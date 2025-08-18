@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2OIU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:2OIU:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#3531",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T13:04:21.288699Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "2OIU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 2
+  },
+  "totalEvidenceCount": 4
+}

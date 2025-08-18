@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3D2G",
+  "biologicalMoleculeName": "3D2G",
+  "caseId": "3D2G",
+  "caseKey": "3D2G",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "3D2G",
+  "profileCount": 8
+}

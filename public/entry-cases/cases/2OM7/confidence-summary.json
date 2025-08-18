@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2OM7",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 56,
+  "defaultEvidenceId": "annojoin:2OM7:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#3991",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 28,
+    "B": 28
+  },
+  "generatedAt": "2026-08-17T11:12:44.783572Z",
+  "materializedEvidenceCount": 56,
+  "pdbId": "2OM7",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 2,
+    "NOT_SUPPORTED": 54
+  },
+  "totalEvidenceCount": 56
+}

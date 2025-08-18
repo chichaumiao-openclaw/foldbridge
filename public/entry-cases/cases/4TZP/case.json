@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4TZP",
+  "biologicalMoleculeName": "4TZP",
+  "caseId": "4TZP",
+  "caseKey": "4TZP",
+  "chains": [
+    "B",
+    "C",
+    "E",
+    "F"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "4TZP",
+  "profileCount": 46
+}

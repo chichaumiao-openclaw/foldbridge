@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3HAX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:3HAX:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#3559",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T13:04:21.164543Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "3HAX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 1,
+    "NOT_SUPPORTED": 5
+  },
+  "totalEvidenceCount": 6
+}

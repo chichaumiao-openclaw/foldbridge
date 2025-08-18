@@ -1,0 +1,20 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4TZZ",
+  "biologicalMoleculeName": "4TZZ",
+  "caseId": "4TZZ",
+  "caseKey": "4TZZ",
+  "chains": [
+    "B",
+    "C",
+    "E",
+    "F",
+    "H",
+    "I",
+    "K",
+    "L"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "4TZZ",
+  "profileCount": 46
+}

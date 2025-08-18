@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3KFU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 16,
+  "defaultEvidenceId": "annojoin:3KFU:confidence:B:data-general/ARCHII_2A3_0000.rdat#18171",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8,
+    "B": 8
+  },
+  "generatedAt": "2026-08-17T12:21:44.256242Z",
+  "materializedEvidenceCount": 16,
+  "pdbId": "3KFU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 4,
+    "NOT_SUPPORTED": 12
+  },
+  "totalEvidenceCount": 16
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3JAP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4222,
+  "defaultEvidenceId": "annojoin:3JAP:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#34846",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2105,
+    "B": 2117
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 4222,
+  "pdbId": "3JAP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 56,
+    "LOW": 880,
+    "NOT_SUPPORTED": 3286
+  },
+  "totalEvidenceCount": 4222
+}

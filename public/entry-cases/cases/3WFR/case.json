@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3WFR",
+  "biologicalMoleculeName": "3WFR",
+  "caseId": "3WFR",
+  "caseKey": "3WFR",
+  "chains": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "3WFR",
+  "profileCount": 12
+}

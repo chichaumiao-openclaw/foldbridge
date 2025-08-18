@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4IOA",
+  "biologicalMoleculeName": "4IOA",
+  "caseId": "4IOA",
+  "caseKey": "4IOA",
+  "chains": [
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "4IOA",
+  "profileCount": 1548
+}

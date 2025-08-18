@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2LKR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 32,
+  "defaultEvidenceId": "annojoin:2LKR:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#4248",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 16,
+    "B": 16
+  },
+  "generatedAt": "2026-08-17T11:12:44.783572Z",
+  "materializedEvidenceCount": 32,
+  "pdbId": "2LKR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 10,
+    "NOT_SUPPORTED": 21
+  },
+  "totalEvidenceCount": 32
+}

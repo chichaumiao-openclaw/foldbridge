@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "2PXV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 64,
+  "defaultEvidenceId": "annojoin:2PXV:confidence:B:data-rna-structures/M2PK90_2A3_0000.rdat#63161",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 31,
+    "B": 33
+  },
+  "generatedAt": "2026-08-17T13:10:50.762864Z",
+  "materializedEvidenceCount": 64,
+  "pdbId": "2PXV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 64
+  },
+  "totalEvidenceCount": 64
+}

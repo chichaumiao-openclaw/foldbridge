@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4NYB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 510,
+  "defaultEvidenceId": "annojoin:4NYB:confidence:A:data-riboswitches/TPPRSW_DMS_0005.rdat#79",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 495,
+    "B": 15
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 510,
+  "pdbId": "4NYB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 510
+  },
+  "totalEvidenceCount": 510
+}

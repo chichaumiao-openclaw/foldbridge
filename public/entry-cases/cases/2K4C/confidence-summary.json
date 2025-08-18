@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2K4C",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 27,
+  "defaultEvidenceId": "annojoin:2K4C:confidence:B:data-eterna/OK45LIB_2A3_0000.rdat#2146",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 12,
+    "B": 15
+  },
+  "generatedAt": "2026-08-17T11:21:04.164187Z",
+  "materializedEvidenceCount": 27,
+  "pdbId": "2K4C",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 5,
+    "LOW": 6,
+    "NOT_SUPPORTED": 16
+  },
+  "totalEvidenceCount": 27
+}

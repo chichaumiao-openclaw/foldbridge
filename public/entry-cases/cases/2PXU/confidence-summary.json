@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "2PXU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 178,
+  "defaultEvidenceId": "annojoin:2PXU:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12357",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 87,
+    "B": 91
+  },
+  "generatedAt": "2026-08-17T13:14:39.572696Z",
+  "materializedEvidenceCount": 178,
+  "pdbId": "2PXU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 178
+  },
+  "totalEvidenceCount": 178
+}

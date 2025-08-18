@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "4LCK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 92,
+  "defaultEvidenceId": "annojoin:4LCK:confidence:A:data-puzzle/RNAPZ10_STD_0001.rdat#5",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 44,
+    "B": 48
+  },
+  "generatedAt": "2026-08-17T12:39:26.743394Z",
+  "materializedEvidenceCount": 92,
+  "pdbId": "4LCK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 14,
+    "NOT_SUPPORTED": 78
+  },
+  "totalEvidenceCount": 92
+}

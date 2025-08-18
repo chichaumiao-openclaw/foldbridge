@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3CCR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1950,
+  "defaultEvidenceId": "annojoin:3CCR:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#23422",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 975,
+    "B": 975
+  },
+  "generatedAt": "2026-08-17T11:55:01.373656Z",
+  "materializedEvidenceCount": 1950,
+  "pdbId": "3CCR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 155,
+    "LOW": 623,
+    "NOT_SUPPORTED": 1172
+  },
+  "totalEvidenceCount": 1950
+}

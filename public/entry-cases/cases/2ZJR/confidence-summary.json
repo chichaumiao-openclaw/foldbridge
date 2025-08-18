@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2ZJR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1548,
+  "defaultEvidenceId": "annojoin:2ZJR:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#81707",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 774,
+    "B": 774
+  },
+  "generatedAt": "2026-08-17T12:30:27.895034Z",
+  "materializedEvidenceCount": 1548,
+  "pdbId": "2ZJR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 67,
+    "LOW": 436,
+    "NOT_SUPPORTED": 1045
+  },
+  "totalEvidenceCount": 1548
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2TRA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 48,
+  "defaultEvidenceId": "annojoin:2TRA:confidence:B:data-eterna/OK1LIB_2A3_0000.rdat#64322",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 24,
+    "B": 24
+  },
+  "generatedAt": "2026-08-17T11:06:33.567203Z",
+  "materializedEvidenceCount": 48,
+  "pdbId": "2TRA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 8,
+    "LOW": 8,
+    "NOT_SUPPORTED": 32
+  },
+  "totalEvidenceCount": 48
+}

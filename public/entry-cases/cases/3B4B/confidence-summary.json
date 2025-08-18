@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3B4B",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 218,
+  "defaultEvidenceId": "annojoin:3B4B:confidence:B:data-rna-structures/M2PK90_2A3_0000.rdat#32627",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 107,
+    "B": 111
+  },
+  "generatedAt": "2026-08-17T11:24:40.294608Z",
+  "materializedEvidenceCount": 218,
+  "pdbId": "3B4B",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 38,
+    "NOT_SUPPORTED": 180
+  },
+  "totalEvidenceCount": 218
+}

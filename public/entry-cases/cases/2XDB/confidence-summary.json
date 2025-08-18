@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2XDB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 414,
+  "defaultEvidenceId": "annojoin:2XDB:confidence:A:data-rna-structures/M2PK50_DMS_0000.rdat#28921",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 203,
+    "B": 211
+  },
+  "generatedAt": "2026-08-17T12:17:42.743368Z",
+  "materializedEvidenceCount": 414,
+  "pdbId": "2XDB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 100,
+    "NOT_SUPPORTED": 314
+  },
+  "totalEvidenceCount": 414
+}
