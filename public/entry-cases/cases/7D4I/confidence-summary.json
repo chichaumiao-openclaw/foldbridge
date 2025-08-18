@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7D4I",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5524,
+  "defaultEvidenceId": "annojoin:7D4I:confidence:B:data-eterna/OK3TST_2A3_0000.rdat#43463",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2762,
+    "B": 2762
+  },
+  "generatedAt": "2026-08-17T11:02:27.253733Z",
+  "materializedEvidenceCount": 5524,
+  "pdbId": "7D4I",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5524
+  },
+  "totalEvidenceCount": 5524
+}

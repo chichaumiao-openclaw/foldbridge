@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6ZP4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2518,
+  "defaultEvidenceId": "annojoin:6ZP4:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#6592",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1245,
+    "B": 1273
+  },
+  "generatedAt": "2026-08-17T12:46:12.664339Z",
+  "materializedEvidenceCount": 2518,
+  "pdbId": "6ZP4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 20,
+    "LOW": 324,
+    "NOT_SUPPORTED": 2174
+  },
+  "totalEvidenceCount": 2518
+}

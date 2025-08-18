@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6XIQ",
+  "biologicalMoleculeName": "6XIQ",
+  "caseId": "6XIQ",
+  "caseKey": "6XIQ",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "AX",
+    "AZ"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "6XIQ",
+  "profileCount": 10422
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6IP8",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5217,
+  "defaultEvidenceId": "annojoin:6IP8:confidence:B:data-rna-structures/HCIRES_1M7_0001.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2496,
+    "B": 2721
+  },
+  "generatedAt": "2026-08-17T11:11:01.230105Z",
+  "materializedEvidenceCount": 5217,
+  "pdbId": "6IP8",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5217
+  },
+  "totalEvidenceCount": 5217
+}

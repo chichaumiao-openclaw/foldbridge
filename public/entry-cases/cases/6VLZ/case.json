@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6VLZ",
+  "biologicalMoleculeName": "6VLZ",
+  "caseId": "6VLZ",
+  "caseKey": "6VLZ",
+  "chains": [
+    "A",
+    "AA",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "6VLZ",
+  "profileCount": 510
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6X6T",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18664,
+  "defaultEvidenceId": "annojoin:6X6T:confidence:A:data-general/P90LIB_DMS_0000.rdat#1090",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8815,
+    "B": 9849
+  },
+  "generatedAt": "2026-08-17T11:12:44.783572Z",
+  "materializedEvidenceCount": 18664,
+  "pdbId": "6X6T",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1002,
+    "LOW": 3916,
+    "NOT_SUPPORTED": 13746
+  },
+  "totalEvidenceCount": 18664
+}

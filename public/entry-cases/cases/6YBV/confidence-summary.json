@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6YBV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 48,
+  "defaultEvidenceId": "annojoin:6YBV:confidence:B:data-eterna/ETERNA_R86_0000.rdat#2471",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 12,
+    "B": 36
+  },
+  "generatedAt": "2026-08-17T10:56:12.942573Z",
+  "materializedEvidenceCount": 48,
+  "pdbId": "6YBV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 14,
+    "LOW": 21,
+    "NOT_SUPPORTED": 13
+  },
+  "totalEvidenceCount": 48
+}

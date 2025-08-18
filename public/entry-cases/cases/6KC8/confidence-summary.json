@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6KC8",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:6KC8:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11696",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T12:46:07.647795Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "6KC8",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 6
+  },
+  "totalEvidenceCount": 6
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7BGE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2024,
+  "defaultEvidenceId": "annojoin:7BGE:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#36832",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1012,
+    "B": 1012
+  },
+  "generatedAt": "2026-08-17T12:11:32.389421Z",
+  "materializedEvidenceCount": 2024,
+  "pdbId": "7BGE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 18,
+    "LOW": 232,
+    "NOT_SUPPORTED": 1774
+  },
+  "totalEvidenceCount": 2024
+}

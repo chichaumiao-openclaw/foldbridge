@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6WLR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 384,
+  "defaultEvidenceId": "annojoin:6WLR:confidence:A:data-riboswitches/SAM4SAM_DMS_0000.rdat#100",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 382,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 384,
+  "pdbId": "6WLR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 332,
+    "LOW": 38,
+    "NOT_SUPPORTED": 14
+  },
+  "totalEvidenceCount": 384
+}

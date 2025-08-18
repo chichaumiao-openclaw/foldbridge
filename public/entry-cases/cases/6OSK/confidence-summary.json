@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6OSK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 13626,
+  "defaultEvidenceId": "annojoin:6OSK:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#39692",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6334,
+    "B": 7292
+  },
+  "generatedAt": "2026-08-17T11:59:32.100172Z",
+  "materializedEvidenceCount": 13626,
+  "pdbId": "6OSK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 460,
+    "LOW": 2279,
+    "NOT_SUPPORTED": 10887
+  },
+  "totalEvidenceCount": 13626
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6XIQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 11884,
+  "defaultEvidenceId": "annojoin:6XIQ:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#2752",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5844,
+    "B": 6040
+  },
+  "generatedAt": "2026-08-17T11:55:49.970020Z",
+  "materializedEvidenceCount": 11884,
+  "pdbId": "6XIQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 125,
+    "LOW": 2723,
+    "NOT_SUPPORTED": 9036
+  },
+  "totalEvidenceCount": 11884
+}

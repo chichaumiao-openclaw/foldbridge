@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6OGI",
+  "biologicalMoleculeName": "6OGI",
+  "caseId": "6OGI",
+  "caseKey": "6OGI",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "6OGI",
+  "profileCount": 13603
+}

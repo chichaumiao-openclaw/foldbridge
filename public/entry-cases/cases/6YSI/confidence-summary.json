@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6YSI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 704,
+  "defaultEvidenceId": "annojoin:6YSI:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#77574",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 351,
+    "B": 353
+  },
+  "generatedAt": "2026-08-17T11:43:36.994359Z",
+  "materializedEvidenceCount": 704,
+  "pdbId": "6YSI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 55,
+    "LOW": 164,
+    "NOT_SUPPORTED": 485
+  },
+  "totalEvidenceCount": 704
+}

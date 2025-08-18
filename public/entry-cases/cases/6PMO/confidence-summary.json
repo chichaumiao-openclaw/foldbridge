@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6PMO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 234,
+  "defaultEvidenceId": "annojoin:6PMO:confidence:A:data-general/P90LIB_DMS_0001.rdat#1428",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 114,
+    "B": 120
+  },
+  "generatedAt": "2026-08-17T12:58:49.317723Z",
+  "materializedEvidenceCount": 234,
+  "pdbId": "6PMO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 18,
+    "LOW": 21,
+    "NOT_SUPPORTED": 195
+  },
+  "totalEvidenceCount": 234
+}

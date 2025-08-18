@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6UFG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 46,
+  "defaultEvidenceId": "annojoin:6UFG:confidence:B:data-eterna/OK7BLIB_2A3_0000.rdat#4085",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 12,
+    "B": 34
+  },
+  "generatedAt": "2026-08-17T10:56:11.497087Z",
+  "materializedEvidenceCount": 46,
+  "pdbId": "6UFG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 26,
+    "LOW": 8,
+    "NOT_SUPPORTED": 12
+  },
+  "totalEvidenceCount": 46
+}

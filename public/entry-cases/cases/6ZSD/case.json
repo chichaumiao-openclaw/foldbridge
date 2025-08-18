@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6ZSD",
+  "biologicalMoleculeName": "6ZSD",
+  "caseId": "6ZSD",
+  "caseKey": "6ZSD",
+  "chains": [
+    "AA",
+    "XA",
+    "XB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6ZSD",
+  "profileCount": 510
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6POM",
+  "biologicalMoleculeName": "6POM",
+  "caseId": "6POM",
+  "caseKey": "6POM",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "6POM",
+  "profileCount": 50
+}

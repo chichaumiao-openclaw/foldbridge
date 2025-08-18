@@ -1,0 +1,29 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6SV4",
+  "biologicalMoleculeName": "6SV4",
+  "caseId": "6SV4",
+  "caseKey": "6SV4",
+  "chains": [
+    "2",
+    "2b",
+    "2c",
+    "BQ",
+    "BR",
+    "BS",
+    "YQ",
+    "YR",
+    "YS",
+    "ZQ",
+    "ZR",
+    "ZS",
+    "mb",
+    "mc",
+    "n",
+    "nb",
+    "nc"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "6SV4",
+  "profileCount": 8876
+}

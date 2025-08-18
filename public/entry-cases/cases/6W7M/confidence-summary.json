@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6W7M",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4738,
+  "defaultEvidenceId": "annojoin:6W7M:confidence:A:data-general/P90LIB_DMS_0000.rdat#2101",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2097,
+    "B": 2641
+  },
+  "generatedAt": "2026-08-17T12:58:49.317723Z",
+  "materializedEvidenceCount": 4738,
+  "pdbId": "6W7M",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 259,
+    "LOW": 1851,
+    "NOT_SUPPORTED": 2628
+  },
+  "totalEvidenceCount": 4738
+}

@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7CPV",
+  "biologicalMoleculeName": "7CPV",
+  "caseId": "7CPV",
+  "caseKey": "7CPV",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "S2",
+    "S6"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "7CPV",
+  "profileCount": 4292
+}

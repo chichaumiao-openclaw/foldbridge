@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "6RW5",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 240,
+  "defaultEvidenceId": "annojoin:6RW5:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#54481",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 120,
+    "B": 120
+  },
+  "generatedAt": "2026-08-17T11:55:49.970020Z",
+  "materializedEvidenceCount": 240,
+  "pdbId": "6RW5",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 28,
+    "NOT_SUPPORTED": 212
+  },
+  "totalEvidenceCount": 240
+}

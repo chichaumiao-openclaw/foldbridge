@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6MPI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1025,
+  "defaultEvidenceId": "annojoin:6MPI:confidence:B:data-eterna/OK1LIB_2A3_0000.rdat#78923",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 512,
+    "B": 513
+  },
+  "generatedAt": "2026-08-17T12:17:42.743368Z",
+  "materializedEvidenceCount": 1025,
+  "pdbId": "6MPI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 14,
+    "LOW": 128,
+    "NOT_SUPPORTED": 883
+  },
+  "totalEvidenceCount": 1025
+}

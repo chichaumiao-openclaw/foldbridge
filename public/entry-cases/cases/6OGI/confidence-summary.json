@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6OGI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 13603,
+  "defaultEvidenceId": "annojoin:6OGI:confidence:B:data-rna-structures/M2PK50_2A3_0000.rdat#39671",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6405,
+    "B": 7198
+  },
+  "generatedAt": "2026-08-17T12:52:15.874142Z",
+  "materializedEvidenceCount": 13603,
+  "pdbId": "6OGI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 258,
+    "LOW": 2509,
+    "NOT_SUPPORTED": 10836
+  },
+  "totalEvidenceCount": 13603
+}

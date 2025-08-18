@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7DAS",
+  "biologicalMoleculeName": "7DAS",
+  "caseId": "7DAS",
+  "caseKey": "7DAS",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "7DAS",
+  "profileCount": 38
+}
