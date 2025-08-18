@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6ORD",
+  "biologicalMoleculeName": "6ORD",
+  "caseId": "6ORD",
+  "caseKey": "RMDB2PDB:6ORD",
+  "chains": [
+    "QY"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6ORD",
+  "profileCount": 2
+}

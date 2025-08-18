@@ -1,0 +1,28 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "58S": {
+      "case2dPath": "chains/58S/case-2d-structure.json.gz",
+      "chainId": "58S",
+      "chainRoot": "chains/58S",
+      "linkedViewBundlePath": "chains/58S/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/58S/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/58S/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "58S",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:7OSA:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#1438": "58S",
+    "annojoin:RMDB2PDB:7OSA:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#14445": "58S",
+    "annojoin:RMDB2PDB:7OSA:confidence:A:top_x_279::data-rna-structures/data-rna-structures/POS240_DMS_0000.rdat#1396": "58S",
+    "annojoin:RMDB2PDB:7OSA:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#1438": "58S",
+    "annojoin:RMDB2PDB:7OSA:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#14445": "58S",
+    "annojoin:RMDB2PDB:7OSA:confidence:B:top_x_279::data-rna-structures/data-rna-structures/POS240_2A3_0000.rdat#1396": "58S"
+  }
+}

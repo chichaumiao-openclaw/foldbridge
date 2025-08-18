@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4RUM",
+  "biologicalMoleculeName": "4RUM",
+  "caseId": "4RUM",
+  "caseKey": "RMDB2PDB:4RUM",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4RUM",
+  "profileCount": 3
+}

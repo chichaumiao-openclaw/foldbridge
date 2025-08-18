@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7AZY",
+  "biologicalMoleculeName": "7AZY",
+  "caseId": "7AZY",
+  "caseKey": "RMDB2PDB:7AZY",
+  "chains": [
+    "E"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "7AZY",
+  "profileCount": 12
+}

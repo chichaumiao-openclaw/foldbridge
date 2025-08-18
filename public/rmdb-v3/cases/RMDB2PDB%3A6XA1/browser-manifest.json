@@ -1,0 +1,34 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "Bv": {
+      "case2dPath": "chains/Bv/case-2d-structure.json.gz",
+      "chainId": "Bv",
+      "chainRoot": "chains/Bv",
+      "linkedViewBundlePath": "chains/Bv/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/Bv/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/Bv/varna-template.svg.gz"
+    },
+    "L5": {
+      "case2dPath": "chains/L5/case-2d-structure.json.gz",
+      "chainId": "L5",
+      "chainRoot": "chains/L5",
+      "linkedViewBundlePath": "chains/L5/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/L5/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/L5/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "L5",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:6XA1:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#15983": "Bv",
+    "annojoin:RMDB2PDB:6XA1:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7723": "L5",
+    "annojoin:RMDB2PDB:6XA1:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#15983": "Bv",
+    "annojoin:RMDB2PDB:6XA1:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#7723": "L5"
+  }
+}

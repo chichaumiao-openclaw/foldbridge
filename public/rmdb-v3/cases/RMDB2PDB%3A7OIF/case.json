@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7OIF",
+  "biologicalMoleculeName": "7OIF",
+  "caseId": "7OIF",
+  "caseKey": "RMDB2PDB:7OIF",
+  "chains": [
+    "z"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "7OIF",
+  "profileCount": 6
+}

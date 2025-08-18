@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4RGF",
+  "biologicalMoleculeName": "4RGF",
+  "caseId": "4RGF",
+  "caseKey": "RMDB2PDB:4RGF",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4RGF",
+  "profileCount": 8
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7XG4",
+  "biologicalMoleculeName": "7XG4",
+  "caseId": "7XG4",
+  "caseKey": "RMDB2PDB:7XG4",
+  "chains": [
+    "I"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "7XG4",
+  "profileCount": 2
+}

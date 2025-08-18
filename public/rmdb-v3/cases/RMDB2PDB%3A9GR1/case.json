@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9GR1",
+  "biologicalMoleculeName": "9GR1",
+  "caseId": "9GR1",
+  "caseKey": "RMDB2PDB:9GR1",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "9GR1",
+  "profileCount": 4
+}

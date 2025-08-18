@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3IWN",
+  "biologicalMoleculeName": "3IWN",
+  "caseId": "3IWN",
+  "caseKey": "RMDB2PDB:3IWN",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3IWN",
+  "profileCount": 3
+}

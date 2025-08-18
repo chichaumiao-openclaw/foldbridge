@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5G2X",
+  "biologicalMoleculeName": "5G2X",
+  "caseId": "5G2X",
+  "caseKey": "RMDB2PDB:5G2X",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "5G2X",
+  "profileCount": 16
+}

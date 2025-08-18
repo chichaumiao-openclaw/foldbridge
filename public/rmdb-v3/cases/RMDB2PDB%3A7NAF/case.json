@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7NAF",
+  "biologicalMoleculeName": "7NAF",
+  "caseId": "7NAF",
+  "caseKey": "RMDB2PDB:7NAF",
+  "chains": [
+    "1"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "7NAF",
+  "profileCount": 12
+}

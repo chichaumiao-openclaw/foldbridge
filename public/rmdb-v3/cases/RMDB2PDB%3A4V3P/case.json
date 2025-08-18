@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4V3P",
+  "biologicalMoleculeName": "4V3P",
+  "caseId": "4V3P",
+  "caseKey": "RMDB2PDB:4V3P",
+  "chains": [
+    "L1",
+    "L2"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "4V3P",
+  "profileCount": 8
+}

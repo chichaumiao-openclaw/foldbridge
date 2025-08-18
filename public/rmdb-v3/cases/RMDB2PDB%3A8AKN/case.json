@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8AKN",
+  "biologicalMoleculeName": "8AKN",
+  "caseId": "8AKN",
+  "caseKey": "RMDB2PDB:8AKN",
+  "chains": [
+    "Z"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "8AKN",
+  "profileCount": 2
+}

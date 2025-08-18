@@ -1,0 +1,40 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "B": {
+      "case2dPath": "chains/B/case-2d-structure.json.gz",
+      "chainId": "B",
+      "chainRoot": "chains/B",
+      "linkedViewBundlePath": "chains/B/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/B/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/B/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "B",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:9BZ1:confidence:A:top_plus_profile_189::data-riboswitches/PFLZTP_DMS_0001.rdat#DATA:79": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:A:top_plus_profile_189::data-riboswitches/PFLZTP_DMS_0001.rdat#DATA:80": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:A:top_plus_profile_189::data-riboswitches/PFLZTP_DMS_0002.rdat#DATA:79": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:A:top_plus_profile_189::data-riboswitches/PFLZTP_DMS_0002.rdat#DATA:80": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:A:top_plus_profile_189::data-riboswitches/PFLZTP_DMS_0002.rdat#DATA:81": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/PFLZTP_BZCN_0001.rdat#DATA:79": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/PFLZTP_BZCN_0001.rdat#DATA:80": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/PFLZTP_BZCN_0002.rdat#DATA:79": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/PFLZTP_BZCN_0002.rdat#DATA:80": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/PFLZTP_BZCN_0002.rdat#DATA:81": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/ZTPRSW_BZCN_0001.rdat#DATA:211": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/ZTPRSW_BZCN_0002.rdat#DATA:211": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/ZTPRSW_BZCN_0003.rdat#DATA:211": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/ZTPRSW_BZCN_0004.rdat#DATA:211": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/ZTPRSW_BZCN_0005.rdat#DATA:211": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/ZTPRSW_BZCN_0006.rdat#DATA:211": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/ZTPRSW_BZCN_0011.rdat#DATA:211": "B",
+    "annojoin:RMDB2PDB:9BZ1:confidence:B:top_plus_profile_189::data-riboswitches/ZTPRSW_BZCN_0012.rdat#DATA:211": "B"
+  }
+}

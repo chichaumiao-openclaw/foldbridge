@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7N1P",
+  "biologicalMoleculeName": "7N1P",
+  "caseId": "7N1P",
+  "caseKey": "RMDB2PDB:7N1P",
+  "chains": [
+    "23"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "7N1P",
+  "profileCount": 360
+}

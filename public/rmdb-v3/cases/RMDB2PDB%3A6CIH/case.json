@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6CIH",
+  "biologicalMoleculeName": "6CIH",
+  "caseId": "6CIH",
+  "caseKey": "RMDB2PDB:6CIH",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "6CIH",
+  "profileCount": 16
+}

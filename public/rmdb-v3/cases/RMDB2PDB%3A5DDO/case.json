@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5DDO",
+  "biologicalMoleculeName": "5DDO",
+  "caseId": "5DDO",
+  "caseKey": "RMDB2PDB:5DDO",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "5DDO",
+  "profileCount": 2
+}

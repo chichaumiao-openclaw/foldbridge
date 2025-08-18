@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8GH6",
+  "biologicalMoleculeName": "8GH6",
+  "caseId": "8GH6",
+  "caseKey": "RMDB2PDB:8GH6",
+  "chains": [
+    "R"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "8GH6",
+  "profileCount": 12
+}

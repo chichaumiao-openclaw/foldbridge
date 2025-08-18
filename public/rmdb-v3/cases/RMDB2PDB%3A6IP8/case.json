@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6IP8",
+  "biologicalMoleculeName": "6IP8",
+  "caseId": "6IP8",
+  "caseKey": "RMDB2PDB:6IP8",
+  "chains": [
+    "zz"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "6IP8",
+  "profileCount": 68
+}

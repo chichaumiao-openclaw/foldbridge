@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7PKT",
+  "biologicalMoleculeName": "7PKT",
+  "caseId": "7PKT",
+  "caseKey": "RMDB2PDB:7PKT",
+  "chains": [
+    "0",
+    "1",
+    "2",
+    "3",
+    "6"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "7PKT",
+  "profileCount": 10
+}

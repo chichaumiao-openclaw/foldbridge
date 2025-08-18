@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9ENE",
+  "biologicalMoleculeName": "9ENE",
+  "caseId": "9ENE",
+  "caseKey": "RMDB2PDB:9ENE",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "9ENE",
+  "profileCount": 2
+}

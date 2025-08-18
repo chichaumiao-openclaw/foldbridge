@@ -1,0 +1,28 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "2y": {
+      "case2dPath": "chains/2y/case-2d-structure.json.gz",
+      "chainId": "2y",
+      "chainRoot": "chains/2y",
+      "linkedViewBundlePath": "chains/2y/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/2y/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/2y/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "2y",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:7U2J:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#18004": "2y",
+    "annojoin:RMDB2PDB:7U2J:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#18005": "2y",
+    "annojoin:RMDB2PDB:7U2J:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#13700": "2y",
+    "annojoin:RMDB2PDB:7U2J:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#18004": "2y",
+    "annojoin:RMDB2PDB:7U2J:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#18005": "2y",
+    "annojoin:RMDB2PDB:7U2J:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#13700": "2y"
+  }
+}

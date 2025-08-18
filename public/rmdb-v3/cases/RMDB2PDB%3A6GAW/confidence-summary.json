@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "RMDB2PDB:6GAW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:6GAW:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0000.rdat#63188",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5,
+    "B": 5
+  },
+  "generatedAt": "2026-07-14T17:01:14.538114Z",
+  "materializedEvidenceCount": 10,
+  "pdbId": "6GAW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 5,
+    "LSS_MODERATE": 2,
+    "LSS_STRONG": 3
+  },
+  "totalEvidenceCount": 10
+}

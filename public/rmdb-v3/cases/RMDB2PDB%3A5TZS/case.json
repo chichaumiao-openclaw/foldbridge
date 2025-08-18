@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5TZS",
+  "biologicalMoleculeName": "5TZS",
+  "caseId": "5TZS",
+  "caseKey": "RMDB2PDB:5TZS",
+  "chains": [
+    "2"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "5TZS",
+  "profileCount": 2
+}

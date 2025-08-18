@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9HC4",
+  "biologicalMoleculeName": "9HC4",
+  "caseId": "9HC4",
+  "caseKey": "RMDB2PDB:9HC4",
+  "chains": [
+    "Z2",
+    "iN"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "9HC4",
+  "profileCount": 94
+}

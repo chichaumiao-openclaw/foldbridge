@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6RJA",
+  "biologicalMoleculeName": "6RJA",
+  "caseId": "6RJA",
+  "caseKey": "RMDB2PDB:6RJA",
+  "chains": [
+    "G"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "6RJA",
+  "profileCount": 2
+}

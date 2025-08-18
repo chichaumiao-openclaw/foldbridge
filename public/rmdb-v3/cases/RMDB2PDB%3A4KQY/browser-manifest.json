@@ -1,0 +1,33 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "A": {
+      "case2dPath": "chains/A/case-2d-structure.json.gz",
+      "chainId": "A",
+      "chainRoot": "chains/A",
+      "linkedViewBundlePath": "chains/A/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:4KQY:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0004.rdat#65891": "A",
+    "annojoin:RMDB2PDB:4KQY:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0004.rdat#65913": "A",
+    "annojoin:RMDB2PDB:4KQY:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0004.rdat#66189": "A",
+    "annojoin:RMDB2PDB:4KQY:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0004.rdat#66349": "A",
+    "annojoin:RMDB2PDB:4KQY:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0004.rdat#66381": "A",
+    "annojoin:RMDB2PDB:4KQY:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0004.rdat#65891": "A",
+    "annojoin:RMDB2PDB:4KQY:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0004.rdat#65913": "A",
+    "annojoin:RMDB2PDB:4KQY:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0004.rdat#65949": "A",
+    "annojoin:RMDB2PDB:4KQY:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0004.rdat#66189": "A",
+    "annojoin:RMDB2PDB:4KQY:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0004.rdat#66349": "A",
+    "annojoin:RMDB2PDB:4KQY:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0004.rdat#66381": "A"
+  }
+}

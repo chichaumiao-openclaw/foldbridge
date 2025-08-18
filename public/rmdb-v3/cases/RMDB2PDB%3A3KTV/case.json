@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3KTV",
+  "biologicalMoleculeName": "3KTV",
+  "caseId": "3KTV",
+  "caseKey": "RMDB2PDB:3KTV",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3KTV",
+  "profileCount": 8
+}

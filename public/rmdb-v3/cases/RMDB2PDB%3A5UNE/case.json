@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5UNE",
+  "biologicalMoleculeName": "5UNE",
+  "caseId": "5UNE",
+  "caseKey": "RMDB2PDB:5UNE",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "5UNE",
+  "profileCount": 2
+}

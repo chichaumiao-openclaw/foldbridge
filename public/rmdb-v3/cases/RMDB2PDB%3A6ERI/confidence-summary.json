@@ -1,0 +1,27 @@
+{
+  "atlasCaseKey": "RMDB2PDB:6ERI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 126,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:6ERI:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#11424",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 63,
+    "B": 63
+  },
+  "generatedAt": "2026-07-14T17:01:14.538114Z",
+  "materializedEvidenceCount": 126,
+  "pdbId": "6ERI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 12,
+    "LSS_NOT_SUPPORTED": 8,
+    "LSS_STRONG": 2,
+    "LSS_UNDERPOWERED": 99,
+    "LSS_WEAK": 5
+  },
+  "totalEvidenceCount": 126
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4V5G",
+  "biologicalMoleculeName": "4V5G",
+  "caseId": "4V5G",
+  "caseKey": "RMDB2PDB:4V5G",
+  "chains": [
+    "AY"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4V5G",
+  "profileCount": 2
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7UNV",
+  "biologicalMoleculeName": "7UNV",
+  "caseId": "7UNV",
+  "caseKey": "RMDB2PDB:7UNV",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "7UNV",
+  "profileCount": 2
+}

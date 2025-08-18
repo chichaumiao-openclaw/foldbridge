@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5TC1",
+  "biologicalMoleculeName": "5TC1",
+  "caseId": "5TC1",
+  "caseKey": "RMDB2PDB:5TC1",
+  "chains": [
+    "R"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "5TC1",
+  "profileCount": 34
+}

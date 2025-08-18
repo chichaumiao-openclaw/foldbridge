@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8EUG",
+  "biologicalMoleculeName": "8EUG",
+  "caseId": "8EUG",
+  "caseKey": "RMDB2PDB:8EUG",
+  "chains": [
+    "1",
+    "9"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "8EUG",
+  "profileCount": 34
+}

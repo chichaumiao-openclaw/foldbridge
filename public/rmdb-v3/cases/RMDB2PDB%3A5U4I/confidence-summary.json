@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "RMDB2PDB:5U4I",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 17,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:5U4I:confidence:A:top_x_279::data-general/data-general/P50LIB_DMS_0001.rdat#1532",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8,
+    "B": 9
+  },
+  "generatedAt": "2026-07-14T17:01:14.538114Z",
+  "materializedEvidenceCount": 17,
+  "pdbId": "5U4I",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 5,
+    "LSS_MODERATE": 1,
+    "LSS_NOT_SUPPORTED": 11
+  },
+  "totalEvidenceCount": 17
+}

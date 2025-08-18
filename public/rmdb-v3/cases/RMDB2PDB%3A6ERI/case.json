@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6ERI",
+  "biologicalMoleculeName": "6ERI",
+  "caseId": "6ERI",
+  "caseKey": "RMDB2PDB:6ERI",
+  "chains": [
+    "AA",
+    "AB",
+    "BA"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "6ERI",
+  "profileCount": 126
+}

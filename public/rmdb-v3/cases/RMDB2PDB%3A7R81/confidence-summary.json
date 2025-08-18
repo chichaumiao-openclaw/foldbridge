@@ -1,0 +1,28 @@
+{
+  "atlasCaseKey": "RMDB2PDB:7R81",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 240,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:7R81:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#7617",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 120,
+    "B": 120
+  },
+  "generatedAt": "2026-07-14T17:01:14.538114Z",
+  "materializedEvidenceCount": 240,
+  "pdbId": "7R81",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 22,
+    "LSS_MODERATE": 2,
+    "LSS_NOT_SUPPORTED": 24,
+    "LSS_STRONG": 9,
+    "LSS_UNDERPOWERED": 181,
+    "LSS_WEAK": 2
+  },
+  "totalEvidenceCount": 240
+}

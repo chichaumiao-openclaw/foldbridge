@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4TZZ",
+  "biologicalMoleculeName": "4TZZ",
+  "caseId": "4TZZ",
+  "caseKey": "RMDB2PDB:4TZZ",
+  "chains": [
+    "K"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "4TZZ",
+  "profileCount": 2
+}

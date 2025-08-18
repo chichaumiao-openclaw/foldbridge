@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8CTL",
+  "biologicalMoleculeName": "8CTL",
+  "caseId": "8CTL",
+  "caseKey": "RMDB2PDB:8CTL",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "8CTL",
+  "profileCount": 14
+}

@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9DTR",
+  "biologicalMoleculeName": "9DTR",
+  "caseId": "9DTR",
+  "caseKey": "RMDB2PDB:9DTR",
+  "chains": [
+    "2",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "9DTR",
+  "profileCount": 38
+}

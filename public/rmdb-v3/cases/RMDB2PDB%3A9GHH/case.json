@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9GHH",
+  "biologicalMoleculeName": "9GHH",
+  "caseId": "9GHH",
+  "caseKey": "RMDB2PDB:9GHH",
+  "chains": [
+    "A",
+    "a"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "9GHH",
+  "profileCount": 28
+}

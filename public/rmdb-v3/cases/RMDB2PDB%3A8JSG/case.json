@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8JSG",
+  "biologicalMoleculeName": "8JSG",
+  "caseId": "8JSG",
+  "caseKey": "RMDB2PDB:8JSG",
+  "chains": [
+    "g"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "8JSG",
+  "profileCount": 2
+}

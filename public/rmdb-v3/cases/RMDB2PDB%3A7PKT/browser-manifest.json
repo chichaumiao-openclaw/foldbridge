@@ -1,0 +1,64 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "0": {
+      "case2dPath": "chains/0/case-2d-structure.json.gz",
+      "chainId": "0",
+      "chainRoot": "chains/0",
+      "linkedViewBundlePath": "chains/0/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/0/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/0/varna-template.svg.gz"
+    },
+    "1": {
+      "case2dPath": "chains/1/case-2d-structure.json.gz",
+      "chainId": "1",
+      "chainRoot": "chains/1",
+      "linkedViewBundlePath": "chains/1/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/1/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/1/varna-template.svg.gz"
+    },
+    "2": {
+      "case2dPath": "chains/2/case-2d-structure.json.gz",
+      "chainId": "2",
+      "chainRoot": "chains/2",
+      "linkedViewBundlePath": "chains/2/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/2/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/2/varna-template.svg.gz"
+    },
+    "3": {
+      "case2dPath": "chains/3/case-2d-structure.json.gz",
+      "chainId": "3",
+      "chainRoot": "chains/3",
+      "linkedViewBundlePath": "chains/3/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/3/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/3/varna-template.svg.gz"
+    },
+    "6": {
+      "case2dPath": "chains/6/case-2d-structure.json.gz",
+      "chainId": "6",
+      "chainRoot": "chains/6",
+      "linkedViewBundlePath": "chains/6/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/6/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/6/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "1",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:7PKT:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#12717": "2",
+    "annojoin:RMDB2PDB:7PKT:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#4374": "6",
+    "annojoin:RMDB2PDB:7PKT:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#6179": "0",
+    "annojoin:RMDB2PDB:7PKT:confidence:A:top_x_279::data-rna-structures/data-rna-structures/POS240_DMS_0000.rdat#1375": "3",
+    "annojoin:RMDB2PDB:7PKT:confidence:A:top_x_279::data-rna-structures/data-rna-structures/POS240_DMS_0000.rdat#1389": "1",
+    "annojoin:RMDB2PDB:7PKT:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#12717": "2",
+    "annojoin:RMDB2PDB:7PKT:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#4374": "6",
+    "annojoin:RMDB2PDB:7PKT:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#6179": "0",
+    "annojoin:RMDB2PDB:7PKT:confidence:B:top_x_279::data-rna-structures/data-rna-structures/POS240_2A3_0000.rdat#1375": "3",
+    "annojoin:RMDB2PDB:7PKT:confidence:B:top_x_279::data-rna-structures/data-rna-structures/POS240_2A3_0000.rdat#1389": "1"
+  }
+}

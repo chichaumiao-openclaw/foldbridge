@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6RXV",
+  "biologicalMoleculeName": "6RXV",
+  "caseId": "6RXV",
+  "caseKey": "RMDB2PDB:6RXV",
+  "chains": [
+    "C2"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "6RXV",
+  "profileCount": 24
+}

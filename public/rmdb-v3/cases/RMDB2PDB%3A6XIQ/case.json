@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6XIQ",
+  "biologicalMoleculeName": "6XIQ",
+  "caseId": "6XIQ",
+  "caseKey": "RMDB2PDB:6XIQ",
+  "chains": [
+    "3"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "6XIQ",
+  "profileCount": 4
+}

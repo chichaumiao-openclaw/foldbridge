@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8I0T",
+  "biologicalMoleculeName": "8I0T",
+  "caseId": "8I0T",
+  "caseKey": "RMDB2PDB:8I0T",
+  "chains": [
+    "F"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "8I0T",
+  "profileCount": 10
+}

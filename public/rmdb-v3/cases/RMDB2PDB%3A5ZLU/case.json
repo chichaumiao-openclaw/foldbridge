@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5ZLU",
+  "biologicalMoleculeName": "5ZLU",
+  "caseId": "5ZLU",
+  "caseKey": "RMDB2PDB:5ZLU",
+  "chains": [
+    "DD",
+    "V"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "5ZLU",
+  "profileCount": 12
+}

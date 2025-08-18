@@ -1,0 +1,34 @@
+{
+  "atlasCaseKey": "RMDB2PDB:8I7N",
+  "generatedAt": "2026-06-28T21:26:31.631273Z",
+  "pdbId": "8I7N",
+  "rows": [
+    {
+      "aucDirectional": null,
+      "aucEffectSizeZ": null,
+      "aucEmpiricalPValue": null,
+      "bridgeStatus": "bridge_missing",
+      "chain": "N",
+      "conflictFraction": null,
+      "directionalMetricKind": "auc_unpaired_vs_paired",
+      "directionalMetricLabel": "AUC unpaired vs paired",
+      "evidenceId": "annojoin:RMDB2PDB:8I7N:confidence:B:top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#3013",
+      "family": "B",
+      "lssTierCalibrated": "LSS_UNDERPOWERED",
+      "lssTierUncalibrated": "LSS_UNDERPOWERED",
+      "nEvaluable": 0,
+      "pairId": "",
+      "pairSegmentId": "",
+      "partnerInsideFraction": null,
+      "profileKey": "top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#3013",
+      "recallPath": "",
+      "sasaReferenceStatus": "",
+      "selectedByDefault": true,
+      "signalDirection": "unpaired_positive",
+      "technology": "1M7",
+      "trackProfileId": "top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#3013"
+    }
+  ],
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized"
+}

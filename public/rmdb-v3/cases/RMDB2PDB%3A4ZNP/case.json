@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4ZNP",
+  "biologicalMoleculeName": "4ZNP",
+  "caseId": "4ZNP",
+  "caseKey": "RMDB2PDB:4ZNP",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4ZNP",
+  "profileCount": 4
+}

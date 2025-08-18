@@ -1,0 +1,27 @@
+{
+  "atlasCaseKey": "RMDB2PDB:5G2X",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 16,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:5G2X:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#9239",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8,
+    "B": 8
+  },
+  "generatedAt": "2026-07-06T08:51:40.206646Z",
+  "materializedEvidenceCount": 16,
+  "pdbId": "5G2X",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 7,
+    "LSS_NOT_SUPPORTED": 3,
+    "LSS_STRONG": 1,
+    "LSS_UNDERPOWERED": 3,
+    "LSS_WEAK": 2
+  },
+  "totalEvidenceCount": 16
+}

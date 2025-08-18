@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5WWT",
+  "biologicalMoleculeName": "5WWT",
+  "caseId": "5WWT",
+  "caseKey": "RMDB2PDB:5WWT",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "5WWT",
+  "profileCount": 2
+}
