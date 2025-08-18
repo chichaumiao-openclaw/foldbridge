@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8QOA",
+  "biologicalMoleculeName": "8QOA",
+  "caseId": "8QOA",
+  "caseKey": "RASP2PDB:8QOA",
+  "chains": [
+    "A",
+    "Y",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "D MODERATE",
+  "pdbId": "8QOA",
+  "profileCount": 39
+}

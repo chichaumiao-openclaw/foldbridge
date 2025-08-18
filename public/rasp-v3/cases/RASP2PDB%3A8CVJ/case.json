@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8CVJ",
+  "biologicalMoleculeName": "8CVJ",
+  "caseId": "8CVJ",
+  "caseKey": "RASP2PDB:8CVJ",
+  "chains": [
+    "1w",
+    "1x"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "8CVJ",
+  "profileCount": 16
+}

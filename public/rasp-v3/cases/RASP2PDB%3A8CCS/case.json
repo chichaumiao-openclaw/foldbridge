@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8CCS",
+  "biologicalMoleculeName": "8CCS",
+  "caseId": "8CCS",
+  "caseKey": "RASP2PDB:8CCS",
+  "chains": [
+    "AA",
+    "BB",
+    "Bb",
+    "CC",
+    "c"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "8CCS",
+  "profileCount": 187
+}

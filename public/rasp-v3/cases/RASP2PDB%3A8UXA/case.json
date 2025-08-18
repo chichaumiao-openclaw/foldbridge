@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8UXA",
+  "biologicalMoleculeName": "8UXA",
+  "caseId": "8UXA",
+  "caseKey": "RASP2PDB:8UXA",
+  "chains": [
+    "A",
+    "AL",
+    "AM"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "8UXA",
+  "profileCount": 37
+}

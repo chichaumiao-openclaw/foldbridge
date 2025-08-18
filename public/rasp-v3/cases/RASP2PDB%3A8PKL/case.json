@@ -1,0 +1,18 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8PKL",
+  "biologicalMoleculeName": "8PKL",
+  "caseId": "8PKL",
+  "caseKey": "RASP2PDB:8PKL",
+  "chains": [
+    "7",
+    "8",
+    "A",
+    "W",
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8PKL",
+  "profileCount": 43
+}

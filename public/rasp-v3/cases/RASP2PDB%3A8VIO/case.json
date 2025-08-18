@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8VIO",
+  "biologicalMoleculeName": "8VIO",
+  "caseId": "8VIO",
+  "caseKey": "RASP2PDB:8VIO",
+  "chains": [
+    "5"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "8VIO",
+  "profileCount": 14
+}

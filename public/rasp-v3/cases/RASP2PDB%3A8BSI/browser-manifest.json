@@ -1,0 +1,38 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "Lu": {
+      "case2dPath": "chains/Lu/case-2d-structure.json.gz",
+      "chainId": "Lu",
+      "chainRoot": "chains/Lu",
+      "linkedViewBundlePath": "chains/Lu/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/Lu/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/Lu/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "Lu",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:8BSI:confidence:A:rasp_bw_93deaa819d97": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:B:rasp_bw_0ac5e94788d5": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:B:rasp_bw_22e4e9ad287f": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:B:rasp_bw_49311a4f5dd2": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:B:rasp_bw_5c4d7e90dfb5": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:B:rasp_bw_93b59d01ad5d": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:B:rasp_bw_b3bd67bfbe31": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:B:rasp_bw_b458e77f0bd6": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:B:rasp_bw_f19b2878af92": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:C:rasp_bw_1bce4cb9b4c1": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:C:rasp_bw_391957bc990d": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:C:rasp_bw_adb74bd90821": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:C:rasp_bw_c8eb2a9bae27": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:C:rasp_bw_ccc48c8d34b3": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:C:rasp_bw_df45dbde575d": "Lu",
+    "annojoin:RASP2PDB:8BSI:confidence:C:rasp_bw_eee90e60acaa": "Lu"
+  }
+}

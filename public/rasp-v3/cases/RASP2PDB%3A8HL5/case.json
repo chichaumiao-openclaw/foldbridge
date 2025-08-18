@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8HL5",
+  "biologicalMoleculeName": "8HL5",
+  "caseId": "8HL5",
+  "caseKey": "RASP2PDB:8HL5",
+  "chains": [
+    "AATN"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8HL5",
+  "profileCount": 13
+}

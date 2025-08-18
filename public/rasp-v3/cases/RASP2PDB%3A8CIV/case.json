@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8CIV",
+  "biologicalMoleculeName": "8CIV",
+  "caseId": "8CIV",
+  "caseKey": "RASP2PDB:8CIV",
+  "chains": [
+    "AA",
+    "BB",
+    "Bb",
+    "CC",
+    "c"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "8CIV",
+  "profileCount": 187
+}
