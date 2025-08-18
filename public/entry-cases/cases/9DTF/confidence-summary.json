@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9DTF",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:9DTF:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#13014",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T12:30:27.895034Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "9DTF",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 1,
+    "NOT_SUPPORTED": 3
+  },
+  "totalEvidenceCount": 4
+}

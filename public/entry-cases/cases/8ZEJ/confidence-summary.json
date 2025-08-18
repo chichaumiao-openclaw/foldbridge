@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8ZEJ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19146,
+  "defaultEvidenceId": "annojoin:8ZEJ:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#49499",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9055,
+    "B": 10091
+  },
+  "generatedAt": "2026-08-17T12:06:37.774269Z",
+  "materializedEvidenceCount": 19146,
+  "pdbId": "8ZEJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 662,
+    "LOW": 4164,
+    "NOT_SUPPORTED": 14320
+  },
+  "totalEvidenceCount": 19146
+}

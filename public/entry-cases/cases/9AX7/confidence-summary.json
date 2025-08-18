@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9AX7",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19201,
+  "defaultEvidenceId": "annojoin:9AX7:confidence:A:data-general/P90LIB_DMS_0000.rdat#1090",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9082,
+    "B": 10119
+  },
+  "generatedAt": "2026-08-17T12:58:30.448085Z",
+  "materializedEvidenceCount": 19201,
+  "pdbId": "9AX7",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 999,
+    "LOW": 2930,
+    "NOT_SUPPORTED": 15272
+  },
+  "totalEvidenceCount": 19201
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8YUP",
+  "biologicalMoleculeName": "8YUP",
+  "caseId": "8YUP",
+  "caseKey": "8YUP",
+  "chains": [
+    "A",
+    "V",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8YUP",
+  "profileCount": 19223
+}

@@ -1,0 +1,21 @@
+{
+  "atlasCaseKey": "8TKJ",
+  "availableFamilies": [
+    "B"
+  ],
+  "bridgeMissingCount": 1,
+  "defaultEvidenceId": "annojoin:8TKJ:confidence:B:data-eterna/SHAPE_RYOS_0620.rdat#2717",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "B": 1
+  },
+  "generatedAt": "2026-08-17T13:04:21.288699Z",
+  "materializedEvidenceCount": 1,
+  "pdbId": "8TKJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 1
+  },
+  "totalEvidenceCount": 1
+}

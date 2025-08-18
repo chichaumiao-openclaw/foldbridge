@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8QO4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2728,
+  "defaultEvidenceId": "annojoin:8QO4:confidence:B:data-rna-structures/M2SL5_2A3_0000.rdat#1066",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1364,
+    "B": 1364
+  },
+  "generatedAt": "2026-08-17T12:12:38.856048Z",
+  "materializedEvidenceCount": 2728,
+  "pdbId": "8QO4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2728
+  },
+  "totalEvidenceCount": 2728
+}

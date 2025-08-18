@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8YUO",
+  "biologicalMoleculeName": "8YUO",
+  "caseId": "8YUO",
+  "caseKey": "8YUO",
+  "chains": [
+    "A",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8YUO",
+  "profileCount": 19201
+}

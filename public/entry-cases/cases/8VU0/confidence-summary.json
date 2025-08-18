@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8VU0",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 20,
+  "defaultEvidenceId": "annojoin:8VU0:confidence:B:data-general/ARCHII_2A3_0000.rdat#18030",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 10,
+    "B": 10
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 20,
+  "pdbId": "8VU0",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 5,
+    "LOW": 5,
+    "NOT_SUPPORTED": 10
+  },
+  "totalEvidenceCount": 20
+}

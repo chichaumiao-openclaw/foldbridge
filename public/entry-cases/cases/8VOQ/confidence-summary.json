@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8VOQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19532,
+  "defaultEvidenceId": "annojoin:8VOQ:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#10769",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9169,
+    "B": 10363
+  },
+  "generatedAt": "2026-08-17T13:14:39.572696Z",
+  "materializedEvidenceCount": 19532,
+  "pdbId": "8VOQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 748,
+    "LOW": 4029,
+    "NOT_SUPPORTED": 14755
+  },
+  "totalEvidenceCount": 19532
+}

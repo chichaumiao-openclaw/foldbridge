@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8YLD",
+  "biologicalMoleculeName": "8YLD",
+  "caseId": "8YLD",
+  "caseKey": "8YLD",
+  "chains": [
+    "2",
+    "A",
+    "B",
+    "C",
+    "s",
+    "t"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8YLD",
+  "profileCount": 10056
+}

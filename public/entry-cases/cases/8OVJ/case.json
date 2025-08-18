@@ -1,0 +1,20 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8OVJ",
+  "biologicalMoleculeName": "8OVJ",
+  "caseId": "8OVJ",
+  "caseKey": "8OVJ",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "7",
+    "8",
+    "S1"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8OVJ",
+  "profileCount": 1152
+}

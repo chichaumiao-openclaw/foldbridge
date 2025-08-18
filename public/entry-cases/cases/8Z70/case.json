@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8Z70",
+  "biologicalMoleculeName": "8Z70",
+  "caseId": "8Z70",
+  "caseKey": "8Z70",
+  "chains": [
+    "2",
+    "A",
+    "B",
+    "C",
+    "s",
+    "t"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8Z70",
+  "profileCount": 10066
+}

@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8XSY",
+  "biologicalMoleculeName": "8XSY",
+  "caseId": "8XSY",
+  "caseKey": "8XSY",
+  "chains": [
+    "CC",
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8XSY",
+  "profileCount": 7220
+}

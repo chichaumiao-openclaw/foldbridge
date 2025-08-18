@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9DRS",
+  "biologicalMoleculeName": "9DRS",
+  "caseId": "9DRS",
+  "caseKey": "9DRS",
+  "chains": [
+    "C",
+    "F"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "9DRS",
+  "profileCount": 2
+}

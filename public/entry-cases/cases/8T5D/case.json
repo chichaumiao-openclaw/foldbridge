@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8T5D",
+  "biologicalMoleculeName": "8T5D",
+  "caseId": "8T5D",
+  "caseKey": "8T5D",
+  "chains": [
+    "5",
+    "A",
+    "B",
+    "v"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8T5D",
+  "profileCount": 18297
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8VVJ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8,
+  "defaultEvidenceId": "annojoin:8VVJ:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#1440",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 4
+  },
+  "generatedAt": "2026-08-17T13:10:54.484222Z",
+  "materializedEvidenceCount": 8,
+  "pdbId": "8VVJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 4,
+    "NOT_SUPPORTED": 1
+  },
+  "totalEvidenceCount": 8
+}

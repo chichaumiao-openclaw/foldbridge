@@ -1,0 +1,19 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8YDH",
+  "biologicalMoleculeName": "8YDH",
+  "caseId": "8YDH",
+  "caseKey": "8YDH",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8YDH",
+  "profileCount": 19196
+}

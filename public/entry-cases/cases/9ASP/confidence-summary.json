@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9ASP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10,
+  "defaultEvidenceId": "annojoin:9ASP:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#51035",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5,
+    "B": 5
+  },
+  "generatedAt": "2026-08-17T12:58:31.235657Z",
+  "materializedEvidenceCount": 10,
+  "pdbId": "9ASP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 5,
+    "NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 10
+}

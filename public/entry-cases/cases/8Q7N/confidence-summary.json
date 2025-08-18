@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "8Q7N",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 146,
+  "defaultEvidenceId": "annojoin:8Q7N:confidence:A:data-general/P50LIB_DMS_0002.rdat#1060",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 72,
+    "B": 74
+  },
+  "generatedAt": "2026-08-17T11:11:01.230105Z",
+  "materializedEvidenceCount": 146,
+  "pdbId": "8Q7N",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 30,
+    "NOT_SUPPORTED": 116
+  },
+  "totalEvidenceCount": 146
+}

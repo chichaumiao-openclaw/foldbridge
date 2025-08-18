@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8TJX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5351,
+  "defaultEvidenceId": "annojoin:8TJX:confidence:A:data-rna-structures/PKBLNG_DMS_0000.rdat#8",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3933,
+    "B": 1418
+  },
+  "generatedAt": "2026-08-17T11:17:37.724985Z",
+  "materializedEvidenceCount": 5351,
+  "pdbId": "8TJX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 656,
+    "LOW": 494,
+    "NOT_SUPPORTED": 4201
+  },
+  "totalEvidenceCount": 5351
+}

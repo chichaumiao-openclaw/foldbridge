@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8PHJ",
+  "biologicalMoleculeName": "8PHJ",
+  "caseId": "8PHJ",
+  "caseKey": "8PHJ",
+  "chains": [
+    "7",
+    "8",
+    "A",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8PHJ",
+  "profileCount": 19202
+}

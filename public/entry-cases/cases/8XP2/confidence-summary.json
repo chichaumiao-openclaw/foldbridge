@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8XP2",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3646,
+  "defaultEvidenceId": "annojoin:8XP2:confidence:B:data-eterna/OK3TST_2A3_0003.rdat#62948",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1821,
+    "B": 1825
+  },
+  "generatedAt": "2026-08-17T13:14:41.178795Z",
+  "materializedEvidenceCount": 3646,
+  "pdbId": "8XP2",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 3646
+  },
+  "totalEvidenceCount": 3646
+}
