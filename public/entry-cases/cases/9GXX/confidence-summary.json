@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9GXX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19212,
+  "defaultEvidenceId": "annojoin:9GXX:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#3266",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9087,
+    "B": 10125
+  },
+  "generatedAt": "2026-08-17T11:18:34.916425Z",
+  "materializedEvidenceCount": 19212,
+  "pdbId": "9GXX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 765,
+    "LOW": 2804,
+    "NOT_SUPPORTED": 15643
+  },
+  "totalEvidenceCount": 19212
+}

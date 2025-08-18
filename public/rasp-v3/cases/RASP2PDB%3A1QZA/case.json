@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1QZA",
+  "biologicalMoleculeName": "1QZA",
+  "caseId": "1QZA",
+  "caseKey": "RASP2PDB:1QZA",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "1QZA",
+  "profileCount": 26
+}

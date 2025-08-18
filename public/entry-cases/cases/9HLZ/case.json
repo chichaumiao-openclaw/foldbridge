@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9HLZ",
+  "biologicalMoleculeName": "9HLZ",
+  "caseId": "9HLZ",
+  "caseKey": "9HLZ",
+  "chains": [
+    "AA",
+    "r",
+    "t"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "9HLZ",
+  "profileCount": 538
+}

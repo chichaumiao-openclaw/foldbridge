@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1GTF",
+  "biologicalMoleculeName": "1GTF",
+  "caseId": "1GTF",
+  "caseKey": "RASP2PDB:1GTF",
+  "chains": [
+    "W"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "1GTF",
+  "profileCount": 2
+}

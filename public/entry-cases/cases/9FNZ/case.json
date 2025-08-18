@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9FNZ",
+  "biologicalMoleculeName": "9FNZ",
+  "caseId": "9FNZ",
+  "caseKey": "9FNZ",
+  "chains": [
+    "AA",
+    "BA"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9FNZ",
+  "profileCount": 1218
+}

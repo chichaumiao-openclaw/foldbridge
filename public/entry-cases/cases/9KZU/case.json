@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9KZU",
+  "biologicalMoleculeName": "9KZU",
+  "caseId": "9KZU",
+  "caseKey": "9KZU",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "S2",
+    "zy",
+    "zz"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9KZU",
+  "profileCount": 9092
+}

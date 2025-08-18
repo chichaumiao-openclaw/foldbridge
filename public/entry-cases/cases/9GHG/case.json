@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9GHG",
+  "biologicalMoleculeName": "9GHG",
+  "caseId": "9GHG",
+  "caseKey": "9GHG",
+  "chains": [
+    "A",
+    "B",
+    "D",
+    "F",
+    "a"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "9GHG",
+  "profileCount": 6160
+}

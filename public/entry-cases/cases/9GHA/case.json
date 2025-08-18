@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9GHA",
+  "biologicalMoleculeName": "9GHA",
+  "caseId": "9GHA",
+  "caseKey": "9GHA",
+  "chains": [
+    "8",
+    "A",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "9GHA",
+  "profileCount": 19110
+}

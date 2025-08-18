@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9KZU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 9092,
+  "defaultEvidenceId": "annojoin:9KZU:confidence:B:data-rna-structures/HCIRES_1M7_0001.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4429,
+    "B": 4663
+  },
+  "generatedAt": "2026-08-17T11:02:07.037170Z",
+  "materializedEvidenceCount": 9092,
+  "pdbId": "9KZU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 9092
+  },
+  "totalEvidenceCount": 9092
+}

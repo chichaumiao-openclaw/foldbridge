@@ -1,0 +1,40 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "D": {
+      "case2dPath": "chains/D/case-2d-structure.json.gz",
+      "chainId": "D",
+      "chainRoot": "chains/D",
+      "linkedViewBundlePath": "chains/D/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/D/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/D/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "D",
+  "evidenceChainMap": {
+    "annojoin:9N6T:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#9425": "D",
+    "annojoin:9N6T:confidence:A:data-rna-structures/POS240_DMS_0000.rdat#143": "D",
+    "annojoin:9N6T:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#24560": "D",
+    "annojoin:9N6T:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#24564": "D",
+    "annojoin:9N6T:confidence:A:data-rna-structures/RFM130_DMS_0000.rdat#133": "D",
+    "annojoin:9N6T:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#13225": "D",
+    "annojoin:9N6T:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#13226": "D",
+    "annojoin:9N6T:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#68817": "D",
+    "annojoin:9N6T:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#68818": "D",
+    "annojoin:9N6T:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#9425": "D",
+    "annojoin:9N6T:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#143": "D",
+    "annojoin:9N6T:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#24560": "D",
+    "annojoin:9N6T:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#24564": "D",
+    "annojoin:9N6T:confidence:B:data-rna-structures/RFM130_2A3_0000.rdat#133": "D",
+    "annojoin:9N6T:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#13225": "D",
+    "annojoin:9N6T:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#13226": "D",
+    "annojoin:9N6T:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#68817": "D",
+    "annojoin:9N6T:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#68818": "D"
+  }
+}

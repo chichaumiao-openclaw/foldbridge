@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9I2E",
+  "biologicalMoleculeName": "9I2E",
+  "caseId": "9I2E",
+  "caseKey": "9I2E",
+  "chains": [
+    "CC",
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9I2E",
+  "profileCount": 7532
+}

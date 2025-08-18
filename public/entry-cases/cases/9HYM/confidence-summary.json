@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9HYM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 11262,
+  "defaultEvidenceId": "annojoin:9HYM:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#84078",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5408,
+    "B": 5854
+  },
+  "generatedAt": "2026-08-17T13:15:46.196997Z",
+  "materializedEvidenceCount": 11262,
+  "pdbId": "9HYM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 236,
+    "LOW": 1076,
+    "NOT_SUPPORTED": 9950
+  },
+  "totalEvidenceCount": 11262
+}

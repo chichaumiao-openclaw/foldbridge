@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9NUF",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 348,
+  "defaultEvidenceId": "annojoin:9NUF:confidence:B:data-eterna/SHAPE_RYOS_0620.rdat#124",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 95,
+    "B": 253
+  },
+  "generatedAt": "2026-08-17T11:37:53.577227Z",
+  "materializedEvidenceCount": 348,
+  "pdbId": "9NUF",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 348
+  },
+  "totalEvidenceCount": 348
+}

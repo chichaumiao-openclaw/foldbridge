@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9KKF",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5472,
+  "defaultEvidenceId": "annojoin:9KKF:confidence:B:data-rna-structures/HCIRES_1M7_0001.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2619,
+    "B": 2853
+  },
+  "generatedAt": "2026-08-17T11:29:37.042961Z",
+  "materializedEvidenceCount": 5472,
+  "pdbId": "9KKF",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5472
+  },
+  "totalEvidenceCount": 5472
+}

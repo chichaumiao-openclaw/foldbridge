@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9FMD",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 258,
+  "defaultEvidenceId": "annojoin:9FMD:confidence:B:data-eterna/OK2TST_2A3_0000.rdat#65763",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 125,
+    "B": 133
+  },
+  "generatedAt": "2026-08-17T11:32:33.512835Z",
+  "materializedEvidenceCount": 258,
+  "pdbId": "9FMD",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 77,
+    "NOT_SUPPORTED": 180
+  },
+  "totalEvidenceCount": 258
+}

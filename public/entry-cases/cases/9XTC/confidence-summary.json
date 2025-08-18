@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9XTC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5070,
+  "defaultEvidenceId": "annojoin:9XTC:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#12818",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2263,
+    "B": 2807
+  },
+  "generatedAt": "2026-08-17T13:14:39.572696Z",
+  "materializedEvidenceCount": 5070,
+  "pdbId": "9XTC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 422,
+    "LOW": 1042,
+    "NOT_SUPPORTED": 3606
+  },
+  "totalEvidenceCount": 5070
+}

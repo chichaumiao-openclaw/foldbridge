@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9GUW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4484,
+  "defaultEvidenceId": "annojoin:9GUW:confidence:A:data-general/P90LIB_DMS_0001.rdat#1126",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2103,
+    "B": 2381
+  },
+  "generatedAt": "2026-08-17T11:09:30.598638Z",
+  "materializedEvidenceCount": 4484,
+  "pdbId": "9GUW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 380,
+    "LOW": 1246,
+    "NOT_SUPPORTED": 2858
+  },
+  "totalEvidenceCount": 4484
+}

@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9SAR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 404,
+  "defaultEvidenceId": "annojoin:9SAR:confidence:A:data-rna-structures/SRSBCV_DMS_0006.rdat#4234",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 202,
+    "B": 202
+  },
+  "generatedAt": "2026-08-17T12:04:11.962344Z",
+  "materializedEvidenceCount": 404,
+  "pdbId": "9SAR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 13,
+    "NOT_SUPPORTED": 391
+  },
+  "totalEvidenceCount": 404
+}

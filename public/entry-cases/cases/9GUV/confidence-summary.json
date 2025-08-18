@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9GUV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4488,
+  "defaultEvidenceId": "annojoin:9GUV:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#39692",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2105,
+    "B": 2383
+  },
+  "generatedAt": "2026-08-17T11:11:01.230105Z",
+  "materializedEvidenceCount": 4488,
+  "pdbId": "9GUV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 289,
+    "LOW": 948,
+    "NOT_SUPPORTED": 3251
+  },
+  "totalEvidenceCount": 4488
+}

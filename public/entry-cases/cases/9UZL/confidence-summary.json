@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9UZL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3116,
+  "defaultEvidenceId": "annojoin:9UZL:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#30238",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1546,
+    "B": 1570
+  },
+  "generatedAt": "2026-08-17T11:11:01.230105Z",
+  "materializedEvidenceCount": 3116,
+  "pdbId": "9UZL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 72,
+    "LOW": 650,
+    "NOT_SUPPORTED": 2394
+  },
+  "totalEvidenceCount": 3116
+}

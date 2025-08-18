@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9QLQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7554,
+  "defaultEvidenceId": "annojoin:9QLQ:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3775,
+    "B": 3779
+  },
+  "generatedAt": "2026-08-17T13:05:06.246706Z",
+  "materializedEvidenceCount": 7554,
+  "pdbId": "9QLQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 7554
+  },
+  "totalEvidenceCount": 7554
+}

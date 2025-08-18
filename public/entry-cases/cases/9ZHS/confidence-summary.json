@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9ZHS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1184,
+  "defaultEvidenceId": "annojoin:9ZHS:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#3317",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 991,
+    "B": 193
+  },
+  "generatedAt": "2026-08-17T12:42:08.809790Z",
+  "materializedEvidenceCount": 1184,
+  "pdbId": "9ZHS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 727,
+    "LOW": 268,
+    "NOT_SUPPORTED": 189
+  },
+  "totalEvidenceCount": 1184
+}

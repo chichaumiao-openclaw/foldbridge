@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9XFK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 13714,
+  "defaultEvidenceId": "annojoin:9XFK:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#1871",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6677,
+    "B": 7037
+  },
+  "generatedAt": "2026-08-17T11:11:01.230105Z",
+  "materializedEvidenceCount": 13714,
+  "pdbId": "9XFK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 205,
+    "LOW": 1472,
+    "NOT_SUPPORTED": 12037
+  },
+  "totalEvidenceCount": 13714
+}

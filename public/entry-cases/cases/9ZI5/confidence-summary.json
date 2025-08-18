@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9ZI5",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1184,
+  "defaultEvidenceId": "annojoin:9ZI5:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#32175",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 991,
+    "B": 193
+  },
+  "generatedAt": "2026-08-17T11:21:04.164187Z",
+  "materializedEvidenceCount": 1184,
+  "pdbId": "9ZI5",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 725,
+    "LOW": 238,
+    "NOT_SUPPORTED": 221
+  },
+  "totalEvidenceCount": 1184
+}

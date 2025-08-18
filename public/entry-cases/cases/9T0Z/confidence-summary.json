@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9T0Z",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 767,
+  "defaultEvidenceId": "annojoin:9T0Z:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#36832",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 383,
+    "B": 384
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 767,
+  "pdbId": "9T0Z",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 54,
+    "LOW": 237,
+    "NOT_SUPPORTED": 476
+  },
+  "totalEvidenceCount": 767
+}
