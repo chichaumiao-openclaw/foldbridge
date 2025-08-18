@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9QAX",
+  "biologicalMoleculeName": "9QAX",
+  "caseId": "9QAX",
+  "caseKey": "RASP2PDB:9QAX",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "9QAX",
+  "profileCount": 47
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2YDH",
+  "biologicalMoleculeName": "2YDH",
+  "caseId": "2YDH",
+  "caseKey": "RMDB2PDB:2YDH",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "2YDH",
+  "profileCount": 2
+}

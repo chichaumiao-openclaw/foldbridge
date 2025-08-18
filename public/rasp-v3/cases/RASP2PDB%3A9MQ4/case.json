@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9MQ4",
+  "biologicalMoleculeName": "9MQ4",
+  "caseId": "9MQ4",
+  "caseKey": "RASP2PDB:9MQ4",
+  "chains": [
+    "1",
+    "2",
+    "4",
+    "5"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "9MQ4",
+  "profileCount": 40
+}

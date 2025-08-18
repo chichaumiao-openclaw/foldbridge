@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2GIS",
+  "biologicalMoleculeName": "2GIS",
+  "caseId": "2GIS",
+  "caseKey": "RMDB2PDB:2GIS",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "2GIS",
+  "profileCount": 6
+}

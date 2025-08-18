@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3ICQ",
+  "biologicalMoleculeName": "3ICQ",
+  "caseId": "3ICQ",
+  "caseKey": "RMDB2PDB:3ICQ",
+  "chains": [
+    "E"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "3ICQ",
+  "profileCount": 2
+}

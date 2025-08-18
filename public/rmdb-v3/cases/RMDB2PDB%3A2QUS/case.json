@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2QUS",
+  "biologicalMoleculeName": "2QUS",
+  "caseId": "2QUS",
+  "caseKey": "RMDB2PDB:2QUS",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "2QUS",
+  "profileCount": 2
+}

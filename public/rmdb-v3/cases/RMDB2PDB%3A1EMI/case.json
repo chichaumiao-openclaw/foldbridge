@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:1EMI",
+  "biologicalMoleculeName": "1EMI",
+  "caseId": "1EMI",
+  "caseKey": "RMDB2PDB:1EMI",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "1EMI",
+  "profileCount": 8
+}

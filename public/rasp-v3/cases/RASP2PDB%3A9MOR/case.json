@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9MOR",
+  "biologicalMoleculeName": "9MOR",
+  "caseId": "9MOR",
+  "caseKey": "RASP2PDB:9MOR",
+  "chains": [
+    "1",
+    "2",
+    "4",
+    "5"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "9MOR",
+  "profileCount": 40
+}

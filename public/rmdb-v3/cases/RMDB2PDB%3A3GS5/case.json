@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3GS5",
+  "biologicalMoleculeName": "3GS5",
+  "caseId": "3GS5",
+  "caseKey": "RMDB2PDB:3GS5",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "3GS5",
+  "profileCount": 1
+}

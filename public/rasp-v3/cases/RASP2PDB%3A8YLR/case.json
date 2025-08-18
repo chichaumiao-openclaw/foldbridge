@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8YLR",
+  "biologicalMoleculeName": "8YLR",
+  "caseId": "8YLR",
+  "caseKey": "RASP2PDB:8YLR",
+  "chains": [
+    "2",
+    "A",
+    "B",
+    "C",
+    "t"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "8YLR",
+  "profileCount": 173
+}

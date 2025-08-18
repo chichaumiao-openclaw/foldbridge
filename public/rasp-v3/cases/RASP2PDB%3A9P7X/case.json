@@ -1,0 +1,19 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9P7X",
+  "biologicalMoleculeName": "9P7X",
+  "caseId": "9P7X",
+  "caseKey": "RASP2PDB:9P7X",
+  "chains": [
+    "At",
+    "L5",
+    "L7",
+    "L8",
+    "Pt",
+    "S2",
+    "Zt"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "9P7X",
+  "profileCount": 205
+}

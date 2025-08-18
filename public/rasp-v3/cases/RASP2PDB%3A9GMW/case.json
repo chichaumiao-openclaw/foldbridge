@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9GMW",
+  "biologicalMoleculeName": "9GMW",
+  "caseId": "9GMW",
+  "caseKey": "RASP2PDB:9GMW",
+  "chains": [
+    "T"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "9GMW",
+  "profileCount": 11
+}

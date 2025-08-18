@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9PRA",
+  "biologicalMoleculeName": "9PRA",
+  "caseId": "9PRA",
+  "caseKey": "RASP2PDB:9PRA",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "9PRA",
+  "profileCount": 120
+}

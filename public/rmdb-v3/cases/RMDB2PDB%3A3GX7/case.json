@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3GX7",
+  "biologicalMoleculeName": "3GX7",
+  "caseId": "3GX7",
+  "caseKey": "RMDB2PDB:3GX7",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3GX7",
+  "profileCount": 1
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3G8T",
+  "biologicalMoleculeName": "3G8T",
+  "caseId": "3G8T",
+  "caseKey": "RMDB2PDB:3G8T",
+  "chains": [
+    "S"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "3G8T",
+  "profileCount": 2
+}

@@ -1,0 +1,21 @@
+{
+  "atlasCaseKey": "RMDB2PDB:28UL",
+  "availableFamilies": [
+    "B"
+  ],
+  "bridgeMissingCount": 1,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:28UL:confidence:B:top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "B": 1
+  },
+  "generatedAt": "2026-06-28T21:12:52.193227Z",
+  "materializedEvidenceCount": 1,
+  "pdbId": "28UL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 1
+  },
+  "totalEvidenceCount": 1
+}
