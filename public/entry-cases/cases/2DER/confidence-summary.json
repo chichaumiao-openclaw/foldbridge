@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2DER",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 44,
+  "defaultEvidenceId": "annojoin:2DER:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#30046",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 22,
+    "B": 22
+  },
+  "generatedAt": "2026-08-17T12:30:27.895034Z",
+  "materializedEvidenceCount": 44,
+  "pdbId": "2DER",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 16,
+    "NOT_SUPPORTED": 28
+  },
+  "totalEvidenceCount": 44
+}

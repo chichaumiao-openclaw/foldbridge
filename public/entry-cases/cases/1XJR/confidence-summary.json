@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1XJR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 676,
+  "defaultEvidenceId": "annojoin:1XJR:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#4753",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 336,
+    "B": 340
+  },
+  "generatedAt": "2026-08-17T11:02:10.009471Z",
+  "materializedEvidenceCount": 676,
+  "pdbId": "1XJR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 51,
+    "LOW": 82,
+    "NOT_SUPPORTED": 543
+  },
+  "totalEvidenceCount": 676
+}

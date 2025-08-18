@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1SJF",
+  "biologicalMoleculeName": "1SJF",
+  "caseId": "1SJF",
+  "caseKey": "1SJF",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1SJF",
+  "profileCount": 5931
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1Z43",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 64,
+  "defaultEvidenceId": "annojoin:1Z43:confidence:B:data-general/ARCHII_2A3_0000.rdat#2318",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 32,
+    "B": 32
+  },
+  "generatedAt": "2026-08-17T13:04:20.107274Z",
+  "materializedEvidenceCount": 64,
+  "pdbId": "1Z43",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 64
+  },
+  "totalEvidenceCount": 64
+}

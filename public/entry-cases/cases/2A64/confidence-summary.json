@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2A64",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1184,
+  "defaultEvidenceId": "annojoin:2A64:confidence:B:data-rna-structures/RNASEP_RSQ_0000.rdat#32",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 991,
+    "B": 193
+  },
+  "generatedAt": "2026-08-17T12:52:51.132170Z",
+  "materializedEvidenceCount": 1184,
+  "pdbId": "2A64",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 389,
+    "LOW": 588,
+    "NOT_SUPPORTED": 207
+  },
+  "totalEvidenceCount": 1184
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1TRA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1462,
+  "defaultEvidenceId": "annojoin:1TRA:confidence:B:data-rna-structures/TRNAPH_SHP_0002.rdat#11",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 683,
+    "B": 779
+  },
+  "generatedAt": "2026-08-17T11:27:19.881483Z",
+  "materializedEvidenceCount": 1462,
+  "pdbId": "1TRA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 125,
+    "LOW": 253,
+    "NOT_SUPPORTED": 1084
+  },
+  "totalEvidenceCount": 1462
+}

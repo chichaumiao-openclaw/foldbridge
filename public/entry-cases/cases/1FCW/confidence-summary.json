@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1FCW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7310,
+  "defaultEvidenceId": "annojoin:1FCW:confidence:A:data-rna-structures/TRNAPH_DMS_0006.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3415,
+    "B": 3895
+  },
+  "generatedAt": "2026-08-17T11:18:34.916425Z",
+  "materializedEvidenceCount": 7310,
+  "pdbId": "1FCW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1564,
+    "LOW": 2664,
+    "NOT_SUPPORTED": 3082
+  },
+  "totalEvidenceCount": 7310
+}

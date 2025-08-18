@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2CKY",
+  "biologicalMoleculeName": "2CKY",
+  "caseId": "2CKY",
+  "caseKey": "2CKY",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "2CKY",
+  "profileCount": 8
+}

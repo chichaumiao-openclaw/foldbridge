@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2DEU",
+  "biologicalMoleculeName": "2DEU",
+  "caseId": "2DEU",
+  "caseKey": "2DEU",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "2DEU",
+  "profileCount": 22
+}
