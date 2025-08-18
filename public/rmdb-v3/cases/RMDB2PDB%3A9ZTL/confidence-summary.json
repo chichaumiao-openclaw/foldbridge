@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:9ZTL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 238,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:9ZTL:confidence:A:top_x_279::data-eterna/data-eterna/OK1LIB_DMS_0000.rdat#42000",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 118,
+    "B": 120
+  },
+  "generatedAt": "2026-07-15T08:15:20.959586Z",
+  "materializedEvidenceCount": 238,
+  "pdbId": "9ZTL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 238
+  },
+  "totalEvidenceCount": 238
+}

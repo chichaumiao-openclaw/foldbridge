@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9RVU",
+  "biologicalMoleculeName": "9RVU",
+  "caseId": "9RVU",
+  "caseKey": "RMDB2PDB:9RVU",
+  "chains": [
+    "AA",
+    "B2",
+    "B3",
+    "B4"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "9RVU",
+  "profileCount": 455
+}

@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9TZE",
+  "biologicalMoleculeName": "9TZE",
+  "caseId": "9TZE",
+  "caseKey": "RMDB2PDB:9TZE",
+  "chains": [
+    "A",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "9TZE",
+  "profileCount": 71
+}

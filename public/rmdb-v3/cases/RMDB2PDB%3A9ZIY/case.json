@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9ZIY",
+  "biologicalMoleculeName": "9ZIY",
+  "caseId": "9ZIY",
+  "caseKey": "RMDB2PDB:9ZIY",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "9ZIY",
+  "profileCount": 22
+}

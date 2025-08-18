@@ -1,0 +1,21 @@
+{
+  "atlasCaseKey": "RMDB2PDB:9RMU",
+  "availableFamilies": [
+    "B"
+  ],
+  "bridgeMissingCount": 2,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:9RMU:confidence:B:top_x_279::data-eterna/data-eterna/OK7BLIB_2A3_0000.rdat#1801",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "B": 2
+  },
+  "generatedAt": "2026-07-14T17:01:14.538114Z",
+  "materializedEvidenceCount": 2,
+  "pdbId": "9RMU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 2
+  },
+  "totalEvidenceCount": 2
+}
