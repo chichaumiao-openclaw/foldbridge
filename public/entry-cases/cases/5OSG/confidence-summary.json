@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5OSG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 580,
+  "defaultEvidenceId": "annojoin:5OSG:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#15998",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 290,
+    "B": 290
+  },
+  "generatedAt": "2026-08-17T11:24:40.294608Z",
+  "materializedEvidenceCount": 580,
+  "pdbId": "5OSG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 12,
+    "NOT_SUPPORTED": 566
+  },
+  "totalEvidenceCount": 580
+}

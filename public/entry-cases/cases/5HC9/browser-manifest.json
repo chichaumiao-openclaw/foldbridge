@@ -1,0 +1,40 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "C": {
+      "case2dPath": "chains/C/case-2d-structure.json.gz",
+      "chainId": "C",
+      "chainRoot": "chains/C",
+      "linkedViewBundlePath": "chains/C/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/C/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/C/varna-template.svg.gz"
+    },
+    "D": {
+      "case2dPath": "chains/D/case-2d-structure.json.gz",
+      "chainId": "D",
+      "chainRoot": "chains/D",
+      "linkedViewBundlePath": "chains/D/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/D/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/D/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "D",
+  "evidenceChainMap": {
+    "annojoin:5HC9:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#84123": "D",
+    "annojoin:5HC9:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#84124": "D",
+    "annojoin:5HC9:confidence:A:data-eterna/OK2TST_DMS_0000.rdat#97692": "D",
+    "annojoin:5HC9:confidence:A:data-general/ARCHII_DMS_0000.rdat#17952": "D",
+    "annojoin:5HC9:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#12340": "D",
+    "annojoin:5HC9:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#84123": "D",
+    "annojoin:5HC9:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#84124": "D",
+    "annojoin:5HC9:confidence:B:data-eterna/OK2TST_2A3_0000.rdat#97692": "D",
+    "annojoin:5HC9:confidence:B:data-general/ARCHII_2A3_0000.rdat#17952": "D",
+    "annojoin:5HC9:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12340": "D"
+  }
+}

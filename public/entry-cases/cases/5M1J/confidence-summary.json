@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5M1J",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 9730,
+  "defaultEvidenceId": "annojoin:5M1J:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1396",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4815,
+    "B": 4915
+  },
+  "generatedAt": "2026-08-17T12:33:28.063985Z",
+  "materializedEvidenceCount": 9730,
+  "pdbId": "5M1J",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 9730
+  },
+  "totalEvidenceCount": 9730
+}

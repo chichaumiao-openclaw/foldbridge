@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6DNC",
+  "biologicalMoleculeName": "6DNC",
+  "caseId": "6DNC",
+  "caseKey": "6DNC",
+  "chains": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "LA"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "6DNC",
+  "profileCount": 6347
+}

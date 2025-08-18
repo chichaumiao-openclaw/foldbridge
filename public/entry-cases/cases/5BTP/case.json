@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5BTP",
+  "biologicalMoleculeName": "5BTP",
+  "caseId": "5BTP",
+  "caseKey": "5BTP",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5BTP",
+  "profileCount": 238
+}

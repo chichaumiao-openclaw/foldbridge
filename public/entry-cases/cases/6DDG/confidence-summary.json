@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6DDG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4046,
+  "defaultEvidenceId": "annojoin:6DDG:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#38092",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2022,
+    "B": 2024
+  },
+  "generatedAt": "2026-08-17T11:43:43.312761Z",
+  "materializedEvidenceCount": 4046,
+  "pdbId": "6DDG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 156,
+    "LOW": 1266,
+    "NOT_SUPPORTED": 2624
+  },
+  "totalEvidenceCount": 4046
+}

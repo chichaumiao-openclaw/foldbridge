@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6GXN",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10720,
+  "defaultEvidenceId": "annojoin:6GXN:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#902",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4986,
+    "B": 5734
+  },
+  "generatedAt": "2026-08-17T11:36:33.593526Z",
+  "materializedEvidenceCount": 10720,
+  "pdbId": "6GXN",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 72,
+    "LOW": 2490,
+    "NOT_SUPPORTED": 8158
+  },
+  "totalEvidenceCount": 10720
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6GZZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5276,
+  "defaultEvidenceId": "annojoin:6GZZ:confidence:B:data-eterna/OK3TST_2A3_0003.rdat#64335",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2636,
+    "B": 2640
+  },
+  "generatedAt": "2026-08-17T12:46:09.508388Z",
+  "materializedEvidenceCount": 5276,
+  "pdbId": "6GZZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5276
+  },
+  "totalEvidenceCount": 5276
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6GAZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 274,
+  "defaultEvidenceId": "annojoin:6GAZ:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11596",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 137,
+    "B": 137
+  },
+  "generatedAt": "2026-08-17T12:58:32.114596Z",
+  "materializedEvidenceCount": 274,
+  "pdbId": "6GAZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 274
+  },
+  "totalEvidenceCount": 274
+}

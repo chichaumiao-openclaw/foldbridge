@@ -1,0 +1,20 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5OBM",
+  "biologicalMoleculeName": "5OBM",
+  "caseId": "5OBM",
+  "caseKey": "5OBM",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5OBM",
+  "profileCount": 8296
+}

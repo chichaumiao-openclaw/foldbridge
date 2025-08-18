@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5X8P",
+  "biologicalMoleculeName": "5X8P",
+  "caseId": "5X8P",
+  "caseKey": "5X8P",
+  "chains": [
+    "A",
+    "W",
+    "a"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5X8P",
+  "profileCount": 1224
+}

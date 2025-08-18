@@ -1,0 +1,20 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4WOI",
+  "biologicalMoleculeName": "4WOI",
+  "caseId": "4WOI",
+  "caseKey": "4WOI",
+  "chains": [
+    "AA",
+    "AX",
+    "BA",
+    "BB",
+    "CA",
+    "CB",
+    "DA",
+    "DW"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4WOI",
+  "profileCount": 615
+}

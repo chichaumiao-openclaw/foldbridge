@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5JUP",
+  "biologicalMoleculeName": "5JUP",
+  "caseId": "5JUP",
+  "caseKey": "5JUP",
+  "chains": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "EC"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5JUP",
+  "profileCount": 8281
+}

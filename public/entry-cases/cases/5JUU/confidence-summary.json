@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5JUU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8281,
+  "defaultEvidenceId": "annojoin:5JUU:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12709",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4133,
+    "B": 4148
+  },
+  "generatedAt": "2026-08-17T13:14:41.178795Z",
+  "materializedEvidenceCount": 8281,
+  "pdbId": "5JUU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 230,
+    "LOW": 2080,
+    "NOT_SUPPORTED": 5971
+  },
+  "totalEvidenceCount": 8281
+}

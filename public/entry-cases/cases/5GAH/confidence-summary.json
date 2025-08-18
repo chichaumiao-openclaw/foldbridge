@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5GAH",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 976,
+  "defaultEvidenceId": "annojoin:5GAH:confidence:B:data-rna-structures/5SRRNA_DCP_0000.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 398,
+    "B": 578
+  },
+  "generatedAt": "2026-08-17T12:35:20.277790Z",
+  "materializedEvidenceCount": 976,
+  "pdbId": "5GAH",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 11,
+    "LOW": 223,
+    "NOT_SUPPORTED": 742
+  },
+  "totalEvidenceCount": 976
+}

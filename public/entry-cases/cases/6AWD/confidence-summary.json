@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6AWD",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4207,
+  "defaultEvidenceId": "annojoin:6AWD:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#6161",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1833,
+    "B": 2374
+  },
+  "generatedAt": "2026-08-17T12:52:51.132170Z",
+  "materializedEvidenceCount": 4207,
+  "pdbId": "6AWD",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 116,
+    "LOW": 1212,
+    "NOT_SUPPORTED": 2879
+  },
+  "totalEvidenceCount": 4207
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6I7V",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 23964,
+  "defaultEvidenceId": "annojoin:6I7V:confidence:B:data-eterna/OK3TST_2A3_0004.rdat#44555",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 11174,
+    "B": 12790
+  },
+  "generatedAt": "2026-08-17T11:02:07.037170Z",
+  "materializedEvidenceCount": 23964,
+  "pdbId": "6I7V",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 23964
+  },
+  "totalEvidenceCount": 23964
+}

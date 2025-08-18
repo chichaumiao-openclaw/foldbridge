@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "5U3G",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8,
+  "defaultEvidenceId": "annojoin:5U3G:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#1595",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 4
+  },
+  "generatedAt": "2026-08-17T10:56:06.713584Z",
+  "materializedEvidenceCount": 8,
+  "pdbId": "5U3G",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 3,
+    "NOT_SUPPORTED": 5
+  },
+  "totalEvidenceCount": 8
+}

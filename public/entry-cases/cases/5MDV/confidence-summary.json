@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5MDV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3852,
+  "defaultEvidenceId": "annojoin:5MDV:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#902",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1618,
+    "B": 2234
+  },
+  "generatedAt": "2026-08-17T10:56:12.942573Z",
+  "materializedEvidenceCount": 3852,
+  "pdbId": "5MDV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 507,
+    "LOW": 949,
+    "NOT_SUPPORTED": 2396
+  },
+  "totalEvidenceCount": 3852
+}

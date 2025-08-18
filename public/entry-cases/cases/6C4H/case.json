@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6C4H",
+  "biologicalMoleculeName": "6C4H",
+  "caseId": "6C4H",
+  "caseKey": "6C4H",
+  "chains": [
+    "A",
+    "x"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "6C4H",
+  "profileCount": 132
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5JVG",
+  "biologicalMoleculeName": "5JVG",
+  "caseId": "5JVG",
+  "caseKey": "5JVG",
+  "chains": [
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5JVG",
+  "profileCount": 1744
+}

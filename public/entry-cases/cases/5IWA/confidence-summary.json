@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5IWA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1123,
+  "defaultEvidenceId": "annojoin:5IWA:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#84194",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 561,
+    "B": 562
+  },
+  "generatedAt": "2026-08-17T11:43:36.994359Z",
+  "materializedEvidenceCount": 1123,
+  "pdbId": "5IWA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 4,
+    "LOW": 133,
+    "NOT_SUPPORTED": 986
+  },
+  "totalEvidenceCount": 1123
+}

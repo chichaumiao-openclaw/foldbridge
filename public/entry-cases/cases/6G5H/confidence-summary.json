@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6G5H",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2086,
+  "defaultEvidenceId": "annojoin:6G5H:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#6592",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1041,
+    "B": 1045
+  },
+  "generatedAt": "2026-08-17T12:30:27.895034Z",
+  "materializedEvidenceCount": 2086,
+  "pdbId": "6G5H",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 16,
+    "LOW": 331,
+    "NOT_SUPPORTED": 1739
+  },
+  "totalEvidenceCount": 2086
+}

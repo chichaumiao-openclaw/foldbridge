@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5UYL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4957,
+  "defaultEvidenceId": "annojoin:5UYL:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#6161",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2200,
+    "B": 2757
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 4957,
+  "pdbId": "5UYL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 141,
+    "LOW": 1046,
+    "NOT_SUPPORTED": 3770
+  },
+  "totalEvidenceCount": 4957
+}

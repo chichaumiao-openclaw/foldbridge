@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5ZEB",
+  "biologicalMoleculeName": "5ZEB",
+  "caseId": "5ZEB",
+  "caseKey": "5ZEB",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "v"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5ZEB",
+  "profileCount": 4033
+}

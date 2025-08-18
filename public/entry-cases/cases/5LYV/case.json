@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5LYV",
+  "biologicalMoleculeName": "5LYV",
+  "caseId": "5LYV",
+  "caseKey": "5LYV",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "5LYV",
+  "profileCount": 245
+}

@@ -1,0 +1,19 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6AZ3",
+  "biologicalMoleculeName": "6AZ3",
+  "caseId": "6AZ3",
+  "caseKey": "6AZ3",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "7",
+    "8"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "6AZ3",
+  "profileCount": 574
+}

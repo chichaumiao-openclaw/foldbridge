@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5MGP",
+  "biologicalMoleculeName": "5MGP",
+  "caseId": "5MGP",
+  "caseKey": "5MGP",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "x"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5MGP",
+  "profileCount": 4607
+}
