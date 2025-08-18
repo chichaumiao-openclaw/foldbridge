@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7WU0",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2856,
+  "defaultEvidenceId": "annojoin:7WU0:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#3847",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1426,
+    "B": 1430
+  },
+  "generatedAt": "2026-08-17T13:10:52.621679Z",
+  "materializedEvidenceCount": 2856,
+  "pdbId": "7WU0",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 43,
+    "LOW": 500,
+    "NOT_SUPPORTED": 2313
+  },
+  "totalEvidenceCount": 2856
+}

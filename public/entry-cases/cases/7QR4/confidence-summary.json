@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7QR4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 746,
+  "defaultEvidenceId": "annojoin:7QR4:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#46606",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 232,
+    "B": 514
+  },
+  "generatedAt": "2026-08-17T12:39:28.893021Z",
+  "materializedEvidenceCount": 746,
+  "pdbId": "7QR4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 231,
+    "LOW": 83,
+    "NOT_SUPPORTED": 432
+  },
+  "totalEvidenceCount": 746
+}

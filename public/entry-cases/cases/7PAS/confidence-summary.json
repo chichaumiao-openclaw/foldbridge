@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7PAS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 803,
+  "defaultEvidenceId": "annojoin:7PAS:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#15258",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 401,
+    "B": 402
+  },
+  "generatedAt": "2026-08-17T11:09:41.751286Z",
+  "materializedEvidenceCount": 803,
+  "pdbId": "7PAS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 21,
+    "LOW": 192,
+    "NOT_SUPPORTED": 590
+  },
+  "totalEvidenceCount": 803
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7PIQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 805,
+  "defaultEvidenceId": "annojoin:7PIQ:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#15277",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 402,
+    "B": 403
+  },
+  "generatedAt": "2026-08-17T12:46:07.647795Z",
+  "materializedEvidenceCount": 805,
+  "pdbId": "7PIQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 23,
+    "LOW": 203,
+    "NOT_SUPPORTED": 579
+  },
+  "totalEvidenceCount": 805
+}

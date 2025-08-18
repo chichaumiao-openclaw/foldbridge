@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7XNX",
+  "biologicalMoleculeName": "7XNX",
+  "caseId": "7XNX",
+  "caseKey": "7XNX",
+  "chains": [
+    "CC",
+    "L1",
+    "L2",
+    "L3",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "7XNX",
+  "profileCount": 4460
+}

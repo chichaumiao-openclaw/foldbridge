@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7OHR",
+  "biologicalMoleculeName": "7OHR",
+  "caseId": "7OHR",
+  "caseKey": "7OHR",
+  "chains": [
+    "1",
+    "2",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7OHR",
+  "profileCount": 4590
+}

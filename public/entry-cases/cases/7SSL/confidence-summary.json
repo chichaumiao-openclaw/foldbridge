@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7SSL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18796,
+  "defaultEvidenceId": "annojoin:7SSL:confidence:B:data-general/P50LIB_2A3_0003.rdat#352",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8901,
+    "B": 9895
+  },
+  "generatedAt": "2026-08-17T11:11:01.230105Z",
+  "materializedEvidenceCount": 18796,
+  "pdbId": "7SSL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 451,
+    "LOW": 5765,
+    "NOT_SUPPORTED": 12580
+  },
+  "totalEvidenceCount": 18796
+}

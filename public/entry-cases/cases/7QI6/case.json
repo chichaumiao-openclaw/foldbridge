@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7QI6",
+  "biologicalMoleculeName": "7QI6",
+  "caseId": "7QI6",
+  "caseKey": "7QI6",
+  "chains": [
+    "A",
+    "AA",
+    "Aw",
+    "Ax",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "7QI6",
+  "profileCount": 510
+}

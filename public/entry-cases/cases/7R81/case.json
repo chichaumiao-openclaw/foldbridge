@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7R81",
+  "biologicalMoleculeName": "7R81",
+  "caseId": "7R81",
+  "caseKey": "7R81",
+  "chains": [
+    "A1",
+    "A2",
+    "B1",
+    "C1",
+    "t1",
+    "u1"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "7R81",
+  "profileCount": 7398
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7WTT",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2790,
+  "defaultEvidenceId": "annojoin:7WTT:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#3848",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1393,
+    "B": 1397
+  },
+  "generatedAt": "2026-08-17T11:15:08.471806Z",
+  "materializedEvidenceCount": 2790,
+  "pdbId": "7WTT",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 24,
+    "LOW": 575,
+    "NOT_SUPPORTED": 2191
+  },
+  "totalEvidenceCount": 2790
+}

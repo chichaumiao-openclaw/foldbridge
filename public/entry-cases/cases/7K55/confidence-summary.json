@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7K55",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18557,
+  "defaultEvidenceId": "annojoin:7K55:confidence:B:data-rna-structures/M2PK50_2A3_0000.rdat#19083",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8782,
+    "B": 9775
+  },
+  "generatedAt": "2026-08-17T12:46:12.664339Z",
+  "materializedEvidenceCount": 18557,
+  "pdbId": "7K55",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 427,
+    "LOW": 4300,
+    "NOT_SUPPORTED": 13830
+  },
+  "totalEvidenceCount": 18557
+}

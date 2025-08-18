@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7MQ9",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2908,
+  "defaultEvidenceId": "annojoin:7MQ9:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1361",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1452,
+    "B": 1456
+  },
+  "generatedAt": "2026-08-17T11:06:33.567203Z",
+  "materializedEvidenceCount": 2908,
+  "pdbId": "7MQ9",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2908
+  },
+  "totalEvidenceCount": 2908
+}

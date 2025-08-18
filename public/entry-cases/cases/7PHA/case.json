@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7PHA",
+  "biologicalMoleculeName": "7PHA",
+  "caseId": "7PHA",
+  "caseKey": "7PHA",
+  "chains": [
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "7PHA",
+  "profileCount": 803
+}

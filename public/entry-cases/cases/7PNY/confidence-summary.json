@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7PNY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 240,
+  "defaultEvidenceId": "annojoin:7PNY:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#17013",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 120,
+    "B": 120
+  },
+  "generatedAt": "2026-08-17T10:56:12.942573Z",
+  "materializedEvidenceCount": 240,
+  "pdbId": "7PNY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 31,
+    "NOT_SUPPORTED": 209
+  },
+  "totalEvidenceCount": 240
+}

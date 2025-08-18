@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7F5S",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1834,
+  "defaultEvidenceId": "annojoin:7F5S:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 917,
+    "B": 917
+  },
+  "generatedAt": "2026-08-17T12:12:25.241356Z",
+  "materializedEvidenceCount": 1834,
+  "pdbId": "7F5S",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 1834
+  },
+  "totalEvidenceCount": 1834
+}

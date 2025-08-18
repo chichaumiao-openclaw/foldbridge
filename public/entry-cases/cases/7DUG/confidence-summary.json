@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7DUG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1023,
+  "defaultEvidenceId": "annojoin:7DUG:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#54666",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 511,
+    "B": 512
+  },
+  "generatedAt": "2026-08-17T11:15:08.119192Z",
+  "materializedEvidenceCount": 1023,
+  "pdbId": "7DUG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 8,
+    "LOW": 124,
+    "NOT_SUPPORTED": 891
+  },
+  "totalEvidenceCount": 1023
+}

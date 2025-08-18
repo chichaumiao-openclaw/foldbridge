@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7KRN",
+  "biologicalMoleculeName": "7KRN",
+  "caseId": "7KRN",
+  "caseKey": "7KRN",
+  "chains": [
+    "P",
+    "T"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "7KRN",
+  "profileCount": 416
+}

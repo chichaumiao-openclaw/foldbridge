@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7XAM",
+  "biologicalMoleculeName": "7XAM",
+  "caseId": "7XAM",
+  "caseKey": "7XAM",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7XAM",
+  "profileCount": 2824
+}

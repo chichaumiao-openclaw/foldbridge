@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7XD3",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5058,
+  "defaultEvidenceId": "annojoin:7XD3:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#37480",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3751,
+    "B": 1307
+  },
+  "generatedAt": "2026-08-17T10:56:07.108683Z",
+  "materializedEvidenceCount": 5058,
+  "pdbId": "7XD3",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 5,
+    "LOW": 1305,
+    "NOT_SUPPORTED": 3748
+  },
+  "totalEvidenceCount": 5058
+}

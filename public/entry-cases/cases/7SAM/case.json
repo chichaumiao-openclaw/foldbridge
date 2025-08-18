@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7SAM",
+  "biologicalMoleculeName": "7SAM",
+  "caseId": "7SAM",
+  "caseKey": "7SAM",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "7SAM",
+  "profileCount": 16
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7OLC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7278,
+  "defaultEvidenceId": "annojoin:7OLC:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#39891",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3639,
+    "B": 3639
+  },
+  "generatedAt": "2026-08-17T12:18:57.850374Z",
+  "materializedEvidenceCount": 7278,
+  "pdbId": "7OLC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 28,
+    "LOW": 2141,
+    "NOT_SUPPORTED": 5109
+  },
+  "totalEvidenceCount": 7278
+}

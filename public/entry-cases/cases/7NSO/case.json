@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7NSO",
+  "biologicalMoleculeName": "7NSO",
+  "caseId": "7NSO",
+  "caseKey": "7NSO",
+  "chains": [
+    "8",
+    "A",
+    "B",
+    "a"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7NSO",
+  "profileCount": 18932
+}

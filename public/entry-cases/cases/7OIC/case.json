@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7OIC",
+  "biologicalMoleculeName": "7OIC",
+  "caseId": "7OIC",
+  "caseKey": "7OIC",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7OIC",
+  "profileCount": 264
+}

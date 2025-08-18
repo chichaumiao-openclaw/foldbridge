@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7KRN",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 416,
+  "defaultEvidenceId": "annojoin:7KRN:confidence:B:data-rna-structures/SRSBCV_2A3_0004.rdat#10126",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 207,
+    "B": 209
+  },
+  "generatedAt": "2026-08-17T12:04:11.962344Z",
+  "materializedEvidenceCount": 416,
+  "pdbId": "7KRN",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 17,
+    "NOT_SUPPORTED": 399
+  },
+  "totalEvidenceCount": 416
+}

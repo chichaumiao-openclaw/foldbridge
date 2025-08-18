@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7Q4P",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 166,
+  "defaultEvidenceId": "annojoin:7Q4P:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#20797",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 82,
+    "B": 84
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 166,
+  "pdbId": "7Q4P",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 25,
+    "NOT_SUPPORTED": 141
+  },
+  "totalEvidenceCount": 166
+}

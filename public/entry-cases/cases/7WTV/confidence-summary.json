@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7WTV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2802,
+  "defaultEvidenceId": "annojoin:7WTV:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#3847",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1399,
+    "B": 1403
+  },
+  "generatedAt": "2026-08-17T13:04:20.107274Z",
+  "materializedEvidenceCount": 2802,
+  "pdbId": "7WTV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 31,
+    "LOW": 582,
+    "NOT_SUPPORTED": 2189
+  },
+  "totalEvidenceCount": 2802
+}

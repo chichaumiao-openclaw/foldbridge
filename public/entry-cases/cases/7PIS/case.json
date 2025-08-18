@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7PIS",
+  "biologicalMoleculeName": "7PIS",
+  "caseId": "7PIS",
+  "caseKey": "7PIS",
+  "chains": [
+    "3",
+    "4",
+    "5",
+    "6",
+    "8"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7PIS",
+  "profileCount": 803
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7PIO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 803,
+  "defaultEvidenceId": "annojoin:7PIO:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#34643",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 401,
+    "B": 402
+  },
+  "generatedAt": "2026-08-17T12:35:20.277790Z",
+  "materializedEvidenceCount": 803,
+  "pdbId": "7PIO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 30,
+    "LOW": 233,
+    "NOT_SUPPORTED": 540
+  },
+  "totalEvidenceCount": 803
+}

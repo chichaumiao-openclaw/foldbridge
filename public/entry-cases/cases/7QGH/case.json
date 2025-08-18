@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7QGH",
+  "biologicalMoleculeName": "7QGH",
+  "caseId": "7QGH",
+  "caseKey": "7QGH",
+  "chains": [
+    "0",
+    "M",
+    "N",
+    "O",
+    "u",
+    "x"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7QGH",
+  "profileCount": 19125
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7OKY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1188,
+  "defaultEvidenceId": "annojoin:7OKY:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24456",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1136,
+    "B": 52
+  },
+  "generatedAt": "2026-08-17T12:04:11.962344Z",
+  "materializedEvidenceCount": 1188,
+  "pdbId": "7OKY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 55,
+    "NOT_SUPPORTED": 1132
+  },
+  "totalEvidenceCount": 1188
+}

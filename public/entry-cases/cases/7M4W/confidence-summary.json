@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7M4W",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1868,
+  "defaultEvidenceId": "annojoin:7M4W:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#17757",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 932,
+    "B": 936
+  },
+  "generatedAt": "2026-08-17T11:59:32.100172Z",
+  "materializedEvidenceCount": 1868,
+  "pdbId": "7M4W",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 106,
+    "LOW": 590,
+    "NOT_SUPPORTED": 1172
+  },
+  "totalEvidenceCount": 1868
+}

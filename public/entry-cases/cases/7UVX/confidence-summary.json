@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7UVX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1906,
+  "defaultEvidenceId": "annojoin:7UVX:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#20095",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 951,
+    "B": 955
+  },
+  "generatedAt": "2026-08-17T11:21:04.164187Z",
+  "materializedEvidenceCount": 1906,
+  "pdbId": "7UVX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 85,
+    "LOW": 542,
+    "NOT_SUPPORTED": 1279
+  },
+  "totalEvidenceCount": 1906
+}

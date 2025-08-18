@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7SSL",
+  "biologicalMoleculeName": "7SSL",
+  "caseId": "7SSL",
+  "caseKey": "7SSL",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7SSL",
+  "profileCount": 18796
+}

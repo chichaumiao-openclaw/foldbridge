@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7SSD",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18796,
+  "defaultEvidenceId": "annojoin:7SSD:confidence:B:data-general/P50LIB_2A3_0001.rdat#2206",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8901,
+    "B": 9895
+  },
+  "generatedAt": "2026-08-17T12:21:44.256242Z",
+  "materializedEvidenceCount": 18796,
+  "pdbId": "7SSD",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 489,
+    "LOW": 4536,
+    "NOT_SUPPORTED": 13771
+  },
+  "totalEvidenceCount": 18796
+}

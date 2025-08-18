@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7ODT",
+  "biologicalMoleculeName": "7ODT",
+  "caseId": "7ODT",
+  "caseKey": "7ODT",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "7ODT",
+  "profileCount": 264
+}

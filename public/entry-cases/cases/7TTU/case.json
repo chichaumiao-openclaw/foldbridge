@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7TTU",
+  "biologicalMoleculeName": "7TTU",
+  "caseId": "7TTU",
+  "caseKey": "7TTU",
+  "chains": [
+    "1",
+    "2"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "7TTU",
+  "profileCount": 4082
+}

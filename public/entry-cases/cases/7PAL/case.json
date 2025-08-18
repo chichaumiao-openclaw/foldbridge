@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7PAL",
+  "biologicalMoleculeName": "7PAL",
+  "caseId": "7PAL",
+  "caseKey": "7PAL",
+  "chains": [
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "7PAL",
+  "profileCount": 803
+}

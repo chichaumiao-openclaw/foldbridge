@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7UQZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4662,
+  "defaultEvidenceId": "annojoin:7UQZ:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12709",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2329,
+    "B": 2333
+  },
+  "generatedAt": "2026-08-17T12:46:12.664339Z",
+  "materializedEvidenceCount": 4662,
+  "pdbId": "7UQZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 77,
+    "LOW": 1318,
+    "NOT_SUPPORTED": 3267
+  },
+  "totalEvidenceCount": 4662
+}

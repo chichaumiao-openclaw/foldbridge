@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7QTT",
+  "biologicalMoleculeName": "7QTT",
+  "caseId": "7QTT",
+  "caseKey": "7QTT",
+  "chains": [
+    "d",
+    "e",
+    "f",
+    "g"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7QTT",
+  "profileCount": 274
+}

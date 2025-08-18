@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7SSO",
+  "biologicalMoleculeName": "7SSO",
+  "caseId": "7SSO",
+  "caseKey": "7SSO",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7SSO",
+  "profileCount": 18808
+}
