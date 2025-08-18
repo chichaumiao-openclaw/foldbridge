@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4CSU",
+  "biologicalMoleculeName": "4CSU",
+  "caseId": "4CSU",
+  "caseKey": "RASP2PDB:4CSU",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "D WEAK",
+  "pdbId": "4CSU",
+  "profileCount": 25
+}

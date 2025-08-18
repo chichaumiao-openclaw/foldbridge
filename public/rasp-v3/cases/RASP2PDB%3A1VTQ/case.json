@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1VTQ",
+  "biologicalMoleculeName": "1VTQ",
+  "caseId": "1VTQ",
+  "caseKey": "RASP2PDB:1VTQ",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "1VTQ",
+  "profileCount": 33
+}

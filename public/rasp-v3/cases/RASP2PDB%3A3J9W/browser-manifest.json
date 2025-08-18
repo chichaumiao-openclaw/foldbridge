@@ -1,0 +1,50 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "AA": {
+      "case2dPath": "chains/AA/case-2d-structure.json.gz",
+      "chainId": "AA",
+      "chainRoot": "chains/AA",
+      "linkedViewBundlePath": "chains/AA/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/AA/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/AA/varna-template.svg.gz"
+    },
+    "AX": {
+      "case2dPath": "chains/AX/case-2d-structure.json.gz",
+      "chainId": "AX",
+      "chainRoot": "chains/AX",
+      "linkedViewBundlePath": "chains/AX/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/AX/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/AX/varna-template.svg.gz"
+    },
+    "BA": {
+      "case2dPath": "chains/BA/case-2d-structure.json.gz",
+      "chainId": "BA",
+      "chainRoot": "chains/BA",
+      "linkedViewBundlePath": "chains/BA/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/BA/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/BA/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "AA",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:3J9W:confidence:A:rasp_bw_5859f1cec40f": "AX",
+    "annojoin:RASP2PDB:3J9W:confidence:A:rasp_bw_ae4c2c08c4fa": "AX",
+    "annojoin:RASP2PDB:3J9W:confidence:A:rasp_bw_e773afe95fb5": "AX",
+    "annojoin:RASP2PDB:3J9W:confidence:B:rasp_bw_22d1e0ca8ae4": "BA",
+    "annojoin:RASP2PDB:3J9W:confidence:B:rasp_bw_6a383199d20e": "BA",
+    "annojoin:RASP2PDB:3J9W:confidence:B:rasp_bw_70b79d7c1e9d": "BA",
+    "annojoin:RASP2PDB:3J9W:confidence:B:rasp_bw_78ea31d594b8": "BA",
+    "annojoin:RASP2PDB:3J9W:confidence:B:rasp_bw_baad01b1ba83": "BA",
+    "annojoin:RASP2PDB:3J9W:confidence:B:rasp_bw_f1145990c306": "BA",
+    "annojoin:RASP2PDB:3J9W:confidence:B:rasp_bw_f6a01f96cda2": "BA",
+    "annojoin:RASP2PDB:3J9W:confidence:D:rasp_bw_10c682ff1c66": "AX",
+    "annojoin:RASP2PDB:3J9W:confidence:D:rasp_bw_7c9a09370ba1": "AX"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:2AZX",
+  "biologicalMoleculeName": "2AZX",
+  "caseId": "2AZX",
+  "caseKey": "RASP2PDB:2AZX",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "2AZX",
+  "profileCount": 29
+}

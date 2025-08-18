@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4WQY",
+  "biologicalMoleculeName": "4WQY",
+  "caseId": "4WQY",
+  "caseKey": "RASP2PDB:4WQY",
+  "chains": [
+    "BX"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "4WQY",
+  "profileCount": 3
+}

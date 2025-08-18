@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5FCJ",
+  "biologicalMoleculeName": "5FCJ",
+  "caseId": "5FCJ",
+  "caseKey": "RASP2PDB:5FCJ",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "5FCJ",
+  "profileCount": 94
+}

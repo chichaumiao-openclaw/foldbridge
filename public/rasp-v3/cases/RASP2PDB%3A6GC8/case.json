@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6GC8",
+  "biologicalMoleculeName": "6GC8",
+  "caseId": "6GC8",
+  "caseKey": "RASP2PDB:6GC8",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "D WEAK",
+  "pdbId": "6GC8",
+  "profileCount": 31
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4UER",
+  "biologicalMoleculeName": "4UER",
+  "caseId": "4UER",
+  "caseKey": "RASP2PDB:4UER",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "4UER",
+  "profileCount": 52
+}

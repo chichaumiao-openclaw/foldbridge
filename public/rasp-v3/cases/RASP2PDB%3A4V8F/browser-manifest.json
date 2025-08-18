@@ -1,0 +1,35 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "BB": {
+      "case2dPath": "chains/BB/case-2d-structure.json.gz",
+      "chainId": "BB",
+      "chainRoot": "chains/BB",
+      "linkedViewBundlePath": "chains/BB/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/BB/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/BB/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "BB",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_5859f1cec40f": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_82386cd6a5a9": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_ababe03077b9": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_ae4c2c08c4fa": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_be857b790fa8": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_cd2a8623e064": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_e773afe95fb5": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_e8fe53f69987": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_ec38cf915d88": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_f1d5bbab35be": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:A:rasp_bw_f3ffb4493573": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:D:rasp_bw_10c682ff1c66": "BB",
+    "annojoin:RASP2PDB:4V8F:confidence:D:rasp_bw_7c9a09370ba1": "BB"
+  }
+}

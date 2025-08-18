@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4V5S",
+  "biologicalMoleculeName": "4V5S",
+  "caseId": "4V5S",
+  "caseKey": "RASP2PDB:4V5S",
+  "chains": [
+    "AV",
+    "AY"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "4V5S",
+  "profileCount": 15
+}

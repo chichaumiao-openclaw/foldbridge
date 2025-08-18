@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3D2X",
+  "biologicalMoleculeName": "3D2X",
+  "caseId": "3D2X",
+  "caseKey": "RASP2PDB:3D2X",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "3D2X",
+  "profileCount": 2
+}

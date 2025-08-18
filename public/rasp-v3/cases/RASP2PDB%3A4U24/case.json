@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4U24",
+  "biologicalMoleculeName": "4U24",
+  "caseId": "4U24",
+  "caseKey": "RASP2PDB:4U24",
+  "chains": [
+    "AA",
+    "BA"
+  ],
+  "confidenceDisplayLabel": "D MODERATE",
+  "pdbId": "4U24",
+  "profileCount": 32
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4WPO",
+  "biologicalMoleculeName": "4WPO",
+  "caseId": "4WPO",
+  "caseKey": "RASP2PDB:4WPO",
+  "chains": [
+    "BW",
+    "BX"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "4WPO",
+  "profileCount": 16
+}

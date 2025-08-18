@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5HCR",
+  "biologicalMoleculeName": "5HCR",
+  "caseId": "5HCR",
+  "caseKey": "RASP2PDB:5HCR",
+  "chains": [
+    "1x"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "5HCR",
+  "profileCount": 3
+}

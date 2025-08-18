@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:2DEU",
+  "biologicalMoleculeName": "2DEU",
+  "caseId": "2DEU",
+  "caseKey": "RASP2PDB:2DEU",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "2DEU",
+  "profileCount": 8
+}

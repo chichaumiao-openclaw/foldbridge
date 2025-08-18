@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4V87",
+  "biologicalMoleculeName": "4V87",
+  "caseId": "4V87",
+  "caseKey": "RASP2PDB:4V87",
+  "chains": [
+    "BB"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4V87",
+  "profileCount": 13
+}

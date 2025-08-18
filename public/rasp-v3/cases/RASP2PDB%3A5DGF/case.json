@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5DGF",
+  "biologicalMoleculeName": "5DGF",
+  "caseId": "5DGF",
+  "caseKey": "RASP2PDB:5DGF",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "5DGF",
+  "profileCount": 91
+}

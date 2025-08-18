@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3JCM",
+  "biologicalMoleculeName": "3JCM",
+  "caseId": "3JCM",
+  "caseKey": "RASP2PDB:3JCM",
+  "chains": [
+    "D",
+    "E",
+    "F"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "3JCM",
+  "profileCount": 53
+}

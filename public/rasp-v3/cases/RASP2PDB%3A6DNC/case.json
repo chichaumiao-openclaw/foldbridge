@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6DNC",
+  "biologicalMoleculeName": "6DNC",
+  "caseId": "6DNC",
+  "caseKey": "RASP2PDB:6DNC",
+  "chains": [
+    "A",
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "6DNC",
+  "profileCount": 39
+}

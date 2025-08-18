@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4KZZ",
+  "biologicalMoleculeName": "4KZZ",
+  "caseId": "4KZZ",
+  "caseKey": "RASP2PDB:4KZZ",
+  "chains": [
+    "i",
+    "j"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "4KZZ",
+  "profileCount": 98
+}

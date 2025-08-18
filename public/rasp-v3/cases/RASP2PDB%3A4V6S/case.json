@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4V6S",
+  "biologicalMoleculeName": "4V6S",
+  "caseId": "4V6S",
+  "caseKey": "RASP2PDB:4V6S",
+  "chains": [
+    "AA",
+    "AB",
+    "BA",
+    "BC"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "4V6S",
+  "profileCount": 38
+}

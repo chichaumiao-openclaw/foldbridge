@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5EEX",
+  "biologicalMoleculeName": "5EEX",
+  "caseId": "5EEX",
+  "caseKey": "RASP2PDB:5EEX",
+  "chains": [
+    "W"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "5EEX",
+  "profileCount": 2
+}

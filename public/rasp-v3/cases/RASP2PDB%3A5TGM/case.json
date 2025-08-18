@@ -1,0 +1,18 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5TGM",
+  "biologicalMoleculeName": "5TGM",
+  "caseId": "5TGM",
+  "caseKey": "RASP2PDB:5TGM",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "5TGM",
+  "profileCount": 83
+}
