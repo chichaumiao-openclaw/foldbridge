@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8FKR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2370,
+  "defaultEvidenceId": "annojoin:8FKR:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1185,
+    "B": 1185
+  },
+  "generatedAt": "2026-08-17T11:27:19.881483Z",
+  "materializedEvidenceCount": 2370,
+  "pdbId": "8FKR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2370
+  },
+  "totalEvidenceCount": 2370
+}

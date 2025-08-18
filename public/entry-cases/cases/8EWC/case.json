@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8EWC",
+  "biologicalMoleculeName": "8EWC",
+  "caseId": "8EWC",
+  "caseKey": "8EWC",
+  "chains": [
+    "A1",
+    "A3",
+    "A4",
+    "B5",
+    "EC"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8EWC",
+  "profileCount": 9987
+}

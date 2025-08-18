@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8AGT",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4694,
+  "defaultEvidenceId": "annojoin:8AGT:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#73739",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2345,
+    "B": 2349
+  },
+  "generatedAt": "2026-08-17T11:12:44.783572Z",
+  "materializedEvidenceCount": 4694,
+  "pdbId": "8AGT",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 87,
+    "LOW": 1164,
+    "NOT_SUPPORTED": 3443
+  },
+  "totalEvidenceCount": 4694
+}

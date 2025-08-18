@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7XSR",
+  "biologicalMoleculeName": "7XSR",
+  "caseId": "7XSR",
+  "caseKey": "7XSR",
+  "chains": [
+    "A",
+    "D"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "7XSR",
+  "profileCount": 10
+}

@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8JDK",
+  "biologicalMoleculeName": "8JDK",
+  "caseId": "8JDK",
+  "caseKey": "8JDK",
+  "chains": [
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "w"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8JDK",
+  "profileCount": 5284
+}

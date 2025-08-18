@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8CKU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 11092,
+  "defaultEvidenceId": "annojoin:8CKU:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#6653",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5496,
+    "B": 5596
+  },
+  "generatedAt": "2026-08-17T11:18:34.916425Z",
+  "materializedEvidenceCount": 11092,
+  "pdbId": "8CKU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 91,
+    "LOW": 999,
+    "NOT_SUPPORTED": 10002
+  },
+  "totalEvidenceCount": 11092
+}

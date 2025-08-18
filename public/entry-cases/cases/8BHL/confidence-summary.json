@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8BHL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19142,
+  "defaultEvidenceId": "annojoin:8BHL:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#902",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9053,
+    "B": 10089
+  },
+  "generatedAt": "2026-08-17T12:12:38.856048Z",
+  "materializedEvidenceCount": 19142,
+  "pdbId": "8BHL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 589,
+    "LOW": 4537,
+    "NOT_SUPPORTED": 14016
+  },
+  "totalEvidenceCount": 19142
+}

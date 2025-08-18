@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8G7R",
+  "biologicalMoleculeName": "8G7R",
+  "caseId": "8G7R",
+  "caseKey": "8G7R",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "w",
+    "x",
+    "y"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8G7R",
+  "profileCount": 17649
+}

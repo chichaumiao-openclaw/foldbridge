@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8G7S",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 17625,
+  "defaultEvidenceId": "annojoin:8G7S:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#19987",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8382,
+    "B": 9243
+  },
+  "generatedAt": "2026-08-17T11:26:25.684564Z",
+  "materializedEvidenceCount": 17625,
+  "pdbId": "8G7S",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 539,
+    "LOW": 3814,
+    "NOT_SUPPORTED": 13272
+  },
+  "totalEvidenceCount": 17625
+}

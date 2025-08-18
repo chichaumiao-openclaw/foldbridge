@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8BGE",
+  "biologicalMoleculeName": "8BGE",
+  "caseId": "8BGE",
+  "caseKey": "8BGE",
+  "chains": [
+    "0",
+    "1",
+    "2",
+    "4"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8BGE",
+  "profileCount": 19136
+}

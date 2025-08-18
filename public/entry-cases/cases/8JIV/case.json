@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8JIV",
+  "biologicalMoleculeName": "8JIV",
+  "caseId": "8JIV",
+  "caseKey": "8JIV",
+  "chains": [
+    "Aa",
+    "Ab",
+    "Ac"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8JIV",
+  "profileCount": 4819
+}

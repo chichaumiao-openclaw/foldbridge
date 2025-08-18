@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7Y7H",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19126,
+  "defaultEvidenceId": "annojoin:7Y7H:confidence:B:data-rna-structures/SHPKNT_2A3_0000.rdat#151",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9045,
+    "B": 10081
+  },
+  "generatedAt": "2026-08-17T12:46:09.508388Z",
+  "materializedEvidenceCount": 19126,
+  "pdbId": "7Y7H",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1011,
+    "LOW": 2471,
+    "NOT_SUPPORTED": 15644
+  },
+  "totalEvidenceCount": 19126
+}

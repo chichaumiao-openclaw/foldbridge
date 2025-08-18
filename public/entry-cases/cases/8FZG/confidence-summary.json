@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8FZG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 17685,
+  "defaultEvidenceId": "annojoin:8FZG:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#19987",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8411,
+    "B": 9274
+  },
+  "generatedAt": "2026-08-17T11:24:40.294608Z",
+  "materializedEvidenceCount": 17685,
+  "pdbId": "8FZG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 604,
+    "LOW": 4160,
+    "NOT_SUPPORTED": 12921
+  },
+  "totalEvidenceCount": 17685
+}

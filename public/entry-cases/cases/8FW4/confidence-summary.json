@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8FW4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 20,
+  "defaultEvidenceId": "annojoin:8FW4:confidence:A:data-rna-structures/POS240_DMS_0000.rdat#1367",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 10,
+    "B": 10
+  },
+  "generatedAt": "2026-08-17T12:52:13.016002Z",
+  "materializedEvidenceCount": 20,
+  "pdbId": "8FW4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 8,
+    "NOT_SUPPORTED": 11
+  },
+  "totalEvidenceCount": 20
+}

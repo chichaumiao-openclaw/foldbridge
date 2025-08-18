@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8EYV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:8EYV:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#3920",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T12:00:38.806516Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "8EYV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4
+  },
+  "totalEvidenceCount": 4
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8CGN",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 9574,
+  "defaultEvidenceId": "annojoin:8CGN:confidence:B:data-general/ARCHII_2A3_0000.rdat#144",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4785,
+    "B": 4789
+  },
+  "generatedAt": "2026-08-17T11:30:17.681519Z",
+  "materializedEvidenceCount": 9574,
+  "pdbId": "8CGN",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 67,
+    "LOW": 879,
+    "NOT_SUPPORTED": 8628
+  },
+  "totalEvidenceCount": 9574
+}

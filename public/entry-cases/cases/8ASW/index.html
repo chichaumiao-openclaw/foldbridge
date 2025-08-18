@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>8ASW case page</title>
+  <link rel="stylesheet" href="../../__entry_v3_site__/case-shell.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>8ASW</h1>
+      <p>8ASW</p>
+      <div class="meta">
+        <span class="chip">source MERGED</span>
+        <span class="chip">families A,B</span>
+        <span class="chip">default chain X</span>
+        <span class="chip">chains 1</span>
+      </div>
+    </section>
+    <section class="layout">
+      <aside class="panel">
+        <h2>Chains</h2>
+        <div class="chain-list"><button class="chain-btn is-active" type="button" data-chain-id="X">
+  <strong>X</strong>
+  <span class="mini">chains/X/index.html</span>
+</button></div>
+      </aside>
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">X</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/X/index.html?profileId=data-rna-structures/PDB130_DMS_0000.rdat#7812"
+          loading="lazy"
+          title="8ASW chain page"
+        ></iframe>
+      </section>
+    </section>
+  </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "8ASW", "caseKey": "8ASW", "defaultChainId": "X", "defaultEvidenceId": "annojoin:8ASW:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#7812", "chainPageById": {"X": "chains/X/index.html"}, "evidenceChainMap": {"annojoin:8ASW:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#7812": "X", "annojoin:8ASW:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#7812": "X"}, "evidenceRows": [{"aucDirectional": 0.8452380952380952, "aucEffectSizeZ": null, "aucEmpiricalPValue": 0.06510319821590546, "bridgeStatus": "bridge_missing", "chain": "X", "conflictFraction": 0.047619047619047616, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:8ASW:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#7812", "family": "A", "lssTierCalibrated": "LOW", "lssTierUncalibrated": "", "nEvaluable": 31, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-rna-structures/PDB130_DMS_0000.rdat#7812", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "", "sourceLane": "rmdb", "technology": "DMS", "trackProfileId": "data-rna-structures/PDB130_DMS_0000.rdat#7812"}, {"aucDirectional": 0.6556776556776557, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "X", "conflictFraction": 0.25, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:8ASW:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#7812", "family": "B", "lssTierCalibrated": "LOW", "lssTierUncalibrated": "", "nEvaluable": 73, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-rna-structures/PDB130_2A3_0000.rdat#7812", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "", "sourceLane": "rmdb", "technology": "2A3", "trackProfileId": "data-rna-structures/PDB130_2A3_0000.rdat#7812"}]}</script>
+  <script src="../../__entry_v3_site__/case-shell.js"></script>
+</body>
+</html>

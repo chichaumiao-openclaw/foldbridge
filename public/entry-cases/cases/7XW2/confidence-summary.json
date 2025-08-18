@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7XW2",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10,
+  "defaultEvidenceId": "annojoin:7XW2:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#51035",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5,
+    "B": 5
+  },
+  "generatedAt": "2026-08-17T12:58:32.114596Z",
+  "materializedEvidenceCount": 10,
+  "pdbId": "7XW2",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 7,
+    "NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 10
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8EYV",
+  "biologicalMoleculeName": "8EYV",
+  "caseId": "8EYV",
+  "caseKey": "8EYV",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "8EYV",
+  "profileCount": 2
+}

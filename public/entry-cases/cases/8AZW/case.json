@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8AZW",
+  "biologicalMoleculeName": "8AZW",
+  "caseId": "8AZW",
+  "caseKey": "8AZW",
+  "chains": [
+    "A",
+    "B",
+    "C"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8AZW",
+  "profileCount": 4489
+}

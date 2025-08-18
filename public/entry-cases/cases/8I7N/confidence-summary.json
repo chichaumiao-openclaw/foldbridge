@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8I7N",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5082,
+  "defaultEvidenceId": "annojoin:8I7N:confidence:A:data-rna-structures/TRP4P6_DMS_0012.rdat#142",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3763,
+    "B": 1319
+  },
+  "generatedAt": "2026-08-17T12:19:44.171112Z",
+  "materializedEvidenceCount": 5082,
+  "pdbId": "8I7N",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 533,
+    "NOT_SUPPORTED": 4546
+  },
+  "totalEvidenceCount": 5082
+}
