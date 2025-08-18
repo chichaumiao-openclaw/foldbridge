@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2TPK",
+  "biologicalMoleculeName": "2TPK",
+  "caseId": "2TPK",
+  "caseKey": "RMDB2PDB:2TPK",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "2TPK",
+  "profileCount": 2
+}

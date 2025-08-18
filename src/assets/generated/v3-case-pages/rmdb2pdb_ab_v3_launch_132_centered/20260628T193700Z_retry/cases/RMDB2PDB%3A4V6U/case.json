@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4V6U",
+  "biologicalMoleculeName": "4V6U",
+  "caseId": "4V6U",
+  "caseKey": "RMDB2PDB:4V6U",
+  "chains": [
+    "A0",
+    "A1",
+    "B3"
+  ],
+  "confidenceDisplayLabel": "A MODERATE",
+  "pdbId": "4V6U",
+  "profileCount": 8
+}

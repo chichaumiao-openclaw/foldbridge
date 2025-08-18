@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3TUP",
+  "biologicalMoleculeName": "3TUP",
+  "caseId": "3TUP",
+  "caseKey": "RMDB2PDB:3TUP",
+  "chains": [
+    "T"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3TUP",
+  "profileCount": 2
+}

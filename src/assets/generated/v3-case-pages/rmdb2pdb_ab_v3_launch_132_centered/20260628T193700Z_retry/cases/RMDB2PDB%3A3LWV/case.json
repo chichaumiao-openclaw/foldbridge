@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3LWV",
+  "biologicalMoleculeName": "3LWV",
+  "caseId": "3LWV",
+  "caseKey": "RMDB2PDB:3LWV",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3LWV",
+  "profileCount": 1
+}

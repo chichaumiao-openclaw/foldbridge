@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4CXG",
+  "biologicalMoleculeName": "4CXG",
+  "caseId": "4CXG",
+  "caseKey": "RMDB2PDB:4CXG",
+  "chains": [
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "4CXG",
+  "profileCount": 2
+}

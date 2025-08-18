@@ -1,0 +1,39 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "2": {
+      "case2dPath": "chains/2/case-2d-structure.json.gz",
+      "chainId": "2",
+      "chainRoot": "chains/2",
+      "linkedViewBundlePath": "chains/2/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/2/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/2/varna-template.svg.gz"
+    },
+    "5": {
+      "case2dPath": "chains/5/case-2d-structure.json.gz",
+      "chainId": "5",
+      "chainRoot": "chains/5",
+      "linkedViewBundlePath": "chains/5/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/5/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/5/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "2",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:9FMD:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0000.rdat#1517": "2",
+    "annojoin:RMDB2PDB:9FMD:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0001.rdat#1517": "2",
+    "annojoin:RMDB2PDB:9FMD:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0002.rdat#1517": "2",
+    "annojoin:RMDB2PDB:9FMD:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#5528": "5",
+    "annojoin:RMDB2PDB:9FMD:confidence:B:top_x_279::data-general/data-general/P90LIB_2A3_0000.rdat#1516": "2",
+    "annojoin:RMDB2PDB:9FMD:confidence:B:top_x_279::data-general/data-general/P90LIB_2A3_0000.rdat#1517": "2",
+    "annojoin:RMDB2PDB:9FMD:confidence:B:top_x_279::data-general/data-general/P90LIB_2A3_0001.rdat#1517": "2",
+    "annojoin:RMDB2PDB:9FMD:confidence:B:top_x_279::data-general/data-general/P90LIB_2A3_0002.rdat#1517": "2",
+    "annojoin:RMDB2PDB:9FMD:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#5528": "5"
+  }
+}

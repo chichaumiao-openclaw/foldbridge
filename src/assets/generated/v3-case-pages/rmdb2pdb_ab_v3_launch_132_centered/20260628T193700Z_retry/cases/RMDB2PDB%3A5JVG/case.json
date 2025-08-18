@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5JVG",
+  "biologicalMoleculeName": "5JVG",
+  "caseId": "5JVG",
+  "caseKey": "RMDB2PDB:5JVG",
+  "chains": [
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "5JVG",
+  "profileCount": 8
+}

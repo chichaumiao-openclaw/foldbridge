@@ -1,0 +1,38 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "CB": {
+      "case2dPath": "chains/CB/case-2d-structure.json.gz",
+      "chainId": "CB",
+      "chainRoot": "chains/CB",
+      "linkedViewBundlePath": "chains/CB/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/CB/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/CB/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "CB",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:6ZMO:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#18318": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#18362": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#18378": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#18379": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0000.rdat#1450": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0001.rdat#1450": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0002.rdat#1450": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#5853": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#18318": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#18362": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#18378": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#18379": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:B:top_x_279::data-general/data-general/P90LIB_2A3_0000.rdat#1450": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:B:top_x_279::data-general/data-general/P90LIB_2A3_0001.rdat#1450": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:B:top_x_279::data-general/data-general/P90LIB_2A3_0002.rdat#1450": "CB",
+    "annojoin:RMDB2PDB:6ZMO:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#5853": "CB"
+  }
+}

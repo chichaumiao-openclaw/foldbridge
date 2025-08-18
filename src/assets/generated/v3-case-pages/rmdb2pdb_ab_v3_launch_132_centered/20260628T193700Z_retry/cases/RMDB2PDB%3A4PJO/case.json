@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4PJO",
+  "biologicalMoleculeName": "4PJO",
+  "caseId": "4PJO",
+  "caseKey": "RMDB2PDB:4PJO",
+  "chains": [
+    "2"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "4PJO",
+  "profileCount": 2
+}

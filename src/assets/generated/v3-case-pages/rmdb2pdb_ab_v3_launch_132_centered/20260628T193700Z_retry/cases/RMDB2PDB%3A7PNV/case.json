@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7PNV",
+  "biologicalMoleculeName": "7PNV",
+  "caseId": "7PNV",
+  "caseKey": "RMDB2PDB:7PNV",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "7PNV",
+  "profileCount": 16
+}

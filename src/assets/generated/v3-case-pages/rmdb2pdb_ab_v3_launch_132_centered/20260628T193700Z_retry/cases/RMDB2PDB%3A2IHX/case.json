@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2IHX",
+  "biologicalMoleculeName": "2IHX",
+  "caseId": "2IHX",
+  "caseKey": "RMDB2PDB:2IHX",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "2IHX",
+  "profileCount": 1
+}

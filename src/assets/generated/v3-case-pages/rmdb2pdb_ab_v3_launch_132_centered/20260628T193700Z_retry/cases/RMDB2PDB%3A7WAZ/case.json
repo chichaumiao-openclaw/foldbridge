@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7WAZ",
+  "biologicalMoleculeName": "7WAZ",
+  "caseId": "7WAZ",
+  "caseKey": "RMDB2PDB:7WAZ",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "7WAZ",
+  "profileCount": 4
+}

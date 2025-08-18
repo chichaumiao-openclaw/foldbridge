@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9HLZ",
+  "biologicalMoleculeName": "9HLZ",
+  "caseId": "9HLZ",
+  "caseKey": "RMDB2PDB:9HLZ",
+  "chains": [
+    "AA",
+    "r",
+    "t"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "9HLZ",
+  "profileCount": 62
+}

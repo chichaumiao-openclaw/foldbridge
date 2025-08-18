@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4FRG",
+  "biologicalMoleculeName": "4FRG",
+  "caseId": "4FRG",
+  "caseKey": "RMDB2PDB:4FRG",
+  "chains": [
+    "X"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "4FRG",
+  "profileCount": 2
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8A3W",
+  "biologicalMoleculeName": "8A3W",
+  "caseId": "8A3W",
+  "caseKey": "RMDB2PDB:8A3W",
+  "chains": [
+    "S1"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "8A3W",
+  "profileCount": 2
+}

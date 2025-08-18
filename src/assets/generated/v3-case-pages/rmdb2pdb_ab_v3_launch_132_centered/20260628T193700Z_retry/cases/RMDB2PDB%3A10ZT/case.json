@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:10ZT",
+  "biologicalMoleculeName": "10ZT",
+  "caseId": "10ZT",
+  "caseKey": "RMDB2PDB:10ZT",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "10ZT",
+  "profileCount": 1
+}

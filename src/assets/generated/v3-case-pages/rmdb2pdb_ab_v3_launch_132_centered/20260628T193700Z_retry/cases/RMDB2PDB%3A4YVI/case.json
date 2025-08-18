@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4YVI",
+  "biologicalMoleculeName": "4YVI",
+  "caseId": "4YVI",
+  "caseKey": "RMDB2PDB:4YVI",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4YVI",
+  "profileCount": 2
+}

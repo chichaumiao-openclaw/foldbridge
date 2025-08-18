@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5DDR",
+  "biologicalMoleculeName": "5DDR",
+  "caseId": "5DDR",
+  "caseKey": "RMDB2PDB:5DDR",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "5DDR",
+  "profileCount": 2
+}

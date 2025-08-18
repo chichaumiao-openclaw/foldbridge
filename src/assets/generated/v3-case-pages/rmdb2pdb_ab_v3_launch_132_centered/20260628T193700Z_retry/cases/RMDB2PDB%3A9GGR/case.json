@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9GGR",
+  "biologicalMoleculeName": "9GGR",
+  "caseId": "9GGR",
+  "caseKey": "RMDB2PDB:9GGR",
+  "chains": [
+    "A3",
+    "AU",
+    "M"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "9GGR",
+  "profileCount": 12
+}

@@ -1,0 +1,33 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "A": {
+      "case2dPath": "chains/A/case-2d-structure.json.gz",
+      "chainId": "A",
+      "chainRoot": "chains/A",
+      "linkedViewBundlePath": "chains/A/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:2NOQ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4838": "A",
+    "annojoin:RMDB2PDB:2NOQ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4839": "A",
+    "annojoin:RMDB2PDB:2NOQ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4840": "A",
+    "annojoin:RMDB2PDB:2NOQ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4841": "A",
+    "annojoin:RMDB2PDB:2NOQ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4842": "A",
+    "annojoin:RMDB2PDB:2NOQ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4838": "A",
+    "annojoin:RMDB2PDB:2NOQ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4839": "A",
+    "annojoin:RMDB2PDB:2NOQ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4840": "A",
+    "annojoin:RMDB2PDB:2NOQ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4841": "A",
+    "annojoin:RMDB2PDB:2NOQ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4842": "A",
+    "annojoin:RMDB2PDB:2NOQ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4843": "A"
+  }
+}

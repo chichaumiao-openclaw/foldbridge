@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7UR5",
+  "biologicalMoleculeName": "7UR5",
+  "caseId": "7UR5",
+  "caseKey": "RMDB2PDB:7UR5",
+  "chains": [
+    "w"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "7UR5",
+  "profileCount": 2
+}

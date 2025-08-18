@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3K0J",
+  "biologicalMoleculeName": "3K0J",
+  "caseId": "3K0J",
+  "caseKey": "RMDB2PDB:3K0J",
+  "chains": [
+    "F"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "3K0J",
+  "profileCount": 2
+}

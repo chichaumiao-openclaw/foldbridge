@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3LQX",
+  "biologicalMoleculeName": "3LQX",
+  "caseId": "3LQX",
+  "caseKey": "RMDB2PDB:3LQX",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "3LQX",
+  "profileCount": 1
+}

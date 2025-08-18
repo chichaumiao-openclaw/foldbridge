@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4V8A",
+  "biologicalMoleculeName": "4V8A",
+  "caseId": "4V8A",
+  "caseKey": "RMDB2PDB:4V8A",
+  "chains": [
+    "BB"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "4V8A",
+  "profileCount": 2
+}

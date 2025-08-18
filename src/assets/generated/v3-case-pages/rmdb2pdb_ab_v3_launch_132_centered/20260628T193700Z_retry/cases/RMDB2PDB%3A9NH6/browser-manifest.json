@@ -1,0 +1,26 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "Z": {
+      "case2dPath": "chains/Z/case-2d-structure.json.gz",
+      "chainId": "Z",
+      "chainRoot": "chains/Z",
+      "linkedViewBundlePath": "chains/Z/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/Z/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/Z/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "Z",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:9NH6:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFMREP_DMS_0000.rdat#480": "Z",
+    "annojoin:RMDB2PDB:9NH6:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFMREP_DMS_0000.rdat#56962": "Z",
+    "annojoin:RMDB2PDB:9NH6:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RFMREP_2A3_0000.rdat#480": "Z",
+    "annojoin:RMDB2PDB:9NH6:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RFMREP_2A3_0000.rdat#56962": "Z"
+  }
+}

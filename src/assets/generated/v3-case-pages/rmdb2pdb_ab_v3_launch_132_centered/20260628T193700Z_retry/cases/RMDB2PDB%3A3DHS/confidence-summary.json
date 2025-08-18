@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:3DHS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:3DHS:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFM100_DMS_0000.rdat#11329",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 3
+  },
+  "generatedAt": "2026-06-28T21:12:52.193227Z",
+  "materializedEvidenceCount": 5,
+  "pdbId": "3DHS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 5
+  },
+  "totalEvidenceCount": 5
+}

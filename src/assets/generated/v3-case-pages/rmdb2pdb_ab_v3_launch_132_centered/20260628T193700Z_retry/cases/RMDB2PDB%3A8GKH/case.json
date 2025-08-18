@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8GKH",
+  "biologicalMoleculeName": "8GKH",
+  "caseId": "8GKH",
+  "caseKey": "RMDB2PDB:8GKH",
+  "chains": [
+    "W"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "8GKH",
+  "profileCount": 2
+}
