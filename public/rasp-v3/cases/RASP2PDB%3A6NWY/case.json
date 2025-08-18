@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6NWY",
+  "biologicalMoleculeName": "6NWY",
+  "caseId": "6NWY",
+  "caseKey": "RASP2PDB:6NWY",
+  "chains": [
+    "QV"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "6NWY",
+  "profileCount": 5
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6OSI",
+  "biologicalMoleculeName": "6OSI",
+  "caseId": "6OSI",
+  "caseKey": "RASP2PDB:6OSI",
+  "chains": [
+    "QV"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "6OSI",
+  "profileCount": 5
+}

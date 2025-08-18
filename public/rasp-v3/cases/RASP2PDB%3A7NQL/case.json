@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7NQL",
+  "biologicalMoleculeName": "7NQL",
+  "caseId": "7NQL",
+  "caseKey": "RASP2PDB:7NQL",
+  "chains": [
+    "AA",
+    "AV",
+    "BA"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "7NQL",
+  "profileCount": 88
+}

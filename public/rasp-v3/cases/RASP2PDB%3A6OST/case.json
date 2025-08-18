@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6OST",
+  "biologicalMoleculeName": "6OST",
+  "caseId": "6OST",
+  "caseKey": "RASP2PDB:6OST",
+  "chains": [
+    "1",
+    "2",
+    "3"
+  ],
+  "confidenceDisplayLabel": "D MODERATE",
+  "pdbId": "6OST",
+  "profileCount": 32
+}

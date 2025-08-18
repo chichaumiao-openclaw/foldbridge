@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7MPJ",
+  "biologicalMoleculeName": "7MPJ",
+  "caseId": "7MPJ",
+  "caseKey": "RASP2PDB:7MPJ",
+  "chains": [
+    "A1",
+    "A3",
+    "A4",
+    "B5"
+  ],
+  "confidenceDisplayLabel": "A STRONG",
+  "pdbId": "7MPJ",
+  "profileCount": 113
+}

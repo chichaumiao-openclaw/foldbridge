@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6N8O",
+  "biologicalMoleculeName": "6N8O",
+  "caseId": "6N8O",
+  "caseKey": "RASP2PDB:6N8O",
+  "chains": [
+    "A",
+    "B",
+    "C"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "6N8O",
+  "profileCount": 68
+}

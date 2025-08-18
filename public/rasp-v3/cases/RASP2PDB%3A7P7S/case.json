@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7P7S",
+  "biologicalMoleculeName": "7P7S",
+  "caseId": "7P7S",
+  "caseKey": "RASP2PDB:7P7S",
+  "chains": [
+    "a"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "7P7S",
+  "profileCount": 7
+}

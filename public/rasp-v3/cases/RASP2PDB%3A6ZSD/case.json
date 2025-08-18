@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6ZSD",
+  "biologicalMoleculeName": "6ZSD",
+  "caseId": "6ZSD",
+  "caseKey": "RASP2PDB:6ZSD",
+  "chains": [
+    "AA",
+    "XA",
+    "XB"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "6ZSD",
+  "profileCount": 125
+}

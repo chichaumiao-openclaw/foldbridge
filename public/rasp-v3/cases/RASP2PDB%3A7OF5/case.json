@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7OF5",
+  "biologicalMoleculeName": "7OF5",
+  "caseId": "7OF5",
+  "caseKey": "RASP2PDB:7OF5",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "7OF5",
+  "profileCount": 125
+}
