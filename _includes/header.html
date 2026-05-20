@@ -1,0 +1,74 @@
+<header class="rna-header">
+  <div class="rna-institutional">
+<a class="rna-institutional-link" href="https://www.gznl.org/" target="_blank" rel="noopener noreferrer">
+  <img src="/assets/header/home.svg" alt="">
+  <span>Home</span>
+</a>
+<a class="rna-institutional-link" href="https://www.gznl.org/database/" target="_blank" rel="noopener noreferrer">
+  <img src="/assets/header/database.svg" alt="">
+  <span>Database</span>
+</a>
+<a class="rna-institutional-link" href="https://www.gznl.org/research/" target="_blank" rel="noopener noreferrer">
+  <img src="/assets/header/research.svg" alt="">
+  <span>Research</span>
+</a>
+<a class="rna-institutional-link" href="https://www.gznl.org/aboutus/" target="_blank" rel="noopener noreferrer">
+  <img src="/assets/header/aboutus.svg" alt="">
+  <span>About us</span>
+</a>
+<a class="rna-institutional-link" href="https://gzlab.ac.cn/" target="_blank" rel="noopener noreferrer">
+  <img src="/assets/header/gznl2.svg" alt="">
+  <span>GZNL-RDC</span>
+</a>
+  </div>
+  <div class="rna-main-nav">
+    <div class="rna-main-nav-inner">
+      <div class="rna-brand">
+        <div class="rna-brand-mark">
+          {% if site.logo_path and site.logo_path != "" %}
+          <img src="{{ site.logo_path }}" alt="FoldBridge logo">
+          {% else %}
+          <span class="rna-brand-fallback">FO</span>
+          {% endif %}
+        </div>
+        <div class="rna-brand-copy">
+          <p class="rna-kicker">{{ site.site_family_label }}</p>
+          <h1 class="rna-title">FoldBridge</h1>
+          <p class="rna-paper-line"><a href="{{ site.paper_url }}" target="_blank" rel="noopener noreferrer">{{ site.paper_title }}</a></p>
+        </div>
+      </div>
+      <div class="rna-nav-group">
+        <div class="rna-family-row">
+<a class="rna-family-pill" href="https://www.ribocentre.org/" >
+  <strong>Ribocentre</strong>
+  <small>Ribozyme database</small>
+</a>
+<a class="rna-family-pill" href="https://switch.ribocentre.org/" >
+  <strong>Switch</strong>
+  <small>Riboswitch database</small>
+</a>
+<a class="rna-family-pill" href="https://aptamer.ribocentre.org/" >
+  <strong>Aptamer</strong>
+  <small>Aptamer database</small>
+</a>
+<a class="rna-family-pill is-active" href="/" aria-current="page">
+  <strong>FoldBridge</strong>
+  <small>Probing-to-structure bridge</small>
+</a>
+        </div>
+        <div class="rna-page-row">
+          <button type="button" class="rna-mode-toggle" data-mode-toggle>Dark mode</button>
+          <button type="button" class="rna-nav-toggle" data-nav-toggle aria-expanded="false">Menu</button>
+          <nav class="rna-page-links" data-page-links>
+<a class="rna-page-link {% if page.url == '/' %}is-active{% endif %}" href="/" {% if page.url == '/' %}aria-current="page"{% endif %}>Home</a>
+<a class="rna-page-link {% if page.url == '/datasets/' %}is-active{% endif %}" href="/datasets/" {% if page.url == '/datasets/' %}aria-current="page"{% endif %}>Database</a>
+<a class="rna-page-link {% if page.url == '/bridges/' %}is-active{% endif %}" href="/bridges/" {% if page.url == '/bridges/' %}aria-current="page"{% endif %}>Bridges</a>
+<a class="rna-page-link {% if page.url == '/registry/' %}is-active{% endif %}" href="/registry/" {% if page.url == '/registry/' %}aria-current="page"{% endif %}>Registry</a>
+<a class="rna-page-link {% if page.url == '/resources/' %}is-active{% endif %}" href="/resources/" {% if page.url == '/resources/' %}aria-current="page"{% endif %}>Resources</a>
+<a class="rna-page-link {% if page.url == '/about/' %}is-active{% endif %}" href="/about/" {% if page.url == '/about/' %}aria-current="page"{% endif %}>About</a>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

@@ -1,0 +1,37 @@
+title: "FoldBridge"
+email: "rnapuzzles@gzlab.ac.cn"
+description: >
+  FoldBridge: an AI-assisted database linking RNA chemical probing, secondary structure, and experimental 3D structure
+baseurl: ""
+url: "https://foldbridge.ribocentre.org"
+paper_title: "FoldBridge: an AI-assisted database linking RNA chemical probing, secondary structure, and experimental 3D structure"
+paper_url: "https://academic.oup.com/nar/advance-article/doi/10.1093/nar/gkaf1246/8340160"
+theme_key: "foldbridge"
+site_domain: "foldbridge.ribocentre.org"
+site_family_label: "Probing-to-structure bridge"
+logo_path: ""
+
+
+include:
+  - _pages
+
+sass:
+  sass_dir: _sass
+
+plugins:
+  - liquid
+
+markdown: kramdown
+highlighter: rouge
+excerpt_separator: "\n\n"
+
+kramdown:
+  input: GFM
+  hard_wrap: false
+  auto_ids: true
+  footnote_nr: 1
+  entity_output: as_char
+  toc_levels: 1..6
+  smart_quotes: lsquo,rsquo,ldquo,rdquo
+  enable_coderay: false
+  parse_block_html: true
