@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const scopedStylesheetCache = new Map();
   const legacyOnloadQueue = [];
   const localAssetPrefixes = ['/css/', '/js/', '/images/', '/downloads/', '/pdb/'];
-  const sharedLegacyAssetHosts = new Set(['www.ribocentre.org']);
+  const sharedLegacyAssetHosts = new Set(['ribocentre.gznl.org', 'www.ribocentre.org']);
   const legacyDomainValues = (body && body.dataset.legacyDomains ? body.dataset.legacyDomains : '')
     .split(',')
     .map((value) => value.trim().toLowerCase())

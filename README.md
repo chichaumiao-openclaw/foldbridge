@@ -2,7 +2,7 @@
 
 Jekyll interface repo for FoldBridge.
 
-- Domain: `foldbridge.ribocentre.org`
+- Domain: `foldbridge.gznl.org`
 - Paper: FoldBridge: an AI-assisted database linking RNA chemical probing, secondary structure, and experimental 3D structure
 - Scope: web interface only
 - Data location: legacy scientific data remains in the old upstream repositories / local sources
