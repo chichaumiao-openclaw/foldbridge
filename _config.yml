@@ -8,6 +8,8 @@ paper_title: "FoldBridge: an AI-assisted database linking RNA chemical probing, 
 paper_url: "https://academic.oup.com/nar/advance-article/doi/10.1093/nar/gkaf1246/8340160"
 theme_key: "foldbridge"
 site_domain: "foldbridge.ribocentre.org"
+legacy_site_domains:
+  - "foldbridge.ribocentre.org"
 site_family_label: "Probing-to-structure bridge"
 logo_path: ""
 

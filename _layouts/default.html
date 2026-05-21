@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html lang="en" data-mode="light">
   {% include head.html %}
-  <body class="rna-theme-{{ site.theme_key | default: 'default' }}">
+  <body class="rna-theme-{{ site.theme_key | default: 'default' }}" data-site-domain="{{ site.site_domain | default: '' }}" data-legacy-domains="{{ site.legacy_site_domains | join: ',' }}">
     <div class="rna-shell">
       {% include header.html %}
       <main class="rna-content rna-main" aria-label="Content">
