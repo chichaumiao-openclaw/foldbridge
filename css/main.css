@@ -332,6 +332,20 @@ img {
   padding-right: 24px;
 }
 
+.btn-secondary {
+  color: #fff;
+  background-color: var(--site-primary);
+  border-color: var(--site-primary-dark);
+}
+
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+  color: #fff;
+  background-color: var(--site-primary-dark);
+  border-color: var(--site-primary-dark);
+}
+
 .rna-footer {
   margin-top: 48px;
   background: #03070c;

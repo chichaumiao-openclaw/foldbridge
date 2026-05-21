@@ -1,6 +1,49 @@
 ---
-layout: default
 ---
-<div class="legacy-page-shell">
-  {{ content }}
-</div>
+<!DOCTYPE html>
+<html lang="en" data-mode="light">
+  {% include head.html %}
+  <body class="rna-theme-{{ site.theme_key | default: 'default' }}">
+    <div class="rna-shell">
+      {% include header.html %}
+      <main class="rna-content rna-main" aria-label="Content">
+        {{ content }}
+      </main>
+      {% include footer.html %}
+    </div>
+    <script>
+      (function () {
+        var needsBootstrap = document.querySelector('.carousel[data-ride], [data-toggle="tooltip"], .modal');
+        if (!needsBootstrap) return;
+
+        function loadScript(src) {
+          var script = document.createElement('script');
+          script.src = src;
+          document.body.appendChild(script);
+        }
+
+        function loadBootstrap() {
+          if (window.jQuery && window.jQuery.fn && !window.jQuery.fn.carousel) {
+            loadScript('https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js');
+          }
+        }
+
+        if (!window.jQuery) {
+          var jqueryScript = document.createElement('script');
+          jqueryScript.src = 'https://code.jquery.com/jquery-2.2.4.min.js';
+          jqueryScript.onload = loadBootstrap;
+          document.body.appendChild(jqueryScript);
+          return;
+        }
+
+        var major = parseInt(window.jQuery.fn.jquery.split('.')[0], 10);
+        if (major >= 3) {
+          return;
+        }
+
+        loadBootstrap();
+      }());
+    </script>
+    <script src="{{ '/assets/shell.js' | relative_url }}"></script>
+  </body>
+</html>
