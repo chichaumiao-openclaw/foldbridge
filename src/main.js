@@ -37,6 +37,13 @@ let caseDetailSequencePage = 1;
 let activeCaseDetailId = null;
 let selectedSequenceIds = new Set();
 let sequenceSearchQuery = '';
+let advancedSearchQuery = '';
+let advancedSearchSort = 'relevance';
+let advancedSearchView = 'list';
+let advancedSearchFiltersOpen = false;
+let advancedSearchExperiment = 'all';
+let advancedSearchModifier = 'all';
+let advancedSearchLengthBand = 'all';
 const BROWSE_PAGE_SIZE = 10;
 const CASE3D_PAGE_SIZE = 10;
 const CASE_DETAIL_SEQUENCE_PAGE_SIZE = 10;
@@ -1602,6 +1609,171 @@ function clampPage(value, totalPages) {
   return Math.min(Math.max(value, 1), totalPages);
 }
 
+function parseLengthValue(value) {
+  const numeric = Number.parseInt(String(value ?? '').replace(/[^\d]/g, ''), 10);
+  return Number.isFinite(numeric) ? numeric : null;
+}
+
+function normalizeModifierValue(value) {
+  return String(value ?? '').trim() || 'Unspecified';
+}
+
+function searchMatchesLengthBand(row, band) {
+  const length = parseLengthValue(row.length);
+  if (!length || band === 'all') return band === 'all';
+  if (band === 'short') return length < 60;
+  if (band === 'medium') return length >= 60 && length <= 100;
+  if (band === 'long') return length > 100;
+  return true;
+}
+
+function scoreSearchRow(row, query) {
+  if (!query) return 0;
+  const terms = query.split(/\s+/).filter(Boolean);
+  const haystacks = {
+    foldBridgeId: String(row.foldBridgeId ?? '').toLowerCase(),
+    name: String(row.name ?? '').toLowerCase(),
+    sequence: String(row.sequence ?? '').toLowerCase(),
+    fileCode: String(row.fileCode ?? '').toLowerCase(),
+    experimentType: String(row.experimentType ?? '').toLowerCase(),
+    modifier: normalizeModifierValue(row.modifier).toLowerCase()
+  };
+
+  return terms.reduce((score, term) => {
+    if (haystacks.foldBridgeId === term) return score + 160;
+    if (haystacks.foldBridgeId.includes(term)) return score + 110;
+    if (haystacks.name.includes(term)) return score + 80;
+    if (haystacks.fileCode.includes(term)) return score + 42;
+    if (haystacks.experimentType.includes(term)) return score + 34;
+    if (haystacks.modifier.includes(term)) return score + 24;
+    if (haystacks.sequence.includes(term)) return score + 18;
+    return score;
+  }, 0);
+}
+
+function getAdvancedSearchOptions() {
+  const experimentTypes = [...new Set(browseEntryRows.map((row) => row.experimentType).filter(Boolean))].sort((a, b) =>
+    a.localeCompare(b)
+  );
+  const modifiers = [...new Set(browseEntryRows.map((row) => normalizeModifierValue(row.modifier)))].sort((a, b) =>
+    a.localeCompare(b)
+  );
+  return { experimentTypes, modifiers };
+}
+
+function getAdvancedSearchRows() {
+  const query = advancedSearchQuery.trim().toLowerCase();
+  if (!query) return [];
+
+  const rows = browseEntryRows
+    .map((row) => ({
+      ...row,
+      modifierLabel: normalizeModifierValue(row.modifier),
+      lengthValue: parseLengthValue(row.length),
+      relevanceScore: scoreSearchRow(row, query)
+    }))
+    .filter((row) => {
+      if (query && row.relevanceScore <= 0) return false;
+      if (advancedSearchExperiment !== 'all' && row.experimentType !== advancedSearchExperiment) return false;
+      if (advancedSearchModifier !== 'all' && row.modifierLabel !== advancedSearchModifier) return false;
+      if (!searchMatchesLengthBand(row, advancedSearchLengthBand)) return false;
+      return true;
+    });
+
+  rows.sort((a, b) => {
+    if (advancedSearchSort === 'name') return a.name.localeCompare(b.name);
+    if (advancedSearchSort === 'length') return (b.lengthValue || 0) - (a.lengthValue || 0) || a.name.localeCompare(b.name);
+    if (advancedSearchSort === 'experiment') {
+      return a.experimentType.localeCompare(b.experimentType) || a.name.localeCompare(b.name);
+    }
+    return b.relevanceScore - a.relevanceScore || a.name.localeCompare(b.name);
+  });
+
+  return rows;
+}
+
+function renderAdvancedSearchFilterPills() {
+  const pills = [];
+  if (advancedSearchExperiment !== 'all') pills.push(`Experiment: ${advancedSearchExperiment}`);
+  if (advancedSearchModifier !== 'all') pills.push(`Modifier: ${advancedSearchModifier}`);
+  if (advancedSearchLengthBand !== 'all') {
+    const labels = { short: '< 60 nt', medium: '60-100 nt', long: '> 100 nt' };
+    pills.push(`Length: ${labels[advancedSearchLengthBand]}`);
+  }
+  if (!pills.length) return '<span class="search-filter-empty">No active filters</span>';
+  return pills.map((pill) => `<span class="search-filter-pill">${pill}</span>`).join('');
+}
+
+function renderAdvancedSearchResults(rows) {
+  if (!advancedSearchQuery.trim()) {
+    return `<div class="search-empty-state">
+      <h3>No results yet</h3>
+      <p>Start typing a record name, sequence fragment, FoldBridge ID, or experiment keyword to search the database.</p>
+    </div>`;
+  }
+
+  if (!rows.length) {
+    return `<div class="search-empty-state">
+      <h3>No matching records</h3>
+      <p>Try a different name, sequence fragment, target code, or relax the filters above.</p>
+    </div>`;
+  }
+
+  if (advancedSearchView === 'grid') {
+    return `<div class="search-card-grid">
+      ${rows
+        .map(
+          (row) => `<article class="search-result-card">
+            <div class="search-result-card-top">
+              <span class="search-record-id">${row.foldBridgeId}</span>
+              <span class="search-record-code">${row.fileCode || 'N/A'}</span>
+            </div>
+            <h3>${row.name || 'Untitled record'}</h3>
+            <p class="search-result-sequence">${row.sequence || 'Sequence unavailable'}</p>
+            <dl class="search-result-meta">
+              <div><dt>Length</dt><dd>${row.length || 'N/A'}</dd></div>
+              <div><dt>Experiment</dt><dd>${row.experimentType || 'N/A'}</dd></div>
+              <div><dt>Modifier</dt><dd>${row.modifierLabel}</dd></div>
+            </dl>
+          </article>`
+        )
+        .join('')}
+    </div>`;
+  }
+
+  return `<div class="search-table-wrap">
+    <table class="search-results-table">
+      <thead>
+        <tr>
+          <th>FoldBridge ID</th>
+          <th>Name</th>
+          <th>Experiment</th>
+          <th>Modifier</th>
+          <th>Length</th>
+          <th>Sequence</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows
+          .map(
+            (row) => `<tr>
+              <td><span class="search-record-id">${row.foldBridgeId}</span></td>
+              <td>
+                <strong>${row.name || 'Untitled record'}</strong>
+                <div class="search-table-subline">Code: ${row.fileCode || 'N/A'}</div>
+              </td>
+              <td>${row.experimentType || 'N/A'}</td>
+              <td>${row.modifierLabel}</td>
+              <td>${row.length || 'N/A'}</td>
+              <td><span class="search-sequence-inline">${row.sequence || 'Sequence unavailable'}</span></td>
+            </tr>`
+          )
+          .join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
 function renderPageJumpControls(prefix, totalPages, currentPage) {
   return `<div class="browse-page-jump">
     <label class="browse-page-jump-label" for="${prefix}-page-input">Go to</label>
@@ -2897,15 +3069,103 @@ function downloadPage() {
 }
 
 function searchPage() {
+  const { experimentTypes, modifiers } = getAdvancedSearchOptions();
+  const rows = getAdvancedSearchRows();
+
   return `<main class="page-detail page-browse page-search">
     ${renderBundleHeader()}
-    <section class="card bundle-wide-card">
-      <h1>Search</h1>
-      <p>Search FoldBridge records from the curated browse index.</p>
-    </section>
-    <section class="grid two-col bundle-wide-card">
-      ${renderFacetPanel()}
-      ${renderResultList()}
+    <section class="card bundle-wide-card search-page-shell">
+      <div class="search-page-header">
+        <p class="search-page-eyebrow">Advanced FoldBridge Search</p>
+      </div>
+
+      <section class="search-hero-panel">
+        <div class="search-hero-input-shell">
+          <label class="search-hero-input">
+            <span class="search-hero-icon" aria-hidden="true">⌕</span>
+            <input
+              id="advanced-search-input"
+              type="search"
+              placeholder="Search by name, sequence, FoldBridge ID, file code, or keyword..."
+              value="${advancedSearchQuery.replace(/"/g, '&quot;')}"
+            />
+            <button id="advanced-search-clear" type="button" class="search-inline-clear" ${advancedSearchQuery ? '' : 'disabled'}>Clear</button>
+          </label>
+        </div>
+      </section>
+
+      <section class="search-filter-band">
+        <button id="advanced-search-filters-toggle" type="button" class="search-filter-toggle ${advancedSearchFiltersOpen ? 'open' : ''}">
+          <span class="search-filter-toggle-label">Filters</span>
+          <span class="search-filter-toggle-summary">${renderAdvancedSearchFilterPills()}</span>
+          <span class="search-filter-toggle-caret" aria-hidden="true">${advancedSearchFiltersOpen ? '−' : '+'}</span>
+        </button>
+        <div class="search-filter-drawer ${advancedSearchFiltersOpen ? 'open' : ''}">
+          <label>
+            <span>Experiment Type</span>
+            <select id="advanced-search-experiment">
+              <option value="all">All experiment types</option>
+              ${experimentTypes
+                .map(
+                  (item) =>
+                    `<option value="${item.replace(/"/g, '&quot;')}" ${advancedSearchExperiment === item ? 'selected' : ''}>${item}</option>`
+                )
+                .join('')}
+            </select>
+          </label>
+          <label>
+            <span>Modifier</span>
+            <select id="advanced-search-modifier">
+              <option value="all">All modifiers</option>
+              ${modifiers
+                .map(
+                  (item) =>
+                    `<option value="${item.replace(/"/g, '&quot;')}" ${advancedSearchModifier === item ? 'selected' : ''}>${item}</option>`
+                )
+                .join('')}
+            </select>
+          </label>
+          <label>
+            <span>Length</span>
+            <select id="advanced-search-length-band">
+              <option value="all" ${advancedSearchLengthBand === 'all' ? 'selected' : ''}>All lengths</option>
+              <option value="short" ${advancedSearchLengthBand === 'short' ? 'selected' : ''}>&lt; 60 nt</option>
+              <option value="medium" ${advancedSearchLengthBand === 'medium' ? 'selected' : ''}>60-100 nt</option>
+              <option value="long" ${advancedSearchLengthBand === 'long' ? 'selected' : ''}>&gt; 100 nt</option>
+            </select>
+          </label>
+          <button id="advanced-search-reset" type="button" class="ghost search-reset-btn">Reset filters</button>
+        </div>
+      </section>
+
+      <section class="search-results-shell">
+        <div class="search-results-toolbar">
+          <div class="search-results-count">
+            <strong>${rows.length}</strong>
+            <span>${rows.length === 1 ? 'result' : 'results'}</span>
+          </div>
+          <div class="search-results-controls">
+            <label class="search-sort-control">
+              <span>Sort by</span>
+              <select id="advanced-search-sort">
+                <option value="relevance" ${advancedSearchSort === 'relevance' ? 'selected' : ''}>Relevance</option>
+                <option value="name" ${advancedSearchSort === 'name' ? 'selected' : ''}>Name</option>
+                <option value="length" ${advancedSearchSort === 'length' ? 'selected' : ''}>Length</option>
+                <option value="experiment" ${advancedSearchSort === 'experiment' ? 'selected' : ''}>Experiment type</option>
+              </select>
+            </label>
+            <button id="advanced-search-export" type="button" class="search-export-btn">Export CSV</button>
+            <div class="search-view-toggle" role="group" aria-label="Search result view">
+              <button id="advanced-search-view-list" type="button" class="${advancedSearchView === 'list' ? 'active' : ''}">List</button>
+              <button id="advanced-search-view-grid" type="button" class="${advancedSearchView === 'grid' ? 'active' : ''}">Cards</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="search-results-body">
+          ${renderAdvancedSearchResults(rows)}
+        </div>
+      </section>
     </section>
   </main>`;
 }
@@ -2948,10 +3208,48 @@ function publicationsPage() {
 function helpPage() {
   return `<main class="page-help">
     ${renderBundleHeader()}
-    <section class="card bundle-wide-card">
-      <h1>Help</h1>
-      <p>Use the navigation above to move across Home, Browse, Sequence, Structure, Probing, Download, Search, and Help.</p>
-      <p>If you cannot find a record, start from Browse or Search and then open the related sequence or probing page.</p>
+    <section class="card bundle-wide-card help-page-shell">
+      <div class="help-page-header">
+        <p class="help-page-eyebrow">Help Center</p>
+        <h1>Help</h1>
+      </div>
+
+      <section class="help-module-grid">
+        <article class="help-module-card help-module-card-wide">
+          <div class="help-module-titlebar">
+            <h2>About FoldBridge database</h2>
+          </div>
+          <div class="help-module-body help-module-body-empty"></div>
+        </article>
+
+        <article class="help-module-card">
+          <div class="help-module-titlebar">
+            <h2>How to contact us</h2>
+          </div>
+          <div class="help-module-body help-module-body-empty"></div>
+        </article>
+
+        <article class="help-module-card">
+          <div class="help-module-titlebar">
+            <h2>Usage</h2>
+          </div>
+          <div class="help-module-body help-module-body-empty"></div>
+        </article>
+
+        <article class="help-module-card">
+          <div class="help-module-titlebar">
+            <h2>How to make a feedback</h2>
+          </div>
+          <div class="help-module-body help-module-body-empty"></div>
+        </article>
+
+        <article class="help-module-card">
+          <div class="help-module-titlebar">
+            <h2>Group members</h2>
+          </div>
+          <div class="help-module-body help-module-body-empty"></div>
+        </article>
+      </section>
     </section>
   </main>`;
 }
@@ -2980,6 +3278,20 @@ function render(options = {}) {
   const { preserveScroll = false } = options;
   const previousScrollX = window.scrollX;
   const previousScrollY = window.scrollY;
+  const activeElement = document.activeElement;
+  const shouldRestoreTextFocus =
+    activeElement &&
+    (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') &&
+    typeof activeElement.id === 'string' &&
+    activeElement.id.length > 0;
+  const focusState = shouldRestoreTextFocus
+    ? {
+        id: activeElement.id,
+        selectionStart: typeof activeElement.selectionStart === 'number' ? activeElement.selectionStart : null,
+        selectionEnd: typeof activeElement.selectionEnd === 'number' ? activeElement.selectionEnd : null,
+        selectionDirection: typeof activeElement.selectionDirection === 'string' ? activeElement.selectionDirection : 'none'
+      }
+    : null;
 
   setTheme(theme, mode);
   document.getElementById('app').innerHTML = `${nav()}${pageFor(route)}${renderFooter()}`;
@@ -3021,6 +3333,86 @@ function render(options = {}) {
   if (sequenceSearchInput) {
     sequenceSearchInput.addEventListener('input', (event) => {
       sequenceSearchQuery = event.target.value;
+      render({ preserveScroll: true });
+    });
+  }
+  const advancedSearchInput = document.getElementById('advanced-search-input');
+  if (advancedSearchInput) {
+    advancedSearchInput.addEventListener('input', (event) => {
+      advancedSearchQuery = event.target.value;
+      render({ preserveScroll: true });
+    });
+  }
+  const advancedSearchClear = document.getElementById('advanced-search-clear');
+  if (advancedSearchClear) {
+    advancedSearchClear.addEventListener('click', () => {
+      advancedSearchQuery = '';
+      render({ preserveScroll: true });
+    });
+  }
+  const advancedSearchFiltersToggle = document.getElementById('advanced-search-filters-toggle');
+  if (advancedSearchFiltersToggle) {
+    advancedSearchFiltersToggle.addEventListener('click', () => {
+      advancedSearchFiltersOpen = !advancedSearchFiltersOpen;
+      render({ preserveScroll: true });
+    });
+  }
+  const advancedSearchExperimentSelect = document.getElementById('advanced-search-experiment');
+  if (advancedSearchExperimentSelect) {
+    advancedSearchExperimentSelect.addEventListener('change', (event) => {
+      advancedSearchExperiment = event.target.value;
+      render({ preserveScroll: true });
+    });
+  }
+  const advancedSearchModifierSelect = document.getElementById('advanced-search-modifier');
+  if (advancedSearchModifierSelect) {
+    advancedSearchModifierSelect.addEventListener('change', (event) => {
+      advancedSearchModifier = event.target.value;
+      render({ preserveScroll: true });
+    });
+  }
+  const advancedSearchLengthBandSelect = document.getElementById('advanced-search-length-band');
+  if (advancedSearchLengthBandSelect) {
+    advancedSearchLengthBandSelect.addEventListener('change', (event) => {
+      advancedSearchLengthBand = event.target.value;
+      render({ preserveScroll: true });
+    });
+  }
+  const advancedSearchReset = document.getElementById('advanced-search-reset');
+  if (advancedSearchReset) {
+    advancedSearchReset.addEventListener('click', () => {
+      advancedSearchExperiment = 'all';
+      advancedSearchModifier = 'all';
+      advancedSearchLengthBand = 'all';
+      render({ preserveScroll: true });
+    });
+  }
+  const advancedSearchSortSelect = document.getElementById('advanced-search-sort');
+  if (advancedSearchSortSelect) {
+    advancedSearchSortSelect.addEventListener('change', (event) => {
+      advancedSearchSort = event.target.value;
+      render({ preserveScroll: true });
+    });
+  }
+  const advancedSearchExport = document.getElementById('advanced-search-export');
+  if (advancedSearchExport) {
+    advancedSearchExport.addEventListener('click', () => {
+      downloadRowsAsCsv(getAdvancedSearchRows(), 'foldbridge-search-results.csv');
+    });
+  }
+  const advancedSearchViewList = document.getElementById('advanced-search-view-list');
+  if (advancedSearchViewList) {
+    advancedSearchViewList.addEventListener('click', () => {
+      if (advancedSearchView === 'list') return;
+      advancedSearchView = 'list';
+      render({ preserveScroll: true });
+    });
+  }
+  const advancedSearchViewGrid = document.getElementById('advanced-search-view-grid');
+  if (advancedSearchViewGrid) {
+    advancedSearchViewGrid.addEventListener('click', () => {
+      if (advancedSearchView === 'grid') return;
+      advancedSearchView = 'grid';
       render({ preserveScroll: true });
     });
   }
@@ -3184,8 +3576,20 @@ document.addEventListener('click', () => {
     });
   });
 
-  if (preserveScroll) {
-    requestAnimationFrame(() => window.scrollTo(previousScrollX, previousScrollY));
+  if (preserveScroll || focusState) {
+    requestAnimationFrame(() => {
+      if (preserveScroll) {
+        window.scrollTo(previousScrollX, previousScrollY);
+      }
+
+      if (!focusState) return;
+      const nextActive = document.getElementById(focusState.id);
+      if (!nextActive || (nextActive.tagName !== 'INPUT' && nextActive.tagName !== 'TEXTAREA')) return;
+      nextActive.focus({ preventScroll: true });
+      if (typeof nextActive.setSelectionRange === 'function' && focusState.selectionStart !== null && focusState.selectionEnd !== null) {
+        nextActive.setSelectionRange(focusState.selectionStart, focusState.selectionEnd, focusState.selectionDirection);
+      }
+    });
   }
 }
 

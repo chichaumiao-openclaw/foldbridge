@@ -14,7 +14,9 @@ include:
 exclude:
   - node_modules
   - vendor
+  - local_archive
   - .sass-cache
   - .jekyll-cache
   - .jekyll-metadata
+  - .bundle
   - Gemfile.lock
