@@ -1,4 +1,20 @@
-const ALLOWED_ROUTES = new Set(['home', 'structure', 'download-sequences', 'download-structures', 'detail', 'publications', 'help', 'sequence-detail']);
+const ALLOWED_ROUTES = new Set([
+  'home',
+  'browse',
+  'sequence',
+  'structure',
+  'probing',
+  'download',
+  'search',
+  'download-sequences',
+  'download-structures',
+  'detail',
+  'publications',
+  'help',
+  'sequence-detail',
+  'case-10fz',
+  'case-detail'
+]);
 
 export function normalizeRoute(value) {
   if (typeof value !== 'string') return 'home';

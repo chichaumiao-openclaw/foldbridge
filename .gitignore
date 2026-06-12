@@ -4,9 +4,13 @@
 .bundle/
 .jekyll-cache/
 _site/
+dist/
+singlecell-viewer/dist/
 vendor/
 
 node_modules/
 singlecell-viewer/node_modules/
+
+local_archive/
 
 *.log

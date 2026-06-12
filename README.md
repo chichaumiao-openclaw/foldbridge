@@ -95,5 +95,6 @@ Location: `singlecell-viewer/`
 - Placeholder scientific content is synthetic and intended only for UI validation.
 - Shared placeholder datasets live in `src/data.js` for deterministic visual review.
 - Repro metadata: `DATA_VERSION` and `DETERMINISTIC_SEED` are exported from `src/data.js` and validated in tests.
-- Main build output: `dist/`
-- Single-cell viewer build output: `singlecell-viewer/dist/`
+- Main build output: `dist/` (local build artifact, ignored by Git)
+- Single-cell viewer build output: `singlecell-viewer/dist/` (local build artifact, ignored by Git)
+- Large local datasets and archived build outputs should live under `local_archive/` instead of the repo root.

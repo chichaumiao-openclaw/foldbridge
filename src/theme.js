@@ -13,6 +13,20 @@ const COMMON = {
     radiusCard: '22px',
     radiusPanel: '16px'
   },
+  dark: {
+    surface: '#111a17',
+    surfaceAlt: '#182320',
+    background: '#08110e',
+    backgroundStrong: '#0d1714',
+    textPrimary: '#edf4ef',
+    textSecondary: '#b8c8bf',
+    textMuted: '#8ea196',
+    onPrimary: '#08110e',
+    shadow: '0 18px 50px rgba(0, 0, 0, 0.34)',
+    shadowSoft: '0 10px 28px rgba(0, 0, 0, 0.28)',
+    radiusCard: '22px',
+    radiusPanel: '16px'
+  }
 };
 
 export const themeTokens = {
@@ -25,6 +39,14 @@ export const themeTokens = {
       accent: '#2F8F6B',
       accentSoft: '#C7E36B',
       border: '#D6E0D8'
+    },
+    dark: {
+      primary: '#7dd4aa',
+      primaryHover: '#99e0bd',
+      primarySoft: 'rgba(125, 212, 170, 0.14)',
+      accent: '#63cfa0',
+      accentSoft: '#d9e99d',
+      border: '#2c3a34'
     },
   }
 };
