@@ -1,0 +1,29 @@
+| Technology | Representative paper | Year | Journal | Status | Notes |
+| --- | --- | --- | --- | --- | --- |
+| PARS | Kertesz M et al. *Genome-wide measurement of RNA secondary structure in yeast.* | 2010 | Nature | verified | Foundational transcriptome-scale enzymatic probing paper. |
+| PARTE | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Method name may be a project placeholder or less-standard alias; needs manual literature check. |
+| tNet-RNase-seq | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Method name may be a project placeholder or internal grouping label. |
+| DMS-seq | Rouskin S et al. *Genome-wide probing of RNA structure reveals active unfolding of mRNA structures in vivo.* | 2014 | Nature | verified | Foundational in vivo DMS-seq paper. |
+| Structure-seq | Ding Y et al. *In vivo genome-wide profiling of RNA secondary structure reveals novel regulatory features.* | 2014 | Nature | verified | Foundational genome-wide Structure-seq paper. |
+| Structure-Seq | Ding Y et al. *In vivo genome-wide profiling of RNA secondary structure reveals novel regulatory features.* | 2014 | Nature | verified | Capitalization variant of Structure-seq. |
+| Structure-seq2 | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Likely a later protocol/refinement; needs exact title verification. |
+| CIRS-seq | Incarnato D et al. *Genome-wide profiling of mouse RNA secondary structures reveals key features of the mammalian transcriptome.* | 2014 | Genome Biology | moderate | Often associated with CIRS-seq-style transcriptome-wide RNA structure profiling. |
+| Mod-seq | Talkish J et al. *Mod-seq: high-throughput sequencing for chemical probing of RNA structure.* | 2014 | RNA | moderate | Needs final title/page verification, but this is the commonly cited Mod-seq paper. |
+| DIM-2P-seq | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Could be a niche or placeholder method name; exact paper not verified. |
+| DMS-MaPseq | Zubradt M et al. *DMS-MaPseq for genome-wide or targeted RNA structure probing in vivo.* | 2017 | Nature Methods | verified | Foundational DMS mutational profiling paper. |
+| RAPiD-MaPseq | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Exact method title not verified in the literature search. |
+| tNet-MaPseq | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Method name may be internal or placeholder. |
+| SHAPE | Merino EJ et al. *RNA structure analysis at single nucleotide resolution by selective 2'-hydroxyl acylation and primer extension (SHAPE).* | 2005 | Journal of the American Chemical Society | verified | Original SHAPE paper. |
+| SHAPE-seq | Lucks JB et al. *Multiplexed RNA structure characterization with selective 2'-hydroxyl acylation analyzed by primer extension sequencing (SHAPE-Seq).* | 2011 | Proceedings of the National Academy of Sciences USA | verified | Foundational SHAPE-Seq paper. |
+| SHAPE-MaP | Siegfried NA et al. *RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP).* | 2014 | Nature Methods | verified | Foundational SHAPE-MaP paper. |
+| NAI-MaP | Spitale RC et al. *RNA SHAPE analysis in living cells.* | 2013 | Nature Chemical Biology | moderate | Useful anchor paper for NAI-based in-cell SHAPE chemistry; exact NAI-MaP naming needs verification. |
+| icSHAPE | Spitale RC et al. *Structural imprints in vivo decode RNA regulatory mechanisms.* | 2015 | Nature | verified | Foundational icSHAPE paper. |
+| icSHAPE-MaP | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Likely a combined naming of icSHAPE chemistry plus MaP readout rather than a single canonical paper title. |
+| smartSHAPE | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Exact method paper not confidently identified. |
+| Cotranscriptional SHAPE-seq | Watters KE et al. *Cotranscriptional folding of a riboswitch at nucleotide resolution.* | 2016 | Nature Structural & Molecular Biology | moderate | Widely cited cotranscriptional SHAPE-seq application paper. |
+| Nuc-SHAPE-Structure-Seq | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Likely a specialized or later variation; exact primary paper not verified. |
+| ChemModSeq | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Exact method paper not confidently identified. |
+| Keth-seq | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Kethoxal probing literature is clear, but exact Keth-seq paper title was not verified in this pass. |
+| Lead-seq | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Lead-based RNA probing exists, but exact Lead-seq primary paper not verified. |
+| RL-seq | Not confidently verified as a distinct standalone primary paper in this pass. |  |  | needs_check | Exact method title not confidently identified in this pass. |
+| icLASER | Feng C et al. *Light-activated chemical probing of nucleobase solvent accessibility inside cells.* | 2018 | Nature Chemical Biology | moderate | This is the key LASER/icLASER-style solvent accessibility paper. |
