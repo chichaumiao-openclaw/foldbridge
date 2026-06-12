@@ -1,5 +1,6 @@
 import { cssVarsFor, themeTokens } from './theme.js';
 import { caseManifest } from './generated/caseManifest.js';
+import { rmdbPdbBlastRows } from './generated/rmdbPdbBlastRows.js';
 import {
   renderGlobalSearch,
   renderFacetPanel,
@@ -29,10 +30,13 @@ import { normalizeRoute, routeFromHash } from './router.js';
 import { downloadRowsAsCsv } from './modules.js';
 let sequenceRows = [];
 let browseEntryRows = [];
+let structureEntryRows = [];
 let selectedBrowseIds = new Set();
+let selectedStructureIds = new Set();
 let browseCurrentPage = 1;
 let case3dRows = [];
 let case3dCurrentPage = 1;
+let structureCurrentPage = 1;
 let caseDetailSequencePage = 1;
 let activeCaseDetailId = null;
 let selectedSequenceIds = new Set();
@@ -757,6 +761,13 @@ function getCaseIdFromHash() {
   return params.get('case');
 }
 
+function getStructureRecordIdFromHash() {
+  const hash = window.location.hash || '';
+  const [, queryString = ''] = hash.split('?');
+  const params = new URLSearchParams(queryString);
+  return params.get('foldBridgeId');
+}
+
 function getFilteredSequenceRows() {
   const query = sequenceSearchQuery.trim().toLowerCase();
   if (!query) return sequenceRows;
@@ -1306,6 +1317,145 @@ function dataAssetPath(fileName) {
   return `./src/assets/data/rmdb-puzzle/${fileName}`;
 }
 
+function normalizeStructureMatchLabel(value) {
+  return String(value ?? '')
+    .toLowerCase()
+    .replace(/&/g, ' and ')
+    .replace(/\([^)]*\)/g, ' ')
+    .replace(/_/g, ' ')
+    .replace(/,/g, ' ')
+    .replace(/\+/g, ' plus ')
+    .replace(/\bfree\b/g, ' ')
+    .replace(/\bbound\b/g, ' ')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function parseScientificValue(value) {
+  const numeric = Number(value);
+  return Number.isFinite(numeric) ? numeric : Number.POSITIVE_INFINITY;
+}
+
+function choosePreferredBlastHit(current, candidate) {
+  if (!current) return candidate;
+  const currentEvalue = parseScientificValue(current.evalue);
+  const candidateEvalue = parseScientificValue(candidate.evalue);
+  if (candidateEvalue !== currentEvalue) return candidateEvalue < currentEvalue ? candidate : current;
+  const currentBitscore = Number(current.bitscore) || 0;
+  const candidateBitscore = Number(candidate.bitscore) || 0;
+  if (candidateBitscore !== currentBitscore) return candidateBitscore > currentBitscore ? candidate : current;
+  const currentIdentity = Number(current.pident) || 0;
+  const candidateIdentity = Number(candidate.pident) || 0;
+  if (candidateIdentity !== currentIdentity) return candidateIdentity > currentIdentity ? candidate : current;
+  const currentCoverage = Number(current.qcovs) || 0;
+  const candidateCoverage = Number(candidate.qcovs) || 0;
+  if (candidateCoverage !== currentCoverage) return candidateCoverage > currentCoverage ? candidate : current;
+  return String(candidate.pdbId ?? '').localeCompare(String(current.pdbId ?? '')) < 0 ? candidate : current;
+}
+
+function buildBlastMatchIndex(rows) {
+  return rows.reduce((index, row) => {
+    const key = normalizeStructureMatchLabel(row.queryLabel);
+    if (!key) return index;
+    const entries = index.get(key) || [];
+    entries.push(row);
+    index.set(key, entries);
+    return index;
+  }, new Map());
+}
+
+function buildStructureEntryRows(rows) {
+  const grouped = new Map();
+
+  rows
+    .filter((row) => row.hasPdbMatch)
+    .forEach((row) => {
+      const groupKey = normalizeStructureMatchLabel(row.name) || row.foldBridgeId;
+      const existing = grouped.get(groupKey);
+
+      if (!existing) {
+        grouped.set(groupKey, {
+          representative: row,
+          relatedRecords: [row]
+        });
+        return;
+      }
+
+      existing.relatedRecords.push(row);
+
+      const current = existing.representative;
+      const currentEvalue = parseScientificValue(current.bestEvalue);
+      const candidateEvalue = parseScientificValue(row.bestEvalue);
+      if (candidateEvalue < currentEvalue) {
+        existing.representative = row;
+        return;
+      }
+
+      if (candidateEvalue === currentEvalue) {
+        const currentIdentity = Number(current.bestIdentity) || 0;
+        const candidateIdentity = Number(row.bestIdentity) || 0;
+        if (candidateIdentity > currentIdentity) {
+          existing.representative = row;
+          return;
+        }
+
+        if (candidateIdentity === currentIdentity) {
+          const currentCoverage = Number(current.bestCoverage) || 0;
+          const candidateCoverage = Number(row.bestCoverage) || 0;
+          if (candidateCoverage > currentCoverage) {
+            existing.representative = row;
+            return;
+          }
+
+          if (candidateCoverage === currentCoverage && row.foldBridgeId.localeCompare(current.foldBridgeId) < 0) {
+            existing.representative = row;
+          }
+        }
+      }
+    });
+
+  return [...grouped.values()]
+    .map(({ representative, relatedRecords }) => ({
+      ...representative,
+      relatedRecords,
+      relatedRecordCount: relatedRecords.length,
+      detailPage: `#structure-detail?foldBridgeId=${encodeURIComponent(representative.foldBridgeId)}`
+    }))
+    .sort((a, b) => {
+      const evalueDiff = parseScientificValue(a.bestEvalue) - parseScientificValue(b.bestEvalue);
+      if (evalueDiff !== 0) return evalueDiff;
+      const identityDiff = (Number(b.bestIdentity) || 0) - (Number(a.bestIdentity) || 0);
+      if (identityDiff !== 0) return identityDiff;
+      const coverageDiff = (Number(b.bestCoverage) || 0) - (Number(a.bestCoverage) || 0);
+      if (coverageDiff !== 0) return coverageDiff;
+      return (a.name || a.foldBridgeId).localeCompare(b.name || b.foldBridgeId);
+    });
+}
+
+function formatBlastPercent(value) {
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return 'N/A';
+  return `${numeric.toFixed(1)}%`;
+}
+
+function formatBlastEvalue(value) {
+  if (value === null || value === undefined || value === '') return 'N/A';
+  return String(value);
+}
+
+function renderPdbExternalLink(pdbId) {
+  if (!pdbId) return 'N/A';
+  const safePdbId = encodeURIComponent(pdbId);
+  return `<a href="https://www.rcsb.org/structure/${safePdbId}" target="_blank" rel="noopener noreferrer" class="sequence-link pdb-external-link" title="Open in RCSB PDB">${pdbId}<span class="pdb-external-link-icon" aria-hidden="true">↗</span></a>`;
+}
+
+function summarizePdbMatch(row) {
+  if (!row.bestPdbId) return 'Not matched';
+  if (row.pdbIds.length <= 1) return row.bestPdbId;
+  return `${row.bestPdbId} (+${row.pdbIds.length - 1})`;
+}
+
 function parseCsv(text) {
   const rows = [];
   let current = '';
@@ -1553,8 +1703,14 @@ async function loadBrowseEntryRows() {
       return;
     }
 
+    const blastMatchIndex = buildBlastMatchIndex(rmdbPdbBlastRows);
+
     browseEntryRows = records.map((record) => {
       const row = Object.fromEntries(header.map((key, index) => [key, record[index] ?? '']));
+      const matchKey = normalizeStructureMatchLabel(row.Name || '');
+      const blastMatches = blastMatchIndex.get(matchKey) || [];
+      const bestMatch = blastMatches.reduce((best, candidate) => choosePreferredBlastHit(best, candidate), null);
+      const pdbIds = [...new Set(blastMatches.map((item) => item.pdbId).filter(Boolean))].sort();
       return {
         foldBridgeId: row['FoldBridge ID'] || '',
         name: row.Name || '',
@@ -1562,12 +1718,22 @@ async function loadBrowseEntryRows() {
         length: row.Length || '',
         fileCode: row['File Code'] || '',
         experimentType: row['Experiment Type'] || '',
-        modifier: row.Modifier || ''
+        modifier: row.Modifier || '',
+        hasPdbMatch: Boolean(bestMatch),
+        pdbMatchCount: blastMatches.length,
+        pdbIds,
+        bestPdbId: bestMatch?.pdbId || '',
+        bestSubjectId: bestMatch?.subjectId || '',
+        bestEvalue: bestMatch?.evalue || '',
+        bestIdentity: bestMatch?.pident || '',
+        bestCoverage: bestMatch?.qcovs || ''
       };
     });
+    structureEntryRows = buildStructureEntryRows(browseEntryRows);
   } catch (error) {
     console.error(error);
     browseEntryRows = [];
+    structureEntryRows = [];
   }
 }
 
@@ -1579,8 +1745,7 @@ function rdatDownloadPath(foldBridgeId) {
   return dataAssetPath(`${foldBridgeId.replace(/^RMDB_/, '')}.rdat`);
 }
 
-function downloadSelectedRdatFiles() {
-  const selectedIds = [...selectedBrowseIds];
+function downloadSelectedRdatFiles(selectedIds = [...selectedBrowseIds]) {
   selectedIds.forEach((foldBridgeId, index) => {
     const link = document.createElement('a');
     link.href = rdatDownloadPath(foldBridgeId);
@@ -2897,10 +3062,17 @@ function browsePage() {
             <td>${row.fileCode}</td>
             <td>${row.experimentType}</td>
             <td>${row.modifier}</td>
+            <td>
+              <span class="browse-match-pill ${row.hasPdbMatch ? 'is-hit' : 'is-miss'}">
+                ${row.hasPdbMatch ? 'Matched' : 'Pending'}
+              </span>
+            </td>
+            <td>${summarizePdbMatch(row)}</td>
+            <td>${formatBlastEvalue(row.bestEvalue)}</td>
           </tr>`
         )
         .join('')
-    : `<tr><td colspan="7" class="entry-table-empty">No entries yet.</td></tr>`;
+    : `<tr><td colspan="10" class="entry-table-empty">No entries yet.</td></tr>`;
   const case3dTableRows = visibleCase3dRows.length
     ? visibleCase3dRows
         .map(
@@ -2926,6 +3098,9 @@ function browsePage() {
           <h2>2D Entry</h2>
         </div>
       </div>
+      <p class="browse-section-note">
+        All RMDB records stay in one table. Entries without a PDB hit remain visible and are marked as pending.
+      </p>
       <div class="download-toolbar browse-toolbar">
         <button
           type="button"
@@ -2966,6 +3141,9 @@ function browsePage() {
               <th>File Code</th>
               <th>Experiment Type</th>
               <th>Modifier</th>
+              <th>Status</th>
+              <th>Best PDB</th>
+              <th>E-value</th>
             </tr>
           </thead>
           <tbody>
@@ -3052,6 +3230,153 @@ function browsePage() {
 
 function structurePage() {
   return downloadStructuresPage();
+}
+
+function structureDetailPage() {
+  const foldBridgeId = getStructureRecordIdFromHash();
+  const row = structureEntryRows.find((item) => item.foldBridgeId === foldBridgeId);
+  const linkedCase = row?.bestPdbId ? case3dRows.find((item) => item.pdbId === row.bestPdbId) : null;
+
+  if (!row) {
+    return `<main class="page-sequence-detail page-case-detail">
+      ${renderBundleHeader()}
+      <section class="sequence-detail-card case-detail-card">
+        <div class="sequence-detail-header">
+          <a class="sequence-detail-back" href="#structure">Back to structure</a>
+          <div class="sequence-detail-title-row">
+            <div>
+              <p class="sequence-detail-kicker">Structure-linked probing record</p>
+              <h1>Record not found</h1>
+              <p class="technology-intro">The requested FoldBridge structure-linked record could not be found.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>`;
+  }
+
+  const alternatePdbMarkup = row.pdbIds.length
+    ? row.pdbIds
+        .map((pdbId) => `<span class="search-filter-pill ${pdbId === row.bestPdbId ? 'is-active' : ''}">${pdbId}</span>`)
+        .join('')
+    : '<span class="search-filter-pill">No alternate PDB IDs</span>';
+  const relatedRecordsMarkup = (row.relatedRecords || [row])
+    .map(
+      (record) => `<tr>
+        <td>${record.foldBridgeId}</td>
+        <td>${record.fileCode || 'N/A'}</td>
+        <td>${record.experimentType || 'N/A'}</td>
+        <td>${record.modifier || 'N/A'}</td>
+      </tr>`
+    )
+    .join('');
+
+  const linkedCaseAction = linkedCase
+    ? `<a class="download-outline-btn structure-detail-action-link" href="#case-detail?case=${encodeURIComponent(linkedCase.pdbId)}">Open bundled 3D case</a>`
+    : '<span class="browse-pagination-status">No bundled PDB case is available yet for this matched record.</span>';
+
+  return `<main class="page-sequence-detail page-case-detail">
+    ${renderBundleHeader()}
+    <section class="sequence-detail-card case-detail-card">
+      <div class="sequence-detail-header">
+        <a class="sequence-detail-back" href="#structure">Back to structure</a>
+        <div class="sequence-detail-title-row">
+          <div>
+            <p class="sequence-detail-kicker">Structure-linked probing record</p>
+            <h1>${row.foldBridgeId}</h1>
+            <p class="technology-intro">${row.name || 'Untitled record'} is a probing-centered FoldBridge record with a matched tertiary-structure target.</p>
+          </div>
+          <dl class="sequence-detail-meta">
+            <div><dt>PDB ID</dt><dd>${renderPdbExternalLink(row.bestPdbId)}</dd></div>
+            <div><dt>E-value</dt><dd>${formatBlastEvalue(row.bestEvalue)}</dd></div>
+            <div><dt>Identity</dt><dd>${formatBlastPercent(row.bestIdentity)}</dd></div>
+            <div><dt>Coverage</dt><dd>${formatBlastPercent(row.bestCoverage)}</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <section class="sequence-detail-panel">
+        <div class="sequence-detail-section-heading">
+          <h2>FoldBridge Record</h2>
+          <p>This page keeps the probing record in the foreground and shows how it links to an experimentally resolved tertiary structure.</p>
+        </div>
+        <div class="technology-detail-meta case-detail-meta-grid">
+          <div><dt>FoldBridge ID</dt><dd>${row.foldBridgeId}</dd></div>
+          <div><dt>Name</dt><dd>${row.name || 'Untitled record'}</dd></div>
+          <div><dt>File code</dt><dd>${row.fileCode || 'N/A'}</dd></div>
+          <div><dt>Experiment type</dt><dd>${row.experimentType || 'N/A'}</dd></div>
+          <div><dt>Modifier</dt><dd>${row.modifier || 'N/A'}</dd></div>
+          <div><dt>Related probing records</dt><dd>${row.relatedRecordCount || 1}</dd></div>
+        </div>
+      </section>
+
+      <section class="sequence-detail-panel">
+        <div class="sequence-detail-section-heading">
+          <h2>Sequence</h2>
+          <p>The original probing entry sequence is shown below.</p>
+        </div>
+        <article class="case-sequence-card">
+          <div class="case-sequence-card-header">
+            <div>
+              <p class="case-sequence-card-kicker">Probing record</p>
+              <h3>${row.name || row.foldBridgeId}</h3>
+            </div>
+            <span class="case-sequence-card-length">${row.length || 'N/A'}</span>
+          </div>
+          <code class="case-sequence-block">${row.sequence || 'Sequence unavailable'}</code>
+        </article>
+      </section>
+
+      <section class="sequence-detail-panel">
+        <div class="sequence-detail-section-heading">
+          <h2>Structure Match</h2>
+          <p>The best current structure match is summarized here from the BLAST mapping table.</p>
+        </div>
+        <div class="sequence-detail-insight-grid">
+          <article class="sequence-detail-insight-card"><span>PDB ID</span><strong>${renderPdbExternalLink(row.bestPdbId)}</strong></article>
+          <article class="sequence-detail-insight-card"><span>Subject ID</span><strong>${row.bestSubjectId || 'N/A'}</strong></article>
+          <article class="sequence-detail-insight-card"><span>E-value</span><strong>${formatBlastEvalue(row.bestEvalue)}</strong></article>
+          <article class="sequence-detail-insight-card"><span>Identity</span><strong>${formatBlastPercent(row.bestIdentity)}</strong></article>
+          <article class="sequence-detail-insight-card"><span>Coverage</span><strong>${formatBlastPercent(row.bestCoverage)}</strong></article>
+          <article class="sequence-detail-insight-card"><span>Status</span><strong>Matched</strong></article>
+        </div>
+        <div class="sequence-detail-placeholder case-detail-note">
+          <p>Alternative matched PDB IDs</p>
+          <div class="search-filter-pills structure-detail-pill-row">${alternatePdbMarkup}</div>
+        </div>
+      </section>
+
+      <section class="sequence-detail-panel">
+        <div class="sequence-detail-section-heading">
+          <h2>Related FoldBridge Records</h2>
+          <p>This representative row stands in for the related probing records below that belong to the same puzzle group.</p>
+        </div>
+        <div class="entry-table-wrap">
+          <table class="entry-table case-detail-table related-records-table">
+            <thead>
+              <tr>
+                <th>FoldBridge ID</th>
+                <th>File code</th>
+                <th>Experiment type</th>
+                <th>Modifier</th>
+              </tr>
+            </thead>
+            <tbody>${relatedRecordsMarkup}</tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="sequence-detail-panel">
+        <div class="sequence-detail-section-heading">
+          <h2>Next Step</h2>
+          <p>If this matched PDB also exists in the packaged 3D bundle, you can continue into the PDB-centered case detail below.</p>
+        </div>
+        <div class="browse-pagination structure-detail-actions">
+          ${linkedCaseAction}
+        </div>
+      </section>
+    </section>
+  </main>`;
 }
 
 function downloadPage() {
@@ -3172,11 +3497,107 @@ function searchPage() {
 
 
 function downloadStructuresPage() {
+  const totalStructurePages = Math.max(1, Math.ceil(structureEntryRows.length / CASE3D_PAGE_SIZE));
+  if (structureCurrentPage > totalStructurePages) structureCurrentPage = totalStructurePages;
+  const structureStartIndex = (structureCurrentPage - 1) * CASE3D_PAGE_SIZE;
+  const visibleStructureRows = structureEntryRows.slice(structureStartIndex, structureStartIndex + CASE3D_PAGE_SIZE);
+  const structureRows = visibleStructureRows.length
+    ? visibleStructureRows
+        .map(
+          (row) => `<tr>
+            <td>
+              <input
+                type="checkbox"
+                class="structure-select"
+                data-structure-id="${row.foldBridgeId}"
+                ${selectedStructureIds.has(row.foldBridgeId) ? 'checked' : ''}
+              />
+            </td>
+            <td><a href="${row.detailPage}" class="sequence-link">${row.foldBridgeId}</a></td>
+            <td>${row.name || 'Untitled record'}</td>
+            <td>${renderPdbExternalLink(row.bestPdbId)}</td>
+            <td>${formatBlastEvalue(row.bestEvalue)}</td>
+            <td>${formatBlastPercent(row.bestIdentity)}</td>
+            <td>${formatBlastPercent(row.bestCoverage)}</td>
+          </tr>`
+        )
+        .join('')
+    : `<tr><td colspan="7" class="entry-table-empty">No structure matches yet.</td></tr>`;
+
   return `<main class="page-download">
     ${renderBundleHeader()}
-    <section class="card bundle-wide-card">
+    <section class="card bundle-wide-card browse-entry-section">
       <h1>Structure</h1>
-      <p>Structure-linked downloads and related assets are collected here.</p>
+      <p class="browse-section-note">This page lists probing-centered FoldBridge records that already have a best tertiary-structure match in the current BLAST mapping table.</p>
+      <div class="download-toolbar browse-toolbar">
+        <button
+          type="button"
+          id="select-all-structure"
+          class="browse-action-btn ${structureEntryRows.length ? '' : 'is-disabled'}"
+          ${structureEntryRows.length ? '' : 'disabled'}
+          aria-disabled="${structureEntryRows.length ? 'false' : 'true'}"
+        >
+          Select All
+        </button>
+        <button
+          type="button"
+          id="download-selected-structure"
+          class="browse-action-btn ${selectedStructureIds.size ? 'is-active' : 'is-disabled'}"
+          ${selectedStructureIds.size ? '' : 'disabled'}
+          aria-disabled="${selectedStructureIds.size ? 'false' : 'true'}"
+        >
+          Download Selected RDAT (${selectedStructureIds.size})
+        </button>
+        <button
+          type="button"
+          id="clear-selected-structure"
+          class="browse-action-btn ${selectedStructureIds.size ? 'is-active' : 'is-disabled'}"
+          ${selectedStructureIds.size ? '' : 'disabled'}
+          aria-disabled="${selectedStructureIds.size ? 'false' : 'true'}"
+        >
+          Clear Selection
+        </button>
+      </div>
+      <div class="entry-table-wrap">
+        <table class="entry-table case-detail-table">
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>FoldBridge ID</th>
+              <th>Name</th>
+              <th>PDB ID</th>
+              <th>E-value</th>
+              <th>Identity</th>
+              <th>Coverage</th>
+            </tr>
+          </thead>
+          <tbody>${structureRows}</tbody>
+        </table>
+      </div>
+      <div class="browse-pagination">
+        <div class="browse-pagination-info">
+          <span class="browse-pagination-status">Page ${structureCurrentPage} of ${totalStructurePages}</span>
+          ${renderPageJumpControls('structure', totalStructurePages, structureCurrentPage)}
+        </div>
+        <div class="browse-pagination-actions">
+          <button
+            type="button"
+            id="structure-prev-page"
+            class="download-outline-btn"
+            ${structureCurrentPage === 1 ? 'disabled' : ''}
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            id="structure-next-page"
+            class="download-outline-btn"
+            ${structureCurrentPage === totalStructurePages ? 'disabled' : ''}
+          >
+            Next
+          </button>
+        </div>
+      </div>
     </section>
   </main>`;
 }
@@ -3260,6 +3681,7 @@ function pageFor(name) {
   if (safeRoute === 'browse') return browsePage();
   if (safeRoute === 'case-10fz') return case10fzPage();
   if (safeRoute === 'case-detail') return caseDetailPage();
+  if (safeRoute === 'structure-detail') return structureDetailPage();
   if (safeRoute === 'sequence') return downloadSequencesPage();
   if (safeRoute === 'structure') return structurePage();
   if (safeRoute === 'probing') return detailPage();
@@ -3477,6 +3899,46 @@ function render(options = {}) {
       case3dCurrentPage = value;
     }
   });
+  const structurePrevPageBtn = document.getElementById('structure-prev-page');
+  if (structurePrevPageBtn) {
+    structurePrevPageBtn.addEventListener('click', () => {
+      if (structureCurrentPage <= 1) return;
+      structureCurrentPage -= 1;
+      render({ preserveScroll: true });
+    });
+  }
+  const structureNextPageBtn = document.getElementById('structure-next-page');
+  if (structureNextPageBtn) {
+    structureNextPageBtn.addEventListener('click', () => {
+      const totalStructurePages = Math.max(1, Math.ceil(structureEntryRows.length / CASE3D_PAGE_SIZE));
+      if (structureCurrentPage >= totalStructurePages) return;
+      structureCurrentPage += 1;
+      render({ preserveScroll: true });
+    });
+  }
+  bindPageJump({
+    inputId: 'structure-page-input',
+    buttonId: 'structure-page-go',
+    totalPages: () => Math.max(1, Math.ceil(structureEntryRows.length / CASE3D_PAGE_SIZE)),
+    getCurrentPage: () => structureCurrentPage,
+    setCurrentPage: (value) => {
+      structureCurrentPage = value;
+    }
+  });
+  const selectAllStructureBtn = document.getElementById('select-all-structure');
+  bindPseudoButton(selectAllStructureBtn, () => {
+    structureEntryRows.forEach((row) => selectedStructureIds.add(row.foldBridgeId));
+    render({ preserveScroll: true });
+  });
+  const downloadSelectedStructureBtn = document.getElementById('download-selected-structure');
+  bindPseudoButton(downloadSelectedStructureBtn, () => {
+    downloadSelectedRdatFiles([...selectedStructureIds]);
+  });
+  const clearSelectedStructureBtn = document.getElementById('clear-selected-structure');
+  bindPseudoButton(clearSelectedStructureBtn, () => {
+    selectedStructureIds.clear();
+    render({ preserveScroll: true });
+  });
   const caseDetailPrevPageBtn = document.getElementById('case-detail-prev-page');
   if (caseDetailPrevPageBtn) {
     caseDetailPrevPageBtn.addEventListener('click', () => {
@@ -3510,6 +3972,15 @@ function render(options = {}) {
       if (!id) return;
       if (event.target.checked) selectedBrowseIds.add(id);
       else selectedBrowseIds.delete(id);
+      render({ preserveScroll: true });
+    });
+  });
+  document.querySelectorAll('.structure-select').forEach((checkbox) => {
+    checkbox.addEventListener('change', (event) => {
+      const id = event.target.getAttribute('data-structure-id');
+      if (!id) return;
+      if (event.target.checked) selectedStructureIds.add(id);
+      else selectedStructureIds.delete(id);
       render({ preserveScroll: true });
     });
   });

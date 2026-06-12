@@ -1431,6 +1431,13 @@ tbody tr:hover {
   font-size: 2rem;
 }
 
+.browse-section-note {
+  margin: -6px 0 2px;
+  color: #6d8091;
+  font-size: 0.98rem;
+  line-height: 1.65;
+}
+
 .browse-empty-block {
   min-height: 120px;
   display: flex;
@@ -1557,6 +1564,137 @@ tbody tr:hover {
   text-decoration: underline;
 }
 
+.page-download .case-detail-table th,
+.page-download .case-detail-table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.page-download .case-detail-table {
+  min-width: 1120px;
+  table-layout: fixed;
+}
+
+.page-download .case-detail-table th:nth-child(1),
+.page-download .case-detail-table td:nth-child(1) {
+  width: 80px;
+}
+
+.page-download .case-detail-table th:nth-child(2),
+.page-download .case-detail-table td:nth-child(2) {
+  width: 260px;
+}
+
+.page-download .case-detail-table th:nth-child(3),
+.page-download .case-detail-table td:nth-child(3) {
+  width: 220px;
+}
+
+.page-download .case-detail-table th:nth-child(4),
+.page-download .case-detail-table td:nth-child(4) {
+  width: 130px;
+}
+
+.page-download .case-detail-table th:nth-child(5),
+.page-download .case-detail-table td:nth-child(5) {
+  width: 150px;
+}
+
+.page-download .case-detail-table th:nth-child(6),
+.page-download .case-detail-table td:nth-child(6),
+.page-download .case-detail-table th:nth-child(7),
+.page-download .case-detail-table td:nth-child(7) {
+  width: 140px;
+}
+
+.page-download .case-detail-table .entry-sequence {
+  margin: 0 auto;
+}
+
+.page-download .case-detail-table .sequence-link {
+  color: #b8840e;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.page-download .case-detail-table .sequence-link:hover {
+  color: #9e7107;
+  text-decoration: underline;
+}
+
+.pdb-external-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.pdb-external-link-icon {
+  font-size: 0.78em;
+  opacity: 0.72;
+  transform: translateY(-0.02em);
+  transition: transform 160ms ease, opacity 160ms ease;
+}
+
+.pdb-external-link:hover .pdb-external-link-icon {
+  opacity: 1;
+  transform: translate(1px, -1px);
+}
+
+.structure-detail-pill-row {
+  justify-content: flex-start;
+}
+
+.structure-detail-actions {
+  justify-content: flex-start;
+}
+
+.structure-detail-action-link {
+  text-decoration: none;
+}
+
+.page-case-detail .sequence-link {
+  color: #b8840e;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.page-case-detail .sequence-link:hover {
+  color: #9e7107;
+  text-decoration: underline;
+}
+
+.related-records-table {
+  min-width: 980px;
+  table-layout: fixed;
+}
+
+.related-records-table th,
+.related-records-table td {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.related-records-table th:nth-child(1),
+.related-records-table td:nth-child(1) {
+  width: 42%;
+}
+
+.related-records-table th:nth-child(2),
+.related-records-table td:nth-child(2) {
+  width: 14%;
+}
+
+.related-records-table th:nth-child(3),
+.related-records-table td:nth-child(3) {
+  width: 26%;
+}
+
+.related-records-table th:nth-child(4),
+.related-records-table td:nth-child(4) {
+  width: 18%;
+}
+
 @media (max-width: 960px) {
   .case-detail-meta-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1608,10 +1746,40 @@ tbody tr:hover {
 .entry-table td:nth-child(6) { width: 190px; }
 .entry-table th:nth-child(7),
 .entry-table td:nth-child(7) { width: 110px; }
+.entry-table th:nth-child(8),
+.entry-table td:nth-child(8) { width: 120px; text-align: center; }
+.entry-table th:nth-child(9),
+.entry-table td:nth-child(9) { width: 110px; }
+.entry-table th:nth-child(10),
+.entry-table td:nth-child(10) { width: 120px; }
 
 .browse-select {
   width: 18px;
   height: 18px;
+}
+
+.browse-match-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 84px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.browse-match-pill.is-hit {
+  background: rgba(227, 191, 92, 0.18);
+  color: #9e7107;
+  border: 1px solid rgba(227, 191, 92, 0.32);
+}
+
+.browse-match-pill.is-miss {
+  background: rgba(148, 165, 177, 0.14);
+  color: #667989;
+  border: 1px solid rgba(148, 165, 177, 0.18);
 }
 
 .entry-table-empty {
