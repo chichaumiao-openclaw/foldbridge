@@ -1571,7 +1571,7 @@ tbody tr:hover {
 }
 
 .page-download .case-detail-table {
-  min-width: 1120px;
+  min-width: 1540px;
   table-layout: fixed;
 }
 
@@ -1587,7 +1587,7 @@ tbody tr:hover {
 
 .page-download .case-detail-table th:nth-child(3),
 .page-download .case-detail-table td:nth-child(3) {
-  width: 220px;
+  width: 180px;
 }
 
 .page-download .case-detail-table th:nth-child(4),
@@ -1597,13 +1597,20 @@ tbody tr:hover {
 
 .page-download .case-detail-table th:nth-child(5),
 .page-download .case-detail-table td:nth-child(5) {
-  width: 150px;
+  width: 360px;
 }
 
 .page-download .case-detail-table th:nth-child(6),
-.page-download .case-detail-table td:nth-child(6),
+.page-download .case-detail-table td:nth-child(6) {
+  width: 130px;
+}
+
 .page-download .case-detail-table th:nth-child(7),
-.page-download .case-detail-table td:nth-child(7) {
+.page-download .case-detail-table td:nth-child(7),
+.page-download .case-detail-table th:nth-child(8),
+.page-download .case-detail-table td:nth-child(8),
+.page-download .case-detail-table th:nth-child(9),
+.page-download .case-detail-table td:nth-child(9) {
   width: 140px;
 }
 
@@ -2502,25 +2509,34 @@ tbody tr:hover {
 }
 
 .sequence-detail-forna-frame {
-  border: 1px solid rgba(227, 191, 92, 0.24);
+  width: min(100%, 560px);
+  aspect-ratio: 1 / 1;
+  margin: 0 auto;
+  border: 1px solid rgba(148, 163, 184, 0.35);
   border-radius: 22px;
   background: #ffffff;
-  min-height: 420px;
-  padding: 16px;
+  padding: 8px;
   overflow: hidden;
   box-shadow: none;
 }
 
 .sequence-detail-forna-host {
-  min-height: 380px;
   width: 100%;
+  height: 100%;
+  min-height: 0;
   border-radius: 16px;
   background: #ffffff;
+  border: 1px solid rgba(148, 163, 184, 0.35);
   overflow: hidden;
 }
 
-.sequence-detail-forna-host > * {
-  display: none !important;
+.sequence-detail-forna-host svg,
+.sequence-detail-forna-host .forna-host,
+.sequence-detail-forna-host .rnagraph,
+.sequence-detail-forna-host .rna_ss_svg {
+  border: 0 !important;
+  outline: 0 !important;
+  background: #ffffff !important;
 }
 
 .sequence-secondary-side {
@@ -3497,7 +3513,9 @@ tbody tr:hover {
   background: var(--surface);
 }
 
-#sequence-detail-molstar .msp-plugin {
+#sequence-detail-molstar .msp-plugin,
+#structure-detail-molstar .msp-plugin,
+#predicted-structure-detail-molstar .msp-plugin {
   position: relative !important;
   inset: auto !important;
   display: block !important;
@@ -3508,12 +3526,20 @@ tbody tr:hover {
 
 #sequence-detail-molstar .msp-layout-root,
 #sequence-detail-molstar .msp-layout-standard,
-#sequence-detail-molstar canvas {
+#sequence-detail-molstar canvas,
+#structure-detail-molstar .msp-layout-root,
+#structure-detail-molstar .msp-layout-standard,
+#structure-detail-molstar canvas,
+#predicted-structure-detail-molstar .msp-layout-root,
+#predicted-structure-detail-molstar .msp-layout-standard,
+#predicted-structure-detail-molstar canvas {
   position: relative !important;
   inset: auto !important;
 }
 
-#sequence-detail-molstar .msp-layout-standard {
+#sequence-detail-molstar .msp-layout-standard,
+#structure-detail-molstar .msp-layout-standard,
+#predicted-structure-detail-molstar .msp-layout-standard {
   border: 0;
   height: 560px !important;
 }
@@ -3734,7 +3760,7 @@ tbody tr:hover {
   .hero, .split, .grid.two-col, .detail-grid, .stats-grid, .stats-grid.compact, .viz-grid, .chart-container.two, .summary-cards { grid-template-columns: 1fr; }
   .pie-layout { grid-template-columns: 1fr; }
   .structure-table #myViewer1, #myViewer1 { width: 100% !important; height: 420px !important; }
-  .sequence-detail-viewer, #sequence-detail-molstar .msp-plugin, #sequence-detail-molstar .msp-layout-standard { min-height: 420px; height: 420px !important; }
+  .sequence-detail-viewer, #sequence-detail-molstar .msp-plugin, #sequence-detail-molstar .msp-layout-standard, #structure-detail-molstar .msp-plugin, #structure-detail-molstar .msp-layout-standard, #predicted-structure-detail-molstar .msp-plugin, #predicted-structure-detail-molstar .msp-layout-standard { min-height: 420px; height: 420px !important; }
   .sequence-detail-title-row { grid-template-columns: 1fr; align-items: start; gap: 24px; }
   .sequence-secondary-top { grid-template-columns: 1fr; }
   .sequence-secondary-bottom { grid-template-columns: 1fr; }

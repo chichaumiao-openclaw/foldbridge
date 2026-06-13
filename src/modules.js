@@ -594,6 +594,46 @@ async function loadFornaAssets() {
   }
 }
 
+function buildFornaCustomColorsText(sequence) {
+  const nucleotideColors = {
+    A: '#68AF31',
+    U: '#18529A',
+    G: '#C06D23',
+    C: '#DA4E6D'
+  };
+
+  return sequence
+    .split('')
+    .map((base, index) => {
+      const color = nucleotideColors[base];
+      return color ? `${index + 1}:${color}` : '';
+    })
+    .filter(Boolean)
+    .join(' ');
+}
+
+function parseRdatSecondaryConfig(text, fallbackSequence = '') {
+  let sequence = normalizeRnaSequence(fallbackSequence);
+  let structure = '';
+
+  text.split(/\r?\n/).forEach((rawLine) => {
+    const line = rawLine.trim();
+    if (!line) return;
+    if (line.startsWith('SEQUENCE')) {
+      sequence = normalizeRnaSequence(line.replace(/^SEQUENCE\s+/, ''));
+    } else if (line.startsWith('STRUCTURE')) {
+      structure = line.replace(/^STRUCTURE\s+/, '').replace(/\s+/g, '').trim();
+    }
+  });
+
+  const hasPairs = /[()[\]{}<>]/.test(structure);
+  if (!sequence || !structure || !hasPairs || sequence.length !== structure.length) {
+    return null;
+  }
+
+  return { sequence, structure };
+}
+
 export async function initSecondaryStructureModule() {
   const status = document.getElementById('forna-status');
   const host = document.getElementById('custom_colors');
@@ -619,6 +659,45 @@ export async function initSecondaryStructureModule() {
     status.textContent = 'Forna secondary structure loaded.';
   } catch (_e) {
     status.textContent = 'Forna failed to load (remote scripts blocked).';
+  }
+}
+
+export async function initStructureDetailSecondaryForna() {
+  const status = document.getElementById('structure-detail-forna-status');
+  const host = document.getElementById('structure-detail-forna-host');
+  if (!status || !host) return;
+
+  const rdatUrl = host.dataset.rdatUrl;
+  const fallbackSequence = host.dataset.sequence || '';
+  const foldBridgeId = host.dataset.foldbridgeId || 'this RDAT record';
+  if (!rdatUrl) return;
+
+  try {
+    const response = await fetch(rdatUrl);
+    if (!response.ok) throw new Error('Failed to load RDAT');
+    const text = await response.text();
+    const config = parseRdatSecondaryConfig(text, fallbackSequence);
+
+    if (!config) {
+      host.innerHTML = '';
+      status.textContent = `Secondary structure unavailable for ${foldBridgeId} in the current RDAT.`;
+      return;
+    }
+
+    await loadFornaAssets();
+    host.innerHTML = '';
+    const container = new window.fornac.FornaContainer('#structure-detail-forna-host', {
+      applyForce: 1,
+      editable: false,
+      initialSize: [640, 420]
+    });
+
+    container.addRNA(config.structure, config);
+    container.addCustomColorsText(buildFornaCustomColorsText(config.sequence));
+    status.textContent = `Forna secondary structure loaded from ${foldBridgeId}.`;
+  } catch (_error) {
+    host.innerHTML = '';
+    status.textContent = 'Forna failed to load for this RDAT record.';
   }
 }
 
@@ -698,6 +777,66 @@ export async function initSequenceDetailMolstar() {
     status.textContent = `Interactive Mol* view loaded from ${structureLabel} with random segmented coloring.`;
   } catch (_e) {
     status.textContent = '3D viewer unavailable right now.';
+  }
+}
+
+export async function initStructureDetailMolstar() {
+  const container = document.getElementById('structure-detail-molstar');
+  const status = document.getElementById('structure-detail-molstar-status');
+  if (!container || !status) return;
+
+  const structureUrl = container.dataset.structureUrl;
+  const structureFormat = container.dataset.structureFormat || 'cif';
+  const structureLabel = container.dataset.structureLabel || 'PDB structure';
+  const sequence = container.dataset.structureSequence || '';
+  if (!structureUrl) return;
+
+  try {
+    await loadMolstarAssets();
+    const viewer = new window.PDBeMolstarPlugin();
+    viewer.render(container, {
+      customData: { url: structureUrl, format: structureFormat },
+      expanded: false,
+      hideControls: true,
+      bgColor: { r: 255, g: 255, b: 255 }
+    });
+    applyMolstarColoring(viewer, sequence, structureLabel);
+
+    status.textContent = `Interactive Mol* view loaded from ${structureLabel}.`;
+  } catch (_e) {
+    status.textContent = '3D viewer unavailable right now.';
+  }
+}
+
+export async function initPredictedStructureDetailMolstar() {
+  const container = document.getElementById('predicted-structure-detail-molstar');
+  const status = document.getElementById('predicted-structure-detail-molstar-status');
+  if (!container || !status) return;
+
+  const structureUrl = container.dataset.structureUrl;
+  const structureFormat = container.dataset.structureFormat || 'pdb';
+  const structureLabel = container.dataset.structureLabel || 'predicted structure';
+  const sequence = container.dataset.structureSequence || '';
+  const structureSource = container.dataset.structureSource || 'local-fallback';
+  if (!structureUrl) return;
+
+  try {
+    await loadMolstarAssets();
+    const viewer = new window.PDBeMolstarPlugin();
+    viewer.render(container, {
+      customData: { url: structureUrl, format: structureFormat },
+      expanded: false,
+      hideControls: true,
+      bgColor: { r: 255, g: 255, b: 255 }
+    });
+    applyMolstarColoring(viewer, sequence, structureLabel);
+
+    status.textContent =
+      structureSource === 'rnacomposer'
+        ? `RNAComposer predicted 3D model loaded from ${structureLabel}.`
+        : `Predicted 3D fallback model loaded from ${structureLabel}.`;
+  } catch (_e) {
+    status.textContent = 'Predicted 3D viewer unavailable right now.';
   }
 }
 
