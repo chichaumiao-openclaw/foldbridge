@@ -1407,13 +1407,44 @@ function buildBlastMatchIndex(rows) {
   }, new Map());
 }
 
+const structureDatasetOrder = new Map([
+  ['puzzle', 0],
+  ['general', 1],
+  ['riboswitches', 2],
+  ['rna-structure', 3],
+  ['eterna', 4],
+  ['other', 5]
+]);
+
+function normalizeStructureDataset(value) {
+  const text = String(value ?? '').toLowerCase();
+  if (text.includes('puzzle')) return 'puzzle';
+  if (text.includes('general')) return 'general';
+  if (text.includes('riboswitch')) return 'riboswitches';
+  if (text.includes('rnastructure')) return 'rna-structure';
+  if (text.includes('eterna')) return 'eterna';
+  return 'other';
+}
+
+function compareStructureRows(a, b) {
+  const identityDiff = (Number(b.bestIdentity) || 0) - (Number(a.bestIdentity) || 0);
+  if (identityDiff !== 0) return identityDiff;
+  const coverageDiff = (Number(b.bestCoverage) || 0) - (Number(a.bestCoverage) || 0);
+  if (coverageDiff !== 0) return coverageDiff;
+  const evalueDiff = parseScientificValue(a.bestEvalue) - parseScientificValue(b.bestEvalue);
+  if (evalueDiff !== 0) return evalueDiff;
+  const nameDiff = (a.name || a.foldBridgeId).localeCompare(b.name || b.foldBridgeId);
+  if (nameDiff !== 0) return nameDiff;
+  return a.foldBridgeId.localeCompare(b.foldBridgeId);
+}
+
 function buildStructureEntryRows(rows) {
   const grouped = new Map();
 
   rows
     .filter((row) => row.hasPdbMatch)
     .forEach((row) => {
-      const groupKey = normalizeStructureMatchLabel(row.name) || row.foldBridgeId;
+      const groupKey = row.structureGroupKey || normalizeStructureMatchLabel(row.name) || row.foldBridgeId;
       const existing = grouped.get(groupKey);
 
       if (!existing) {
@@ -1460,26 +1491,25 @@ function buildStructureEntryRows(rows) {
   return [...grouped.entries()]
     .map(([groupKey, { representative, relatedRecords }]) => {
       const preferredId = preferredStructureRepresentativeIds.get(groupKey);
+      const sortedRelatedRecords = [...relatedRecords].sort(compareStructureRows);
       const preferredRecord = preferredId
-        ? relatedRecords.find((record) => record.foldBridgeId === preferredId)
+        ? sortedRelatedRecords.find((record) => record.foldBridgeId === preferredId)
         : null;
       const finalRepresentative = preferredRecord || representative;
 
       return {
         ...finalRepresentative,
-        relatedRecords,
-        relatedRecordCount: relatedRecords.length,
+        relatedRecords: sortedRelatedRecords,
+        relatedRecordCount: sortedRelatedRecords.length,
         detailPage: `#structure-detail?foldBridgeId=${encodeURIComponent(finalRepresentative.foldBridgeId)}`
       };
     })
     .sort((a, b) => {
-      const evalueDiff = parseScientificValue(a.bestEvalue) - parseScientificValue(b.bestEvalue);
-      if (evalueDiff !== 0) return evalueDiff;
-      const identityDiff = (Number(b.bestIdentity) || 0) - (Number(a.bestIdentity) || 0);
-      if (identityDiff !== 0) return identityDiff;
-      const coverageDiff = (Number(b.bestCoverage) || 0) - (Number(a.bestCoverage) || 0);
-      if (coverageDiff !== 0) return coverageDiff;
-      return (a.name || a.foldBridgeId).localeCompare(b.name || b.foldBridgeId);
+      const datasetOrderDiff =
+        (structureDatasetOrder.get(a.structureDatasetGroup) ?? structureDatasetOrder.get('other')) -
+        (structureDatasetOrder.get(b.structureDatasetGroup) ?? structureDatasetOrder.get('other'));
+      if (datasetOrderDiff !== 0) return datasetOrderDiff;
+      return compareStructureRows(a, b);
     });
 }
 
@@ -1562,6 +1592,62 @@ function parseTsv(text) {
     const values = line.split('\t');
     return Object.fromEntries(headers.map((header, index) => [header, values[index] ?? '']));
   });
+}
+
+function trimRdatSuffix(value) {
+  return String(value ?? '').replace(/\.rdat$/i, '');
+}
+
+function inferFileCodeFromSourceFile(sourceFile) {
+  const tokens = trimRdatSuffix(sourceFile).split('_');
+  return tokens[1] || '';
+}
+
+function inferModifierFromSupplementRow(row) {
+  const annotation = String(row.source_sequence_type ?? '').toLowerCase();
+  if (annotation.includes('modifier:1m7')) return '1M7';
+  if (annotation.includes('mutation:wt')) return 'SHAPE';
+  if (annotation.includes('chemical:atp')) return 'ATP';
+
+  const fileCode = inferFileCodeFromSourceFile(row.source_file).toUpperCase();
+  if (['1M7', 'DMS', 'CMC', 'CMCT', 'HRF', 'NMD', 'ALG', 'STD'].includes(fileCode)) return fileCode;
+  return '';
+}
+
+function buildSupplementStructureRows(rows, existingIds = new Set()) {
+  return rows
+    .map((row) => {
+      const sourceStem = trimRdatSuffix(row.source_file);
+      const foldBridgeId = `RMDB_${sourceStem}`;
+      if (!sourceStem || existingIds.has(foldBridgeId)) return null;
+
+      const sequenceLength = String(row.source_sequence_length ?? '').trim();
+      const sequenceText = String(row.source_sequence ?? '').trim();
+
+      return {
+        foldBridgeId,
+        name: row.source_name || '',
+        discoveryYear: '',
+        sequence: sequenceText && sequenceLength ? `${sequenceText} (${sequenceLength}nt)` : sequenceText,
+        length: sequenceLength ? `${sequenceLength}nt` : '',
+        structureGroupKey: `${normalizeStructureMatchLabel(row.source_name || sourceStem)}::${sequenceLength || sourceStem}`,
+        fileCode: inferFileCodeFromSourceFile(row.source_file),
+        experimentType: '',
+        modifier: inferModifierFromSupplementRow(row),
+        hasPdbMatch: Boolean(row.pdb_id),
+        pdbMatchCount: row.pdb_id ? 1 : 0,
+        pdbIds: row.pdb_id ? [String(row.pdb_id).toUpperCase()] : [],
+        bestPdbId: row.pdb_id ? String(row.pdb_id).toUpperCase() : '',
+        bestSubjectId: row.sseqid || '',
+        bestEvalue: row.evalue || '',
+        bestIdentity: row.pident || '',
+        bestCoverage: row.qcovs || '',
+        structureDatasetGroup: normalizeStructureDataset(row.dataset),
+        rdatPath: '',
+        hasLocalRdat: false
+      };
+    })
+    .filter(Boolean);
 }
 
 function parseFasta(text) {
@@ -1744,10 +1830,15 @@ async function ensureCaseDetailLoaded(caseId) {
 
 async function loadBrowseEntryRows() {
   try {
-    const response = await fetch(dataAssetPath('rdat_summary.csv'));
-    if (!response.ok) throw new Error('Failed to load RDAT summary');
-    const text = await response.text();
-    const [header, ...records] = parseCsv(text);
+    const [summaryResponse, supplementResponse] = await Promise.all([
+      fetch(dataAssetPath('rdat_summary.csv')),
+      fetch(dataAssetPath('structure_page_supplement.tsv'))
+    ]);
+    if (!summaryResponse.ok) throw new Error('Failed to load RDAT summary');
+    if (!supplementResponse.ok) throw new Error('Failed to load structure supplement');
+
+    const [summaryText, supplementText] = await Promise.all([summaryResponse.text(), supplementResponse.text()]);
+    const [header, ...records] = parseCsv(summaryText);
     if (!header?.length) {
       browseEntryRows = [];
       return;
@@ -1767,6 +1858,7 @@ async function loadBrowseEntryRows() {
         discoveryYear: puzzleDiscoveryYears.get(matchKey) || 'N/A',
         sequence: row.Sequence || '',
         length: row.Length || '',
+        structureGroupKey: matchKey || row['FoldBridge ID'] || '',
         fileCode: row['File Code'] || '',
         experimentType: row['Experiment Type'] || '',
         modifier: row.Modifier || '',
@@ -1777,9 +1869,15 @@ async function loadBrowseEntryRows() {
         bestSubjectId: bestMatch?.subjectId || '',
         bestEvalue: bestMatch?.evalue || '',
         bestIdentity: bestMatch?.pident || '',
-        bestCoverage: bestMatch?.qcovs || ''
+        bestCoverage: bestMatch?.qcovs || '',
+        structureDatasetGroup: 'puzzle',
+        rdatPath: dataAssetPath(`${(row['FoldBridge ID'] || '').replace(/^RMDB_/, '')}.rdat`),
+        hasLocalRdat: true
       };
     });
+    const existingIds = new Set(browseEntryRows.map((row) => row.foldBridgeId).filter(Boolean));
+    const supplementRows = buildSupplementStructureRows(parseTsv(supplementText), existingIds);
+    browseEntryRows = [...browseEntryRows, ...supplementRows];
     structureEntryRows = buildStructureEntryRows(browseEntryRows);
   } catch (error) {
     console.error(error);
@@ -1793,13 +1891,16 @@ async function loadCase3dRows() {
 }
 
 function rdatDownloadPath(foldBridgeId) {
-  return dataAssetPath(`${foldBridgeId.replace(/^RMDB_/, '')}.rdat`);
+  const row = browseEntryRows.find((item) => item.foldBridgeId === foldBridgeId);
+  return row?.rdatPath || '';
 }
 
 function downloadSelectedRdatFiles(selectedIds = [...selectedBrowseIds]) {
   selectedIds.forEach((foldBridgeId, index) => {
+    const downloadPath = rdatDownloadPath(foldBridgeId);
+    if (!downloadPath) return;
     const link = document.createElement('a');
-    link.href = rdatDownloadPath(foldBridgeId);
+    link.href = downloadPath;
     link.download = `${foldBridgeId.replace(/^RMDB_/, '')}.rdat`;
     link.style.display = 'none';
     document.body.appendChild(link);
@@ -2044,60 +2145,13 @@ function bindPageJump({ inputId, buttonId, totalPages, getCurrentPage, setCurren
 
 
 function downloadSequencesPage() {
-  const visibleRows = getFilteredSequenceRows();
-  const rows = visibleRows.map((row) => `
-    <tr>
-      <td>
-        <input
-          type="checkbox"
-          class="sequence-select"
-          data-sequence-id="${row.id}"
-          ${selectedSequenceIds.has(row.id) ? 'checked' : ''}
-        />
-      </td>
-      <td><a href="#sequence-detail?sequenceId=${encodeURIComponent(row.id ?? '')}" class="sequence-link">${row.sequenceName ?? ''}</a></td>
-      <td>${row.aptamerName ?? ''}</td>
-      <td>${row.article ?? ''}</td>
-      <td>${row.category ?? ''}</td>
-      <td>
-        <span class="sequence-preview" title="${row.type ?? ''}">
-          ${row.type ? `${row.type.slice(0, 10)}...` : ''}
-        </span>
-      </td>
-      <td>${row.chemicalProbing ?? ''}</td>
-      <td><a href="https://www.rcsb.org/structure/${encodeURIComponent(row.pdbName ?? '')}" class="sequence-link" target="_blank" rel="noopener noreferrer">${row.pdbName ?? ''}</a></td>
-      <td>${row.sequence ?? ''}</td>
-      <td>${row.confidence ?? ''}</td>
-    </tr>
-  `).join('');
+  const rows = `<tr><td colspan="10" class="entry-table-empty">Sequence records will be added here later.</td></tr>`;
 
   return `<main class="page-download-sequences">
     ${renderBundleHeader()}
     <section class="card download-card">
-      <h1>Structures</h1>
-      <p class="download-intro">Select one or more rows below to download example structure records. Current data are demo entries copied from the first available record.</p>
-
-      <div class="download-toolbar browse-toolbar">
-        <input
-          id="sequence-search"
-          class="download-search"
-          type="search"
-          placeholder="Search..."
-          value="${sequenceSearchQuery.replace(/"/g, '&quot;')}"
-        />
-        <button id="export-selected-sequences" type="button" class="download-outline-btn" ${selectedSequenceIds.size ? '' : 'disabled'}>
-          Export Selected (${selectedSequenceIds.size})
-        </button>
-        <button id="export-all-sequences" type="button" class="download-outline-btn">
-          Export All Results
-        </button>
-        <button id="select-visible-sequences" type="button" class="download-outline-btn">
-          Select Current Page
-        </button>
-        <button id="clear-selected-sequences" type="button" class="download-outline-btn">
-          Clear Selection
-        </button>
-      </div>
+      <h1>Sequence</h1>
+      <p class="download-intro">This page is reserved for future curated sequence entries.</p>
 
       <div class="download-table-wrap">
       <table class="structure-table download-table">
@@ -2122,7 +2176,7 @@ function downloadSequencesPage() {
       </div>
 
       <div class="download-footnote">
-        <span>Showing 1-${visibleRows.length} of ${visibleRows.length} entries</span>
+        <span>Showing 0 entries</span>
       </div>
     </section>
   </main>`;
@@ -3399,22 +3453,28 @@ function structureDetailPage() {
 
       <section class="sequence-detail-panel">
         <h2>Secondary Structure</h2>
-        <section class="sequence-secondary-card sequence-secondary-forna-card">
-          <div class="sequence-detail-forna-copy">
-            <h3>RNA Secondary Structure Viewer (Forna)</h3>
-            <p>Secondary structure parsed directly from the linked RDAT record when paired dot-bracket constraints are available.</p>
-          </div>
-          <div class="sequence-detail-forna-frame">
-            <div
-              id="structure-detail-forna-host"
-              class="sequence-detail-forna-host"
-              data-rdat-url="${rdatDownloadPath(row.foldBridgeId)}"
-              data-foldbridge-id="${row.foldBridgeId}"
-              data-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-            ></div>
-          </div>
-          <p id="structure-detail-forna-status" class="sequence-detail-forna-note">Loading secondary structure viewer…</p>
-        </section>
+        ${
+          row.hasLocalRdat
+            ? `<section class="sequence-secondary-card sequence-secondary-forna-card">
+                <div class="sequence-detail-forna-copy">
+                  <h3>RNA Secondary Structure Viewer (Forna)</h3>
+                  <p>Secondary structure parsed directly from the linked RDAT record when paired dot-bracket constraints are available.</p>
+                </div>
+                <div class="sequence-detail-forna-frame">
+                  <div
+                    id="structure-detail-forna-host"
+                    class="sequence-detail-forna-host"
+                    data-rdat-url="${rdatDownloadPath(row.foldBridgeId)}"
+                    data-foldbridge-id="${row.foldBridgeId}"
+                    data-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                  ></div>
+                </div>
+                <p id="structure-detail-forna-status" class="sequence-detail-forna-note">Loading secondary structure viewer…</p>
+              </section>`
+            : `<div class="sequence-detail-placeholder">
+                <p>This imported structure entry is listed on the structure page, but its local RDAT file has not been added to the project yet.</p>
+              </div>`
+        }
       </section>
 
       <section class="sequence-detail-panel">
