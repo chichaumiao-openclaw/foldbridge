@@ -8,7 +8,9 @@ function escapeHtml(value) {
 }
 
 function formatPct(value) {
-  return `${Number(value).toFixed(Number.isInteger(value) ? 0 : 1)}%`;
+  if (value == null || !Number.isFinite(Number(value))) return '—';
+  const rounded = Math.round(Number(value) * 1000) / 1000;
+  return `${rounded}%`;
 }
 
 function renderMetric(label, value, note = '') {
@@ -26,8 +28,12 @@ function renderTrackPreview(points = []) {
 
   const bars = points
     .map((point) => {
-      const height = Math.max(6, Math.round(Math.min(Math.max(Number(point.value) || 0, 0), 1) * 100));
-      return `<span class="pdb-case-track-bar" style="height:${height}%" title="pdb_pos ${escapeHtml(point.pdbPos)}: ${escapeHtml(point.value)}"></span>`;
+      const raw = point.reactivity;
+      if (raw == null || !Number.isFinite(Number(raw))) {
+        return `<span class="pdb-case-track-bar pdb-case-track-bar--na" style="height:6%" title="pdb_pos ${escapeHtml(point.pdbPos)}: no value"></span>`;
+      }
+      const height = Math.max(6, Math.round(Math.min(Math.max(Number(raw), 0), 1) * 100));
+      return `<span class="pdb-case-track-bar" style="height:${height}%" title="pdb_pos ${escapeHtml(point.pdbPos)}: ${escapeHtml(raw)}"></span>`;
     })
     .join('');
 
@@ -114,7 +120,109 @@ export function renderPdbCaseIndexPage(rows = []) {
   </main>`;
 }
 
-export function renderPdbCasePage(detail, params = {}) {
+function renderAlignmentSection(detail, alignmentPage) {
+  if (detail.alignmentPageCount === 0) {
+    return `<section class="card bundle-wide-card pdb-case-alignment-section">
+      <div class="technology-section-heading">
+        <div><p class="technology-kicker">base-level alignment</p><h2>Gapped alignment columns</h2></div>
+        <p>No alignment columns are available for this case.</p>
+      </div>
+    </section>`;
+  }
+  if (!alignmentPage) {
+    return `<section class="card bundle-wide-card pdb-case-alignment-section" data-alignment-page="1">
+      <div class="technology-section-heading">
+        <div><p class="technology-kicker">base-level alignment</p><h2>Gapped alignment columns</h2></div>
+        <p>Loading alignment page…</p>
+      </div>
+      <div class="pdb-case-track-empty">Loading…</div>
+    </section>`;
+  }
+  const rows = (alignmentPage.rows || [])
+    .map((r) => `<tr>
+      <td>${escapeHtml(r.alignment_column)}</td>
+      <td>${escapeHtml(r.rmdb_query_pos)}</td>
+      <td>${escapeHtml(r.pdb_pos)}</td>
+      <td>${escapeHtml(r.rmdb_base)}</td>
+      <td>${escapeHtml(r.pdb_base)}</td>
+      <td>${escapeHtml(r.match_state)}</td>
+    </tr>`)
+    .join('');
+  const page = alignmentPage.page || 1;
+  const total = detail.alignmentPageCount;
+  const prevDisabled = page <= 1 ? 'disabled' : '';
+  const nextDisabled = page >= total ? 'disabled' : '';
+  return `<section class="card bundle-wide-card pdb-case-alignment-section" data-alignment-page="${escapeHtml(page)}">
+    <div class="technology-section-heading">
+      <div><p class="technology-kicker">base-level alignment</p><h2>Gapped alignment columns</h2></div>
+      <p>Each row is one gapped alignment column between the RMDB query and the PDB reference sequence. Loaded 25 rows per page.</p>
+    </div>
+    <div class="download-table-wrap">
+      <table class="structure-table download-table">
+        <caption>Base-level gapped alignment columns for ${escapeHtml(detail.pdbId)}, page ${escapeHtml(page)} of ${escapeHtml(total)}.</caption>
+        <thead>
+          <tr>
+            <th>Alignment column</th>
+            <th>RMDB query pos</th>
+            <th>PDB pos</th>
+            <th>RMDB base</th>
+            <th>PDB base</th>
+            <th>Match state</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+    <div class="pdb-case-pager">
+      <button type="button" class="pdb-case-pager-btn" data-alignment-nav="prev" ${prevDisabled}>Previous</button>
+      <span class="pdb-case-pager-status">Page ${escapeHtml(page)} / ${escapeHtml(total)}</span>
+      <button type="button" class="pdb-case-pager-btn" data-alignment-nav="next" ${nextDisabled}>Next</button>
+    </div>
+  </section>`;
+}
+
+function renderProfilesSection(profiles) {
+  if (!profiles) {
+    return `<section class="card bundle-wide-card pdb-case-profile-section">
+      <div class="technology-section-heading">
+        <div><p class="technology-kicker">profile-level detail</p><h2>Probing profiles</h2></div>
+        <p>Loading profiles…</p>
+      </div>
+    </section>`;
+  }
+  const rows = profiles
+    .map((p) => `<tr>
+      <td>${escapeHtml(p.rdatFile)}</td>
+      <td>${escapeHtml(p.rmdbUniqueId)}</td>
+      <td>${escapeHtml(p.sequenceLength)}</td>
+      <td>${escapeHtml(formatPct(Number.isFinite(Number(p.identityFraction)) ? Number(p.identityFraction) * 100 : null))}</td>
+      <td><code class="pdb-case-profile-key">${escapeHtml(p.profileKey)}</code></td>
+    </tr>`)
+    .join('');
+  return `<section class="card bundle-wide-card pdb-case-profile-section">
+    <div class="technology-section-heading">
+      <div><p class="technology-kicker">profile-level detail</p><h2>Probing profiles &amp; provenance</h2></div>
+      <p>Profiles stay separate; this page does not hide multiple RMDB probing sources behind one aggregate value. The probe type is carried by the RDAT file name.</p>
+    </div>
+    <div class="download-table-wrap">
+      <table class="structure-table download-table">
+        <caption>RMDB probing profiles joined to provenance for this case.</caption>
+        <thead>
+          <tr>
+            <th>RDAT file</th>
+            <th>rmdb_unique_id</th>
+            <th>Seq length</th>
+            <th>Identity</th>
+            <th>profile_key</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  </section>`;
+}
+
+export function renderPdbCasePage(detail, params = {}, assets = {}) {
   if (!detail) {
     return `<main class="page-pdb-case">
       <section class="card bundle-wide-card pdb-case-hero">
@@ -126,20 +234,8 @@ export function renderPdbCasePage(detail, params = {}) {
     </main>`;
   }
 
-  const selectedProfileId = params.bundleProfileId || detail.profileSummaries?.[0]?.bundleProfileId || '';
-  const profileRows = (detail.profileSummaries || [])
-    .map((profile) => {
-      const selected = profile.bundleProfileId === selectedProfileId;
-      return `<tr class="${selected ? 'selected-profile' : ''}">
-        <td>${escapeHtml(profile.bundleProfileId)}</td>
-        <td>${escapeHtml(profile.rmdbUniqueId)}</td>
-        <td>${escapeHtml(profile.bundleSequenceId)}</td>
-        <td>${escapeHtml(profile.modifier)}</td>
-        <td>${escapeHtml(profile.rowCount)}</td>
-        <td>${escapeHtml(profile.baseMismatchRows)}</td>
-      </tr>`;
-    })
-    .join('');
+  const { profiles, alignmentPage, reactivitySummary } = assets;
+  const reactivityEntries = detail.reactivity || [];
 
   return `<main class="page-pdb-case">
     <section class="card bundle-wide-card pdb-case-hero">
@@ -147,16 +243,16 @@ export function renderPdbCasePage(detail, params = {}) {
       <p class="technology-kicker">PDB case page</p>
       <div class="pdb-case-title-row">
         <div>
-          <h1>${escapeHtml(detail.pdbId)} ${escapeHtml(detail.title)}</h1>
-          <p class="pdb-case-lede">${escapeHtml(detail.description)}</p>
-          <p class="pdb-case-lede">This is a lightweight site preview, not the full 722-case support-root import.</p>
+          <h1>${escapeHtml(detail.pdbId)} ${escapeHtml(detail.title)} ${renderConfidenceBadge(detail.confidenceClass)}</h1>
+          ${detail.subtitle ? `<p class="pdb-case-lede">${escapeHtml(detail.subtitle)}</p>` : ''}
+          <p class="pdb-case-lede">Lazy-loaded from the generated RMDB→PDB case assets. Confidence score ${escapeHtml(formatScore(detail.confidenceScore))}.</p>
         </div>
         <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/${encodeURIComponent(detail.pdbId)}" target="_blank" rel="noopener noreferrer">Open RCSB</a>
       </div>
       <div class="pdb-case-status-grid">
-        ${renderMetric('PDB references', detail.pdbReferenceCount)}
+        ${renderMetric('PDB references', detail.pdbReferenceIdCount)}
         ${renderMetric('RMDB unique sequences', detail.rmdbUniqueSequenceCount)}
-        ${renderMetric('Profiles', detail.profileCount)}
+        ${renderMetric('Profiles', detail.rmdbProfileCount)}
         ${renderMetric('Projection status', detail.projectionStatus)}
       </div>
     </section>
@@ -192,30 +288,7 @@ export function renderPdbCasePage(detail, params = {}) {
       </div>
     </section>
 
-    <section class="card bundle-wide-card pdb-case-profile-section">
-      <div class="technology-section-heading">
-        <div>
-          <p class="technology-kicker">profile-level detail</p>
-          <h2>Probing profiles</h2>
-        </div>
-        <p>Profiles stay separate; this page does not hide multiple RMDB sources behind one aggregate value.</p>
-      </div>
-      <div class="download-table-wrap">
-        <table class="structure-table download-table">
-          <thead>
-            <tr>
-              <th>bundle_profile_id</th>
-              <th>rmdb_unique_id</th>
-              <th>bundle_sequence_id</th>
-              <th>Modifier</th>
-              <th>Rows</th>
-              <th>Mismatch rows</th>
-            </tr>
-          </thead>
-          <tbody>${profileRows}</tbody>
-        </table>
-      </div>
-    </section>
+    ${renderProfilesSection(profiles)}
 
     <section class="card bundle-wide-card pdb-case-track-section">
       <div class="technology-section-heading">
@@ -223,9 +296,12 @@ export function renderPdbCasePage(detail, params = {}) {
           <p class="technology-kicker">sequence-axis preview</p>
           <h2>Downsampled reactivity track</h2>
         </div>
-        <p>The full per-base TSV is a build input. The browser receives only bounded summaries or future windowed slices.</p>
+        <p>The full per-base TSV is a build input. The browser receives only a bounded, downsampled summary per probing profile.</p>
       </div>
-      ${renderTrackPreview(detail.reactivityTrackPreview)}
+      ${reactivityEntries.length > 1 ? `<p class="pdb-case-track-note">${escapeHtml(reactivityEntries.length)} probing profiles available; showing ${escapeHtml(reactivitySummary?.profileKey || reactivityEntries[0].profileKey)}.</p>` : ''}
+      ${renderTrackPreview(reactivitySummary?.trackPreview)}
     </section>
+
+    ${renderAlignmentSection(detail, alignmentPage)}
   </main>`;
 }
