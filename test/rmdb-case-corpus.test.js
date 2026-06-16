@@ -10,6 +10,7 @@ import {
   slugifyProfileKey
 } from '../scripts/lib/rmdb-case-corpus.mjs';
 import { paginateAlignment, buildProfiles } from '../scripts/lib/rmdb-case-corpus.mjs';
+import { selectBestHitPair, buildCaseDetail } from '../scripts/lib/rmdb-case-corpus.mjs';
 
 test('sample case ids: 20 unique uppercase pdb ids', () => {
   assert.equal(SAMPLE_CASE_IDS.length, 20);
@@ -172,4 +173,56 @@ test('buildProfiles tolerates a profile whose bundle_sequence has no member row'
   assert.equal(out.length, 1);
   assert.equal(out[0].sequenceLength, 0);
   assert.equal(out[0].profileKey, slugifyProfileKey('pf-x'));
+});
+
+test('selectBestHitPair picks highest bitscore then lowest evalue', () => {
+  const pairs = [
+    { bundle_sequence_id: 'b1', identity_fraction: '0.9', rmdb_query_coverage: '0.5', pdb_subject_coverage: '0.8', evalue: '2.88e-49', bitscore: '193.0' },
+    { bundle_sequence_id: 'b2', identity_fraction: '0.95', rmdb_query_coverage: '0.6', pdb_subject_coverage: '0.85', evalue: '1e-60', bitscore: '210.0' }
+  ];
+  const best = selectBestHitPair(pairs);
+  assert.equal(best.bundle_sequence_id, 'b2');
+});
+
+test('selectBestHitPair returns null for empty', () => {
+  assert.equal(selectBestHitPair([]), null);
+});
+
+test('buildCaseDetail surfaces projection semantics, quality fields, and asset manifest', () => {
+  const publicCase = {
+    pdb_id: '8CBL', projection_status: 'pass', projection_is_structural_evidence: false,
+    reactivity_axis: 'pdb_reference_sequence_position', observed_residue_axis: false,
+    projection_method: 'rmdb_sequence_position_to_blast_gapped_subject_position_v0',
+    scientific_scope: 'sequence_alignment_projection_to_pdb_reference_axis',
+    annotation_pdb_name_policy: 'display_as_rdat_author_annotation_only_not_structure_proof',
+    map2d_status: 'not_claimed_no_rmdb_2d_map_source_in_package',
+    base_mismatch_rows: 2, alignment_rows: 109, pdb_axis_reactivity_rows: 218,
+    rmdb_unique_sequence_count: 1, rmdb_profile_count: 2, pdb_reference_id_count: 1
+  };
+  const indexRow = { pdbId: '8CBL', title: 'X', confidenceClass: 'high', confidenceScore: 1, pairCount: 1, profileCount: 1, residueCount: 218 };
+  const bestPair = { identity_fraction: '0.99083', rmdb_query_coverage: '0.5266', pdb_subject_coverage: '0.8516', evalue: '2.88e-49', bitscore: '193.0' };
+  const reactivityEntries = [
+    { profileKey: 'pf1', bundleProfileId: 'pf1', summaryPath: 'reactivity/pf1/summary.json', windows: [{ start: 1, end: 100, path: 'reactivity/pf1/pdb-pos-1-100.json' }] }
+  ];
+  const d = buildCaseDetail({ publicCase, indexRow, bestPair, reactivityEntries, alignmentPageCount: 5 });
+  assert.equal(d.pdbId, '8CBL');
+  assert.equal(d.projectionStatus, 'pass');
+  assert.equal(d.projectionIsStructuralEvidence, false);
+  assert.equal(d.observedResidueAxis, false);
+  assert.equal(d.reactivityAxis, 'pdb_reference_sequence_position');
+  assert.equal(d.residueMappingStatus, 'not-ready');
+  assert.equal(d.confidenceClass, 'high');
+  assert.equal(d.identityPct, 99.083);
+  assert.equal(d.alignmentPageCount, 5);
+  assert.equal(d.reactivity[0].profileKey, 'pf1');
+  assert.equal(d.reactivity[0].windows[0].path, 'reactivity/pf1/pdb-pos-1-100.json');
+});
+
+test('buildCaseDetail tolerates missing bestPair (no alignment summary)', () => {
+  const publicCase = { pdb_id: '9QQQ', projection_status: 'pass', projection_is_structural_evidence: false, observed_residue_axis: false };
+  const indexRow = { pdbId: '9QQQ', title: 'Y', confidenceClass: 'low', confidenceScore: 0.49 };
+  const d = buildCaseDetail({ publicCase, indexRow, bestPair: null, reactivityEntries: [], alignmentPageCount: 0 });
+  assert.equal(d.identityPct, null);
+  assert.equal(d.residueMappingStatus, 'not-ready');
+  assert.deepEqual(d.reactivity, []);
 });

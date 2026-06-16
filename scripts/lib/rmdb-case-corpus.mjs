@@ -191,3 +191,67 @@ export function buildProfiles({ provenance = [], members = [] }) {
   }
   return out;
 }
+
+/**
+ * 从 alignment_pair_summary 行中选 best-hit：最高 bitscore，平局取最低 evalue。
+ * 与 case.json 的 candidate_selection_policy=best_hit_per_rmdb_unique_query_by_bitscore_evalue 一致。
+ */
+export function selectBestHitPair(pairRows) {
+  if (!pairRows || pairRows.length === 0) return null;
+  return pairRows.reduce((best, cur) => {
+    const bb = toNumber(best.bitscore);
+    const cb = toNumber(cur.bitscore);
+    if (cb > bb) return cur;
+    if (cb < bb) return best;
+    return toNumber(cur.evalue) < toNumber(best.evalue) ? cur : best;
+  });
+}
+
+function toPct(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return null;
+  return Math.round(n * 100 * 1000) / 1000; // 0.99083 -> 99.083
+}
+
+/**
+ * 合并 PUBLIC case.json + 索引行 + best-hit 比对统计 + 资产清单，
+ * 构造前端详情页用 case 详情对象。科学口径字段原样透传，不弱化。
+ */
+export function buildCaseDetail({ publicCase = {}, indexRow = {}, bestPair = null, reactivityEntries = [], alignmentPageCount = 0 }) {
+  return {
+    pdbId: indexRow.pdbId || publicCase.pdb_id || '',
+    title: indexRow.title || '',
+    subtitle: indexRow.subtitle || '',
+    confidenceClass: indexRow.confidenceClass || 'low',
+    confidenceScore: indexRow.confidenceScore ?? 0,
+    pairCount: indexRow.pairCount ?? 0,
+    profileCount: indexRow.profileCount ?? 0,
+    residueCount: indexRow.residueCount ?? 0,
+    // 科学口径（原样透传，UI 必须尊重，不得弱化）
+    projectionStatus: publicCase.projection_status ?? '',
+    projectionMethod: publicCase.projection_method ?? '',
+    projectionIsStructuralEvidence: publicCase.projection_is_structural_evidence === true,
+    reactivityAxis: publicCase.reactivity_axis ?? '',
+    observedResidueAxis: publicCase.observed_residue_axis === true,
+    scientificScope: publicCase.scientific_scope ?? '',
+    annotationPdbNamePolicy: publicCase.annotation_pdb_name_policy ?? '',
+    map2dStatus: publicCase.map2d_status ?? '',
+    residueMappingStatus: 'not-ready', // 3D 残基着色默认禁用，直到生成 residue selector map
+    // 质量字段
+    alignmentRows: toNumber(publicCase.alignment_rows),
+    baseMismatchRows: toNumber(publicCase.base_mismatch_rows),
+    reactivityRows: toNumber(publicCase.pdb_axis_reactivity_rows),
+    rmdbUniqueSequenceCount: toNumber(publicCase.rmdb_unique_sequence_count),
+    rmdbProfileCount: toNumber(publicCase.rmdb_profile_count),
+    pdbReferenceIdCount: toNumber(publicCase.pdb_reference_id_count),
+    // best-hit 比对统计（百分比，缺失为 null）
+    identityPct: bestPair ? toPct(bestPair.identity_fraction) : null,
+    queryCoveragePct: bestPair ? toPct(bestPair.rmdb_query_coverage) : null,
+    subjectCoveragePct: bestPair ? toPct(bestPair.pdb_subject_coverage) : null,
+    evalue: bestPair ? (bestPair.evalue ?? '') : '',
+    bitscore: bestPair ? toNumber(bestPair.bitscore) : null,
+    // 资产清单（前端据此懒加载，不扫描目录）
+    reactivity: reactivityEntries,
+    alignmentPageCount
+  };
+}
