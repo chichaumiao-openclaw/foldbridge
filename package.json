@@ -5,10 +5,16 @@
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "build:site": "node scripts/build.mjs",
+    "build:static": "node scripts/build.mjs",
+    "build:search-docs": "node scripts/build-search-docs.mjs",
+    "build:search-index": "pagefind --site dist --output-path dist/pagefind",
+    "build:site": "npm run build:static && npm run build:search-docs && npm run build:search-index",
     "build": "npm run build:site",
     "build:pages": "npm run build && node scripts/build-pages.mjs",
     "serve": "node scripts/serve.mjs",
     "verify:mvp": "node scripts/verify-mvp.mjs"
+  },
+  "devDependencies": {
+    "pagefind": "^1.5.2"
   }
 }

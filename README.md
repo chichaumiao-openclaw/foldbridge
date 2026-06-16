@@ -28,6 +28,10 @@ npm run serve -- --port 8080
 
 Open `http://127.0.0.1:8080/dist/`.
 
+Search is built with Pagefind during `npm run build`. The build writes lightweight
+search documents to `dist/search-docs/` and the browser search bundle to
+`dist/pagefind/`.
+
 ## Fast release
 
 ```bash
@@ -51,6 +55,7 @@ Runtime data is kept in source control:
 - Home: project overview, bundled RNA database links, and visualization modules.
 - Browse: search, facets, and result tables.
 - Sequence / Structure / Probing: FoldBridge demo records and downloadable assets.
+- Search: Pagefind-backed full-site search with type/tag filters and saved queries.
 
 ## Verification
 

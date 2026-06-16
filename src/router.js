@@ -11,7 +11,8 @@ const ALLOWED_ROUTES = new Set([
   'detail',
   'publications',
   'help',
-  'sequence-detail'
+  'sequence-detail',
+  'pdb-case'
 ]);
 
 export function normalizeRoute(value) {
@@ -20,9 +21,30 @@ export function normalizeRoute(value) {
   return ALLOWED_ROUTES.has(lowered) ? lowered : 'home';
 }
 
-export function routeFromHash(hashValue) {
-  if (typeof hashValue !== 'string' || hashValue.length === 0) return 'home';
+export function parseHashRoute(hashValue) {
+  if (typeof hashValue !== 'string' || hashValue.length === 0) {
+    return { route: 'home', params: new URLSearchParams() };
+  }
+
   const withoutHash = hashValue.startsWith('#') ? hashValue.slice(1) : hashValue;
-  const [routeOnly = 'home'] = withoutHash.split('?');
-  return normalizeRoute(routeOnly);
+  const [routeOnly = 'home', queryString = ''] = withoutHash.split('?');
+  return {
+    route: normalizeRoute(routeOnly),
+    params: new URLSearchParams(queryString)
+  };
+}
+
+export function routeFromHash(hashValue) {
+  return parseHashRoute(hashValue).route;
+}
+
+export function buildPdbCaseHash({ pdbId, pdbReferenceId, bundleProfileId, rmdbUniqueId } = {}) {
+  const normalizedPdbId = String(pdbId ?? '').trim().toUpperCase();
+  const params = new URLSearchParams();
+  if (normalizedPdbId) params.set('pdbId', normalizedPdbId);
+  if (pdbReferenceId) params.set('pdbReferenceId', String(pdbReferenceId).trim());
+  if (bundleProfileId) params.set('bundleProfileId', String(bundleProfileId).trim());
+  if (rmdbUniqueId) params.set('rmdbUniqueId', String(rmdbUniqueId).trim());
+  const query = params.toString();
+  return query ? `#pdb-case?${query}` : '#pdb-case';
 }

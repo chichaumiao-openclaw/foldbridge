@@ -8,7 +8,9 @@ const requiredFiles = [
   'src/theme.js',
   'src/modules.js',
   'README.md',
-  'dist/index.html'
+  'dist/index.html',
+  'dist/search-docs/manifest.json',
+  'dist/pagefind/pagefind.js'
 ];
 
 for (const rel of requiredFiles) {
@@ -31,7 +33,7 @@ for (const t of requiredThemes) {
   }
 }
 
-const requiredRoutes = ['home', 'browse', 'detail'];
+const requiredRoutes = ['home', 'browse', 'detail', 'search'];
 for (const route of requiredRoutes) {
   const routeRegex = new RegExp(`['\"]${route}['\"]`, 'i');
   if (!routeRegex.test(pageSource)) {
@@ -48,4 +50,4 @@ for (const moduleId of requiredModules) {
   }
 }
 
-console.log('MVP regression guard passed: themes/pages/modules/dist artifacts are present.');
+console.log('MVP regression guard passed: themes/pages/modules/search/dist artifacts are present.');

@@ -19,6 +19,8 @@ import {
   dataTypeCards,
   detailRecord,
   featuredRecords,
+  getPdbCaseDetail,
+  pdbCaseRows,
   portalMetrics,
   recentPublications,
   siteSummaries,
@@ -26,6 +28,13 @@ import {
 } from './data.js';
 import { normalizeRoute, routeFromHash } from './router.js';
 import { downloadRowsAsCsv } from './modules.js';
+import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
+import {
+  buildSearchHash,
+  createSearchService,
+  filtersFromSearchParams,
+  searchParamsFromHash
+} from './search/searchService.js';
 let sequenceRows = [];
 let browseEntryRows = [];
 let selectedBrowseIds = new Set();
@@ -389,6 +398,18 @@ function getTechnologySlugFromHash() {
   const [, queryString = ''] = hash.split('?');
   const params = new URLSearchParams(queryString);
   return params.get('tech');
+}
+
+function getPdbCaseParamsFromHash() {
+  const hash = window.location.hash || '';
+  const [, queryString = ''] = hash.split('?');
+  const params = new URLSearchParams(queryString);
+  return {
+    pdbId: params.get('pdbId'),
+    pdbReferenceId: params.get('pdbReferenceId'),
+    bundleProfileId: params.get('bundleProfileId'),
+    rmdbUniqueId: params.get('rmdbUniqueId')
+  };
 }
 
 function getFilteredSequenceRows() {
@@ -1069,7 +1090,7 @@ function downloadSequencesPage() {
         </span>
       </td>
       <td>${row.chemicalProbing ?? ''}</td>
-      <td><a href="https://www.rcsb.org/structure/${encodeURIComponent(row.pdbName ?? '')}" class="sequence-link" target="_blank" rel="noopener noreferrer">${row.pdbName ?? ''}</a></td>
+      <td><a href="#pdb-case?pdbId=${encodeURIComponent(row.pdbName ?? '')}" class="sequence-link">${row.pdbName ?? ''}</a></td>
       <td>${row.sequence ?? ''}</td>
       <td>${row.confidence ?? ''}</td>
     </tr>
@@ -1136,13 +1157,24 @@ function downloadSequencesPage() {
 
 
 
-const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help'];
+const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help', 'pdb-case'];
 let route = routeFromHash(window.location.hash);
 let theme = 'ribocentre';
 let mode = localStorage.getItem('foldbridge-mode') === 'dark' ? 'dark' : 'light';
+const siteSearchService = createSearchService();
+const SAVED_SEARCHES_KEY = 'foldbridge.savedSearches';
 
 function isRouteActive(...names) {
   return names.includes(route);
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }
 
 function setTheme(themeKey, modeKey) {
@@ -1508,6 +1540,10 @@ function renderBundleHeader(featuredNamesMarkup = null) {
           </div>
           <div class="bundle-home-meta">
             <span class="bundle-home-domain">foldbridge.gznl.org</span>
+            <form class="global-search-form" id="global-search-form">
+              <input id="global-search-input" type="search" placeholder="Search FoldBridge" aria-label="Search FoldBridge" />
+              <button type="submit">Search</button>
+            </form>
             <button type="button" class="mode-toggle" id="mode-toggle">
               ${mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
             </button>
@@ -1519,6 +1555,7 @@ function renderBundleHeader(featuredNamesMarkup = null) {
           <button type="button" class="nav-btn ${isRouteActive('browse') ? 'active' : ''}" data-route="browse">Browse</button>
           <button type="button" class="nav-btn ${isRouteActive('sequence', 'download-sequences') ? 'active' : ''}" data-route="sequence">Sequence</button>
           <button type="button" class="nav-btn ${isRouteActive('structure', 'download-structures') ? 'active' : ''}" data-route="structure">Structure</button>
+          <button type="button" class="nav-btn ${isRouteActive('pdb-case') ? 'active' : ''}" data-route="pdb-case">PDB Cases</button>
           <button type="button" class="nav-btn ${isRouteActive('probing', 'detail') ? 'active' : ''}" data-route="probing">Probing</button>
           <button type="button" class="nav-btn ${isRouteActive('download') ? 'active' : ''}" data-route="download">Download</button>
           <button type="button" class="nav-btn ${isRouteActive('search') ? 'active' : ''}" data-route="search">Search</button>
@@ -1784,6 +1821,12 @@ function structurePage() {
   return downloadStructuresPage();
 }
 
+function pdbCasePage() {
+  const params = getPdbCaseParamsFromHash();
+  if (!params.pdbId) return renderPdbCaseIndexPage(pdbCaseRows);
+  return renderPdbCasePage(getPdbCaseDetail(params.pdbId), params);
+}
+
 function downloadPage() {
   return `<main class="page-download">
     ${renderBundleHeader()}
@@ -1799,15 +1842,52 @@ function downloadPage() {
 }
 
 function searchPage() {
+  const params = searchParamsFromHash(window.location.hash);
+  const query = params.get('q') ?? '';
+  const filters = filtersFromSearchParams(params);
+  const activeTags = Array.isArray(filters.tag) ? filters.tag : filters.tag ? [filters.tag] : [];
+  const activeType = filters.type ?? '';
+
   return `<main class="page-detail page-browse page-search">
     ${renderBundleHeader()}
-    <section class="card bundle-wide-card">
-      <h1>Search</h1>
-      <p>Search FoldBridge records from the curated browse index.</p>
+    <section class="card bundle-wide-card site-search-card">
+      <div class="site-search-header">
+        <div>
+          <p class="technology-kicker">central search</p>
+          <h1>Search</h1>
+        </div>
+        <button id="save-search-query" type="button" class="download-outline-btn">Save Search</button>
+      </div>
+      <form class="site-search-form" id="site-search-form">
+        <input
+          id="site-search-input"
+          class="site-search-input"
+          type="search"
+          placeholder="Search sequence, PDB ID, method, profile, DOI..."
+          value="${escapeHtml(query)}"
+          aria-label="Search query"
+        />
+        <button type="submit">Search</button>
+      </form>
+      <div class="site-search-active">
+        ${activeType ? `<span class="chip">type: ${escapeHtml(activeType)}</span>` : ''}
+        ${activeTags.map((tag) => `<span class="chip">tag: ${escapeHtml(tag)}</span>`).join('')}
+      </div>
     </section>
-    <section class="grid two-col bundle-wide-card">
-      ${renderFacetPanel()}
-      ${renderResultList()}
+
+    <section class="site-search-layout bundle-wide-card">
+      <aside class="card site-search-filter-card">
+        <h2>Filters</h2>
+        <div id="site-search-filters" class="site-search-filters">
+          <span class="mini-note">Loading filters...</span>
+        </div>
+        <h2>Saved</h2>
+        <div id="site-search-saved" class="site-search-saved"></div>
+      </aside>
+      <section class="card site-search-results-card">
+        <div id="site-search-summary" class="mini-note">Loading search index...</div>
+        <div id="site-search-results" class="site-search-results"></div>
+      </section>
     </section>
   </main>`;
 }
@@ -1864,6 +1944,7 @@ function pageFor(name) {
   if (safeRoute === 'browse') return browsePage();
   if (safeRoute === 'sequence') return downloadSequencesPage();
   if (safeRoute === 'structure') return structurePage();
+  if (safeRoute === 'pdb-case') return pdbCasePage();
   if (safeRoute === 'probing') return detailPage();
   if (safeRoute === 'download') return downloadPage();
   if (safeRoute === 'search') return searchPage();
@@ -1874,6 +1955,200 @@ function pageFor(name) {
   if (safeRoute === 'help') return helpPage();
   if (safeRoute === 'sequence-detail') return sequenceDetailPage();
   return homePage();
+}
+
+function readSavedSearches() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(SAVED_SEARCHES_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed.slice(0, 8) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeSavedSearches(items) {
+  localStorage.setItem(SAVED_SEARCHES_KEY, JSON.stringify(items.slice(0, 8)));
+}
+
+function currentSearchState() {
+  const params = searchParamsFromHash(window.location.hash);
+  return {
+    q: params.get('q') ?? '',
+    filters: filtersFromSearchParams(params)
+  };
+}
+
+function setSearchState(nextState) {
+  const nextHash = buildSearchHash(nextState);
+  if (window.location.hash === nextHash) {
+    render({ preserveScroll: true });
+    return;
+  }
+  window.location.hash = nextHash;
+}
+
+function isFilterActive(filters, key, value) {
+  const active = filters[key];
+  return Array.isArray(active) ? active.includes(value) : active === value;
+}
+
+function toggleSearchFilter(key, value) {
+  const state = currentSearchState();
+  const filters = { ...state.filters };
+
+  if (key === 'type') {
+    filters.type = filters.type === value ? '' : value;
+  } else {
+    const values = new Set(Array.isArray(filters[key]) ? filters[key] : filters[key] ? [filters[key]] : []);
+    if (values.has(value)) values.delete(value);
+    else values.add(value);
+    filters[key] = [...values];
+  }
+
+  setSearchState({ q: state.q, filters });
+}
+
+function renderSearchFilters(filters, activeFilters) {
+  const allowedKeys = ['type', 'tag'];
+  return allowedKeys
+    .map((key) => {
+      const values = filters?.[key] ?? {};
+      const buttons = Object.entries(values)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .slice(0, 12)
+        .map(([value, count]) => `<button
+          type="button"
+          class="site-search-filter ${isFilterActive(activeFilters, key, value) ? 'active' : ''}"
+          data-search-filter-key="${escapeHtml(key)}"
+          data-search-filter-value="${escapeHtml(value)}"
+        >
+          <span>${escapeHtml(value)}</span>
+          <small>${escapeHtml(count)}</small>
+        </button>`)
+        .join('');
+
+      return `<div class="site-search-filter-group">
+        <h3>${escapeHtml(key)}</h3>
+        <div>${buttons || '<span class="mini-note">No filters yet.</span>'}</div>
+      </div>`;
+    })
+    .join('');
+}
+
+function renderSavedSearches() {
+  const saved = readSavedSearches();
+  if (!saved.length) return '<span class="mini-note">No saved searches.</span>';
+
+  return saved
+    .map((item, index) => `<div class="saved-search-item">
+      <a href="${escapeHtml(item.hash)}">${escapeHtml(item.label)}</a>
+      <button type="button" data-remove-saved-search="${index}" aria-label="Remove saved search">×</button>
+    </div>`)
+    .join('');
+}
+
+function renderSearchResults(result) {
+  if (!result.items.length) {
+    return '<div class="entry-table-empty">No results.</div>';
+  }
+
+  return result.items
+    .map((item) => `<article class="site-search-result">
+      <div>
+        <a href="${escapeHtml(item.href)}">${escapeHtml(item.title)}</a>
+        <p>${item.excerpt}</p>
+      </div>
+      <div class="site-search-result-tags">
+        ${item.type ? `<span>${escapeHtml(item.type)}</span>` : ''}
+        ${item.tags.slice(0, 4).map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}
+      </div>
+    </article>`)
+    .join('');
+}
+
+function bindSearchPageControls() {
+  const form = document.getElementById('site-search-form');
+  const input = document.getElementById('site-search-input');
+  const saveButton = document.getElementById('save-search-query');
+  const savedHost = document.getElementById('site-search-saved');
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const state = currentSearchState();
+    setSearchState({ q: input?.value ?? '', filters: state.filters });
+  });
+
+  saveButton?.addEventListener('click', () => {
+    const state = currentSearchState();
+    const hash = buildSearchHash(state);
+    if (hash === '#search') return;
+    const labelParts = [state.q || 'Filtered search'];
+    if (state.filters.type) labelParts.push(`type:${state.filters.type}`);
+    const tags = Array.isArray(state.filters.tag) ? state.filters.tag : state.filters.tag ? [state.filters.tag] : [];
+    if (tags.length) labelParts.push(`tag:${tags.join(',')}`);
+    const item = { hash, label: labelParts.join(' · ') };
+    const next = [item, ...readSavedSearches().filter((saved) => saved.hash !== hash)];
+    writeSavedSearches(next);
+    if (savedHost) savedHost.innerHTML = renderSavedSearches();
+  });
+
+  savedHost?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-remove-saved-search]');
+    if (!button) return;
+    const index = Number(button.getAttribute('data-remove-saved-search'));
+    const next = readSavedSearches().filter((_, itemIndex) => itemIndex !== index);
+    writeSavedSearches(next);
+    savedHost.innerHTML = renderSavedSearches();
+  });
+}
+
+async function initSearchPage() {
+  if (route !== 'search') return;
+
+  const filterHost = document.getElementById('site-search-filters');
+  const resultHost = document.getElementById('site-search-results');
+  const summaryHost = document.getElementById('site-search-summary');
+  const savedHost = document.getElementById('site-search-saved');
+  if (!filterHost || !resultHost || !summaryHost || !savedHost) return;
+
+  bindSearchPageControls();
+  savedHost.innerHTML = renderSavedSearches();
+
+  const state = currentSearchState();
+
+  try {
+    const result = await siteSearchService.search({ q: state.q, filters: state.filters, pageSize: 20 });
+    filterHost.innerHTML = renderSearchFilters(result.availableFilters, state.filters);
+    resultHost.innerHTML = renderSearchResults(result);
+    summaryHost.textContent = state.q || Object.keys(state.filters).length
+      ? `${result.total} results`
+      : 'Enter a query or choose a filter.';
+
+    filterHost.querySelectorAll('[data-search-filter-key]').forEach((button) => {
+      button.addEventListener('click', () => {
+        toggleSearchFilter(button.getAttribute('data-search-filter-key'), button.getAttribute('data-search-filter-value'));
+      });
+    });
+  } catch (_error) {
+    summaryHost.textContent = 'Search index unavailable. Run npm run build:pages.';
+    resultHost.innerHTML = '';
+    filterHost.innerHTML = '<span class="mini-note">No index loaded.</span>';
+  }
+}
+
+function initGlobalSearch() {
+  const form = document.getElementById('global-search-form');
+  const input = document.getElementById('global-search-input');
+  if (!form || !input) return;
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    setSearchState({ q: input.value, filters: {} });
+  });
+
+  input.addEventListener('focus', () => {
+    siteSearchService.warm().catch(() => {});
+  });
 }
 
 function render(options = {}) {
@@ -1961,6 +2236,7 @@ function render(options = {}) {
 
 
   initHeaderSearch();
+  initGlobalSearch();
   initAptamerMultiSelect();
   initSecondaryStructureModule();
   initMolstarModule();
@@ -1969,6 +2245,7 @@ function render(options = {}) {
   initSequenceDetailSecondaryHeatmap();
   initAnimatedStats();
   initHomeDashboardFilters();
+  initSearchPage();
 
 const subnavMenuToggle = document.getElementById('subnav-menu-toggle');
 const subnavNav = document.querySelector('.hero-subnav nav');
