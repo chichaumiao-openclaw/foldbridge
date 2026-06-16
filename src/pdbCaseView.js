@@ -34,17 +34,39 @@ function renderTrackPreview(points = []) {
   return `<div class="pdb-case-track" aria-label="Downsampled sequence-axis reactivity preview">${bars}</div>`;
 }
 
+const CONFIDENCE_LABELS = { high: 'High', medium: 'Medium', low: 'Low' };
+
+function renderConfidenceBadge(confidenceClass) {
+  const cls = CONFIDENCE_LABELS[confidenceClass] ? confidenceClass : 'low';
+  return `<span class="pdb-case-badge pdb-case-badge--${cls}">${escapeHtml(CONFIDENCE_LABELS[cls])}</span>`;
+}
+
+function formatScore(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return '—';
+  return n.toFixed(3);
+}
+
 export function renderPdbCaseIndexPage(rows = []) {
+  const counts = { all: rows.length, high: 0, medium: 0, low: 0 };
+  rows.forEach((row) => { if (counts[row.confidenceClass] != null) counts[row.confidenceClass] += 1; });
+
+  const filterButtons = ['all', 'high', 'medium', 'low']
+    .map((key) => {
+      const label = key === 'all' ? 'All' : CONFIDENCE_LABELS[key];
+      return `<button type="button" class="pdb-case-filter-btn${key === 'all' ? ' is-active' : ''}" data-confidence-filter="${key}">${escapeHtml(label)} <span class="pdb-case-filter-count">${counts[key]}</span></button>`;
+    })
+    .join('');
+
   const body = rows
     .map(
-      (row) => `<tr>
+      (row) => `<tr data-confidence-class="${escapeHtml(row.confidenceClass)}">
         <td><a class="sequence-link" href="${escapeHtml(row.detailHref)}">${escapeHtml(row.pdbId)}</a></td>
         <td>${escapeHtml(row.title)}</td>
-        <td>${escapeHtml(row.pdbReferenceCount)}</td>
-        <td>${escapeHtml(row.rmdbUniqueSequenceCount)}</td>
+        <td>${renderConfidenceBadge(row.confidenceClass)}</td>
+        <td>${escapeHtml(formatScore(row.confidenceScore))}</td>
         <td>${escapeHtml(row.profileCount)}</td>
-        <td>${escapeHtml(row.projectionStatus)}</td>
-        <td>${escapeHtml(row.baseMismatchRows)}</td>
+        <td>${escapeHtml(row.residueCount)}</td>
       </tr>`
     )
     .join('');
@@ -54,11 +76,11 @@ export function renderPdbCaseIndexPage(rows = []) {
       <p class="technology-kicker">PDB case index</p>
       <h1>PDB case index</h1>
       <p class="pdb-case-lede">One PDB case can contain multiple PDB references, RMDB unique sequences, and probing profiles. This page keeps that case grain visible instead of flattening each PDB into a single molecule.</p>
-      <p class="pdb-case-lede">Current build uses a small local demo case index; the full support-root importer is intentionally not wired into the browser path.</p>
+      <p class="pdb-case-lede">Cases are filtered from the RMDB→PDB master table to high, medium, and low displayable confidence. Each case page lazy-loads its own lightweight assets.</p>
       <div class="pdb-case-status-grid">
         ${renderMetric('Cases in current site build', rows.length)}
         ${renderMetric('Page grain', 'PDB case')}
-        ${renderMetric('Track loading', 'summary only', 'full per-base tracks stay out of the browser')}
+        ${renderMetric('Confidence tiers', 'high / medium / low')}
       </div>
     </section>
 
@@ -68,7 +90,10 @@ export function renderPdbCaseIndexPage(rows = []) {
           <p class="technology-kicker">lightweight index</p>
           <h2>Case summaries</h2>
         </div>
-        <p>Open a case page to inspect projection quality, profile-level summaries, and sequence-axis previews.</p>
+        <p>Open a case page to inspect projection quality, profile-level summaries, sequence-axis previews, and base-level alignment.</p>
+      </div>
+      <div class="pdb-case-filter-bar" role="group" aria-label="Filter cases by confidence class">
+        ${filterButtons}
       </div>
       <div class="download-table-wrap">
         <table class="structure-table download-table">
@@ -76,11 +101,10 @@ export function renderPdbCaseIndexPage(rows = []) {
             <tr>
               <th>PDB</th>
               <th>Case title</th>
-              <th>PDB refs</th>
-              <th>RMDB sequences</th>
+              <th>Confidence</th>
+              <th>Score</th>
               <th>Profiles</th>
-              <th>Projection</th>
-              <th>Mismatch rows</th>
+              <th>Residues</th>
             </tr>
           </thead>
           <tbody>${body}</tbody>
