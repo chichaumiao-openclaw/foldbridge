@@ -1,10 +1,11 @@
+import { readFileSync } from 'node:fs';
 import {
   dataTypeCards,
-  pdbCaseRows,
-  getPdbCaseDetail,
   recentPublications,
   siteSummaries
 } from '../data.js';
+
+const GENERATED_CASES_BASE = new URL('../assets/generated/rmdb-pdb-cases/', import.meta.url);
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -15,8 +16,12 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
+function readGeneratedJson(relPath) {
+  return JSON.parse(readFileSync(new URL(relPath, GENERATED_CASES_BASE), 'utf8'));
+}
+
 function tagForCase(row) {
-  const title = `${row.title} ${row.organism}`.toLowerCase();
+  const title = `${row.title} ${row.subtitle ?? ''}`.toLowerCase();
   return [
     'rna',
     'structure',
@@ -27,11 +32,24 @@ function tagForCase(row) {
   ].filter(Boolean);
 }
 
-export function buildSearchDocuments() {
-  const pdbDocs = pdbCaseRows.map((row) => {
-    const detail = getPdbCaseDetail(row.pdbId);
-    const profiles = detail?.profileSummaries
-      ?.map((profile) => `${profile.bundleProfileId} ${profile.rmdbUniqueId} ${profile.modifier}`)
+// pdb-case 文档来自构建期生成的 index.json（轻量索引）+ 每个 case.json（科学口径字段）。
+// 生成资产缺失时（外接卷未挂载且未提交）静默降级为空集，搜索语料仍可构建。
+function buildPdbCaseDocs() {
+  let index;
+  try {
+    index = readGeneratedJson('index.json');
+  } catch {
+    return [];
+  }
+  return (index.cases || []).map((row) => {
+    let detail = null;
+    try {
+      detail = readGeneratedJson(`cases/${row.pdbId}/case.json`);
+    } catch {
+      detail = null;
+    }
+    const reactivityKeys = (detail?.reactivity || [])
+      .map((entry) => `${entry.profileId} ${entry.profileKey}`)
       .join(' ');
 
     return {
@@ -40,21 +58,27 @@ export function buildSearchDocuments() {
       title: row.title,
       href: row.detailHref,
       tags: tagForCase(row),
-      summary: `${row.pdbId} ${row.title}. ${detail?.description ?? ''}`,
+      summary: `${row.pdbId} ${row.title}. ${row.subtitle ?? ''}`.trim(),
       content: [
         row.pdbId,
+        row.pdbReferenceId,
         row.title,
-        row.organism,
-        `projection_status ${row.projectionStatus}`,
-        `identity ${row.identityPct}`,
-        `query coverage ${row.queryCoveragePct}`,
-        `subject coverage ${row.subjectCoveragePct}`,
-        `base mismatch rows ${row.baseMismatchRows}`,
+        row.subtitle,
+        `confidence ${row.confidenceClass} ${row.confidenceScore}`,
+        `projection_status ${detail?.projectionStatus ?? ''}`,
+        `identity ${detail?.identityPct ?? ''}`,
+        `query coverage ${detail?.queryCoveragePct ?? ''}`,
+        `subject coverage ${detail?.subjectCoveragePct ?? ''}`,
+        `base mismatch rows ${detail?.baseMismatchRows ?? ''}`,
         `profiles ${row.profileCount}`,
-        profiles
-      ].filter(Boolean).join(' ')
+        reactivityKeys
+      ].filter((part) => part != null && String(part).trim() !== '').join(' ')
     };
   });
+}
+
+export function buildSearchDocuments() {
+  const pdbDocs = buildPdbCaseDocs();
 
   const dataTypeDocs = dataTypeCards.map((card) => ({
     id: `data-type-${card.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,

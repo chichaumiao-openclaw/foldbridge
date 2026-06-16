@@ -19,8 +19,6 @@ import {
   dataTypeCards,
   detailRecord,
   featuredRecords,
-  getPdbCaseDetail,
-  pdbCaseRows,
   portalMetrics,
   recentPublications,
   siteSummaries,
@@ -29,6 +27,7 @@ import {
 import { normalizeRoute, routeFromHash } from './router.js';
 import { downloadRowsAsCsv } from './modules.js';
 import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
+import { createCaseStore } from './rmdbCaseStore.js';
 import {
   buildSearchHash,
   createSearchService,
@@ -40,6 +39,14 @@ let browseEntryRows = [];
 let selectedBrowseIds = new Set();
 let selectedSequenceIds = new Set();
 let sequenceSearchQuery = '';
+// RMDB→PDB case 资产懒加载层与浏览器侧渲染缓存。
+// store 命中内存缓存避免重复 fetch；下面三类 state 缓存“已加载”结果，
+// 让同步的 pageFor()/render() 路径命中即渲染数据，未命中则渲染 loading 占位并触发后台加载。
+const pdbCaseStore = createCaseStore();
+let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
+const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
+let pdbCaseConfidenceFilter = 'all';
+let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
 let homeDashboardFilters = {
   years: [],
   categories: []
@@ -1821,10 +1828,96 @@ function structurePage() {
   return downloadStructuresPage();
 }
 
+function renderPdbCaseLoadingPage(message) {
+  return `<main class="page-pdb-case">
+    <section class="card bundle-wide-card pdb-case-hero">
+      <a class="technology-back-link" href="#pdb-case">Back to PDB case index</a>
+      <p class="technology-kicker">PDB case</p>
+      <h1>${message}</h1>
+      <div class="pdb-case-track-empty">Loading…</div>
+    </section>
+  </main>`;
+}
+
+async function loadPdbCaseIndex() {
+  if (pdbCaseIndexState === 'loading') return;
+  pdbCaseIndexState = 'loading';
+  try {
+    const index = await pdbCaseStore.loadCaseIndex();
+    pdbCaseIndexState = { cases: index.cases || [] };
+  } catch (err) {
+    console.error('[main] 加载 PDB case 索引失败', err);
+    pdbCaseIndexState = 'error';
+  }
+  if (route === 'pdb-case') render({ preserveScroll: true });
+}
+
+async function loadPdbCaseDetail(pdbId) {
+  if (pdbCaseDetailState.get(pdbId) === 'loading') return;
+  pdbCaseDetailState.set(pdbId, 'loading');
+  try {
+    const detail = await pdbCaseStore.loadCase(pdbId);
+    const profilesDoc = await pdbCaseStore.loadProfiles(pdbId).catch(() => null);
+    const profiles = profilesDoc?.profiles || [];
+    const page = pdbCaseAlignmentPageByPdb.get(pdbId) || 1;
+    let alignmentPage = null;
+    if ((detail.alignmentPageCount || 0) > 0) {
+      alignmentPage = await pdbCaseStore.loadAlignmentPage(pdbId, page).catch(() => null);
+    }
+    let reactivitySummary = null;
+    const firstReac = (detail.reactivity || [])[0];
+    if (firstReac?.profileKey) {
+      reactivitySummary = await pdbCaseStore
+        .loadReactivitySummary(pdbId, firstReac.profileKey)
+        .catch(() => null);
+    }
+    pdbCaseDetailState.set(pdbId, { detail, profiles, alignmentPage, reactivitySummary });
+  } catch (err) {
+    console.error('[main] 加载 PDB case 详情失败', pdbId, err);
+    pdbCaseDetailState.set(pdbId, 'error');
+  }
+  if (route === 'pdb-case') render({ preserveScroll: true });
+}
+
+// alignment 分页导航：保留已加载的 detail/profiles/reactivity，只换 alignment 页，避免整页 loading 闪烁。
+async function loadAlignmentForCase(pdbId, page) {
+  pdbCaseAlignmentPageByPdb.set(pdbId, page);
+  const state = pdbCaseDetailState.get(pdbId);
+  if (!state || typeof state === 'string') {
+    loadPdbCaseDetail(pdbId);
+    return;
+  }
+  try {
+    const alignmentPage = await pdbCaseStore.loadAlignmentPage(pdbId, page);
+    pdbCaseDetailState.set(pdbId, { ...state, alignmentPage });
+  } catch (err) {
+    console.error('[main] 加载 alignment 页失败', pdbId, page, err);
+  }
+  if (route === 'pdb-case') render({ preserveScroll: true });
+}
+
 function pdbCasePage() {
   const params = getPdbCaseParamsFromHash();
-  if (!params.pdbId) return renderPdbCaseIndexPage(pdbCaseRows);
-  return renderPdbCasePage(getPdbCaseDetail(params.pdbId), params);
+  if (!params.pdbId) {
+    if (pdbCaseIndexState && typeof pdbCaseIndexState === 'object') {
+      return renderPdbCaseIndexPage(pdbCaseIndexState.cases);
+    }
+    if (pdbCaseIndexState !== 'loading') loadPdbCaseIndex();
+    return renderPdbCaseLoadingPage(
+      pdbCaseIndexState === 'error' ? 'PDB case index unavailable' : 'Loading PDB case index…'
+    );
+  }
+  const state = pdbCaseDetailState.get(params.pdbId);
+  if (state && typeof state === 'object') {
+    return renderPdbCasePage(state.detail, params, {
+      profiles: state.profiles,
+      alignmentPage: state.alignmentPage,
+      reactivitySummary: state.reactivitySummary
+    });
+  }
+  if (state === 'error') return renderPdbCasePage(null, params);
+  if (state !== 'loading') loadPdbCaseDetail(params.pdbId);
+  return renderPdbCaseLoadingPage(`Loading case assets for ${params.pdbId}…`);
 }
 
 function downloadPage() {
@@ -2245,6 +2338,7 @@ function render(options = {}) {
   initSequenceDetailSecondaryHeatmap();
   initAnimatedStats();
   initHomeDashboardFilters();
+  initPdbCasePage();
   initSearchPage();
 
 const subnavMenuToggle = document.getElementById('subnav-menu-toggle');
@@ -2289,6 +2383,45 @@ document.addEventListener('click', () => {
 
   if (preserveScroll) {
     requestAnimationFrame(() => window.scrollTo(previousScrollX, previousScrollY));
+  }
+}
+
+function initPdbCasePage() {
+  // 索引页 confidence 过滤：纯前端切换行可见性，不触发整页重渲染。
+  const filterButtons = document.querySelectorAll('[data-confidence-filter]');
+  if (filterButtons.length) {
+    const applyFilter = () => {
+      document.querySelectorAll('[data-confidence-class]').forEach((row) => {
+        const cls = row.getAttribute('data-confidence-class');
+        row.hidden = pdbCaseConfidenceFilter !== 'all' && cls !== pdbCaseConfidenceFilter;
+      });
+      filterButtons.forEach((btn) => {
+        btn.classList.toggle('is-active', btn.getAttribute('data-confidence-filter') === pdbCaseConfidenceFilter);
+      });
+    };
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        pdbCaseConfidenceFilter = btn.getAttribute('data-confidence-filter') || 'all';
+        applyFilter();
+      });
+    });
+    applyFilter();
+  }
+
+  // 详情页 alignment 分页导航。
+  const params = getPdbCaseParamsFromHash();
+  if (params.pdbId) {
+    const section = document.querySelector('[data-alignment-page]');
+    const current = section ? Number(section.getAttribute('data-alignment-page')) || 1 : 1;
+    document.querySelectorAll('[data-alignment-nav]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        const dir = btn.getAttribute('data-alignment-nav');
+        const next = dir === 'prev' ? current - 1 : current + 1;
+        if (next < 1) return;
+        loadAlignmentForCase(params.pdbId, next);
+      });
+    });
   }
 }
 
