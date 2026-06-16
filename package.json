@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node --test",
     "build:static": "node scripts/build.mjs",
+    "build:rmdb-cases": "node scripts/build-rmdb-cases.mjs",
     "build:search-docs": "node scripts/build-search-docs.mjs",
     "build:search-index": "pagefind --site dist --output-path dist/pagefind",
     "build:site": "npm run build:static && npm run build:search-docs && npm run build:search-index",
