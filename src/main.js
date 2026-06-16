@@ -3199,7 +3199,6 @@ function browsePage() {
     <section class="card bundle-wide-card browse-entry-section">
       <div class="browse-section-heading">
         <div>
-          <p class="technology-kicker">browse collection</p>
           <h2>2D Entry</h2>
         </div>
       </div>
@@ -3285,7 +3284,6 @@ function browsePage() {
     <section class="card bundle-wide-card browse-entry-section">
       <div class="browse-section-heading">
         <div>
-          <p class="technology-kicker">browse collection</p>
           <h2>3D Entry</h2>
         </div>
       </div>
@@ -3581,9 +3579,9 @@ function structureDetailPage() {
 function downloadPage() {
   return `<main class="page-download">
     ${renderBundleHeader()}
-    <section class="card bundle-wide-card">
+    <section class="card bundle-wide-card download-card">
       <h1>Download</h1>
-      <p>Use this page as the download entry for FoldBridge sequence and structure assets.</p>
+      <p class="download-intro">Use this page as the download entry for FoldBridge sequence and structure assets.</p>
       <div class="actions">
         <button type="button" data-route="sequence">Sequence downloads</button>
         <button type="button" data-route="structure">Structure downloads</button>
@@ -3600,7 +3598,7 @@ function searchPage() {
     ${renderBundleHeader()}
     <section class="card bundle-wide-card search-page-shell">
       <div class="search-page-header">
-        <p class="search-page-eyebrow">Advanced FoldBridge Search</p>
+        <h1>Advanced FoldBridge Search</h1>
       </div>
 
       <section class="search-hero-panel">
@@ -3834,8 +3832,8 @@ function helpPage() {
     ${renderBundleHeader()}
     <section class="card bundle-wide-card help-page-shell">
       <div class="help-page-header">
-        <p class="help-page-eyebrow">Help Center</p>
         <h1>Help</h1>
+        <p class="page-explainer">This page provides database documentation, usage guidelines, research group details, and contact options for FoldBridge.</p>
       </div>
 
       <section class="help-module-grid">
@@ -3843,14 +3841,20 @@ function helpPage() {
           <div class="help-module-titlebar">
             <h2>About FoldBridge database</h2>
           </div>
-          <div class="help-module-body help-module-body-empty"></div>
+          <div class="help-module-body" style="color: var(--textSecondary); line-height: 1.7; font-size: 0.98rem;">
+            <p style="margin: 0;">
+              <strong>FoldBridge</strong> Database is designed to provide comprehensive mappings between high-throughput RNA chemical probing experiments and 3D tertiary structures. Each RNA mapping page includes a brief introduction and offers various search options, such as sequence, structures, and chemical probing reactivities. Users can submit new RNA structure-mapping cases or related comments through the feedback portal to help us enhance our database. The <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Sequence</strong> page compiles information on chemical probing targets and their primary sequences verified by published studies. The <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Structure</strong> page showcases 3D structural details and alignment statistics, updated regularly. The <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Probing</strong> page offers detailed insights into the per-base chemical reactivity (e.g., SHAPE/DMS profiles) mapped onto structural models, and the <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Browse</strong> and <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Search</strong> pages provide links to individual entry details, structural alignments, and interactive visualizations.
+            </p>
+          </div>
         </article>
 
         <article class="help-module-card">
           <div class="help-module-titlebar">
             <h2>How to contact us</h2>
           </div>
-          <div class="help-module-body help-module-body-empty"></div>
+          <div class="help-module-body">
+            <p>For any inquiries or concerns regarding the database, please reach out to xxx</p>
+          </div>
         </article>
 
         <article class="help-module-card">
@@ -3864,14 +3868,52 @@ function helpPage() {
           <div class="help-module-titlebar">
             <h2>How to make a feedback</h2>
           </div>
-          <div class="help-module-body help-module-body-empty"></div>
+          <div class="help-module-body" style="color: var(--textSecondary); line-height: 1.7; font-size: 0.98rem;">
+            <p style="margin: 0;">
+              You are welcomed to send us feedback and your ideas or suggestions will be greatly valued. We will continue to have our database improved to be fully functional and user-friendly. Your opinions will be fully considered. Click the <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Submit</strong> button or figures to record your suggestions and comments on Google sheet. We provide more than one entrence you can find to send your feedback.
+            </p>
+          </div>
         </article>
 
-        <article class="help-module-card">
+        <article class="help-module-card help-module-card-wide">
           <div class="help-module-titlebar">
             <h2>Group members</h2>
           </div>
-          <div class="help-module-body help-module-body-empty"></div>
+          <div class="help-module-body">
+            <div class="help-member-grid">
+              <article class="help-member-card">
+                <div class="help-member-avatar">
+                  <img src="./src/assets/groupmember/Chichau_photo.jpg" alt="Portrait of Zhichao (Chichau) Miao" />
+                </div>
+                <div class="help-member-content">
+                  <h3><a class="help-member-name-link" href="mailto:miao_zhichao@gzlab.ac.cn">Zhichao (Chichau) Miao</a></h3>
+                  <p class="help-member-role"><span class="help-member-role-initial">P</span>rincipal Investigator of Guangzhou Lab</p>
+                  <ul class="help-member-history">
+                    <li>PhD <a class="help-member-link" href="https://ibp.cas.cn/" target="_blank" rel="noopener noreferrer">Institute of Biophysics, CAS</a></li>
+                    <li>Chercheur at <a class="help-member-link" href="https://ibmc.cnrs.fr/en/" target="_blank" rel="noopener noreferrer">IBMC, CNRS</a></li>
+                    <li>PostDoc at <a class="help-member-link" href="https://www.ebi.ac.uk/" target="_blank" rel="noopener noreferrer">EMBL-EBI</a></li>
+                    <li>Visiting Scientist at <a class="help-member-link" href="https://www.sanger.ac.uk/" target="_blank" rel="noopener noreferrer">Wellcome Sanger Institute</a></li>
+                    <li>Senior Bioinformatician at <a class="help-member-link" href="https://www.ebi.ac.uk/" target="_blank" rel="noopener noreferrer">EMBL-EBI</a></li>
+                  </ul>
+                </div>
+              </article>
+
+              <article class="help-member-card">
+                <div class="help-member-avatar">
+                  <img src="./src/assets/groupmember/Lin_Huang.jpg" alt="Portrait of Lin Huang" />
+                </div>
+                <div class="help-member-content">
+                  <h3><a class="help-member-name-link" href="mailto:huanglin36@mail.sysu.edu.cn">Lin Huang</a></h3>
+                  <p class="help-member-role"><span class="help-member-role-initial">P</span>rincipal Investigator of Sun Yat-sen University</p>
+                  <ul class="help-member-history">
+                    <li>PhD <a class="help-member-link" href="https://en.whu.edu.cn/" target="_blank" rel="noopener noreferrer">Wuhan University</a></li>
+                    <li>Postdoctoral research assistant at <a class="help-member-link" href="https://www.dundee.ac.uk/" target="_blank" rel="noopener noreferrer">University of<br />Dundee, UK</a></li>
+                    <li>Senior research associate at <a class="help-member-link" href="https://www.dundee.ac.uk/" target="_blank" rel="noopener noreferrer">University of<br />Dundee, UK</a></li>
+                  </ul>
+                </div>
+              </article>
+            </div>
+          </div>
         </article>
       </section>
     </section>
