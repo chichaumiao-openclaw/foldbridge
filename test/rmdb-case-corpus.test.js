@@ -9,6 +9,7 @@ import {
   sliceReactivityWindows,
   slugifyProfileKey
 } from '../scripts/lib/rmdb-case-corpus.mjs';
+import { paginateAlignment, buildProfiles } from '../scripts/lib/rmdb-case-corpus.mjs';
 
 test('sample case ids: 20 unique uppercase pdb ids', () => {
   assert.equal(SAMPLE_CASE_IDS.length, 20);
@@ -125,4 +126,50 @@ test('sliceReactivityWindows splits a single profile group by fixed position win
   assert.equal(windows[0].start, 1);
   assert.equal(windows[0].end, 100);
   assert.ok(windows[0].rows.length > 0);
+});
+
+test('paginateAlignment chunks rows by 25', () => {
+  const rows = Array.from({ length: 60 }, (_, i) => ({
+    alignment_column: String(i + 1), rmdb_base: 'A', pdb_base: 'A', match_state: 'match'
+  }));
+  const pages = paginateAlignment(rows, 25);
+  assert.equal(pages.length, 3);
+  assert.equal(pages[0].rows.length, 25);
+  assert.equal(pages[2].rows.length, 10);
+  assert.equal(pages[0].page, 1);
+  assert.equal(pages[2].page, 3);
+});
+
+test('paginateAlignment handles empty input', () => {
+  assert.deepEqual(paginateAlignment([], 25), []);
+});
+
+// 真实 schema：profile 维度来自 provenance_index.tsv（bundle_profile_id），
+// 经 bundle_sequence_id 关联 rmdb_sequence_members.tsv 取序列统计；探针类型来自 rdat_file 名。
+test('buildProfiles enumerates profiles from provenance joined to members and emits profileKey', () => {
+  const provenance = [
+    { bundle_profile_id: 'top_x_279::data-eterna/OK3TST_2A3_0000.rdat#64272', bundle_sequence_id: 'b1', rmdb_unique_id: 'r1', lineage_id: 'l1', rdat_file: 'data-eterna/OK3TST_2A3_0000.rdat', release_source_id: 'rmdb_release_20260606:OK3TST_2A3' },
+    { bundle_profile_id: 'top_x_279::data-eterna/OK3TST_DMS_0000.rdat#64272', bundle_sequence_id: 'b2', rmdb_unique_id: 'r1', lineage_id: 'l2', rdat_file: 'data-eterna/OK3TST_DMS_0000.rdat', release_source_id: 'rmdb_release_20260606:OK3TST_DMS' }
+  ];
+  const members = [
+    { bundle_sequence_id: 'b1', rmdb_unique_id: 'r1', sequence_length: '207', identity_fraction: '0.99083', rmdb_query_coverage: '0.5266', pdb_subject_coverage: '0.8516' },
+    { bundle_sequence_id: 'b2', rmdb_unique_id: 'r1', sequence_length: '207', identity_fraction: '0.99083', rmdb_query_coverage: '0.5266', pdb_subject_coverage: '0.8516' }
+  ];
+  const out = buildProfiles({ provenance, members });
+  assert.equal(out.length, 2);
+  const p0 = out[0];
+  assert.equal(p0.bundleProfileId, 'top_x_279::data-eterna/OK3TST_2A3_0000.rdat#64272');
+  assert.equal(p0.profileKey, slugifyProfileKey(p0.bundleProfileId));
+  assert.equal(p0.rdatFile, 'data-eterna/OK3TST_2A3_0000.rdat');
+  assert.equal(p0.sequenceLength, 207);
+  assert.equal(p0.identityFraction, 0.99083);
+  assert.equal(p0.lineageId, 'l1');
+});
+
+test('buildProfiles tolerates a profile whose bundle_sequence has no member row', () => {
+  const provenance = [{ bundle_profile_id: 'pf-x', bundle_sequence_id: 'missing', rmdb_unique_id: 'r9', rdat_file: 'x.rdat' }];
+  const out = buildProfiles({ provenance, members: [] });
+  assert.equal(out.length, 1);
+  assert.equal(out[0].sequenceLength, 0);
+  assert.equal(out[0].profileKey, slugifyProfileKey('pf-x'));
 });

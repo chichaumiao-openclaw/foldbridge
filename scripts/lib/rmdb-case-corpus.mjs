@@ -146,3 +146,48 @@ export function sliceReactivityWindows(rows, windowSize = 100) {
     rows: byWindow.get(idx)
   }));
 }
+
+/**
+ * 按固定页大小把 alignment 行分页。返回 [{ page, rows }]（page 从 1 起）。
+ */
+export function paginateAlignment(rows, pageSize = 25) {
+  const pages = [];
+  for (let i = 0; i < rows.length; i += pageSize) {
+    pages.push({ page: pages.length + 1, rows: rows.slice(i, i + pageSize) });
+  }
+  return pages;
+}
+
+/**
+ * 枚举 profile：以 provenance_index.tsv 的 bundle_profile_id 为粒度（去重，保留首次出现），
+ * 经 bundle_sequence_id 关联 rmdb_sequence_members.tsv 取序列统计。
+ * 探针类型等信息由 rdat_file 名承载，不依赖独立 modifier 列。
+ */
+export function buildProfiles({ provenance = [], members = [] }) {
+  const memberBySeqId = new Map();
+  for (const m of members) {
+    if (!memberBySeqId.has(m.bundle_sequence_id)) memberBySeqId.set(m.bundle_sequence_id, m);
+  }
+  const seen = new Set();
+  const out = [];
+  for (const p of provenance) {
+    const id = p.bundle_profile_id ?? '';
+    if (seen.has(id)) continue;
+    seen.add(id);
+    const m = memberBySeqId.get(p.bundle_sequence_id);
+    out.push({
+      bundleProfileId: id,
+      profileKey: slugifyProfileKey(id),
+      bundleSequenceId: p.bundle_sequence_id || '',
+      rmdbUniqueId: p.rmdb_unique_id || '',
+      rdatFile: p.rdat_file || '',
+      lineageId: p.lineage_id || '',
+      releaseSourceId: p.release_source_id || '',
+      sequenceLength: m ? toNumber(m.sequence_length) : 0,
+      identityFraction: m ? toNumber(m.identity_fraction) : 0,
+      rmdbQueryCoverage: m ? toNumber(m.rmdb_query_coverage) : 0,
+      pdbSubjectCoverage: m ? toNumber(m.pdb_subject_coverage) : 0
+    });
+  }
+  return out;
+}

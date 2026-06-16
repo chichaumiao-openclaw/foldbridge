@@ -475,6 +475,6 @@ test('store throws on non-ok response', async () => {
 
 ## 风险与待执行时确认项
 
-1. `rmdb_sequence_members.tsv` 是否有 `modifier` 列 — 任务 A5 执行时 Read header 核对。
+1. ~~`rmdb_sequence_members.tsv` 是否有 `modifier` 列~~ — **已核实（A5 执行时）：members 无 `modifier` 也无 `bundle_profile_id` 列。profile 维度来自 `provenance_index.tsv` 的 `bundle_profile_id`，经 `bundle_sequence_id` 关联 members 取序列统计（sequence_length/identity_fraction/coverage）；探针类型（2A3/DMS 等）由 `rdat_file` 名承载。`buildProfiles({provenance,members})` 据此实现，偏离计划原示例测试数据。
 2. identity/coverage 聚合口径（取代表行 vs 均值）— 任务 A6 执行时确认，倾向取该 case 的 `alignment_pair_summary` 中 best-hit 行或展示区间。
 3. 外接卷 `/Volumes/tianyi/...` 在 CI/他人环境不可用 — 生成脚本是 build-time 本地步骤；生成产物已 commit 进仓库，CI 的 `npm run build` 不应重跑生成（E1 中 build 链是否含 build:rmdb-cases 需决策：**倾向构建链不含它**，改为独立手动脚本，避免 CI 因缺卷失败；E1 步骤 1 据此调整为不加入 build:site，仅留独立 script）。**执行任务 E1 前与用户确认这一点。**
