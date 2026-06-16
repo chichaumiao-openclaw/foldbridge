@@ -73,3 +73,76 @@ export function buildIndexRow(linkRow, overview) {
     detailHref: `#pdb-case?pdbId=${pdbId}`
   };
 }
+
+/**
+ * 把 bundle_profile_id 转为文件系统安全的 key：小写、非字母数字转 '-'、压缩重复 '-'、去首尾 '-'。
+ */
+export function slugifyProfileKey(profileId) {
+  return String(profileId)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+/**
+ * 按 bundle_profile_id 分组反应性行，保留每组内原始行序。
+ * 返回 [{ profileId, profileKey, rows }]，分组顺序按首次出现。
+ */
+export function groupReactivityByProfile(reacRows) {
+  const order = [];
+  const byId = new Map();
+  for (const row of reacRows) {
+    const id = row.bundle_profile_id ?? '';
+    if (!byId.has(id)) {
+      byId.set(id, []);
+      order.push(id);
+    }
+    byId.get(id).push(row);
+  }
+  return order.map((id) => ({ profileId: id, profileKey: slugifyProfileKey(id), rows: byId.get(id) }));
+}
+
+function parseReactivity(value) {
+  const n = Number(value);
+  return Number.isFinite(n) ? n : null;
+}
+
+/**
+ * 由单个 profile 的反应性行构造轻量摘要：位置范围 + 降采样轨道预览（≤maxPoints 点）。
+ */
+export function buildReactivitySummary(rows, maxPoints = 64) {
+  const points = rows.map((r) => ({
+    pdbPos: Number(r.pdb_pos),
+    pdbBase: r.pdb_base ?? '',
+    reactivity: parseReactivity(r.reactivity)
+  }));
+  const positions = points.map((p) => p.pdbPos).filter((n) => Number.isFinite(n));
+  const minPos = positions.length ? Math.min(...positions) : 0;
+  const maxPos = positions.length ? Math.max(...positions) : 0;
+  let trackPreview = points;
+  if (points.length > maxPoints) {
+    const step = (points.length - 1) / (maxPoints - 1);
+    trackPreview = Array.from({ length: maxPoints }, (_, i) => points[Math.round(i * step)]);
+  }
+  return { minPos, maxPos, pointCount: points.length, trackPreview };
+}
+
+/**
+ * 按固定 PDB position window 把单个 profile 的反应性行切片。
+ * 返回 [{ start, end, rows }]，按 window 起点升序。
+ */
+export function sliceReactivityWindows(rows, windowSize = 100) {
+  const byWindow = new Map();
+  for (const row of rows) {
+    const pos = Number(row.pdb_pos);
+    if (!Number.isFinite(pos)) continue;
+    const idx = Math.floor((pos - 1) / windowSize);
+    if (!byWindow.has(idx)) byWindow.set(idx, []);
+    byWindow.get(idx).push(row);
+  }
+  return [...byWindow.keys()].sort((a, b) => a - b).map((idx) => ({
+    start: idx * windowSize + 1,
+    end: (idx + 1) * windowSize,
+    rows: byWindow.get(idx)
+  }));
+}
