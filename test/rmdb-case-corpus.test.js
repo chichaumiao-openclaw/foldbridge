@@ -11,6 +11,7 @@ import {
 } from '../scripts/lib/rmdb-case-corpus.mjs';
 import { paginateAlignment, buildProfiles } from '../scripts/lib/rmdb-case-corpus.mjs';
 import { selectBestHitPair, buildCaseDetail } from '../scripts/lib/rmdb-case-corpus.mjs';
+import { sha256Hex, classifyAssetSize } from '../scripts/lib/rmdb-case-corpus.mjs';
 
 test('sample case ids: 20 unique uppercase pdb ids', () => {
   assert.equal(SAMPLE_CASE_IDS.length, 20);
@@ -225,4 +226,21 @@ test('buildCaseDetail tolerates missing bestPair (no alignment summary)', () => 
   assert.equal(d.identityPct, null);
   assert.equal(d.residueMappingStatus, 'not-ready');
   assert.deepEqual(d.reactivity, []);
+});
+
+test('sha256Hex stable for known string', () => {
+  assert.equal(sha256Hex('abc'), 'ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad');
+});
+
+test('classifyAssetSize flags large-asset-warning and hard limit', () => {
+  assert.deepEqual(classifyAssetSize(10), { ok: true, warning: false });
+  assert.deepEqual(classifyAssetSize(60 * 1024 * 1024), { ok: true, warning: true });
+  assert.deepEqual(classifyAssetSize(101 * 1024 * 1024), { ok: false, warning: true });
+});
+
+test('classifyAssetSize boundaries: exactly 50MiB no warning, just over warns, exactly 100MiB ok', () => {
+  assert.deepEqual(classifyAssetSize(50 * 1024 * 1024), { ok: true, warning: false });
+  assert.deepEqual(classifyAssetSize(50 * 1024 * 1024 + 1), { ok: true, warning: true });
+  assert.deepEqual(classifyAssetSize(100 * 1024 * 1024), { ok: true, warning: true });
+  assert.deepEqual(classifyAssetSize(100 * 1024 * 1024 + 1), { ok: false, warning: true });
 });

@@ -1,5 +1,7 @@
 // RMDB→PDB case 语料构造纯函数库（build-time，无 fs 依赖，便于单测）。
 
+import { createHash } from 'node:crypto';
+
 /**
  * 解析 TSV 文本为 header 键控的对象数组。
  * - 制表符分隔，首行为表头
@@ -253,5 +255,26 @@ export function buildCaseDetail({ publicCase = {}, indexRow = {}, bestPair = nul
     // 资产清单（前端据此懒加载，不扫描目录）
     reactivity: reactivityEntries,
     alignmentPageCount
+  };
+}
+
+const MIB = 1024 * 1024;
+const WARNING_THRESHOLD = 50 * MIB; // >50MiB 标记 large asset warning
+const HARD_LIMIT = 100 * MIB;       // >100MiB 视为失败（契约硬上限）
+
+/**
+ * 计算字符串/Buffer 的 sha256 十六进制摘要。
+ */
+export function sha256Hex(data) {
+  return createHash('sha256').update(data).digest('hex');
+}
+
+/**
+ * 按契约判定资产大小：>50MiB warning，>100MiB 不合规（ok=false）。
+ */
+export function classifyAssetSize(sizeBytes) {
+  return {
+    ok: sizeBytes <= HARD_LIMIT,
+    warning: sizeBytes > WARNING_THRESHOLD
   };
 }
