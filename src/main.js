@@ -24,10 +24,19 @@ import {
   siteSummaries,
   stageDiseaseCards
 } from './data.js';
-import { normalizeRoute, routeFromHash } from './router.js';
+import { normalizeRoute, parseHashRoute, routeFromHash } from './router.js';
 import { downloadRowsAsCsv } from './modules.js';
 import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
+import {
+  buildAtlasSearchState,
+  createAtlasCaseDetail,
+  createAtlasCaseDetailFromAsset,
+  SAMPLE_ANNOJOIN_ATLAS_TABLES
+} from './annojoinAtlasData.js';
+import { renderAnnojointAtlasPage } from './annojoinAtlasView.js';
+import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
+import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
 import {
   buildSearchHash,
   createSearchService,
@@ -43,8 +52,11 @@ let sequenceSearchQuery = '';
 // store 命中内存缓存避免重复 fetch；下面三类 state 缓存“已加载”结果，
 // 让同步的 pageFor()/render() 路径命中即渲染数据，未命中则渲染 loading 占位并触发后台加载。
 const pdbCaseStore = createCaseStore();
+const annojoinAtlasStore = createAnnojointAtlasStore();
 let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
 const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
+let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
+const annojoinAtlasDetailState = new Map(); // caseId -> 'loading' | 'error' | generated case asset
 let pdbCaseConfidenceFilter = 'all';
 let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
 let homeDashboardFilters = {
@@ -1164,7 +1176,7 @@ function downloadSequencesPage() {
 
 
 
-const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help', 'pdb-case'];
+const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas'];
 let route = routeFromHash(window.location.hash);
 let theme = 'ribocentre';
 let mode = localStorage.getItem('foldbridge-mode') === 'dark' ? 'dark' : 'light';
@@ -1879,6 +1891,30 @@ async function loadPdbCaseDetail(pdbId) {
   if (route === 'pdb-case') render({ preserveScroll: true });
 }
 
+async function loadAnnojointAtlasIndex() {
+  if (annojoinAtlasIndexState === 'loading') return;
+  annojoinAtlasIndexState = 'loading';
+  try {
+    annojoinAtlasIndexState = await annojoinAtlasStore.loadIndex();
+  } catch (err) {
+    console.error('[main] 加载 ANNOJOIN Atlas 索引失败', err);
+    annojoinAtlasIndexState = 'error';
+  }
+  if (route === 'annojoin-atlas') render({ preserveScroll: true });
+}
+
+async function loadAnnojointAtlasDetail(caseId) {
+  if (!caseId || annojoinAtlasDetailState.get(caseId) === 'loading') return;
+  annojoinAtlasDetailState.set(caseId, 'loading');
+  try {
+    annojoinAtlasDetailState.set(caseId, await annojoinAtlasStore.loadCase(caseId));
+  } catch (err) {
+    console.error('[main] 加载 ANNOJOIN Atlas case 失败', caseId, err);
+    annojoinAtlasDetailState.set(caseId, 'error');
+  }
+  if (route === 'annojoin-atlas') render({ preserveScroll: true });
+}
+
 // alignment 分页导航：保留已加载的 detail/profiles/reactivity，只换 alignment 页，避免整页 loading 闪烁。
 async function loadAlignmentForCase(pdbId, page) {
   pdbCaseAlignmentPageByPdb.set(pdbId, page);
@@ -1920,6 +1956,53 @@ function pdbCasePage() {
   return renderPdbCaseLoadingPage(`Loading case assets for ${params.pdbId}…`);
 }
 
+function annojoinAtlasPage() {
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const filters = {
+    query: params.get('q') || '',
+    rnaFamily: params.get('rnaFamily') || '',
+    probeType: params.get('probeType') || '',
+    pdbId: params.get('pdbId') || '',
+    motif: params.get('motif') || '',
+    structureClass: params.get('structureClass') || ''
+  };
+  if (!annojoinAtlasIndexState || annojoinAtlasIndexState === 'loading') {
+    if (annojoinAtlasIndexState !== 'loading') loadAnnojointAtlasIndex();
+    const state = buildAtlasSearchState(SAMPLE_ANNOJOIN_ATLAS_TABLES, filters);
+    const detail = createAtlasCaseDetail(SAMPLE_ANNOJOIN_ATLAS_TABLES, state.cases[0]?.caseId || SAMPLE_ANNOJOIN_ATLAS_TABLES.cases[0]?.case_id);
+    return renderAnnojointAtlasPage({ state, detail });
+  }
+  if (annojoinAtlasIndexState === 'error') {
+    const state = buildAtlasSearchState(SAMPLE_ANNOJOIN_ATLAS_TABLES, filters);
+    const detail = createAtlasCaseDetail(SAMPLE_ANNOJOIN_ATLAS_TABLES, state.cases[0]?.caseId || SAMPLE_ANNOJOIN_ATLAS_TABLES.cases[0]?.case_id);
+    return renderAnnojointAtlasPage({ state, detail });
+  }
+
+  const state = buildAtlasSearchState(annojoinAtlasIndexState, filters);
+  const selectedCaseId = params.get('caseId') || state.cases[0]?.caseId || annojoinAtlasIndexState.cases?.[0]?.caseId;
+  const detailState = annojoinAtlasDetailState.get(selectedCaseId);
+  if (!detailState) loadAnnojointAtlasDetail(selectedCaseId);
+  const detail = detailState && typeof detailState === 'object'
+    ? createAtlasCaseDetailFromAsset(detailState)
+    : null;
+  return renderAnnojointAtlasPage({ state, detail });
+}
+
+function setAnnojointAtlasFilter(key, value) {
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  if (value) params.set(key, value);
+  else params.delete(key);
+  params.delete('caseId');
+  const next = params.toString();
+  window.location.hash = next ? `annojoin-atlas?${next}` : 'annojoin-atlas';
+}
+
+function setAnnojointAtlasQuery(query) {
+  setAnnojointAtlasFilter('q', query);
+}
+
 function downloadPage() {
   return `<main class="page-download">
     ${renderBundleHeader()}
@@ -1929,6 +2012,7 @@ function downloadPage() {
       <div class="actions">
         <button type="button" data-route="sequence">Sequence downloads</button>
         <button type="button" data-route="structure">Structure downloads</button>
+        <button type="button" data-route="annojoin-atlas">ANNOJOIN Atlas</button>
       </div>
     </section>
   </main>`;
@@ -2038,6 +2122,7 @@ function pageFor(name) {
   if (safeRoute === 'sequence') return downloadSequencesPage();
   if (safeRoute === 'structure') return structurePage();
   if (safeRoute === 'pdb-case') return pdbCasePage();
+  if (safeRoute === 'annojoin-atlas') return annojoinAtlasPage();
   if (safeRoute === 'probing') return detailPage();
   if (safeRoute === 'download') return downloadPage();
   if (safeRoute === 'search') return searchPage();
@@ -2292,6 +2377,27 @@ function render(options = {}) {
       render({ preserveScroll: true });
     });
   }
+  const annojoinSearchInput = document.getElementById('annojoin-search-input');
+  if (annojoinSearchInput) {
+    annojoinSearchInput.addEventListener('change', (event) => {
+      setAnnojointAtlasQuery(event.target.value.trim());
+    });
+    annojoinSearchInput.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        setAnnojointAtlasQuery(event.target.value.trim());
+      }
+    });
+  }
+  document.querySelectorAll('[data-annojoin-filter]').forEach((input) => {
+    const apply = () => setAnnojointAtlasFilter(input.getAttribute('data-annojoin-filter'), input.value.trim());
+    input.addEventListener('change', apply);
+    input.addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') apply();
+    });
+  });
+  initAnnojointStructureViewers().catch((error) => {
+    console.error('[main] 初始化 ANNOJOIN 3D viewer 失败', error);
+  });
   const downloadSelectedRdatBtn = document.getElementById('download-selected-rdat');
   bindPseudoButton(downloadSelectedRdatBtn, () => {
     downloadSelectedRdatFiles();
@@ -2393,7 +2499,30 @@ function initPdbCasePage() {
     const applyFilter = () => {
       document.querySelectorAll('[data-confidence-class]').forEach((row) => {
         const cls = row.getAttribute('data-confidence-class');
-        row.hidden = pdbCaseConfidenceFilter !== 'all' && cls !== pdbCaseConfidenceFilter;
+        const isParentRow = row.classList.contains('pdb-case-parent-row');
+        if (pdbCaseConfidenceFilter === 'all') {
+          // parent 行始终可见；child 行取决于其 parent 是否展开
+          if (isParentRow) { row.hidden = false; }
+          else if (row.classList.contains('pdb-case-child-row')) {
+            // 由 parent toggle 控制
+          } else { row.hidden = false; }
+        } else {
+          row.hidden = cls !== pdbCaseConfidenceFilter;
+          // 过滤时强制折叠 child 行
+          if (row.classList.contains('pdb-case-child-row')) row.hidden = true;
+        }
+      });
+      // parent 行特殊逻辑：如果过滤后没有子行匹配，隐藏 parent
+      document.querySelectorAll('[data-parent-toggle]').forEach((parentRow) => {
+        const parentName = parentRow.getAttribute('data-parent-toggle');
+        if (pdbCaseConfidenceFilter === 'all') {
+          parentRow.hidden = false;
+        } else {
+          const hasVisible = !!document.querySelector(
+            `[data-parent-name="${CSS.escape(parentName)}"][data-confidence-class="${pdbCaseConfidenceFilter}"]`
+          );
+          parentRow.hidden = !hasVisible;
+        }
       });
       filterButtons.forEach((btn) => {
         btn.classList.toggle('is-active', btn.getAttribute('data-confidence-filter') === pdbCaseConfidenceFilter);
@@ -2407,6 +2536,30 @@ function initPdbCasePage() {
     });
     applyFilter();
   }
+
+  // Parent group 折叠/展开切换
+  document.querySelectorAll('[data-parent-toggle]').forEach((parentRow) => {
+    const toggleBtn = parentRow.querySelector('.pdb-case-parent-toggle');
+    if (!toggleBtn) return;
+    toggleBtn.addEventListener('click', () => {
+      const parentName = parentRow.getAttribute('data-parent-toggle');
+      const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      toggleBtn.setAttribute('aria-expanded', String(!expanded));
+      const arrow = toggleBtn.querySelector('.pdb-case-parent-arrow');
+      if (arrow) arrow.textContent = expanded ? '\u25B6' : '\u25BC';
+      document.querySelectorAll(`.pdb-case-child-row[data-parent-name="${CSS.escape(parentName)}"]`).forEach((child) => {
+        child.hidden = expanded; // toggle: was expanded → collapse, was collapsed → expand
+      });
+    });
+  });
+
+  // Detail 按钮：导航到本站详情页
+  document.querySelectorAll('.pdb-case-detail-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const href = btn.getAttribute('data-detail-href');
+      if (href) window.location.hash = href.replace(/^#/, '');
+    });
+  });
 
   // 详情页 alignment 分页导航。
   const params = getPdbCaseParamsFromHash();

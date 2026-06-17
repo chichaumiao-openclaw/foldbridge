@@ -6,6 +6,7 @@
   "scripts": {
     "test": "node --test",
     "build:static": "node scripts/build.mjs",
+    "build:annojoin-atlas": "node scripts/build-annojoin-atlas.mjs",
     "build:rmdb-cases": "node scripts/build-rmdb-cases.mjs",
     "build:search-docs": "node scripts/build-search-docs.mjs",
     "build:search-index": "pagefind --site dist --output-path dist/pagefind",
@@ -13,7 +14,8 @@
     "build": "npm run build:site",
     "build:pages": "npm run build && node scripts/build-pages.mjs",
     "serve": "node scripts/serve.mjs",
-    "verify:mvp": "node scripts/verify-mvp.mjs"
+    "verify:mvp": "node scripts/verify-mvp.mjs",
+    "verify:annojoin-atlas": "node scripts/verify-annojoin-atlas-smoke.mjs"
   },
   "devDependencies": {
     "pagefind": "^1.5.2"
