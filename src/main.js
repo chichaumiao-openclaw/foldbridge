@@ -1195,7 +1195,6 @@ function sequenceDetailPage() {
           <div>
             <p class="sequence-detail-kicker">${row.category ?? 'RNA'} record</p>
             <h1>${row.sequenceName ?? ''}</h1>
-            <p>${row.aptamerName ?? ''}</p>
           </div>
           <dl class="sequence-detail-meta">
             <div><dt>PDB</dt><dd>${row.pdbName ?? 'N/A'}</dd></div>
@@ -1505,6 +1504,9 @@ function buildStructureEntryRows(rows) {
       };
     })
     .sort((a, b) => {
+      const secondaryStructureDiff = Number(structureHasSecondaryStructure(b)) - Number(structureHasSecondaryStructure(a));
+      if (secondaryStructureDiff !== 0) return secondaryStructureDiff;
+
       const datasetOrderDiff =
         (structureDatasetOrder.get(a.structureDatasetGroup) ?? structureDatasetOrder.get('other')) -
         (structureDatasetOrder.get(b.structureDatasetGroup) ?? structureDatasetOrder.get('other'));
@@ -1517,6 +1519,11 @@ function formatBlastPercent(value) {
   const numeric = Number(value);
   if (!Number.isFinite(numeric)) return 'N/A';
   return `${numeric.toFixed(1)}%`;
+}
+
+function structureHasSecondaryStructure(row) {
+  if (row?.hasLocalRdat) return true;
+  return /[().[\]{}<>]/.test(String(row?.sourceStructure || ''));
 }
 
 function formatBlastEvalue(value) {
@@ -1644,7 +1651,9 @@ function buildSupplementStructureRows(rows, existingIds = new Set()) {
         bestCoverage: row.qcovs || '',
         structureDatasetGroup: normalizeStructureDataset(row.dataset),
         rdatPath: '',
-        hasLocalRdat: false
+        hasLocalRdat: false,
+        sourceStructure: String(row.source_structure ?? '').trim(),
+        sourceSequence: sequenceText
       };
     })
     .filter(Boolean);
@@ -2645,7 +2654,6 @@ function renderTechnologyMethodPage(method) {
         <div>
           <p class="technology-kicker">${method.category}</p>
           <h1>${method.title}</h1>
-          <p class="technology-intro">${method.subtitle}</p>
         </div>
         <dl class="technology-detail-meta">
           <div><dt>Reagent</dt><dd>${method.reagent}</dd></div>
@@ -2774,7 +2782,6 @@ function case10fzPage() {
           <div>
             <p class="sequence-detail-kicker">PDB-centered case bundle</p>
             <h1>10FZ Projection Case</h1>
-            <p class="technology-intro">A curated case package projecting RMDB reactivity profiles onto the 10FZ reference sequence axis for quick review inside FoldBridge.</p>
           </div>
           <dl class="sequence-detail-meta">
             <div><dt>PDB ID</dt><dd>${case10fzSummary.pdbId}</dd></div>
@@ -3019,7 +3026,6 @@ function caseDetailPage() {
           <div>
             <p class="sequence-detail-kicker">3D Entry case bundle</p>
             <h1>${row.pdbId}</h1>
-            <p class="technology-intro">RMDB-to-PDB projection case summary generated from the packaged case manifest.</p>
           </div>
         </div>
       </div>
@@ -3338,9 +3344,22 @@ function structurePage() {
 function structureDetailPdbUrl(pdbId, subjectId = '') {
   if (!pdbId) return '';
 
-  const normalizedPdbId = encodeURIComponent(String(pdbId).toUpperCase());
-  const chainMatch = String(subjectId || '').match(/_([A-Za-z0-9]+)$/);
+  const uppercasePdbId = String(pdbId).toUpperCase();
+  const chainMatch = String(subjectId || '').match(/_([A-Za-z0-9-]+)$/);
   const authAsymId = chainMatch?.[1];
+  const localPdbMap = {
+    '1AM0': './src/assets/structures/1AM0-assembly1.cif',
+    '4L81': './src/assets/structures/4L81-assembly1.cif',
+    '5KPY': './src/assets/structures/5KPY-assembly1.cif',
+    '5TPY': './src/assets/structures/5TPY-assembly1.cif',
+    '8QO5': './src/assets/structures/8QO5-assembly1.cif'
+  };
+
+  if (!authAsymId && localPdbMap[uppercasePdbId]) {
+    return localPdbMap[uppercasePdbId];
+  }
+
+  const normalizedPdbId = encodeURIComponent(uppercasePdbId);
 
   if (!authAsymId) {
     return `https://files.rcsb.org/download/${normalizedPdbId}.cif`;
@@ -3358,6 +3377,10 @@ function structureDetailPage() {
   const foldBridgeId = getStructureRecordIdFromHash();
   const row = structureEntryRows.find((item) => item.foldBridgeId === foldBridgeId);
   const linkedCase = row?.bestPdbId ? case3dRows.find((item) => item.pdbId === row.bestPdbId) : null;
+  const detailSequence = String(row?.sourceSequence || row?.sequence || '').replace(/\s*\(\d+nt\)$/i, '');
+  const detailSecondaryStructure = String(row?.sourceStructure || '').trim();
+  const hasSecondaryStructureConstraints = structureHasSecondaryStructure(row);
+  const showPredictedStructureSection = predictedStructureIds.has(row?.foldBridgeId) || hasSecondaryStructureConstraints;
 
   if (!row) {
     return `<main class="page-sequence-detail">
@@ -3404,7 +3427,6 @@ function structureDetailPage() {
         <div class="sequence-detail-title-row">
           <div>
             <h1>${row.foldBridgeId}</h1>
-            <p class="technology-intro">${row.name || 'Untitled record'} is a probing-centered FoldBridge record with a matched tertiary-structure target.</p>
           </div>
           <dl class="sequence-detail-meta">
             <div><dt>PDB ID</dt><dd>${renderPdbExternalLink(row.bestPdbId)}</dd></div>
@@ -3415,48 +3437,36 @@ function structureDetailPage() {
         </div>
       </div>
 
-      ${renderSequenceDetailTimeline()}
-
       <section class="sequence-detail-panel">
-        <h2>FoldBridge Record</h2>
+        <h2>Description</h2>
         <div class="sequence-detail-placeholder">
-          <p>This page keeps the probing record in the foreground and shows how it links to an experimentally resolved tertiary structure.</p>
-        </div>
-        <div class="technology-detail-meta case-detail-meta-grid">
-          <div><dt>FoldBridge ID</dt><dd>${row.foldBridgeId}</dd></div>
-          <div><dt>Name</dt><dd>${row.name || 'Untitled record'}</dd></div>
-          <div><dt>File code</dt><dd>${row.fileCode || 'N/A'}</dd></div>
-          <div><dt>Experiment type</dt><dd>${row.experimentType || 'N/A'}</dd></div>
-          <div><dt>Modifier</dt><dd>${row.modifier || 'N/A'}</dd></div>
-          <div><dt>Related probing records</dt><dd>${row.relatedRecordCount || 1}</dd></div>
+          <p>${row.name || 'Untitled record'} is a probing-centered FoldBridge record with a matched tertiary-structure target.</p>
         </div>
       </section>
 
       <section class="sequence-detail-panel">
         <h2>Sequence</h2>
-        <div class="sequence-detail-placeholder">
-          <p>The original probing entry sequence is shown below.</p>
-        </div>
         <article class="case-sequence-card">
-          <div class="case-sequence-card-header">
-            <div>
-              <p class="case-sequence-card-kicker">Probing record</p>
-              <h3>${row.name || row.foldBridgeId}</h3>
-            </div>
-            <span class="case-sequence-card-length">${row.length || 'N/A'}</span>
-          </div>
-          <code class="case-sequence-block">${row.sequence || 'Sequence unavailable'}</code>
+          <code class="case-sequence-block">${detailSequence ? renderColoredSequence(detailSequence) : 'Sequence unavailable'}</code>
+          ${
+            hasSecondaryStructureConstraints
+              ? `<div id="structure-detail-sequence-structure-block">
+                   <p class="case-sequence-structure-label">Secondary structure</p>
+                   <code id="structure-detail-sequence-structure" class="case-sequence-structure">${detailSecondaryStructure || 'Loading secondary structure…'}</code>
+                 </div>`
+              : ''
+          }
         </article>
       </section>
 
       <section class="sequence-detail-panel">
         <h2>Secondary Structure</h2>
         ${
-          row.hasLocalRdat
+          row.hasLocalRdat || row.sourceStructure
             ? `<section class="sequence-secondary-card sequence-secondary-forna-card">
                 <div class="sequence-detail-forna-copy">
                   <h3>RNA Secondary Structure Viewer (Forna)</h3>
-                  <p>Secondary structure parsed directly from the linked RDAT record when paired dot-bracket constraints are available.</p>
+                  <p>Secondary structure representation generated with Forna module.</p>
                 </div>
                 <div class="sequence-detail-forna-frame">
                   <div
@@ -3464,41 +3474,46 @@ function structureDetailPage() {
                     class="sequence-detail-forna-host"
                     data-rdat-url="${rdatDownloadPath(row.foldBridgeId)}"
                     data-foldbridge-id="${row.foldBridgeId}"
-                    data-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                    data-sequence="${(row.sourceSequence || row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                    data-structure="${row.sourceStructure || ''}"
                   ></div>
                 </div>
                 <p id="structure-detail-forna-status" class="sequence-detail-forna-note">Loading secondary structure viewer…</p>
               </section>`
             : `<div class="sequence-detail-placeholder">
-                <p>This imported structure entry is listed on the structure page, but its local RDAT file has not been added to the project yet.</p>
+                <p>This imported structure entry is listed on the structure page, but its secondary structure is not available.</p>
               </div>`
         }
       </section>
 
-      <section class="sequence-detail-panel">
-        <h2>Predicted 3D from secondary structure</h2>
-        <div class="sequence-detail-placeholder">
-          <p>${predictedStructureDescription(row.foldBridgeId)}</p>
-        </div>
-        ${
-          predictedStructureIds.has(row.foldBridgeId)
-            ? `<div class="sequence-detail-media">
-                <div id="predicted-structure-detail-molstar-status" class="mini-note">Loading predicted 3D model…</div>
-                <div
-                  id="predicted-structure-detail-molstar"
-                  class="sequence-detail-viewer"
-                  data-structure-url="${predictedStructurePath(row.foldBridgeId)}"
-                  data-structure-format="pdb"
-                  data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
-                  data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                  data-structure-source="${rnaComposerPredictedStructureIds.has(row.foldBridgeId) ? 'rnacomposer' : 'local-fallback'}"
-                ></div>
-              </div>`
-            : `<div class="sequence-detail-placeholder">
-                <p>Predicted 3D model is not available yet for this record.</p>
-              </div>`
-        }
-      </section>
+      ${
+        showPredictedStructureSection
+          ? `<section class="sequence-detail-panel">
+              <h2>Predicted 3D from secondary structure</h2>
+              <div class="sequence-detail-placeholder">
+                <p>${predictedStructureDescription(row.foldBridgeId)}</p>
+              </div>
+              ${
+                predictedStructureIds.has(row.foldBridgeId)
+                  ? `<div class="sequence-detail-media">
+                      <div id="predicted-structure-detail-molstar-status" class="mini-note">Loading predicted 3D model…</div>
+                      <div
+                        id="predicted-structure-detail-molstar"
+                        class="sequence-detail-viewer"
+                        data-structure-url="${predictedStructurePath(row.foldBridgeId)}"
+                        data-structure-format="pdb"
+                        data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
+                        data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                        data-structure-source="${rnaComposerPredictedStructureIds.has(row.foldBridgeId) ? 'rnacomposer' : 'local-fallback'}"
+                      ></div>
+                    </div>`
+                  : `<div class="sequence-detail-placeholder">
+                      <p>Predicted 3D model is not available yet for this record.</p>
+                    </div>`
+              }
+            </section>`
+          : ''
+      }
 
       <section class="sequence-detail-panel">
         <h2>Tertiary Structure</h2>
@@ -3516,6 +3531,7 @@ function structureDetailPage() {
                   data-structure-format="cif"
                   data-structure-label="${row.bestPdbId}"
                   data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                  data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
                 ></div>
               </div>`
             : `<div class="sequence-detail-placeholder">
@@ -3524,24 +3540,6 @@ function structureDetailPage() {
         }
       </section>
 
-      <section class="sequence-detail-panel">
-        <h2>Structure Match</h2>
-        <div class="sequence-detail-placeholder">
-          <p>The best current structure match is summarized here from the BLAST mapping table.</p>
-        </div>
-        <div class="sequence-detail-insight-grid">
-          <article class="sequence-detail-insight-card"><span>PDB ID</span><strong>${renderPdbExternalLink(row.bestPdbId)}</strong></article>
-          <article class="sequence-detail-insight-card"><span>Subject ID</span><strong>${row.bestSubjectId || 'N/A'}</strong></article>
-          <article class="sequence-detail-insight-card"><span>E-value</span><strong>${formatBlastEvalue(row.bestEvalue)}</strong></article>
-          <article class="sequence-detail-insight-card"><span>Identity</span><strong>${formatBlastPercent(row.bestIdentity)}</strong></article>
-          <article class="sequence-detail-insight-card"><span>Coverage</span><strong>${formatBlastPercent(row.bestCoverage)}</strong></article>
-          <article class="sequence-detail-insight-card"><span>Status</span><strong>Matched</strong></article>
-        </div>
-        <div class="sequence-detail-placeholder case-detail-note">
-          <p>Alternative matched PDB IDs</p>
-          <div class="search-filter-pills structure-detail-pill-row">${alternatePdbMarkup}</div>
-        </div>
-      </section>
 
       <section class="sequence-detail-panel">
         <h2>Related FoldBridge Records</h2>
@@ -3563,15 +3561,6 @@ function structureDetailPage() {
         </div>
       </section>
 
-      <section class="sequence-detail-panel">
-        <h2>Next Step</h2>
-        <div class="sequence-detail-placeholder">
-          <p>If this matched PDB also exists in the packaged 3D bundle, you can continue into the PDB-centered case detail below.</p>
-        </div>
-        <div class="browse-pagination structure-detail-actions">
-          ${linkedCaseAction}
-        </div>
-      </section>
     </section>
   </main>`;
 }

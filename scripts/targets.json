@@ -1,0 +1,158 @@
+[
+  {
+    "id": "RMDB_ATPCON_DMS_0001",
+    "filename": "ATPCON_DMS_0001.pdb",
+    "sequence": "GGGUUGGGAAGAAACUGUGGCACUUCGGUGCCAGCAACCC",
+    "structure": "((((((...........((((((....)))))).))))))"
+  },
+  {
+    "id": "RMDB_ADDSC_1M7_0007",
+    "filename": "ADDSC_1M7_0007.pdb",
+    "sequence": "GGACGCUUCAUAUAAUCCUAAUGAUAUGGUUUGGGAGUUUCUACCAAGAGCCUUAAACUCUUGAUUAUGAAGUG",
+    "structure": "...(((((((((...((((((.........))))))........((((((.......))))))..))))))))."
+  },
+  {
+    "id": "RMDB_ATTR03_DMS_0001",
+    "filename": "ATTR03_DMS_0001.pdb",
+    "sequence": "GCGAUAUGGCAUGGAAUCAGCUCAAGGAACUGUGAACGUAUAUCGGGCAACGACUAGGAAACUAGUCGUUGGGAAGAAACUGCCGAUAUACGGGAGUUCCUUGAGCGGGAGAUUCCAUGCCUAAGUCGC",
+    "structure": "(((((..(((((((((((.((((((((((((.....((((((((((.((((((((((....))))))))))((......)).))))))))))..))))))))))))....)))))))))))...)))))"
+  },
+  {
+    "id": "RMDB_GLYCFN_KNK_0001",
+    "filename": "GLYCFN_KNK_0001.pdb",
+    "sequence": "GGAAAUAAUCGGAUGAAGAUAUGAGGAGAGAUUUCAUUUUAAUGAAACACCGAAGAAGUAAAUCUUUCAGGUAAAAAGGACUCAUAUUGGACGAACCUCUGGAGAGCUUAUCUAAGAGAUAACACCGAAGGAGCAAAGCUAAUUUUAGCCUAAACUCUCAGGUAAAAGGACGGAGAAAACAAAACAAAGAAACAACAACAACAAC",
+    "structure": "........(((......((((((((......((((((....)))))).(((....(((.....)))...)))........))))))))...)))..(((((......(((((.....))))).(((....(((....((((....)))).....)))...))).......))))).............................."
+  },
+  {
+    "id": "RMDB_TPPSC_1M7_0005",
+    "filename": "TPPSC_1M7_0005.pdb",
+    "sequence": "GGACUCGGGGUGCCCUUCUGCGUGAAGGCUGAGAAAUACCCGUAUCACCUGAUCUGGAUAAUGCCAGCGUAGGGAAGUUC",
+    "structure": ".((((((((.((((.(((.....))))))......)..)))).....(((...((((......))))...)))..))))."
+  },
+  {
+    "id": "RMDB_TRP4P6_DMS_0014",
+    "filename": "TRP4P6_DMS_0014.pdb",
+    "sequence": "GGAAUUGCGGGAAAGGGGUCAACAGCCGUUCAGUACCAAGUCUCAGGGGAAACUUUGAGAUGGCCUUGCAAAGGGUAUGGUAAUAAGCUGACGGACAUGGUCCUAACCACGCAGCCAAGUCCUAAGUCAACAGAUCUUCUGUUGAUAUGGAUGCAGUUCA",
+    "structure": ".....((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...))..."
+  },
+  {
+    "id": "RMDB_16SFWJ_1M7_0001",
+    "filename": "16SFWJ_1M7_0001.pdb",
+    "sequence": "GGGAAACUGCCUGAUGGAGGGGGAUAACUACUGGAAACGGUAGCUAAUACCGCAUAACGUCGCAAGACCAAAGAGGGGGACCUUCGGGCCUCUUGCCAUCGGAUGUGCCC",
+    "structure": "(((..((...(((((((.((((..((.((((((....)))))).))...)))).....(((....))).....((((((.((....)))))))).)))))))..)).)))"
+  },
+  {
+    "id": "RMDB_RNAPZ5_1M7_0002",
+    "filename": "RNAPZ5_1M7_0002.pdb",
+    "sequence": "GGAACAGGUUGGGUUGGGAAGUAUCAUGGCUAAUCACCAUGAUGCAAUCGGGUUGAACACUUAAUUGGGUUAAAACGGUGGGGGACGAUCCCGUAACAUCCGUCCUAACGGCGACAGACUGCACGGCCCUGCCUCUUAGGUGUGUUCAAUGAACAGUCGUUCCGAAAGGAAGCAUCCGGUAUCCCAAGACAAUCAAACGAAAGAAACAACAACAACAAC",
+    "structure": "......(((((..(((((..(((((((((.......)))))))))..((((.((((((((......(((((...((((((((((....))))....)).))))((....)).....[[[[[...))))).((((...))))))))))))....]]]]].((((....))))....))))...)))))..)))))........................."
+  },
+  {
+    "id": "RMDB_RNAPZ5_STD_0000",
+    "filename": "RNAPZ5_STD_0000.pdb",
+    "sequence": "GGUUGGGUUGGGAAGUAUCAUGGCUAAUCACCAUGAUGCAAUCGGGUUGAACACUUAAUUGGGUUAAAACGGUGGGGGACGAUCCCGUAACAUCCGUCCUAACGGCGACAGACUGCACGGCCCUGCCUCUUAGGUGUGUUCAAUGAACAGUCGUUCCGAAAGGAAGCAUCCGGUAUCCCAAGACAAUC",
+    "structure": "(((((..(((((..(((((((((.......)))))))))..((((.((((((((......(((((...((((((((((....))))....)).))))((....)).....[[[[[...))))).((((...))))))))))))....]]]]].((((....))))....))))...)))))..)))))"
+  },
+  {
+    "id": "RMDB_RNAPZ14_HRF_0003",
+    "filename": "RNAPZ14_HRF_0003.pdb",
+    "sequence": "CGUUGGCCCAGGAAACUGGGUGGAAGUAAGGCCCAUUGCACUCCGGGCCUGAAGCAACGCU",
+    "structure": "(((((((((((....))))))((...))((((((..........))))))....))))))."
+  },
+  {
+    "id": "RMDB_RNAPZ11_STD_0002",
+    "filename": "RNAPZ11_STD_0002.pdb",
+    "sequence": "GGGAUCUGUCACCCCAUUGAUCGCCUUCGGGCUGAUCUGGCUGGCUAGGCGGGUCCC",
+    "structure": "((((((((((.(((((..(((((((....))).)))))))..))...))))))))))"
+  },
+  {
+    "id": "RMDB_RNAPZ14_HRF_0002",
+    "filename": "RNAPZ14_HRF_0002.pdb",
+    "sequence": "CGUUGACCCAGGAAACUGGGCGGAAGUAAGGCCCAUUGCACUCCGGGCCUGAAGCAACGCG",
+    "structure": "(((((.(((((....)))))((....))((((((..........))))))....)))))))"
+  },
+  {
+    "id": "RMDB_RNAPZ14_1M7_0005",
+    "filename": "RNAPZ14_1M7_0005.pdb",
+    "sequence": "GGAACAGCUCGAGUAGAGCUGAAAUUGCGUUGACCCAGGAAACUGGGCGGAAGUAAGGCCCAUUGCACUCCGGGCCUGAAGCAACGCGAAACGCAUCGAGUAGAUGCGAACAAAGAAACAACAACAACAAC",
+    "structure": "....((((((.....))))))...((((((((.(((((....)))))((....))((((((..........))))))....))))))))..((((((.....))))))......................."
+  },
+  {
+    "id": "RMDB_RNAPZ18_1M7_0000",
+    "filename": "RNAPZ18_1M7_0000.pdb",
+    "sequence": "GGGUCAGGCCGGCGAAAGUCGCCACAGUUUGGGGAAAGCUGUGCAGCCUGUAACCCCCCCACGAAAGUGGG",
+    "structure": "....(((((((((....)))).(((((((.[[[[..)))))))..)))))...]]]](((((....)))))"
+  },
+  {
+    "id": "RMDB_RNAPZ11_1M7_0006",
+    "filename": "RNAPZ11_1M7_0006.pdb",
+    "sequence": "GGAACAGCUCGAGUAGAGCUGAAAGGGAUCUGUCACCCCAUUGAUCGCCUUCGGGCUGAUCUGGCUGGCUAGGCGGGUCCCAAACGCAUCGAGUAGAUGCGAACAAAGAAACAACAACAACAAC",
+    "structure": "....((((((.....))))))...((((((((((.(((((..(((((((....))).)))))))..))...))))))))))...((((((.....))))))......................."
+  },
+  {
+    "id": "RMDB_RNAPZ5_NMD_0002",
+    "filename": "RNAPZ5_NMD_0002.pdb",
+    "sequence": "GGAACAGGUUGGGUUGGGAAGUAUCAUGGCUAAUCACCAUGAUGCAAUCGGGUUGAACACUUAAUUGGGUUAAAACGGUGGGGGACGAUCCCGUAACAUCCGUCCUAACGGCGACAGACUGCACGGCCCUGCCUCUUAGGUGUGUUCAAUGAACAGUCGUUCCGAAAGGAAGCAUCCGGUAUCCCAAGACAAUCAAACGAAAGAAACAACAACAACAAC",
+    "structure": "......(((((..(((((..(((((((((.......)))))))))..((((.((((((((......(((((...((((((((((....))))....)).))))((....)).....[[[[[...))))).((((...))))))))))))....]]]]].((((....))))....))))...)))))..)))))........................."
+  },
+  {
+    "id": "RMDB_RNAPZ14_1M7_0004",
+    "filename": "RNAPZ14_1M7_0004.pdb",
+    "sequence": "GGAACAGCUCGAGUAGAGCUGAAAUUGCGUUGACCCAGGAAACUGGGCGGAAGUAAGGCCCAUUGCACUCCGGGCCUGAAGCAACGCGAAACGCAUCGAGUAGAUGCGAACAAAGAAACAACAACAACAAC",
+    "structure": "....((((((.....))))))...((((((((.(((((....)))))((....))((((((..........))))))....))))))))..((((((.....))))))......................."
+  },
+  {
+    "id": "RMDB_RNAPZ5_DMS_0002",
+    "filename": "RNAPZ5_DMS_0002.pdb",
+    "sequence": "GGAACAGGUUGGGUUGGGAAGUAUCAUGGCUAAUCACCAUGAUGCAAUCGGGUUGAACACUUAAUUGGGUUAAAACGGUGGGGGACGAUCCCGUAACAUCCGUCCUAACGGCGACAGACUGCACGGCCCUGCCUCUUAGGUGUGUUCAAUGAACAGUCGUUCCGAAAGGAAGCAUCCGGUAUCCCAAGACAAUCAAACGAAAGAAACAACAACAACAAC",
+    "structure": "......(((((..(((((..(((((((((.......)))))))))..((((.((((((((......(((((...((((((((((....))))....)).))))((....)).....[[[[[...))))).((((...))))))))))))....]]]]].((((....))))....))))...)))))..)))))........................."
+  },
+  {
+    "id": "RMDB_RNAPZ14_1M7_0007",
+    "filename": "RNAPZ14_1M7_0007.pdb",
+    "sequence": "GGAACAGCUCGAGUAGAGCUGAAAUUGCGUUGGCCCAGGAAACUGGGUGGAAGUAAGGCCCAUUGCACUCCGGGCCUGAAGCAACGCUAAACGCAUCGAGUAGAUGCGAACAAAGAAACAACAACAACAAC",
+    "structure": "....((((((.....)))))).....((((((((((((....))))))((...))((((((..........))))))....))))))....((((((.....))))))......................."
+  },
+  {
+    "id": "RMDB_RNAPZ11_1M7_0004",
+    "filename": "RNAPZ11_1M7_0004.pdb",
+    "sequence": "GGAACAGCUCGAGUAGAGCUGAAAGGGAUCUGUCACCCCAUUGAUCGCCUUCGGGCUGAUCUGGCUGGCUAGGCGGGUCCCAAACGCAUCGAGUAGAUGCGAACAAAGAAACAACAACAACAAC",
+    "structure": "....((((((.....))))))...((((((((((.(((((..(((((((....))).)))))))..))...))))))))))...((((((.....))))))......................."
+  },
+  {
+    "id": "RMDB_RNAPZ11_1M7_0005",
+    "filename": "RNAPZ11_1M7_0005.pdb",
+    "sequence": "GGAACAGCUCGAGUAGAGCUGAAAGGGAUCUGUCACCCCAUUGAUCGCCUUCGGGCUGAUCUGGCUGGCUAGGCGGGUCCCAAACGCAUCGAGUAGAUGCGAACAAAGAAACAACAACAACAAC",
+    "structure": "....((((((.....))))))...((((((((((.(((((..(((((((....))).)))))))..))...))))))))))...((((((.....))))))......................."
+  },
+  {
+    "id": "RMDB_RNAPZ14_1M7_0006",
+    "filename": "RNAPZ14_1M7_0006.pdb",
+    "sequence": "GGAACAGCUCGAGUAGAGCUGAAAUUGCGUUGGCCCAGGAAACUGGGUGGAAGUAAGGCCCAUUGCACUCCGGGCCUGAAGCAACGCUAAACGCAUCGAGUAGAUGCGAACAAAGAAACAACAACAACAAC",
+    "structure": "....((((((.....)))))).....((((((((((((....))))))((...))((((((..........))))))....))))))....((((((.....))))))......................."
+  },
+  {
+    "id": "RMDB_RNAPZ14_STD_0003",
+    "filename": "RNAPZ14_STD_0003.pdb",
+    "sequence": "CGUUGGCCCAGGAAACUGGGUGGAAGUAAGGCCCAUUGCACUCCGGGCCUGAAGCAACGCU",
+    "structure": "(((((((((((....))))))((...))((((((..........))))))....))))))."
+  },
+  {
+    "id": "RMDB_RNAPZ5_RSQ_0001",
+    "filename": "RNAPZ5_RSQ_0001.pdb",
+    "sequence": "GGUUGGGUUGGGAAGUAUCAUGGCUAAUCACCAUGAUGCAAUCGGGUUGAACACUUAAUUGGGUUAAAACGGUGGGGGACGAUCCCGUAACAUCCGUCCUAACGGCGACAGACUGCACGGCCCUGCCUCUUAGGUGUGUUCAAUGAACAGUCGUUCCGAAAGGAAGCAUCCGGUAUCCCAAGACAAUC",
+    "structure": "(((((..(((((..(((((((((.......)))))))))..((((.((((((((......(((((...((((((((((....))))....)).))))((....)).....[[[[[...))))).((((...))))))))))))....]]]]].((((....))))....))))...)))))..)))))"
+  },
+  {
+    "id": "RMDB_RNAPZ5_HRF_0001",
+    "filename": "RNAPZ5_HRF_0001.pdb",
+    "sequence": "GGUUGGGUUGGGAAGUAUCAUGGCUAAUCACCAUGAUGCAAUCGGGUUGAACACUUAAUUGGGUUAAAACGGUGGGGGACGAUCCCGUAACAUCCGUCCUAACGGCGACAGACUGCACGGCCCUGCCUCUUAGGUGUGUUCAAUGAACAGUCGUUCCGAAAGGAAGCAUCCGGUAUCCCAAGACAAUC",
+    "structure": "(((((..(((((..(((((((((.......)))))))))..((((.((((((((......(((((...((((((((((....))))....)).))))((....)).....[[[[[...))))).((((...))))))))))))....]]]]].((((....))))....))))...)))))..)))))"
+  },
+  {
+    "id": "RMDB_RNAPZ14_STD_0002",
+    "filename": "RNAPZ14_STD_0002.pdb",
+    "sequence": "CGUUGACCCAGGAAACUGGGCGGAAGUAAGGCCCAUUGCACUCCGGGCCUGAAGCAACGCG",
+    "structure": "(((((.(((((....)))))((....))((((((..........))))))....)))))))"
+  }
+]

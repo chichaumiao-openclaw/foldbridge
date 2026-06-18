@@ -549,6 +549,26 @@ function applyMolstarColoring(viewer, sequence, seedLabel, chainId = 'A', attemp
   }, attempt === 0 ? 450 : 250);
 }
 
+function focusMolstarChain(viewer, chainId, color = { r: 20, g: 128, b: 96 }, attempt = 0) {
+  if (!viewer?.visual?.select || !chainId) return;
+
+  window.setTimeout(() => {
+    try {
+      if (viewer.visual.clearSelection) {
+        viewer.visual.clearSelection();
+      }
+      viewer.visual.select({
+        data: [{ struct_asym_id: chainId, color }],
+        nonSelectedColor: { r: 255, g: 255, b: 255 }
+      });
+    } catch (_error) {
+      if (attempt < 8) {
+        focusMolstarChain(viewer, chainId, color, attempt + 1);
+      }
+    }
+  }, attempt === 0 ? 450 : 250);
+}
+
 async function loadFornaAssets() {
   if (!document.getElementById('forna-css')) {
     const css = document.createElement('link');
@@ -594,6 +614,202 @@ async function loadFornaAssets() {
   }
 }
 
+function tokenizeCifRow(row) {
+  const tokens = [];
+  let current = '';
+  let quote = '';
+
+  for (let index = 0; index < row.length; index += 1) {
+    const char = row[index];
+
+    if (quote) {
+      current += char;
+      if (char === quote) {
+        quote = '';
+      }
+      continue;
+    }
+
+    if (char === '"' || char === "'") {
+      quote = char;
+      current += char;
+      continue;
+    }
+
+    if (/\s/.test(char)) {
+      if (current) {
+        tokens.push(current);
+        current = '';
+      }
+      continue;
+    }
+
+    current += char;
+  }
+
+  if (current) tokens.push(current);
+  return tokens;
+}
+
+function filterCifLoopByChain(lines, startIndex, headers, chainId) {
+  const atomAuthIndex = headers.indexOf('_atom_site.auth_asym_id');
+  const atomLabelIndex = headers.indexOf('_atom_site.label_asym_id');
+  const anisotropAuthIndex = headers.indexOf('_atom_site_anisotrop.pdbx_auth_asym_id');
+  const anisotropLabelIndex = headers.indexOf('_atom_site_anisotrop.pdbx_label_asym_id');
+  const chainIndex = Math.max(atomAuthIndex, atomLabelIndex, anisotropAuthIndex, anisotropLabelIndex);
+
+  if (chainIndex < 0) return { nextIndex: startIndex, keptLines: null };
+
+  const preferredIndices = [atomAuthIndex, atomLabelIndex, anisotropAuthIndex, anisotropLabelIndex].filter((index) => index >= 0);
+  const keptLines = [];
+  let index = startIndex;
+
+  while (index < lines.length) {
+    const line = lines[index];
+    const trimmed = line.trim();
+    if (!trimmed) {
+      keptLines.push(line);
+      index += 1;
+      continue;
+    }
+    if (trimmed === '#' || trimmed === 'loop_' || trimmed.startsWith('_')) break;
+
+    const tokens = tokenizeCifRow(line);
+    const keepLine = preferredIndices.some((tokenIndex) => {
+      const token = tokens[tokenIndex];
+      return token === chainId;
+    });
+
+    if (keepLine) keptLines.push(line);
+    index += 1;
+  }
+
+  return { nextIndex: index, keptLines };
+}
+
+function filterCifToChain(text, chainId) {
+  if (!chainId) return text;
+
+  const lines = String(text || '').split(/\r?\n/);
+  const output = [];
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    output.push(line);
+
+    if (line.trim() !== 'loop_') continue;
+
+    const headers = [];
+    let headerIndex = index + 1;
+    while (headerIndex < lines.length && lines[headerIndex].trim().startsWith('_')) {
+      headers.push(lines[headerIndex].trim());
+      output.push(lines[headerIndex]);
+      headerIndex += 1;
+    }
+
+    const firstHeader = headers[0] || '';
+    const isAtomLoop = firstHeader.startsWith('_atom_site.');
+    const isAnisotropLoop = firstHeader.startsWith('_atom_site_anisotrop.');
+    if (!isAtomLoop && !isAnisotropLoop) {
+      index = headerIndex - 1;
+      continue;
+    }
+
+    const { nextIndex, keptLines } = filterCifLoopByChain(lines, headerIndex, headers, chainId);
+    if (keptLines) output.push(...keptLines);
+    index = nextIndex - 1;
+  }
+
+  return output.join('\n');
+}
+
+function parseCifAssemblyIdForChain(text, chainId) {
+  if (!chainId) return '';
+
+  const lines = String(text || '').split(/\r?\n/);
+  for (let index = 0; index < lines.length; index += 1) {
+    if (lines[index].trim() !== 'loop_') continue;
+
+    const headers = [];
+    let headerIndex = index + 1;
+    while (headerIndex < lines.length && lines[headerIndex].trim().startsWith('_')) {
+      headers.push(lines[headerIndex].trim());
+      headerIndex += 1;
+    }
+
+    if (
+      headers[0] !== '_pdbx_struct_assembly_gen.assembly_id' ||
+      headers[1] !== '_pdbx_struct_assembly_gen.oper_expression' ||
+      headers[2] !== '_pdbx_struct_assembly_gen.asym_id_list'
+    ) {
+      index = headerIndex - 1;
+      continue;
+    }
+
+    for (let rowIndex = headerIndex; rowIndex < lines.length; rowIndex += 1) {
+      const trimmed = lines[rowIndex].trim();
+      if (!trimmed) continue;
+      if (trimmed === '#' || trimmed === 'loop_' || trimmed.startsWith('_')) {
+        index = rowIndex - 1;
+        break;
+      }
+
+      const tokens = tokenizeCifRow(lines[rowIndex]);
+      const assemblyId = tokens[0] || '';
+      const asymIdList = tokens[2] || '';
+      const asymIds = asymIdList.split(',').map((value) => value.trim());
+      if (asymIds.includes(chainId)) {
+        return assemblyId;
+      }
+    }
+  }
+
+  return '';
+}
+
+async function resolveRenderableStructureSource(structureUrl, structureFormat, structureLabel, structureChain = '') {
+  if (!structureUrl || structureUrl.startsWith('./')) {
+    return { url: structureUrl, format: structureFormat, usedFallback: false, assemblyId: '' };
+  }
+
+  try {
+    const response = await fetch(structureUrl);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const text = await response.text();
+    if (/^Error:/i.test(text.trim())) {
+      throw new Error(text.trim());
+    }
+    const filteredText = structureFormat === 'cif' ? filterCifToChain(text, structureChain) : text;
+    return {
+      url: `data:text/plain;charset=utf-8,${encodeURIComponent(filteredText)}`,
+      format: structureFormat,
+      usedFallback: false,
+      assemblyId: ''
+    };
+  } catch (_error) {
+    const fallbackUrl = `https://files.rcsb.org/download/${encodeURIComponent(String(structureLabel || '').toUpperCase())}.cif`;
+    try {
+      const fallbackResponse = await fetch(fallbackUrl);
+      if (!fallbackResponse.ok) throw new Error(`HTTP ${fallbackResponse.status}`);
+      const fallbackText = await fallbackResponse.text();
+      const assemblyId = parseCifAssemblyIdForChain(fallbackText, structureChain);
+      return {
+        url: `data:text/plain;charset=utf-8,${encodeURIComponent(fallbackText)}`,
+        format: 'cif',
+        usedFallback: true,
+        assemblyId
+      };
+    } catch (_fallbackError) {
+      return {
+        url: fallbackUrl,
+        format: 'cif',
+        usedFallback: true,
+        assemblyId: ''
+      };
+    }
+  }
+}
+
 function buildFornaCustomColorsText(sequence) {
   const nucleotideColors = {
     A: '#68AF31',
@@ -626,12 +842,27 @@ function parseRdatSecondaryConfig(text, fallbackSequence = '') {
     }
   });
 
-  const hasPairs = /[()[\]{}<>]/.test(structure);
-  if (!sequence || !structure || !hasPairs || sequence.length !== structure.length) {
+  if (!sequence || !structure || sequence.length !== structure.length) {
     return null;
   }
 
   return { sequence, structure };
+}
+
+function syncStructureDetailSecondaryText(structure = '') {
+  const block = document.getElementById('structure-detail-sequence-structure-block');
+  const code = document.getElementById('structure-detail-sequence-structure');
+  if (!block || !code) return;
+
+  const cleanStructure = String(structure).replace(/\s+/g, '').trim();
+  if (!cleanStructure) {
+    block.hidden = true;
+    code.textContent = '';
+    return;
+  }
+
+  block.hidden = false;
+  code.textContent = cleanStructure;
 }
 
 export async function initSecondaryStructureModule() {
@@ -667,9 +898,40 @@ export async function initStructureDetailSecondaryForna() {
   const host = document.getElementById('structure-detail-forna-host');
   if (!status || !host) return;
 
+  const foldBridgeId = host.dataset.foldbridgeId || 'this RDAT record';
+  const directStructure = host.dataset.structure || '';
+  const directSequence = host.dataset.sequence || '';
+
+  if (directStructure && directSequence) {
+    try {
+      await loadFornaAssets();
+      host.innerHTML = '';
+      const container = new window.fornac.FornaContainer('#structure-detail-forna-host', {
+        applyForce: 1,
+        editable: false,
+        initialSize: [640, 420]
+      });
+
+      const cleanSequence = normalizeRnaSequence(directSequence);
+      const cleanStructure = directStructure.replace(/\s+/g, '').trim();
+      syncStructureDetailSecondaryText(cleanStructure);
+
+      container.addRNA(cleanStructure, {
+        sequence: cleanSequence,
+        structure: cleanStructure
+      });
+      container.addCustomColorsText(buildFornaCustomColorsText(cleanSequence));
+      status.textContent = `Forna secondary structure loaded from ${foldBridgeId}.`;
+      return;
+    } catch (_error) {
+      host.innerHTML = '';
+      status.textContent = 'Forna failed to load for this record.';
+      return;
+    }
+  }
+
   const rdatUrl = host.dataset.rdatUrl;
   const fallbackSequence = host.dataset.sequence || '';
-  const foldBridgeId = host.dataset.foldbridgeId || 'this RDAT record';
   if (!rdatUrl) return;
 
   try {
@@ -679,10 +941,12 @@ export async function initStructureDetailSecondaryForna() {
     const config = parseRdatSecondaryConfig(text, fallbackSequence);
 
     if (!config) {
+      syncStructureDetailSecondaryText('');
       host.innerHTML = '';
       status.textContent = `Secondary structure unavailable for ${foldBridgeId} in the current RDAT.`;
       return;
     }
+    syncStructureDetailSecondaryText(config.structure);
 
     await loadFornaAssets();
     host.innerHTML = '';
@@ -696,6 +960,7 @@ export async function initStructureDetailSecondaryForna() {
     container.addCustomColorsText(buildFornaCustomColorsText(config.sequence));
     status.textContent = `Forna secondary structure loaded from ${foldBridgeId}.`;
   } catch (_error) {
+    syncStructureDetailSecondaryText('');
     host.innerHTML = '';
     status.textContent = 'Forna failed to load for this RDAT record.';
   }
@@ -788,19 +1053,20 @@ export async function initStructureDetailMolstar() {
   const structureUrl = container.dataset.structureUrl;
   const structureFormat = container.dataset.structureFormat || 'cif';
   const structureLabel = container.dataset.structureLabel || 'PDB structure';
-  const sequence = container.dataset.structureSequence || '';
+  const structureChain = container.dataset.structureChain || '';
   if (!structureUrl) return;
 
   try {
     await loadMolstarAssets();
+    const source = await resolveRenderableStructureSource(structureUrl, structureFormat, structureLabel, structureChain);
     const viewer = new window.PDBeMolstarPlugin();
     viewer.render(container, {
-      customData: { url: structureUrl, format: structureFormat },
+      customData: { url: source.url, format: source.format },
+      ...(source.assemblyId ? { assemblyId: source.assemblyId } : {}),
       expanded: false,
       hideControls: true,
       bgColor: { r: 255, g: 255, b: 255 }
     });
-    applyMolstarColoring(viewer, sequence, structureLabel);
 
     status.textContent = `Interactive Mol* view loaded from ${structureLabel}.`;
   } catch (_e) {

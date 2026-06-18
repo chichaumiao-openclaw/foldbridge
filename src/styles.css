@@ -1655,6 +1655,14 @@ tbody tr:hover {
   align-items: center;
   justify-content: center;
   gap: 6px;
+  color: #b8840e;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.pdb-external-link:hover {
+  color: #9e7107;
+  text-decoration: underline;
 }
 
 .pdb-external-link-icon {
@@ -1877,7 +1885,7 @@ tbody tr:hover {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 420px);
   gap: 32px;
-  align-items: end;
+  align-items: center;
 }
 
 .sequence-detail-kicker {
@@ -1890,9 +1898,9 @@ tbody tr:hover {
 }
 
 .sequence-detail-header h1 {
-  margin: 0 0 12px;
+  margin: 0;
   max-width: 920px;
-  font-size: clamp(1.65rem, 3vw, 2.45rem);
+  font-size: var(--title-size-page);
   line-height: 1.08;
   color: #10281f;
 }
@@ -2113,6 +2121,25 @@ tbody tr:hover {
 .case-sequence-block {
   font-size: 0.98rem;
   line-height: 1.75;
+}
+
+.case-sequence-structure-label {
+  margin: 16px 0 8px;
+  color: #7f948b;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.case-sequence-structure {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: "SFMono-Regular", "Menlo", "Consolas", monospace;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  color: #355345;
 }
 
 .case-sequence-table-wrap {
