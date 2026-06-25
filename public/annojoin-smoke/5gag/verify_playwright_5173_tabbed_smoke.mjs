@@ -427,8 +427,8 @@ if (!/LSS_UNDERPOWERED/.test(result.before.trackStatusText || "")) failures.push
 if (!/DMS loop recall\s*30\/34 \(88\.24%\)/.test(result.before.statsText || "")) failures.push("stats do not expose DMS loop recall 30/34");
 if (!/LSS status\s*LSS_UNDERPOWERED/.test(result.before.statsText || "")) failures.push("stats do not expose LSS_UNDERPOWERED");
 if (!/LSS evaluable\s*18 paired \/ 4 unpaired/.test(result.before.statsText || "")) failures.push("stats do not expose LSS paired/unpaired counts");
-if (!/qcov\s*not materialized/.test(result.before.statsText || "")) failures.push("qcov should be not materialized");
-if (!/scov\s*not materialized/.test(result.before.statsText || "")) failures.push("scov should be not materialized");
+if (!/RMDB query coverage\s*not materialized/.test(result.before.statsText || "")) failures.push("RMDB query coverage should be not materialized");
+if (!/PDB reference sequence coverage\s*not materialized/.test(result.before.statsText || "")) failures.push("PDB reference sequence coverage should be not materialized");
 if (!/profile-PDB polymer sequence match 113\/113/.test(result.before.molstarMetaText || "")) failures.push("Molstar meta does not expose 113/113 sequence match");
 if (!/atom_site coordinates observed 43\/113/.test(result.before.molstarMetaText || "")) failures.push("Molstar meta does not label 43/113 as atom_site coordinate coverage");
 if (!/sequence-only\/no atom_site/.test(result.before.molstarMetaText || "")) failures.push("Molstar meta does not expose sequence-only coordinate intervals");

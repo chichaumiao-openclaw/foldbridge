@@ -41,6 +41,8 @@ LINKED_VIEW_ASSETS = [
     "bridges.json",
     "interactions.json",
     "confidence-summary.json",
+    "lss-context.json",
+    "raw-alignment-coverage.json",
 ]
 
 

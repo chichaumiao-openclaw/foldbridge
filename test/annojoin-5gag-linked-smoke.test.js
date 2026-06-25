@@ -71,6 +71,7 @@ test('5GAG smoke consumes linked-view contract assets for residue semantics', ()
     'interactions.json',
     'confidence-summary.json',
     'lss-context.json',
+    'raw-alignment-coverage.json',
   ]) {
     assert.ok(fs.existsSync(path.join(smokeRoot, 'assets', 'linked-view', asset)), `${asset} missing`);
   }
@@ -82,6 +83,7 @@ test('5GAG smoke consumes linked-view contract assets for residue semantics', ()
   assert.match(js, /buildBridgeIndexes/);
   assert.match(js, /buildInteractionIndexes/);
   assert.match(js, /buildLssContextIndexes/);
+  assert.match(js, /buildRawAlignmentCoverageIndexes/);
   assert.match(js, /installVarnaHitLayer/);
   assert.match(js, /data-layer", "varna-hit-layer"/);
   assert.match(js, /data-structure-chain-key/);
@@ -129,6 +131,7 @@ test('5GAG smoke manifest registers linked-view projection assets', () => {
     'interactions.json',
     'confidence-summary.json',
     'lss-context.json',
+    'raw-alignment-coverage.json',
   ];
 
   let totalBytes = 0;
@@ -140,6 +143,35 @@ test('5GAG smoke manifest registers linked-view projection assets', () => {
   }
   assert.equal(sizeReport.linked_view_total_bytes, totalBytes);
   assert.equal(sizeReport.linked_view_asset_count, linkedViewAssets.length);
+});
+
+test('5GAG raw qcov/scov remains an explicit non-materialized alignment contract', () => {
+  const rawCoveragePath = path.join(smokeRoot, 'assets', 'linked-view', 'raw-alignment-coverage.json');
+  const rawCoverage = JSON.parse(fs.readFileSync(rawCoveragePath, 'utf8'));
+  assert.equal(rawCoverage.protocolVersion, 'linked-view-v0.1');
+  assert.equal(rawCoverage.caseId, '5GAG');
+  assert.equal(rawCoverage.status, 'not_materialized');
+  assert.equal(rawCoverage.sourceDataPath, 'not_materialized');
+  assert.equal(rawCoverage.matchPolicy, 'profile_id_pair_id_pair_segment_id_exact');
+  assert.deepEqual(rawCoverage.records, []);
+  assert.match(rawCoverage.note, /raw alignment\/BLAST coverage/);
+  assert.match(rawCoverage.note, /not FEC semantic coverage/);
+
+  const structureCoverage = JSON.parse(fs.readFileSync(path.join(smokeRoot, 'assets', 'linked-view', 'structure-coverage.json'), 'utf8'));
+  assert.equal(structureCoverage.coverage.qcov, undefined);
+  assert.equal(structureCoverage.coverage.scov, undefined);
+  assert.equal(structureCoverage.coverage.subject_coverage, undefined);
+  assert.equal(structureCoverage.coverage.construct_coverage, undefined);
+
+  assert.match(js, /rawAlignmentCoverage: "assets\/linked-view\/raw-alignment-coverage\.json"/);
+  assert.match(js, /function rawAlignmentCoverageForProfile/);
+  assert.match(js, /function rawAlignmentCoverageMetric/);
+  assert.match(js, /RMDB query coverage/);
+  assert.match(js, /PDB reference sequence coverage/);
+  assert.match(js, /raw_alignment_coverage/);
+  assert.doesNotMatch(js, /scalarCoverageMetric\("qcov"\)/);
+  assert.doesNotMatch(js, /scalarCoverageMetric\("scov"\)/);
+  assert.doesNotMatch(js, /structureCoverage\?\.coverage\?\.\[metricName\]/);
 });
 
 test('5GAG Molstar renders an alignment-cropped target view plus a full-CIF reference', () => {

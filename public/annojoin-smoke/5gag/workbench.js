@@ -11,6 +11,7 @@ const linkedViewUrls = {
   interactions: "assets/linked-view/interactions.json",
   confidenceSummary: "assets/linked-view/confidence-summary.json",
   lssContext: "assets/linked-view/lss-context.json",
+  rawAlignmentCoverage: "assets/linked-view/raw-alignment-coverage.json",
 };
 const state = {
   caseData: null,
@@ -25,8 +26,10 @@ const state = {
   bridgeByResidueKey: new Map(),
   interactionsByResidueKey: new Map(),
   lssContextByProfileId: new Map(),
+  rawAlignmentCoverageByProfileId: new Map(),
   confidenceSummary: null,
   lssContext: null,
+  rawAlignmentCoverage: null,
   structureCoverage: null,
   varnaTemplate: null,
   profiles: [],
@@ -340,6 +343,16 @@ function buildLssContextIndexes(lssContext) {
   }
 }
 
+function buildRawAlignmentCoverageIndexes(rawAlignmentCoverage) {
+  state.rawAlignmentCoverage = rawAlignmentCoverage || null;
+  state.rawAlignmentCoverageByProfileId = new Map();
+  for (const record of rawAlignmentCoverage?.records || []) {
+    const existing = state.rawAlignmentCoverageByProfileId.get(record.profileId) || [];
+    existing.push(record);
+    state.rawAlignmentCoverageByProfileId.set(record.profileId, existing);
+  }
+}
+
 function buildBridgeIndexes(bridges) {
   state.bridgeByResidueKey = new Map();
   for (const bridge of bridges?.bridges || []) {
@@ -371,6 +384,7 @@ function installLinkedViewIndexes(linkedView) {
   buildInteractionIndexes(linkedView.interactions);
   buildConfidenceIndexes(linkedView.confidenceSummary);
   buildLssContextIndexes(linkedView.lssContext);
+  buildRawAlignmentCoverageIndexes(linkedView.rawAlignmentCoverage);
 }
 
 function residueKeyForPosition(position, strand = activeStrand()) {
@@ -415,6 +429,19 @@ function colorForResidueVisualState(residueKey, selectedKey = state.selectedResi
 
 function lssContextForProfile(profileId = activeProfileId()) {
   return state.lssContextByProfileId.get(profileId) || null;
+}
+
+function rawAlignmentCoverageForProfile(profile) {
+  if (!profile?.profile_id) return null;
+  const records = state.rawAlignmentCoverageByProfileId.get(profile.profile_id) || [];
+  return records.find((record) => (
+    record.profileId === profile.profile_id
+    && (!record.pairId || record.pairId === profile.pair_id)
+    && (!record.pairSegmentId || record.pairSegmentId === profile.pair_segment_id)
+  )) || records.find((record) => (
+    record.profileId === profile.profile_id
+    && (!record.pairId || record.pairId === profile.pair_id)
+  )) || null;
 }
 
 function lssContextLabel(profileId = activeProfileId()) {
@@ -463,8 +490,8 @@ function formatDmsLoopRecall(recall) {
   return `${recall.numerator}/${recall.denominator} (${recall.percentage.toFixed(2)}%)`;
 }
 
-function scalarCoverageMetric(metricName) {
-  const value = state.structureCoverage?.coverage?.[metricName];
+function rawAlignmentCoverageMetric(rawCoverage, metricName) {
+  const value = rawCoverage?.[metricName];
   return Number.isFinite(value) ? value.toFixed(4) : "not materialized";
 }
 
@@ -1566,6 +1593,7 @@ async function renderProfile(index) {
   const normalized = normalizeProfile(profile, values);
   const dmsLoopRecall = computeDmsLoopRecall(profile, normalized, strand);
   const lssContext = lssContextForProfile(profile.profile_id);
+  const rawAlignmentCoverage = rawAlignmentCoverageForProfile(profile);
   const varnaSvg = recolorVarnaSvg(state.varnaTemplate, strand, normalized, profile);
   const linearSvg = drawLinearSvg(strand, normalized, profile);
   el.varnaViewport.innerHTML = varnaSvg;
@@ -1593,8 +1621,8 @@ async function renderProfile(index) {
     metric("profiles loaded", state.profiles.length),
     metric("sequence match", `${sequenceSummary.matchedResidues}/${sequenceSummary.profileResidues}`),
     metric("atom_site obs", coverage?.profileResidues ? `${coverage.resolvedResidues}/${coverage.profileResidues}` : "n/a"),
-    metric("qcov", scalarCoverageMetric("qcov")),
-    metric("scov", scalarCoverageMetric("scov")),
+    metric("RMDB query coverage", rawAlignmentCoverageMetric(rawAlignmentCoverage, "rmdbQueryCoverage")),
+    metric("PDB reference sequence coverage", rawAlignmentCoverageMetric(rawAlignmentCoverage, "pdbReferenceSequenceCoverage")),
     metric("LSS status", lssContext?.lssStatus || "not materialized"),
     metric("LSS evaluable", lssContext ? `${lssContext.pairedEvaluable} paired / ${lssContext.unpairedEvaluable} unpaired` : "not materialized"),
     metric("DMS loop recall", formatDmsLoopRecall(dmsLoopRecall)),
@@ -1618,8 +1646,10 @@ async function renderProfile(index) {
     layout_source: "VARNA",
     varna_fit: varnaFit,
     structure_coverage: state.structureCoverage?.coverage || null,
-    qcov: scalarCoverageMetric("qcov"),
-    scov: scalarCoverageMetric("scov"),
+    raw_alignment_coverage: rawAlignmentCoverage || {
+      status: state.rawAlignmentCoverage?.status || "not_materialized",
+      sourceDataPath: state.rawAlignmentCoverage?.sourceDataPath || "not_materialized",
+    },
     lss_context: lssContext || { status: "not_materialized" },
     dms_loop_recall: dmsLoopRecall,
     fec_status: state.confidenceSummary?.fec?.status || "not_materialized_in_smoke",
@@ -1680,6 +1710,7 @@ async function init() {
     interactions,
     confidenceSummary,
     lssContext,
+    rawAlignmentCoverage,
   ] = await Promise.all([
     fetch(caseUrl).then((response) => response.json()),
     fetch(profileIndexUrl).then((response) => response.json()),
@@ -1692,10 +1723,11 @@ async function init() {
     fetch(linkedViewUrls.interactions).then((response) => response.json()),
     fetch(linkedViewUrls.confidenceSummary).then((response) => response.json()),
     fetch(linkedViewUrls.lssContext).then((response) => response.json()),
+    fetch(linkedViewUrls.rawAlignmentCoverage).then((response) => response.json()),
   ]);
   state.caseData = caseData;
   state.profileIndex = profileIndex;
-  state.linkedView = { residueIndex, profileJoins, structureContexts, structureCoverage, bridges, interactions, confidenceSummary, lssContext };
+  state.linkedView = { residueIndex, profileJoins, structureContexts, structureCoverage, bridges, interactions, confidenceSummary, lssContext, rawAlignmentCoverage };
   installLinkedViewIndexes(state.linkedView);
   state.varnaTemplate = varnaTemplate;
   state.profiles = profileIndex.profiles;

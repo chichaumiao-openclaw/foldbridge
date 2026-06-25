@@ -8,6 +8,7 @@
     "linked_view_interactions": "assets/linked-view/interactions.json",
     "linked_view_lss_context": "assets/linked-view/lss-context.json",
     "linked_view_profile_joins": "assets/linked-view/profile-joins.json",
+    "linked_view_raw_alignment_coverage": "assets/linked-view/raw-alignment-coverage.json",
     "linked_view_residue_index": "assets/linked-view/residue-index.json",
     "linked_view_structure_contexts": "assets/linked-view/structure-contexts.json",
     "linked_view_structure_coverage": "assets/linked-view/structure-coverage.json",
