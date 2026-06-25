@@ -1,0 +1,2153 @@
+{
+  "caseId": "5GAG",
+  "protocolVersion": "linked-view-v0.1",
+  "residues": [
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|1|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 1,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 1,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|1"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|2|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 2,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 2,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|2"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|3|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 3,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 3,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|3"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|4|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 4,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 4,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|4"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|5|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 5,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 5,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|5"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|6|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 6,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 6,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|6"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|7|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 7,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 7,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|7"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|8|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 8,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 8,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|8"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|9|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 9,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 9,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|9"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|10|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 10,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 10,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|10"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|11|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 11,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 11,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|11"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|12|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 12,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 12,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|12"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|13|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 13,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 13,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|13"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|14|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 14,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 14,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|14"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|15|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 15,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 15,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|15"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|16|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 16,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 16,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|16"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|17|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 17,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 17,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|17"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|18|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 18,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 18,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|18"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|19|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 19,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 19,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|19"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|20|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 20,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 20,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|20"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|21|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 21,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 21,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|21"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|22|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 22,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 22,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|22"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|23|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 23,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 23,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|23"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|24|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 24,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 24,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|24"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|25|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 25,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 25,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|25"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|26|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 26,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 26,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|26"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|27|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 27,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 27,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|27"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|28|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 28,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 28,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|28"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|29|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 29,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 29,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|29"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|30|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 30,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 30,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|30"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|31|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 31,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 31,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|31"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|32|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 32,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 32,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|32"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|33|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 33,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 33,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|33"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|34|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 34,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 34,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|34"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|35|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 35,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 35,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|35"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|36|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 36,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 36,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|36"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|37|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 37,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 37,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|37"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|38|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 38,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 38,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|38"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|39|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 39,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 39,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|39"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|40|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 40,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 40,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|40"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|41|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 41,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 41,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|41"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|42|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 42,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 42,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|42"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|43|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 43,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 43,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|43"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|44|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 44,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 44,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|44"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|45|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 45,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 45,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|45"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|46|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 46,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 46,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|46"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|47|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 47,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 47,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|47"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|48|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 48,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 48,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|48"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|49|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 49,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 49,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|49"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|50|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 50,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 50,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|50"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|51|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 51,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 51,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|51"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|52|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 52,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 52,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|52"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|53|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 53,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 53,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|53"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|54|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 54,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 54,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|54"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|55|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 55,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 55,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|55"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|56|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 56,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 56,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|56"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|57|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 57,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 57,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|57"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|58|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 58,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 58,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|58"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|59|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 59,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 59,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|59"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|60|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 60,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 60,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|60"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|61|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 61,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 61,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|61"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|62|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 62,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 62,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|62"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|63|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 63,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 63,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|63"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|64|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 64,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 64,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|64"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|65|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 65,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 65,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|65"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|66|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 66,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 66,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|66"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|67|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 67,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 67,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|67"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|68|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 68,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 68,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|68"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|69|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 69,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 69,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|69"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|70|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 70,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 70,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|70"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|71|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 71,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 71,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|71"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|72|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 72,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 72,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|72"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|73|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 73,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 73,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|73"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|74|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 74,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 74,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|74"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|75|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 75,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 75,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|75"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|76|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 76,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 76,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|76"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|77|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 77,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 77,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|77"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|78|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 78,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 78,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|78"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|79|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 79,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 79,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|79"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|80|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 80,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 80,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|80"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|81|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 81,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 81,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|81"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|82|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 82,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 82,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|82"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|83|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 83,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 83,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|83"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|84|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 84,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 84,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|84"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|85|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 85,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 85,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|85"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|86|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 86,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 86,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|86"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|87|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 87,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 87,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|87"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|88|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 88,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 88,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|88"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|89|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 89,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 89,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|89"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|90|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 90,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 90,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|90"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|91|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 91,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 91,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|91"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|92|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 92,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 92,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|92"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|93|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 93,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 93,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|93"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|94|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 94,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 94,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|94"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|95|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 95,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 95,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|95"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|96|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 96,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 96,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|96"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|97|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 97,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 97,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|97"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|98|U"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 98,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "U",
+      "labelAsymId": "A",
+      "labelSeqId": 98,
+      "parentBase": "U",
+      "residueKey": "5GAG|chain|strand_1|98"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|99|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 99,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 99,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|99"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|100|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 100,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 100,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|100"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|101|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 101,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 101,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|101"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|102|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 102,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 102,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|102"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|103|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 103,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 103,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|103"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|104|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 104,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 104,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|104"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|105|G"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 105,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "G",
+      "labelAsymId": "A",
+      "labelSeqId": 105,
+      "parentBase": "G",
+      "residueKey": "5GAG|chain|strand_1|105"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|106|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 106,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 106,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|106"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|107|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 107,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 107,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|107"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|108|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 108,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 108,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|108"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|109|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 109,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 109,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|109"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|110|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 110,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 110,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|110"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|111|A"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 111,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "A",
+      "labelAsymId": "A",
+      "labelSeqId": 111,
+      "parentBase": "A",
+      "residueKey": "5GAG|chain|strand_1|111"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|112|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 112,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 112,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|112"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "5GAG|1|1|A|113|C"
+        ],
+        "renderStrand": [
+          "strand_1"
+        ]
+      },
+      "authAsymId": "1",
+      "authSeqId": 113,
+      "caseId": "5GAG",
+      "chainKey": "5GAG|chain|strand_1",
+      "compId": "C",
+      "labelAsymId": "A",
+      "labelSeqId": 113,
+      "parentBase": "C",
+      "residueKey": "5GAG|chain|strand_1|113"
+    }
+  ]
+}
