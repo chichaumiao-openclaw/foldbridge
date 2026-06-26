@@ -237,7 +237,8 @@ EOF
 **实现要点（写代码时遵循）：**
 - import 追加 `searchAnnojointRows, isAnnojointSearchActive, familyBadgeDescriptor`。
 - `renderAnnojointAtlasPage` 内：先按 `isAnnojointSearchActive(atlasState.filters?.query)` 判定模式。
-  - **搜索模式**：`const matched = searchAnnojointRows(sortedRows, query)` → `paginateAnnojointRows(matched, {page, pageSize})` → 渲染**扁平行**（新函数 `renderFlatRows`，复用现有 `renderCaseRow` 的单元格逻辑，不分组），并在表上方插入模式提示条。
+  - **搜索模式**：`const matched = searchAnnojointRows(sortedRows, query)` → `paginateAnnojointRows(matched, {page, pageSize})` → 渲染**扁平行**（新函数 `renderFlatRows`，复用现有单行单元格逻辑，不分组），并在表上方插入模式提示条。
+    - ⚠️ **`renderCaseRow` 当前是 `renderTableBody` 内的闭包**（view 约 125 行），不能直接从 `renderFlatRows` 调用。实现时先把它**提取为 view 模块级函数**（参数化它依赖的列可见性等闭包变量），再让 `renderTableBody` 与 `renderFlatRows` 共用。提取属重构、不改输出，提取后跑步骤 4 测试确认浏览模式渲染未变。
   - **浏览模式**：维持现有 `buildAnnojointTableGroups(pagination.rows)` + `renderTableBody`，不动。
 - **来源徽标**：在 PDB 单元格渲染时，对每行依据 `row.sourceFamilies`（合并行）或 `[row.assetFamily]`（单来源）生成徽标。新增 view 内 helper `renderFamilyBadges(row)`，对每个 family 调 `familyBadgeDescriptor`，输出 `<span class="annojoin-family-badge ${active ? 'is-active' : 'is-inactive'}">LABEL</span>`，非激活附 `not active`。徽标在浏览模式与搜索模式、侧栏三处共用此 helper（块 5 一致性护栏）。
 - **confidence 分段**：新增 helper `renderConfidenceSegments(label)`，按 `;` 拆 `"RMDB: B/C; RASP: not active"` 为多个 `<span class="annojoin-confidence-seg">`，**保留原文不截断**；无 `;` 时整段输出。
@@ -292,22 +293,35 @@ EOF
 
 **文件：**
 - 修改：`src/annojoinAtlasView.js`（`renderAnnojointAtlasPage` 的 meta 区与 toolbar 区）
+- 修改：`test/annojoin-atlas.test.js`（更新既有 meta 断言，见步骤 0）
 
 **实现要点：**
 - **计数双口径**（替换现 418-425 meta）：
   - 浏览模式：`<N> PDB entries (<M> source cases)`，N=`totalCaseCount`，M=`totalSourceCaseCount`。
   - 搜索模式：`Showing <matched.length> of <totalCaseCount> entries matching "<query>"`。
+  - ⚠️ 旧 meta 文案是 `${cases.length} / ${totalCaseCount} PDB entries`（view 行 419）。`test/annojoin-atlas.test.js:328` 现断言 `assert.match(html, /1 \/ 1 PDB entries/)`，本任务替换 meta 后该断言必然失败。**步骤 0 必须先更新该断言**，否则步骤 4 与任务 5/7 的 `npm test` 会变红。
 - **活动条件 chips**：search query 非空时渲染一个可移除 chip：`<span class="annojoin-filter-chip">"<query>" <button data-annojoin-chip-remove="q">×</button></span>`，旁附 `<button data-annojoin-clear-all>Clear all</button>`。（rnaFamily/pdbId 等其它 filter 若非空也各成 chip，复用同结构。）
 - **模式提示条**：搜索模式在表格上方渲染 `<p class="annojoin-search-mode-note">Search results — grouping is paused. Clear the filter to return to grouped browsing.</p>`。
 - **搜索框 placeholder** 改为 `Filter this table by PDB ID or molecule name`（现为 `Search PDB, molecule, confidence...`），明确表内过滤语义。
 - **占位 search input 的 value** 仍绑定 `atlasState.filters?.query`。
 
-- [ ] **步骤 1：手动渲染验证**
+- [ ] **步骤 0：先更新既有 meta 断言（防止自身测试门变红）**
 
-```bash
-node --input-type=module -e '
-import { renderAnnojointAtlasPage } from "./src/annojoinAtlasView.js";
-const base = { cases:[{pdbId:"11DG",atlasCaseKey:"PDB:11DG",caseId:"11DG",biologicalMoleculeName:"x",confidenceDisplayLabel:"RMDB: B/C",sourceFamilies:["RMDB2PDB"],chains:["A"],profileCount:1,conflictCandidateCount:0}], totalCaseCount:3610, totalSourceCaseCount:4070 };
+把 `test/annojoin-atlas.test.js:328` 的：
+
+```javascript
+assert.match(html, /1 \/ 1 PDB entries/);
+```
+
+改为新双口径文案（该 fixture `totalCaseCount:1` / `totalSourceCaseCount:2`）：
+
+```javascript
+assert.match(html, /1 PDB entries \(2 source cases\)/);
+```
+
+（行 329 的 `assert.match(html, /2 source cases/)` 作为子串仍成立，保留不动。）此步骤先于实现，确保步骤 4 的 `npm test` 反映的是「新文案通过」而非「旧文案残留」。
+
+- [ ] **步骤 1：手动渲染验证**,atlasCaseKey:"PDB:11DG",caseId:"11DG",biologicalMoleculeName:"x",confidenceDisplayLabel:"RMDB: B/C",sourceFamilies:["RMDB2PDB"],chains:["A"],profileCount:1,conflictCandidateCount:0}], totalCaseCount:3610, totalSourceCaseCount:4070 };
 const browse = renderAnnojointAtlasPage({ state:{...base, filters:{query:""}} });
 const search = renderAnnojointAtlasPage({ state:{...base, filters:{query:"11dg"}} });
 console.log("browseCount:", browse.includes("source cases"));
@@ -331,7 +345,7 @@ console.log("placeholder:", browse.includes("Filter this table by PDB ID"));
 - [ ] **步骤 5：Commit**
 
 ```bash
-git add src/annojoinAtlasView.js
+git add src/annojoinAtlasView.js test/annojoin-atlas.test.js
 git commit -m "$(cat <<'EOF'
 feat(ANNOJOIN Atlas): 主表导览反馈控件
 
@@ -349,12 +363,25 @@ EOF
 
 **文件：**
 - 修改：`src/annojoinAtlasController.js`（搜索框改 input 防抖；新增 chip/clear 绑定）
-- 修改：`src/main.js`（`bindAnnojointAtlasTable` 调用处补 clear 回调；`currentAnnojointAtlasState` 已用 `sortAnnojointCases`，搜索态需对齐扁平结果——见要点）
+- 修改：`src/main.js`（搜索 query 写入改 `history.replaceState` + 直接 `render()`；`render()` 末尾恢复搜索框焦点/光标；`bindAnnojointAtlasTable` 调用处补 clear 回调；`currentAnnojointAtlasState` 搜索态对齐扁平结果——见要点）
 
 **实现要点：**
-- **controller 搜索即时化**：把 `change`/`Enter` 改为 `input` 事件 + 防抖（150ms），仍调 `setQuery`。保留 Enter 立即应用。
+
+- **controller 搜索即时化**：把 `change`/`Enter` 改为 `input` 事件 + 防抖（150ms），仍调 `setQuery`。保留 Enter 立即应用（清防抖定时器后立即 `setQuery`）。
+
+- **⚠️ 避免历史污染（blocker 修复）**：现 `setAnnojointAtlasQuery` → `setAnnojointAtlasFilter('q', …)` 用 `window.location.hash = …`（main.js:2132）。**每次防抖击键都写 hash 会向浏览器历史压入一条记录**——打一个词留下多条半截 query 记录，Back 键无法退出表格。修复：为 query 专门走「替换式」写入：
+  - 在 `setAnnojointAtlasFilter` 增加可选第三参 `{ replace = false }`；`replace` 为真时，用函数**已经算好的完整 hash 串**（即现有 `next ? \`${routeName}?${next}\` : routeName` 的结果，含 route）调 `history.replaceState(null, '', '#' + composedHash)` 替换当前条目，**不压栈**。⚠️ 不要只把 `params.toString()` 前缀 `#`——那会丢掉 route 变成 `#q=...`。因 `replaceState` 不触发 `hashchange`，需手动 `route = routeFromHash(window.location.hash); render();`。
+  - `setAnnojointAtlasQuery(query)` 调 `setAnnojointAtlasFilter('q', query, { replace: true })`。
+  - chip 移除 / Clear（非每击键、是单次显式操作）仍走默认 `replace:false`（正常压栈，Back 可回退），保持深链可分享与可回退两不误。
+
+- **⚠️ 恢复焦点/光标（blocker 修复）**：`render()`（main.js:2517）整体替换 `#app.innerHTML`，只恢复滚动（2700-2702），**不恢复焦点**——每次应用 query 都销毁重建 `#annojoin-search-input`，焦点与光标丢失，直接破坏「打字即过滤」。修复：在 `render()` 替换 innerHTML **之前**捕获 `document.activeElement` 的 `id` 与 `selectionStart/selectionEnd`（仅当 id 为 `annojoin-search-input` 时）；替换 **之后**若该 id 仍存在则 `el.focus()` 并还原 `setSelectionRange`。范围最小化：只对该搜索框做，不动其它输入。
+
 - **chip 移除 / clear**：绑定 `[data-annojoin-chip-remove]`（调用新回调 `removeFilter(key)` → `setAnnojointAtlasFilter(key, '')`）、`[data-annojoin-clear-all]` 与 `[data-annojoin-clear-search]`（调用 `clearFilters()` → 跳 `setAnnojointAtlasFilter('q','')` 等）。
-- **main.js**：`bindAnnojointAtlasTable(...)` 传入 `removeFilter`、`clearFilters` 回调（基于现有 `setAnnojointAtlasFilter`）。`currentAnnojointAtlasState()` 的 `rows` 在搜索态应等于扁平匹配结果，使「Select All Results」「分页」与扁平视图一致：把 `rows = sortAnnojointCases(...cases)` 之后，按 `isAnnojointSearchActive(filters.query)` 决定是否再过 `searchAnnojointRows`（保持与 view 同源排序）。
+
+- **main.js 状态对齐**：`bindAnnojointAtlasTable(...)` 传入 `removeFilter`、`clearFilters` 回调（基于现有 `setAnnojointAtlasFilter`）。`currentAnnojointAtlasState()` 的 `rows` 在搜索态应等于扁平匹配结果，使「Select All Results」「分页」与扁平视图一致：把 `rows = sortAnnojointCases(...cases)` 之后，按 `isAnnojointSearchActive(filters.query)` 决定是否再过 `searchAnnojointRows`（保持与 view 同源排序）。
+  - **import 补全**：main.js 现仅 import `sortAnnojointCases`/`paginateAnnojointRows` 等；本任务需在 import 行追加 `searchAnnojointRows, isAnnojointSearchActive`（来自 `./annojoinAtlasTableModel.js`）。
+
+- **双重过滤说明（与 view 同源）**：`filterCases`（data.js:504-527）已对 query 做**宽字段**子串过滤（含 confidence/parentClass 等），而 `searchAnnojointRows` 只按 pdbId+moleculeName 打分。仅靠宽字段命中的行（如搜 `B/C` 命中 confidence）会通过 `filterCases` 但在搜索态打分 0 而消失，导致「Showing N」少于预期且无解释。本计划遵循规格的窄口径（pdb+molecule）意图：在搜索态 `currentAnnojointAtlasState` 与 view 都**只**以 `searchAnnojointRows` 为准（让 `filterCases` 的 query 仍执行但结果被 `searchAnnojointRows` 收窄，二者口径一致即可，不新增宽字段命中行）。实现时确认 view 与 state 两处排序/过滤同源，避免计数与列表不一致。
 
 - [ ] **步骤 1：手动验证 controller 绑定（jsdom 风格的最小桩）**
 
@@ -372,14 +399,21 @@ setTimeout(()=>console.log("debouncedQuery:", q), 200);
 ```
 预期：约 200ms 后输出 `debouncedQuery: 11dg`。
 
-- [ ] **步骤 2：实现代码** — 修改 controller 与 main。
+- [ ] **步骤 2：实现代码** — 修改 controller 与 main（含 `replaceState` 写入与焦点恢复）。
 
 - [ ] **步骤 3：重跑步骤 1 验证通过。**
+
+- [ ] **步骤 3b：人工验证历史与焦点（dev server）**
+
+`npm run dev` 后到 `#sequence`，在搜索框逐字打 `11dg`：
+- 光标全程留在输入框、不丢焦点（焦点恢复生效）。
+- 打完后按一次浏览器 Back 应直接退出表格态/回到打字前的单一历史点，**而非**逐字符回退（`replaceState` 生效，无逐击键压栈）。
+- 点 chip 的 × 或 Clear all 后按 Back 可回到清除前状态（显式操作仍压栈）。
 
 - [ ] **步骤 4：跑全量测试**
 
 运行：`npm test`
-预期：全绿（基线 133/133，加任务 1-2 新增用例后应为 133+）。
+预期：全绿（基线 133/133，加任务 1-2 新增用例、任务 4 更新断言后应为 133+ 且无回归）。
 
 - [ ] **步骤 5：Commit**
 
@@ -388,8 +422,9 @@ git add src/annojoinAtlasController.js src/main.js
 git commit -m "$(cat <<'EOF'
 feat(ANNOJOIN Atlas): 搜索即时化与筛选 chip 清除
 
-搜索框改 input 防抖即时过滤；接通 chip 移除 / Clear all /
-清除空结果；搜索态 rows 对齐扁平匹配结果保证选择与分页一致。
+搜索框改 input 防抖即时过滤；query 写入改 replaceState 避免
+逐击键历史污染并在重渲染后恢复输入框焦点/光标；接通 chip 移除 /
+Clear all / 清除空结果；搜索态 rows 对齐扁平匹配结果保证选择与分页一致。
 EOF
 )"
 ```
