@@ -30,13 +30,28 @@ import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
 import {
   buildAtlasSearchState,
-  createAtlasCaseDetail,
-  createAtlasCaseDetailFromAsset,
   SAMPLE_ANNOJOIN_ATLAS_TABLES
 } from './annojoinAtlasData.js';
 import { renderAnnojointAtlasPage } from './annojoinAtlasView.js';
+import { bindAnnojointAtlasTable } from './annojoinAtlasController.js';
+import {
+  annojoinExportRow,
+  buildAnnojointTableGroups,
+  defaultVisibleAnnojointColumnIds,
+  isAnnojointSearchActive,
+  normalizeVisibleAnnojointColumnIds,
+  paginateAnnojointRows,
+  rowCaseId,
+  rowCaseKey,
+  searchAnnojointRows,
+  sortAnnojointCases
+} from './annojoinAtlasTableModel.js';
 import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
+import {
+  initAnnojointCasePrototype,
+  renderAnnojointCasePrototypePage
+} from './annojoinCasePrototypeView.js';
 import {
   buildSearchHash,
   createSearchService,
@@ -47,6 +62,11 @@ let sequenceRows = [];
 let browseEntryRows = [];
 let selectedBrowseIds = new Set();
 let selectedSequenceIds = new Set();
+let selectedAnnojointCaseIds = new Set();
+let expandedAnnojointGroupIds = new Set();
+let uncappedAnnojointGroupIds = new Set();
+let visibleAnnojointColumnIds = defaultVisibleAnnojointColumnIds();
+let annojoinPageSize = 50;
 let sequenceSearchQuery = '';
 // RMDB→PDB case 资产懒加载层与浏览器侧渲染缓存。
 // store 命中内存缓存避免重复 fetch；下面三类 state 缓存“已加载”结果，
@@ -56,7 +76,8 @@ const annojoinAtlasStore = createAnnojointAtlasStore();
 let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
 const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
 let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
-const annojoinAtlasDetailState = new Map(); // caseId -> 'loading' | 'error' | generated case asset
+let annojoinDetailRouteIndexState = null; // null=未加载, 'loading', 'error', 或 detail-route-index.json
+const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'error' | generated case asset
 let pdbCaseConfidenceFilter = 'all';
 let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
 let homeDashboardFilters = {
@@ -1176,7 +1197,7 @@ function downloadSequencesPage() {
 
 
 
-const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas'];
+const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case'];
 let route = routeFromHash(window.location.hash);
 let theme = 'ribocentre';
 let mode = localStorage.getItem('foldbridge-mode') === 'dark' ? 'dark' : 'light';
@@ -1900,19 +1921,40 @@ async function loadAnnojointAtlasIndex() {
     console.error('[main] 加载 ANNOJOIN Atlas 索引失败', err);
     annojoinAtlasIndexState = 'error';
   }
-  if (route === 'annojoin-atlas') render({ preserveScroll: true });
+  if (route === 'sequence' || route === 'annojoin-atlas' || route === 'annojoin-case') render({ preserveScroll: true });
 }
 
-async function loadAnnojointAtlasDetail(caseId) {
-  if (!caseId || annojoinAtlasDetailState.get(caseId) === 'loading') return;
-  annojoinAtlasDetailState.set(caseId, 'loading');
+async function loadAnnojointDetailRouteIndex() {
+  if (annojoinDetailRouteIndexState === 'loading') return;
+  annojoinDetailRouteIndexState = 'loading';
   try {
-    annojoinAtlasDetailState.set(caseId, await annojoinAtlasStore.loadCase(caseId));
+    annojoinDetailRouteIndexState = await annojoinAtlasStore.loadDetailRouteIndex();
   } catch (err) {
-    console.error('[main] 加载 ANNOJOIN Atlas case 失败', caseId, err);
-    annojoinAtlasDetailState.set(caseId, 'error');
+    console.error('[main] 加载 ANNOJOIN Atlas detail route index 失败', err);
+    annojoinDetailRouteIndexState = 'error';
   }
-  if (route === 'annojoin-atlas') render({ preserveScroll: true });
+  if (route === 'annojoin-case') render({ preserveScroll: true });
+}
+
+function resolveAnnojointDetailRouteEntry(caseKey, caseId = '') {
+  if (!annojoinDetailRouteIndexState || typeof annojoinDetailRouteIndexState !== 'object') return null;
+  const lookup = annojoinDetailRouteIndexState.lookup || {};
+  return lookup[caseKey] || lookup[String(caseKey || '').toUpperCase()] || lookup[caseId] || lookup[String(caseId || '').toUpperCase()] || null;
+}
+
+async function loadAnnojointAtlasDetail(caseKey, caseAssetPath = '') {
+  if (!caseKey || annojoinAtlasDetailState.get(caseKey) === 'loading') return;
+  annojoinAtlasDetailState.set(caseKey, 'loading');
+  try {
+    const asset = caseAssetPath
+      ? await annojoinAtlasStore.loadCaseAssetPath(caseAssetPath, { compressed: true })
+      : await annojoinAtlasStore.loadCase(caseKey, { compressed: true });
+    annojoinAtlasDetailState.set(caseKey, asset);
+  } catch (err) {
+    console.error('[main] 加载 ANNOJOIN Atlas case 失败', caseKey, err);
+    annojoinAtlasDetailState.set(caseKey, 'error');
+  }
+  if (route === 'annojoin-case') render({ preserveScroll: true });
 }
 
 // alignment 分页导航：保留已加载的 detail/profiles/reactivity，只换 alignment 页，避免整页 loading 闪烁。
@@ -1959,7 +2001,65 @@ function pdbCasePage() {
 function annojoinAtlasPage() {
   const parsed = parseHashRoute(window.location.hash);
   const params = parsed.params;
-  const filters = {
+  const routeName = parsed.route === 'sequence' ? 'sequence' : 'annojoin-atlas';
+  const filters = getAnnojointAtlasFilters(params);
+  const page = Number(params.get('page')) || 1;
+  const pageSize = Number(params.get('pageSize')) || annojoinPageSize;
+  const selectedCaseId = params.get('caseId') || '';
+  const selectedCaseKey = params.get('caseKey') || '';
+  const selectedField = params.get('field') || '';
+  if (!annojoinAtlasIndexState || annojoinAtlasIndexState === 'loading') {
+    if (annojoinAtlasIndexState !== 'loading') loadAnnojointAtlasIndex();
+    const state = buildAtlasSearchState(SAMPLE_ANNOJOIN_ATLAS_TABLES, filters);
+    return renderAnnojointAtlasPage({
+      state,
+      routeName,
+      selectedCaseIds: selectedAnnojointCaseIds,
+      expandedGroupIds: expandedAnnojointGroupIds,
+      uncappedGroupIds: uncappedAnnojointGroupIds,
+      visibleColumnIds: visibleAnnojointColumnIds,
+      page,
+      pageSize,
+      selectedCaseId,
+      selectedCaseKey,
+      selectedField
+    });
+  }
+  if (annojoinAtlasIndexState === 'error') {
+    const state = buildAtlasSearchState(SAMPLE_ANNOJOIN_ATLAS_TABLES, filters);
+    return renderAnnojointAtlasPage({
+      state,
+      routeName,
+      selectedCaseIds: selectedAnnojointCaseIds,
+      expandedGroupIds: expandedAnnojointGroupIds,
+      uncappedGroupIds: uncappedAnnojointGroupIds,
+      visibleColumnIds: visibleAnnojointColumnIds,
+      page,
+      pageSize,
+      selectedCaseId,
+      selectedCaseKey,
+      selectedField
+    });
+  }
+
+  const state = buildAtlasSearchState(annojoinAtlasIndexState, filters);
+  return renderAnnojointAtlasPage({
+    state,
+    routeName,
+    selectedCaseIds: selectedAnnojointCaseIds,
+    expandedGroupIds: expandedAnnojointGroupIds,
+    uncappedGroupIds: uncappedAnnojointGroupIds,
+    visibleColumnIds: visibleAnnojointColumnIds,
+    page,
+    pageSize,
+    selectedCaseId,
+    selectedCaseKey,
+    selectedField
+  });
+}
+
+function getAnnojointAtlasFilters(params) {
+  return {
     query: params.get('q') || '',
     rnaFamily: params.get('rnaFamily') || '',
     probeType: params.get('probeType') || '',
@@ -1967,40 +2067,150 @@ function annojoinAtlasPage() {
     motif: params.get('motif') || '',
     structureClass: params.get('structureClass') || ''
   };
-  if (!annojoinAtlasIndexState || annojoinAtlasIndexState === 'loading') {
-    if (annojoinAtlasIndexState !== 'loading') loadAnnojointAtlasIndex();
-    const state = buildAtlasSearchState(SAMPLE_ANNOJOIN_ATLAS_TABLES, filters);
-    const detail = createAtlasCaseDetail(SAMPLE_ANNOJOIN_ATLAS_TABLES, state.cases[0]?.caseId || SAMPLE_ANNOJOIN_ATLAS_TABLES.cases[0]?.case_id);
-    return renderAnnojointAtlasPage({ state, detail });
-  }
-  if (annojoinAtlasIndexState === 'error') {
-    const state = buildAtlasSearchState(SAMPLE_ANNOJOIN_ATLAS_TABLES, filters);
-    const detail = createAtlasCaseDetail(SAMPLE_ANNOJOIN_ATLAS_TABLES, state.cases[0]?.caseId || SAMPLE_ANNOJOIN_ATLAS_TABLES.cases[0]?.case_id);
-    return renderAnnojointAtlasPage({ state, detail });
-  }
-
-  const state = buildAtlasSearchState(annojoinAtlasIndexState, filters);
-  const selectedCaseId = params.get('caseId') || state.cases[0]?.caseId || annojoinAtlasIndexState.cases?.[0]?.caseId;
-  const detailState = annojoinAtlasDetailState.get(selectedCaseId);
-  if (!detailState) loadAnnojointAtlasDetail(selectedCaseId);
-  const detail = detailState && typeof detailState === 'object'
-    ? createAtlasCaseDetailFromAsset(detailState)
-    : null;
-  return renderAnnojointAtlasPage({ state, detail });
 }
 
-function setAnnojointAtlasFilter(key, value) {
+function currentAnnojointAtlasTables() {
+  return annojoinAtlasIndexState && typeof annojoinAtlasIndexState === 'object'
+    ? annojoinAtlasIndexState
+    : SAMPLE_ANNOJOIN_ATLAS_TABLES;
+}
+
+function currentAnnojointAtlasState() {
   const parsed = parseHashRoute(window.location.hash);
   const params = parsed.params;
+  const filters = getAnnojointAtlasFilters(params);
+  const pageSize = Number(params.get('pageSize')) || annojoinPageSize;
+  const page = Number(params.get('page')) || 1;
+  const sortedRows = sortAnnojointCases(buildAtlasSearchState(currentAnnojointAtlasTables(), filters).cases);
+  const rows = isAnnojointSearchActive(filters.query)
+    ? searchAnnojointRows(sortedRows, filters.query)
+    : sortedRows;
+  const pagination = paginateAnnojointRows(rows, { page, pageSize });
+  return { rows, pageRows: pagination.rows, pagination };
+}
+
+function getAnnojointCaseIdFromHash() {
+  const parsed = parseHashRoute(window.location.hash);
+  return String(parsed.params.get('caseId') || '10ZT').trim().toUpperCase();
+}
+
+function getAnnojointCaseKeyFromHash() {
+  const parsed = parseHashRoute(window.location.hash);
+  return String(parsed.params.get('caseKey') || getAnnojointCaseIdFromHash()).trim();
+}
+
+function findAnnojointIndexRowByKey(caseKey) {
+  const normalizedKey = String(caseKey || '').trim().toUpperCase();
+  if (!normalizedKey) return null;
+  const state = buildAtlasSearchState(currentAnnojointAtlasTables(), {}).cases;
+  return state.find((row) => rowCaseKey(row).toUpperCase() === normalizedKey || rowCaseId(row).toUpperCase() === normalizedKey) || null;
+}
+
+function annojoinCasePrototypePage() {
+  const caseId = getAnnojointCaseIdFromHash();
+  const caseKey = getAnnojointCaseKeyFromHash();
+  const detailState = annojoinAtlasDetailState.get(caseKey);
+  if (!annojoinDetailRouteIndexState) loadAnnojointDetailRouteIndex();
+  const detailRouteEntry = resolveAnnojointDetailRouteEntry(caseKey, caseId);
+  const caseAssetPath = detailRouteEntry?.asset?.caseAssetPath || findAnnojointIndexRowByKey(caseKey)?.caseAssetPath;
+  if (!detailState && (annojoinDetailRouteIndexState === 'error' || detailRouteEntry || caseAssetPath)) {
+    loadAnnojointAtlasDetail(caseKey, caseAssetPath);
+  }
+  return renderAnnojointCasePrototypePage({
+    caseAsset: detailState && typeof detailState === 'object' ? detailState : null,
+    caseId,
+    caseKey
+  });
+}
+
+function setAnnojointAtlasFilter(key, value, { replace = false } = {}) {
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const routeName = parsed.route === 'sequence' ? 'sequence' : 'annojoin-atlas';
   if (value) params.set(key, value);
   else params.delete(key);
+  params.set('page', '1');
   params.delete('caseId');
+  params.delete('caseKey');
+  params.delete('field');
   const next = params.toString();
-  window.location.hash = next ? `annojoin-atlas?${next}` : 'annojoin-atlas';
+  const composedHash = next ? `${routeName}?${next}` : routeName;
+  if (replace) {
+    // replaceState 不触发 hashchange，需手动同步 route 并重渲染（保留滚动与焦点）。
+    history.replaceState(null, '', '#' + composedHash);
+    route = routeFromHash(window.location.hash);
+    render({ preserveScroll: true });
+  } else {
+    window.location.hash = composedHash;
+  }
+}
+
+function clearAnnojointAtlasFilters() {
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const routeName = parsed.route === 'sequence' ? 'sequence' : 'annojoin-atlas';
+  ['q', 'rnaFamily', 'probeType', 'pdbId', 'motif', 'structureClass'].forEach((key) => params.delete(key));
+  params.set('page', '1');
+  params.delete('caseId');
+  params.delete('caseKey');
+  params.delete('field');
+  const next = params.toString();
+  window.location.hash = next ? `${routeName}?${next}` : routeName;
 }
 
 function setAnnojointAtlasQuery(query) {
-  setAnnojointAtlasFilter('q', query);
+  setAnnojointAtlasFilter('q', query, { replace: true });
+}
+
+function setAnnojointAtlasPage(value) {
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const routeName = parsed.route === 'sequence' ? 'sequence' : 'annojoin-atlas';
+  const current = currentAnnojointAtlasState().pagination;
+  let nextPage = Number(value) || current.page;
+  if (value === 'prev') nextPage = current.page - 1;
+  if (value === 'next') nextPage = current.page + 1;
+  nextPage = Math.min(Math.max(1, nextPage), current.pageCount);
+  if (nextPage > 1) params.set('page', String(nextPage));
+  else params.delete('page');
+  const next = params.toString();
+  window.location.hash = next ? `${routeName}?${next}` : routeName;
+}
+
+function setAnnojointAtlasPageSize(value) {
+  annojoinPageSize = Number(value) || 50;
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const routeName = parsed.route === 'sequence' ? 'sequence' : 'annojoin-atlas';
+  params.set('pageSize', String(annojoinPageSize));
+  params.delete('page');
+  const next = params.toString();
+  window.location.hash = next ? `${routeName}?${next}` : routeName;
+}
+
+function setAnnojointAtlasVisibleColumns(columnIds) {
+  visibleAnnojointColumnIds = normalizeVisibleAnnojointColumnIds(columnIds);
+  render({ preserveScroll: true });
+}
+
+function toggleAnnojointAtlasGroup(groupId) {
+  if (expandedAnnojointGroupIds.has(groupId)) expandedAnnojointGroupIds.delete(groupId);
+  else expandedAnnojointGroupIds.add(groupId);
+  render({ preserveScroll: true });
+}
+
+function allAnnojointAtlasGroupIds() {
+  const groups = buildAnnojointTableGroups(currentAnnojointAtlasState().rows);
+  return groups.flatMap((parent) => [
+    `parent:${parent.id}`,
+    ...parent.children.map((child) => `child:${child.id}`)
+  ]);
+}
+
+function toggleAnnojointAtlasGroupLimit(groupId) {
+  if (uncappedAnnojointGroupIds.has(groupId)) uncappedAnnojointGroupIds.delete(groupId);
+  else uncappedAnnojointGroupIds.add(groupId);
+  render({ preserveScroll: true });
 }
 
 function downloadPage() {
@@ -2119,10 +2329,11 @@ function helpPage() {
 function pageFor(name) {
   const safeRoute = normalizeRoute(name);
   if (safeRoute === 'browse') return browsePage();
-  if (safeRoute === 'sequence') return downloadSequencesPage();
+  if (safeRoute === 'sequence') return annojoinAtlasPage();
   if (safeRoute === 'structure') return structurePage();
   if (safeRoute === 'pdb-case') return pdbCasePage();
   if (safeRoute === 'annojoin-atlas') return annojoinAtlasPage();
+  if (safeRoute === 'annojoin-case') return annojoinCasePrototypePage();
   if (safeRoute === 'probing') return detailPage();
   if (safeRoute === 'download') return downloadPage();
   if (safeRoute === 'search') return searchPage();
@@ -2333,6 +2544,14 @@ function render(options = {}) {
   const { preserveScroll = false } = options;
   const previousScrollX = window.scrollX;
   const previousScrollY = window.scrollY;
+  let activeSearch = null;
+  if (document.activeElement?.id === 'annojoin-search-input') {
+    const el = document.activeElement;
+    activeSearch = {
+      selectionStart: el.selectionStart ?? null,
+      selectionEnd: el.selectionEnd ?? null
+    };
+  }
 
   setTheme(theme, mode);
   document.getElementById('app').innerHTML = `${nav()}${pageFor(route)}${renderFooter()}`;
@@ -2377,26 +2596,53 @@ function render(options = {}) {
       render({ preserveScroll: true });
     });
   }
-  const annojoinSearchInput = document.getElementById('annojoin-search-input');
-  if (annojoinSearchInput) {
-    annojoinSearchInput.addEventListener('change', (event) => {
-      setAnnojointAtlasQuery(event.target.value.trim());
-    });
-    annojoinSearchInput.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') {
-        setAnnojointAtlasQuery(event.target.value.trim());
-      }
+  const annojoinState = document.getElementById('annojoin-search-input') ? currentAnnojointAtlasState() : null;
+  if (annojoinState) {
+    bindAnnojointAtlasTable({
+      root: document,
+      selectedCaseIds: selectedAnnojointCaseIds,
+      visibleColumnIds: visibleAnnojointColumnIds,
+      pageRows: annojoinState.pageRows,
+      rows: annojoinState.rows,
+      setQuery: setAnnojointAtlasQuery,
+      setPage: setAnnojointAtlasPage,
+      setPageSize: setAnnojointAtlasPageSize,
+      setVisibleColumns: setAnnojointAtlasVisibleColumns,
+      exportSelectedRows: (selectedRows) => {
+        downloadRowsAsCsv(selectedRows.map(annojoinExportRow), 'annojoin-selected-cases.csv');
+      },
+      selectRows: (rows) => {
+        rows.forEach((row) => {
+          const caseKey = rowCaseKey(row);
+          if (caseKey) selectedAnnojointCaseIds.add(caseKey);
+        });
+        render({ preserveScroll: true });
+      },
+      clearSelection: () => {
+        selectedAnnojointCaseIds.clear();
+        render({ preserveScroll: true });
+      },
+      toggleGroup: toggleAnnojointAtlasGroup,
+      toggleGroupLimit: toggleAnnojointAtlasGroupLimit,
+      expandAllGroups: () => {
+        expandedAnnojointGroupIds = new Set(allAnnojointAtlasGroupIds());
+        render({ preserveScroll: true });
+      },
+      collapseAllGroups: () => {
+        expandedAnnojointGroupIds.clear();
+        uncappedAnnojointGroupIds.clear();
+        render({ preserveScroll: true });
+      },
+      rerender: () => render({ preserveScroll: true }),
+      removeFilter: (key) => setAnnojointAtlasFilter(key, ''),
+      clearFilters: () => clearAnnojointAtlasFilters()
     });
   }
-  document.querySelectorAll('[data-annojoin-filter]').forEach((input) => {
-    const apply = () => setAnnojointAtlasFilter(input.getAttribute('data-annojoin-filter'), input.value.trim());
-    input.addEventListener('change', apply);
-    input.addEventListener('keydown', (event) => {
-      if (event.key === 'Enter') apply();
-    });
-  });
   initAnnojointStructureViewers().catch((error) => {
     console.error('[main] 初始化 ANNOJOIN 3D viewer 失败', error);
+  });
+  initAnnojointCasePrototype().catch((error) => {
+    console.error('[main] 初始化 ANNOJOIN case prototype 失败', error);
   });
   const downloadSelectedRdatBtn = document.getElementById('download-selected-rdat');
   bindPseudoButton(downloadSelectedRdatBtn, () => {
@@ -2486,6 +2732,20 @@ document.addEventListener('click', () => {
       window.location.hash = route;
     });
   });
+
+  if (activeSearch) {
+    const el = document.getElementById('annojoin-search-input');
+    if (el) {
+      el.focus();
+      if (typeof activeSearch.selectionStart === 'number' && typeof activeSearch.selectionEnd === 'number') {
+        try {
+          el.setSelectionRange(activeSearch.selectionStart, activeSearch.selectionEnd);
+        } catch (error) {
+          // type="search" 可能不支持 setSelectionRange，忽略。
+        }
+      }
+    }
+  }
 
   if (preserveScroll) {
     requestAnimationFrame(() => window.scrollTo(previousScrollX, previousScrollY));
