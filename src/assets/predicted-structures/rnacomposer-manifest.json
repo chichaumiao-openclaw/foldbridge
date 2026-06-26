@@ -1,0 +1,114 @@
+[
+  {
+    "representativeId": "RMDB_16SFWJ_1M7_0001",
+    "members": [
+      "RMDB_16SFWJ_1M7_0001"
+    ],
+    "sequenceLength": 110,
+    "taskId": "9c0f2e0c-9fde-4ec3-b57f-7082d6912f08",
+    "resultHref": "/Home/GetResult?resId=dc8b0fe7-6f7c-47e0-a805-67f6de431a3b&name=16SFWJ_1M7_0001.pdb",
+    "savedFiles": [
+      "src/assets/predicted-structures/16SFWJ_1M7_0001.rnacomposer.pdb"
+    ],
+    "completedAt": "2026-06-26T08:16:48Z"
+  },
+  {
+    "representativeId": "RMDB_ADDSC_1M7_0007",
+    "members": [
+      "RMDB_ADDSC_1M7_0007"
+    ],
+    "sequenceLength": 74,
+    "taskId": "1a0140b7-0ce1-4b2d-975a-28b8574a739d",
+    "resultHref": "/Home/GetResult?resId=56ffc682-a840-40ff-8859-fe99d1dbfede&name=ADDSC_1M7_0007.pdb",
+    "savedFiles": [
+      "src/assets/predicted-structures/ADDSC_1M7_0007.rnacomposer.pdb"
+    ],
+    "completedAt": "2026-06-26T08:17:12Z"
+  },
+  {
+    "representativeId": "RMDB_ATPCON_DMS_0001",
+    "members": [
+      "RMDB_ATPCON_DMS_0001"
+    ],
+    "sequenceLength": 40,
+    "taskId": "b8998d72-3f86-4955-957a-6677d63ac2b6",
+    "resultHref": "/Home/GetResult?resId=5d93f7fd-056d-4788-b324-d86a2adb69f8&name=ATPCON_DMS_0001.pdb",
+    "savedFiles": [
+      "src/assets/predicted-structures/ATPCON_DMS_0001.rnacomposer.pdb"
+    ],
+    "completedAt": "2026-06-26T08:00:04Z"
+  },
+  {
+    "representativeId": "RMDB_RNAPZ14_1M7_0005",
+    "members": [
+      "RMDB_RNAPZ14_1M7_0005",
+      "RMDB_RNAPZ14_1M7_0004"
+    ],
+    "sequenceLength": 131,
+    "taskId": "2329dfdb-bfca-4177-9d47-7b5b55998065",
+    "resultHref": "/Home/GetResult?resId=e7b071cc-3a10-46ef-8f52-b48ff4ce1eac&name=RNAPZ14_d74e9a.pdb",
+    "savedFiles": [
+      "src/assets/predicted-structures/RNAPZ14_1M7_0005.rnacomposer.pdb",
+      "src/assets/predicted-structures/RNAPZ14_1M7_0004.rnacomposer.pdb"
+    ],
+    "completedAt": "2026-06-26T08:18:00Z"
+  },
+  {
+    "representativeId": "RMDB_RNAPZ14_1M7_0007",
+    "members": [
+      "RMDB_RNAPZ14_1M7_0007",
+      "RMDB_RNAPZ14_1M7_0006"
+    ],
+    "sequenceLength": 131,
+    "taskId": "d5e4e043-ffd4-480f-96cf-fb5839d49bdd",
+    "resultHref": "/Home/GetResult?resId=d368685c-e372-4e5f-860d-7bd8f4c7c6a7&name=RNAPZ14_8341e2.pdb",
+    "savedFiles": [
+      "src/assets/predicted-structures/RNAPZ14_1M7_0007.rnacomposer.pdb",
+      "src/assets/predicted-structures/RNAPZ14_1M7_0006.rnacomposer.pdb"
+    ],
+    "completedAt": "2026-06-26T08:18:44Z"
+  },
+  {
+    "representativeId": "RMDB_RNAPZ14_HRF_0002",
+    "members": [
+      "RMDB_RNAPZ14_HRF_0002",
+      "RMDB_RNAPZ14_STD_0002"
+    ],
+    "sequenceLength": 61,
+    "taskId": "b34fa399-9d3d-4278-82ef-5a5332cadc92",
+    "resultHref": "/Home/GetResult?resId=1f432853-aa44-4b24-8415-ae468531c0ab&name=RNAPZ14_d1abfc.pdb",
+    "savedFiles": [
+      "src/assets/predicted-structures/RNAPZ14_HRF_0002.rnacomposer.pdb",
+      "src/assets/predicted-structures/RNAPZ14_STD_0002.rnacomposer.pdb"
+    ],
+    "completedAt": "2026-06-26T08:19:09Z"
+  },
+  {
+    "representativeId": "RMDB_RNAPZ14_HRF_0003",
+    "members": [
+      "RMDB_RNAPZ14_HRF_0003",
+      "RMDB_RNAPZ14_STD_0003"
+    ],
+    "sequenceLength": 61,
+    "taskId": "81c48a17-1c28-401f-9983-e6137c9b085d",
+    "resultHref": "/Home/GetResult?resId=c564a818-d6be-4804-a052-cef5a44c4e7b&name=RNAPZ14_7c7cd6.pdb",
+    "savedFiles": [
+      "src/assets/predicted-structures/RNAPZ14_HRF_0003.rnacomposer.pdb",
+      "src/assets/predicted-structures/RNAPZ14_STD_0003.rnacomposer.pdb"
+    ],
+    "completedAt": "2026-06-26T08:20:15Z"
+  },
+  {
+    "representativeId": "RMDB_TRP4P6_DMS_0014",
+    "members": [
+      "RMDB_TRP4P6_DMS_0014"
+    ],
+    "sequenceLength": 160,
+    "taskId": "45e50bc2-0a0f-4cc5-afb8-6abe44c22024",
+    "resultHref": "/Home/GetResult?resId=f857423f-6442-4900-a98f-cf1d79c5e96a&name=TRP4P6_DMS_0014.pdb",
+    "savedFiles": [
+      "src/assets/predicted-structures/TRP4P6_DMS_0014.rnacomposer.pdb"
+    ],
+    "completedAt": "2026-06-26T08:09:16Z"
+  }
+]

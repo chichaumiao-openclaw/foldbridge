@@ -4,6 +4,7 @@ import path from 'node:path';
 const root = process.cwd();
 const dist = path.join(root, 'dist');
 const generatedSrcDir = path.join(root, 'src', 'generated');
+const predictedStructuresDir = path.join(root, 'src', 'assets', 'predicted-structures');
 
 await rm(dist, { recursive: true, force: true });
 await mkdir(generatedSrcDir, { recursive: true });
@@ -47,6 +48,41 @@ try {
   await writeFile(path.join(caseBundleDist, 'manifest.json'), JSON.stringify(manifest, null, 2));
 } catch {
   // optional folder
+}
+
+try {
+  const entries = await readdir(predictedStructuresDir, { withFileTypes: true });
+  const predictedStructureIds = new Set();
+  const rnaComposerPredictedStructureIds = new Set();
+
+  for (const entry of entries) {
+    if (!entry.isFile()) continue;
+    if (entry.name.endsWith('.rnacomposer.pdb')) {
+      const foldBridgeId = `RMDB_${entry.name.replace(/\.rnacomposer\.pdb$/i, '')}`;
+      predictedStructureIds.add(foldBridgeId);
+      rnaComposerPredictedStructureIds.add(foldBridgeId);
+      continue;
+    }
+    if (entry.name.endsWith('.pdb')) {
+      const foldBridgeId = `RMDB_${entry.name.replace(/\.pdb$/i, '')}`;
+      predictedStructureIds.add(foldBridgeId);
+    }
+  }
+
+  await writeFile(
+    path.join(generatedSrcDir, 'predictedStructureManifest.js'),
+    `export const predictedStructureIds = ${JSON.stringify([...predictedStructureIds].sort(), null, 2)};\n` +
+      `export const rnaComposerPredictedStructureIds = ${JSON.stringify(
+        [...rnaComposerPredictedStructureIds].sort(),
+        null,
+        2
+      )};\n`
+  );
+} catch {
+  await writeFile(
+    path.join(generatedSrcDir, 'predictedStructureManifest.js'),
+    'export const predictedStructureIds = [];\nexport const rnaComposerPredictedStructureIds = [];\n'
+  );
 }
 
 await cp(path.join(root, 'src'), path.join(dist, 'src'), { recursive: true });

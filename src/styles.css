@@ -1592,7 +1592,7 @@ tbody tr:hover {
 }
 
 .page-download .case-detail-table {
-  min-width: 1540px;
+  min-width: 1600px;
   table-layout: fixed;
 }
 
@@ -1635,6 +1635,43 @@ tbody tr:hover {
   width: 140px;
 }
 
+.page-download .case-detail-table th:nth-child(2),
+.page-download .case-detail-table td:nth-child(2) {
+  width: 280px;
+}
+
+.page-download .case-detail-table th:nth-child(3),
+.page-download .case-detail-table td:nth-child(3) {
+  width: 240px;
+}
+
+.page-download .case-detail-table th:nth-child(4),
+.page-download .case-detail-table td:nth-child(4) {
+  width: 190px;
+}
+
+.page-download .case-detail-table th:nth-child(5),
+.page-download .case-detail-table td:nth-child(5) {
+  width: 120px;
+}
+
+.page-download .case-detail-table th:nth-child(6),
+.page-download .case-detail-table td:nth-child(6) {
+  width: 320px;
+}
+
+.page-download .case-detail-table td:nth-child(2),
+.page-download .case-detail-table td:nth-child(3) {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  vertical-align: top;
+}
+
+.page-download .case-detail-table td:nth-child(4) {
+  white-space: nowrap;
+}
+
 .page-download .case-detail-table .entry-sequence {
   margin: 0 auto;
 }
@@ -1643,6 +1680,9 @@ tbody tr:hover {
   color: #b8840e;
   font-weight: 700;
   text-decoration: none;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .page-download .case-detail-table .sequence-link:hover {
@@ -1971,6 +2011,10 @@ tbody tr:hover {
   display: none;
 }
 
+.sequence-detail-panel-related {
+  padding-top: 38px;
+}
+
 .sequence-detail-panel h2 {
   position: relative;
   margin: 0 0 18px;
@@ -1988,6 +2032,17 @@ tbody tr:hover {
   margin: 0;
   color: #5d6f69;
   line-height: 1.7;
+}
+
+.sequence-detail-section-intro {
+  margin: 0 0 18px;
+}
+
+.sequence-detail-section-intro p {
+  margin: 0;
+  color: #5f6b66;
+  font-size: 1rem;
+  line-height: 1.65;
 }
 
 .sequence-detail-insight-grid {
@@ -2123,8 +2178,32 @@ tbody tr:hover {
   line-height: 1.75;
 }
 
+.case-sequence-block-formatted {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.9rem;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.case-sequence-group {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.case-sequence-direction {
+  color: #2f4057;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .case-sequence-structure-label {
-  margin: 16px 0 8px;
+  margin: 0 0 8px;
   color: #7f948b;
   font-size: 0.8rem;
   font-weight: 700;
@@ -2134,12 +2213,52 @@ tbody tr:hover {
 
 .case-sequence-structure {
   display: block;
-  white-space: pre-wrap;
-  overflow-wrap: anywhere;
   font-family: "SFMono-Regular", "Menlo", "Consolas", monospace;
   font-size: 0.92rem;
   line-height: 1.65;
   color: #355345;
+}
+
+.case-sequence-structure {
+  font-family: "SFMono-Regular", "Menlo", "Consolas", monospace;
+}
+
+.case-sequence-structure-wrap {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  white-space: normal;
+  line-height: 1.95;
+  color: #355345;
+  letter-spacing: 0.04em;
+}
+
+.case-sequence-row {
+  display: block;
+  max-width: 100%;
+}
+
+.case-sequence-structure-row {
+  line-height: 1.95;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.case-sequence-structure-char {
+  display: inline-block;
+  width: 1ch;
+  text-align: center;
+}
+
+.sequence-detail-dot-bracket-block {
+  display: grid;
+  gap: 0;
+  padding: 16px 18px;
+  border-radius: 16px;
+  border: 1px solid rgba(23, 75, 58, 0.1);
+  background: rgba(244, 247, 242, 0.9);
 }
 
 .case-sequence-table-wrap {
@@ -2325,10 +2444,19 @@ tbody tr:hover {
 
 .sequence-detail-placeholder p {
   margin: 0;
-  max-width: 980px;
   color: #5b4b31;
   font-size: 1.02rem;
   line-height: 1.75;
+}
+
+.sequence-detail-placeholder sup a {
+  color: #8a6513;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.sequence-detail-placeholder sup a:hover {
+  text-decoration: underline;
 }
 
 .sequence-detail-media {
@@ -2421,6 +2549,36 @@ tbody tr:hover {
   background: var(--surface);
   isolation: isolate;
   box-shadow: 0 12px 34px rgba(155, 122, 38, 0.08);
+}
+
+.structure-detail-comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+
+.structure-detail-comparison-card {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+}
+
+.structure-detail-comparison-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.structure-detail-comparison-copy h3 {
+  margin: 0;
+  color: #173224;
+  font-size: 1.1rem;
+}
+
+.structure-detail-comparison-copy p {
+  margin: 0;
+  color: #4b6158;
+  line-height: 1.6;
 }
 
 .sequence-detail-image {
@@ -2541,11 +2699,12 @@ tbody tr:hover {
   gap: 10px;
 }
 
-.sequence-detail-forna-copy h3 {
+.sequence-detail-forna-title {
   margin: 0;
   color: #14221C;
-  font-size: 1.28rem;
-  line-height: 1.25;
+  font-size: 1rem;
+  line-height: 1.55;
+  font-weight: 500;
 }
 
 .sequence-detail-forna-copy p,
@@ -2748,11 +2907,33 @@ tbody tr:hover {
   background: #fff;
 }
 
+.structure-detail-heatmap-card {
+  padding: 0;
+  border: 0;
+  border-radius: 16px;
+  background: #ffffff;
+  overflow: visible;
+  box-shadow: none;
+}
+
 .sequence-secondary-heatmap-host {
-  border: 1px solid #e6efe8;
+  border: 0;
   border-radius: 12px;
   background: #fff;
-  overflow: hidden;
+  overflow: visible;
+}
+
+.structure-detail-heatmap-card .sequence-secondary-heatmap-host {
+  border: 0;
+  border-radius: 16px;
+  width: 100%;
+  min-height: 220px;
+}
+
+.structure-detail-heatmap-card .sequence-secondary-heatmap-scroll {
+  justify-content: center;
+  align-items: center;
+  padding: 6px 8px;
 }
 
 .sequence-secondary-heatmap-scroll {
@@ -2760,13 +2941,15 @@ tbody tr:hover {
   overflow: auto;
   display: flex;
   justify-content: center;
+  overflow-y: visible;
 }
 
 .sequence-secondary-heatmap-stage {
   position: relative;
   width: max-content;
-  padding: 14px;
+  padding: 4px;
   background: #fff;
+  overflow: visible;
 }
 
 .sequence-secondary-heatmap-canvas {
@@ -2775,7 +2958,7 @@ tbody tr:hover {
 }
 
 .sequence-secondary-heatmap-tooltip {
-  position: absolute;
+  position: fixed;
   min-width: 180px;
   padding: 10px 12px;
   border-radius: 12px;
@@ -4219,6 +4402,10 @@ main {
 
   .sequence-secondary-forna-card {
     padding: 22px 18px 20px;
+  }
+
+  .structure-detail-comparison-grid {
+    grid-template-columns: 1fr;
   }
 
   .sequence-detail-forna-frame {

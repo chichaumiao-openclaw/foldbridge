@@ -1,5 +1,9 @@
 import { cssVarsFor, themeTokens } from './theme.js';
 import { caseManifest } from './generated/caseManifest.js';
+import {
+  predictedStructureIds as generatedPredictedStructureIds,
+  rnaComposerPredictedStructureIds as generatedRnaComposerPredictedStructureIds
+} from './generated/predictedStructureManifest.js';
 import { rmdbPdbBlastRows } from './generated/rmdbPdbBlastRows.js';
 import {
   renderGlobalSearch,
@@ -17,6 +21,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap,
   initStructureDetailSecondaryForna,
+  initStructureDetailSecondaryHeatmap,
   initStructureDetailMolstar,
   initPredictedStructureDetailMolstar
 } from './modules.js';
@@ -801,6 +806,59 @@ function renderColoredSequence(sequence) {
     .join('');
 }
 
+function renderFormattedDetailSequence(sequence, groupSize = 5) {
+  const cleanSequence = String(sequence ?? '').replace(/\s+/g, '').trim();
+  if (!cleanSequence) return 'Sequence unavailable';
+
+  const safeGroupSize = Math.max(1, Number(groupSize) || 5);
+  const groups = [];
+  for (let index = 0; index < cleanSequence.length; index += safeGroupSize) {
+    groups.push(cleanSequence.slice(index, index + safeGroupSize));
+  }
+
+  const groupedMarkup = groups
+    .map((group) => `<span class="case-sequence-group">${renderColoredSequence(group)}</span>`)
+    .join('');
+
+  return `<span class="case-sequence-direction">5′-</span>${groupedMarkup}<span class="case-sequence-direction">-3′</span>`;
+}
+
+function splitTextIntoChunks(text, chunkSize = 120) {
+  const cleanText = String(text ?? '').replace(/\s+/g, '').trim();
+  if (!cleanText) return [];
+
+  const safeChunkSize = Math.max(1, Number(chunkSize) || 120);
+  const chunks = [];
+  for (let index = 0; index < cleanText.length; index += safeChunkSize) {
+    chunks.push(cleanText.slice(index, index + safeChunkSize));
+  }
+  return chunks;
+}
+
+function renderAlignedSequenceStructure(sequence, structure = '') {
+  const cleanSequence = String(sequence ?? '').replace(/\s+/g, '').trim();
+  const cleanStructure = String(structure ?? '').replace(/\s+/g, '').trim();
+  const chunkSize = 120;
+
+  if (!cleanSequence) return 'Sequence unavailable';
+  if (!cleanStructure || cleanStructure.length !== cleanSequence.length) {
+    return cleanStructure || '';
+  }
+
+  const chunks = splitTextIntoChunks(cleanStructure, chunkSize);
+  const chars = chunks
+    .map((chunk) => {
+      const chunkChars = chunk
+        .split('')
+        .map((structureChar) => `<span class="case-sequence-structure-char">${structureChar}</span>`)
+        .join('');
+      return `<span class="case-sequence-row case-sequence-structure-row">${chunkChars}</span>`;
+    })
+    .join('');
+
+  return `<span class="case-sequence-structure-wrap" aria-label="RNA secondary structure in dot-bracket notation">${chars}</span>`;
+}
+
 function renderSequenceDetailTimeline() {
   const items = ['2004', '2009', '2013']
     .map((year) => `<article class="sequence-detail-timeline-item">
@@ -1064,6 +1122,15 @@ function renderSequenceDetailReferenceContent(row) {
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gkae144" target="_blank" rel="noopener noreferrer">DOI: 10.1093/nar/gkae144</a>
           </div>
         </article>
+        <article class="sequence-detail-reference-item">
+          <h3>[2] RCSB PDB entry 8QO5: SARS-CoV-2 SL5 structure model.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/8QO5" target="_blank" rel="noopener noreferrer">RCSB: 8QO5</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb8QO5/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb8QO5/pdb</a>
+          </div>
+        </article>
       </div>
     </div>`;
   }
@@ -1088,6 +1155,15 @@ function renderSequenceDetailReferenceContent(row) {
           <div class="sequence-detail-reference-links">
             <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/28092358/" target="_blank" rel="noopener noreferrer">PubMed: 28092358</a>
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/nchembio.2278" target="_blank" rel="noopener noreferrer">DOI: 10.1038/nchembio.2278</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item">
+          <h3>[3] RCSB PDB entry 5KPY: 5-HTP RNA aptamer structure.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5KPY" target="_blank" rel="noopener noreferrer">RCSB: 5KPY</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5KPY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5KPY/pdb</a>
           </div>
         </article>
       </div>
@@ -1116,6 +1192,15 @@ function renderSequenceDetailReferenceContent(row) {
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/382183a0" target="_blank" rel="noopener noreferrer">DOI: 10.1038/382183a0</a>
           </div>
         </article>
+        <article class="sequence-detail-reference-item">
+          <h3>[3] RCSB PDB entry 1AM0: AMP-RNA aptamer complex.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/1AM0" target="_blank" rel="noopener noreferrer">RCSB: 1AM0</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb1AM0/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb1AM0/pdb</a>
+          </div>
+        </article>
       </div>
     </div>`;
   }
@@ -1142,6 +1227,15 @@ function renderSequenceDetailReferenceContent(row) {
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1073/pnas.1312918111" target="_blank" rel="noopener noreferrer">DOI: 10.1073/pnas.1312918111</a>
           </div>
         </article>
+        <article class="sequence-detail-reference-item">
+          <h3>[3] RCSB PDB entry 4L81: SAM I/IV variant riboswitch aptamer domain.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4L81" target="_blank" rel="noopener noreferrer">RCSB: 4L81</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4L81/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4L81/pdb</a>
+          </div>
+        </article>
       </div>
     </div>`;
   }
@@ -1158,6 +1252,15 @@ function renderSequenceDetailReferenceContent(row) {
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1126/science.aah3963" target="_blank" rel="noopener noreferrer">DOI: 10.1126/science.aah3963</a>
           </div>
         </article>
+        <article class="sequence-detail-reference-item">
+          <h3>[2] RCSB PDB entry 5TPY: Crystal structure of an exonuclease resistant RNA from Zika virus.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5TPY" target="_blank" rel="noopener noreferrer">RCSB: 5TPY</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5TPY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5TPY/pdb</a>
+          </div>
+        </article>
       </div>
     </div>`;
   }
@@ -1165,8 +1268,174 @@ function renderSequenceDetailReferenceContent(row) {
   return `<div class="sequence-detail-reference-card">
     <p>This tertiary structure is based on the PDB entry <strong>${row.pdbName ?? ''}</strong>.</p>
     <div class="sequence-detail-reference-links">
-      <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/${encodeURIComponent(row.pdbName ?? '')}" target="_blank" rel="noopener noreferrer">Open PDB Entry</a>
+      <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/${encodeURIComponent(row.pdbName ?? '')}" target="_blank" rel="noopener noreferrer">RCSB: ${row.pdbName ?? ''}</a>
+      <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb${encodeURIComponent(row.pdbName ?? '')}/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb${row.pdbName ?? ''}/pdb</a>
     </div>
+  </div>`;
+}
+
+function renderStructureDetailDescription(row) {
+  if (row?.foldBridgeId === 'RMDB_ATTR03_DMS_0001') {
+    return `ATP-TTR 3 is a computer-designed ATP-binding RNA aptamer reported within the Ribosolve workflow for RNA-only three-dimensional structure determination. The apo-state ATP-TTR-3 model was resolved as PDB entry 6WLK and was used as part of a benchmark set for evaluating accelerated cryo-EM-guided RNA structure modeling and comparison across apo and ligand-bound states.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ18_1M7_0000') {
+    return `RNA Puzzle 18 corresponds to a Zika virus exonuclease-resistant RNA (xrRNA), a structured noncoding RNA element that promotes production of subgenomic flaviviral RNAs by blocking host exonuclease degradation. Its experimentally solved tertiary structure, represented by PDB entry 5TPY, revealed a compact multi-pseudoknot architecture that underlies exonuclease resistance and supports functional studies of flaviviral RNA biology.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_ATPCON_DMS_0001') {
+    return `ATP control is a compact ATP-binding RNA aptamer used as a reference system for RNA structure probing and tertiary-structure analysis. Its experimentally determined structure is represented by PDB entry 1AM0, which captures the AMP-bound aptamer fold and has been widely used as a benchmark for RNA folding, ligand recognition, and RNA design studies. In this context, the ATP control construct provides a small, well-characterized model for comparing chemical probing signals with an established tertiary architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_ADDSC_1M7_0007') {
+    return `add Adenine Riboswitch, <em>Vibrio vulnificus</em> is an adenine-sensing bacterial riboswitch aptamer profiled here by 1M7 SHAPE-Seq v2.0 under standard-state conditions. The RMDB record notes that all replicates were probed in the presence of 1 uM adenine, making this entry a ligand-bound probing snapshot that can be compared against the matched tertiary structure represented by PDB entry 1Y26. Together, the chemical probing profile and the crystallographic model provide a compact reference for adenine recognition and local fold organization in the <em>add</em> riboswitch family.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_TPPSC_1M7_0005') {
+    return `TPP Riboswitch is an <em>E. coli</em> thiamine pyrophosphate (TPP) riboswitch construct profiled by SHAPE-Seq to measure how the ligand-sensing RNA folds across its aptamer and expression-platform regions. TPP riboswitches directly bind the coenzyme thiamine pyrophosphate and regulate bacterial gene expression through metabolite-dependent structural rearrangements, making this record a compact model for comparing chemical probing reactivity with a well-studied riboswitch architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  return `${row?.name || 'Untitled record'} is a probing-centered FoldBridge record with a matched tertiary-structure target.`;
+}
+
+function renderStructureDetailReferenceContent(row) {
+  if (row?.foldBridgeId === 'RMDB_ATTR03_DMS_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Accelerated cryo-EM-guided determination of three-dimensional RNA-only structures.</h3>
+          <p class="sequence-detail-reference-authors">Kappel K, Zhang K, Su Z, Watkins AM, Kladwang W, Li S, Pintilie G, Topkar VV, Rangan R, Zheludev IN, Yesselman JD, Chiu W, Das R. (2020)</p>
+          <p class="sequence-detail-reference-source">Nature Methods 17(7):699-707</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/32616928/" target="_blank" rel="noopener noreferrer">PubMed: 32616928</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/s41592-020-0878-9" target="_blank" rel="noopener noreferrer">DOI: 10.1038/s41592-020-0878-9</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 6WLK: Apo ATP-TTR-3 models, 10.0 Angstrom resolution.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the apo ATP-TTR-3 model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/6WLK" target="_blank" rel="noopener noreferrer">RCSB: 6WLK</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb6WLK/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb6WLK/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ18_1M7_0000') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Zika virus produces noncoding RNAs using a multi-pseudoknot structure that confounds a cellular exonuclease.</h3>
+          <p class="sequence-detail-reference-authors">Akiyama BM, Laurence HM, Massey AR, Costantino DA, Xie X, Yang Y, Shi PY, Nix JC, Beckham JD, Kieft JS. (2016)</p>
+          <p class="sequence-detail-reference-source">Science 354:1148-1152</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/27934765/" target="_blank" rel="noopener noreferrer">PubMed: 27934765</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1126/science.aah3963" target="_blank" rel="noopener noreferrer">DOI: 10.1126/science.aah3963</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 5TPY: Crystal structure of an exonuclease resistant RNA from Zika virus.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the Zika virus xrRNA model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5TPY" target="_blank" rel="noopener noreferrer">RCSB: 5TPY</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5TPY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5TPY/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_ATPCON_DMS_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Structural Basis of RNA Folding and Recognition in an AMP-RNA Aptamer Complex.</h3>
+          <p class="sequence-detail-reference-authors">Jiang F, Kumar RA, Jones RA, Patel DJ. (1996)</p>
+          <p class="sequence-detail-reference-source">Nature 382:183-186</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/8700212/" target="_blank" rel="noopener noreferrer">PubMed: 8700212</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/382183a0" target="_blank" rel="noopener noreferrer">DOI: 10.1038/382183a0</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] Computational design of three-dimensional RNA structure and function.</h3>
+          <p class="sequence-detail-reference-authors">Yesselman JD, Eiler D, Carlson ED, Gotrik MR, d'Aquino AE, Ooms AN, Kladwang W, Carlson PD, Shi X, Costantino DA, Herschlag D, Lucks JB, Jewett MC, Kieft JS, Das R. (2019)</p>
+          <p class="sequence-detail-reference-source">Nature Nanotechnology 14(9):866-873</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/31427748/" target="_blank" rel="noopener noreferrer">PubMed: 31427748</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/s41565-019-0517-8" target="_blank" rel="noopener noreferrer">DOI: 10.1038/s41565-019-0517-8</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-3">
+          <h3>[3] RCSB PDB entry 1AM0: AMP-RNA aptamer complex.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the AMP-bound aptamer linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/1AM0" target="_blank" rel="noopener noreferrer">RCSB: 1AM0</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb1AM0/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb1AM0/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_ADDSC_1M7_0007') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Structural Basis for Discriminative Regulation of Gene Expression by Adenine- and Guanine-Sensing mRNAs.</h3>
+          <p class="sequence-detail-reference-authors">Serganov A, Yuan YR, Pikovskaya O, Polonskaia A, Malinina L, Phan AT, Hobartner C, Micura R, Breaker RR, Patel DJ. (2004)</p>
+          <p class="sequence-detail-reference-source">Chemistry &amp; Biology 11(12):1729-1741</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/15610857/" target="_blank" rel="noopener noreferrer">PubMed: 15610857</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.chembiol.2004.11.004" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.chembiol.2004.11.004</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 1Y26: A-riboswitch-adenine complex.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the ligand-bound <em>Vibrio vulnificus</em> adenine riboswitch aptamer linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/1Y26" target="_blank" rel="noopener noreferrer">RCSB: 1Y26</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb1Y26/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb1Y26/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_TPPSC_1M7_0005') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Characterizing RNA structures in vitro and in vivo with selective 2'-hydroxyl acylation analyzed by primer extension sequencing (SHAPE-Seq).</h3>
+          <p class="sequence-detail-reference-authors">Watters KE, Yu AM, Strobel EJ, Settle AH, Lucks JB. (2016)</p>
+          <p class="sequence-detail-reference-source">Methods 103:34-48</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.ymeth.2016.04.002" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.ymeth.2016.04.002</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] Structural basis for gene regulation by a thiamine pyrophosphate-sensing riboswitch.</h3>
+          <p class="sequence-detail-reference-authors">Serganov A, Polonskaia A, Phan AT, Breaker RR, Patel DJ. (2006)</p>
+          <p class="sequence-detail-reference-source">Nature 441:1167-1171</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/16728979/" target="_blank" rel="noopener noreferrer">PubMed: 16728979</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/nature04740" target="_blank" rel="noopener noreferrer">DOI: 10.1038/nature04740</a>
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/7TZS" target="_blank" rel="noopener noreferrer">RCSB: 7TZS</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb7TZS/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb7TZS/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  return `<div class="sequence-detail-reference-card">
+    <p>No curated references are attached to this structure-linked record yet.</p>
   </div>`;
 }
 
@@ -1319,6 +1588,12 @@ function dataAssetPath(fileName) {
   return `./src/assets/data/rmdb-puzzle/${fileName}`;
 }
 
+function normalizeRdatAssetName(value) {
+  const fileName = String(value ?? '').trim().replace(/^.*\//, '');
+  if (!fileName) return '';
+  return fileName.endsWith('.rdat') ? fileName : `${fileName}.rdat`;
+}
+
 function normalizeStructureMatchLabel(value) {
   return String(value ?? '')
     .toLowerCase()
@@ -1332,6 +1607,27 @@ function normalizeStructureMatchLabel(value) {
     .replace(/[^a-z0-9]+/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+function normalizeSpeciesLabel(value) {
+  const text = String(value ?? '').trim();
+  if (!text) return '';
+  const parts = text.split(/\s+/);
+  if (parts.length >= 2 && /\.$/.test(parts[0])) {
+    return `${parts[0]} ${parts[1].toLowerCase()}${parts.length > 2 ? ` ${parts.slice(2).join(' ')}` : ''}`;
+  }
+  return text;
+}
+
+function splitNameAndSpecies(value) {
+  const raw = String(value ?? '').trim();
+  if (!raw) return { name: '', species: '' };
+  const parts = raw.split(/\s*,\s*/);
+  if (parts.length < 2) return { name: raw, species: '' };
+  return {
+    name: parts[0].trim(),
+    species: normalizeSpeciesLabel(parts.slice(1).join(', '))
+  };
 }
 
 function parseScientificValue(value) {
@@ -1358,18 +1654,39 @@ const puzzleDiscoveryYears = new Map([
   ['rna puzzle 18', '2016']
 ]);
 
-const predictedStructureIds = new Set([
-  'RMDB_RNAPZ5_HRF_0001',
-  'RMDB_RNAPZ11_STD_0002',
-  'RMDB_RNAPZ14_HRF_0002',
-  'RMDB_RNAPZ18_1M7_0000'
+const predictedStructureIds = new Set(generatedPredictedStructureIds);
+
+const curatedStructureOverrides = new Map([
+  [
+    'RMDB_RNAPZ18_1M7_0000',
+    {
+      sourceStructure: '....(((((((((....)))).(((((((.[[[[..)))))))..)))))...]]]](((((....)))))',
+      species: 'Zika virus'
+    }
+  ],
+  [
+    'RMDB_ATTR03_DMS_0001',
+    {
+      discoveryYear: '2020',
+      species: 'Synthetic construct'
+    }
+  ],
+  [
+    'RMDB_ATPCON_DMS_0001',
+    {
+      discoveryYear: '1996',
+      species: 'Synthetic construct'
+    }
+  ],
+  [
+    'RMDB_TPPSC_1M7_0005',
+    {
+      discoveryYear: '2016'
+    }
+  ]
 ]);
 
-const rnaComposerPredictedStructureIds = new Set([
-  'RMDB_RNAPZ5_HRF_0001',
-  'RMDB_RNAPZ11_STD_0002',
-  'RMDB_RNAPZ18_1M7_0000'
-]);
+const rnaComposerPredictedStructureIds = new Set(generatedRnaComposerPredictedStructureIds);
 
 function predictedStructureDescription(foldBridgeId) {
   if (rnaComposerPredictedStructureIds.has(foldBridgeId)) {
@@ -1504,6 +1821,9 @@ function buildStructureEntryRows(rows) {
       };
     })
     .sort((a, b) => {
+      const dotBracketDiff = Number(Boolean(String(b.sourceStructure || '').trim())) - Number(Boolean(String(a.sourceStructure || '').trim()));
+      if (dotBracketDiff !== 0) return dotBracketDiff;
+
       const secondaryStructureDiff = Number(structureHasSecondaryStructure(b)) - Number(structureHasSecondaryStructure(a));
       if (secondaryStructureDiff !== 0) return secondaryStructureDiff;
 
@@ -1522,13 +1842,107 @@ function formatBlastPercent(value) {
 }
 
 function structureHasSecondaryStructure(row) {
-  if (row?.hasLocalRdat) return true;
   return /[().[\]{}<>]/.test(String(row?.sourceStructure || ''));
 }
 
 function formatBlastEvalue(value) {
   if (value === null || value === undefined || value === '') return 'N/A';
-  return String(value);
+  const numeric = Number(value);
+  if (!Number.isFinite(numeric)) return String(value);
+  if (numeric === 0) return '0.00';
+  if (/e/i.test(String(value)) || Math.abs(numeric) < 0.01 || Math.abs(numeric) >= 100) {
+    return numeric.toExponential(2).replace('e+', 'e');
+  }
+  return numeric.toFixed(2);
+}
+
+function normalizeSequenceForMetrics(sequence) {
+  return String(sequence ?? '')
+    .toUpperCase()
+    .replace(/T/g, 'U')
+    .replace(/[^AUGC]/g, '');
+}
+
+function parseStructurePairs(structure) {
+  const openToClose = { '(': ')', '[': ']', '{': '}', '<': '>' };
+  const closeToOpen = Object.fromEntries(Object.entries(openToClose).map(([open, close]) => [close, open]));
+  const stacks = Object.fromEntries(Object.keys(openToClose).map((key) => [key, []]));
+  const pairs = new Map();
+
+  String(structure ?? '')
+    .replace(/\s+/g, '')
+    .split('')
+    .forEach((char, index) => {
+      if (openToClose[char]) {
+        stacks[char].push(index);
+        return;
+      }
+      const opener = closeToOpen[char];
+      if (!opener || !stacks[opener].length) return;
+      const partner = stacks[opener].pop();
+      pairs.set(index, partner);
+      pairs.set(partner, index);
+    });
+
+  return pairs;
+}
+
+function countStructureStems(structure) {
+  const pairs = parseStructurePairs(structure);
+  const seen = new Set();
+  let stemCount = 0;
+
+  [...pairs.keys()]
+    .filter((index) => index < pairs.get(index))
+    .sort((a, b) => a - b)
+    .forEach((left) => {
+      if (seen.has(left)) return;
+      stemCount += 1;
+      let currentLeft = left;
+      let currentRight = pairs.get(left);
+      while (pairs.get(currentLeft) === currentRight) {
+        seen.add(currentLeft);
+        seen.add(currentRight);
+        currentLeft += 1;
+        currentRight -= 1;
+      }
+    });
+
+  return stemCount;
+}
+
+function parseSequenceLength(sequenceText) {
+  return normalizeSequenceForMetrics(sequenceText).length || 0;
+}
+
+function estimateGlobalFoldSimilarity(row, secondaryStructure) {
+  if (!predictedStructureIds.has(row?.foldBridgeId) || !structureHasSecondaryStructure(row)) {
+    return { label: 'Unavailable', note: 'Predicted 3D model or secondary-structure constraints are missing.' };
+  }
+
+  const identity = Number(row?.bestIdentity) || 0;
+  const coverage = Number(row?.bestCoverage) || 0;
+  const stemCount = countStructureStems(secondaryStructure);
+  const sequenceLength = parseSequenceLength(row?.sourceSequence || row?.sequence || '');
+
+  if (identity >= 95 && coverage >= 95 && stemCount >= 4 && sequenceLength >= 80) {
+    return { label: 'High', note: 'Estimated from very strong sequence match, full coverage, and a well-defined multi-stem fold.' };
+  }
+  if (identity >= 85 && coverage >= 80 && stemCount >= 3) {
+    return { label: 'Medium', note: 'Estimated from good sequence match and a secondary structure likely to preserve the global topology.' };
+  }
+  return { label: 'Exploratory', note: 'Use visual comparison only; the current constraints are weaker for claiming a shared global fold.' };
+}
+
+function applyCuratedStructureOverrides(row) {
+  if (!row?.foldBridgeId) return row;
+  const override = curatedStructureOverrides.get(row.foldBridgeId);
+  if (!override) return row;
+  return {
+    ...row,
+    ...override,
+    sourceStructure: override.sourceStructure ?? row.sourceStructure
+  };
 }
 
 function renderPdbExternalLink(pdbId) {
@@ -1624,16 +2038,19 @@ function inferModifierFromSupplementRow(row) {
 function buildSupplementStructureRows(rows, existingIds = new Set()) {
   return rows
     .map((row) => {
-      const sourceStem = trimRdatSuffix(row.source_file);
-      const foldBridgeId = `RMDB_${sourceStem}`;
-      if (!sourceStem || existingIds.has(foldBridgeId)) return null;
+      const explicitFoldBridgeId = String(row.foldbridge_id ?? row.foldBridgeId ?? '').trim();
+      const sourceStem = trimRdatSuffix(row.source_file || explicitFoldBridgeId.replace(/^(?:RMDB|RASP)_/, ''));
+      const foldBridgeId = explicitFoldBridgeId || (sourceStem ? `RMDB_${sourceStem}` : '');
+      if (!foldBridgeId || existingIds.has(foldBridgeId)) return null;
 
       const sequenceLength = String(row.source_sequence_length ?? '').trim();
       const sequenceText = String(row.source_sequence ?? '').trim();
+      const nameParts = splitNameAndSpecies(row.source_name || '');
 
       return {
         foldBridgeId,
-        name: row.source_name || '',
+        name: nameParts.name || row.source_name || '',
+        species: nameParts.species || '',
         discoveryYear: '',
         sequence: sequenceText && sequenceLength ? `${sequenceText} (${sequenceLength}nt)` : sequenceText,
         length: sequenceLength ? `${sequenceLength}nt` : '',
@@ -1650,8 +2067,10 @@ function buildSupplementStructureRows(rows, existingIds = new Set()) {
         bestIdentity: row.pident || '',
         bestCoverage: row.qcovs || '',
         structureDatasetGroup: normalizeStructureDataset(row.dataset),
-        rdatPath: '',
-        hasLocalRdat: false,
+        rdatPath: normalizeRdatAssetName(row.source_file || sourceStem)
+          ? dataAssetPath(normalizeRdatAssetName(row.source_file || sourceStem))
+          : '',
+        hasLocalRdat: Boolean(normalizeRdatAssetName(row.source_file || sourceStem)),
         sourceStructure: String(row.source_structure ?? '').trim(),
         sourceSequence: sequenceText
       };
@@ -1839,14 +2258,20 @@ async function ensureCaseDetailLoaded(caseId) {
 
 async function loadBrowseEntryRows() {
   try {
-    const [summaryResponse, supplementResponse] = await Promise.all([
+    const [summaryResponse, supplementResponse, resultsResponse] = await Promise.all([
       fetch(dataAssetPath('rdat_summary.csv')),
-      fetch(dataAssetPath('structure_page_supplement.tsv'))
+      fetch(dataAssetPath('structure_page_supplement.tsv')),
+      fetch(dataAssetPath('structure_page_results.tsv'))
     ]);
     if (!summaryResponse.ok) throw new Error('Failed to load RDAT summary');
     if (!supplementResponse.ok) throw new Error('Failed to load structure supplement');
+    if (!resultsResponse.ok) throw new Error('Failed to load structure results supplement');
 
-    const [summaryText, supplementText] = await Promise.all([summaryResponse.text(), supplementResponse.text()]);
+    const [summaryText, supplementText, resultsText] = await Promise.all([
+      summaryResponse.text(),
+      supplementResponse.text(),
+      resultsResponse.text()
+    ]);
     const [header, ...records] = parseCsv(summaryText);
     if (!header?.length) {
       browseEntryRows = [];
@@ -1858,12 +2283,14 @@ async function loadBrowseEntryRows() {
     browseEntryRows = records.map((record) => {
       const row = Object.fromEntries(header.map((key, index) => [key, record[index] ?? '']));
       const matchKey = normalizeStructureMatchLabel(row.Name || '');
+      const nameParts = splitNameAndSpecies(row.Name || '');
       const blastMatches = blastMatchIndex.get(matchKey) || [];
       const bestMatch = blastMatches.reduce((best, candidate) => choosePreferredBlastHit(best, candidate), null);
       const pdbIds = [...new Set(blastMatches.map((item) => item.pdbId).filter(Boolean))].sort();
       return {
         foldBridgeId: row['FoldBridge ID'] || '',
-        name: row.Name || '',
+        name: nameParts.name || row.Name || '',
+        species: nameParts.species || '',
         discoveryYear: puzzleDiscoveryYears.get(matchKey) || 'N/A',
         sequence: row.Sequence || '',
         length: row.Length || '',
@@ -1885,8 +2312,11 @@ async function loadBrowseEntryRows() {
       };
     });
     const existingIds = new Set(browseEntryRows.map((row) => row.foldBridgeId).filter(Boolean));
-    const supplementRows = buildSupplementStructureRows(parseTsv(supplementText), existingIds);
-    browseEntryRows = [...browseEntryRows, ...supplementRows];
+    const supplementRows = [
+      ...buildSupplementStructureRows(parseTsv(supplementText), existingIds),
+      ...buildSupplementStructureRows(parseTsv(resultsText), existingIds)
+    ];
+    browseEntryRows = [...browseEntryRows, ...supplementRows].map(applyCuratedStructureOverrides);
     structureEntryRows = buildStructureEntryRows(browseEntryRows);
   } catch (error) {
     console.error(error);
@@ -3370,17 +3800,23 @@ function structureDetailPdbUrl(pdbId, subjectId = '') {
 
 function predictedStructurePath(foldBridgeId) {
   if (!predictedStructureIds.has(foldBridgeId)) return '';
-  return `./src/assets/predicted-structures/${foldBridgeId.replace(/^RMDB_/, '')}.pdb`;
+  const stem = foldBridgeId.replace(/^RMDB_/, '');
+  if (rnaComposerPredictedStructureIds.has(foldBridgeId)) {
+    return `./src/assets/predicted-structures/${stem}.rnacomposer.pdb`;
+  }
+  return `./src/assets/predicted-structures/${stem}.pdb`;
 }
 
 function structureDetailPage() {
   const foldBridgeId = getStructureRecordIdFromHash();
   const row = structureEntryRows.find((item) => item.foldBridgeId === foldBridgeId);
-  const linkedCase = row?.bestPdbId ? case3dRows.find((item) => item.pdbId === row.bestPdbId) : null;
   const detailSequence = String(row?.sourceSequence || row?.sequence || '').replace(/\s*\(\d+nt\)$/i, '');
+  const detailSequenceLength = detailSequence.replace(/\s+/g, '').length;
   const detailSecondaryStructure = String(row?.sourceStructure || '').trim();
   const hasSecondaryStructureConstraints = structureHasSecondaryStructure(row);
   const showPredictedStructureSection = predictedStructureIds.has(row?.foldBridgeId) || hasSecondaryStructureConstraints;
+  const showReactivityHeatmap = Boolean(row?.hasLocalRdat && row?.rdatPath);
+  const showPredictedStructureViewer = predictedStructureIds.has(row?.foldBridgeId);
 
   if (!row) {
     return `<main class="page-sequence-detail">
@@ -3398,26 +3834,6 @@ function structureDetailPage() {
       </section>
     </main>`;
   }
-
-  const alternatePdbMarkup = row.pdbIds.length
-    ? row.pdbIds
-        .map((pdbId) => `<span class="search-filter-pill ${pdbId === row.bestPdbId ? 'is-active' : ''}">${pdbId}</span>`)
-        .join('')
-    : '<span class="search-filter-pill">No alternate PDB IDs</span>';
-  const relatedRecordsMarkup = (row.relatedRecords || [row])
-    .map(
-      (record) => `<tr>
-        <td>${record.foldBridgeId}</td>
-        <td>${record.fileCode || 'N/A'}</td>
-        <td>${record.experimentType || 'N/A'}</td>
-        <td>${record.modifier || 'N/A'}</td>
-      </tr>`
-    )
-    .join('');
-
-  const linkedCaseAction = linkedCase
-    ? `<a class="download-outline-btn structure-detail-action-link" href="#case-detail?case=${encodeURIComponent(linkedCase.pdbId)}">Open bundled 3D case</a>`
-    : '<span class="browse-pagination-status">No bundled PDB case is available yet for this matched record.</span>';
 
   return `<main class="page-sequence-detail">
     ${renderBundleHeader()}
@@ -3440,33 +3856,27 @@ function structureDetailPage() {
       <section class="sequence-detail-panel">
         <h2>Description</h2>
         <div class="sequence-detail-placeholder">
-          <p>${row.name || 'Untitled record'} is a probing-centered FoldBridge record with a matched tertiary-structure target.</p>
+          <p>${renderStructureDetailDescription(row)}</p>
         </div>
       </section>
 
       <section class="sequence-detail-panel">
-        <h2>Sequence</h2>
+        <h2>Sequence${detailSequenceLength ? ` (${detailSequenceLength} nt)` : ''}</h2>
         <article class="case-sequence-card">
-          <code class="case-sequence-block">${detailSequence ? renderColoredSequence(detailSequence) : 'Sequence unavailable'}</code>
-          ${
-            hasSecondaryStructureConstraints
-              ? `<div id="structure-detail-sequence-structure-block">
-                   <p class="case-sequence-structure-label">Secondary structure</p>
-                   <code id="structure-detail-sequence-structure" class="case-sequence-structure">${detailSecondaryStructure || 'Loading secondary structure…'}</code>
-                 </div>`
-              : ''
-          }
+          <code class="case-sequence-block case-sequence-block-formatted">${detailSequence ? renderFormattedDetailSequence(detailSequence) : 'Sequence unavailable'}</code>
         </article>
       </section>
 
-      <section class="sequence-detail-panel">
-        <h2>Secondary Structure</h2>
-        ${
-          row.hasLocalRdat || row.sourceStructure
-            ? `<section class="sequence-secondary-card sequence-secondary-forna-card">
+      ${
+        hasSecondaryStructureConstraints
+          ? `<section class="sequence-detail-panel">
+              <h2>Secondary Structure</h2>
+              <div class="sequence-detail-section-intro">
+                <p>This panel shows the RNA secondary structure derived from the packaged dot-bracket annotation and rendered as an interactive 2D layout.</p>
+              </div>
+              <section class="sequence-secondary-card sequence-secondary-forna-card">
                 <div class="sequence-detail-forna-copy">
-                  <h3>RNA Secondary Structure Viewer (Forna)</h3>
-                  <p>Secondary structure representation generated with Forna module.</p>
+                  <p class="sequence-detail-forna-title">RNA Secondary Structure Viewer (Forna)</p>
                 </div>
                 <div class="sequence-detail-forna-frame">
                   <div
@@ -3478,87 +3888,119 @@ function structureDetailPage() {
                     data-structure="${row.sourceStructure || ''}"
                   ></div>
                 </div>
-                <p id="structure-detail-forna-status" class="sequence-detail-forna-note">Loading secondary structure viewer…</p>
-              </section>`
-            : `<div class="sequence-detail-placeholder">
-                <p>This imported structure entry is listed on the structure page, but its secondary structure is not available.</p>
-              </div>`
-        }
-      </section>
-
-      ${
-        showPredictedStructureSection
-          ? `<section class="sequence-detail-panel">
-              <h2>Predicted 3D from secondary structure</h2>
-              <div class="sequence-detail-placeholder">
-                <p>${predictedStructureDescription(row.foldBridgeId)}</p>
-              </div>
-              ${
-                predictedStructureIds.has(row.foldBridgeId)
-                  ? `<div class="sequence-detail-media">
-                      <div id="predicted-structure-detail-molstar-status" class="mini-note">Loading predicted 3D model…</div>
-                      <div
-                        id="predicted-structure-detail-molstar"
-                        class="sequence-detail-viewer"
-                        data-structure-url="${predictedStructurePath(row.foldBridgeId)}"
-                        data-structure-format="pdb"
-                        data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
-                        data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                        data-structure-source="${rnaComposerPredictedStructureIds.has(row.foldBridgeId) ? 'rnacomposer' : 'local-fallback'}"
-                      ></div>
-                    </div>`
-                  : `<div class="sequence-detail-placeholder">
-                      <p>Predicted 3D model is not available yet for this record.</p>
-                    </div>`
-              }
+                <div id="structure-detail-sequence-structure-block" class="sequence-detail-dot-bracket-block">
+                  <p class="case-sequence-structure-label">Dot-bracket notation</p>
+                  <code
+                    id="structure-detail-sequence-structure"
+                    class="case-sequence-structure"
+                    data-sequence="${detailSequence || ''}"
+                    data-chunk-size="120"
+                  >${renderAlignedSequenceStructure(detailSequence, detailSecondaryStructure)}</code>
+                </div>
+                <p id="structure-detail-forna-status" class="sequence-detail-forna-note" hidden></p>
+              </section>
             </section>`
           : ''
       }
 
-      <section class="sequence-detail-panel">
-        <h2>Tertiary Structure</h2>
-        <div class="sequence-detail-placeholder">
-          <p>The experimentally resolved tertiary structure linked through the matched PDB record is shown below.</p>
-        </div>
-        ${
-          row.bestPdbId
-            ? `<div class="sequence-detail-media">
-                <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
+      ${
+        showReactivityHeatmap
+          ? `<section class="sequence-detail-panel">
+              <h2>Reactivity Heatmap</h2>
+              <div class="sequence-detail-section-intro">
+                <p>This heatmap summarizes per-position chemical probing reactivity across the RDAT measurements, helping relate experimental signal to structural context.</p>
+              </div>
+              <section class="sequence-secondary-card sequence-secondary-heatmap-card structure-detail-heatmap-card">
                 <div
-                  id="structure-detail-molstar"
-                  class="sequence-detail-viewer"
-                  data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
-                  data-structure-format="cif"
-                  data-structure-label="${row.bestPdbId}"
-                  data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                  data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
+                  id="structure-detail-heatmap"
+                  class="sequence-secondary-heatmap-host"
+                  data-rdat-url="${row.rdatPath}"
                 ></div>
-              </div>`
-            : `<div class="sequence-detail-placeholder">
-                <p>No matched PDB structure is available for this record.</p>
-              </div>`
-        }
-      </section>
+                <p id="structure-detail-heatmap-status" class="mini-note" hidden></p>
+              </section>
+            </section>`
+          : ''
+      }
+
+      ${
+        hasSecondaryStructureConstraints && (showPredictedStructureSection || row.bestPdbId)
+          ? `<section class="sequence-detail-panel">
+              <h2>Tertiary Structure Comparison</h2>
+              <div class="sequence-detail-section-intro">
+                <p>Compare the secondary-structure-derived RNA model with the matched experimental PDB structure side by side.</p>
+              </div>
+              <div class="structure-detail-comparison-grid">
+                <section class="structure-detail-comparison-card">
+                  <div class="structure-detail-comparison-copy">
+                    <h3>Predicted 3D from dot-bracket</h3>
+                  </div>
+                  ${
+                    showPredictedStructureViewer
+                      ? `<div class="sequence-detail-media">
+                          <div id="predicted-structure-detail-molstar-status" class="mini-note">Loading predicted 3D model…</div>
+                          <div
+                            id="predicted-structure-detail-molstar"
+                            class="sequence-detail-viewer"
+                            data-structure-url="${predictedStructurePath(row.foldBridgeId)}"
+                            data-structure-format="pdb"
+                            data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
+                            data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                            data-structure-source="${rnaComposerPredictedStructureIds.has(row.foldBridgeId) ? 'rnacomposer' : 'local-fallback'}"
+                          ></div>
+                        </div>`
+                      : `<div class="sequence-detail-placeholder">
+                          <p>Predicted 3D model is not available yet for this record.</p>
+                        </div>`
+                  }
+                </section>
+                <section class="structure-detail-comparison-card">
+                  <div class="structure-detail-comparison-copy">
+                    <h3>Matched PDB tertiary structure</h3>
+                  </div>
+                  ${
+                    row.bestPdbId
+                      ? `<div class="sequence-detail-media">
+                          <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
+                          <div
+                            id="structure-detail-molstar"
+                            class="sequence-detail-viewer"
+                            data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
+                            data-structure-format="cif"
+                            data-structure-label="${row.bestPdbId}"
+                            data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                            data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
+                          ></div>
+                        </div>`
+                      : `<div class="sequence-detail-placeholder">
+                          <p>No matched PDB structure is available for this record.</p>
+                        </div>`
+                  }
+                </section>
+              </div>
+            </section>`
+          : row.bestPdbId
+            ? `<section class="sequence-detail-panel">
+                <h2>Tertiary Structure</h2>
+                <div class="sequence-detail-media">
+                  <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
+                  <div
+                    id="structure-detail-molstar"
+                    class="sequence-detail-viewer"
+                    data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
+                    data-structure-format="cif"
+                    data-structure-label="${row.bestPdbId}"
+                    data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                    data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
+                  ></div>
+                </div>
+              </section>`
+            : ''
+      }
 
 
-      <section class="sequence-detail-panel">
-        <h2>Related FoldBridge Records</h2>
-        <div class="sequence-detail-placeholder">
-          <p>This representative row stands in for the related probing records below that belong to the same puzzle group.</p>
-        </div>
-        <div class="entry-table-wrap">
-          <table class="entry-table case-detail-table related-records-table">
-            <thead>
-              <tr>
-                <th>FoldBridge ID</th>
-                <th>File code</th>
-                <th>Experiment type</th>
-                <th>Modifier</th>
-              </tr>
-            </thead>
-            <tbody>${relatedRecordsMarkup}</tbody>
-          </table>
-        </div>
+      <section class="sequence-detail-panel" id="references">
+        <h2>References</h2>
+        ${renderStructureDetailReferenceContent(row)}
       </section>
 
     </section>
@@ -3701,6 +4143,7 @@ function downloadStructuresPage() {
             </td>
             <td><a href="${row.detailPage}" class="sequence-link">${row.foldBridgeId}</a></td>
             <td>${row.name || 'Untitled record'}</td>
+            <td>${row.species || 'N/A'}</td>
             <td>${row.discoveryYear || 'N/A'}</td>
             <td><span class="entry-sequence" title="${row.sequence || 'Sequence unavailable'}">${row.sequence || 'N/A'}</span></td>
             <td>${renderPdbExternalLink(row.bestPdbId)}</td>
@@ -3710,7 +4153,7 @@ function downloadStructuresPage() {
           </tr>`
         )
         .join('')
-    : `<tr><td colspan="9" class="entry-table-empty">No structure matches yet.</td></tr>`;
+    : `<tr><td colspan="10" class="entry-table-empty">No structure matches yet.</td></tr>`;
 
   return `<main class="page-download">
     ${renderBundleHeader()}
@@ -3753,6 +4196,7 @@ function downloadStructuresPage() {
               <th>Select</th>
               <th>FoldBridge ID</th>
               <th>Name</th>
+              <th>Species</th>
               <th>Discovery year</th>
               <th>Sequence</th>
               <th>PDB ID</th>
@@ -4239,6 +4683,7 @@ function render(options = {}) {
   initSequenceDetailMolstar();
   initSequenceDetailSecondaryHeatmap();
   initStructureDetailSecondaryForna();
+  initStructureDetailSecondaryHeatmap();
   initStructureDetailMolstar();
   initPredictedStructureDetailMolstar();
   initAnimatedStats();
@@ -4281,6 +4726,17 @@ document.addEventListener('click', () => {
       isSubnavMenuOpen = false;
       route = normalizeRoute(el.getAttribute('data-route'));
       window.location.hash = route;
+    });
+  });
+
+  document.querySelectorAll('[data-scroll-target]').forEach((el) => {
+    el.addEventListener('click', (event) => {
+      event.preventDefault();
+      const targetId = el.getAttribute('data-scroll-target');
+      if (!targetId) return;
+      const target = document.getElementById(targetId);
+      if (!target) return;
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 
@@ -4354,6 +4810,9 @@ window.addEventListener('hashchange', () => {
     caseDetailSequencePage = 1;
   }
   render();
+  requestAnimationFrame(() => {
+    window.scrollTo(0, 0);
+  });
 });
 
 

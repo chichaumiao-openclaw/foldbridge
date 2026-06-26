@@ -854,15 +854,30 @@ function syncStructureDetailSecondaryText(structure = '') {
   const code = document.getElementById('structure-detail-sequence-structure');
   if (!block || !code) return;
 
+  const sequence = String(code.dataset.sequence || '').replace(/\s+/g, '').trim();
   const cleanStructure = String(structure).replace(/\s+/g, '').trim();
-  if (!cleanStructure) {
+  const chunkSize = Math.max(1, Number(code.dataset.chunkSize) || 120);
+  if (!cleanStructure || !sequence || cleanStructure.length !== sequence.length) {
     block.hidden = true;
-    code.textContent = '';
+    code.innerHTML = '';
     return;
   }
 
+  const rows = [];
+  for (let index = 0; index < cleanStructure.length; index += chunkSize) {
+    rows.push(cleanStructure.slice(index, index + chunkSize));
+  }
+
   block.hidden = false;
-  code.textContent = cleanStructure;
+  code.innerHTML = rows
+    .map((row) => {
+      const chars = row
+        .split('')
+        .map((structureChar) => `<span class="case-sequence-structure-char">${structureChar}</span>`)
+        .join('');
+      return `<span class="case-sequence-row case-sequence-structure-row">${chars}</span>`;
+    })
+    .join('');
 }
 
 export async function initSecondaryStructureModule() {
@@ -921,10 +936,12 @@ export async function initStructureDetailSecondaryForna() {
         structure: cleanStructure
       });
       container.addCustomColorsText(buildFornaCustomColorsText(cleanSequence));
-      status.textContent = `Forna secondary structure loaded from ${foldBridgeId}.`;
+      status.hidden = true;
+      status.textContent = '';
       return;
     } catch (_error) {
       host.innerHTML = '';
+      status.hidden = false;
       status.textContent = 'Forna failed to load for this record.';
       return;
     }
@@ -958,10 +975,12 @@ export async function initStructureDetailSecondaryForna() {
 
     container.addRNA(config.structure, config);
     container.addCustomColorsText(buildFornaCustomColorsText(config.sequence));
-    status.textContent = `Forna secondary structure loaded from ${foldBridgeId}.`;
+    status.hidden = true;
+    status.textContent = '';
   } catch (_error) {
     syncStructureDetailSecondaryText('');
     host.innerHTML = '';
+    status.hidden = false;
     status.textContent = 'Forna failed to load for this RDAT record.';
   }
 }
@@ -1267,6 +1286,8 @@ function parseRdatMatrix(text) {
   const rowLabels = [];
   const reactivityRows = [];
   const errorRows = [];
+  const annotationLabels = [];
+  const annotationTypes = [];
   let colLabels = [];
 
   for (const rawLine of lines) {
@@ -1277,8 +1298,34 @@ function parseRdatMatrix(text) {
       const [, indexPart = ''] = line.split(':');
       const cols = line.split('\t').filter(Boolean);
       const mutationCol = cols.find((entry) => entry.startsWith('mutation:'));
+      const chemicalCol = cols.find((entry) => entry.startsWith('chemical:'));
       const index = Number(indexPart.split(/\s+/)[0]);
-      rowLabels[index - 1] = mutationCol ? mutationCol.replace('mutation:', '') : `Row ${index}`;
+      annotationLabels[index - 1] = mutationCol
+        ? mutationCol.replace('mutation:', '')
+        : chemicalCol
+          ? chemicalCol.replace('chemical:', '')
+          : cols.slice(1).join(' | ') || `Row ${index}`;
+      annotationTypes[index - 1] = 'REACTIVITY';
+    } else if (line.startsWith('DATA_ANNOTATION:')) {
+      const [, indexPart = ''] = line.split(':');
+      const cols = line.split('\t').filter(Boolean);
+      const index = Number(indexPart.split(/\s+/)[0]);
+      const datatypeCol = cols.find((entry) => entry.startsWith('datatype:')) || '';
+      const idCol = cols.find((entry) => entry.startsWith('ID:'));
+      const mutationCol = cols.find((entry) => entry.startsWith('mutation:'));
+      const chemicalCol = cols.find((entry) => entry.startsWith('chemical:'));
+      const modifierCol = cols.find((entry) => entry.startsWith('modifier:'));
+      const datatype = datatypeCol.replace('datatype:', '');
+      annotationTypes[index - 1] = datatype;
+      annotationLabels[index - 1] = mutationCol
+        ? mutationCol.replace('mutation:', '')
+        : chemicalCol
+          ? chemicalCol.replace('chemical:', '')
+          : idCol
+            ? idCol.replace('ID:', '')
+            : modifierCol
+              ? modifierCol.replace('modifier:', '')
+              : cols.slice(1).join(' | ') || `Row ${index}`;
     } else if (line.startsWith('SEQPOS')) {
       colLabels = line.split('\t').slice(1).filter(Boolean);
     } else if (line.startsWith('REACTIVITY_ERROR:')) {
@@ -1292,15 +1339,46 @@ function parseRdatMatrix(text) {
     } else if (line.startsWith('REACTIVITY:')) {
       const [, indexPart = ''] = line.split(':');
       const index = Number(indexPart.split(/\s+/)[0]);
+      rowLabels[index - 1] = annotationLabels[index - 1] || `Row ${index}`;
       reactivityRows[index - 1] = line
         .split('\t')
         .slice(1)
         .filter(Boolean)
         .map((value) => Number.parseFloat(value));
+    } else if (line.startsWith('DATA:')) {
+      const [, indexPart = ''] = line.split(':');
+      const index = Number(indexPart.split(/\s+/)[0]);
+      const values = line
+        .split('\t')
+        .slice(1)
+        .filter(Boolean)
+        .map((value) => Number.parseFloat(value));
+      const annotationType = String(annotationTypes[index - 1] || '').toUpperCase();
+      const label = annotationLabels[index - 1] || `Row ${index}`;
+
+      if (annotationType.startsWith('REACTIVITY_ERROR')) {
+        errorRows.push(values);
+      } else if (annotationType.startsWith('REACTIVITY')) {
+        rowLabels.push(label);
+        reactivityRows.push(values);
+      }
     }
   }
 
-  return { rowLabels, colLabels, reactivityRows, errorRows };
+  const compactRows = reactivityRows
+    .map((values, index) => ({
+      label: rowLabels[index] || `Row ${index + 1}`,
+      values,
+      error: errorRows[index]
+    }))
+    .filter((entry) => Array.isArray(entry.values) && entry.values.length);
+
+  return {
+    rowLabels: compactRows.map((entry) => entry.label),
+    colLabels,
+    reactivityRows: compactRows.map((entry) => entry.values),
+    errorRows: compactRows.map((entry) => entry.error || [])
+  };
 }
 
 function formatHeatmapLabel(label) {
@@ -1318,6 +1396,10 @@ export async function initSequenceDetailSecondaryHeatmap() {
   const rdatUrl = host.dataset.rdatUrl;
   if (!rdatUrl) return;
 
+  await renderRdatHeatmap(host, status, rdatUrl);
+}
+
+async function renderRdatHeatmap(host, status, rdatUrl) {
   try {
     const response = await fetch(rdatUrl);
     if (!response.ok) throw new Error('Failed to load RDAT');
@@ -1325,14 +1407,14 @@ export async function initSequenceDetailSecondaryHeatmap() {
     const parsed = parseRdatMatrix(text);
     const labelGap = 10;
     const leftLabelBand = 28;
-    const rightLabelBand = 64;
+    const rightLabelBand = 108;
     const topLabelBand = 58;
     const bottomLabelBand = 28;
     const rows = parsed.reactivityRows.length;
     const cols = parsed.colLabels.length;
     const hostWidth = Math.floor(host.getBoundingClientRect().width || host.clientWidth || 0);
-    const availableWidth = Math.min(760, Math.max(620, hostWidth - 28));
-    const cellSize = Math.min(12, Math.max(8, Math.floor((availableWidth - leftLabelBand - rightLabelBand) / cols)));
+    const availableWidth = Math.max(620, hostWidth - 12);
+    const cellSize = Math.min(16, Math.max(8, Math.floor((availableWidth - leftLabelBand - rightLabelBand) / cols)));
     const width = leftLabelBand + cols * cellSize + rightLabelBand;
     const height = topLabelBand + rows * cellSize + bottomLabelBand;
 
@@ -1340,16 +1422,21 @@ export async function initSequenceDetailSecondaryHeatmap() {
       <div class="sequence-secondary-heatmap-scroll">
         <div class="sequence-secondary-heatmap-stage">
           <canvas class="sequence-secondary-heatmap-canvas"></canvas>
-          <div class="sequence-secondary-heatmap-tooltip" hidden></div>
         </div>
       </div>
     `;
 
     const canvas = host.querySelector('canvas');
-    const tooltip = host.querySelector('.sequence-secondary-heatmap-tooltip');
     const stage = host.querySelector('.sequence-secondary-heatmap-stage');
     const ctx = canvas?.getContext('2d');
-    if (!ctx || !tooltip || !stage) throw new Error('Canvas unavailable');
+    if (!ctx || !stage) throw new Error('Canvas unavailable');
+    let tooltip = document.querySelector('.sequence-secondary-heatmap-tooltip');
+    if (!tooltip) {
+      tooltip = document.createElement('div');
+      tooltip.className = 'sequence-secondary-heatmap-tooltip';
+      tooltip.hidden = true;
+      document.body.appendChild(tooltip);
+    }
     const dpr = window.devicePixelRatio || 1;
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
@@ -1479,8 +1566,14 @@ export async function initSequenceDetailSecondaryHeatmap() {
         <div><span>ERROR</span><strong>${Number.isFinite(error) ? error.toFixed(3) : '—'}</strong></div>
       `;
       tooltip.hidden = false;
-      tooltip.style.left = `${Math.min(x + 22, width - 210)}px`;
-      tooltip.style.top = `${Math.min(y + 22, height - 150)}px`;
+      const tooltipWidth = 210;
+      const tooltipHeight = 150;
+      const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+      const left = Math.min(event.clientX + 22, viewportWidth - tooltipWidth - 16);
+      const top = Math.min(event.clientY + 22, viewportHeight - tooltipHeight - 16);
+      tooltip.style.left = `${Math.max(12, left)}px`;
+      tooltip.style.top = `${Math.max(12, top)}px`;
     });
 
     stage.addEventListener('mouseleave', () => {
@@ -1488,10 +1581,23 @@ export async function initSequenceDetailSecondaryHeatmap() {
       paint();
     });
 
-    status.textContent = 'Hover any cell to inspect mutation, position, reactivity, and error.';
+    status.hidden = true;
+    status.textContent = '';
   } catch (_error) {
+    status.hidden = false;
     status.textContent = 'Heatmap data could not be loaded.';
   }
+}
+
+export async function initStructureDetailSecondaryHeatmap() {
+  const host = document.getElementById('structure-detail-heatmap');
+  const status = document.getElementById('structure-detail-heatmap-status');
+  if (!host || !status) return;
+
+  const rdatUrl = host.dataset.rdatUrl;
+  if (!rdatUrl) return;
+
+  await renderRdatHeatmap(host, status, rdatUrl);
 }
 
 export function downloadRowsAsCsv(rows, filename = 'sequences.csv') {
