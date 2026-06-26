@@ -147,6 +147,24 @@ export function searchAnnojointRows(rows = [], query = '') {
     .map((entry) => entry.row);
 }
 
+export function isAnnojointSearchActive(query = '') {
+  return foldText(query).length > 0;
+}
+
+// family 激活态默认：RMDB 激活、RASP 未激活（positive_confidence_active_now=false）。
+// 将来 RASP 激活后，传入 activationOverride={ RASP2PDB: true } 即可翻转，无需改渲染。
+const FAMILY_BADGE_LABELS = { RMDB2PDB: 'RMDB', RASP2PDB: 'RASP' };
+const DEFAULT_FAMILY_ACTIVATION = { RMDB2PDB: true, RASP2PDB: false };
+
+export function familyBadgeDescriptor(family = '', activationOverride = {}) {
+  const key = String(family || '').trim();
+  const label = FAMILY_BADGE_LABELS[key] || key || 'unknown';
+  const active = key in activationOverride
+    ? Boolean(activationOverride[key])
+    : Boolean(DEFAULT_FAMILY_ACTIVATION[key]);
+  return { family: key, label, active, note: active ? '' : 'not active' };
+}
+
 export function annojoinExportRow(row = {}) {
   const out = {
     case_id: row.caseId,

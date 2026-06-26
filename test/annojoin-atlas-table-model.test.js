@@ -5,6 +5,8 @@ import {
   annojoinExportRow,
   buildAnnojointTableGroups,
   defaultVisibleAnnojointColumnIds,
+  familyBadgeDescriptor,
+  isAnnojointSearchActive,
   normalizeVisibleAnnojointColumnIds,
   paginateAnnojointRows,
   scoreAnnojointMatch,
@@ -172,4 +174,26 @@ test('searchAnnojointRows returns matches sorted by score, stable within tier, e
   assert.deepEqual(out.map((r) => r.pdbId), ['11DG', '11DGA', 'A11DGZ']);
   assert.equal(searchAnnojointRows(rows, '').length, 3);
   assert.equal(searchAnnojointRows(rows, 'zzz').length, 0);
+});
+
+test('isAnnojointSearchActive true only when query non-empty after trim', () => {
+  assert.equal(isAnnojointSearchActive(''), false);
+  assert.equal(isAnnojointSearchActive('   '), false);
+  assert.equal(isAnnojointSearchActive('11dg'), true);
+});
+
+test('familyBadgeDescriptor marks RASP non-active and RMDB active by default', () => {
+  const rmdb = familyBadgeDescriptor('RMDB2PDB');
+  assert.equal(rmdb.active, true);
+  assert.equal(rmdb.label, 'RMDB');
+  const rasp = familyBadgeDescriptor('RASP2PDB');
+  assert.equal(rasp.active, false);
+  assert.equal(rasp.label, 'RASP');
+  assert.equal(rasp.note, 'not active');
+});
+
+test('familyBadgeDescriptor respects activation override for future RASP activation', () => {
+  const rasp = familyBadgeDescriptor('RASP2PDB', { RASP2PDB: true });
+  assert.equal(rasp.active, true);
+  assert.equal(rasp.note, '');
 });
