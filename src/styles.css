@@ -423,6 +423,10 @@ main.page-sequence-detail {
   border-right: 1px solid var(--border);
 }
 
+.annojoin-case-row.is-in-expanded-group:hover td {
+  background: var(--surfaceAlt);
+}
+
 .annojoin-group-overflow-row td {
   text-align: center;
   background: var(--surfaceAlt);
@@ -453,7 +457,7 @@ main.page-sequence-detail {
 .annojoin-child-group-row button:focus-visible {
   outline: none;
   border-color: var(--accent);
-  background: var(--accentSoft);
+  background: var(--primarySoft);
 }
 
 .annojoin-parent-group-row span,
@@ -590,8 +594,8 @@ main.page-sequence-detail {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   border: none;
   border-radius: 999px;
   background: transparent;
@@ -603,6 +607,13 @@ main.page-sequence-detail {
 .annojoin-filter-chip button[data-annojoin-chip-remove]:hover {
   background: var(--border);
   color: var(--textPrimary);
+}
+
+.annojoin-filter-chip button[data-annojoin-chip-remove]:focus-visible {
+  outline: none;
+  background: var(--border);
+  color: var(--textPrimary);
+  box-shadow: 0 0 0 2px var(--accentSoft);
 }
 
 button[data-annojoin-clear-all] {
