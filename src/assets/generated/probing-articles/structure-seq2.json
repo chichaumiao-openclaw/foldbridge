@@ -1,0 +1,149 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "structure-seq2",
+  "title": "Structure-seq2：把活细胞 DMS 的文库和覆盖度做得更干净",
+  "date": "2026-06-25",
+  "figure_count": 4,
+  "rep_pmid": "28637286",
+  "rep_pmcid": "PMC5737731",
+  "rep_doi": "10.1093/nar/gkx533",
+  "asset_base": "./src/assets/generated/probing-articles/assets/structure-seq2",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只看数据表，Structure-seq2 最容易引人误会的地方，是把“文库更干净、覆盖更全”读成“现在每个碱基都能算、所有高信号都是 DMS 证据”——好像数据质量一升级，可解释的化学靶点也跟着扩大了。这个理解是错的。Structure-seq2 是 Structure-seq（Ding 2014）的升级版：它没有改变化学的本质，而是把文库制备、读出覆盖度和系统偏差做得更干净。它真正报告的，仍然是 A 和 C 在 Watson-Crick 配对面上的化学可及性：A 的 N1、C 的 N3 在没有被配对、没有被蛋白或配体遮挡、也没有被复杂构象保护时更容易被 DMS 甲基化。换句话说，Structure-seq2 首先报告的是一类化学位点在活细胞里是否可及，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”，更不是给 transcriptome-wide 的每个 residue 都贴上同等结构标签。它升级的是工程质量，不是化学靶点。"
+    },
+    {
+      "type": "paragraph",
+      "text": "正因为升级动的是工程而不是化学，这条边界在 FoldBridge 里更要原样守住。因为 Structure-seq2 继承的还是 DMS 的化学，所以它沿用同一条 A/C 靶点边界：信号落在 A/C 上时，反映的是 pairing face 的可及性；G/U 在这种 DMS 读法里本来就不是主要可解释对象。Structure-seq2 的改进——例如带发卡接头的连接、去掉副产物的纯化步骤、更高的去变性（denaturation）覆盖均一性——让数据更可信、覆盖更均匀、偏差更小，但这些改进作用在“信号质量”上，不会扩大“可解释的化学靶点”。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 ANNOCONFIDENCE / FEC positive confidence，raw signal 就必须先经过 assay chemistry 和 readout context 的检查，才能成为默认上色或 confidence 的候选。对 Structure-seq2 来说，这条检查同样从 `DMS_AC_ONLY` 开始，只是被应用在一个文库更干净、覆盖更均一的全转录组数据集上。"
+    },
+    {
+      "type": "heading",
+      "text": "工作流升级：更干净的文库，不变的化学"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-structure-seq2-f1",
+      "alt": "Structure-seq2 F1",
+      "srcBasename": "structureseq2_f1__PMC5737731__F1.jpg",
+      "legend": "**图 1。Structure-seq2 的两个版本与文库改进。** Ritchey et al. 2017（PMID 28637286，DOI `10.1093/nar/gkx533`）的这张流程图把 Structure-seq2 拆开：RNA 先被 DMS 或其他可经逆转录读出的化学试剂修饰，再转换成 cDNA、连上接头、扩增并接入 TruSeq 引物序列，最后用一个定制测序引物上 Illumina NGS。图注（legend）特别用方框标出了相对原始 Structure-seq 协议的多项改进：用发卡接头加 T4 DNA 连接酶做连接，并增加纯化步骤去除一个有害副产物；纯化有两种可选方案——PAGE 纯化（A），或 biotin–streptavidin 磁珠 pull down（B）。",
+      "body": [
+        "这张图最该让读者抓住的一点是：Structure-seq2 升级的是“怎么把修饰干净地变成测序读段”，而不是“它能测的化学位点变多了”。从 RNA 修饰到 cDNA、连接、扩增、测序，整条链路被工程化地打磨过，但起点仍然是 DMS 对 A/C 可及性的化学修饰。对 FoldBridge 来说，这意味着即便文库质量更高，进入数据库的每一行仍然要回到 assay model 去解释：A/C 的信号可以读成可及性线索，但这条线索的强弱依旧受配对、三级结构、蛋白或配体保护、以及测序背景的共同影响。文库更干净，不等于数值免检；它只是让“需要解释的观测量”更可靠地被采集下来。"
+      ],
+      "label": "Structure-seq2 F1",
+      "pmid": "28637286",
+      "pmcid": "PMC5737731",
+      "doi": "10.1093/nar/gkx533",
+      "figureId": "F1",
+      "legendText": "Two versions of Structure-seq2 produce high quality data. In Structure-seq2, RNA (kelly green) is first modified by DMS or another chemical that can be read-out through reverse transcription. The RNA is then prepared for Illumina NGS sequencing by conversion to cDNA (Step 1A/1B, blue), ligating an adaptor (Step 3A/3B), and amplifying the products while incorporating TruSeq primer sequences (Step 5A/5B). In order to increase library quality, numerous improvements were made to the original Structure-seq protocol (boxed). These include performing the ligation with a hairpin adaptor and T4 DNA ligase (Step 3A/3B; pink) ( 10 ), and adding various purification steps to remove a deleterious by-product (Figure 2A ). We present two options for purification: PAGE purification ( A ) or a biotin–streptavidin pull down ( B ). In the PAGE purification method, an additional PAGE purification step is added after reverse transcription (Step 2A). In the biotin–streptavidin pull down method, biotinylated dNTPs (cyan) are incorporated into the extended product during reverse transcription (Step 1B) and are purified via a magnetic streptavidin pull down after reverse transcription (Step 2B) and after ligation (Step 4B). There is also a common, final PAGE purification step following amplification (Step 5A/5B). Finally, a custom sequencing primer (light green) is used during sequencing (Step 7A/7B) to further provide high quality data. Supplementary Figure S1 is a version of this figure with all the nucleotides shown explicitly."
+    },
+    {
+      "type": "heading",
+      "text": "连接偏差更低：减少的是偏差，不是靶点"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-structure-seq2-f2",
+      "alt": "Structure-seq2 F2",
+      "srcBasename": "structureseq2_f2__PMC5737731__F2.jpg",
+      "legend": "**图 2。Structure-seq2 带来更低的连接偏差。** Ritchey et al. 2017（PMID 28637286，DOI `10.1093/nar/gkx533`）的这张图说明了一个具体的偏差来源：逆转录后溶液里仍有过量的 27 nt 引物，它在连接步骤里会和 40 nt 发卡接头连成一个无插入片段的 67 nt 副产物，产生没有利用价值的测序读段（A）。图注（legend）进一步比较了连接偏差：基于 T4 DNA 连接酶的新方法（–DMS 与 +DMS）相比原先基于 Circligase 的方法，显著降低了连接偏差，使四种核苷酸的连接比例更接近理想的转录组分布（B）。",
+      "body": [
+        "这张图把 Structure-seq2 的一个核心改进放到了证据层面：它压低的是 library preparation 引入的系统偏差，让被测到的核苷酸分布更接近真实转录组组成。但要注意，降低连接偏差改善的是“测得的信号有多干净、多有代表性”，而不是“DMS 能解释哪些碱基”。偏差更低，意味着 A/C 上的可及性读数更可信、更少被建库假象污染；它并不会把 G/U 变成可解释的 DMS 靶点。对 FoldBridge 来说，这正是要区分的两件事：质量改进让 raw observation 更值得信任，但 chemistry gate 依然只放行落在 A/C 上的可解释信号。把“连接偏差更低”错读成“现在所有碱基都能算了”，就会把工程进步误当成化学边界的扩张。"
+      ],
+      "label": "Structure-seq2 F2",
+      "pmid": "28637286",
+      "pmcid": "PMC5737731",
+      "doi": "10.1093/nar/gkx533",
+      "figureId": "F2",
+      "legendText": "Structure-seq2 leads to a lower ligation bias. ( A ) After RT (Figure 1 , step 1A/1B), excess of the 27 nt primer (blue, top, right) is still present in the solution. During ligation (Figure 1 , step 3A/3B), this primer can also ligate to the 40 nt hairpin adaptor (pink) to form an unwanted 67 nt by-product which has no insert and so results in sequencing reads with no utility. ( B ) The complement of the first nucleotide after the adaptor sequence read during sequencing is the nucleotide that ligated to the adaptor. Our new T4 DNA ligase-based method (green, –DMS and pink, +DMS) substantially decreases ligation bias as compared to the previous Circligase-based method (blue). Percentages equaling the transcriptomic distribution of the four nucleotides (black) are ideal."
+    },
+    {
+      "type": "heading",
+      "text": "覆盖度更均一：读得到更多区域，靶点边界不变"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-structure-seq2-f3",
+      "alt": "Structure-seq2 F3",
+      "srcBasename": "structureseq2_f3__PMC5737731__F3.jpg",
+      "legend": "**图 3。Structure-seq2 改善覆盖均一性并揭示 25S rRNA 上的 m¹A。** Ritchey et al. 2017（PMID 28637286，DOI `10.1093/nar/gkx533`）的这张图比较了逆转录去变性条件的影响：用原始 Structure-seq 的条件（65°C、无单价盐）时，有些区域完全读不到读段（箭头标注）；提高去变性条件（90°C、加单价盐）后，这些区域得以被读出，低覆盖区域也被收窄，而总读段数相近（A、B）。图注（legend）还指出，25S 中唯一仍读不到的区域下游有一处读段骤降，对应酵母、人和 H. marismortui 中已知的一个 m¹A 位点；该位点在 –DMS 数据里表现为一个精确位置上的高 RT stop 计数（C、D）。",
+      "body": [
+        "这张图说明 Structure-seq2 在覆盖度上的改进：更强的去变性让 RT 能穿过原本读不到的结构区或 GC 富集区，使覆盖更均一，并顺带让一个已知的 m¹A 内源修饰从 RT stop 信号里显现出来。但覆盖更均一改变的是“我们能读到多少位置”，而不是“DMS 在每个位置都能被解释为结构信号”。在新读到的区域里，仍然是 A/C 上的信号才落在 DMS 可解释的范围内；而像 m¹A 这样的内源修饰、或者 –DMS 背景里的 RT stop，恰恰提醒读者：高信号不等于 DMS 探测到的 A/C 可及性，它也可能来自天然修饰、序列组成或读出假象。对 FoldBridge 来说，覆盖度提升让更多 A/C 位点有机会被采样，但每一个新位点在进入默认上色或 confidence 前，仍要先确认它落在可解释的 A/C 靶点上，且没有被内源修饰或背景信号混淆。"
+      ],
+      "label": "Structure-seq2 F3",
+      "pmid": "28637286",
+      "pmcid": "PMC5737731",
+      "doi": "10.1093/nar/gkx533",
+      "figureId": "F3",
+      "legendText": "Structure-seq2 identifies a previously unreported m 1 A in 25S rRNA. ( A ) Using the original Structure-seq method for RT denaturation (65°C with no monovalent salt), there are regions that receive no reads (denoted with arrows). ( B ) Increasing the denaturation conditions (90°C with monovalent salt) allows these regions to be read (denoted with color-matched arrows) and narrows regions of low read depth. Total number of reads is similar in panels a and b. Location of the large drop in reads downstream of the single region in 25S that remains absent of reads (red arrow) corresponds to a site known to contain a m 1 A in yeast, human, and H. marismortui ( C , Supplementary Figure S13 ) ( 16 , 18 ). Reads continue to decrease until they go to zero at nucleotide 539. The region between nucleotides 432 and 644 is 79% GC-rich with a read depth <100 on each nucleotide. ( D ) This site corresponds to a high RT stop count at the precise location in the –DMS data."
+    },
+    {
+      "type": "heading",
+      "text": "RT stop 信号也能定位结构事件，但要分清来源"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-structure-seq2-f4",
+      "alt": "Structure-seq2 F4",
+      "srcBasename": "structureseq2_f4__PMC5737731__F4.jpg",
+      "legend": "**图 4。Structure-seq2 在叶绿体 rRNA 上揭示两个 hidden break。** Ritchey et al. 2017（PMID 28637286，DOI `10.1093/nar/gkx533`）的这张图显示，在叶绿体 rRNA 两个已知存在 hidden break 的位置上，–DMS 的 RT stop 计数出现尖峰。第一个 hidden break 处的尖峰（A）与菠菜和拟南芥已发表的断裂位点相差一个核苷酸，可能源于物种间的轻微序列差异；第二个 hidden break 处的尖峰（B）则精确落在菠菜和拟南芥已发表的切割位点上。图注（legend）把这两个尖峰当作方法能精确定位真实结构事件（链断裂）的证据。",
+      "body": [
+        "这张图把 Structure-seq2 改进后的数据质量推到一个有意思的边界：在 –DMS（也就是没有 DMS 修饰）的对照数据里，RT stop 计数本身也携带信息，能精确定位 RNA 链上的 hidden break。这说明覆盖更干净、定位更准的读出，让结构事件能被精确捕捉。但它同时也是一个清晰的提醒：不是所有有用的尖峰都来自 DMS 的 A/C 化学。hidden break 处的 RT stop 来自链的物理断裂，不是 DMS 对 pairing face 可及性的报告。对 FoldBridge 来说，这正是要在 readout context 里分清的来源问题：同样是“RT stop 信号高”，可能来自 DMS 修饰位点，也可能来自内源修饰、链断裂或序列特征。把这些来源混为一谈，就会把一个 –DMS 背景信号错写成 DMS 支持的 A/C 可及性证据。Structure-seq2 的高质量数据让这些信号更清楚，但也更要求文章把“哪一类信号属于 DMS 可解释证据”讲明白。"
+      ],
+      "label": "Structure-seq2 F4",
+      "pmid": "28637286",
+      "pmcid": "PMC5737731",
+      "doi": "10.1093/nar/gkx533",
+      "figureId": "F4",
+      "legendText": "Structure-seq2 demonstrates the presence of two hidden breaks in chloroplast rRNA. At the two locations known to harbor hidden breaks in chloroplast rRNA, the –DMS RT stop count data spike. The spike at the first hidden break ( A ) differs by one nucleotide from the published break site in spinach and Arabidopsis ( 21 , 28 ), which could be due to the slight sequence variation between species (Arabidopsis: 5′-GGGAGUGAAA*UAGAACA-3′, Rice: 5′-GGGUAGUGAAAU*AGAACG-3′, where * indicates the proposed break site). The spike at the second hidden break ( B ) occurs precisely at the published cleavage site for spinach and Arabidopsis ( 21 , 28 )."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 Structure-seq2"
+    },
+    {
+      "type": "paragraph",
+      "text": "Structure-seq2 是字面意义上的 DMS-based 方法，是 Structure-seq 的升级版，所以它直接继承 `DMS_AC_ONLY` 这条核心规则——升级的是文库质量和覆盖度，不是化学靶点。A/C 是 targetable base；G/U/T/unknown 是 non-target base。G/U/T/unknown 行即使有数字，也只能保留为 raw provenance、debug 信息或下载表字段，不能因为它来自一个更干净、覆盖更均一的实验就自动进入 positive confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "ANNOJOIN 的默认结构图应读取经过 targetability mask 的 `visual_colormap_value`，而不是直接读取原始数值。这样读者在结构页面看到的颜色，才是在 Structure-seq2（即改进版 in vivo DMS）assay model 下可解释的颜色。ANNOCONFIDENCE / FEC 的要求更高：只有通过 assay targetability、mapping、claim 和 context gates 的 A/C 行，才可以进入 positive confidence 候选。这条 chemistry gate 和 DMS、Structure-seq 文章里的完全一致；Structure-seq2 的不同之处在于它的数据更干净、覆盖更全、偏差更低，因此能采到更多 A/C 位点，gate 的工作量更大，纪律性也更不能放松。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱 Structure-seq2。相反，这是尊重它的强项。Structure-seq2 对 A/C pairing face 在活细胞里的可及性测得更干净、更均一、更少偏差；错误发生在把“数据质量更高”读成“现在所有碱基都能算、所有高信号都是 DMS 证据”时。对 Structure-seq2 这种以“更干净”为卖点的方法，FoldBridge 尤其要把“数值更可信”和“数值更可解释”当成两件事来记。文库越干净、覆盖越全，越要把 chemical reactivity、accessibility、base pairing、tertiary protection、protein/ligand protection、内源修饰、链断裂和 sequencing bias 分开来谈。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，Structure-seq2 技术文章不应该只写“我们的文库偏差更低”或“我们的覆盖更均一”。更完整的句子应该写成：在 Structure-seq2 的改进版 in vivo DMS assay 中，该 A/C 位点具有较高可及性信号；如果 mapping、coverage、背景、内源修饰和上下文都通过检查，这个信号可以作为结构解释的支持。强调质量更高不等于解释边界更宽虽然啰嗦，却能避免把更干净的文库误读成对每个碱基的配对判定。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case（示意）"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 Structure-seq2 profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一份 Structure-seq2 profile 流进 FoldBridge：它来自一次改进版 in vivo DMS + 测序实验，文库用 T4 DNA 连接酶的新方法建好、覆盖度因为更强的去变性条件而更均一，覆盖了一条 mRNA 上连续的若干位点。在 ANNOJOIN visual track 里，这条 profile 会被自然地分成两类——落在 A/C 上的位点，和落在 G/U/T 或位置未解析（unresolved）上的位点。前者是 DMS 可解释的靶点，后者则不是。文库更干净、覆盖更全，意味着这两类位点都比上一代采得更完整，但分类标准没有变。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这组划分给读者的结论非常直接：per-position 的 Structure-seq2 observation 不等于 per-position 的 DMS positive support。对 A/C 来说，改进后的活细胞 DMS 可以提供更干净的可及性线索；对 G/U/T/unknown 来说，数值首先是 raw provenance。只有前者在通过 mapping 和 context gates 后，才可能进入 ANNOCONFIDENCE / FEC positive confidence。覆盖度提升带来的额外位点也一样：读到更多区域是好事，但新读到的 A/C 位点同样要过 gate，新读到的非靶点位置同样只是 provenance。"
+    },
+    {
+      "type": "paragraph",
+      "text": "如果把这条 profile 上的所有位点都按原始数值上色，页面看起来会更满，但解释会变差。非靶点位置不应该参与默认 DMS positive signal；位置未解析的行也不能假装已经映射到可靠结构坐标；像 m¹A 这样的内源修饰、或者 hidden break 处的 –DMS RT stop，更不能被当作 DMS 探测到的 A/C 可及性。相反，A/C-targetable 的那一层才是读者第一眼应该看到的 Structure-seq2 层。剩下的行仍然可以在详情里追溯，因为它们对 provenance、调试和再分析有价值，但它们不应该伪装成同一种证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个示意场景真正想说的，不是某个数字，而是同一份 Structure-seq2 profile 在系统里会同时活成三种身份：原始观测、可视化信号和 confidence 候选。这三层各管各的事——原始观测层记录“实验测到了什么”，可视化信号层只显示“在改进版 in vivo DMS 解释边界内能读出什么”，confidence 层只接收通过 gates 的可解释证据。这里还有一层 Structure-seq2 特有的混淆要挡住：质量更高、覆盖更全，很容易让人把“数值更可信”误当成“数值更可解释”。但更干净的文库不会改变信号的来源——一处 m¹A 内源修饰、一个 hidden break 处的 –DMS RT stop，哪怕信号再清晰，也不是 DMS 对 A/C 可及性的报告。一旦科普文章分不清这三层、又分不清这几种信号来源，读者就会把高质量数据里的非 DMS 信号当成 A/C 证据，而这种错读会被更全的覆盖和自动化图层更高效地传播出去。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，Structure-seq2 文章的正确结尾不是“高信号证明该碱基不配对”，也不是“文库更干净、覆盖更全就等于解释了更多碱基”，而是：Structure-seq2 在 Structure-seq 的基础上，把活细胞、transcriptome-wide 的 A/C 可及性读出做得更干净、更均一、更少偏差；在 FoldBridge 中，这种更高质量的线索，依然只有通过 `DMS_AC_ONLY` 和后续 gates 后，才会成为结构解释和 confidence 的一部分。"
+    }
+  ]
+}

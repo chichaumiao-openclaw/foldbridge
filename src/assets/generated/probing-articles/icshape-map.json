@@ -1,0 +1,149 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "icshape-map",
+  "title": "icSHAPE-MaP：在活细胞里把 2′-OH 可及性读成突变",
+  "date": "2026-06-25",
+  "figure_count": 4,
+  "rep_pmid": "34099665",
+  "rep_pmcid": "PMC8184798",
+  "rep_doi": "10.1038/s41467-021-23607-w",
+  "asset_base": "./src/assets/generated/probing-articles/assets/icshape-map",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只看数据表，icSHAPE-MaP 很容易被误读成“逆转录在那里读出了突变，所以那个碱基的配对状态被直接测了出来”。这个理解是错的。icSHAPE-MaP 把活细胞内 2′-OH 酰化和突变图谱（MaP）读出串成一条链：NAI-N3 在体内酰化 2′-OH，逆转录把这些加合物读成测序突变——突变率高低反映的是 2′-OH 可及性，而不是配对真值。它的解释对象，是核糖 2′-OH 在活细胞（in vivo）里的化学可及性与柔性：当一个核苷酸的 2′ 羟基没有被配对、被蛋白或配体遮挡、也没有被复杂构象保护时，它更容易被 NAI-N3 这类酰化试剂修饰。也就是说，icSHAPE-MaP 首先报告的是一类化学位点是否可及，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”。可及性高提示更可能未配对，但这不是配对真值。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里要特别区分它和已有的 icSHAPE 文章。经典 icSHAPE 用 click 化学把酰化位点接上生物素、做亲和富集，再靠逆转录在修饰位点前停下来（RT-stop）读出信号。icSHAPE-MaP 换了读出方式：它沿用活细胞内 2′-OH 酰化，但用突变图谱（MaP）把 2′-OH 上的加合物在逆转录时读成测序突变，而不是 RT-stop。这一步的意义在于绕开 RT-stop 读法固有的偏差——RT-stop 会受过早终止、片段长度和富集效率影响，而 MaP 把每个修饰直接落在比对后的碱基错配上，让单分子里多个修饰都能被记录。这条边界对 FoldBridge 很关键：FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 confidence 层，就必须先问一个更具体的问题：这个数字在 icSHAPE-MaP 的 assay model 下能不能被解释为 2′-OH 可及性支持？原始突变计数是 raw provenance；它必须先通过 assay 化学、background/readout 上下文，才能成为默认结构颜色或 confidence 的候选。"
+    },
+    {
+      "type": "heading",
+      "text": "icSHAPE-MaP 的化学与读出链条：酰化 2′-OH，再用突变图谱读出"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-icshape-map-f1",
+      "alt": "icSHAPE-MaP F1",
+      "srcBasename": "icshapemap_f1__PMC8184798__F1.jpg",
+      "legend": "**图 1。icSHAPE-MaP 的流程、突变谱与单碱基可及性读出。** Luo et al. 2021（PMID 34099665，DOI `10.1038/s41467-021-23607-w`）的图注（legend）把 icSHAPE-MaP 拆成几个环节：(a) icSHAPE-MaP 的整体流程示意；(b) 人 5S rRNA 在 DMSO 对照（灰色）与 NAI-N3 处理（红色）下的突变谱；(c) 5S rRNA 的二级结构模型及每个碱基的 icSHAPE-MaP 分数，不同颜色代表不同分数区间，灰色表示该位点缺少分数；(d) 四种碱基在 DMSO、in vivo 与 in vitro 样本中突变率的箱线图，箱线图以中位数（橙色横线）、25/75 百分位（箱体边界）与 1.5 倍四分位距（须）表示；(e) 两次重复之间 NAI-N3 突变率 Pearson 相关系数的累积分布曲线，每条线对应不同的读取覆盖度。",
+      "body": [
+        "这张图把 icSHAPE-MaP 的增量讲清楚了：它不是凭空给每个碱基贴标签，而是先用化学把“2′-OH 可及”这件事变成可以测序的突变信号。NAI-N3 酰化 2′-OH，逆转录把加合物读成错配，比对后这些错配就成了每个位点的突变率——再减去 DMSO 背景，才接近真正的可及性度量。和经典 icSHAPE 的 RT-stop 读法相比，MaP 让单分子里的多个修饰都落在错配上、各自被记录，而不是只在第一个修饰处终止。b 图里 NAI-N3 样本相对 DMSO 的突变率抬升，正是这条化学链条的直接证据。",
+        "d 图尤其值得停留：它把 DMSO、in vivo 与 in vitro 三种条件下四种碱基的突变率分开来看。这提醒读者两件事。第一，背景（DMSO）本身有不可忽略的突变率，所以可及性必须是“处理减背景”之后的量，而不是裸的突变计数。第二，同一段 RNA 在活细胞和试管里的可及性会不同，因为活细胞里有蛋白、有离子、有拥挤构象。对 FoldBridge 来说，这意味着 icSHAPE-MaP 信号不能脱离“在哪种条件下测的”来解释，raw provenance 必须带着 assay context 一起保存。e 图的重复相关性随覆盖度上升而变好，则说明这是一个有统计前提的 readout：低覆盖位点的可及性数值不应被当成同等可靠的结构线索。"
+      ],
+      "label": "icSHAPE-MaP F1",
+      "pmid": "34099665",
+      "pmcid": "PMC8184798",
+      "doi": "10.1038/s41467-021-23607-w",
+      "figureId": "F1",
+      "legendText": "a Flowchart of the icSHAPE-MaP protocol. b DMSO (gray) and NAI-N 3 (red) mutation profiles of human 5S rRNA. c The secondary structure model and icSHAPE-MaP score for each base of 5S rRNA, with different colors representing different range of scores. Gray color indicates a missing score. d Box plot of mutation rates of four bases in DMSO ( n = 3156, 3493, 2978, or 3411, respectively), in vivo ( n = 2871, 3229, 4002, or 4671, respectively), and in vitro samples ( n = 3117, 3485, 3049, or 3539, respectively). Box plots are shown with median (orange horizontal line), 25th and 75th percentiles (box edges), and 1.5-fold of the interquartile range (whiskers). e The cumulative distribution curve for the Pearson correlation coefficient of NAI-N 3 mutation rates between two replicates. Each line represents a different read coverage with different colors. Source data are provided as a Source Data file."
+    },
+    {
+      "type": "heading",
+      "text": "把可及性接到生物学：富集少量 RNA，也能照见功能结构"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-icshape-map-f2",
+      "alt": "icSHAPE-MaP F2",
+      "srcBasename": "icshapemap_f2__PMC8184798__F2.jpg",
+      "legend": "**图 2。RIP-icSHAPE-MaP 与 pre-miRNA 结构推断。** Luo et al. 2021（PMID 34099665，DOI `10.1038/s41467-021-23607-w`）的图注（legend）展示：(a) RIP-icSHAPE-MaP 的流程示意；(b) 带 icSHAPE-MaP 分数的、被 Dicer 富集的不同类型 RNA 数目环形图；(c) 表达量最高的 150 个 pre-miRNA 的相对表达柱状图（mapped reads 除以 RNA 长度），绿色为有 icSHAPE-MaP 分数者，棕色为没有者；(d) 对 GtRNAdb 数据库 209 个 tRNA 二级结构，icSHAPE-MaP 分数的 ROC 曲线下面积（AUC）小提琴图；(e) hsa-miR-125a 的二级结构模型与 icSHAPE-MaP 分数，上方用 RNAStructure 以 icSHAPE-MaP 分数为约束建模，下方来自 miRBase；(f) 用或不用 icSHAPE-MaP 分数作约束所建 pre-miRNA 结构模型差异的热图，紫色框表示在实验推断结构中为单链、在 miRBase 中为配对，橙色框相反，青色框表示两模型中都配对但配对对象不同，灰色框表示两模型结构一致；(g) 基于 miRBase 预测（蓝）或 icSHAPE-MaP（绿）的 pre-miRNA 末端环长度分布小提琴图，p 值由双侧配对 t 检验确定。",
+      "body": [
+        "这张图说明 icSHAPE-MaP 的 MaP 读出有一个很实际的好处：它对低丰度 RNA 也能给出可用信号。配合 RIP（先把 Dicer 结合的 RNA 富集出来），即便是表达量不高的 pre-miRNA、tRNA 也能拿到逐位点的可及性。c 图里有相当一部分 pre-miRNA 拿到了分数，d 图里 icSHAPE-MaP 分数对 tRNA 已知结构的 AUC 明显偏高，都在说同一件事：这套可及性谱确实和真实结构相关。",
+        "但要小心读出 e、f、g 想表达的边界。把 icSHAPE-MaP 分数当约束建出来的结构，和数据库里的注释结构有系统性差异——尤其在末端环长度上。这不等于“实验一定对、数据库一定错”，而是说可及性提供的是结构约束，不是结构判定。f 图里紫色与橙色框标的是“单链 vs 配对”的不一致；对 FoldBridge 来说，这类位点恰恰是最该写清限定的地方：icSHAPE-MaP 报告该位点 2′-OH 更可及或更不可及，至于它最终是否配对，要由建模与上下文共同决定，而不是由单个分数直接拍板。"
+      ],
+      "label": "icSHAPE-MaP F2",
+      "pmid": "34099665",
+      "pmcid": "PMC8184798",
+      "doi": "10.1038/s41467-021-23607-w",
+      "figureId": "F2",
+      "legendText": "a Flowchart of the RIP-icSHAPE-MaP protocol. b Ring diagram of the number of different types of Dicer-enriched RNAs in different colors with icSHAPE-MaP scores. c Bar plot of the relative expression level of the top 150 pre-miRNAs, calculated as the number of mapped reads divided by the RNA length. The green bars denote the pre-miRNAs with icSHAPE-MaP scores, and the brown bars indicate those without icSHAPE-MaP scores. d Violin plot of Area Under ROC Curves (AUCs) of icSHAPE-MaP scores for 209 tRNA secondary structures from the GtRNAdb database. e The secondary structure models and icSHAPE-MaP scores of hsa-miR-125a. The structure on the top was modeled using the RNAStructure software with icSHAPE-MaP scores as constraints; the structure on the bottom is from the miRBase database. f A Heatmap highlighting differences between secondary structure models of pre-miRNAs built with or without icSHAPE-MaP scores as constraints. Purple boxes indicate that these nucleotides are single-stranded in the experimentally inferred structures but are base-paired in the structures from the miRBase; orange boxes indicate the opposite. Cyan boxes indicate that these nucleotides are based paired in both structural models, but with different pairing counterparts. Gray boxes indicate those nucleotide positions with identical structures in both models, either single-stranded or base-paired with the same counterparts. g A violin plot showing the length distribution of the terminal loop for pre-miRNAs based on the structural models from miRBase prediction (blue) or icSHAPE-MaP (green). p Values were determined with a two-sided paired Student’s t test. Violin plots show the median (white circle), 25/75 percentiles, and the smallest/largest values within 1.5 times the interquartile range above/below quartiles. Source data are provided as a Source Data file."
+    },
+    {
+      "type": "heading",
+      "text": "可及性谱能给底物分群——但分群是模式，不是配对真值"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-icshape-map-f3",
+      "alt": "icSHAPE-MaP F3",
+      "srcBasename": "icshapemap_f3__PMC8184798__F3.jpg",
+      "legend": "**图 3。基于 icSHAPE-MaP 可及性谱的 Dicer 底物分群。** Luo et al. 2021（PMID 34099665，DOI `10.1038/s41467-021-23607-w`）的图注（legend）说明：(a) 用每个中心环两侧 30 nt 的 icSHAPE-MaP 分数做 PCA，PC1（10.2%）与 PC2（6.8%）的散点图，点色代表 RNA 类别，透明点表示未被 Dicer RIP 富集，K-means 把所有 RNA 分成三个簇并用不同背景色标出；(b) PCA 中各位置对 PC1、PC2 权重的热图；(c) Dicer 底物 icSHAPE-MaP 分数热图，每列标出簇 ID、RNA 类别、icSHAPE-MaP 分数、富集分数与 Dicer 切割分数；(d) 各簇代表性 RNA 的 icSHAPE-MaP 分数谱（左）与卡通图（右）；(e) 三个簇中 RNA 的富集分数、Dicer 切割分数与 AGO2 IP 富集的 sRNA 表达量小提琴图，p 值由双侧配对 t 检验确定；(f) in vitro dicing assay 验证选出的若干 snoRNA 是 Dicer 切割底物，实验重复两次结果一致。",
+      "body": [
+        "这张图展示了 icSHAPE-MaP 的一种聚合用法：把许多 RNA 的逐位点可及性谱拿来做 PCA 和聚类，结果三个簇与 Dicer 富集、切割活性、下游 sRNA 表达都有对应关系。换句话说，可及性谱里携带了和功能相关的结构模式，而不只是噪声。f 图的 in vitro 验证进一步把计算分群落到了生化层面。",
+        "对 FoldBridge 来说，这张图提示一个容易被夸大的解读方向。PCA、K-means 这类降维聚类得到的是“可及性模式的相似性”，它有助于发现规律，但它不是逐碱基的配对判定。一个 RNA 落进某个簇，说明它的可及性谱整体上像那一类底物，不等于其中某个位点“一定配对”或“一定单链”。把簇标签直接翻译成碱基级结构真值，正是 icSHAPE-MaP 文章要避免的误读。FoldBridge 引用这类结果时，应当写成“该 RNA 的 icSHAPE-MaP 可及性谱与某类 Dicer 底物相似”，而把碱基级判断留给通过完整 gate 的可视化与 confidence 层。"
+      ],
+      "label": "icSHAPE-MaP F3",
+      "pmid": "34099665",
+      "pmcid": "PMC8184798",
+      "doi": "10.1038/s41467-021-23607-w",
+      "figureId": "F3",
+      "legendText": "a Scatter plot of PC1 (10.2%) and PC2 (6.8%) in the PCA analysis using icSHAPE-MaP scores of 30 nt flanking each of the center loops. The dot color indicates its RNA category. Transparent dots suggest that they are not enriched by Dicer RIP. K-means clustering divides all RNAs into three clusters with different background colors. b Heatmap of the weights of each position for PC1 and PC2 in the PCA analysis. c Heatmap of icSHAPE-MaP scores of Dicer substrates. For each column, the cluster ID, RNA category, icSHAPE-MaP scores, enrichment score, and Dicer cleavage score are indicated. d icSHAPE-MaP score profiles (left) and cartoon diagrams (right) for representative RNAs of each cluster are shown. e Violin plots of enrichment scores (left, n = 91, 99, or 43, respectively), Dicer cleavage scores (middle, n = 91, 99, or 43, respectively), and sRNA expression level enriched by AGO2 IP in HEK293T cells (right, n = 87, 76, or 33, respectively) for RNAs in the three clusters of Dicer substrates. p values were determined with a two-sided paired Student’s t test. Violin plots show the median (white circle), 25/75 percentiles, and the smallest/largest values within 1.5 times the interquartile range above/below quartiles. f In vitro dicing assay validated selected snoRNAs as Dicer cleavage substrates. The experiment was repeated two times with similar results. Source data are provided as a Source Data file."
+    },
+    {
+      "type": "heading",
+      "text": "从可及性到三维距离：解释越深，越要标清来源"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-icshape-map-f4",
+      "alt": "icSHAPE-MaP F4",
+      "srcBasename": "icshapemap_f4__PMC8184798__F4.jpg",
+      "legend": "**图 4。icSHAPE-MaP 约束的三维结构与 Dicer 切割位点选择。** Luo et al. 2021（PMID 34099665，DOI `10.1038/s41467-021-23607-w`）的图注（legend）说明：(a) 计算成熟 miRNA 及其 pre-miRNA 臂空间距离的流程卡通；(b) pre-miRNA 3p 臂上 Dicer 切割位点与其 3′ 端空间距离的箱线图，每个箱代表 Rosetta 预测的每条 pre-miRNA 前 50 个三维结构，pre-miRNA 按注释长度分三组，p 值由双侧非配对 t 检验确定并经 FDR 校正；(c) RIP-icSHAPE-MaP 得到的多条 Dicer 切割位点选择规则之间逻辑关系的维恩图；(d) 约 20 nt sRNA-Seq 显示 pre-miR-217 变体 3p 臂上 Dicer 切割位点选择的一致性，标出各 isoform 的相对表达与距离，变体上的核苷酸替换标红，可能对应 5′ 端的首个核苷酸标绿，部分核苷酸由 in vitro SHAPE 评估的 NAI-N3 反应性以彩点表示（高/中/低反应性分别为红/橙/黑）；(e) in vitro dicing assay 确认 Dicer 对 (d) 中切割位点选择的直接作用，实验重复三次结果一致；(f) 散点图显示 D3p_miRNA 接近 59 Å 的 isoform 表达相对更高；(g) sRNA northern blot 显示 miR-217-5p isoform 长度的异质性，以 mmu-miR-124-1-3p 和 has-miR-15b-5p 作上样对照，实验重复三次结果一致。",
+      "body": [
+        "这张图把 icSHAPE-MaP 的解释链条推到最远的一端：从逐位点可及性，到二级结构约束，再到 Rosetta 三维建模，最后落到“切割位点到 3′ 端约 59 Å 的空间距离”这样一个几何规则。它很漂亮地说明，活细胞里的可及性谱可以一路喂进结构建模，并和 Dicer 切割、isoform 表达对应起来。",
+        "但功能解释越漂亮，越要把不同来源的证据分清楚。b、f 里的“空间距离”不是直接测出来的，而是从可及性约束、二级结构、再到三维预测层层推导出来的——每一层都带着自己的假设和误差。d 图里还混进了 in vitro SHAPE 的反应性彩点，那是试管条件下的另一套测量，不能和 in vivo 的 icSHAPE-MaP 分数当成同一个量。对 FoldBridge 来说，这正是必须保留 assay context 的原因：同一页面上可能同时出现 in vivo 可及性、in vitro 反应性、预测的三维距离，它们的可信度和解释边界各不相同。把它们混成一句“此处结构如何”，就会把推断当成观测，把试管当成活细胞。正确的写法是分层标注每个数字的来源与条件。"
+      ],
+      "label": "icSHAPE-MaP F4",
+      "pmid": "34099665",
+      "pmcid": "PMC8184798",
+      "doi": "10.1038/s41467-021-23607-w",
+      "figureId": "F4",
+      "legendText": "a Cartoon shows the computational pipeline to calculate the spatial distance for mature miRNAs and their arms of pre-miRNAs. b Box plots of spatial distance between Dicer cleavage site on 3p arm of pre-miRNAs and their 3′ end. Each box represents the top 50 3D structures of each pre-miRNA predicted by the Rosetta software. Pre-miRNAs are divided into three groups with the number of annotated nucleotides in length with different colors. p Values were determined with a two-sided unpaired Student’s t test and were adjusted by their false discovery rate (FDR). Boxplots show the median (orange horizontal line), 25th and 75th percentiles (box edges), and 1.5-fold of the interquartile range (whiskers). c A Venn diagram shows all logical relations between different rules of Dicer cleavage-site selection on pre-miRNAs obtained by RIP-icSHAPE-MaP. d sRNA-Seq for ~20-nt long RNAs indicates a consistency for Dicer cleavage-site selection on 3p arms of pre-miR-217 variants, based on their spatial distance. The relative expression level and distance are shown for each isoform (shown as a blunt-ended line). The nucleotide substitutions on pre-miR217 variants are colored in red. The first nucleotides which may correspond to 5′ end of pre-miR-217 isoforms are colored in green. Reactivity to NAI-N 3 , assessed by in vitro SHAPE analysis, are shown as colored dots for select nucleotides. The reactivity is defined as the ratio of darkness quantified by Image J between the NAI-N 3 (−) and NAI-N 3 (+) sample of the gel. High reactivity (ratio > 1.6), medium reactivity (1.2 < ratio ≤ 1.6) or low reactivity (ratio ≤ 1.2) are denoted as red, orange or black points. e In vitro Dicing assay confirms Dicer’s direct role on cleavage-site selection shown in panel ( d ). The experiment was repeated three times with similar results. f Scatter plot indicating that the isoforms having D 3p_miRNA closer to 59 Å will yield relatively higher expression, compared to their counterparts outside this distance range. g sRNA northern blots showing the heterogeneity in the lengths of the miR-217-5p isoforms. mmu-miR-124-1-3p and has-miR-15b-5p were used to show approximately equal loading. The experiment was repeated three times with similar results. Source data are provided as a Source Data file."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 icSHAPE-MaP"
+    },
+    {
+      "type": "paragraph",
+      "text": "icSHAPE-MaP 和 DMS 不一样，它没有“A/C 可解释、G/U 不可解释”的清晰碱基靶点边界——它的靶点是核糖 2′-OH，原则上每个核苷酸都有 2′-OH。所以 icSHAPE-MaP 的解释闸门不是“哪个碱基能上色”，而是一个面向 2′-OH 可及性的多级 gate：化学靶点可达性（这个位点的 2′-OH 是否在当前文库里被有效酰化并被 MaP 读出）、readout 上下文（突变率是否减过 DMSO 背景、覆盖度是否足够、是否做过缩放与归一化）、以及 mapping 与 claim gate（坐标是否可靠、是否在该实验条件下成立）。这里和经典 icSHAPE 的关键差别要写明：icSHAPE-MaP 的原始信号是逐位点突变率，而不是 RT-stop 计数；MaP 读出避开了 RT-stop 偏差，但它本身也有自己的背景（DMSO 突变率）和覆盖度前提，同样需要校正。"
+    },
+    {
+      "type": "paragraph",
+      "text": "只有同时通过这些 gate 的可及性，才能进入默认可视化和 confidence 层。原始突变计数本身只是 provenance：它该被完整保存、可下载、可追溯，但不应该自动驱动默认结构上色。ANNOJOIN 的默认结构图应读取经过 background 校正与 targetability 处理后的可视化值，而不是裸的突变率。confidence / FEC 的要求更高：只有通过化学、readout、mapping、claim 与 context gate 的可及性观测，才可以成为 positive confidence 的候选。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱 icSHAPE-MaP，而是尊重它的强项。icSHAPE-MaP 对活细胞 2′-OH 可及性非常有力，尤其在低丰度 RNA 和需要单分子多修饰信息的场景里；错误发生在把“可及性下降”一律写成“配对”，或把 raw 突变率写成结构真值时。即使 MaP 在单条 read 上保留了多处修饰，FoldBridge 也要把“某个位点测到了突变”和“这个突变率能作为柔性证据”分开。网页上的默认颜色回答“在 icSHAPE-MaP 解释边界内，这个位点有什么可读信号”；详情表才回答“原始数据里记录了什么”。一旦把这两层混在一起，单分子 read 上记下的多处突变就会被当成 icSHAPE-MaP 已经认证的结构判断。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case：一份 icSHAPE-MaP profile 会怎样流过三个图层（示意）"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 icSHAPE-MaP profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一份在人源细胞里、经 RIP 富集后测得的 icSHAPE-MaP profile 进入 FoldBridge。第一层是 raw observation：逐位点的突变率、对应的 DMSO 对照突变率、读取覆盖度、文库元数据、测序坐标——这些都原样保存，作为 provenance，可下载、可重算。它们记录的是“低丰度 RNA 上读到了多少突变”，还不是这个位点的柔性结论。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第二层是 visual signal：突变率减去 DMSO 背景、按覆盖度筛过、做 0 到 1 缩放、通过 mapping 与 readout gate 之后，得到可以在结构页面上色的 2′-OH 可及性值。读者第一眼看到的颜色应该来自这一层，因为它是在 icSHAPE-MaP assay model 下可解释的颜色，而不是裸的突变计数。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第三层是 confidence candidate：只有那些既通过化学与 readout gate、又通过 mapping/claim/context 检查的可及性观测，才进入 confidence 评估，并且仍要带着“可及性反映 2′-OH 柔性、提示未配对而非配对真值”这一限定。覆盖度不足、或只在某一条件下成立的位点，不应被当成同等强度的证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个示意场景的价值在于把 click 富集加 MaP 突变读出这条组合链落到系统行为上：同一份 icSHAPE-MaP profile 可以同时产出原始观测、可视化信号和 confidence 候选，但这三者停在不同的解释深度上。icSHAPE-MaP 的科普文章如果把这三层混成一层，读者就会把“逆转录读到了突变”直接当成“配对状态已定”，进而误读 FoldBridge 的结构图。MaP 避开了 RT-stop 偏差，却没有取消“突变率反映 2′-OH 可及性、提示未配对而非配对真值”这条限定；越是自动上色，越要把这条和覆盖度前提写在颜色旁边。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，icSHAPE-MaP 文章的正确结尾不是“低信号证明该碱基配对”，而是：icSHAPE-MaP 能为 RNA structure interpretation 提供有力的 in vivo 2′-OH 可及性线索，并且用 MaP 读出避开了 RT-stop 偏差；在 FoldBridge 中，这种线索只有先作为 raw provenance 保存、再通过化学与 readout、mapping、claim、context 等 gate 之后，才会成为默认结构解释和 confidence 的一部分。"
+    }
+  ]
+}

@@ -1,0 +1,149 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "iclaser",
+  "title": "icLASER：在活细胞里读嘌呤 C8 的溶剂可及性",
+  "date": "2026-06-25",
+  "figure_count": 4,
+  "rep_pmid": "34634799",
+  "rep_pmcid": "PMC8599799",
+  "rep_doi": "10.1093/nar/gkab885",
+  "asset_base": "./src/assets/generated/probing-articles/assets/iclaser",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只看数据表，icLASER 很容易被当成 SHAPE 或 DMS 的又一个等价物，仿佛它也在读配对面、可以和它们的数值直接合并。这个理解是错的。icLASER（in-cell Light Activated Structural Examination of RNA）不是用配对/不配对去标注每一个 residue，而是用一束 LASER 驱动的光催化反应，在活细胞里对 solvent-accessible purines 的 C8 位点做 acylation（C8 amidation），再用 RT-stop sequencing 读出来。也就是说，它报告的是“嘌呤 C8 这个化学位点在细胞内是否溶剂可及”，这和 SHAPE 探测的 2′-OH、或 DMS 探测的 Watson-Crick 配对面，是不同的化学靶点。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界对 FoldBridge 很关键。icLASER 的 purine-C8 accessibility 是它自己的 assay model：原始 RT-stop 信号可以被保存、也可以在网页上展示，但只要进入默认结构上色、解释性文字或 confidence 层，就必须先问一个具体问题——这个数字在 icLASER 的 chemistry targetability 和 readout context 下能不能被解释为 icLASER 支持？正因为如此，FoldBridge 不能把 icLASER 的信号和 SHAPE、DMS 的信号当成等价物直接合并；它们 in-cell + 测序的框架相似，但化学目标不同。"
+    },
+    {
+      "type": "heading",
+      "text": "icLASER 与 icSHAPE：同一框架，不同化学靶点"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-iclaser-f1",
+      "alt": "icLASER F1",
+      "srcBasename": "iclaser_f1__F1.jpg",
+      "legend": "**图 1。icLASER 与 icSHAPE 的并置工作流。** Wolf et al. 2021（PMID 34634799，DOI `10.1093/nar/gkab885`）把 icSHAPE 与 icLASER 放在同一张示意图里比较：（A）两者的化学处理流程；（B）两者可以整合进同一套 transcriptome-wide 的 library preparation 方法；（C）用于 copper-free “click” 反应的 dibenzylcyclooctyne biotin（DBCO biotin）结构；（D）azido-modified structure probe 与 DBCO biotin 的最终产物结构。图注（legend）传递的关键点是：icLASER 与 icSHAPE 的 readout 流程高度相似，但化学靶点不同——icLASER 打的是嘌呤 C8，icSHAPE 打的是 2′-OH。",
+      "body": [
+        "这张图点出一件事：icLASER 和 icSHAPE 共享 in-cell 处理加测序建库的整体框架，所以它们的数据表看起来可能很像。但相似的流程不等于相同的化学含义。icLASER 报告的是 purine C8 的溶剂可及性，icSHAPE 报告的是 2′-OH 的柔性。两者是 complementary，但不是 equivalent。",
+        "对 FoldBridge 来说，这正是不能把两套信号默默合并的原因。即使 icLASER 与 icSHAPE 走同一条建库流程、产出格式相近的数值，它们背后的 chemistry targetability 也不一样。把 icLASER 的 C8 信号和 icSHAPE 的 2′-OH 信号混进同一个默认图层，等于抹掉了“这个数字在问哪一类化学位点”这一最关键的解释前提。"
+      ],
+      "label": "icLASER F1",
+      "pmid": "34634799",
+      "pmcid": "PMC8599799",
+      "doi": "10.1093/nar/gkab885",
+      "figureId": "F1",
+      "legendText": "Schematic for icSHAPE and icLASER. ( A ) Chemical protocol for icSHAPE ( 10 ) and icLASER. ( B ) Protocol for library preparation for icSHAPE and icLASER, which could be integrated in the same protocol method for RNA structure probing, transcriptome-wide. ( C ) Chemical structure of dibenzylcyclooctyne biotin (DBCO biotin) used for copper-free ‘click’ reaction with azido-modified structure probes. ( D ) Chemical structure of the final product between azido-modified structure probes and DBCO biotin."
+    },
+    {
+      "type": "heading",
+      "text": "双功能探针：在嘌呤 C8 上做 amidation"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-iclaser-f2",
+      "alt": "icLASER F2",
+      "srcBasename": "iclaser_f2__F2.jpg",
+      "legend": "**图 2。icLASER 的双功能探针与 C8 amidation 化学。** Wolf et al. 2021（PMID 34634799，DOI `10.1093/nar/gkab885`）展示了为 icLASER 开发的 bi-functional probe：（A）LASER 的反应示意，利用 NAz 在嘌呤 C8 上完成 amidation；（B）探针 NAz-N₃ 的合成路线；（C）NAz-N₃ 及对照探针的结构，用于 UV-VIS 光谱与光激活分析；（D、E）这些化合物的 UV-VIS 光谱及用于 NAz-N₃ 光激活的长波长；（F）NAz-N₃ 修饰 RNA 的 streptavidin-HRP dot blot，RNA 在长波长 UV 下与 NAz-N₃ 孵育，沉淀后用 SPAAC 连上 biotin 再 blot；（G、H）modified SAM-I 对照 RNA 的变性凝胶电泳与积分信号，富集后的 cDNA stop 对应 NAz-N₃ 修饰位点；（I）富集位点的分析。图注（legend）的核心是：icLASER 的探针通过 LASER 在嘌呤 C8 位点做 amidation，从而标记溶剂可及的嘌呤。",
+      "body": [
+        "这张图把 icLASER 的化学靶点讲清楚了：它报告的是嘌呤 C8 的溶剂可及性，这是 icLASER 独有的 chemistry targetability。C8 在嘌呤环上朝向溶剂的一侧，当嘌呤暴露、没有被配对、堆叠、蛋白或配体遮挡时更容易被光催化 acylation。",
+        "因此最终数据表里的数值，不是探针直接给出的“结构标签”，而是 C8 修饰、富集、逆转录、建库、比对和归一化之后的观测量。对 FoldBridge 来说，这意味着即便信号很强，它首先回答的也是“这个嘌呤的 C8 是否可及”，而不是“这个碱基一定不配对”。一个嘌呤位点的低 C8 信号可能来自配对，也可能来自堆叠、三级结构或蛋白结合，需要上下文才能判断。非嘌呤位点在这套化学里本来就不是主要可解释对象。"
+      ],
+      "label": "icLASER F2",
+      "pmid": "34634799",
+      "pmcid": "PMC8599799",
+      "doi": "10.1093/nar/gkab885",
+      "figureId": "F2",
+      "legendText": "Development of a bi-functional probe for icLASER. ( A ) Reaction schematic for LASER, with C8 amidation utilizing NAz. ( B ) Synthetic scheme for the probe NAz-N 3 . ( C ) Structure of NAz-N 3 and control probes for analysis of UV-VIS spectroscopy and light activation. ( D ) UV–VIS spectra of compounds from panel C. ( E ) Zoomed in UV-Vis spectra and corresponding wavelength used for light-activation of NAz-N 3 and control compounds in panel C. ( F ) Streptavin-HRP dot blot of NAz-N 3 -modified RNA. RNA was incubated with NAz-N 3 in the presence of long-wavelength UV light. RNA was precipitated and conjugated with biotin using SPAAC, as denoted in Figure 1 . Following SPAAC, RNA was blotted. ( G ) Denaturing gel electrophoresis of modified SAM-I control RNA with NAz or NAz-N 3 . RNA was incubated with NAz-N 3 in the presence of long-wavelength UV light. RNA was precipitated and conjugated with biotin using SPAAC. RNA was then enriched over magnetic streptavidin beads and eluted. Eluted RNA was reverse transcribed with 32 P labeled primer and cDNA analyzed on denaturing gel. Ratio of full-length cDNA to modification was calculated against position 82 in the denaturing gel to demonstrate de-enrichment of the full length in comparison to the enriched modified position. ( H ) Integrated signal from panel G, for cDNA stops due to NAz-N 3 modification of SAM-I RNA. NAz-N 3 . ( I ) Analysis of enriched positions from panel F."
+    },
+    {
+      "type": "heading",
+      "text": "RT-stop 比较：互补但不等价"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-iclaser-f3",
+      "alt": "icLASER F3",
+      "srcBasename": "iclaser_f3__F3.jpg",
+      "legend": "**图 3。icLASER 与 icSHAPE 的 RT-stop 对比。** Wolf et al. 2021（PMID 34634799，DOI `10.1093/nar/gkab885`）在同一个 RNA 元件上比较了两种探针的 RT-stop 谱：（A）heavy chain ferritin 相关 IRE 的 icSHAPE profile（基因组坐标为 7 号染色体 45459777–45459811）；（B）同一 IRE 的 icLASER profile；（C、D）把 icSHAPE 与 icLASER 数据分别叠加到 IRE 二级结构上；（E、F）把两种探针的 differential reactivity 分别叠加到 IRE/IRP 复合物的 PDB 模型上（PDB ID 3SNP）。图注（legend）说明：用 RT-stop 谱比较时，icLASER 与 icSHAPE 在同一 RNA 上给出互补但不相同的可及性信息。",
+      "body": [
+        "这张图把“互补不等于等价”落到了具体数据上。同一段 IRE，icSHAPE 看到的是 2′-OH 柔性的分布，icLASER 看到的是嘌呤 C8 的暴露程度；两套信号叠加到同一个结构上时，会在不同位置突出不同的特征。这正是两种方法一起用更有价值的原因——它们看的是 RNA 的不同侧面。",
+        "但对 FoldBridge 来说，价值正来自保留差异，而不是抹平差异。两种探针的数值各自有解释范围；如果要把它们放在一起展示或下游合并，就必须标注每个数值来自哪一种 assay。把 icLASER 的 C8 信号当成 icSHAPE 的 2′-OH 信号去读，或者反过来，都会得到看似漂亮却错位的结论。per-assay interpretation 不是冗余，而是让“互补”真正成立的前提。"
+      ],
+      "label": "icLASER F3",
+      "pmid": "34634799",
+      "pmcid": "PMC8599799",
+      "doi": "10.1093/nar/gkab885",
+      "figureId": "F3",
+      "legendText": "Analysis of icLASER and icSHAPE RT-stops. ( A ) icSHAPE profile at the IRE associated with heavy chain ferritin. The IRE genomic coordinates are chromosome seven from position 45459777 to 45459811. ( B ) icLASER profile at the IRE associated with heavy chain ferritin. ( C ) Secondary structure of the IRE element with icSHAPE data overlaid. ( D ) Secondary structure of the IRE element with icLASER data overlaid. ( E ) PDB model of the IRE/IRP complex with differential icSHAPE reactivities overlaid. ( F ) PDB model of the IRE/IRP complex with differential icLASER reactivities overlaid. PDB ID for the IRE/IRP model is 3SNP."
+    },
+    {
+      "type": "heading",
+      "text": "用可及性数据预测 RNA-蛋白相互作用"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-iclaser-f4",
+      "alt": "icLASER F4",
+      "srcBasename": "iclaser_f4__F4.jpg",
+      "legend": "**图 4。用 icLASER/icSHAPE 数据预测 RNA-蛋白相互作用。** Wolf et al. 2021（PMID 34634799，DOI `10.1093/nar/gkab885`）展示了如何用结构探测数据预测 transcriptome-wide 的 RNA-蛋白相互作用：（A）在细胞内探测 RNA 结构、测试 RNA-蛋白相互作用并用 SVM 模型预测结合的整体流程；（B、D、F、H）分别以 TRA2A、RBFOX2、QK1、PUM2 的 motif 为中心，比较活细胞内与 in vitro 探测之间的 icSHAPE 与 icLASER difference map；（C、E、G、I）对应蛋白结合 RNA 的晶体/PDB 结构（PDB 2KXN、2ERR、4JVH、3Q0Q）；（J）用 icLASER、icSHAPE 或两者训练分类器、预测 RNA–protein interaction 的 ROC 分析，训练集与测试集来自 in vivo 与 in vitro 的 eCLIP bound sites。图注（legend）说明：可及性变化可以被解释为蛋白结合界面的线索。",
+      "body": [
+        "这张图说明可及性数据能服务下游预测：in-cell 与 in vitro 之间的 C8 或 2′-OH 可及性差异，往往出现在蛋白结合的 motif 附近，因此能被机器学习模型用来预测界面。这是 icLASER 数据真实而有力的应用。",
+        "不过预测结论仍要回到各自 assay 的 targetability 与 context。difference map 上的信号变化，首先是“某类化学位点的可及性在两种条件下发生了变化”，把它解释为蛋白结合需要结构和上下文支持。对 FoldBridge 来说，这再次印证了同一条原则：icLASER 与 icSHAPE 在预测任务里可以联合使用（图中分类器甚至能同时吃两套 profile），但联合的前提是系统清楚每个特征来自哪一种化学、可解释到什么程度，而不是把它们当成同一种证据混在一起。"
+      ],
+      "label": "icLASER F4",
+      "pmid": "34634799",
+      "pmcid": "PMC8599799",
+      "doi": "10.1093/nar/gkab885",
+      "figureId": "F4",
+      "legendText": "Utilizing icSHAPE and icLASER data to predict RNA-protein interactions transcriptome-wide. ( A ) Overview of methods to probe RNA structure in cells and test RNA-protein interactions in cells and predict binding using SVM models. ( B ) icSHAPE and icLASER difference maps between RNA probed inside living cells and in vitro centered at the motif for TRA2A. ( C ) X-Ray structure of TRA2A bound to RNA (PDB 2KXN). ( D ) icSHAPE and icLASER difference maps between RNA probed inside living cells and in vitro centered at the motif for RBFOX2. ( E ) X-ray structure of RBFOX2 bound to RNA (PDB 2ERR). ( E ) X-ray structure of RBFOX2 bound to RNA (PDB 2ERR). ( F ). icSHAPE and icLASER difference maps between RNA probed inside living cells and in vitro centered at the motif for QK1. ( G ) X-ray structure of QK1 bound to RNA (PDB 4JVH). ( H ) icSHAPE and icLASER difference maps between RNA probed inside living cells and in vitro centered at the motif for PUM2. ( I ). X-Ray structure of PUM2 bound to RNA (PDB 3Q0Q). ( J ) ROC analysis for predicting RNA–protein interactions using icLASER and/or icSHAPE structure probing. For each RNA-binding protein, we selected eCLIP bound sites in vivo and in vitro . A portion of this dataset was used as a training set, and the remainder was used to test the classifier. The classifier was trained using icSHAPE profiles, icLASER profiles, or both."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 icLASER"
+    },
+    {
+      "type": "paragraph",
+      "text": "icLASER 在 FoldBridge 里的核心待遇，是把 purine-C8 solvent-accessibility 当作它自己的 assay model 来对待。原始 RT-stop 数值首先是 raw provenance：它可以被保存、被下载、被用于 debug 和再分析，但不能仅凭“数值高”就自动进入默认可视化或 confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "进入默认结构图层的，应该是经过 icLASER 自身 chemistry targetability（嘌呤 C8）加 readout / mapping context 检查后、可解释为 icLASER 支持的信号。换句话说，读者在结构页面看到的颜色，应该是在 icLASER assay model 下站得住的颜色，而不是直接来自 raw RT-stop 的数字。confidence 层的门槛更高：只有通过 targetability、mapping 和 context 这些 gate 的位点，才可以成为 positive confidence 的候选。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里要强调的 gate 概念是：FoldBridge 绝不把 icLASER 和 SHAPE、DMS 的信号默默 pool 在一起。即使它们 in-cell + 测序的流程相近、数据格式相似，化学靶点的差异决定了它们的每一个数值在问不同的问题。合并展示或联合分析可以做，但每个数值必须带着“我来自 icLASER 的 C8 化学”这个标签，而不是被融进一个无差别的统一图层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱 icLASER，而是尊重它的强项。icLASER 对嘌呤 C8 溶剂可及性的探测很有用，尤其和 icSHAPE 互补时；错误发生在把这个强项扩展成“所有碱基统一可及性”或“和别的探针等价”时。FoldBridge 的任务不是把所有数字都画出来，而是把“有观测值”和“可解释为 icLASER 结构支持”分开。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case（示意）"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 icLASER profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一份 icLASER profile 流过 FoldBridge：它在活细胞里对某条 RNA 做了 C8 acylation，测序得到一串 RT-stop 信号。这串信号进入系统时，首先作为 raw observation 被完整保存——每个位点的原始数值、覆盖度、来源 assay 都记录在案，可追溯、可下载、可再分析。"
+    },
+    {
+      "type": "paragraph",
+      "text": "接着，系统会问这些数值能否进入 visual signal。只有落在嘌呤、且 C8 化学可解释、mapping 与 context 都通过检查的位点，才会成为默认结构图上的 icLASER 可及性颜色。非嘌呤位点、或无法可靠映射到结构坐标的位点，即使有数字，也停留在 provenance 层，不伪装成同一种证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "最后是 confidence candidate：在前两层都成立的基础上，通过完整 gate 的位点才可能进入 positive confidence。这三层——raw observation、visual signal、confidence candidate——是同一份 profile 派生出的三件不同的东西，不能彼此替代。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个 case 落到系统行为上，就是同一份 icLASER profile 会派生出 raw observation、visual signal、confidence candidate 这三件不能彼此替代的东西。icLASER 最特有的误读，是因为它和 icSHAPE 流程几乎一样、数据格式相近，读者容易把嘌呤 C8 的溶剂可及性当成 icSHAPE 的 2′-OH 柔性来读，反过来也一样——而这两者是互补、不是等价。论文图可以聚焦一个实验；FoldBridge 的页面会把许多 profile、坐标和证据层叠在一起，文章如果不把这三层、以及“C8 不是 2′-OH、不是 WC 面”这条化学边界讲清楚，混进同一个无差别图层的信号就会被误读。所以 icLASER 文章的正确结尾不是“某个嘌呤信号高就说明它不配对”，而是：icLASER 能为 RNA 结构解释提供有力的 purine-C8 可及性线索；在 FoldBridge 中，这种线索只有通过 icLASER 自身的 chemistry targetability 和后续 gate、并始终与 SHAPE/DMS 信号区分开来之后，才会成为默认可视化与 confidence 的一部分。"
+    }
+  ]
+}

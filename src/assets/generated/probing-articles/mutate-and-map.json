@@ -1,0 +1,137 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "mutate-and-map",
+  "title": "mutate-and-map 给出的配对是\"推断\"出来的，不是直接读出来的",
+  "date": "2026-06-26",
+  "figure_count": 4,
+  "rep_pmid": "22109276",
+  "rep_pmcid": "PMC3725140",
+  "rep_doi": "10.1038/nchem.1176",
+  "asset_base": "./src/assets/generated/probing-articles/assets/mutate-and-map",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只看一张漂亮的 mutate-and-map（M²）二维热图，很容易把它误读成\"化学探测直接读出了哪两个碱基在配对\"。这个理解是错的。mutate-and-map 本身不是一个能在单一化学位点上证明配对的实验。它的做法是：对一条 RNA 做系统性的单点突变，再对每一个突变体分别做化学探测（SHAPE 的 2′-OH 酰化、DMS 的 A/C 甲基化、或 CMCT 的 G/U 修饰），然后观察\"在某个位点引入突变后，远端某个位点的化学可及性是否发生了改变\"。如果突变 A 位点会让 B 位点的反应性系统性变化，就把这对位点读成存在结构耦合，多数情况下是碱基配对或三级接触。也就是说，M² 报告的配对是**推断（inference）**出来的——来自突变扰动加化学读出加 Z-score 分析加计算建模，而不是某个化学位点直接给出的真值。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界对 FoldBridge 很关键。化学探测那一层读的仍然是各自 assay 的化学位点：SHAPE 报告 2′-OH 的柔性/可及性，DMS 报告 A/C 的可及性，CMCT 报告 G/U 的可及性。M² 所谓的\"配对\"是这些信号在整个突变扰动矩阵里呈现出的二维模式被分析和建模出来的结论。因此 FoldBridge 必须保留 assay 与推断这两层上下文：raw 化学探测信号、二维 Z-score 推断出来的配对候选、以及最终经过计算建模和 gate 之后的 confidence，三者要分层存储，不能把 M² 推断出的配对升级成直接化学真值或直接的 positive confidence。"
+    },
+    {
+      "type": "heading",
+      "text": "二维推断的核心逻辑：突变扰动远端可及性"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-mutate-and-map-f1",
+      "alt": "mutate-and-map F1",
+      "srcBasename": "mutateandmap_f1__PMC3725140__F1.jpg",
+      "legend": "**图 1。mutate-and-map 如何从单点突变读出三维相互作用。** Kladwang et al. 2011（Nature Chemistry，PMID 22109276，DOI `10.1038/nchem.1176`）的图示说明：突变一个核苷酸并对其化学可及性成像，就能揭示 RNA 三维结构里的相互作用。图注（legend）中的轨迹比较了 add 腺嘌呤核糖开关结合域的野生型（蓝）与 C18G 突变体（红），用荧光引物逆转录加毛细管电泳读出 2′-OH 酰化（SHAPE）信号；箭头标出突变位点 C18 自身变得暴露，以及因为配对被破坏而被\"拉近\"暴露出来的远端位点——它的配对伙伴 G78。图 b 是 71 个单突变体的完整 mutate-and-map 数据集（灰度图），从中可以读出大量结构要素：沿主对角线的条带（突变对局部的扰动）、标记具体碱基对的离散点（C18–G78、C26–G44、C54–G72）、helix 突变带来的更弥散效应、二级结构重排、腺嘌呤结合的丧失，以及 L2–L3 的长程三级接触。",
+      "body": [
+        "这张图是 M² 二维推断逻辑的核心。单看一对轨迹（图 a），结论不是\"C18 的化学位点直接告诉我们它和 G78 配对\"，而是\"破坏 C18 后 G78 的可及性变了，所以推断 C18 与 G78 之间存在配对耦合\"。把这种逻辑扩展到所有位点，就得到图 b 这张矩阵：每一行是一个突变体的探测结果，离散的 off-diagonal 信号点才是被推断出来的配对/接触关系。换句话说，配对信息藏在\"扰动—响应\"的二维模式里，而不是任何单个化学位点的绝对数值里。"
+      ],
+      "label": "Kladwang(M2) nchem.1176 F1",
+      "pmid": "22109276",
+      "pmcid": "PMC3725140",
+      "doi": "10.1038/nchem.1176",
+      "figureId": "F1",
+      "legendText": "a , Mutating a nucleotide and mapping chemical accessibility reveals interactions in the three-dimensional structure of the RNA. The traces are for wild-type (blue) and C18G-mutated (red) variants of the adenine-binding domain of the add riboswitch. These 2′-OH acylation (SHAPE) data were read out by reverse transcription with fluorescently labelled primers and capillary electrophoresis; peaks (left to right) correspond to nucleotides from the 5′ to 3′ end of the RNA. Arrows mark exposure of the mutation site (C18) and of sequence-distant regions brought near this nucleotide by base-pairing (partner G78). b , Entire mutate-and-map data set across 71 single mutations, plotted in grey scale, revealing numerous elements of riboswitch structure. Dark features highlight: (I) the main diagonal stripe showing localized perturbations following C18G mutation; (II–IV) punctate features marking base pairs C18–G78, C26–G44 and C54–G72 in three different helices; (V–VII) more delocalized effects upon helix mutations G14C, G44C and G59C; (VIII) large-scale changes from C69G mutation due to secondary structure rearrangement; (IX) perturbations consistent with loss of adenine binding in A52U variant; (X) evidence for long-range tertiary contact between L2 and L3 upon mutation of C60 and C61 in L3; (XI) ‘symmetric’ mutations in L2 that affect L3; (XII) evidence for U22–A52 base pair in the adenine binding site."
+    },
+    {
+      "type": "heading",
+      "text": "在多个独立 RNA 上恢复已知结构"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-mutate-and-map-f2",
+      "alt": "mutate-and-map F4",
+      "srcBasename": "mutateandmap_f2__PMC3725140__F4.jpg",
+      "legend": "**图 2。mutate-and-map 在多种 RNA 上恢复二级结构。** Kladwang et al. 2011（Nature Chemistry，PMID 22109276，DOI `10.1038/nchem.1176`）展示了三条独立 RNA 的 mutate-and-map Z-score 数据及由此推断出的二级结构模型：Tetrahymena group I 核酶的 P4–P6 域、E. coli 5S rRNA，以及 V. cholerae VC1722 c-di-GMP 核糖开关结合域。图注（legend）里，方块表示实验数据（Z-score 矩阵），线条与核苷酸表示由数据推断出来的结构。",
+      "body": [
+        "这张图的意义是方法的可推广性：M² 不是只在某一条精心挑选的 RNA 上凑出答案，而是在多个结构和功能各异的 RNA 上都能恢复已知的二级结构。但要注意，图中的结构模型不是被直接\"测\"出来的——它是 Z-score 数据加计算建模推断出来的结果。同一份 Z-score 矩阵，换一套建模约束或参数，得到的结构细节可能不同。这正是为什么 M² 的产出必须带着\"它是推断\"这层标签存储，而不能当作和晶体结构同级的直接证据。"
+      ],
+      "label": "Kladwang(M2) nchem.1176 F4",
+      "pmid": "22109276",
+      "pmcid": "PMC3725140",
+      "doi": "10.1038/nchem.1176",
+      "figureId": "F4",
+      "legendText": "a – f , Mutate-and-map Z -score data and resulting secondary structure models for the P4–P6 domain of the Tetrahymena group I ribozyme ( a , b ), the 5S ribosomal RNA from E. coli ( c , d ) and the domain that binds cyclic di-guanosine monophosphate from the V. cholerae VC1722 riboswitch (in the presence of 10 μM ligand; e , f ). Colouring of squares ( a , c , e ) and lines and nucleotides ( b , d , f ) are as in Fig. 3 ."
+    },
+    {
+      "type": "heading",
+      "text": "方法学奠基：MedLoop 模型 RNA"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-mutate-and-map-f3",
+      "alt": "mutate-and-map F1",
+      "srcBasename": "mutateandmap_f3__PMC3039151__F1.jpg",
+      "legend": "**图 3。建立 mutate-and-map 方法学的模型系统。** Kladwang et al. 2011（RNA，PMID 21239468，DOI `10.1261/rna.2516311`）用一条设计好的 80-nt MedLoop RNA 作为验证 M² 的模型系统。图注（legend）描述了它的结构：一个 10-bp 的发卡加一个 15-nt 的内环（残基 1–35），5′ 侧有 10 nt，3′ 侧有 35 nt（包含引物结合位点）。",
+      "body": [
+        "这是 M² 方法学的奠基论文。在把 M² 用到核糖开关、核酶等真实功能 RNA 之前，作者先用一个结构已知、可控的 MedLoop RNA 来确认\"系统性单点突变加化学探测能不能稳定地读出已知碱基对\"。先在受控模型上证明读出逻辑成立，再推广到未知结构——这是 M² 推断链条可信度的起点。"
+      ],
+      "label": "Kladwang(M2) rna.2516311 F1",
+      "pmid": "21239468",
+      "pmcid": "PMC3039151",
+      "doi": "10.1261/rna.2516311",
+      "figureId": "F1",
+      "legendText": "Model system for establishing the mutate-and-map methodology for RNA structure inference. The 80-residue MedLoop RNA was designed as a 10-bp hairpin with a 15-nt internal loop (residues 1 to 35), a 10-residue 5′-flanking sequence (residues −9 to 0), and a 35-residue 3′-flanking sequence (residues 36 to 70) containing the primer binding site."
+    },
+    {
+      "type": "heading",
+      "text": "二维数据如何在单核苷酸分辨率上揭示配对"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-mutate-and-map-f4",
+      "alt": "mutate-and-map F3",
+      "srcBasename": "mutateandmap_f4__PMC3039151__F3.jpg",
+      "legend": "**图 4。MedLoop RNA 的 mutate-and-map 数据集。** Kladwang et al. 2011（RNA，PMID 21239468，DOI `10.1261/rna.2516311`）展示了 MedLoop RNA 的完整 M² 数据集，把 DMS（蓝，标记 A/C）与 CMCT（红，标记 G/U）两种化学可及性叠加，用荧光引物的高通量逆转录加毛细管电泳读出。图注（legend）标出了多个特征：沿主对角线的条带（局部扰动）、对应碱基对的离散 off-diagonal 信号、loop 内的保护、与构象变化相关的侧翼保护、实验上被保护但计算却预测为暴露的位点，以及突变位点附近一处未被解释的 U 暴露。",
+      "body": [
+        "这张图既展示了 M² 二维数据的力量，也展示了它的诚实之处。一方面，DMS 与 CMCT 叠加后，off-diagonal 的离散信号能在单核苷酸分辨率上指认碱基对——这正是 M² 相对于单次化学探测的增量。另一方面，图注明确标出了实验与计算预测不一致的位点，以及未能解释的特征。这些\"不一致\"和\"未解释\"恰恰呼应了核心边界：M² 的配对是推断出来的，依赖建模假设，会和预测打架，也会留下解释不了的信号。把这些信息抹平成一张干净的配对图，等于丢掉了证据结构里最重要的部分。"
+      ],
+      "label": "Kladwang(M2) rna.2516311 F3",
+      "pmid": "21239468",
+      "pmcid": "PMC3039151",
+      "doi": "10.1261/rna.2516311",
+      "figureId": "F3",
+      "legendText": "Mutate-and-map data set for the MedLoop RNA. Chemical accessibility data for dimethyl sulfate alkylation (DMS, blue) at A's and C's and for carbodiimide modification (CMCT, red) at G's and U's are overlaid. Chemical modifications were read out by high-throughput reverse transcription with fluorescently labeled primers and capillary electrophoresis, with faster electrophoretic mobility products on the right . Raw fluorescence data (arbitrary units) are shown after automated alignment of traces and normalization to mean intensity. Ten features are marked on the data: (I) The main diagonal stripe showing localized perturbations in the U30A variant; (II–VI) punctate, off-diagonal signals corresponding to the MedLoop RNA base pairs revealed at nucleotide resolution for U30A, C10G, C10A, U35A, and A1U; (VII) protection within the 15-nt loop for G11U; (VIII) more extensive perturbations due to specific mutations, here G4U; (IX) protection of flanking regions correlated with large conformational changes in G4U; (X–XI) sites protected in experimental measurements that are predicted to be exposed by computational secondary structure prediction; (XII) unexplained exposure of multiple U's near mutation site in U28G."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 mutate-and-map"
+    },
+    {
+      "type": "paragraph",
+      "text": "mutate-and-map 的产出是\"推断出来的配对/结构模型\"，FoldBridge 必须把它和 assay 上下文一起存储，绝不能把它升级成直接化学真值或直接的 positive confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "具体来说，要分清三层。第一层是 raw 化学探测信号：每个突变体在 SHAPE / DMS / CMCT 下的逐位点反应性，这层的解释边界和各自 assay 一致——SHAPE 是 2′-OH 柔性，DMS 是 A/C 可及，CMCT 是 G/U 可及，这层是 raw provenance。第二层是二维推断：把整个突变扰动矩阵做 Z-score 分析后得到的\"两位点之间存在耦合\"的配对候选，这一层是 M² 特有的推断产物，必须明确标注它来自扰动矩阵而非单点化学位点。第三层是计算建模后的结构模型与 confidence：只有在通过 assay、mapping、claim 和 context gates 之后，推断出来的配对候选才可以进入 confidence 候选。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这种分层不是削弱 M²，而是尊重它的强项。M² 擅长用扰动—响应模式把碱基配对和长程三级接触从一维化学探测里\"解\"出来；错误发生在把这个推断结果当成和直接结构测定同级的真值。FoldBridge 还要保留两类容易被抹平的信息：实验与计算预测不一致的位点，以及未被解释的特征。它们不是噪声，而是推断不确定性的直接证据，应该作为 provenance 保留，而不是在可视化时悄悄删掉。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，面向读者的正确说法不是\"M² 测出了 C18 和 G78 配对\"，而是：在 mutate-and-map 实验中，突变 C18 会系统性改变 G78 的化学可及性，由此推断两者之间存在配对耦合；这个配对候选在通过建模和 gate 检查后，才会作为结构解释的一部分进入 FoldBridge 的 confidence 层。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case：一份 M² profile 在 FoldBridge 中的三层分离（示意）"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想 FoldBridge 接收到一份类似 add 核糖开关结合域的 mutate-and-map profile（此处为示意，不代表任何具体内部 ID 或真值）。系统应当把它拆成三层来处理，而不是直接把热图上色成一张配对图。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第一层，raw 化学探测 provenance：保存每个突变体逐位点的 SHAPE/DMS/CMCT 反应性，并标明各自的 assay 解释边界。这一层即使数值很高，也只是某种化学可及性信号，不直接等于配对。第二层，二维推断的配对候选：对扰动矩阵做 Z-score 分析后得到若干 off-diagonal 耦合点（例如示意性的 C18–G78、C26–G44 一类），把它们标记为\"由扰动矩阵推断、待建模确认\"的配对候选，并把对应的实验—预测不一致和未解释特征一并附上。第三层，经 gate 后的 confidence：只有通过 assay targetability、mapping、claim 与 context gates 的配对候选，才进入 positive confidence；其余的留在 provenance 与 debug 层，可追溯但不冒充结构真值。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个 case 落到系统行为上，就是同一份 M² profile 会派生出 raw 化学观测、二维推断的配对候选和 confidence 候选这三件不同的东西。M² 最需要被讲清楚的边界，恰恰藏在第二层：那些 off-diagonal 耦合点是从扰动—响应矩阵里 Z-score 出来、还可能和预测打架的推断，不是某个化学位点直接给出的真值。如果 FoldBridge 不把这三层、以及“配对是推断出来的”这层标签分开，读者就会把一张待建模确认的耦合图，误读成 M² 直接测出了哪两个碱基在配对。"
+    }
+  ]
+}

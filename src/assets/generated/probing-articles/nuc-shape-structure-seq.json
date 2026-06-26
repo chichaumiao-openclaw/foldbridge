@@ -1,0 +1,149 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "nuc-shape-structure-seq",
+  "title": "Nuc-SHAPE-Structure-Seq：核内两种化学，不能写成同一种证据",
+  "date": "2026-06-25",
+  "figure_count": 4,
+  "rep_pmid": "33397430",
+  "rep_pmcid": "PMC7784297",
+  "rep_doi": "10.1186/s13059-020-02236-4",
+  "asset_base": "./src/assets/generated/probing-articles/assets/nuc-shape-structure-seq",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只看数据表，Nuc-SHAPE-Structure-Seq 很容易被误读成一种把两类化学揉成同一种结构证据的方法。这个理解是错的。这个方法在细胞核里同时用到两套互不相同的化学：SHAPE（在这篇工作里用 NAI 试剂）探测的是核糖 2'-OH 的可及性，也就是骨架的柔性——只要某个核苷酸处于单链、未配对、未被构象或蛋白锁住的灵活状态，它的 2'-OH 就更容易被修饰，而且这套化学对 A/U/G/C 四种碱基原则上都适用；Structure-seq 那一支沿用的是 DMS 化学，报告的是 A 的 N1、C 的 N3 在 Watson-Crick 配对面上的可及性，只对 A/C 两类碱基有可解释信号。换句话说，SHAPE 回答的是“这个核苷酸的骨架柔不柔”，DMS 回答的是“这个 A/C 的配对面可不可及”。这是两个不同的化学问题，落在两套不同的靶点上，不能因为它们被写进同一个方法名、同一张数据表，就当成同一种证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 ANNOCONFIDENCE / FEC positive confidence，就必须先问清楚：这个数字来自哪一套化学，在对应的 assay model 下能不能被解释为结构支持。SHAPE 信号要走 2'-OH 柔性这条靶点边界（四种碱基都可解释，但读出的是柔性而非配对状态）；DMS / Structure-seq 信号要走 `DMS_AC_ONLY` 这条 A/C 靶点边界。两条 gate 必须分开标注、分开判断，绝不能把一个 SHAPE 柔性读数和一个 DMS A/C 可及性读数合并成一条无差别的“结构信号”。"
+    },
+    {
+      "type": "heading",
+      "text": "Nuc-SHAPE-Structure-Seq 能在活细胞核里准确探测 RNA 结构"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-nuc-shape-structure-seq-f1",
+      "alt": "Nuc-SHAPE-Structure-Seq F1",
+      "srcBasename": "nucshapestructureseq_f1__PMC7784297__F1.jpg",
+      "legend": "**图 1。Nuc-SHAPE-Structure-Seq 能准确探测核内 RNA 的活细胞结构。**Liu et al. 2021（PMID 33397430，DOI `10.1186/s13059-020-02236-4`）这张图先给出方法流程：在拟南芥幼苗里直接施加 NAI 做 in vivo SHAPE 处理，单链核苷酸被修饰（图中星号），再做深度测序并统计逆转录终止位点；右侧则是先分离细胞核、去除蛋白后再做 SHAPE 的“去蛋白（deproteinized）”对照。图注（legend）还展示了 U1 与 U12 snRNA 的 SHAPE reactivity 曲线：双链区用灰色标出，Sm 蛋白结合位点用黄框标出，在 Sm 位点上去蛋白条件的 SHAPE reactivity 显著高于 in vivo 条件（配对 t 检验，U1 与 U12 的 P 值分别为 6.8e−3 和 3.1e−6）；按 reactivity 高低着色后，结果与系统发育推导出的 U1/U12 结构一致。",
+      "body": [
+        "这张图传达的第一件事是：方法的可信度来自与已知结构的一致性，而不是来自“它给每个核苷酸都打了一个统一分数”。这里读出的是 SHAPE 2'-OH 柔性——NAI 在灵活、未被遮挡的核苷酸上留下修饰，所以 Sm 位点在去蛋白后 reactivity 升高，反映的是蛋白保护被移除、骨架重新变得可及，而不是配对状态本身发生了改变。这正是 SHAPE 这一支要单独标注的原因：它的高信号意味着 2'-OH 更可及、骨架更柔，而不是某个 A/C 的配对面更可及。",
+        "对应到方法名里的另一支，Structure-seq / DMS 通道报告的是完全不同的化学位点：A 的 N1、C 的 N3。即便两套数据最终都进入同一份 profile，FoldBridge 也要把它们分到两条靶点边界上——SHAPE 行按 2'-OH 柔性解释，覆盖四种碱基；DMS 行按 `DMS_AC_ONLY` 解释，只认 A/C。把核内验证过的方法当成“免检”，或者把两套化学的数值混在一列里上色，都会让读者误以为它们是同一种证据。"
+      ],
+      "label": "Nuc-SHAPE-Structure-Seq F1",
+      "pmid": "33397430",
+      "pmcid": "PMC7784297",
+      "doi": "10.1186/s13059-020-02236-4",
+      "figureId": "F1",
+      "legendText": "Nuc-SHAPE-Structure-Seq method can accurately probe the in vivo RNA structure of nuclear RNAs. a Schematic pipeline of Nuc-SHAPE-Structure-Seq for both in vivo and deproteinized conditions. Asterisks, SHAPE modification; blue oval, protein; RT, reverse transcription. For in vivo treatments (left), NAI was applied to Arabidopsis thaliana seedlings directly and single-stranded nucleotides of RNA were modified. SHAPE treatment was also applied on the RNAs after nuclei isolation and protein removal, which we termed the “ deproteinized condition” (right). Deep sequencing was performed followed by the RT-stop counting. b SHAPE reactivity profiles of U1 and U12 snRNAs. SHAPE reactivity profiles of both in vivo (blue) and deproteinized (orange) conditions were shown. Double-stranded regions were shaded with gray. Sm protein binding sites were highlighted with yellow boxes. At Sm protein binding sites, significantly higher SHAPE reactivities were observed under the deproteinized condition rather than the in vivo condition for both U1 and U12 snRNAs (paired t test, P value = 6.8e−3 and 3.1e−6 for U1 and U12 snRNA, respectively). c SHAPE reactivities are consistent with the phylogenetically derived U1 and U12 snRNA structures. Sm protein binding sites were highlighted with black boxes. Nucleotides were color-coded according to in vivo and deproteinized SHAPE reactivity values (SHAPE reactivity 0.6–1.0 marked in red, 0.3–0.6 marked in yellow, 0–0.3 marked in green)"
+    },
+    {
+      "type": "heading",
+      "text": "核内 mRNA 结构与胞质 mRNA 不同：读的仍是 SHAPE 柔性"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-nuc-shape-structure-seq-f2",
+      "alt": "Nuc-SHAPE-Structure-Seq F2",
+      "srcBasename": "nucshapestructureseq_f2__PMC7784297__F2.jpg",
+      "legend": "**图 2。核内 mRNA 在翻译起始与终止位点附近的结构不同于胞质 mRNA。**Liu et al. 2021（PMID 33397430，DOI `10.1186/s13059-020-02236-4`）图注（legend）比较了核内与胞质 mRNA 在起始密码子和终止密码子附近的平均 SHAPE reactivity：在起始密码子下游，核内 mRNA 的平均 SHAPE reactivity 显著高于胞质 mRNA（Mann-Whitney 检验，图中标出 CDS 前十个核苷酸里最高和最低的 P 值）；而在终止密码子处，核内 mRNA 的 SHAPE reactivity 显著低于胞质 mRNA。",
+      "body": [
+        "这张图比较的全是 SHAPE reactivity，也就是 2'-OH 柔性。所以正确的读法是：核内 mRNA 在起始密码子下游骨架更柔、更可及，终止密码子处更受约束——这是骨架灵活性在不同亚细胞区室之间的差异，而不是“某种碱基配对状态”的直接读数。SHAPE 的力量正在于它对四种碱基都能给出柔性信号，因此可以在 CDS 这种序列组成各异的区域里做连续比较。",
+        "但这恰恰是必须和 DMS 分开标注的地方。SHAPE 的高/低反映 2'-OH 可及性，DMS 的高/低反映 A/C 配对面可及性，两者即使方向看起来一致，证据类型也不同。FoldBridge 在写这类区室差异时，应该明确这是 SHAPE 柔性通道的结论；如果同一位点上还有 DMS / Structure-seq 数据，那一支要单独走 A/C 靶点 gate，不能借 SHAPE 的曲线替 DMS 的 A/C 结论背书，反过来也一样。"
+      ],
+      "label": "Nuc-SHAPE-Structure-Seq F2",
+      "pmid": "33397430",
+      "pmcid": "PMC7784297",
+      "doi": "10.1186/s13059-020-02236-4",
+      "figureId": "F2",
+      "legendText": "In vivo nuclear mRNA structures are different from cytosolic mRNA structures across translation start and stop sites. a Comparison of average SHAPE reactivity profiles between nuclear and cytosolic mRNAs across the translation start codon. Average SHAPE reactivities downstream of the start codon are significantly higher in nuclear mRNAs compared to cytosolic mRNAs (Mann-Whitney test, the highest and lowest P values for the first ten nucleotides of the CDS region are shown). b Comparison of SHAPE reactivity profiles between nuclear and cytosolic mRNAs across the translation stop codon. Average SHAPE reactivities at the stop codon are significantly lower in nuclear mRNAs compared to cytosolic mRNAs (Mann-Whitney test, the P values were shown)"
+    },
+    {
+      "type": "heading",
+      "text": "5′ 剪接位点与分支点上游的结构特征：高 SHAPE = 单链柔性"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-nuc-shape-structure-seq-f3",
+      "alt": "Nuc-SHAPE-Structure-Seq F3",
+      "srcBasename": "nucshapestructureseq_f3__PMC7784297__F3.jpg",
+      "legend": "**图 3。5′ss 上游与分支点的 pre-mRNA 二级结构特征与剪接及选择性剪接位点选择相关。**Liu et al. 2021（PMID 33397430，DOI `10.1186/s13059-020-02236-4`）图注（legend）展示了 in vivo（a）与去蛋白（b）条件下跨越 5′ss、分支点和 3′ss 的 SHAPE reactivity 曲线，比较了剪接（红）与未剪接（黑）事件：在 5′ss 的 −1、−2 位以及分支点上，剪接事件的 SHAPE reactivity 显著更高（星号标注，Mann-Whitney 检验）。对选择性 5′ss（c、d）和选择性 3′ss（e、f）事件，显著升高的 SHAPE reactivity 只出现在被实际使用的主要位点（major distal 或 major proximal）上游的 −1、−2 位或主要位点的分支点处，而不出现在次要位点上，图注列出了各对应位置的 P 值。",
+      "body": [
+        "这张图说明的是一个 SHAPE 柔性特征：剪接事件在 5′ss 的 −1、−2 位 SHAPE reactivity 更高，意味着这两个核苷酸的 2'-OH 更可及、更像处于单链/灵活状态。读者要把这理解成“骨架在这两位上更松、更容易被 U1 等机器识别”，而不是“这两个碱基一定不配对”——SHAPE 报告的是可及性与柔性，把它直接等同于配对真值就越过了化学边界。in vivo 与去蛋白条件都呈现同样模式，进一步说明这是 RNA 本身的结构特征，而非纯粹的蛋白占位。",
+        "在 FoldBridge 的语境里，这类“单链柔性”的结论必须挂在 SHAPE 2'-OH 通道下，覆盖四种碱基都成立；它和 DMS 对 A/C 配对面的可及性读数是两件事。如果 −1、−2 位恰好是 A 或 C，DMS 通道也许能给出独立的 A/C 信号，但那条证据要单独通过 `DMS_AC_ONLY` 与上下文 gate，而不能用 SHAPE 曲线顶替。把两套化学的“高信号”混写成一句“这里是单链”，会让下游分不清证据来自骨架柔性还是配对面可及性。"
+      ],
+      "label": "Nuc-SHAPE-Structure-Seq F3",
+      "pmid": "33397430",
+      "pmcid": "PMC7784297",
+      "doi": "10.1186/s13059-020-02236-4",
+      "figureId": "F3",
+      "legendText": "pre-mRNA secondary structure features upstream of 5′ss and at the branch site are associated with splicing and alternative splice site selection. a , b SHAPE reactivity profiles across 5′ss, branch point, and 3′ss for in vivo ( a ) and deproteinized ( b ) conditions. Average SHAPE reactivity profiles for spliced (red) versus unspliced (black) events are shown. Significantly higher SHAPE reactivities are observed at the − 1 and − 2 nt positions of 5′ss and the branch site for spliced events rather than unspliced events (marked with asterisks, Mann-Whitney test, P values are shown). c SHAPE reactivity profiles for alternative 5′ss events with the distal 5′ss as the major one. Average SHAPE reactivity profiles of both in vivo (dark blue) and deproteinized (light blue) conditions are shown. Significantly higher SHAPE reactivities only appear at − 1 and − 2 positions upstream of the major distal 5′ss rather than the minor proximal 5′ss (Mann-Whitney test, P value = 1.6e−4 and < 2.2e−16 at − 1 and − 2 positions under in vivo condition; P value = 6.1e−9 and < 2.2e−16 at − 1 and − 2 positions under deproteinized condition). d SHAPE reactivity profiles for alternative 5′ss events with the proximal 5′ss as the major one. The significantly higher SHAPE reactivities of − 1 and − 2 positions only appear upstream of the major proximal 5′ss rather than the minor distal 5′ss (Mann-Whitney test, P value = 3.3e−12 at − 1 position under in vivo condition; no significant difference was detected at − 2 position under in vivo condition; P value = 3.1e−5 and < 2.2e−16 at − 1 and − 2 positions under deproteinized condition). e SHAPE reactivity profiles for alternative 3′ss events with the distal 3′ss as the major one. Average SHAPE reactivity profiles of both in vivo (dark purple) and deproteinized (light purple) conditions across different 3′ss and the corresponding branch points are shown. Significantly higher SHAPE reactivity only appears at the branch site of the major distal 3′ss rather than the minor proximal 3′ss (Mann-Whitney test, P value = 1.2e−3 and 2.8e−4 at branch point under in vivo and deproteinized conditions, respectively). f SHAPE reactivity profiles for alternative 3′ss events with the proximal 3′ss as the major one. The significantly higher SHAPE reactivity only appears at the branch point of the major proximal 3′ss rather than the minor distal 3′ss (Mann-Whitney test, P value = 1.4e−2 and 1.7e−3 at the branch point under in vivo and deproteinized conditions, respectively)"
+    },
+    {
+      "type": "heading",
+      "text": "−1/−2 单链特征能调控剪接：从结构信号到功能验证"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-nuc-shape-structure-seq-f4",
+      "alt": "Nuc-SHAPE-Structure-Seq F4",
+      "srcBasename": "nucshapestructureseq_f4__PMC7784297__F4.jpg",
+      "legend": "**图 4。5′ss 上游 −1、−2 位的双核苷酸单链结构特征可以调控剪接。**Liu et al. 2021（PMID 33397430，DOI `10.1186/s13059-020-02236-4`）图注（legend）以 AT5G56870 第一个内含子为例：in vivo 与去蛋白两种条件下，5′ss 上游 −1、−2 位（黄色阴影）都呈现高 SHAPE reactivity，与全局上剪接事件的曲线一致。随后用功能实验验证：在 U1 结合位点上游插入一段序列使整个结合位点完全配对成稳定发夹后，剪接被完全抑制；而通过 “AA” 或 “GG” 突变破坏 −1、−2 位的配对状态（Mutation-1）能够恢复剪接；破坏 U1 结合位点其他位置配对的 Mutation-2–10 则都不能恢复剪接。烟草瞬时表达加半定量 RT-PCR 用同一对引物区分剪接与未剪接产物。",
+      "body": [
+        "这张图把 SHAPE 柔性信号一路推到了功能因果上：−1、−2 位的高 SHAPE reactivity（2'-OH 高度可及、提示单链）不是一个旁观的相关性，而是剪接所必需的结构特征——人为把这两位锁进配对会关掉剪接，单独解锁这两位又能救回剪接。这说明 SHAPE 报告的骨架柔性，在这里确实对应一个有功能意义的单链构象。",
+        "但即使做到功能验证，证据类型仍然要标清楚：救回剪接的关键是 −1、−2 位的配对状态被破坏，而读出这一状态的是 SHAPE 2'-OH 化学，不是 DMS。对 FoldBridge 来说，这意味着可以把这条 SHAPE 柔性特征写成强证据，但仍然挂在 SHAPE 通道下；它不会自动变成 DMS A/C 通道的支持。两套化学各自报告各自的位点，功能验证强化的是 SHAPE 这一支的结论，而不是把两支合并成一条。"
+      ],
+      "label": "Nuc-SHAPE-Structure-Seq F4",
+      "pmid": "33397430",
+      "pmcid": "PMC7784297",
+      "doi": "10.1186/s13059-020-02236-4",
+      "figureId": "F4",
+      "legendText": "The two-nucleotide single-stranded RNA structure feature at − 1 and − 2 nt positions upstream of 5′ss can regulate splicing. a SHAPE reactivity profiles across 5′ss of the first intron of AT5G56870 . High SHAPE reactivities are observed at − 1 and − 2 nt positions (shaded in yellow) upstream of 5′ss under both in vivo (top) and deproteinized (bottom) conditions, which resemble the global SHAPE reactivity profiles for spliced events. b Schematic of experimental design to validate the effect of single-strandedness at the − 1 and − 2 positions of 5′ss on splicing of the first intron of AT5G56870 . A short sequence (blue) was inserted immediately upstream of the U1 snRNA binding site (red dashed box) to form a stable hairpin structure with the whole U1 binding site completely base-paired. The exon and intron sequences are colored in black and gray, respectively. A series of mutations were introduced at different positions of the inserted sequence to disrupt the base-pairing status of different nucleotides. Two types of mutations (with/without bracket) were designed for each position to avoid potential effects due to changing the sequence content. c , d Determination of splicing events by transient expression assay in Nicotiana benthamiana . The spliced and unspliced products were distinguished by semiquantitative RT-PCR using the same pair of primers located upstream and downstream of the intron. Spliced and unspliced products are indicated by bands with different sizes. The construct with native sequence was successfully spliced (lane 1). Splicing was completely inhibited in the stem design (lane 2). The mutation “AA” or “GG” disrupted the base-pairing status at − 1 and − 2 positions upstream of 5′ss (Mutation-1) and rescued the splicing (lanes 3 and 4). All other mutations (Mutation-2–10) designed to disrupt other base-pairing sites across the U1 binding site did not rescue the splicing (lanes 5–22). Lane 23, the DNA marker"
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 Nuc-SHAPE-Structure-Seq"
+    },
+    {
+      "type": "paragraph",
+      "text": "Nuc-SHAPE-Structure-Seq 的核心写法，是把两套化学的靶点边界分开维护，绝不合并。SHAPE 通道走 2'-OH 柔性边界：A/U/G/C 四种碱基都可解释，但读出的是骨架可及性与单链/灵活程度，而不是配对真值。DMS / Structure-seq 通道走 `DMS_AC_ONLY`：A/C 是 targetable base，报告 N1/N3 配对面可及性；G/U/T/unknown 是 non-target base，即使有数字也只能保留为 raw provenance、debug 信息或下载表字段。两条 gate 的靶点集合不同、读出含义不同，必须分别标注来源化学，再分别判断。"
+    },
+    {
+      "type": "paragraph",
+      "text": "ANNOJOIN 的默认结构图应读取经过对应 targetability mask 的 `visual_colormap_value`，而不是直接读取原始数值，并且要保留“这条信号来自 SHAPE 还是来自 DMS”这一来源标记。这样读者在结构页面看到的颜色，才是在正确的 assay model 下可解释的颜色。ANNOCONFIDENCE / FEC 的要求更高：SHAPE 行只有通过 2'-OH 柔性 targetability、mapping、claim 和 context gates 才能进入 positive confidence 候选；DMS 行则要额外通过 `DMS_AC_ONLY`。一条 SHAPE 柔性证据和一条 DMS A/C 证据可以彼此印证，但不能互相顶替，更不能在 confidence 层被并成一条无差别信号。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱这个方法。相反，这是尊重它的设计：它之所以强，正是因为在细胞核里同时拿到两套互补的化学读数——SHAPE 看骨架柔性、覆盖四种碱基，DMS 看 A/C 配对面可及性。错误发生在把这两套读数写成同一种证据时。FoldBridge 的任务不是把所有数字都画成一种颜色，而是把“哪条信号来自哪套化学”“有观测值”和“可解释为结构支持”分开。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，Nuc-SHAPE-Structure-Seq 的技术文章不应该只写“某个位点信号高”。更完整的句子应该写成：在 Nuc-SHAPE-Structure-Seq 的 SHAPE 通道中，该核苷酸具有较高的 2'-OH 可及性信号，提示骨架更柔、更可能处于单链；如果 mapping、coverage、背景和上下文都通过检查，这条 SHAPE 柔性信号可以作为结构解释的支持。而当结论涉及 A/C 配对面可及性时，则要明确这来自 DMS / Structure-seq 通道，并单独通过 `DMS_AC_ONLY`。这样写啰嗦一点，但科学上更稳，也更适合进入 FoldBridge 的长期知识库。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case（示意）"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 Nuc-SHAPE-Structure-Seq profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一份 Nuc-SHAPE-Structure-Seq profile 流进 FoldBridge：它来自一次核内实验，同一段 RNA 上既有 NAI 的 SHAPE 读数，也有 DMS / Structure-seq 读数。在 ANNOJOIN visual track 里，这条 profile 首先要按来源化学拆成两支——SHAPE 行按 2'-OH 柔性解释（四种碱基都可读，但读的是柔性），DMS 行按 `DMS_AC_ONLY` 解释（只认 A/C 配对面可及性）；落在 G/U/T 或位置未解析（unresolved）上的 DMS 行则不是可解释靶点。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这组划分给读者的结论非常直接：per-position 的观测值不等于 per-position 的结构支持，而且来自不同化学的支持不能混为一谈。SHAPE 在活细胞核里可以提供强的骨架柔性线索，DMS 可以提供 A/C 配对面可及性线索，但两者各自只在自己的靶点边界内成立；G/U/T/unknown 的 DMS 数值首先是 raw provenance。只有通过各自的 mapping 和 context gates 后，对应的行才可能进入 ANNOCONFIDENCE / FEC positive confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个 case 的价值在于把两套化学的来源标记一路带到三个图层上：同一份 profile 可以同时产生原始观测、可视化信号和 confidence 候选，但每一层都得记着“这一行来自 SHAPE 还是 DMS”。原始观测层记录“两套化学各自测到了什么”，可视化信号层只显示“在各自的 assay 解释边界内能读出什么、且标明来源化学”，confidence 层只接收通过对应 gates 的可解释证据。把 SHAPE 的 2'-OH 柔性和 DMS 的 A/C 可及性合并成一条无差别曲线，最危险的后果不是泛泛的“看错颜色”，而是读者把骨架柔性当成了配对面可及性、或反过来——尤其当一个位点同时压着两套数值、自动化图层又让这种张冠李戴在整张核内结构图上扩散时。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，Nuc-SHAPE-Structure-Seq 文章的正确结尾不是“高信号证明该碱基不配对”，也不是“两套化学都测了就等于双重确认”，而是：这个方法能在活细胞核里同时提供 SHAPE 的 2'-OH 柔性线索和 DMS 的 A/C 可及性线索；在 FoldBridge 中，这两类线索各自只有通过自己的靶点边界（SHAPE 走 2'-OH 柔性 gate，DMS 走 `DMS_AC_ONLY`）和后续 gates 后，才会分别成为结构解释和 confidence 的一部分——它们可以互相印证，但永远是两种证据。"
+    }
+  ]
+}

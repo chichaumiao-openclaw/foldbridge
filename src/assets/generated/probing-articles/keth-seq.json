@@ -1,0 +1,120 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "keth-seq",
+  "title": "keth-seq 为什么只能严肃地解释 G",
+  "date": "2026-06-25",
+  "figure_count": 2,
+  "rep_pmid": "32015521",
+  "rep_pmcid": "PMC7182492",
+  "rep_doi": "10.1038/s41589-019-0459-3",
+  "asset_base": "./src/assets/generated/probing-articles/assets/keth-seq",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只看数据表，keth-seq 很容易被误读成一种“四种碱基都在报告结构”的 RNA 染色剂。这个理解是错的。keth-seq 用 kethoxal（更准确地说是 N3-kethoxal 这种酮醛类试剂）标记鸟嘌呤 G 的 N1/N2 位点：当 G 处于未配对、未被蛋白或配体遮挡、也没有被复杂构象保护的状态时，它的 Watson-Crick 配对面更容易被这类酮醛试剂修饰。也就是说，keth-seq 首先报告的是 G 这一类化学位点是否可及，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”。它和 DMS（靶向 A/C）、CMC（靶向 U/G）的化学逻辑是互补的，但靶点不同。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 ANNOCONFIDENCE / FEC positive confidence，就必须问一个更具体的问题：这个数字在当前 assay model 下能不能被解释为 keth-seq 支持？对 keth-seq 来说，答案从一条 G targetability gate 开始——它在结构上等价于 DMS 的 `DMS_AC_ONLY`，只是把可解释碱基从 A/C 换成了 G。"
+    },
+    {
+      "type": "heading",
+      "text": "kethoxal 标记 G：化学靶点决定了可解释的碱基"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-keth-seq-f1",
+      "alt": "Keth-seq F1",
+      "srcBasename": "kethseq_f1__PMC7182492__F1.jpg",
+      "legend": "**图 1。N3-kethoxal 与鸟嘌呤的反应及其碱基特异性。** Weng et al. 2020（PMID 32015521，DOI `10.1038/s41589-019-0459-3`）展示了 N3-kethoxal 的结构以及它与 guanine 的反应；变性凝胶电泳说明 N3-kethoxal 只和单链 RNA（ssRNA）反应。图注（legend）还把这条化学逻辑接到下游检测上：只有被 N3-kethoxal 标记的 RNA 才能用 biotin-DBCO 进行生物素化，dot blot 进一步确认了标记随反应时间累积，并且在 50 mM GTP、95 °C 条件下孵育约 10 分钟后修饰可被完全去除（可逆）。",
+      "body": [
+        "这张图先回答的是“哪些 G 被保护、哪些 G 可及”。它不是在给每个碱基贴一个统一结构标签，而是在 G 这一类化学位点上读取修饰和保护的差异。N3-kethoxal 只标记单链状态的 G，这正是把“可及性”和“结构”联系起来的化学基础。",
+        "这张图也已经足够说明 keth-seq 的第一条红线：它不是“每个 residue 都有同等化学意义”的读数。G 的高信号可以表示其配对面可及；信号降低可能来自 Watson-Crick 配对，也可能来自三级结构、蛋白结合、配体保护或实验读出限制。相反，A、C、U 在这种 kethoxal 化学里本来就不是主要可解释对象。把 A/C/U/unknown 的数值直接画成 positive support，会把化学位点和数据表字段混为一谈。"
+      ],
+      "label": "Keth-seq F1",
+      "pmid": "32015521",
+      "pmcid": "PMC7182492",
+      "doi": "10.1038/s41589-019-0459-3",
+      "figureId": "F1",
+      "legendText": "( a ) The structure of N 3 -kethoxal and the reaction with guanine. ( b ) Denaturing gel electrophoresis demonstrating N 3 -kethoxal only react with single-strand RNA (ssRNA). ( c ) Upper: Denaturing gel electrophoresis analysis of the labelling reaction of kethoxal and N 3 -kethoxal with FAM-RNA oligo (5’-FAM-GAGCAGCUUUAGUUUAGAUCGAGUGUA, lane 1–3) and biotinylation with biotin-DBCO (lane 5, 6). Only N 3 -kethoxal labelled RNA can be biotinylated (lane 6). Bottom: Dot blot of RNA after labelling and Biotinylation reactions. Methylene blue dot results are listed as control. ( d ) Dot blot of isolated total RNA from mES cells which were treated by N 3 -kethoxal with different periods, 1, 5, 10, 15, 20 min. ( e ) Dot blot analysis of reversibility of N 3 -kethoxal labelled mRNA in present of 50 mM GTP at 95 °C. The N 3 -kethoxal modification in mRNA was removed thoroughly after 10 min incubation. Experiments were independently repeated twice with similar results obtained. Uncropped scans for b, c, d, and e are provided in Supplementary Figure 15 ."
+    },
+    {
+      "type": "heading",
+      "text": "测序读出：G 的信号被放大，背景与解释责任也被放大"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-keth-seq-f2",
+      "alt": "Keth-seq F2",
+      "srcBasename": "kethseq_f2__PMC7182492__F2.jpg",
+      "legend": "**图 2。Keth-seq 的测序信号、重现性与结构验证。** Weng et al. 2020（PMID 32015521，DOI `10.1038/s41589-019-0459-3`）用一组分析说明 keth-seq 如何把 kethoxal 修饰接入测序读出：逆转录（RT）在修饰位点停止，两个重复之间的 RT stop reads 高度相关，而内嵌饼图显示 RT 停在 G 上的 reads 数量（数百万）远高于 A、T、C（数十万），印证了标记的碱基特异性。图注（legend）还显示，keth-seq 与 icSHAPE 在 guanine reactivity 上相关性很高（例如 Rpl6 转录本 Pearson R 约 0.789），在 32 个已知结构模型上 AUC 一致，并能在 18S rRNA 片段上把 G 反应性填回结构模型；keth-seq 还能用 Gini index 检出 +PDS 处理后的 rG4 区域。",
+      "body": [
+        "因此，最终表格里的数值不是 kethoxal 分子直接给出的“结构标签”，而是化学修饰、逆转录、建库、比对和归一化之后的观测量。RT stop 的碱基分布清楚地告诉我们：keth-seq 的可解释信号集中在 G 上；A、T、C 上仍然会出现少量 stop，但它们更接近背景，不能因为数值非零就当作 keth-seq 支持的可及性证据。这个观测量可以很有用，但它需要被解释。",
+        "这一点是 keth-seq 文章里最值得强调的安全阀：测序读出扩大了 keth-seq 的覆盖面，也扩大了背景和偏差进入解释链条的机会。对 FoldBridge 来说，raw observation 必须先经过 chemistry targetability 和 readout context，才能变成默认图层或 confidence 的候选。这里最容易出错的是把“测到了 RT stop”写成“测到了结构”。一个 G 位点的高信号通常提示其配对面更可及；一个 G 位点的低信号可能提示配对或保护；但这两个判断都需要上下文。局部 RNA 构象、离子条件、蛋白或小分子结合、RT bias、局部序列可比对性，都可能影响最后的数值。",
+        "因此，面向非专业读者时，keth-seq 最合适的说法是“把 kethoxal 对 G 的修饰转化成测序可读的可及性线索”。这个说法保留了方法的力量（它和 icSHAPE 在 G 上高度一致，还能定位 rG4），也保留了科学边界。它不会把 A、C、U 的背景信号写成 keth-seq target signal，也不会把一个归一化后的数值写成结构真值。"
+      ],
+      "label": "Keth-seq F2",
+      "pmid": "32015521",
+      "pmcid": "PMC7182492",
+      "doi": "10.1038/s41589-019-0459-3",
+      "figureId": "F2",
+      "legendText": "( a ) Scatter plot of reverse transcription (RT) stop reads distribution between replicates for N 3 -kethoxal sample. The inset pie plots show RT stopped base distribution for replicate 2 (upper left, A: 604,222; T: 497,602; C: 481,596; G: 7,204,998) and replicate 1 (bottom right, A: 703,486; T: 586,297; C: 551,962; G: 8,683,824). ( b ) Accumulation plot of correlation coefficient between Keth-seq and icSHAPE for all transcript. For each common transcript, we calculate the Pearson correlation coefficient for structural signal of guanine bases. The inset plot shows all guanine reactivity between Keth-seq and icSHAPE for Rpl6 (a gene encoding ribosomal protein) transcript with a high correlation (Pearson correlation coefficient R: 0.789). ( c ) Left: scatter plot of AUC between Keth-seq and icSHAPE for RNAs with known structure model (18S ribosomal RNA from RNA STRAND database and others from Rfam database, 32 RNAs in total). Right: A fragment (240–285) of 18S ribosomal RNA with both Keth-seq and icSHAPE reactivity filled in the structure model. ( d ) Gini index of known rG4 regions (based on previously identified by Kwok et.al., 2016, Nature method ) between +PDS treatment and native sample for in vitro (left) and in vivo (right). Only regions with structural information in both + PDS treatment and native conditions are retained for plotting (extended to 50-nucleotide long). ( e ) An example of Keth-seq profile around previously identified in vitro rG4 regions."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 keth-seq"
+    },
+    {
+      "type": "paragraph",
+      "text": "keth-seq 的核心规则可以写成一条 G targetability gate：G 是 targetable base；A/C/U/T/unknown 是 non-target base。non-target 行即使有数字，也只能保留为 raw provenance、debug 信息或下载表字段，不能自动进入 positive confidence。这条规则在结构上和 DMS 的 `DMS_AC_ONLY` 完全平行，只是可解释碱基换成了 G。"
+    },
+    {
+      "type": "paragraph",
+      "text": "ANNOJOIN 的默认结构图不应直接读原始数值，而要先过这条 G targetability gate：只有 G 行通过后才进入默认图层、贡献 `visual_colormap_value`，A/C/U/T/unknown 行被挡在默认上色之外。这样读者在结构页面看到的颜色，才是在 keth-seq assay model 下可解释的颜色——即“这个 G 的配对面更可及”，而不是把背景里 A/C/U 的非靶点信号也染上同一种颜色。ANNOCONFIDENCE / FEC 的要求更高：只有通过 assay targetability、mapping、claim 和 context gates 的 G 行，才可以进入 positive confidence 候选。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱 keth-seq。相反，这是尊重 keth-seq 的强项。kethoxal 对单链 G 配对面的可及性非常有用；错误发生在把这个强项扩展成“所有碱基统一反应性”时。对一个只认 G 的方法，FoldBridge 更要把“某个 G 有信号”和“这个信号能支撑结构解释”分开，更不能让 A/C/U 的背景数值跟着 G 一起被当成证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这种写法也能保护下游读者。网页上的默认颜色应该回答“在当前技术解释边界内，这个位点有什么可读信号”；详情表才回答“原始数据里记录了什么”。如果把这两个问题混在一起，读者会误以为 FoldBridge 认可了所有显示出来的数字。正确做法是：raw provenance 不丢，默认 interpretation 不乱给，confidence 层只接收可解释证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，keth-seq 技术文章不应该只写“某个位点信号高”。更完整的句子应该写成：在 keth-seq assay 中，该 G 位点具有较高可及性信号；如果 mapping、coverage、背景和上下文都通过检查，这个信号可以作为结构解释的支持。把范围限定在 G 上虽然啰嗦，却能避免读者把 A/C/U 的背景数值也当成 keth-seq 的配对判定。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case（示意）：G targetable 与 non-target 的分层"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 keth-seq profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一份 keth-seq profile 在 ANNOJOIN visual track 中有若干行：一部分行落在 G 上，进入默认 visual signal；其余落在 A/C/U 上的行被标为 non-target base；还有少量行因为没有映射到可靠结构坐标而标为 position unresolved。这三层不是同一个东西，正是文章前面原则的落地。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这组分层给读者的结论非常直接：per-position keth-seq observation 不等于 per-position keth-seq positive support。对 G 来说，keth-seq 可以提供强的可及性线索；对 A/C/U/T/unknown 来说，数值首先是 raw provenance。只有前者在通过 mapping 和 context gates 后，才可能进入 ANNOCONFIDENCE / FEC positive confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "如果把所有行都按原始数值上色，页面看起来会更满，但解释会变差。non-target base 行不应该参与默认 keth-seq positive signal；position unresolved 行也不能假装已经映射到可靠结构坐标。相反，落在 G 上的默认 visual signal 才是读者第一眼应该看到的 keth-seq 层。剩下的行仍然可以在详情中追溯，因为它们对 provenance、调试和再分析有价值，但它们不应该伪装成同一种证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个 case 落到实际系统行为上，就是同一份 keth-seq profile 会派生出原始观测、可视化信号和 confidence 候选这三件不同的东西。keth-seq 最直观的误读，是因为它只认 G，读者容易把落在 A/C/U 上的背景数值也当成 keth-seq 在说话；文章如果不能把这三层、以及 G 这一条窄靶点讲清楚，FoldBridge 的结构图就会被当成“所有碱基的可及性都被 keth-seq 测过了”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "换句话说，keth-seq 的文章不能只解释实验，也要解释显示系统为什么要克制。图层越自动，越要把 G 这条窄靶点写清楚；否则一份只在 G 上说话的数据，会被自动上色伪装成对全部碱基的判断。这也是 FoldBridge 和普通论文图解读之间的差别：论文图可以聚焦一个实验或一个模型；FoldBridge 的页面会把许多 profile、结构坐标和证据层放到一起。keth-seq 是最适合拿来解释这个差别的例子之一，因为它的化学靶点（G）足够明确，误把非 G 信号读进来的后果也足够直观。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，keth-seq 文章的正确结尾不是“高信号证明该 G 不配对”，而是：keth-seq 数据能为 RNA structure interpretation 提供强有力的 G 可及性线索；在 FoldBridge 中，这种线索只有通过 G targetability gate 和后续 gates 后，才会成为结构解释和 confidence 的一部分。"
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "hrf-seq",
+  "title": "HRF-Seq：用羟自由基测序读 RNA 主链的溶剂可及性",
+  "date": "2026-06-25",
+  "figure_count": 4,
+  "rep_pmid": "24569351",
+  "rep_pmcid": "PMC4005689",
+  "rep_doi": "10.1093/nar/gku167",
+  "asset_base": "./src/assets/generated/probing-articles/assets/hrf-seq",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只盯着那张测序计数表，HRF-Seq 很容易被当成一台“逐碱基判定配对”的结构检测器。这个理解是错的。HRF-Seq（hydroxyl radical footprinting + sequencing）的解释对象，是 RNA 主链（backbone）的 solvent accessibility，而它读出可及性的方式有一个非常独特的环节：羟自由基（•OH）切出 radical-induced break 后，**逆转录酶延伸到断裂处停顿（RT-stop）**，再靠 **带 7-nt barcode 的接头 + EUC（estimated unique counts）** 把测序计数还原成可信的探测信号。也就是说，HRF-Seq 报告的是“某段主链是否朝向溶剂、因而让逆转录在那里停下”，而不是“这个碱基一定配对”或“一定不配对”；强信号对应的是溶剂暴露的主链，受三级结构折叠影响，并不是碱基配对状态的真值。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界对 FoldBridge 很关键。一个 RT-stop 计数（哪怕已经过 EUC 校正）本质上是一次 solvent-accessibility 事件，而不是一次 pairing call。FoldBridge 可以原样保存这些计数，也可以在网页上展示来自逆转录停顿的读出；但只要它们要进入默认结构上色、解释性文字或 confidence，就得先回答一个更具体的问题：这个数字在“•OH 切割 + RT-stop + barcode/EUC 校正”这套化学和读出语境里，能不能算作主链溶剂可及性的证据？raw signal 必须先穿过它自己的归一化语境，才有资格成为默认颜色或 confidence 的候选。"
+    },
+    {
+      "type": "heading",
+      "text": "实验链条：羟自由基切割、逆转录停顿、barcode 建库"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-hrf-seq-f1",
+      "alt": "HRF F1",
+      "srcBasename": "hrfseq_f1__PMC4005689__F1.jpg",
+      "legend": "**图 1。HRF-Seq 的主要实验步骤。**Kielpinski et al. 2014（PMID 24569351，DOI `10.1093/nar/gku167`）这张图把 HRF-Seq 的实验链条拆开来看：先用羟自由基（hydroxyl radical）探测 RNA；带有 5′ Illumina 接头突出端的引物由逆转录酶延伸，在 radical-induced break（自由基诱导断裂）的位置停止；带有 7-nt barcode 的接头连接到 cDNA 的 3′ 端，随后用带 Illumina 兼容接头和 index 序列的引物做 PCR 扩增；片段大小筛选之后，用 Illumina paired-end 协议测序，从而同时给出探测位点（probing）和起始位点（priming）的信息。",
+      "body": [
+        "读这张流程图，最该记住的一点是：HRF-Seq 的信号来自“逆转录在断裂处停顿”，因此它测的是主链的溶剂可及性（hydroxyl radical footprinting），而不是碱基配对状态本身。某一段断裂多、RT-stop 多，说明这段主链对溶剂暴露；停顿少甚至读不到信号，可能来自主链被三级结构折叠包裹、被埋藏（buried），或被蛋白/配体遮挡。",
+        "对 FoldBridge 来说，这意味着最终表格里的数值不是 •OH 直接给出的“结构标签”，而是切割、逆转录停顿、barcode 连接、PCR、测序和归一化之后的观测量。这个观测量很有用，但它报告的是 solvent exposure，需要先在 HRF-Seq 的化学语境里被解释，才能谈结构。"
+      ],
+      "label": "HRF F1",
+      "pmid": "24569351",
+      "pmcid": "PMC4005689",
+      "doi": "10.1093/nar/gku167",
+      "figureId": "F1",
+      "legendText": "Major experimental steps of the HRF-Seq method. Following hydroxyl radical probing, primers containing a 5′ illumina adaptor overhang are extended by reverse transcriptase to positions of radical induced breaks. Adapters containing a 7-nt barcode are ligated to the 3′-ends of cDNAs, followed by PCR amplification with primers containing Illumina compatible adaptor and index sequences. After size selection, the library is sequenced with the Illumina paired-end protocol to provide information of the positions of probing and priming."
+    },
+    {
+      "type": "heading",
+      "text": "barcode 与 EUC：把测序计数还原成可信的探测信号"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-hrf-seq-f2",
+      "alt": "HRF F2",
+      "srcBasename": "hrfseq_f2__PMC4005689__F2.jpg",
+      "legend": "**图 2。用 barcode 估计 unique counts。**Kielpinski et al. 2014（PMID 24569351，DOI `10.1093/nar/gku167`）图注按几部分组织：(A) hydroxyl radical 处理过的 RNase P 实验中观测到的 barcode 频率分布直方图，竖虚线标出“所有 barcode 等频出现”时的频率；(B) 把观测到的 barcode 计数与按等频假设、以及按作者策略估计的不等频假设所模拟的计数相比较；(C)(D) 分别在 RNase P 和 16S rRNA 实验里，展示观测到的 unique barcode 数目与 EUC（estimated unique counts）在不同 barcode 归一化策略下的关系，竖线标出实验中观测到的最高计数；(E)(F) 分别展示 RNase P specificity domain 和 16S rRNA 探测中片段的长度依赖性偏差（length dependent bias）。",
+      "body": [
+        "这张图把一个容易被忽略的安全阀摆到台面上：测序得到的原始 read 计数并不直接等于探测信号。PCR 扩增会让某些片段被重复计数，barcode 在文库里也不是等频出现，片段长度还会引入系统性偏差。如果不先把这些影响校正成 EUC，再谈“某个位点被切了多少次”，就会把扩增和建库的伪差当成主链可及性。",
+        "对 FoldBridge 来说，这正是“raw observation 要先经过 readout context”的具体来源。同一个位点的切割计数，在校正前后含义并不相同。把没有经过 barcode 归一化、没有标注长度偏差处理的数值直接当成主链可及性真值，会把建库参数和结构解释混为一谈。"
+      ],
+      "label": "HRF F2",
+      "pmid": "24569351",
+      "pmcid": "PMC4005689",
+      "doi": "10.1093/nar/gku167",
+      "figureId": "F2",
+      "legendText": "Using barcodes to estimate unique counts. ( A ) Observed barcode frequencies. Histogram showing the distribution of observed barcode frequencies in the hydroxyl radical treated RNase P experiment. The broken vertical line indicates the barcode frequency if all barcodes were present at equal frequencies. ( B ) Estimation of barcode counts. The plot compares the observed barcode counts with simulated barcode counts as estimated by assuming equal barcode frequencies or the unequal barcode frequencies as estimated by our strategy. Data is from the hydroxyl radical treated RNase P experiment. ( C ) Relationship between the number of observed unique barcodes and EUC for different types of barcode normalization strategies for the hydroxyl radical treated RNAse P experiment. The vertical line shows the highest count observed in the experiment. ( D ) Relationship between the number of observed unique barcodes and EUC for different types of barcode-normalization strategies for the hydroxyl radical-treated 16S rRNA. The vertical line shows the highest count observed in the experiment. ( E ) Length dependent bias of fragments in the probing of the RNAse P specificity domain RNA. ( F ) Length dependent bias of fragments in the probing of the 16S rRNA."
+    },
+    {
+      "type": "heading",
+      "text": "把信号对到核糖可及性：强信号对应溶剂暴露的主链"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-hrf-seq-f3",
+      "alt": "HRF F3",
+      "srcBasename": "hrfseq_f3__PMC4005689__F3.jpg",
+      "legend": "**图 3。HRF-Seq 对 RNase P RNA specificity domain 的分析。**Kielpinski et al. 2014（PMID 24569351，DOI `10.1093/nar/gku167`）图注分为几部分：(A) HRF 处理样品的终止信号（termination signal），按在某个位置终止的片段的 EUC 求和得到；(B) HRF 处理样品的 coverage；(C) 归一化后的 HRF-Seq 信号，用处理样品的 termination coverage ratio 的 3-nt 滑动平均、减去对照样品的对应值算出；(D) 归一化 HRF-Seq 信号与已发表晶体结构中核糖可及性（ribose accessibility，用 1.4 Å 探针、取 3-nt 滑动平均）的相关性；(E) 归一化 HRF-Seq 信号与晶体结构中核糖的 through-space contacts 数目的相关性，R 值用 Pearson correlation 计算；(F) 把归一化 HRF-Seq 信号画到 RNase P RNA specificity domain 的晶体结构上，灰色表示无数据。",
+      "body": [
+        "这张图把 HRF-Seq 的价值放在正确的位置上：当归一化信号被拿来和晶体结构里的核糖可及性、以及核糖的空间接触数目相比较时，相关性确认了 HRF-Seq 信号读出的就是主链/核糖的溶剂可及性；把信号映射回三维结构表面，也让“信号—可及性”的对应关系可视化。",
+        "但这恰恰也是最容易误读的地方。HRF-Seq 的强信号对应的是溶剂暴露的主链，而不是简单的 unpaired。一段主链可以待在配对的螺旋里却仍然朝向溶剂、让逆转录在那里停得很频繁；也可以本是单链却被三级结构折叠裹在内部，几乎读不到 RT-stop。图中 through-space contacts 越多的核糖越被埋藏、信号越弱，正说明三级结构在塑造这个信号。对 FoldBridge 来说，把 HRF-Seq 高信号直接翻译成“此处不配对”，等于跳过了它真正测到的那一层——主链朝向溶剂、逆转录因此停顿。"
+      ],
+      "label": "HRF F3",
+      "pmid": "24569351",
+      "pmcid": "PMC4005689",
+      "doi": "10.1093/nar/gku167",
+      "figureId": "F3",
+      "legendText": "HRF-Seq analysis of RNase P RNA specificity domain. ( A ) Termination signal for HRF-treated sample calculated as the sum of EUC for fragments terminating at a given position. ( B ) Coverage for HRF treated sample. ( C ) Normalized HRF-Seq signal calculated as the 3-nt moving average of the termination coverage ratio for the HRF-treated sample with the termination coverage ratio for the control sample subtracted. ( D ) Correlation between the normalized HRF-Seq signal and a 3-nt moving average of ribose accessibility from the published crystal structure ( 26 ) using a 1.4Å probe. ( E ) Correlation between the normalized HRF-Seq signal the number of ribose through-space contacts from the published crystal structure ( 26 ). R values are calculated using the Pearson correlation. ( F ) Normalized HRF-Seq signal displayed on the crystal structure of the RNase P RNA specificity domain ( 26 ), gray indicates no data."
+    },
+    {
+      "type": "heading",
+      "text": "在 16S rRNA 上的全链条读出：从片段到核糖可及性"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-hrf-seq-f4",
+      "alt": "HRF F4",
+      "srcBasename": "hrfseq_f4__PMC4005689__F4.jpg",
+      "legend": "**图 4。HRF-Seq 对 E. coli 16S rRNA 的分析。**Kielpinski et al. 2014（PMID 24569351，DOI `10.1093/nar/gku167`）图注分为几部分：(A) 处理样品（左）和对照样品（右）的测序片段（EUC）映射到 16S rRNA 序列，每个片段的左端对应逆转录终止位点、右端对应 priming 位点；(B) 处理样品和对照样品在每个位置的 EUC 终止信号求和；(C) 处理样品和对照样品基于 EUC 的 coverage；(D) 用终止信号除以 coverage 得到的 TCR（termination coverage ratio）；(E) 上方红色曲线是归一化 HRF-Seq 信号，用处理样品的 TCR 减去对照样品的 TCR、再取 3-nt 滑动平均得到，下方蓝色曲线是从晶体结构算出的核糖可及性（用 3 Å 半径探针、取 3-nt 滑动平均），R 用 Pearson correlation 计算。",
+      "body": [
+        "这张图把 HRF-Seq 的完整分析链条放在一个更大的 RNA 上：从原始片段，到终止信号、coverage、TCR，再到减去对照、平滑后的归一化信号，最后和晶体结构的核糖可及性对齐。它说明这套读出在 16S rRNA 这样的大分子上同样成立——归一化信号与结构推得的 solvent accessibility 相关。",
+        "这也提醒一件事：HRF-Seq 和同属溶剂可及性家族的其他方法（例如 RL-Seq，另一种 hydroxyl radical footprinting）测的是同一类物理量，但探针半径、平滑窗口、归一化和参考 SASA 的定义都可能不同。即便两个信号都指向“溶剂可及”，把它们不加区分地当成等价证据并不稳妥；同类可及性方法之间仍然需要交叉验证。对 FoldBridge 来说，结论很直接：一个 HRF-Seq 信号和一个 RL-Seq 信号即便都报告主链暴露，也不应该被塞进同一个 confidence 通道而抹掉它们各自的语境。"
+      ],
+      "label": "HRF F4",
+      "pmid": "24569351",
+      "pmcid": "PMC4005689",
+      "doi": "10.1093/nar/gku167",
+      "figureId": "F4",
+      "legendText": "HRF-Seq analysis of E. coli 16S rRNA. ( A ) Sequenced fragments (EUC) from the treated (left) and control (right) sample mapped to 16S rRNA sequence. Left terminus of each fragment corresponds to the reverse transcription termination site and the right terminus to the priming site. ( B ) Sum of EUC termination signal at each position for HRF-treated and control sample. ( C ) EUC-based coverage for HRF-treated and control sample. ( D ) TCR calculated by dividing the termination signal with the coverage for the treated and control samples. ( E ) Top graph (red) shows normalized HRF-Seq signal calculated by subtracting TCR for the control sample from the TCR obtained from the treated sample and taking the 3-nt moving average. Bottom graph (blue) shows the area of ribose accessibility calculated from the crystal structure ( 27 ) as the 3-nt moving average of the accessibility to a probe with 3Å radius. R calculated using the Pearson correlation."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 HRF-Seq"
+    },
+    {
+      "type": "paragraph",
+      "text": "HRF-Seq 在 FoldBridge 里的核心规则，是把 hydroxyl-radical solvent-accessibility signal 当成主链可及性证据，而不是配对判定。raw counts 首先是 provenance：它们记录了在某个探测和建库条件下，某个主链位点被 •OH 切到、并被逆转录读到的次数。只有当这个信号经过 barcode/EUC 归一化、能在 HRF-Seq 的化学语境（backbone solvent exposure，而非 base pairing）以及读出/mapping 语境下被解释时，才进入默认可视化和 confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界的关键，是把“逆转录在这里停顿”和“碱基不配对”分开。溶剂可及不等于不配对：tertiary structure 和 burial 都会让一段主链的可及性偏离它的二级结构状态。一段配对螺旋的外侧可以高度暴露、RT-stop 很多，一段单链却可以被折叠埋藏、几乎不留停顿信号。HRF-Seq 经由 RT-stop 读到的，是“这段主链朝不朝向溶剂”，不是“这段碱基配不配对”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "因此 FoldBridge 需要一个 gate 的概念，而不是一条凭空写出的规则代码。这个 gate 的职责是：在把 raw 值送进默认结构上色或 confidence 之前，先确认它已经做过 barcode/EUC 与长度偏差校正（图 2 那种 readout context）、确认它已经可靠映射到结构坐标、并确认它被解释为 backbone solvent accessibility 而不是 pairing。通过 gate 的信号才进入默认 visual track 和 confidence 候选；没通过的，保留为 raw provenance、调试信息或下载表字段。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱 HRF-Seq，恰恰是尊重它的强项。HRF-Seq 对主链 solvent accessibility 非常敏感，barcode/EUC 校正让它能把测序计数还原成可信信号、并与晶体结构的核糖可及性相关；错误只发生在把这个强项扩张成“高信号等于不配对”的那一刻。所以面向非专业读者，最稳的说法是“HRF-Seq 把主链的溶剂暴露程度，经由逆转录停顿和 EUC 校正，转化成测序可读的可及性线索”。展开成一句完整的话就是：在 HRF-Seq assay 中，该主链位点表现出较高的溶剂可及性信号；若探测/建库条件、barcode/EUC 校正、mapping、coverage 和上下文都通过检查，这个信号才可作为结构解释的支持。它比“高信号等于 unpaired”啰嗦，但科学上更稳，也更适合沉淀进 FoldBridge 的长期知识库。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case（示意）"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 HRF-Seq profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一份 HRF-Seq profile 流过 FoldBridge 的三个图层。第一层是 raw observation：某段 16S rRNA 主链在受控探测条件下被 •OH 切出 break、逆转录在断裂处停顿读到的片段计数，连同 7-nt barcode、EUC 校正和 paired-end 测序的 provenance 一起保存下来。这一层只回答“原始数据里记录了什么”，不替读者下结论。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第二层是 visual signal：当这些计数已经做过 barcode/EUC 与长度偏差校正、可靠映射到结构坐标、并被解释为 backbone solvent accessibility 之后，才进入默认结构上色。读者看到的颜色，应该回答“在 HRF-Seq 的解释边界内，这个主链位点有什么可读的可及性线索”，而不是“这个碱基配不配对”。那些 EUC 校正不全、还没映射到可靠坐标的位点，不该混进这一层冒充同一种证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第三层是 confidence 候选：只有通过了 readout 校正、mapping 和上下文检查的可及性信号，才可能进入 confidence。即便是同一份 profile，它的 raw counts、可视化颜色和 confidence 也不是同一件事；HRF-Seq 信号和同类方法（如 RL-Seq 的连接捕获信号）也不该因同属可及性家族就被当成等价证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "把这份示意 profile 走一遍，真正想说明的是 HRF-Seq 自己的系统行为：经 EUC 校正的 RT-stop 计数、上色后的可视化、和最终 confidence 是三层不同的东西，必须分开。HRF-Seq 的科普文章如果把这三层搅在一起，读者最容易犯的错，就是把“逆转录在这里停顿、说明主链朝向溶剂”默读成“此处不配对”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，HRF-Seq 文章的正确结尾不是“高信号证明该碱基不配对”，而是：HRF-Seq 数据能为 RNA structure interpretation 提供强有力的主链 solvent accessibility 线索；在 FoldBridge 中，这种线索只有先被解释为可及性（而非配对）、并通过后续 gates 之后，才会成为结构解释和 confidence 的一部分。"
+    }
+  ]
+}

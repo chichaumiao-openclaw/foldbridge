@@ -28,6 +28,8 @@ import { normalizeRoute, parseHashRoute, routeFromHash } from './router.js';
 import { downloadRowsAsCsv } from './modules.js';
 import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
+import { createProbingArticleStore } from './probingArticleStore.js';
+import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
 import {
   buildAtlasSearchState,
   SAMPLE_ANNOJOIN_ATLAS_TABLES
@@ -73,11 +75,14 @@ let sequenceSearchQuery = '';
 // 让同步的 pageFor()/render() 路径命中即渲染数据，未命中则渲染 loading 占位并触发后台加载。
 const pdbCaseStore = createCaseStore();
 const annojoinAtlasStore = createAnnojointAtlasStore();
+const probingArticleStore = createProbingArticleStore();
 let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
 const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
 let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
 let annojoinDetailRouteIndexState = null; // null=未加载, 'loading', 'error', 或 detail-route-index.json
 const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'error' | generated case asset
+let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
+const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
 let pdbCaseConfidenceFilter = 'all';
 let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
 let homeDashboardFilters = {
@@ -1772,9 +1777,74 @@ function renderTechnologyMethodPage(method) {
 
 function detailPage() {
   const slug = getTechnologySlugFromHash();
-  const method = technologyMethods.find((item) => item.slug === slug);
-  if (method) return renderTechnologyMethodPage(method);
+  const header = renderBundleHeader();
+
+  // 探针科普文章优先：若 index 里存在该 slug，则渲染真实阅读页。
+  const hasIndex = probingArticleIndexState && typeof probingArticleIndexState === 'object';
+  const articleSlugs = hasIndex
+    ? new Set((probingArticleIndexState.articles || []).map((a) => a.slug))
+    : null;
+
+  if (slug) {
+    // 已加载详情 → 渲染阅读页
+    const detailState = probingArticleDetailState.get(slug);
+    if (detailState && typeof detailState === 'object') {
+      return renderProbingArticlePage(detailState, hasIndex ? probingArticleIndexState : null, header);
+    }
+    // index 已确认该 slug 是真实文章 → 触发详情加载并显示 loading
+    if (articleSlugs && articleSlugs.has(slug)) {
+      if (detailState !== 'loading' && detailState !== 'error') loadProbingArticleDetail(slug);
+      if (detailState === 'error') {
+        // 加载失败时回退到旧占位方法页（若存在）
+        const method = technologyMethods.find((item) => item.slug === slug);
+        if (method) return renderTechnologyMethodPage(method);
+      }
+      return renderProbingArticleLoadingPage(slug, header, detailState === 'error');
+    }
+    // index 尚未加载 → 后台拉取，同时乐观触发该 slug 的详情加载
+    if (!hasIndex) {
+      if (probingArticleIndexState !== 'loading' && probingArticleIndexState !== 'error') {
+        loadProbingArticleIndex();
+      }
+      if (detailState !== 'loading' && detailState !== 'error') loadProbingArticleDetail(slug);
+      if (detailState === 'error') {
+        const method = technologyMethods.find((item) => item.slug === slug);
+        if (method) return renderTechnologyMethodPage(method);
+      }
+      return renderProbingArticleLoadingPage(slug, header, false);
+    }
+    // index 已加载但无此 slug → 回退到旧占位方法页（保留 legacy 方法目录）
+    const method = technologyMethods.find((item) => item.slug === slug);
+    if (method) return renderTechnologyMethodPage(method);
+    return renderProbingArticleIndex(probingArticleIndexState, header);
+  }
+
+  // 无 slug：总览页。优先真实文章索引；未加载则后台拉取并显示原 technology 总览作为占位。
+  if (hasIndex) {
+    return renderProbingArticleIndex(probingArticleIndexState, header);
+  }
+  if (probingArticleIndexState !== 'loading' && probingArticleIndexState !== 'error') {
+    loadProbingArticleIndex();
+  }
   return renderTechnologyOverviewPage();
+}
+
+function renderProbingArticleLoadingPage(slug, headerHtml, isError) {
+  const method = technologyMethods.find((item) => item.slug === slug);
+  const title = method ? method.title : slug;
+  return `<main class="page-detail page-probing-article">
+    ${headerHtml}
+    <section class="card bundle-wide-card technology-detail-hero">
+      <a class="technology-back-link" href="#detail">← 返回探针技术总览</a>
+      <div class="technology-detail-header">
+        <div>
+          <p class="technology-kicker">probing article</p>
+          <h1>${title}</h1>
+          <p class="technology-intro">${isError ? '文章资产加载失败，请稍后重试。' : '正在加载文章…'}</p>
+        </div>
+      </div>
+    </section>
+  </main>`;
 }
 
 function browsePage() {
@@ -1910,6 +1980,31 @@ async function loadPdbCaseDetail(pdbId) {
     pdbCaseDetailState.set(pdbId, 'error');
   }
   if (route === 'pdb-case') render({ preserveScroll: true });
+}
+
+async function loadProbingArticleIndex() {
+  if (probingArticleIndexState === 'loading') return;
+  probingArticleIndexState = 'loading';
+  try {
+    probingArticleIndexState = await probingArticleStore.loadIndex();
+  } catch (err) {
+    console.error('[main] 加载探针文章索引失败', err);
+    probingArticleIndexState = 'error';
+  }
+  if (route === 'detail') render({ preserveScroll: true });
+}
+
+async function loadProbingArticleDetail(slug) {
+  if (!slug || probingArticleDetailState.get(slug) === 'loading') return;
+  probingArticleDetailState.set(slug, 'loading');
+  try {
+    const detail = await probingArticleStore.loadArticle(slug);
+    probingArticleDetailState.set(slug, detail);
+  } catch (err) {
+    console.error('[main] 加载探针文章详情失败', slug, err);
+    probingArticleDetailState.set(slug, 'error');
+  }
+  if (route === 'detail') render({ preserveScroll: true });
 }
 
 async function loadAnnojointAtlasIndex() {

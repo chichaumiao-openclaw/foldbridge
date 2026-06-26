@@ -1,0 +1,213 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "shape-reagents",
+  "title": "SHAPE 试剂读的是 2′-羟基的柔性，不是碱基配对真值",
+  "date": "2026-06-26",
+  "figure_count": 9,
+  "rep_pmid": "",
+  "rep_pmcid": "",
+  "rep_doi": "10.1021/ja043822v",
+  "asset_base": "./src/assets/generated/probing-articles/assets/shape-reagents",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只看一张反应性热图，SHAPE 很容易被误读成一种\"直接告诉你哪个碱基配对、哪个不配对\"的结构染色剂。这个理解是错的。SHAPE（Selective 2′-Hydroxyl Acylation analyzed by Primer Extension）化学读的是核糖 2′-羟基的局部柔性与可及性：当一个核苷酸构象自由、未被配对或堆叠约束时，它的 2′-OH 更容易被酰化试剂修饰；当它被 Watson-Crick 配对、碱基堆叠、三级结构或蛋白/配体保护锁定在某个构象里时，2′-OH 的反应性就下降。也就是说，SHAPE 首先报告的是一类化学位点的局部柔性，而不是直接报告\"这个碱基一定配对\"或\"这个碱基一定单链\"。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始 SHAPE 观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 confidence 候选，就必须先问一个更具体的问题：这个反应性在当前 assay model（2′-OH 酰化）下能不能被解释为结构支持？SHAPE 试剂家族有多个成员——NMIA、1M7、BzCN——它们是同一化学的不同实现，动力学和时间分辨能力各不相同，归一化和可比性也要一并交代。（本文三篇来源均为 ACS 期刊文章，无 PMC/PMID，故下文图注只标 DOI。）"
+    },
+    {
+      "type": "heading",
+      "text": "NMIA：经典的 2′-OH 酰化化学"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-reagents-f1",
+      "alt": "NMIA F1",
+      "srcBasename": "shapereagents_nmia_f1__10_1021_ja043822v__F1.gif",
+      "legend": "**图 1。SHAPE 化学的核心机制：2′-羟基与 NMIA 的酰化反应。** Merino et al. 2005（DOI `10.1021/ja043822v`，原文 Figure 1）的图示给出 SHAPE 的化学基础：核糖 2′-羟基先去质子形成氧负离子亲核试剂，再去攻击 NMIA。图注（legend）强调了选择性的来源——当核苷酸被约束在 C3′-endo 等构象时，邻近的 3′-磷酸二酯会去稳定（图中红色重叠符号标出）这个氧负离子，使该位点不易反应。",
+      "body": [
+        "这张图点出 SHAPE 的本质：信号不是直接的配对读数，而是 2′-OH 的局部化学环境读数。柔性、构象自由的核苷酸反应性高；被配对、堆叠或三级结构锁住的核苷酸反应性低。把高反应性直接写成\"该碱基一定不配对\"，就跳过了\"柔性\"这一层真正被测量的物理量。"
+      ],
+      "label": "NMIA F1",
+      "pmid": "",
+      "pmcid": "",
+      "doi": "10.1021/ja043822v",
+      "figureId": "F1",
+      "legendText": "Figure 1 Reaction of a ribose 2‘-hydroxyl with NMIA via formation of an oxyanion nucleophile. Nucleotides constrained in the RNA C3‘-endo and other conformations are unreactive due to destabilization (red overlap symbol) of the oxyanion by the proximal 3‘-phosphodiester."
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-reagents-f2",
+      "alt": "NMIA F2",
+      "srcBasename": "shapereagents_nmia_f2__10_1021_ja043822v__F2.gif",
+      "legend": "**图 2。NMIA 与核糖羟基反应的结构选择性与动力学。** Merino et al. 2005（DOI `10.1021/ja043822v`，原文 Figure 2）用 ATP 与 3′-deoxy-ATP 对比来定位 2′-酯的形成：被 NMIA 修饰的核苷酸在聚丙烯酰胺凝胶电泳中迁移率下降（A）；图注还给出加合物形成的动力学分析（B），曲线是按 eq 1 做的最小二乘拟合。",
+      "body": [
+        "这张图的意义在于把\"反应性\"落到可测量的速率常数上。SHAPE 不是定性的有无判断，而是不同位点 2′-OH 酰化速率的差异。这也提醒读者：最终热图里的数值是化学反应速率经过读出和归一化后的观测量，需要被解释，而不是一个现成的结构标签。"
+      ],
+      "label": "NMIA F2",
+      "pmid": "",
+      "pmcid": "",
+      "doi": "10.1021/ja043822v",
+      "figureId": "F2",
+      "legendText": "Figure 2 Structure-selective reaction of NMIA with ribose hydroxyl groups. (A) Visualizing nucleotide 2‘-ester formation with ATP and 3‘-deoxy-ATP. NMIA-modified nucleotides migrate with reduced mobility by polyacrylamide gel electrophoresis. (B) Kinetic analysis of nucleotide adduct formation; lines represent least-squares fits to eq 1."
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-reagents-f3",
+      "alt": "NMIA F6",
+      "srcBasename": "shapereagents_nmia_f6__10_1021_ja043822v__F6.gif",
+      "legend": "**图 3。NMIA 的 2′-羟基酰化对未配对核苷酸有选择性。** Merino et al. 2005（DOI `10.1021/ja043822v`，原文 Figure 6）用同一段寡核苷酸（5′-UACUAACACC-ddC）的单链与双链形式做对比（A，标记位点以星号示意），并对 10 个羟基的平均加合速率做定量分析（B）：单链（三角）与双链（方块）的反应速率按 eq 1 拟合后差异明显。",
+      "body": [
+        "这是 SHAPE 选择性最直接的证据：同一序列，单链时 2′-OH 酰化快，配成双链后变慢。差异来源是构象约束，不是序列本身。这正是 SHAPE 的强项，也是它的边界：它对\"柔性 vs 受约束\"敏感，而\"受约束\"可以来自配对，也可以来自堆叠、三级结构或配体保护。读数低不等于一定配对。"
+      ],
+      "label": "NMIA F6",
+      "pmid": "",
+      "pmcid": "",
+      "doi": "10.1021/ja043822v",
+      "figureId": "F6",
+      "legendText": "Figure 6 2‘-Hydroxyl acylation by NMIA is selective for unpaired nucleotides. (A) 2‘-Adduct formation with the oligonucleotide (5‘-UACUAACACC-ddC) and the corresponding duplex visualized by gel electrophoresis. Site of [ 32 P]-label is indicated with an asterisk. (B) Quantitative analysis of 2‘-O-adduct formation averaged over the 10 hydroxyl groups in the labeled oligonucleotide. Rates for the single strand (triangles) and duplex (squares) were obtained by fitting to eq 1."
+    },
+    {
+      "type": "heading",
+      "text": "1M7：快速一步反应的改良试剂"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-reagents-f4",
+      "alt": "1M7 F1",
+      "srcBasename": "shapereagents_1m7_f1__10_1021_ja0704028__F1.gif",
+      "legend": "**图 4。RNA SHAPE 化学机制（1M7 视角）。** Mortimer & Weeks 2007（DOI `10.1021/ja0704028`，原文 Figure 1）的图示重申了同一条原理：2′-羟基的亲核反应性在柔性位点被选择性增强（A）；同时 N-methylisatoic anhydride 类试剂会与 RNA 的 2′-羟基反应，也会与水平行反应（B，试剂初始浓度 5 mM）。",
+      "body": [
+        "1M7（1-methyl-7-nitroisatoic anhydride）和 NMIA 共用 2′-OH 酰化机制，读的仍然是局部柔性而非配对真值。值得注意的是与水的平行水解反应：试剂一边修饰 RNA，一边自我失活。这个竞争决定了反应的时间窗口，也是后面区分三种试剂的关键变量。"
+      ],
+      "label": "1M7 F1",
+      "pmid": "",
+      "pmcid": "",
+      "doi": "10.1021/ja0704028",
+      "figureId": "F1",
+      "legendText": "Figure 1 Mechanism of RNA SHAPE chemistry. (A) The nucleophilic reactivity of the 2’-hydroxyl group is selectively enhanced at flexible positions. 4 (B) Parallel reaction of N -methylisatoic anhydride derivatives with RNA 2‘-hydroxyl groups and with water. [reagent] 0 was 5 mM."
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-reagents-f5",
+      "alt": "1M7 F2",
+      "srcBasename": "shapereagents_1m7_f2__10_1021_ja0704028__F2.gif",
+      "legend": "**图 5。1M7 与 NMIA 的反应性对比。** Mortimer & Weeks 2007（DOI `10.1021/ja0704028`，原文 Figure 2）比较了两种试剂的水解（左）与对 pAp-ethyl 的 2′-O-加合物形成（右）。1M7 的反应明显快于 NMIA（此速率比较依据同篇正文）。",
+      "body": [
+        "这张图说明了 1M7 相对 NMIA 的实际优势：反应更快、能在更短时间内完成一步处理。这让 1M7 成为单组分、易操作的常用 SHAPE 试剂——不需要像 NMIA 那样等待较长的反应时间，背景和降解的窗口也更可控。"
+      ],
+      "label": "1M7 F2",
+      "pmid": "",
+      "pmcid": "",
+      "doi": "10.1021/ja0704028",
+      "figureId": "F2",
+      "legendText": "Figure 2 Comparative reactivity of 1M7 and NMIA via hydrolysis (left) and 2‘- O -adduct formation with pAp-ethyl (right)."
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-reagents-f6",
+      "alt": "1M7 F3",
+      "srcBasename": "shapereagents_1m7_f3__10_1021_ja0704028__F3.gif",
+      "legend": "**图 6。Mg2+ 存在与否下 1M7 的逐核苷酸反应性。** Mortimer & Weeks 2007（DOI `10.1021/ja0704028`，原文 Figure 3）用直方图和差异图展示了在 6 mM Mg2+ 存在与缺失时，1M7 测得的绝对核苷酸反应性变化。",
+      "body": [
+        "离子条件会改变 RNA 构象，进而改变 2′-OH 的局部柔性，所以同一段 RNA 在加 Mg2+ 前后反应性谱会变。这对解读很重要：SHAPE 反应性是一个 assay 信号，它依赖于实验条件（离子、温度、试剂、时间）。脱离这些上下文，单个数值无法直接当作结构真值。"
+      ],
+      "label": "1M7 F3",
+      "pmid": "",
+      "pmcid": "",
+      "doi": "10.1021/ja0704028",
+      "figureId": "F3",
+      "legendText": "Figure 3 Histograms and difference plot of absolute nucleotide reactivities for SHAPE experiments performed with 1M7 in the presence and absence of 6 mM Mg 2+ ."
+    },
+    {
+      "type": "heading",
+      "text": "BzCN：亚秒级、可做时间分辨折叠动力学"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-reagents-f7",
+      "alt": "BzCN F1",
+      "srcBasename": "shapereagents_bzcn_f1__10_1021_ja8061216__F1.gif",
+      "legend": "**图 7。BzCN 的 RNA SHAPE 化学机制。** Mortimer & Weeks 2008（DOI `10.1021/ja8061216`，原文 Figure 1）的图示说明 BzCN（benzoyl cyanide）既会与 RNA 柔性位点的 2′-羟基反应形成 2′-O-加合物，也会通过水解快速失活（其亚秒级时间尺度依据同篇正文）。",
+      "body": [
+        "BzCN 仍然是 2′-OH 酰化化学，读的依旧是柔性而非配对真值。它的特别之处在于速度：BzCN 在亚秒级别就完成反应并失活，这相当于给 RNA 折叠过程拍了一张极短曝光的快照。"
+      ],
+      "label": "BzCN F1",
+      "pmid": "",
+      "pmcid": "",
+      "doi": "10.1021/ja8061216",
+      "figureId": "F1",
+      "legendText": "Figure 1. Mechanism of RNA SHAPE chemistry with BzCN. BzCN reacts both with 2′-hydroxyl groups at flexible positions in RNA to form a 2′- O -adduct and also undergoes inactivation by hydrolysis."
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-reagents-f8",
+      "alt": "BzCN F2",
+      "srcBasename": "shapereagents_bzcn_f2__10_1021_ja8061216__F2.gif",
+      "legend": "**图 8。1M7 与 BzCN 在 RNase P specificity domain 上的反应性对比。** Mortimer & Weeks 2008（DOI `10.1021/ja8061216`，原文 Figure 2）用直方图比较了有无 Mg2+ 时该结构域的绝对 SHAPE 反应性，分别用 1M7（上）与 BzCN（下）测得，并标出了 loop（Lx）与 joining（Jx）结构地标。",
+      "body": [
+        "这张图说明 BzCN 与 1M7 测得的反应性谱在结构地标上彼此印证：两种试剂读的是同一个物理量（2′-OH 柔性），所以在 loop 和 joining 区域给出一致的趋势。差异主要来自反应时间尺度，而不是化学本质的不同。"
+      ],
+      "label": "BzCN F2",
+      "pmid": "",
+      "pmcid": "",
+      "doi": "10.1021/ja8061216",
+      "figureId": "F2",
+      "legendText": "Figure 2. Histograms comparing absolute SHAPE reactivities for the RNase P specificity domain in the presence and absence of Mg 2+ obtained using 1M7 (top) and BzCN (bottom). Loop (L x ) and joining structure (J x ) landmarks are emphasized."
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-reagents-f9",
+      "alt": "BzCN F5",
+      "srcBasename": "shapereagents_bzcn_f5__10_1021_ja8061216__F5.gif",
+      "legend": "**图 9。RNase P specificity domain 的折叠机制。** Mortimer & Weeks 2008（DOI `10.1021/ja8061216`，原文 Figure 5）给出折叠路径：中间态中快速形成的三级相互作用标为红色，速率决定步骤中形成的相互作用标为蓝色，结构按三维空间中螺旋的大致排布绘制。",
+      "body": [
+        "这正是 BzCN 亚秒级反应换来的能力：time-resolved SHAPE 可以在折叠的不同时间点取样，从而解析出中间态和速率决定步骤。NMIA 和 1M7 适合稳态结构 profiling，而 BzCN 把同一套 2′-OH 酰化化学推进到了折叠动力学的时间维度。读者要记住的是：无论时间分辨与否，测量的始终是局部柔性，而不是直接的配对状态。"
+      ],
+      "label": "BzCN F5",
+      "pmid": "",
+      "pmcid": "",
+      "doi": "10.1021/ja8061216",
+      "figureId": "F5",
+      "legendText": "Figure 5. Mechanism for folding of the RNase P specificity domain. Fast-forming tertiary interactions found in the intermediate are red, interactions that form in the rate-determining step are in blue. Structure is drawn to approximate the arrangement of helices in three-dimensional space. (9)"
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 SHAPE 试剂"
+    },
+    {
+      "type": "paragraph",
+      "text": "SHAPE 反应性是一个 assay 信号，不是结构真值。正式文章和系统行为都必须保留 assay/试剂上下文：raw reactivity 不应直接驱动默认结构上色或 positive confidence，而要先过 assay model（2′-OH 酰化的可解释性）以及 mapping/context gate。SHAPE 化学的可解释对象是核糖 2′-羟基的局部柔性，所有四类碱基都可能给出信号，但信号意味着\"该位点更柔性/更可及\"，而不是\"该位点不配对\"。"
+    },
+    {
+      "type": "paragraph",
+      "text": "试剂差异必须被记录下来，不能在归一化时被抹平。NMIA 经典、反应较慢；1M7 快速单组分、操作简便；BzCN 亚秒级、可做时间分辨折叠动力学。不同试剂的反应动力学和时间窗口不同，离子条件、温度、试剂浓度也会改变反应性谱。FoldBridge 在做跨实验比较或归一化时，应保留试剂标识和实验条件，避免把不同 assay 上下文下的数值当作完全可比。"
+    },
+    {
+      "type": "paragraph",
+      "text": "因此，面向读者时，SHAPE 最稳的说法是\"把 2′-OH 局部柔性转化为可读的反应性线索\"。这个说法保留了方法的力量，也保留了科学边界：高反应性提示更柔性（常见于 loop、单链或柔性区），低反应性提示受约束（配对、堆叠、三级结构或蛋白/配体保护），但两个判断都需要上下文，都不能跳过 assay model 直接变成结构真值。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case（示意）：一条 SHAPE profile 的三层处理"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一条 SHAPE profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一条用 1M7 测得的 SHAPE profile 进入 FoldBridge。系统会把它拆成三层，而不是把同一组数值同时当作三件事用。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第一层是 raw provenance：每个位点的原始反应性、试剂标识（1M7）、实验条件（离子、温度、归一化方法）原样保存，可在详情和下载表中追溯。第二层是可视化信号：默认结构图读取经过 assay model 解释后的 colormap 值，把\"在 2′-OH 酰化框架下可解释为柔性\"的位点上色，而不是直接把原始数值铺满页面。第三层是 confidence 候选：只有通过 assay targetability（2′-OH 酰化可解释性）、mapping 和 context gate 的位点，才进入 positive confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个 case 落到系统行为上，就是同一份 SHAPE profile 会派生出原始观测、可视化信号和 confidence 候选这三件不同的东西。SHAPE 最容易踩的两处误读，恰好对应这三层之间的混淆：把“测到了高反应性”读成“测到了单链”，把“显示出来的颜色”读成“系统认可的 confidence”。而 SHAPE 真正测的只是 2′-OH 的局部柔性——受约束可以来自配对，也可以来自堆叠、三级结构或蛋白/配体保护。再加上 NMIA、1M7、BzCN 三者动力学和时间窗口各异，归一化时若把试剂标识和实验条件抹平，跨实验比较就会把不可比的数值当成可比。把这三层、以及试剂与条件上下文一并交代清楚，SHAPE 试剂家族才会是说明“柔性 ≠ 配对真值”的好例子。"
+    }
+  ]
+}

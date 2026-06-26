@@ -1,0 +1,153 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "shape-map",
+  "title": "SHAPE-MaP：把 2′-OH 的柔性读成测序突变",
+  "date": "2026-06-25",
+  "figure_count": 4,
+  "rep_pmid": "25028896",
+  "rep_pmcid": "PMC4259394",
+  "rep_doi": "10.1038/nmeth.3029",
+  "asset_base": "./src/assets/generated/probing-articles/assets/shape-map",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "SHAPE-MaP 名字里的“突变”两个字最容易被误读：看到测序结果里一串 mismatch，很自然会以为这些是 RNA 上真实存在的序列变异，或者干脆把“突变率高”等同于“这个碱基配对/不配对”的判定。这个理解是错的。这里的突变是 MaP（mutational profiling）刻意制造的——逆转录酶读穿 SHAPE 加合物时掺入一个错配，把化学修饰记成了测序里的“突变”。所以 SHAPE-MaP 的解释对象，是核糖 2′-OH 的化学可及性与局部构象柔性：当一个核苷酸处于构象动态、没有被配对或被复杂结构锁死时，它的 2′ 羟基更容易被 SHAPE 试剂酰化。所有四种核苷酸的 2′-OH 原则上都可以被探测，但读出的是局部柔性，而不是直接的配对状态。SHAPE-MaP 的关键创新，是把这些 SHAPE 加合物在逆转录时读成测序突变（mutational profiling, MaP）。也就是说，SHAPE 首先报告的是“这个位点有多柔、2′-OH 有多可及”，而不是“这个碱基一定配对”或“这个碱基一定不配对”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 ANNOCONFIDENCE / FEC positive confidence，就必须先问一个更具体的问题：这个数字在 SHAPE-MaP 的 assay model 下能不能被解释为 2′-OH 柔性/可及性支持？SHAPE-MaP 的原始突变率是 raw provenance；它必须先通过 assay 化学（酰化是否真实发生在 2′-OH 上）、readout 上下文（突变率是否减过背景、是否归一化），才能成为默认结构颜色或 confidence 的候选。"
+    },
+    {
+      "type": "heading",
+      "text": "SHAPE-MaP 的化学链条：酰化 2′-OH，再把加合物读成突变"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-map-f1",
+      "alt": "SHAPE-MaP F1",
+      "srcBasename": "shapemap_f1__PMC4259394__F1.jpg",
+      "legend": "**图 1。SHAPE-MaP 的整体方案：从酰化到突变谱。** Siegfried et al. 2014（PMID 25028896，DOI `10.1038/nmeth.3029`）的图注（legend）把 SHAPE-MaP 拆成几个环节：RNA 先用 SHAPE 试剂处理，试剂在构象动态的核苷酸上反应；逆转录在特定条件下进行，使聚合酶能读穿 RNA 上的化学加合物，并在 cDNA 中掺入一个与原序列不互补的核苷酸（图中红色）；得到的 cDNA 用任意大规模平行测序读出，形成突变谱（mutational profiles, MaP）；测序 reads 比对到参考序列后，计算单核苷酸分辨率的突变率，再经过背景校正与归一化，产生标准的 SHAPE reactivity profile。图注还指出，这样的 reactivity 可以用来建模二级结构、可视化竞争或替代构象，或定量任何能调节局部核苷酸 RNA 动态的过程或功能。",
+      "body": [
+        "顺着这张图走一遍化学链条就清楚了：SHAPE-MaP 真正的增量在“突变谱”三个字上——它先用化学把“2′-OH 可及、局部柔性”这件事变成 RNA 上的加合物，再让逆转录在读穿加合物时掺入错配，最后用测序把这些刻意制造的错配统计成突变率。每一步都决定了最后表格里的数字到底代表什么。",
+        "更重要的是，图注里那条“读穿加合物、掺入非互补核苷酸”的细节，正是 SHAPE-MaP 与传统 RT-stop 读法的分水岭。它把修饰信息保留在 read 内部，而不是丢在 RT 终止位点。但这也意味着，最后的突变率是化学修饰、逆转录、建库、比对和归一化层层叠加之后的观测量，不是 SHAPE 分子直接给出的结构真值。对 FoldBridge 来说，raw observation 必须先经过 assay chemistry 和 readout context，才能变成默认图层或 confidence 的候选。"
+      ],
+      "label": "SHAPE-MaP F1",
+      "pmid": "25028896",
+      "pmcid": "PMC4259394",
+      "doi": "10.1038/nmeth.3029",
+      "figureId": "F1",
+      "legendText": "RNA is treated with a SHAPE reagent that reacts at conformationally dynamic nucleotides. Reverse transcription is carried out under conditions such that the polymerase reads through chemical adducts in the RNA and incorporates a nucleotide non-complementary to the original sequence (in red) into the cDNA. The resulting cDNA is sequenced using any massively parallel approach to create mutational profiles (MaP). Sequencing reads are aligned to a reference sequence, and nucleotide-resolution mutation rates are calculated, corrected for background and normalized, producing a standard SHAPE reactivity profile. SHAPE reactivities can then be used to model secondary structures, visualize competing and alternative structures, or quantify any process or function that modulates local nucleotide RNA dynamics."
+    },
+    {
+      "type": "heading",
+      "text": "TPP riboswitch：先减背景、再归一化，才谈柔性"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-map-f2",
+      "alt": "SHAPE-MaP F2",
+      "srcBasename": "shapemap_f2__PMC4259394__F2.jpg",
+      "legend": "**图 2。SHAPE-MaP 的定量流程与配体诱导的构象变化。** Siegfried et al. 2014（PMID 25028896，DOI `10.1038/nmeth.3029`）的图注（legend）以 TPP riboswitch 为例说明：(a) 在有配体存在下，SHAPE 修饰样品与未处理样品的突变率谱（上），以及在变性条件下进行 SHAPE 修饰的突变率谱（下）；(b) 用处理样品减去未处理样品、再用变性对照归一化后得到的定量 SHAPE profile；(c) 把 SHAPE reactivity 画到配体结合态 TPP riboswitch 的公认二级结构上，红、橙、黑分别对应高、中、低 reactivity；(d) 显示配体结合引起构象变化的差异 SHAPE profile；(e) 把配体诱导的构象变化叠加到 TPP riboswitch 结构上。",
+      "body": [
+        "这张图是 SHAPE-MaP 最值得强调的安全阀。突变率不是只有 SHAPE 修饰才会产生：未处理样品本身也有背景突变，变性条件提供的是“完全可及”这一端的参照。所以一个位点的原始突变率必须先减去未处理背景、再用变性对照归一化，才能被解释为 2′-OH 柔性/可及性的线索。raw mutation rate 本身不等于结构。",
+        "这里最容易出错的，就是把“测到了突变”写成“测到了结构”。图注里红/橙/黑对应的高/中/低 reactivity，是归一化之后的可及性度量：高 reactivity 提示该位点更柔、2′-OH 更可及；低 reactivity 提示被配对或被构象锁住——但这两个判断都需要背景校正和上下文支撑。差异 SHAPE profile 里配体诱导的变化也是 reactivity 的变化，而不是直接的配对翻转。对 FoldBridge 来说，raw observation 必须先经过 readout context，才能成为默认图层或 confidence 的候选；不能让原始突变率直接驱动结构上色。"
+      ],
+      "label": "SHAPE-MaP F2",
+      "pmid": "25028896",
+      "pmcid": "PMC4259394",
+      "doi": "10.1038/nmeth.3029",
+      "figureId": "F2",
+      "legendText": "( a ) Mutation rate profiles for the SHAPE modified and untreated TPP riboswitch RNA in the presence of ligand ( top ) and for SHAPE modification performed under denaturing conditions ( bottom ). ( b ) Quantitative SHAPE profile obtained after subtracting the data from the untreated sample from data for the treated sample and normalizing by the denatured control. ( c ) SHAPE reactivities plotted on the accepted secondary structure of the ligand-bound TPP riboswitch. Red, orange, and black correspond to high, moderate, and low reactivities, respectively. ( d ) Difference SHAPE profile showing conformational changes in the TPP riboswitch upon ligand binding. ( e ) Superposition of ligand-induced conformational changes on the TPP riboswitch structure."
+    },
+    {
+      "type": "heading",
+      "text": "读深与 hit level：定量约束的力量，也有它的前提"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-map-f3",
+      "alt": "SHAPE-MaP F3",
+      "srcBasename": "shapemap_f3__PMC4259394__F3.jpg",
+      "legend": "**图 3。SHAPE-MaP 数据如何提升二级结构建模精度。** Siegfried et al. 2014（PMID 25028896，DOI `10.1038/nmeth.3029`）的图注（legend）说明：(a) 把二级结构建模精度用 sensitivity（sens）和 positive predictive value（ppv）报告，比较无实验约束、传统毛细管电泳（CE）数据、以及用 1M7 试剂或三试剂差异（Diff）数据得到的 SHAPE-MaP 结果，颜色从红（低精度）到绿（高精度）；(b) 测序读深、hit level 与建模精度的关系，结构预测精度（纵轴）用预测结构相对公认模型的 sens 与 ppv 的几何平均表示。图注指出，对 16S rRNA，这个精度在没有实验数据时约为 50%，单试剂 SHAPE 可达 89%，三试剂“差异”实验可达 91%；boxplot 在每个模拟读深下采样 100 条折叠轨迹，箱体表示四分位区间，中线为中位数。图注还定义 hit level 为每个转录本核苷酸上高于归一化背景的总信号。",
+      "body": [
+        "这张图把 SHAPE-MaP 的价值放在正确的位置上：作为定量约束，它能把结构建模精度从 50% 显著拉高。但精度的提升有前提——它依赖足够的读深和 hit level。hit level 本身就被定义为“高于归一化背景的信号”，这再次提醒读者：进入建模的不是裸的突变计数，而是减过背景、达到一定信噪的可及性信号。",
+        "对 FoldBridge 来说，这意味着同一个 SHAPE-MaP 位点的“可解释性”并不均匀：读深不足或 hit level 偏低的位点，其 reactivity 作为结构约束的力量会下降。这正是为什么 raw numeric value 不能直接驱动默认上色——它需要先带着 coverage/hit-level 这样的 readout context 一起被评估。定量分析越精细，越要把 chemical reactivity、accessibility、base pairing 和测序深度/背景分开。"
+      ],
+      "label": "SHAPE-MaP F3",
+      "pmid": "25028896",
+      "pmcid": "PMC4259394",
+      "doi": "10.1038/nmeth.3029",
+      "figureId": "F3",
+      "legendText": "( a ) Secondary structure modeling accuracies reported as a function of sensitivity (sens) and positive predictive value (ppv) for calculations performed without experimental constraints, with conventional capillary electrophoresis (CE) data, and with SHAPE-MaP data obtained with the 1M7 reagent 22 , 38 or with three-reagent differential (Diff) data 19 . Results are colored on a scale to reflect low (red) to high (green) modeling accuracy. ( b ) Relationship between sequencing read depth, hit level, and accuracy of RNA structure modeling. Structure prediction accuracy (vertical axis) is shown as the geometric average of the sens and ppv of predicted structures with respect to the accepted model 38 . For the 16S rRNA, this accuracy ranges from 50% in the absence of experimental data to 89% for single-reagent SHAPE (shown), and to 91% for the three-reagent “differential” 19 experiment. Boxplots summarize modeling the secondary structure of the 16S ribosomal RNA as a function of simulated SHAPE-MaP read depth. At each depth, 100 folding trajectories were sampled. The line at the center of the box indicates the median value and boxes indicate the interquartile range. Whiskers contain data points that are within 1.5 times the interquartile range and outliers are indicated with (+) marks. Hit level is the total signal above normalized background per transcript nucleotide."
+    },
+    {
+      "type": "heading",
+      "text": "HIV-1 基因组：低 SHAPE-低熵能定位功能结构，但仍是柔性读出"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-shape-map-f4",
+      "alt": "SHAPE-MaP F4",
+      "srcBasename": "shapemap_f4__PMC4259394__F4.jpg",
+      "legend": "**图 4。SHAPE-MaP 在 HIV-1 全基因组上的结构与功能读出。** Siegfried et al. 2014（PMID 25028896，DOI `10.1038/nmeth.3029`）的图注（legend）说明：(a) NL4-3 HIV-1 基因组 RNA 的 SHAPE reactivity，以居中的 55-nt 中位窗口相对全局中位数显示，高于或低于基线的区域分别比中位数更柔或更受约束；Shannon entropy 由核苷酸在 1M7 与差异 SHAPE 约束的 Boltzmann 系综中所有结构上的配对概率计算，反映每个区域二级结构模型的确定程度；代表碱基配对的弧线按配对概率上色，绿色弧线表示高概率螺旋，弧线密集重叠处存在多种潜在结构，假结（PK）用黑色弧线表示。(b) 被识别为具有生物学功能的 RNA 区域，括号圈出确定性高的区域，这些区域对应低 SHAPE-低 Shannon entropy 域，并扩展到最低自由能结构中所有相交的螺旋；5′/3′ UTR 为棕色，剪接受体/供体分别为绿/蓝，多聚嘌呤区为黄色，可变域为紫色，移码与 RRE 域为红色，这些元件落在低 SHAPE-低熵区域的频率远高于随机（p=0.002）。(c) 对那些低 SHAPE reactivity、低 Shannon entropy 区域 de novo 识别出的二级结构模型，核苷酸按 SHAPE reactivity 上色，假结结构标为蓝色。",
+      "body": [
+        "这张图展示了 SHAPE-MaP 在全基因组尺度上的吸引力：把 SHAPE reactivity 与 Shannon entropy 结合起来，可以定位那些既受约束、模型又确定性高的区域，而这些“低 SHAPE-低熵”域恰好富集了已知的功能元件。对非专业读者来说，这是一个很有说服力的结果——化学柔性的读出能照见真实的生物学结构。",
+        "但要小心：reactivity 本身仍是 2′-OH 柔性/可及性的读出，不是碱基级的配对真值。一个区域“低 SHAPE”说明它整体更受约束、更柔性更低，这种约束可能来自配对，也可能来自三级结构或其他构象保护；真正把它写成“结构”的，是 reactivity 与 entropy、配对概率、自由能模型共同支撑的推断，而不是单个突变率。FoldBridge 引用这类结果时，应当写成“该区域具有低 SHAPE-低熵特征、与已知功能元件相关”，而不是“该碱基在此处配对”。功能解释越漂亮，越要把柔性 readout 和结构真值分开。"
+      ],
+      "label": "SHAPE-MaP F4",
+      "pmid": "25028896",
+      "pmcid": "PMC4259394",
+      "doi": "10.1038/nmeth.3029",
+      "figureId": "F4",
+      "legendText": "( a ) SHAPE reactivities for the NL4-3 HIV-1 genomic RNA. Reactivities are shown as the centered 55-nt median window, relative to the global median; regions above or below the line are more flexible or constrained than the median, respectively. Shannon entropy values for 55-nt windows were calculated by considering the pairing probability of a nucleotide over all structures in a 1M7 and differential SHAPE 19 reactivity data-constrained Boltzmann ensemble and reflect how well determined the secondary structure model is for each nucleotide region. Arcs representing base pairs are colored by their respective pairing probabilities, with green arcs indicating highly probable helices. Areas with many overlapping arcs have multiple potential structures. Pseudoknots (PK) are indicated by black arcs. ( b ) RNA regions identified as having biological functions. Brackets enclose well-determined regions and are drawn to emphasize locations of these regions relative to known RNA features in the context of the viral genome. Regions correspond to low SHAPE-low Shannon entropy domains and are extended to include all intersecting helices from the lowest predicted free-energy secondary structure. 5’ and 3’ UTRs are brown; splice acceptors and donors are green and blue, respectively; polypurine tracts are yellow; variable domains are purple; and the frameshift and RRE domains are red. These elements fall within regions with low SHAPE and low Shannon entropy much more frequently than expected by chance ( p = 0.002; see Online Methods). ( c ) Secondary structure models for regions, identified de novo , with low SHAPE reactivities and low Shannon entropies. Nucleotides are colored by SHAPE reactivity and pseudoknotted structures are labeled in blue. Larger figure images, showing nucleotide identities, are provided in Supplementary Fig. 7 ."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 SHAPE-MaP"
+    },
+    {
+      "type": "paragraph",
+      "text": "SHAPE-MaP 没有 DMS 那样清晰的“A/C 可解释、G/U 不可解释”的碱基靶点边界——它的靶点是核糖 2′-OH，原则上每个核苷酸都有 2′-OH，都可被酰化探测。所以 SHAPE-MaP 的解释闸门不是“哪个碱基能上色”，而是一个面向 2′-OH 柔性/可及性的多级 gate：assay 化学（这个位点的加合物是否真实形成并在 MaP 中被读成突变）、readout 上下文（突变率是否减过未处理背景、是否用变性对照归一化、读深与 hit level 是否足够）、以及 mapping 与 claim gate（坐标是否可靠、是否在该实验条件下成立）。"
+    },
+    {
+      "type": "paragraph",
+      "text": "只有同时通过这些 gate 的 reactivity，才能进入默认可视化和 confidence 层。原始突变率本身只是 raw provenance：它该被完整保存、可下载、可追溯，但不应该自动驱动默认结构上色。ANNOJOIN 的默认结构图应读取经过 background 校正与 targetability 处理后的 `visual_colormap_value`，而不是裸的 `raw_numeric_value`。这样读者在结构页面看到的颜色，才是在 SHAPE-MaP assay model 下可解释的颜色。ANNOCONFIDENCE / FEC 的要求更高：只有通过化学、readout、mapping、claim 与 context gate 的 reactivity 观测，才可以成为 positive confidence 的候选。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱 SHAPE-MaP，而是尊重它的强项。SHAPE-MaP 对 2′-OH 柔性/可及性非常有力，又因为 MaP 读出能在单条 read 内保留多个修饰、支持高密度定量；错误发生在把“高 reactivity”一律写成“unpaired”、把“低 reactivity”一律写成“paired”，或把 raw mutation rate 写成结构真值时。正因为 MaP 把修饰记成了“突变”，FoldBridge 更要把“某个位点测到了突变”和“这个突变率能作为柔性证据”分开。网页上的默认颜色回答“在 SHAPE-MaP 解释边界内，这个位点有什么可读信号”；详情表才回答“原始数据里记录了什么”。一旦把这两层混在一起，MaP 记下的“突变”就会被顺势读成 SHAPE-MaP 盖章认可的配对判决。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，面向非专业读者时，SHAPE-MaP 最合适的说法是“把 2′-OH 的局部柔性转化成测序可读的可及性线索”。这个说法保留了方法的力量，也保留了科学边界：它不会把背景突变写成 SHAPE target signal，也不会把一个归一化后的 reactivity 写成配对判决。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case：一份 SHAPE-MaP profile 会怎样流过三个图层（示意）"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 SHAPE-MaP profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一份用 1M7 试剂测得的 SHAPE-MaP profile 进入 FoldBridge。第一层是 raw observation：逐位点的突变率、对应的未处理背景与变性对照、读深与 hit level、文库元数据、测序坐标——这些都原样保存，作为 provenance，可下载、可重算。它们记录的是“每个位点被记下了多少突变”，还不是这个位点的柔性结论。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第二层是 visual signal：突变率减去未处理背景、用变性对照归一化、通过 mapping 与 readout（含读深/hit level）gate 之后，得到可以在结构页面上色的 2′-OH 柔性/可及性值（`visual_colormap_value`）。读者第一眼看到的颜色应该来自这一层，因为它是在 SHAPE-MaP assay model 下可解释的颜色，而不是裸的突变计数。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第三层是 confidence candidate：只有那些既通过化学与 readout gate、又通过 mapping/claim/context 检查的 reactivity 观测，才进入 ANNOCONFIDENCE / FEC 评估，并且仍要带着“高/低 reactivity 反映的是局部柔性，配对解释还需要 entropy、配对概率与自由能模型共同支撑”这一限定。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个示意场景的价值，在于它把 MaP 读出的特性落到系统行为上：同一份 SHAPE-MaP profile 可以同时产出原始观测、可视化信号和 confidence 候选，三者不是同一件事。MaP 把修饰记成测序“突变”这件事本身就是个提醒——突变率是被刻意制造、再层层加工的观测量。如果科普文章不能把这三层分开，读者会顺着“突变”二字把背景错配也当成 SHAPE 信号、把归一化后的 reactivity 当成配对判决。图层越自动，越要在颜色和 confidence 里讲清楚每个数字经过了哪几道加工。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，SHAPE-MaP 文章的正确结尾不是“高信号证明该碱基不配对”，而是：SHAPE-MaP 能为 RNA structure interpretation 提供有力的 2′-OH 柔性/可及性线索；在 FoldBridge 中，这种线索只有先作为 raw provenance 保存、再通过 assay 化学与 readout、mapping、claim、context 等 gate 之后，才会成为默认结构解释和 confidence 的一部分。"
+    }
+  ]
+}

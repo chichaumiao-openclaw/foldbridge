@@ -1,0 +1,153 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "lead-seq",
+  "title": "Lead-seq：用铅离子切割读 RNA 的主链柔性与单链可及性",
+  "date": "2026-06-25",
+  "figure_count": 4,
+  "rep_pmid": "32463449",
+  "rep_pmcid": "PMC7337928",
+  "rep_doi": "10.1093/nar/gkaa404",
+  "asset_base": "./src/assets/generated/probing-articles/assets/lead-seq",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只看数据表，Lead-seq 很容易被误读成一种“铅离子切到哪里、哪里就是不配对碱基”的配对检测器——好像 lead score 高低能直接翻译成配对与否。这个理解是错的。Lead-seq 的解释对象，是 RNA 主链（backbone）在溶液里的柔性（flexibility）和单链可及性：铅离子（Pb²⁺）优先攻击单链、柔性、未配对区域的主链，切割后留下 2′,3′-cyclic phosphate（cP）和 5′-hydroxyl 末端，再经建库和测序读出哪些位点更容易被切。也就是说，Lead-seq 首先报告的是某一段主链是否柔性、是否处在单链构象、是否对铅离子可及，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这一点决定了 FoldBridge 该怎么对待 Lead-seq 数据。一个 flexibility / single-strand accessibility 信号并不等同于一次 pairing call。强切割提示主链柔性、单链构象，但它同时受到三级结构和离子环境（包括 Pb²⁺ 与天然 Mg²⁺ 的竞争）的影响，并不是直接的配对真值。FoldBridge 可以保存原始的切割信号，也可以在网页上展示来自实验的读出；但只要进入默认结构上色、解释性文字或 confidence，就必须先问一个更具体的问题：这个数字在 Lead-seq 的化学和读出语境下，能不能被解释为主链柔性 / 单链可及性的证据？raw cleavage signal 必须先经过 chemistry/readout context，才能成为默认颜色或 confidence 的候选。"
+    },
+    {
+      "type": "heading",
+      "text": "实验链条：Pb²⁺ 切割单链，建库后用 lead score 量化"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-lead-seq-f1",
+      "alt": "Lead-seq F1",
+      "srcBasename": "leadseq_f1__PMC7337928__F1.jpg",
+      "legend": "**图 1。用高通量测序定位铅切割位点。** Twittenhoff et al. 2020（PMID 32463449，DOI `10.1093/nar/gkaa404`）的图示把 Lead-seq 的实验链条拆开来看：(A) 从在 25°C 或 37°C 培养、经 lead(II) acetate 处理的 Yersinia pseudotuberculosis 细胞中提取 RNA；铅离子攻击单链核苷酸的主链，生成 2′,3′-cyclic phosphate（cP）和 5′-hydroxyl 切割产物；RNA 分离并去除 rRNA 后随机打断，用 T4 PNK 处理末端，连上 5′（黄）和 3′（绿）接头，逆转录并 PCR 扩增后进行 Illumina 测序；分别统计 lead-treated 和 control 文库中每个核苷酸的切割事件，lead score 取诱导切割与自发切割事件之比的对数。(B) 饼图给出在 25°C 和 37°C 下铅切割对 A/C/G/U 的偏好，并展示按基因组中各核苷酸丰度校正后的比例。(C) 25°C 与 37°C 下 lead score 的分布（n = 3009815）；总体上 37°C 的平均 lead score 显著高于 25°C（25°C 均值 0.13，37°C 均值 0.23，P = 1.0e-13，D = 0.71）。",
+      "body": [
+        "Lead-seq 测的是 RNA 主链的柔性和单链可及性（Pb²⁺ cleavage），不是碱基配对状态本身。强切割提示这一段主链柔性、处在单链构象、对铅离子可及；弱切割或没有切割可能来自主链配对成螺旋、被三级结构折叠包裹、或被蛋白/配体遮挡。温度依赖（37°C 比 25°C 整体 lead score 更高）也提醒我们，切割强度本身就携带构象动态和环境信息，而不是一个固定的结构标签。",
+        "对 FoldBridge 来说，这意味着最终表格里的数值不是 Pb²⁺ 直接给出的“结构标签”，而是切割、末端修复、建库、逆转录、测序和归一化（lead score）之后的观测量。这个观测量很有用，但它报告的是 backbone flexibility / single-strand accessibility，需要先在 Lead-seq 的化学语境里被解释，才能谈结构。"
+      ],
+      "label": "Lead-seq F1",
+      "pmid": "32463449",
+      "pmcid": "PMC7337928",
+      "doi": "10.1093/nar/gkaa404",
+      "figureId": "F1",
+      "legendText": "Mapping lead cleavage sites by high-throughput sequencing. ( A ) RNA from lead(II) acetate-treated Yersinia pseudotuberculosis cells, grown at 25 or 37°C. Lead(II) ion-mediated attack of single-stranded nucleotides generates 2′,3′-cyclic phosphate (cP) and 5′-hydroxyl groups as cleavage products ( 45 ). After RNA isolation and rRNA depletion, total RNA was randomly fragmented and treated with T4 PNK. The RNA fragments were ligated to 5′—(yellow) and 3′—(green) adapters and subjected to RT. The cDNA products were PCR-amplified prior to Illumina high-throughput sequencing. Cleavage events per nt were counted in the lead-treated and control library. The lead score was calculated as the log ratio between lead-induced and spontaneous cleavage events. ( B ) Pie charts displaying the ratio of lead-cleavage preference toward adenines (As), cytosines (Cs), guanines (Gs) and uraciles (Us) at 25 and 37°C. Moreover, pie charts representing these ratios corrected for the genomic abundance of each nt are shown. ( C ) Distribution of lead scores at 25°C and 37°C ( n = 3009815). Over all sampled nt, the mean lead score is significantly higher at 37°C than at 25°C (mean score at 25°C = 0.13, mean score at 37°C = 0.23, P = 1.0e-13;, D = 0.71)."
+    },
+    {
+      "type": "heading",
+      "text": "单分子结构验证：lead score 与 tRNA His 的已知结构吻合"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-lead-seq-f2",
+      "alt": "Lead-seq F2",
+      "srcBasename": "leadseq_f2__PMC7337928__F2.jpg",
+      "legend": "**图 2。tRNA His 的 lead score 谱与预期结构吻合。** Twittenhoff et al. 2020（PMID 32463449，DOI `10.1093/nar/gkaa404`）给出：(A) tRNA His（YPK_R0043）在 25°C 和 37°C 下获得的 lead score 谱，正的 lead score 表示该核苷酸处于无结构（unstructured）构象；(B) 把取自 tRNAScan-SE 的 tRNA His 预期二级结构与 25°C、37°C 的 lead score 叠加，数值按指定的颜色编码标注；(C) tRNA His 的三维表示，铅可及（lead-accessible）的核苷酸标为蓝色。",
+      "body": [
+        "这张图把 Lead-seq 的价值放在正确的位置上：当 lead score 被叠加到已知二级结构、再投到三维结构上时，正信号确实落在单链、柔性的区域（环、bulge、未配对末端），而配对的螺旋区切割较弱。这让“切割—柔性/单链可及性”的对应关系可视化。",
+        "但这恰恰也是最容易误读的地方。Lead-seq 的强信号对应的是柔性、单链、对 Pb²⁺ 可及的主链，而不是简单等价于“此处不配对”。图注用的措辞是 unstructured / single-stranded conformation 和 lead-accessible，强调的是构象和可及性。一段主链可以暂时未配对却被三级结构折叠包裹、埋在内部而切得很弱；切割强度还会随温度和离子环境变化。对 FoldBridge 来说，把 Lead-seq 高信号直接翻译成“此处不配对”，会跳过 flexibility / single-strand accessibility 这一层真正被测到的物理量。"
+      ],
+      "label": "Lead-seq F2",
+      "pmid": "32463449",
+      "pmcid": "PMC7337928",
+      "doi": "10.1093/nar/gkaa404",
+      "figureId": "F2",
+      "legendText": "Lead score profile of tRNA His matches the expected structure. ( A ) Lead score profiles of tRNA His (YPK_R0043) obtained at 25 and 37°C. A positive lead score indicates that the nt is in an unstructured conformation. ( B ) The expected secondary structure of tRNA His (taken from tRNAScan-SE ( 56 )) was superimposed with lead scores obtained at 25 and 37°C. Lead score values are marked according to the indicated color code. ( C ) 3D representation of tRNA His with lead-accessible nucleotides colored in blue."
+    },
+    {
+      "type": "heading",
+      "text": "切割信号需要参考结构校准：lead score 在配对与未配对位点上的区分"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-lead-seq-f3",
+      "alt": "Lead-seq F3",
+      "srcBasename": "leadseq_f3__PMC7337928__F3.jpg",
+      "legend": "**图 3。Lead-seq 在 tRNA 参考结构数据集上的表现。** Twittenhoff et al. 2020（PMID 32463449，DOI `10.1093/nar/gkaa404`）用 32 个 tRNA 的结构（含 764 个配对、665 个未配对核苷酸）评估 lead score 的可靠性：在排除低于某一阈值的分数后，分别在 25°C（A）和 37°C（B）计算 PPV 和 sensitivity，并用不同阈值重复这一过程；(C) 用 boxplot 展示未配对与配对位点的 lead score 分布——25°C 时未配对均值 0.84、配对均值 0.26（P < 2.2e-16，D = 0.22），37°C 时未配对均值 1.41、配对均值 0.69（P < 2.2e-16，D = 0.22）。",
+      "body": [
+        "这张图把一个容易被忽略的安全阀摆到台面上：lead score 在未配对位点确实系统性地高于配对位点，但两组分布有明显重叠，而且要靠阈值和参考结构来校准 PPV 与 sensitivity。换句话说，单个位点的切割值并不能干净地二分为“配对/不配对”，它是一个在统计意义上偏向单链/柔性的连续信号。",
+        "放到 FoldBridge 上，这正好说明为什么 raw observation 必须带着它的实验条件。同一个 lead score，在不同温度、不同阈值、不同参考下含义并不相同。把没有标注阈值和实验条件的数值直接当成主链单链可及性真值，甚至当成配对真值，会把统计偏好误读成确定性的结构标签，也会把实验参数和结构解释混为一谈。"
+      ],
+      "label": "Lead-seq F3",
+      "pmid": "32463449",
+      "pmcid": "PMC7337928",
+      "doi": "10.1093/nar/gkaa404",
+      "figureId": "F3",
+      "legendText": "Lead-seq performance on a tRNA reference structural dataset. The structure of 32 tRNAs was used to assess the reliability of lead scores, including 764 paired and 665 unpaired nt. After excluding scores smaller than a certain threshold from the dataset, PPV and sensitivity were calculated from lead scores at 25°C ( A ) and 37°C ( B ). This was repeated using different thresholds. The distribution of lead scores at unpaired and paired sites at 25°C (mean unpaired = 0.84, mean paired = 0.26, P < 2.2e-16, D = 0.22) and 37°C (mean unpaired = 1.41, mean paired = 0.69, P < 2.2e-16, D = 0.22) is illustrated as boxplots ( C )."
+    },
+    {
+      "type": "heading",
+      "text": "在更大的 RNA 上验证：RNase P RNA 的 lead score 谱"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-lead-seq-f4",
+      "alt": "Lead-seq F4",
+      "srcBasename": "leadseq_f4__PMC7337928__F4.jpg",
+      "legend": "**图 4。RNase P RNA 的 lead score 谱与已验证结构吻合。** Twittenhoff et al. 2020（PMID 32463449，DOI `10.1093/nar/gkaa404`）给出：(A) M1 RNA 在 25°C 和 37°C 下的 lead score 谱；(B) 把 M1 RNA 的 lead scores（25 和 37°C）与其预期二级结构叠加，正的 lead score 值（提示单链构象）以颜色标注，并标出 proposed pseudoknots；黑色箭头指出显著的 lead(II) 切割位点，这些位点在以往独立研究中也被观察到。",
+      "body": [
+        "这张图的意义不是“Lead-seq 解决了所有碱基”，而是提醒：即使在一个更大、含 pseudoknot 的催化 RNA 上，lead score 的正信号也落在单链、柔性区域，而且与历史上独立方法观察到的铅切割热点吻合。这是一种跨方法、跨研究的交叉验证。",
+        "对 FoldBridge 来说，结论很直接：Lead-seq 信号在被多种证据支持时最可信，但即便如此，它报告的仍然是主链柔性 / 单链可及性，而不是配对真值。pseudoknot 这种三级结构的存在恰好说明，二级结构图上的“未配对”与 Lead-seq 测到的“可及/柔性”并不是同一回事——三级结构会让某些名义上未配对的核苷酸不可及，也会让某些参与配对的区域因构象动态而被切。把这些信号不加区分地塞进同一个 confidence 通道，会让交叉验证的意义消失。"
+      ],
+      "label": "Lead-seq F4",
+      "pmid": "32463449",
+      "pmcid": "PMC7337928",
+      "doi": "10.1093/nar/gkaa404",
+      "figureId": "F4",
+      "legendText": "Lead score profiles of RNase P RNA matches the validated structure. ( A ) Lead score profiles of M1 RNA obtained at 25 and 37°C. ( B ) The lead scores of the M1 RNA (25 and 37°C) were overlaid with its expected secondary structure ( 105 ). Nt with positive lead score values, indicating a single-stranded conformation, are indicated in color. Proposed pseudoknots are indicated. Black arrows indicate prominent sites of lead(II) cleavage that were also observed by ( 36 , 38 , 68 )."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 Lead-seq"
+    },
+    {
+      "type": "paragraph",
+      "text": "Lead-seq 在 FoldBridge 里的核心规则，是把 Pb²⁺ cleavage flexibility / single-strand-accessibility signal 当成主链柔性和单链可及性证据，而不是配对判定。raw cleavage counts 和 lead score 首先是 provenance：它们记录了在某个温度和离子条件下，某个主链位点被铅离子切到的相对频率。只有当这个信号能在 Lead-seq 的化学语境（backbone flexibility / single-stranded accessibility，而非 base pairing）以及读出/mapping 语境下被解释时，才进入默认可视化和 confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界的关键在于把 flexibility / single-strand accessibility 和 unpaired 分开。柔性、单链可及不等于不配对：tertiary structure、pseudoknot、burial 和离子环境都会让一段主链的切割可及性偏离它的二级结构状态。一段未配对的环可以被折叠埋藏而切得很弱，一段参与三级接触的区域也可能因为构象动态而被切。Lead-seq 测到的是“这段主链柔不柔、对铅离子可不可及”，不是“这段碱基配不配对”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "因此 FoldBridge 需要一个 gate 的概念，而不是一条凭空写出的规则代码。这个 gate 的职责是：在把 raw lead score 送进默认结构上色或 confidence 之前，先确认它带有明确的实验条件（温度、阈值、control 库这类 readout context）、确认它已经可靠映射到结构坐标、并确认它被解释为 backbone flexibility / single-strand accessibility 而不是 pairing。通过 gate 的信号才进入默认 visual track 和 confidence 候选；没通过的，保留为 raw provenance、调试信息或下载表字段。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱 Lead-seq。相反，这是尊重它的强项。Lead-seq 对主链柔性和单链构象非常敏感，能在活细胞里探测、也能映射到真实三维结构；错误发生在把这个强项扩展成“高切割等于不配对”时。所以面向非专业读者，最合适的说法是“Lead-seq 把主链的柔性和单链可及程度转化成测序可读的可及性线索”。更完整的句子应该写成：在 Lead-seq assay 中，该主链位点具有较高的柔性 / 单链可及性信号；如果温度、阈值、mapping、coverage 和上下文都通过检查，这个信号可以作为结构解释的支持。这句话比“高信号等于 unpaired”啰嗦一点，但科学上更稳，也更适合进入 FoldBridge 的长期知识库。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case（示意）"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 Lead-seq profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一份 Lead-seq profile 流过 FoldBridge 的三个图层。第一层是 raw observation：某段 tRNA 或 RNase P RNA 主链在某个温度下被 Pb²⁺ 切到的计数和 lead score，连同温度、control 库、末端修复、建库和测序的 provenance 一起保存下来。这一层只回答“原始数据里记录了什么”，不替读者下结论。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第二层是 visual signal：当这些 lead score 已经可靠映射到结构坐标、并被解释为 backbone flexibility / single-strand accessibility 之后，才进入默认结构上色。读者在页面上看到的颜色，应该回答“在 Lead-seq 的解释边界内，这个主链位点有什么可读的柔性/可及性线索”，而不是“这个碱基配不配对”。那些温度或阈值不明、或还没映射到可靠坐标的位点，不应该混进这一层假装是同一种证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第三层是 confidence 候选：只有通过了实验条件、mapping 和上下文检查的可及性信号，才可能进入 confidence。哪怕来自同一份 profile，raw lead score、可视化颜色和 confidence 走的是三条不同的路。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个示意场景想说明的是系统行为，而不是某一组数字：一份 Lead-seq profile 会同时长出原始观测、可视化信号和 confidence 候选，这三层各有各的语义，不能互相顶替。如果文章把它们揉在一起，读者就会把铅切割的统计偏好当成确定性的结构标签——尤其会把“这段主链柔性、对 Pb²⁺ 可及”默读成“这个碱基不配对”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，Lead-seq 文章的正确结尾不是“高切割证明该碱基不配对”，而是：Lead-seq 数据能为 RNA structure interpretation 提供强有力的主链 flexibility / single-strand accessibility 线索；在 FoldBridge 中，这种线索只有先被解释为柔性/可及性（而非配对）、并通过后续 gates 之后，才会成为结构解释和 confidence 的一部分。"
+    }
+  ]
+}

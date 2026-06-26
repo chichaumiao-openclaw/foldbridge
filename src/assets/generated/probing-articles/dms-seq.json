@@ -1,0 +1,149 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "dms-seq",
+  "title": "DMS-seq：在活细胞里看见 RNA 的 active unfolding",
+  "date": "2026-06-25",
+  "figure_count": 4,
+  "rep_pmid": "24336214",
+  "rep_pmcid": "PMC3966492",
+  "rep_doi": "10.1038/nature12894",
+  "asset_base": "./src/assets/generated/probing-articles/assets/dms-seq",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只看数据表，DMS-seq 最容易被读偏的地方，是把 in vivo 测到的反应性直接当成脱离环境的结构真值——忽略了它和 denatured、in vitro 对照之间的差异，恰恰漏掉这套方法最独特的发现：细胞在主动用能量改变 RNA 结构。这个理解是错的。Rouskin、Zubradt 等人在 2014 年提出的 DMS-seq，本质上是把 DMS 化学探测做到了 genome-wide 的规模：先在活细胞里用 DMS 修饰 RNA，再通过高通量测序把读出（readout）扩展到整个转录组。它真正报告的，仍然是 A 和 C 在 Watson-Crick 配对面上的化学可及性——A 的 N1、C 的 N3 在没有被配对、没有被蛋白或配体遮挡、也没有被复杂构象保护时更容易被甲基化。换句话说，DMS-seq 首先报告的是一类化学位点在活细胞里是否可及，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”，更不是给基因组上每个 residue 都贴上同等结构标签。"
+    },
+    {
+      "type": "paragraph",
+      "text": "把这条边界放进 FoldBridge，是 DMS-seq 进库前必须先过的一关。因为 DMS-seq 继承的是 DMS 的化学，所以它沿用同一条 A/C 靶点边界：信号落在 A/C 上时，反映的是 pairing face 的可及性；G/U 在这种 DMS 读法里本来就不是主要可解释对象。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 ANNOCONFIDENCE / FEC positive confidence，raw signal 就必须先经过 assay chemistry 和 readout context 的检查，才能成为默认上色或 confidence 的候选。对 DMS-seq 来说，这条检查同样从 `DMS_AC_ONLY` 开始，只是被应用在 genome-wide 的规模上。而 DMS-seq 这篇论文最独特的贡献，是它把这套化学带进活细胞后，看见了一个传统体外实验看不到的现象：细胞会主动消耗能量去解开 RNA 结构，也就是 active unfolding。"
+    },
+    {
+      "type": "heading",
+      "text": "建库策略与 A/C 富集：DMS-seq 读的是什么"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-dms-seq-f1",
+      "alt": "DMS F1",
+      "srcBasename": "dmsseq_f1__PMC3966492__F1.jpg",
+      "legend": "**图 1。DMS-seq 的建库策略与 A/C 富集。** Rouskin et al. 2014（PMID 24336214，DOI `10.1038/nature12894`）的这张图展示了用 DMS 修饰过的 RNA 进行 library preparation 的策略，并说明 DMS-seq 数据在不同处理时间和 DMS 浓度下都高度可重复、稳健。图注（legend）还指出一个关键对照设计：in vivo DMS 处理会显著富集映射到 A/C 碱基的测序 reads，而实验同时做了 in vivo、denatured 和 in vitro 三组样本，其中 denatured（变性）样本充当“无结构（unstructured）”对照。",
+      "body": [
+        "这张图把一件容易被当成 bug 的事讲清楚了：DMS-seq 的信号天然偏向 A/C，这不是缺陷，而是化学决定的。in vivo 处理后映射到 A/C 的 reads 被显著富集，正说明 DMS 的修饰位点就落在 A 的 N1 和 C 的 N3 上——测序只是把这套修饰转成了可读的计数。对 FoldBridge 来说，这意味着 DMS-seq 的可解释信号从一开始就集中在 A/C 上；G/U 即使在表里有计数，也不是这套化学的主要报告对象。denatured 对照同样重要：它给出“没有结构时 A/C 应该有多可及”的基线，因此 in vivo 与 denatured 的差异才是结构信息的来源，而不是原始计数本身。验证过的富集不等于免检的数值。"
+      ],
+      "label": "DMS F1",
+      "pmid": "24336214",
+      "pmcid": "PMC3966492",
+      "doi": "10.1038/nature12894",
+      "figureId": "F1",
+      "legendText": "a , Schematic of strategy for library preparation with DMS-modified RNAs. b , DMS-seq data is highly reproducible and robust against changes in time and DMS concentration. c , In vivo DMS treatment dramatically enriches for sequencing reads mapping to A/C bases compared to untreated control. d , DMS-seq was completed for in vivo , denatured, and in vitro samples. The denatured sample served as an ‘unstructured’ control."
+    },
+    {
+      "type": "heading",
+      "text": "与已知结构的一致性：准确性来自验证"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-dms-seq-f2",
+      "alt": "DMS F2",
+      "srcBasename": "dmsseq_f2__PMC3966492__F2.jpg",
+      "legend": "**图 2。DMS-seq 信号与已知二级结构的一致性。** Rouskin et al. 2014（PMID 24336214，DOI `10.1038/nature12894`）的这张图把 HAC1 和 ASH1 上的 in vivo DMS 信号映射到它们已知的二级结构上，每个核苷酸按 DMS-seq 信号着色；同时用 18S rRNA 的 A 碱基把信号从最低到最高排序，并给出 A/C 碱基的 ROC 曲线。图注（legend）指出，在 18S rRNA 上 A 碱基的阈值取 0.2 时对应 94% 的准确率。需要说明的是，这里的信号都做过归一化——每个位置的 reads 数被归一到所考察区域内最高的 reads 数（设为 1.0）。",
+      "body": [
+        "这张图接着把可信度落到验证上：DMS-seq 的底气来自与已知结构的一致性，而不是来自“它能给所有碱基打分”。HAC1 和 ASH1 的已知结构提供了 ground truth，ROC 曲线则把 A/C 信号的判别能力量化成一个准确率数字。对 FoldBridge 来说，这条 ROC 有两层含义。第一，它确认 A/C 的 DMS-seq 信号确实携带可解释的结构信息——94% 不是凭空来的。第二，它提醒我们这个准确率是建立在 A/C 上、并且依赖一个阈值和一套归一化的：阈值之下的 A 碱基不会自动变成 unpaired，阈值之上的 A 碱基也要回到上下文里解释。换句话说，验证给了我们用 A/C 信号的底气，但没有取消每一行仍要经过 assay model 解释这一步。"
+      ],
+      "label": "DMS F2",
+      "pmid": "24336214",
+      "pmcid": "PMC3966492",
+      "doi": "10.1038/nature12894",
+      "figureId": "F2",
+      "legendText": "A–b , DMS signal in (a) HAC1 (position 1 corresponds to chrVI:75828) (b) ASH1 (position 1 corresponds to chrXI:96245). Number of reads per position was normalized to the highest number of reads in the inspected region, which is set to 1.0. Also shown are the known secondary structures with nucleotides color-coded reflecting DMS-seq signal in vivo . c , DMS signal on 18S rRNA A bases plotted from least to most reactive. d , ROC curve on the DMS signal for A/C bases from the 18S rRNA. Threshold at 94% accuracy corresponds to 0.2 for the A bases."
+    },
+    {
+      "type": "heading",
+      "text": "区分结构区域：Gini index 与 in vivo / in vitro 对比"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-dms-seq-f3",
+      "alt": "DMS F3",
+      "srcBasename": "dmsseq_f3__PMC3966492__F3.jpg",
+      "legend": "**图 3。用 Gini index 在转录组规模上区分结构化区域。** Rouskin et al. 2014（PMID 24336214，DOI `10.1038/nature12894`）的这张图先把 RPL33A mRNA 的 in vitro DMS 信号按强度着色、画到 Mfold 预测结构上，再定义了两个用来界定 mRNA 内结构化区域的指标，并以每 50 个 A/C 核苷酸为窗口，画出酵母与 K562 细胞里 Gini index 对 r 值的散点图。图注（legend）说明，散点既来自生物学重复，也来自 in vivo 与 in vitro 相对于 denatured 样本的比较；红点代表跨越已验证 mRNA 结构的区域，蓝点来自 rRNA，酵母和 K562 的 in vivo 评估区域分别有 23,412 和 17,242 个。",
+      "body": [
+        "这张图是 DMS-seq 区别于普通全转录组探测的核心一步：它不满足于逐位点的反应性，而是用 Gini index 这种衡量“信号是否集中”的指标，在 50-A/C 的窗口尺度上判断一段 RNA 到底有没有结构。结构化的区域，DMS 信号会集中在少数可及的 A/C 上（高 Gini）；没有结构的区域，信号会摊得更平。关键在于，所有这些判断都建立在 A/C 核苷酸上——窗口是按 A/C 数定义的，散点也是 A/C 信号算出来的。这正是 `DMS_AC_ONLY` 在 transcriptome-wide 尺度上的体现：哪怕分析方法升级成了区域级别的 Gini index，底层证据仍然是 A/C 可及性。对 FoldBridge 来说，这意味着即便上游已经把信号聚合成了区域指标，进入数据库的每一行也要记得它的可解释性来自 A/C，而不是来自 G/U 的计数。in vivo 与 in vitro、denatured 的并排比较则埋下了下一张图的伏笔：活细胞里和试管里，结构并不一样。"
+      ],
+      "label": "DMS F3",
+      "pmid": "24336214",
+      "pmcid": "PMC3966492",
+      "doi": "10.1038/nature12894",
+      "figureId": "F3",
+      "legendText": "a , DMS signal in RPL33A mRNA, position 1 corresponds to chrXVI:282824. In vitro DMS signal color-coded proportional to intensity and plotted onto the Mfold structure prediction. b , Schematic representation of the two metrics used to define structured regions within mRNAs. C–d , Scatter plots of Gini index versus r value from biological replicates or in vivo and in vitro relative to denatured samples for non-overlapping mRNA regions of 50 A/C nucleotides for (c) yeast and (d) K562 cells. 5,000 randomly selected regions are shown. Red dots represent regions spanning validated mRNA structures and blue dots are regions from rRNA. Evaluated regions have a minimum of 15 reads per A/C on average and their total number for in vivo data is (c) 23,412 and (d)17,242."
+    },
+    {
+      "type": "heading",
+      "text": "active unfolding：活细胞为什么和试管不同"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-dms-seq-f4",
+      "alt": "DMS F4",
+      "srcBasename": "dmsseq_f4__PMC3966492__F4.jpg",
+      "legend": "**图 4。活细胞内 RNA 的 active unfolding。** Rouskin et al. 2014（PMID 24336214，DOI `10.1038/nature12894`）的这张图展示了随温度升高，RPL33A 和 RPS28B 在 in vivo 与 in vitro 条件下 DMS 信号的变化；统计了体外解链温度（T_unf）在 denatured 与 structured 区域的分布；并比较了 ATP 耗竭与野生型酵母样本之间的 Gini index 差异。图注（legend）还给出一个直接的对照：在 ATP 耗竭的酵母或体外重折叠的 mRNA 中，相对于野生型酵母的 Gini index 差异，以及 ATP 耗竭过程中 in vivo 结构变化的实例。",
+      "body": [
+        "这张图是 DMS-seq 这篇论文最独特、也最不能和普通 DMS 综述混为一谈的发现：活细胞里的 RNA 比试管里更“松”，而这种松弛需要消耗 ATP 来维持。当细胞被耗竭 ATP 后，许多 mRNA 区域的 Gini index 向“更结构化”的方向移动，趋近体外的状态——也就是说，细胞在正常情况下是在主动出力把 RNA 结构解开（active unfolding），而不是让 RNA 静静地折叠到热力学最低点。温度实验进一步佐证：体外 RNA 会随温度展现各自的解链行为，而 in vivo 的图景由能量驱动的过程额外塑形。对 FoldBridge 来说，这条发现把 in vivo 与 in vitro 的区别从“技术细节”提升成了“解释前提”：同一个 A/C 位点，在活细胞里的可及性可能因为 active unfolding 而高于体外，这个差异本身就是生物学信号，不是噪声。因此 DMS-seq 的数值带有强烈的 context 依赖——它报告的是“在这个细胞、这个能量状态下，这个 A/C 有多可及”，而不是一个脱离环境的结构真值。这恰恰是 assay context 必须进入解释链条的最好例子。"
+      ],
+      "label": "DMS F4",
+      "pmid": "24336214",
+      "pmcid": "PMC3966492",
+      "doi": "10.1038/nature12894",
+      "figureId": "F4",
+      "legendText": "a , Example of DMS signal changes for RPL33A and RPS28B in vivo and in vitro with increasing temperature. b , Histogram of in vitro unfolding temperature (T unf ) for denatured (green bars) or structured (red bars) regions in vivo . c , Histogram of Gini index difference between ATP-depleted and wildtype yeast samples. d , Gini index differences in ATP-depleted yeast or in vitro refolded mRNAs relative to wildtype yeast, calculated over 50 A/C nucleotides. e , Example of in vivo structure changes during ATP depletion. Position 1 corresponds to chrXVI:643,069."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 DMS-seq"
+    },
+    {
+      "type": "paragraph",
+      "text": "DMS-seq 是字面意义上的 DMS-based 方法，所以它直接继承 `DMS_AC_ONLY` 这条核心规则——只是把它应用在 genome-wide 规模上。A/C 是 targetable base；G/U/T/unknown 是 non-target base。G/U/T/unknown 行即使有数字，也只能保留为 raw provenance、debug 信息或下载表字段，不能因为是在 transcriptome-wide 实验里测到的、或者参与了 Gini index 之类的区域指标，就自动进入 positive confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "ANNOJOIN 的默认结构图应读取经过 targetability mask 的 `visual_colormap_value`，而不是直接读取原始数值。这样读者在结构页面看到的颜色，才是在 DMS-seq（即 in vivo DMS）assay model 下可解释的颜色。ANNOCONFIDENCE / FEC 的要求更高：只有通过 assay targetability、mapping、claim 和 context gates 的 A/C 行，才可以进入 positive confidence 候选。对 DMS-seq 来说，这里的 context gate 格外重要，因为 active unfolding 意味着同一位点的可及性会随细胞能量状态变化——in vivo / in vitro / ATP 状态本身就是要记录、要参与解释的上下文，而不能被压扁成一个无条件的反应性数字。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱 DMS-seq。相反，这是尊重它的强项。DMS-seq 对 A/C pairing face 在活细胞里的可及性非常有用，还第一次让人在转录组规模上看见了 active unfolding；错误发生在把这个强项扩展成“全转录组所有碱基统一反应性”、或者把 in vivo 数值当成脱离能量状态的结构真值时。FoldBridge 要做的，是在转录组这种海量数字里始终区分“测到了一个 A/C 计数”和“这个计数可以支撑结构解释”。规模越大、生物学背景越活跃，越要把 chemical reactivity、accessibility、base pairing、tertiary protection、protein/ligand protection、active unfolding 和 sequencing bias 分开来谈。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，DMS-seq 技术文章不应该只写“某个位点信号高”或“我们覆盖了整个转录组”。更完整的句子应该写成：在 DMS-seq 的 in vivo DMS assay 中、在记录下来的细胞能量状态下，该 A/C 位点具有较高可及性信号；如果 mapping、coverage、背景和上下文都通过检查，这个信号可以作为结构解释的支持。多写出细胞能量状态这个前提虽然啰嗦，却能避免把一个受 active unfolding 影响的数值当成脱离环境的配对真值。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case（示意）"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 DMS-seq profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一份 DMS-seq profile 流进 FoldBridge：它来自一次 in vivo DMS + 测序实验，覆盖了一条 mRNA 上连续的若干位点，并且附带了同一对象的 denatured 与 in vitro 对照。在 ANNOJOIN visual track 里，这条 profile 会被自然地分成两类——落在 A/C 上的位点，和落在 G/U/T 或位置未解析（unresolved）上的位点。前者是 DMS 可解释的靶点，后者则不是。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这组划分给读者的结论非常直接：per-position 的 DMS-seq observation 不等于 per-position 的 DMS positive support。对 A/C 来说，活细胞里的 DMS 可以提供强的可及性线索，而且 in vivo 与 denatured / in vitro 的差异本身就携带 active unfolding 这一层生物学信息；对 G/U/T/unknown 来说，数值首先是 raw provenance。只有前者在通过 mapping 和 context gates 后，才可能进入 ANNOCONFIDENCE / FEC positive confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "如果把这条 profile 上的所有位点都按原始数值上色，页面看起来会更满，但解释会变差。非靶点位置不应该参与默认 DMS positive signal；位置未解析的行也不能假装已经映射到可靠结构坐标。更微妙的是，如果把 in vivo 信号直接当成结构真值、忽略它和 in vitro 的差异，读者就会错过 DMS-seq 最有价值的发现——活细胞用能量主动改变了 RNA 结构。相反，A/C-targetable、并且带着明确 in vivo / in vitro context 的那一层，才是读者第一眼应该看到的 DMS-seq 层。剩下的行仍然可以在详情里追溯，因为它们对 provenance、调试和再分析有价值，但它们不应该伪装成同一种证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个示意场景真正想说的，不是某个数字，而是同一份 DMS-seq profile 在系统里会同时活成三种身份：原始观测、可视化信号和 confidence 候选。这三层各管各的事——原始观测层记录“实验在哪个细胞状态下测到了什么”，可视化信号层只显示“在 in vivo DMS 解释边界内能读出什么”，confidence 层只接收通过 gates 的可解释证据。对 DMS-seq 来说，分不清这三层会带来双重的错读：一边是把落在 G/U/T 或 unresolved 位点上的计数当成 A/C 一样的可及性证据，另一边是把 in vivo 数值直接当成结构真值、抹掉它和 in vitro 的差异——而后者恰恰丢掉了 active unfolding 这一层最有价值的生物学信号。在整个转录组的规模上，这两种错读都会被自动化图层成倍地传播出去。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，DMS-seq 文章的正确结尾不是“高信号证明该碱基不配对”，也不是“覆盖了整个转录组就等于解释了整个转录组”，而是：DMS-seq 能在活细胞里、在 genome-wide 的规模上，为 RNA structure interpretation 提供强有力的 A/C 可及性线索，并第一次让 active unfolding 这样的体内现象变得可测；在 FoldBridge 中，这种线索只有通过 `DMS_AC_ONLY` 和后续 gates（包括记录 in vivo / in vitro context）后，才会成为结构解释和 confidence 的一部分。"
+    }
+  ]
+}

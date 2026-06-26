@@ -1,0 +1,149 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "cmc-cmct",
+  "title": "CMC/CMCT 为什么读的是 U/G，而不是 A/C",
+  "date": "2026-06-25",
+  "figure_count": 4,
+  "rep_pmid": "30389828",
+  "rep_pmcid": "PMC6298570",
+  "rep_doi": "10.1261/rna.067561.118",
+  "asset_base": "./src/assets/generated/probing-articles/assets/cmc-cmct",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果把 CMC/CMCT 和 DMS 摆在一起看数据表，很容易把它们当成同一类“给所有碱基打分”的 RNA 结构染色剂，甚至误以为它们都在报告 A/C。这个理解是错的。CMC 和 CMCT 都属于 carbodiimide 化学，它们标记的是 U 的 N3 和 G 的 N1：在 mildly basic 条件下，未配对的碱基上去质子化的氮原子去进攻 carbodiimide 上亲电的碳，形成 guanidinium adduct。也就是说，carbodiimide 系列首先报告的是 U/G 这一类化学位点是否可及，而不是 A/C，也不是“这个碱基一定配对或一定不配对”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界对 FoldBridge 很关键，因为它正好是 DMS 的化学互补面。DMS 看 A 的 N1 和 C 的 N3；CMC/CMCT 看 U 的 N3 和 G 的 N1。两者合起来才覆盖四种碱基，但任何一种试剂单独都只能解释自己的那一半。FoldBridge 可以保存全部原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 ANNOCONFIDENCE / FEC positive confidence，就必须问一个更具体的问题：这个数字在当前 assay model 下能不能被解释为 CMC/CMCT 支持？对 carbodiimide 来说，答案从一个与 `DMS_AC_ONLY` 对称的 `CMC_UG_ONLY` targetability gate 开始：U/G 是 targetable base，A/C/T/unknown 是 non-target base。这里把 CMC 和 CMCT 当作同一篇里的相关试剂处理，因为它们共享同一套 U/G 化学靶点。"
+    },
+    {
+      "type": "heading",
+      "text": "carbodiimide 化学：靶点是 U 的 N3 和 G 的 N1"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-cmc-cmct-f1",
+      "alt": "CMC F1",
+      "srcBasename": "cmccmct_f1__PMC6298570__F1.jpg",
+      "legend": "**图 1。carbodiimide 的 RNA 修饰化学及其表征。**Wang et al. 2019（PMID 30389828，DOI `10.1261/rna.067561.118`）这张图先给出 CMC 和 EDC 的化学结构，把 carbodiimide 反应基团标成蓝色；再画出 carbodiimide 修饰 uracil N3 的反应，并说明与 guanine 的反应同样发生在 N1。图注（legend）描述了机制：在 mildly basic 条件下，碱基上去质子化的氮去进攻 carbodiimide 上亲电的碳，形成 guanidinium adduct。图的 C 到 E 部分用电泳迁移率位移实验，在不同反应时间、温度和 carbodiimide 浓度下表征修饰程度，最底部的共有条带对应未修饰的 RNA oligo，上面每一条对应每增加一个修饰。",
+      "body": [
+        "carbodiimide 的化学红线在这张图里画得很清楚：它的靶点是 U 和 G，不是 A 和 C。一个位点能不能产生 carbodiimide 信号，首先取决于它是不是 U 或 G，其次才取决于这个 U/G 的 N3/N1 在当前构象里是否可及。把 A/C/T/unknown 行的数值直接画成 carbodiimide positive support，等于把化学位点和数据表字段混为一谈——那是 DMS 的化学面，不是 CMC/CMCT 的。"
+      ],
+      "label": "CMC F1",
+      "pmid": "30389828",
+      "pmcid": "PMC6298570",
+      "doi": "10.1261/rna.067561.118",
+      "figureId": "F1",
+      "legendText": "RNA modification chemistry of carbodiimides and its characterization. ( A ) Chemical structures of CMC and EDC with carbodiimide highlighted in blue. ( B ) Reaction of carbodiimide modification of uracil at N3. The reaction with guanine occurs similarly at N1. Under mildly basic conditions, the deprotonated N in the nucleobase attacks the electrophilic C in carbodiimide, resulting in the formation of a guanidinium adduct. ( C – E ) Electrophoretic mobility shift assay for RNA modification by carbodiimides at varying reaction conditions. The shared bottom band corresponds to unmodified RNA oligonucleotide, and each band above corresponds to each incremental number of modifications per oligonucleotide. k app denotes approximate apparent second order rate constants calculated using a binomial distribution (Materials and Methods). Reactions were assayed at varying reaction times ( C ), temperatures ( D ), and carbodiimide concentrations ( E )."
+    },
+    {
+      "type": "heading",
+      "text": "in vitro 验证：U 偏好是数据里看得见的事实"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-cmc-cmct-f2",
+      "alt": "CMC F2",
+      "srcBasename": "cmccmct_f2__PMC6298570__F2.jpg",
+      "legend": "**图 2。CMC 与 EDC 在 Xist 子区域上的 in vitro 验证与比较。**Wang et al. 2019（PMID 30389828，DOI `10.1261/rna.067561.118`）这张图用 Xist 4658–5090 的一个子区域（nt 4701–5001）比较 CMC 和 EDC 探针。图注（legend）说明：A 部分给出两种试剂的 P(stop) 值；B 部分是所有被探测核苷酸的 P(stop) 累积分布，两套数据都显示出对 U 的偏好；C 部分是 CMC 与 EDC 归一化 P(stop) 值的相关性，归一化按第 95 百分位进行；D 部分把 CMC 和 EDC 数据中识别出的 reactive G 和 U 映射到该区域预测的二级结构模型上，星号标出与结构模型冲突的位置，蓝色星号表示 CMC 和 EDC 之间一致的冲突。",
+      "body": [
+        "这张图把 U/G gate 从机制讲成了可观测的统计事实：累积分布直接显示出 U-preference，而被标注、被映射到结构上的 reactive 位点是 G 和 U，不是 A 和 C。换句话说，carbodiimide 数据里值得进入结构解释的，本来就是 U/G 这两类碱基。CMC 和 EDC 之间良好的相关性也说明，把它们当作同一套 U/G 化学的相关试剂来处理是合理的，而不是两个互相独立、需要分别解释的体系。"
+      ],
+      "label": "CMC F2",
+      "pmid": "30389828",
+      "pmcid": "PMC6298570",
+      "doi": "10.1261/rna.067561.118",
+      "figureId": "F2",
+      "legendText": "In vitro validation and comparison of CMC and EDC for RNA chemical probing using a subregion in Xist 4658–5090 (nt 4701–5001). ( A ) P(stop) values obtained for CMC and EDC probing. ( B ) Cumulative distribution of P(stop) values for all nucleotides probed, showing bias for U in both data sets. ( C ) Correlation of normalized P(stop) values between CMC and EDC data sets. Respective P(stop) values are normalized at the 95th percentile as described (Materials and Methods). ( D ) Reactive G and U nucleotides identified in CMC and EDC data sets as mapped to the predicted secondary structure model of the region. Asterisk denotes conflicts with the structure model, and a blue asterisk denotes a conflict consistent between CMC and EDC."
+    },
+    {
+      "type": "heading",
+      "text": "in-cell 探测：覆盖面扩大，U-偏好不变"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-cmc-cmct-f3",
+      "alt": "CMC F3",
+      "srcBasename": "cmccmct_f3__PMC6298570__F3.jpg",
+      "legend": "**图 3。7SK RNA 结构的 in-cell carbodiimide 探测。**Wang et al. 2019（PMID 30389828，DOI `10.1261/rna.067561.118`）这张图把 carbodiimide 探测搬进细胞。图注（legend）说明：A 部分是用三种浓度的 CMC 或 EDC 进行 in-cell 探测得到的 P(stop) 柱状图，其中 1500 mM EDC 有些柱超过了显示上限，以便展示数值范围；B 部分是 P(stop) 累积分布，跨数据集都显示出清晰的 U-preference；C 部分把 300 mM EDC 样本中的 reactive 核苷酸映射到 7SK 已知二级结构上，并按前述方式标出冲突；D 部分给出 7SK 第一个主要 stem–loop（nt 24–87）的归一化反应性差异，正值表示细胞内比 in vitro 反应性降低，负值表示升高，文中讨论的 uridine 被标注出来，HEXIM 识别的 (GAUC)2 motif 加粗以供参考。",
+      "body": [
+        "这张图是 carbodiimide 文章里最值得强调的安全阀：把探测搬进细胞、用测序读出 P(stop)，确实把覆盖面扩大到了 in-cell 语境，但累积分布里那条清晰的 U-preference 提醒我们，化学靶点没有变。对 FoldBridge 来说，raw observation 必须先经过 chemistry targetability 和 readout context，才能变成默认图层或 confidence 的候选。一个 U 位点在细胞内反应性的升高或降低，可能来自配对、蛋白结合（比如 HEXIM 对 (GAUC)2 的识别）、构象或读出限制；这些都需要上下文，而不是把高 P(stop) 直接写成“unpaired”。同样，A/C 位点即使在表里有数字，也不是 carbodiimide 的可解释信号。"
+      ],
+      "label": "CMC F3",
+      "pmid": "30389828",
+      "pmcid": "PMC6298570",
+      "doi": "10.1261/rna.067561.118",
+      "figureId": "F3",
+      "legendText": "In-cell carbodiimide probing of 7SK RNA structure. ( A ) Bar plots showing P(stop) values obtained by in-cell probing with three concentrations each of CMC or EDC. The 1500 mM EDC plot includes some bars that are above the maximum value shown to better display the range of values. ( B ) Cumulative distribution of P(stop) values showing clear U-preference across data sets. ( C ) Reactive nucleotides found in 300 mM EDC samples as mapped onto the known secondary structure of 7SK, with conflicts marks as previously described. ( D ) The difference in normalized reactivity for the first major stem–loop of 7SK (nt 24–87), where positive values denote reduced reactivity in cells than in vitro, and negative values increased reactivity. Uridines discussed in the text are labeled. Reactivity difference values were mapped to the secondary structure of the stem–loop on the right . The (GAUC) 2 motif recognized by HEXIM is bolded for reference."
+    },
+    {
+      "type": "heading",
+      "text": "用作结构约束：carbodiimide 可以修正模型，但不取消边界"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-cmc-cmct-f4",
+      "alt": "CMC F4",
+      "srcBasename": "cmccmct_f4__PMC6298570__F4.jpg",
+      "legend": "**图 4。Xist 4658–5090 的修订结构模型。**Wang et al. 2019（PMID 30389828，DOI `10.1261/rna.067561.118`）这张图展示 carbodiimide 数据如何进入二级结构推断。图注（legend）说明：A 部分给出用于约束结构预测的三套化学探测数据，分别是来自 Fang et al. (2015) in-cell DMS 探测的 P(stop) 和 P(mut)，以及 in-cell EDC（300 mM）探测的 P(stop)；B 部分是 Xist 4658–5090 的新修订模型，展示通过 in-cell 化学探测识别出的 reactive 核苷酸，以及与 Fang et al. (2015) in-cell 模型和 Smola et al. (2016) ex vivo 模型的碱基配对一致性。",
+      "body": [
+        "这张图把 carbodiimide 的价值放在正确的位置上，同时也演示了和 DMS 互补的写法：DMS 的 P(stop)/P(mut) 约束 A/C 那一面，EDC 的 P(stop) 约束 U/G 那一面，两者一起去修订同一个结构模型。这正是 FoldBridge 想要的多 assay 协作图景——但前提是每套数据只在自己的化学靶点上被解释。carbodiimide 数据可以帮助约束、甚至修正结构模型，模型仍然要区分实验支持、预测冲突、置信度和不可用位置。它支持的是“CMC/CMCT 是有用约束”，不是“carbodiimide 可以取消 assay-specific 解释边界”。读者看同一张模型图时，需要知道哪些颜色来自 U/G carbodiimide 信号，哪些来自 A/C DMS 信号，哪些是预测冲突或不可用区域，否则“图很漂亮”会掩盖真正的证据结构。"
+      ],
+      "label": "CMC F4",
+      "pmid": "30389828",
+      "pmcid": "PMC6298570",
+      "doi": "10.1261/rna.067561.118",
+      "figureId": "F4",
+      "legendText": "Revised structure model for Xist 4658–5090 . ( A ) Bar plots showing three chemical probing data sets used to constrain the structure prediction, namely P(stop) and P(mut) from in-cell DMS probing from the Fang et al. (2015) data set, and P(stop) from in-cell probing with EDC (300 mM). ( B ) The new revised model of Xist 4658–5090 , showing reactive nucleotides identified via in-cell chemical probing, and base-pairing agreement with the Fang et al. (2015) in-cell model and the Smola et al. (2016) ex vivo model."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 CMC/CMCT"
+    },
+    {
+      "type": "paragraph",
+      "text": "`CMC_UG_ONLY` 是正式文章必须保留的核心规则，它和 `DMS_AC_ONLY` 互为镜像。U/G 是 targetable base；A/C/T/unknown 是 non-target base。A/C/T/unknown 行即使有数字，也只能保留为 raw provenance、debug 信息或下载表字段，不能自动进入 carbodiimide 的 positive confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "ANNOJOIN 的默认结构图不应直接读原始 P(stop)，而要先经过 `CMC_UG_ONLY` 这层 targetability gate：U/G 行通过后才进入默认 carbodiimide 图层并贡献 `visual_colormap_value`，A/C/T/unknown 行即使数值很高也被挡在默认上色之外。这样读者在结构页面看到的 carbodiimide 颜色，才是在 CMC/CMCT assay model 下可解释的颜色，而不是混进了本属于 DMS 那半边的 A/C 数值。ANNOCONFIDENCE / FEC 的要求更高：只有通过 assay targetability、mapping、claim 和 context gates 的 U/G 行，才可以进入 positive confidence 候选。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱 CMC/CMCT。相反，这是尊重它的强项。carbodiimide 对 U/G 的 N3/N1 可及性非常有用，而且正好补上了 DMS 看不到的那一半碱基；错误发生在把这个强项扩展成“所有碱基统一反应性”，或者把它和 DMS 的 A/C 靶点搞混时。FoldBridge 的任务不是把所有数字都画出来，而是把“有观测值”和“可解释为结构支持”分开，并且让每种试剂只解释自己的化学面。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，CMC/CMCT 技术文章不应该只写“某个位点信号高”。更完整的句子应该写成：在 carbodiimide assay 中，该 U/G 位点具有较高可及性信号；如果 mapping、coverage、背景和上下文都通过检查，这个信号可以作为结构解释的支持。同样，把 CMC 和 EDC 当作共享 U/G 化学的相关试剂处理，也比假装它们是两套互不相干的体系更接近数据本身。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case（示意）：U/G 可解释 vs A/C 非靶点"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 carbodiimide profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一个 carbodiimide profile 在 ANNOJOIN visual track 中有若干行，按化学靶点可以拆成三层来理解，这三层正好对应文章前面的原则。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第一层是 raw observation：每个位点都可能记录到一个 P(stop) 数值，无论它是 U、G、A、C 还是 unresolved。这一层是 provenance，必须完整保存，但它本身不携带“这是 carbodiimide 结构支持”的含义。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第二层是 visual signal：只有 U 和 G 行经过 `CMC_UG_ONLY` targetability mask 后，才进入默认 carbodiimide 图层。A/C 行即使数值很高，也被标成 `CMC_NON_TARGET_BASE`——它们属于 DMS 的化学面，不是 carbodiimide 能解释的；unresolved 行被标成 `POSITION_UNRESOLVED`，因为还没有映射到可靠结构坐标。如果把全部行都按原始数值上色，页面看起来更满，但解释会变差：non-target 的 A/C 不应该参与默认 carbodiimide positive signal。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第三层是 confidence：只有那些通过 targetability、mapping 和 context gates 的 U/G 行，才可能进入 ANNOCONFIDENCE / FEC positive confidence。一个映射可靠、上下文干净的 reactive U，可以成为该位点更可能 unpaired 或更可及的结构线索；一个 A/C 行无论数字多大，都不会因为 carbodiimide 而获得 positive confidence——如果想解释 A/C，那应该去看 DMS。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这个 case 落到实际系统行为上，就是同一份 carbodiimide profile 会派生出原始观测、可视化信号和 confidence 候选这三件不同的东西：raw 层记录 U/G/A/C 各行测到的 P(stop)，visual 层只让通过 `CMC_UG_ONLY` 的 U/G 行上色，confidence 层只接收映射干净的 reactive U/G。CMC/CMCT 最特有的误读，是把它和 DMS 当成可以互换的染色剂——如果文章没把这三层分开、也没讲清它和 DMS 的 A/C 是互补而非重叠的两半，读者要么以为 carbodiimide 能解释所有碱基，要么把 A/C 高信号错记成 carbodiimide 的功劳。说到底，carbodiimide 数据能为 RNA structure interpretation 提供强有力的 U/G 可及性线索，正好补上 DMS 看不到的那一面；在 FoldBridge 中，这种线索只有先通过 `CMC_UG_ONLY` 再过后续 gate，才会成为结构解释和 confidence 的一部分。"
+    }
+  ]
+}

@@ -1,0 +1,153 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "rl-seq",
+  "title": "RL-Seq：用羟自由基读 RNA 的溶剂可及性",
+  "date": "2026-06-25",
+  "figure_count": 4,
+  "rep_pmid": "36369947",
+  "rep_pmcid": "PMC9662193",
+  "rep_doi": "10.1080/15476286.2022.2145098",
+  "asset_base": "./src/assets/generated/probing-articles/assets/rl-seq",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "如果只看那张按位点排开的切割计数表，RL-Seq 很容易被当成一台“逐碱基判定配对”的结构检测器。这个理解是错的。RL-Seq 的解释对象，是 RNA 主链（backbone）在溶液里的 solvent accessibility，而它读出可及性的方式有一个非常独特的化学标识：Fenton 反应产生的 hydroxyl radical（•OH）切割溶剂暴露的主链，留下一个 **3′-phosphate 末端**，RL-Seq 正是靠 **RtcB ligase 把固定的 rM13 接头 5′-OH 末端连接到这个 3′-P 断点上**，才把“哪里被切”转写成可测序的片段。换句话说，RL-Seq 报告的是“某段主链是否朝向溶剂、因而被切出一个可被连接捕获的断点”，而不是“这个碱基一定配对”或“一定不配对”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界对 FoldBridge 很关键。一次 RtcB 连接捕获到的断点，本质上是一次 solvent-accessibility 事件，而不是一次 pairing call。FoldBridge 可以原样保存切割计数，也可以在网页上展示这些来自连接捕获的读出；但只要它们要进入默认结构上色、解释性文字或 confidence，就得先回答一个更具体的问题：这个数字在“•OH 切割 + 3′-P 连接捕获”这套化学和读出语境里，能不能算作主链溶剂可及性的证据？raw cleavage signal 必须先穿过它自己的连接/建库语境，才有资格成为默认颜色或 confidence 的候选。"
+    },
+    {
+      "type": "heading",
+      "text": "实验链条：Fenton 产生羟自由基，RtcB 连上固定接头"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-rlseq-f2",
+      "alt": "RL-Seq F2",
+      "srcBasename": "rlseq_f2__F2.jpg",
+      "legend": "**图 2。RL-Seq 的主要实验步骤。**Solayman et al. 2022（PMID 36369947，DOI `10.1080/15476286.2022.2145098`）这张图把 RL-Seq 的实验链条拆开来看：(1) 在体外用 Fenton 反应产生 hydroxyl radical（•OH），用来探测 RNA 或 RNA-蛋白复合物；(2) 溶剂暴露的区域（图中蓝色箭头）被 •OH 切割，生成 3′-phosphate（3′-P）末端，而被埋藏（buried）的区域接触不到 •OH（图中黑点），不会被切；(3) 切割片段的 3′-P 末端由 RtcB ligase 与 rM13 接头的 5′-OH 末端连接；(4) 纯化后的连接产物经化学打断，挑选 150–200 nt 的片段；(5) 用接头特异引物经逆转录合成 cDNA；(6) 通过 PCR 在 5′ 和 3′ 端加上测序平台特异接头，用于高通量测序；(7) 测序数据分析。",
+      "body": [
+        "读这张流程图，最该记住的一点是：RL-Seq 的信号来自“断点能不能被 RtcB 连上”，因此它测的是主链的溶剂可及性（hydroxyl radical footprinting），而不是碱基配对状态本身。某一段被切得多、连接捕获到的片段多，说明这段主链对溶剂暴露；切得少甚至读不到断点，可能是主链被埋藏、被三级结构折叠包裹、或被蛋白/配体遮挡——也可能只是那一段的 3′-P 末端没被高效连上。",
+        "对 FoldBridge 来说，这意味着最终表格里的数值不是 •OH 直接给出的“结构标签”，而是切割、RtcB 连接、建库、逆转录、测序和归一化之后的观测量。这个观测量很有用，但它报告的是 solvent exposure，需要先在 RL-Seq 的化学语境里被解释，才能谈结构。"
+      ],
+      "label": "RL-Seq F2",
+      "pmid": "36369947",
+      "pmcid": "PMC9662193",
+      "doi": "10.1080/15476286.2022.2145098",
+      "figureId": "F2",
+      "legendText": "The main experimental steps of RL-Seq method . (1) Hydroxyl radicals ( • OH) were generated from the Fenton reaction for probing RNA or RNA-protein complex in vitro . (2) Solvent exposed areas (blue arrow) are cleaved by reacting with • OH to create 3′-phosphate (3′-P) ends, whereas buried regions are not accessible to • OH (black dot). (3) The 3′-P ends of cleaved fragments were ligated with the 5′-OH ends of the rM13 linker by RtcB ligase. (4) The purified ligated products are fragmented chemically and selected for those between 150 and 200 nt long. (5) A linker-specific primer was used to synthesized cDNA by reverse transcriptase enzyme. (6) Sequencing platform-specific adapters are added at 5′ and 3′ ends by PCR reaction for high-throughput sequencing. (7) Sequencing data analysis."
+    },
+    {
+      "type": "heading",
+      "text": "切割强度需要优化：过切和欠切都会扭曲信号"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-rlseq-f3",
+      "alt": "RL-Seq F3",
+      "srcBasename": "rlseq_f3__F3.jpg",
+      "legend": "**图 3。优化 ribosomal RNA 的羟自由基切割强度。**Solayman et al. 2022（PMID 36369947，DOI `10.1080/15476286.2022.2145098`）图注指出，过度切割会由 RNA 浓度过低、H₂O₂ 浓度过高或孵育时间过长造成。(A) 作者依据既往研究把 H₂O₂ 固定在 0.6%、孵育时间固定在 1 分钟，然后逐步增加 RNA 用量（总量 0.5–4 µg）；Urea-PAGE 凝胶显示 RNA 浓度越高，切割比例越低。(B) 最终确定总量 3.5 µg rRNA 为羟自由基探测的最佳浓度。图中 M 为 1kb-plus DNA ladder，Untreated 表示未经 •OH 探测，Treated 表示经 •OH 探测。",
+      "body": [
+        "这张图把一个容易被忽略的安全阀摆到台面上：切割条件直接决定 raw 信号长什么样。如果切得过头，几乎每个位点都被切，可及和不可及的差别会被抹平；如果切得不足，本该出现的暴露信号又读不出来。可及性结论必须建立在受控切割（single-hit 附近）之上。",
+        "对 FoldBridge 来说，这正是“raw observation 要先经过 readout context”的具体来源。同一个位点的切割计数，在不同切割强度下含义并不相同。把没有标注切割条件的数值直接当成主链可及性真值，会把实验参数和结构解释混为一谈。"
+      ],
+      "label": "RL-Seq F3",
+      "pmid": "36369947",
+      "pmcid": "PMC9662193",
+      "doi": "10.1080/15476286.2022.2145098",
+      "figureId": "F3",
+      "legendText": "Optimizing the intensity of hydroxyl radical cleavage of ribosomal RNA . Excessive cleavage was resulted from a low concentration of RNA, high concentration of H 2 O 2 or longer incubation time (not shown here). (A) According to the previous studies, we have fixed the concentration of H 2 O 2 at 0.6% and incubation time at 1 m, then increased the concentration of RNA (0.5–4 ug in total). The Urea-PAGE gel image showed that higher the concentration of RNA, the lower the cleavage ratio. (B) Finally, we have determined 3.5 ug rRNA in total as an optimum concentration for hydroxyl radical probing. Here, M: 1kb – plus DNA ladder, Untreated: Without • OH probing, and Treated: probing with • OH."
+    },
+    {
+      "type": "heading",
+      "text": "把信号映射到三维表面：强信号对应溶剂暴露的主链"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-rlseq-f5",
+      "alt": "RL-Seq F5",
+      "srcBasename": "rlseq_f5__F5.jpg",
+      "legend": "**图 5。16S rRNA 的表面表示（surface representation）。**Solayman et al. 2022（PMID 36369947，DOI `10.1080/15476286.2022.2145098`）(A) 从 PDB: 4V7T 提取的核糖体装配体，16S rRNA 按 RL-Seq 信号着色；(B) 16S rRNA 第 99–299 位残基的局部放大图；(C) 第 99–299 位残基旋转后的视图；(D) 第 99–299 位的化学探测信号按单核苷酸分辨率画成柱状图，并叠加了从 PDB: 4V7T 提取的 SASA 折线图。这张图把 RL-Seq 信号映射到 16S rRNA 的三维表面，说明信号对应的是溶剂暴露的主链区域。",
+      "body": [
+        "这张图把 RL-Seq 的价值放在正确的位置上：当切割信号被投到真实三维结构表面时，强信号确实落在溶剂暴露（high SASA）的主链上，而柱状图与 SASA 折线图的叠加也让“信号—可及性”的对应关系可视化。",
+        "但这恰恰也是最容易误读的地方。RL-Seq 的强信号对应的是溶剂暴露的主链，而不是简单的 unpaired。一段主链可以待在配对的螺旋里却仍然朝向溶剂、因而被切并被连接捕获得很强；也可以本是单链却被三级结构折叠裹在内部、几乎读不到断点。可及性由二级结构和三级结构共同决定。对 FoldBridge 来说，把 RL-Seq 高信号直接翻译成“此处不配对”，等于跳过了它真正测到的那一层——主链朝向溶剂、断点可被连接捕获。"
+      ],
+      "label": "RL-Seq F5",
+      "pmid": "36369947",
+      "pmcid": "PMC9662193",
+      "doi": "10.1080/15476286.2022.2145098",
+      "figureId": "F5",
+      "legendText": "Surface representation of 16S rRNA . (A) Ribosome assembly extracted from PDB: 4V7T with 16S rRNA coloured based on RL-Seq signal. (B) Close up image of 16S rRNA between residues 99–299. (C) Rotated image of 16S rRNA residues 99–299. (D) Bar plot of chemical probing signal at single nucleotide resolution between residues 99–299 with SASA extracted from PDB: 4V7T overlayed as a line plot."
+    },
+    {
+      "type": "heading",
+      "text": "同类技术之间也要交叉验证：RL-Seq vs HRF-Seq"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-rlseq-f6",
+      "alt": "RL-Seq F6",
+      "srcBasename": "rlseq_f6__F6.jpg",
+      "legend": "**图 6。RL-Seq 与 HRF-Seq 在 16S rRNA 上的比较。**Solayman et al. 2022（PMID 36369947，DOI `10.1080/15476286.2022.2145098`）图注按三行组织：第一行是 nucleotide-level SASA——(A) 基于模拟测序深度评估 SASA 与 •OH 探测之间的 SCC（Spearman correlation coefficient），(B) probe size 对 SCC 的影响，(C) window size 对 SCC 的影响；第二行是 ribose-level SASA——(D)(E)(F) 分别对应同样的测序深度、probe size、window size 评估；第三行是 atom-level SASA——(G)(H)(I) 同样的三组评估。这张图把 RL-Seq 与 HRF-Seq 在 SASA 上对比，说明同类可及性方法之间也需要交叉验证。",
+      "body": [
+        "这张图的意义不是“哪种方法赢了”，而是提醒：即使都是 hydroxyl radical footprinting，RL-Seq 和 HRF-Seq 与 SASA 的相关性也会随着测序深度、probe size、window size、以及 SASA 在 nucleotide / ribose / atom 不同尺度上的定义而变化。",
+        "对 FoldBridge 来说，结论很直接：同一类可及性技术之间也会有差异，不能把任意一个可及性数值都当成等价的结构证据。一个 RL-Seq 信号和一个 HRF-Seq 信号即便都指向“溶剂可及”，它们的探针尺寸、平滑窗口和参考 SASA 尺度都可能不同。把它们不加区分地塞进同一个 confidence 通道，会让交叉验证的意义消失。"
+      ],
+      "label": "RL-Seq F6",
+      "pmid": "36369947",
+      "pmcid": "PMC9662193",
+      "doi": "10.1080/15476286.2022.2145098",
+      "figureId": "F6",
+      "legendText": "Comparison between RL-Seq and HRF-Seq of 16S rRNA . First row: Nucleotide-level SASA (A) Evaluation of SCC between SASA and OH probing based on simulated sequencing depth. (B) Effect of probe size on SCC. (C) Effect of window size on SCC. Second row: Ribose-level SASA (D) Evaluation of SCC between SASA and OH probing based on simulated sequencing depth. (E) Effect of probe size on SCC. (F) Effect of window size on SCC. Third row: Atom-level SASA (G) Evaluation of SCC between SASA and OH probing based on simulated sequencing depth. (H) Effect of probe size on SCC. (I) Effect of window size on SCC."
+    },
+    {
+      "type": "heading",
+      "text": "FoldBridge 应该怎么写 RL-Seq"
+    },
+    {
+      "type": "paragraph",
+      "text": "RL-Seq 在 FoldBridge 里的核心规则，是把 hydroxyl-radical solvent-accessibility signal 当成主链可及性证据，而不是配对判定。raw cleavage counts 首先是 provenance：它们记录了在某个切割条件下，某个主链位点被 •OH 切到的次数。只有当这个信号能在 RL-Seq 的化学语境（backbone solvent exposure，而非 base pairing）以及读出/mapping 语境下被解释时，才进入默认可视化和 confidence。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这条边界的关键，是把“断点能被连接捕获”和“碱基不配对”分开。溶剂可及不等于不配对：tertiary structure 和 burial 都会让一段主链的可及性偏离它的二级结构状态。一段配对螺旋的外侧可以高度暴露、被切得很强，一段单链却可以被折叠埋藏、几乎不留断点。RL-Seq 经由 RtcB 连接读到的，是“这段主链朝不朝向溶剂”，不是“这段碱基配不配对”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "因此 FoldBridge 需要一个 gate 的概念，而不是一条凭空写出的规则代码。这个 gate 的职责是：在把 raw cleavage 值送进默认结构上色或 confidence 之前，先确认它满足受控切割条件（图 3 那种 readout context）、确认它已经可靠映射到结构坐标、并确认它被解释为 backbone solvent accessibility 而不是 pairing。通过 gate 的信号才进入默认 visual track 和 confidence 候选；没通过的，保留为 raw provenance、调试信息或下载表字段。"
+    },
+    {
+      "type": "paragraph",
+      "text": "这不是削弱 RL-Seq，恰恰是尊重它的强项。RL-Seq 对主链 solvent accessibility 非常敏感，连接捕获策略让它能精确读到断点、也能映射到真实三维表面；错误只发生在把这个强项扩张成“高切割等于不配对”的那一刻。所以面向非专业读者，最稳的说法是“RL-Seq 把主链的溶剂暴露程度，经由 3′-P 断点的连接捕获，转化成测序可读的可及性线索”。展开成一句完整的话就是：在 RL-Seq assay 中，该主链位点表现出较高的溶剂可及性信号；若切割条件、连接捕获、mapping、coverage 和上下文都通过检查，这个信号才可作为结构解释的支持。它比“高信号等于 unpaired”啰嗦，但科学上更稳，也更适合沉淀进 FoldBridge 的长期知识库。"
+    },
+    {
+      "type": "heading",
+      "text": "真实 case（示意）"
+    },
+    {
+      "type": "paragraph",
+      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 RL-Seq profile 如何分成三个不同的层。"
+    },
+    {
+      "type": "paragraph",
+      "text": "设想一份 RL-Seq profile 流过 FoldBridge 的三个图层。第一层是 raw observation：某段 16S rRNA 主链在受控切割条件下被 •OH 切出、并经 RtcB 连接捕获到的断点计数，连同切割强度、连接效率和测序的 provenance 一起保存下来。这一层只回答“原始数据里记录了什么”，不替读者下结论。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第二层是 visual signal：当这些断点计数已经可靠映射到结构坐标、并被解释为 backbone solvent accessibility 之后，才进入默认结构上色。读者看到的颜色，应该回答“在 RL-Seq 的连接捕获边界内，这个主链位点有什么可读的可及性线索”，而不是“这个碱基配不配对”。那些切割或连接条件不明、还没映射到可靠坐标的位点，不该混进这一层冒充同一种证据。"
+    },
+    {
+      "type": "paragraph",
+      "text": "第三层是 confidence 候选：只有通过了切割条件、连接捕获、mapping 和上下文检查的可及性信号，才可能进入 confidence。即便是同一份 profile，它的 raw cleavage、可视化颜色和 confidence 也不是同一件事。"
+    },
+    {
+      "type": "paragraph",
+      "text": "把这份示意 profile 走一遍，真正想说明的是 RL-Seq 自己的系统行为：连接捕获到的断点计数、上色后的可视化、和最终 confidence 是三层不同的东西，必须分开。RL-Seq 的科普文章如果把这三层搅在一起，读者最容易犯的错，就是把“断点能被连上、说明主链朝向溶剂”默读成“此处不配对”。"
+    },
+    {
+      "type": "paragraph",
+      "text": "所以，RL-Seq 文章的正确结尾不是“高切割证明该碱基不配对”，而是：RL-Seq 数据能为 RNA structure interpretation 提供强有力的主链 solvent accessibility 线索；在 FoldBridge 中，这种线索只有先被解释为可及性（而非配对）、并通过后续 gates 之后，才会成为结构解释和 confidence 的一部分。"
+    }
+  ]
+}
