@@ -47,7 +47,7 @@ export function bindAnnojointAtlasTable({
   });
 
   root.querySelectorAll?.('[data-annojoin-clear-search]').forEach((button) => {
-    button.addEventListener('click', () => clearFilters?.());
+    button.addEventListener('click', () => removeFilter?.('q'));
   });
 
   root.querySelectorAll?.('[data-annojoin-page]').forEach((button) => {
