@@ -94,6 +94,9 @@ function renderFamilyBadges(row = {}) {
 // confidence 复合标签分段呈现且不截断；完整原文保留在 title，便于追溯与对比。
 function renderConfidenceSegments(label = '') {
   const full = String(label ?? '');
+  if (!full.trim()) {
+    return `<span class="annojoin-confidence" title="not annotated"><span class="annojoin-confidence-seg">not annotated</span></span>`;
+  }
   const parts = full.includes(';') ? full.split(';') : [full];
   const segs = parts
     .map((part) => part.trim())
@@ -438,7 +441,7 @@ export function renderAnnojointAtlasPage({
     ? sortedRows.find((row) => rowCaseKey(row).toUpperCase() === detailKey || rowCaseId(row).toUpperCase() === detailKey)
     : null;
 
-  const searchModeNotice = searchActive
+  const searchModeNotice = searchActive && pagination.rows.length
     ? `<section class="annojoin-search-mode-banner" role="status">
       <span>Search results for "${escapeHtml(query)}" — grouping is flattened and rows are ranked by match.</span>
       <button type="button" class="download-outline-btn" data-annojoin-clear-search>Clear search</button>
