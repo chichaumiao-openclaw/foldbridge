@@ -420,7 +420,7 @@ function renderActiveConditionChips(filters = {}, query = '') {
   const chips = [];
   if (query) chips.push(renderFilterChip('q', `"${query}"`));
   for (const key of ANNOJOIN_FILTER_CHIP_KEYS) {
-    const value = filters?.[key];
+    const value = filters[key];
     if (value) chips.push(renderFilterChip(key, value));
   }
   if (!chips.length) return '';
@@ -461,9 +461,9 @@ export function renderAnnojointAtlasPage({
     ? sortedRows.find((row) => rowCaseKey(row).toUpperCase() === detailKey || rowCaseId(row).toUpperCase() === detailKey)
     : null;
 
-  const searchModeNotice = searchActive && pagination.rows.length
+  const searchModeNote = searchActive && pagination.rows.length
     ? `<section class="annojoin-search-mode-banner" role="status">
-      <span>Search results for "${escapeHtml(query)}" — grouping is flattened and rows are ranked by match.</span>
+      <p class="annojoin-search-mode-note">Search results — grouping is paused. Clear the filter to return to grouped browsing.</p>
       <button type="button" class="download-outline-btn" data-annojoin-clear-search>Clear search</button>
     </section>`
     : '';
@@ -479,16 +479,11 @@ export function renderAnnojointAtlasPage({
     ? (emptySearchRow || renderFlatRows({ rows: pagination.rows, visibleColumns, selectedCaseIds: selected, routeName }))
     : renderTableBody({ groups, visibleColumns, selectedCaseIds: selected, expandedGroupIds: expanded, uncappedGroupIds: uncapped, routeName });
 
-  const matched = baseRows;
   const displayCount = atlasState.totalCaseCount || atlasState.cases.length;
   const sourceCount = atlasState.totalSourceCaseCount;
   const metaCountText = searchActive
-    ? `Showing ${escapeHtml(matched.length)} of ${escapeHtml(displayCount)} entries matching "${escapeHtml(query)}"`
-    : `${escapeHtml(displayCount)} PDB entries${sourceCount ? ` (${escapeHtml(sourceCount)} source cases)` : ''}`;
-
-  const searchModeNote = searchActive
-    ? `<p class="annojoin-search-mode-note">Search results — grouping is paused. Clear the filter to return to grouped browsing.</p>`
-    : '';
+    ? `Showing ${escapeHtml(baseRows.length)} of ${escapeHtml(displayCount)} entries matching "${escapeHtml(query)}"`
+    : `${escapeHtml(displayCount)} PDB entries${sourceCount && sourceCount !== displayCount ? ` (${escapeHtml(sourceCount)} source cases)` : ''}`;
 
   return `<main class="page-annojoin-atlas page-annojoin-master-table">
     <section class="annojoin-table-heading">
@@ -511,7 +506,7 @@ export function renderAnnojointAtlasPage({
 
     ${renderColumnPicker(visibleIds)}
     ${renderActiveConditionChips(atlasState.filters, query)}
-    ${searchModeNotice}
+    ${searchModeNote}
     ${renderPagination(pagination)}
 
     <section class="annojoin-table-meta">
@@ -519,8 +514,6 @@ export function renderAnnojointAtlasPage({
       <span>${escapeHtml(selected.size)} selected</span>
       <span>Case-level profile/confidence summary</span>
     </section>
-
-    ${searchModeNote}
 
     <section class="annojoin-table-layout">
       <div class="annojoin-master-table-wrap">
