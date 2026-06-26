@@ -410,6 +410,26 @@ function renderDetailSidebar({ row, routeName, selectedField }) {
   return renderEmptySidebar();
 }
 
+const ANNOJOIN_FILTER_CHIP_KEYS = ['rnaFamily', 'pdbId', 'motif', 'structureClass', 'probeType'];
+
+function renderFilterChip(removeKey, label) {
+  return `<span class="annojoin-filter-chip">${escapeHtml(label)} <button type="button" data-annojoin-chip-remove="${escapeHtml(removeKey)}">×</button></span>`;
+}
+
+function renderActiveConditionChips(filters = {}, query = '') {
+  const chips = [];
+  if (query) chips.push(renderFilterChip('q', `"${query}"`));
+  for (const key of ANNOJOIN_FILTER_CHIP_KEYS) {
+    const value = filters?.[key];
+    if (value) chips.push(renderFilterChip(key, value));
+  }
+  if (!chips.length) return '';
+  return `<section class="annojoin-filter-chips" aria-label="Active conditions">
+      ${chips.join('')}
+      <button type="button" data-annojoin-clear-all>Clear all</button>
+    </section>`;
+}
+
 export function renderAnnojointAtlasPage({
   state,
   routeName = 'annojoin-atlas',
@@ -459,6 +479,17 @@ export function renderAnnojointAtlasPage({
     ? (emptySearchRow || renderFlatRows({ rows: pagination.rows, visibleColumns, selectedCaseIds: selected, routeName }))
     : renderTableBody({ groups, visibleColumns, selectedCaseIds: selected, expandedGroupIds: expanded, uncappedGroupIds: uncapped, routeName });
 
+  const matched = baseRows;
+  const displayCount = atlasState.totalCaseCount || atlasState.cases.length;
+  const sourceCount = atlasState.totalSourceCaseCount;
+  const metaCountText = searchActive
+    ? `Showing ${escapeHtml(matched.length)} of ${escapeHtml(displayCount)} entries matching "${escapeHtml(query)}"`
+    : `${escapeHtml(displayCount)} PDB entries${sourceCount ? ` (${escapeHtml(sourceCount)} source cases)` : ''}`;
+
+  const searchModeNote = searchActive
+    ? `<p class="annojoin-search-mode-note">Search results — grouping is paused. Clear the filter to return to grouped browsing.</p>`
+    : '';
+
   return `<main class="page-annojoin-atlas page-annojoin-master-table">
     <section class="annojoin-table-heading">
       <p class="technology-kicker">ANNOJOIN</p>
@@ -467,7 +498,7 @@ export function renderAnnojointAtlasPage({
     </section>
 
     <section class="annojoin-table-toolbar" aria-label="ANNOJOIN table controls">
-      <input type="search" id="annojoin-search-input" placeholder="Search PDB, molecule, confidence..." value="${escapeHtml(atlasState.filters?.query || '')}" />
+      <input type="search" id="annojoin-search-input" placeholder="Filter this table by PDB ID or molecule name" value="${escapeHtml(atlasState.filters?.query || '')}" />
       <button id="export-selected-annojoin-cases" type="button" class="download-outline-btn" ${selected.size ? '' : 'disabled'}>Export Selected (${escapeHtml(selected.size)})</button>
       <a class="download-outline-btn" href="${escapeHtml(currentFilterExportHref(atlasState.filters, 'csv'))}">Export All Results</a>
       <button id="select-visible-annojoin-cases" type="button" class="download-outline-btn">Select Current Page</button>
@@ -479,17 +510,17 @@ export function renderAnnojointAtlasPage({
     </section>
 
     ${renderColumnPicker(visibleIds)}
+    ${renderActiveConditionChips(atlasState.filters, query)}
     ${searchModeNotice}
     ${renderPagination(pagination)}
 
     <section class="annojoin-table-meta">
-      <span>${escapeHtml(atlasState.cases.length)} / ${escapeHtml(atlasState.totalCaseCount || atlasState.cases.length)} PDB entries</span>
-      ${atlasState.totalSourceCaseCount && atlasState.totalSourceCaseCount !== (atlasState.totalCaseCount || atlasState.cases.length)
-    ? `<span>${escapeHtml(atlasState.totalSourceCaseCount)} source cases</span>`
-    : ''}
+      <span>${metaCountText}</span>
       <span>${escapeHtml(selected.size)} selected</span>
       <span>Case-level profile/confidence summary</span>
     </section>
+
+    ${searchModeNote}
 
     <section class="annojoin-table-layout">
       <div class="annojoin-master-table-wrap">
