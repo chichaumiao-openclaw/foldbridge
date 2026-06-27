@@ -12,6 +12,7 @@ import {
   searchAnnojointRows,
   sortAnnojointCases
 } from './annojoinAtlasTableModel.js';
+import { buildPdbCaseHash } from './router.js';
 
 const DEFAULT_GROUP_ROW_LIMIT = 25;
 
@@ -115,7 +116,7 @@ function columnValue(row = {}, columnId, routeName = 'annojoin-atlas') {
     profileCount: fieldLink(row, routeName, 'profileCount', `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`),
     chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated')),
     conflictCandidateCount: fieldLink(row, routeName, 'conflictCandidateCount', escapeHtml(row.conflictCandidateCount || 0)),
-    pdbCaseDetail: `<a class="annojoin-pdb-case-link" href="#pdb-case?pdbId=${escapeHtml(row.pdbId || rowCaseId(row))}">PDB case</a>`
+    pdbCaseDetail: `<a class="annojoin-field-link annojoin-pdb-case-link" href="${escapeHtml(buildPdbCaseHash({ pdbId: row.pdbId || rowCaseId(row) }))}">PDB case</a>`
   };
   return values[columnId] ?? escapeHtml(row[columnId] || '');
 }

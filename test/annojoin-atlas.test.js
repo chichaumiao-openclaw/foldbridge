@@ -676,3 +676,9 @@ test('atlas table renders a PDB case detail link per row', () => {
   const html = renderAnnojointAtlasPage({ state, routeName: 'sequence' });
   assert.match(html, /href="#pdb-case\?pdbId=9ELY"/);
 });
+
+test('atlas PDB case link uppercases the pdb id', () => {
+  const state = { cases: [{ pdbId: '9ely', caseId: '9ely', chains: ['A'], profileCount: 1 }], totalCaseCount: 1, filters: {} };
+  const html = renderAnnojointAtlasPage({ state, routeName: 'sequence' });
+  assert.match(html, /href="#pdb-case\?pdbId=9ELY"/);
+});
