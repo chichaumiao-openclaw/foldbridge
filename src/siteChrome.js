@@ -4,7 +4,7 @@
 
 const PRIMARY_NAV_ITEMS = [
   { route: 'home', label: 'Home', activeRoutes: ['home'] },
-  { route: 'sequence', label: 'Entry', activeRoutes: ['sequence', 'download-sequences'] },
+  { route: 'entry', label: 'Entry', activeRoutes: ['entry', 'sequence', 'download-sequences'] },
   { route: 'probing', label: 'Probing', activeRoutes: ['probing', 'detail'] },
   { route: 'search', label: 'Search', activeRoutes: ['search'] },
   { route: 'help', label: 'Help', activeRoutes: ['help'] }
@@ -46,7 +46,7 @@ export function renderHomeHero(metrics = HOME_METRICS) {
             By matching probing-derived RNA sequences to corresponding sequences in PDB entries, FoldBridge identifies high-confidence structure-linked records and integrates their secondary- and tertiary-structure information.
           </p>
           <div class="bundle-hero-actions">
-            <button type="button" class="bundle-hero-primary" data-route="sequence">Browse Entry table &rarr;</button>
+            <button type="button" class="bundle-hero-primary" data-route="entry">Browse Entry table &rarr;</button>
             <button type="button" class="ghost" data-route="probing">Explore probing methods</button>
           </div>
         </div>
@@ -73,7 +73,7 @@ export function renderHomeHero(metrics = HOME_METRICS) {
 
 const HOME_MODULE_CARDS = [
   {
-    route: 'sequence',
+    route: 'entry',
     kicker: 'master table',
     title: 'Entry table',
     summary: `${HOME_METRICS.structureLinkedRecords.toLocaleString('en-US')} structure-linked PDB entries with search, grouping and export.`,
@@ -120,8 +120,8 @@ export function renderHelpBody() {
 
       <h2>Modules</h2>
       <ul>
-        <li><a href="#sequence">Entry table</a> &mdash; the master browser table; search, group and export structure-linked PDB entries. Merged rows keep links back to their source cases.</li>
-        <li>PDB case &mdash; a per-PDB detail entry, opened from the <em>PDB case</em> column inside the Entry table.</li>
+        <li><a href="#entry">Entry table</a> &mdash; the master browser table; search, group and export structure-linked PDB entries. Merged rows keep links back to their source cases.</li>
+        <li>PDB case &mdash; a per-PDB detail entry, opened from a case row inside the Entry table.</li>
         <li><a href="#probing">Probing methods</a> &mdash; ${HOME_METRICS.probingArticles} explainer articles across ${HOME_METRICS.mechanismFamilies} mechanism families.</li>
         <li><a href="#search">Search</a> &mdash; site-wide search across probing articles and PDB cases.</li>
       </ul>

@@ -1918,7 +1918,7 @@ async function loadProbingArticleIndex() {
     console.error('[main] 加载探针文章索引失败', err);
     probingArticleIndexState = 'error';
   }
-  if (route === 'detail') render({ preserveScroll: true });
+  if (route === 'detail' || route === 'probing') render({ preserveScroll: true });
 }
 
 async function loadProbingArticleDetail(slug) {
@@ -1931,7 +1931,7 @@ async function loadProbingArticleDetail(slug) {
     console.error('[main] 加载探针文章详情失败', slug, err);
     probingArticleDetailState.set(slug, 'error');
   }
-  if (route === 'detail') render({ preserveScroll: true });
+  if (route === 'detail' || route === 'probing') render({ preserveScroll: true });
 }
 
 async function loadAnnojointAtlasIndex() {
@@ -2053,7 +2053,7 @@ function pdbCasePage() {
 function annojoinAtlasPage() {
   const parsed = parseHashRoute(window.location.hash);
   const params = parsed.params;
-  const routeName = parsed.route === 'sequence' ? 'sequence' : 'annojoin-atlas';
+  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
   const filters = getAnnojointAtlasFilters(params);
   const page = Number(params.get('page')) || 1;
   const pageSize = Number(params.get('pageSize')) || annojoinPageSize;
@@ -2184,7 +2184,7 @@ function annojoinCasePage() {
 function setAnnojointAtlasFilter(key, value, { replace = false } = {}) {
   const parsed = parseHashRoute(window.location.hash);
   const params = parsed.params;
-  const routeName = parsed.route === 'sequence' ? 'sequence' : 'annojoin-atlas';
+  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
   if (value) params.set(key, value);
   else params.delete(key);
   params.set('page', '1');
@@ -2206,7 +2206,7 @@ function setAnnojointAtlasFilter(key, value, { replace = false } = {}) {
 function clearAnnojointAtlasFilters() {
   const parsed = parseHashRoute(window.location.hash);
   const params = parsed.params;
-  const routeName = parsed.route === 'sequence' ? 'sequence' : 'annojoin-atlas';
+  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
   ['q', 'rnaFamily', 'probeType', 'pdbId', 'motif', 'structureClass'].forEach((key) => params.delete(key));
   params.set('page', '1');
   params.delete('caseId');
@@ -2223,7 +2223,7 @@ function setAnnojointAtlasQuery(query) {
 function setAnnojointAtlasPage(value) {
   const parsed = parseHashRoute(window.location.hash);
   const params = parsed.params;
-  const routeName = parsed.route === 'sequence' ? 'sequence' : 'annojoin-atlas';
+  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
   const current = currentAnnojointAtlasState().pagination;
   let nextPage = Number(value) || current.page;
   if (value === 'prev') nextPage = current.page - 1;
@@ -2239,7 +2239,7 @@ function setAnnojointAtlasPageSize(value) {
   annojoinPageSize = Number(value) || 50;
   const parsed = parseHashRoute(window.location.hash);
   const params = parsed.params;
-  const routeName = parsed.route === 'sequence' ? 'sequence' : 'annojoin-atlas';
+  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
   params.set('pageSize', String(annojoinPageSize));
   params.delete('page');
   const next = params.toString();
@@ -2383,6 +2383,7 @@ function helpPage() {
 function pageFor(name) {
   const safeRoute = normalizeRoute(name);
   if (safeRoute === 'browse') return browsePage();
+  if (safeRoute === 'entry') return annojoinAtlasPage();
   if (safeRoute === 'sequence') return annojoinAtlasPage();
   if (safeRoute === 'structure') return structurePage();
   if (safeRoute === 'pdb-case') return pdbCasePage();

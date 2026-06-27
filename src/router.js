@@ -1,6 +1,7 @@
 const ALLOWED_ROUTES = new Set([
   'home',
   'browse',
+  'entry',
   'sequence',
   'structure',
   'probing',

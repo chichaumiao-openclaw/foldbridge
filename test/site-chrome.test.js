@@ -7,7 +7,7 @@ test('primary nav exposes exactly the 5 launch routes', () => {
   for (const label of ['Home', 'Entry', 'Probing', 'Search', 'Help']) {
     assert.match(html, new RegExp(`>${label}</button>`), `missing nav button: ${label}`);
   }
-  assert.match(html, /data-route="sequence"[^>]*>Entry<\/button>/);
+  assert.match(html, /data-route="entry"[^>]*>Entry<\/button>/);
 });
 
 test('primary nav drops removed entries', () => {
@@ -19,10 +19,12 @@ test('primary nav drops removed entries', () => {
 });
 
 test('primary nav marks the active route', () => {
+  const entryHtml = renderPrimaryNav('entry');
+  assert.match(entryHtml, /class="nav-btn active"\s+data-route="entry"/);
   const seqHtml = renderPrimaryNav('sequence');
-  assert.match(seqHtml, /class="nav-btn active"\s+data-route="sequence"/);
+  assert.match(seqHtml, /class="nav-btn active"\s+data-route="entry"/);
   const dlHtml = renderPrimaryNav('download-sequences');
-  assert.match(dlHtml, /class="nav-btn active"\s+data-route="sequence"/);
+  assert.match(dlHtml, /class="nav-btn active"\s+data-route="entry"/);
 });
 
 import { renderHomeHero, HOME_METRICS } from '../src/siteChrome.js';
@@ -39,7 +41,7 @@ test('home hero shows real metrics, no placeholders', () => {
 
 test('home hero CTAs target live routes', () => {
   const html = renderHomeHero();
-  assert.match(html, /data-route="sequence"/);
+  assert.match(html, /data-route="entry"/);
   assert.match(html, /data-route="probing"/);
   assert.doesNotMatch(html, /data-route="download-sequences"/);
   assert.doesNotMatch(html, /data-route="structure"/);
@@ -56,7 +58,7 @@ import { renderHomeModuleCards } from '../src/siteChrome.js';
 
 test('home module cards link to the three core modules', () => {
   const html = renderHomeModuleCards();
-  assert.match(html, /data-route="sequence"/);
+  assert.match(html, /data-route="entry"/);
   assert.match(html, /data-route="probing"/);
   assert.match(html, /data-route="search"/);
   assert.match(html, /Entry table/);
@@ -73,7 +75,7 @@ test('help body has four sections and live module links', () => {
   assert.match(html, /Modules/i);
   assert.match(html, /Key terms/i);
   assert.match(html, /Data sources/i);
-  assert.match(html, /href="#sequence"/);
+  assert.match(html, /href="#entry"/);
   assert.match(html, /href="#probing"/);
   assert.match(html, /href="#search"/);
   assert.match(html, /source case/i);

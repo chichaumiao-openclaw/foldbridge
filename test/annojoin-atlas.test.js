@@ -670,15 +670,3 @@ test('atlas page ignores paginated detail route previews on the master table pag
   assert.doesNotMatch(html, /profile-a/);
   assert.doesNotMatch(html, /pdb_residue_coordinate_key/);
 });
-
-test('atlas table renders a PDB case detail link per row', () => {
-  const state = { cases: [{ pdbId: '9ELY', caseId: '9ELY', chains: ['A'], profileCount: 1 }], totalCaseCount: 1, filters: {} };
-  const html = renderAnnojointAtlasPage({ state, routeName: 'sequence' });
-  assert.match(html, /href="#pdb-case\?pdbId=9ELY"/);
-});
-
-test('atlas PDB case link uppercases the pdb id', () => {
-  const state = { cases: [{ pdbId: '9ely', caseId: '9ely', chains: ['A'], profileCount: 1 }], totalCaseCount: 1, filters: {} };
-  const html = renderAnnojointAtlasPage({ state, routeName: 'sequence' });
-  assert.match(html, /href="#pdb-case\?pdbId=9ELY"/);
-});
