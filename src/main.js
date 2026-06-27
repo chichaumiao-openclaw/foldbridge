@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -2375,11 +2375,7 @@ function publicationsPage() {
 function helpPage() {
   return `<main class="page-help">
     ${renderBundleHeader()}
-    <section class="card bundle-wide-card">
-      <h1>Help</h1>
-      <p>Use the navigation above to move across Home, Browse, Sequence, Structure, Probing, Download, Search, and Help.</p>
-      <p>If you cannot find a record, start from Browse or Search and then open the related sequence or probing page.</p>
-    </section>
+    ${renderHelpBody()}
   </main>`;
 }
 

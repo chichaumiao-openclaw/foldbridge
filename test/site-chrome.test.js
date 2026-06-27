@@ -64,3 +64,18 @@ test('home module cards link to the three core modules', () => {
   assert.match(html, />Search</);
   assert.equal((html.match(/bundle-site-card/g) || []).length, 3);
 });
+
+import { renderHelpBody } from '../src/siteChrome.js';
+
+test('help body has four sections and live module links', () => {
+  const html = renderHelpBody();
+  assert.match(html, /What is FoldBridge/i);
+  assert.match(html, /href="#sequence"/);
+  assert.match(html, /href="#probing"/);
+  assert.match(html, /href="#search"/);
+  assert.match(html, /source case/i);
+  assert.match(html, /not active/i);
+  assert.doesNotMatch(html, /Browse/);
+  assert.doesNotMatch(html, /Structure hub|Open structure/i);
+  assert.doesNotMatch(html, /Download/);
+});

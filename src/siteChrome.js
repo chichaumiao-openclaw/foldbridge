@@ -110,3 +110,35 @@ export function renderHomeModuleCards(cards = HOME_MODULE_CARDS) {
   return `<section class="bundle-site-grid" aria-label="Core modules">${items}
   </section>`;
 }
+
+export function renderHelpBody() {
+  return `<section class="card bundle-wide-card">
+      <h1>Help &amp; guide</h1>
+
+      <h2>What is FoldBridge</h2>
+      <p>FoldBridge links RNA chemical probing data with experimentally resolved tertiary structures. It matches probing-derived RNA sequences to PDB entries, identifies high-confidence structure-linked records, and integrates their secondary- and tertiary-structure information.</p>
+
+      <h2>Modules</h2>
+      <ul>
+        <li><a href="#sequence">Entry table</a> &mdash; the master browser table; search, group and export structure-linked PDB entries. Merged rows keep links back to their source cases.</li>
+        <li>PDB case &mdash; a per-PDB detail entry, opened from the <em>PDB case</em> column inside the Entry table.</li>
+        <li><a href="#probing">Probing methods</a> &mdash; ${HOME_METRICS.probingArticles} explainer articles across ${HOME_METRICS.mechanismFamilies} mechanism families.</li>
+        <li><a href="#search">Search</a> &mdash; site-wide search across probing articles and PDB cases.</li>
+      </ul>
+
+      <h2>Key terms</h2>
+      <dl>
+        <dt>source case vs display row</dt>
+        <dd>Source cases are merged into one display row per PDB; RMDB/RASP sources of the same PDB are summarized but keep their source links.</dd>
+        <dt>RMDB vs RASP</dt>
+        <dd>Two source families. RASP is currently <code>positive_confidence_active_now=false</code> and shown as <strong>not active</strong> &mdash; do not read it as an activated positive confidence.</dd>
+        <dt>Confidence (A/B/C)</dt>
+        <dd>A case-level distribution summary, not a best-profile score. C is an exploratory hint and should be re-checked against route assets.</dd>
+        <dt>Conflicts</dt>
+        <dd>Flags annotation/evidence conflict candidates that need review.</dd>
+      </dl>
+
+      <h2>Data sources</h2>
+      <p>Data come from RMDB / RASP / PDB; structure linkage is materialized through the ANNOJOIN master table. Where citation metadata is not provided in the current asset, fields are left unannotated rather than fabricated.</p>
+    </section>`;
+}
