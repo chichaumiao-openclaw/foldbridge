@@ -6,7 +6,8 @@ export const ANNOJOIN_TABLE_COLUMNS = [
   { id: 'confidenceDisplayLabel', label: 'Confidence distribution', defaultVisible: true },
   { id: 'profileCount', label: 'Profiles', defaultVisible: true },
   { id: 'chains', label: 'Chains', defaultVisible: true },
-  { id: 'conflictCandidateCount', label: 'Conflicts', defaultVisible: true }
+  { id: 'conflictCandidateCount', label: 'Conflicts', defaultVisible: true },
+  { id: 'pdbCaseDetail', label: 'PDB case', defaultVisible: true }
 ];
 
 const COLUMN_IDS = new Set(ANNOJOIN_TABLE_COLUMNS.map((column) => column.id));

@@ -197,3 +197,15 @@ test('familyBadgeDescriptor respects activation override for future RASP activat
   assert.equal(rasp.active, true);
   assert.equal(rasp.note, '');
 });
+
+test('table columns expose a default-visible PDB case entry column', () => {
+  const col = ANNOJOIN_TABLE_COLUMNS.find((c) => c.id === 'pdbCaseDetail');
+  assert.ok(col, 'pdbCaseDetail column missing');
+  assert.equal(col.defaultVisible, true);
+  assert.equal(col.label, 'PDB case');
+});
+
+test('export row never contains the derived UI column', () => {
+  const exported = annojoinExportRow({ pdbId: '9ELY', chains: ['A'] });
+  assert.equal('pdbCaseDetail' in exported, false);
+});
