@@ -51,3 +51,16 @@ test('HOME_METRICS carries the launch numbers', () => {
   assert.equal(HOME_METRICS.probingArticles, 27);
   assert.equal(HOME_METRICS.mechanismFamilies, 6);
 });
+
+import { renderHomeModuleCards } from '../src/siteChrome.js';
+
+test('home module cards link to the three core modules', () => {
+  const html = renderHomeModuleCards();
+  assert.match(html, /data-route="sequence"/);
+  assert.match(html, /data-route="probing"/);
+  assert.match(html, /data-route="search"/);
+  assert.match(html, /Entry table/);
+  assert.match(html, /Probing methods/);
+  assert.match(html, />Search</);
+  assert.equal((html.match(/bundle-site-card/g) || []).length, 3);
+});

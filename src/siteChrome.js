@@ -70,3 +70,43 @@ export function renderHomeHero(metrics = HOME_METRICS) {
         </aside>
       </section>`;
 }
+
+const HOME_MODULE_CARDS = [
+  {
+    route: 'sequence',
+    kicker: 'master table',
+    title: 'Entry table',
+    summary: `${HOME_METRICS.structureLinkedRecords.toLocaleString('en-US')} structure-linked PDB entries with search, grouping and export.`,
+    action: 'Open Entry table'
+  },
+  {
+    route: 'probing',
+    kicker: 'science library',
+    title: 'Probing methods',
+    summary: `${HOME_METRICS.probingArticles} explainer articles across ${HOME_METRICS.mechanismFamilies} mechanism families.`,
+    action: 'Explore probing methods'
+  },
+  {
+    route: 'search',
+    kicker: 'site-wide',
+    title: 'Search',
+    summary: 'Search probing articles and PDB cases across the whole site.',
+    action: 'Open search'
+  }
+];
+
+export function renderHomeModuleCards(cards = HOME_MODULE_CARDS) {
+  const items = cards.map((card, index) => `
+    <article class="bundle-site-card tone-${(index % 3) + 1}">
+      <div class="bundle-site-copy">
+        <p class="bundle-site-kicker">${card.kicker}</p>
+        <h3>${card.title}</h3>
+        <p>${card.summary}</p>
+      </div>
+      <div class="bundle-site-footer">
+        <button type="button" class="bundle-site-link" data-route="${card.route}">${card.action}</button>
+      </div>
+    </article>`).join('');
+  return `<section class="bundle-home-modules" aria-label="Core modules">${items}
+  </section>`;
+}

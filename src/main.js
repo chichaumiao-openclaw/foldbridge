@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -1472,35 +1472,13 @@ function homePage() {
       <span>${site.topLabel ?? ''}</span>
     </span>`;
   }).join('');
-  const cards = homeBundleSites.map((site, index) => `
-    <article class="bundle-site-card tone-${site.tone}">
-      <div class="bundle-site-visual">
-        <div class="bundle-site-strand strand-a"></div>
-        <div class="bundle-site-strand strand-b"></div>
-        <div class="bundle-site-orb orb-${(index % 3) + 1}"></div>
-        <span class="bundle-site-badge">${site.short}</span>
-      </div>
-      <div class="bundle-site-copy">
-        <p class="bundle-site-kicker">${site.accent}</p>
-        <h3>${site.name}</h3>
-        <p>${site.summary}</p>
-      </div>
-      <div class="bundle-site-footer">
-        <span class="bundle-site-tag">${site.tag}</span>
-        ${site.action.href
-          ? `<a class="bundle-site-link" href="${site.action.href}" target="_blank" rel="noopener noreferrer">${site.action.label}</a>`
-          : `<button type="button" class="bundle-site-link" data-route="${site.action.route}">${site.action.label}</button>`}
-      </div>
-    </article>
-  `).join('');
-
   const bundleHeader = renderBundleHeader(featuredNames);
 
   return `<main class="page-home bundle-home-page">
     <section class="bundle-home-shell">
       ${bundleHeader}
       ${renderHomeHero()}
-
+      ${renderHomeModuleCards()}
     </section>
   </main>`;
 }
