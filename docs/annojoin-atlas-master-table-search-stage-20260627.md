@@ -18,6 +18,16 @@
 - **B = 筛选子集**。
 - **C = 评估证据质量**。
 
+## 1.5 数据现状（combined 主表已生成，2026-06-27）
+
+主表搜索重设计的代码先于 combined 数据落地，因此一度运行在旧的 1126 全 RMDB 资产上。2026-06-27 已用本地 combined 源重新生成，主表现为真实的 3610/4070：
+
+- **source 入口**：`…/rmdb2pdb/task_packages/fec_lss_rc3_release_20260623/local_stage/annojoin_three_table_json_20260625/view_roots/combined`（4070 行 = 4070 source case，按 pdb_id 去重 = 3610）。source family 分布：RMDB2PDB 1126 + RASP2PDB 2944。
+- **生成命令**：`FOLDBRIDGE_ANNOJOIN_ROOT=<combined view root> npm run build:annojoin-atlas`（输出 `src/assets/generated/annojoin-atlas/`，该目录是 .gitignore 构建产物，脚本开头 `rm -rf OUT_ROOT` 自清，可重建）。
+- **combine 逻辑**：`scripts/lib/annojoin-atlas-corpus.mjs` 的 `buildDisplayCases()`，按 pdb_id 分组；多 source 合并成一行打 `isMergedDisplayRow`、累加 profileCount、复合 confidence、`sourceFamilies:[RMDB2PDB,RASP2PDB]`。无需新写代码。
+- **生成结果**：cases(source)=4070，displayCases=3610，totalCaseCount=3610，totalSourceCaseCount=4070；displayCases family 分布 `{RMDB2PDB:666, RMDB2PDB+RASP2PDB:460, RASP2PDB:2484}`（460 个合并行）。产物 33165 assets / 456 MiB（含 .br/.gz 懒加载副本，目录约 833M）。
+- **详情页视觉预览（1D/2D/3D/mapped residue）暂缺**：本次生成未提供 ANNOCONFIDENCE/FEC 源（`lss_structure_context_annotation.tsv` / `residue_evidence.tsv`，本地未找到），故 `verify:annojoin-atlas` 报若干 `missing visual preview`。**本阶段范围只到 combined 主表**；视觉预览留待后续按 `docs/annojoin-5gag-linked-smoke-stage-20260626.md` 分 RMDB/RASP coverage 轴的全量生成补齐，届时需 staging ANNOCONFIDENCE/FEC 源（历史上为 24G，见 asset-refresh 文档）。
+
 ## 2. 交付能力
 
 **核心搜索（优先级 A）**
@@ -83,12 +93,17 @@
 
 - atlas 专属测试 35/35 通过：`node --test test/annojoin-atlas.test.js test/annojoin-atlas-table-model.test.js`。
 - `npm run build` 通过（977 页）。
-- `npm run verify:annojoin-atlas -- --asset-root src/assets/generated/annojoin-atlas --sample-size 20`：`"failures": []`，9 个 capability 全过。
 - 最终整体代码审查（opus）：可以合并，无 critical/important 问题。
+
+**combined 真实数据端到端验证（2026-06-27）**：用 §1.5 重新生成的 3610/4070 资产，`npm run build:static` + 本地 `npm run serve` 实测：
+- 服务端 index：`displayCases=3610 totalCaseCount=3610 totalSourceCaseCount=4070`，family `{RMDB2PDB:666, RMDB2PDB+RASP2PDB:460, RASP2PDB:2484}`。
+- 渲染层（`renderAnnojointAtlasPage`）实跑真实数据：浏览态双口径计数 `3610 PDB entries (4070 source cases)`；RASP 徽标带 `not active`；搜索 `ribozyme` → `Showing 22 of 3610 entries matching "ribozyme"`（分子名匹配生效），搜索模式提示条出现。红线全部守住。
 
 **已知无关红测**：`npm test` 全量为 147 通过 / 1 失败。唯一失败是 `5GAG smoke resource provenance manifest records source tools and dispatch boundaries`（`test/annojoin-5gag-linked-smoke.test.js`），属于本分支上**早于本阶段的未提交 WIP**，失败点是静态 fixture 里一段文案的正则断言，与搜索重设计无关，本阶段未修改它。
 
-**尚未做的验证**：真实数据规模（3610/4070）与真浏览器搜索手感未跑端到端 / Docker 验证。如需完全确认线上效果，运行 `docker compose up -d --build` 后在真浏览器点查一遍。
+**已知数据缺口（非回归，范围外）**：`verify:annojoin-atlas` 在 combined 资产上报若干 `missing visual preview for 1D/2D/3D/mapped residues`——因本次生成未提供 ANNOCONFIDENCE/FEC 源（见 §1.5）。本阶段范围只到 combined 主表，视觉预览留待后续全量生成补齐。
+
+**Docker 端到端**：本次未跑（base image `node:22-bookworm-slim` 未缓存且 Docker Hub 不可达）。已用本地 `npm run serve` 等价验证（`serve.mjs` 的 `defaultAnnoRoot` 与 Docker 挂载同源）。如需容器级确认，待 registry 可达后 `docker compose up -d --build`。
 
 ## 8. 阶段文档时间线（统一索引）
 
