@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -1499,50 +1499,7 @@ function homePage() {
   return `<main class="page-home bundle-home-page">
     <section class="bundle-home-shell">
       ${bundleHeader}
-      <section class="bundle-hero-card bundle-wide-card">
-        <div class="bundle-hero-copy">
-          <p class="bundle-kicker">five database bundle</p>
-          <h2>FoldBridge Database Portal</h2>
-          <p class="bundle-hero-summary">
-            FoldBridge is a curated database that links RNA chemical probing data with experimentally resolved tertiary structures.
-          </p>
-          <p class="bundle-hero-detail">
-            By matching probing-derived RNA sequences to corresponding sequences in PDB entries, FoldBridge identifies high-confidence structure-linked records and integrates their secondary- and tertiary-structure information. The database is intended to support the analysis of relationships between RNA structural signals and 3D organization, and to facilitate improved RNA structure interpretation and prediction.
-          </p>
-          <div class="bundle-hero-actions">
-            <button type="button" class="bundle-hero-primary" data-route="download-sequences">Browse FoldBridge</button>
-            <button type="button" class="ghost" data-route="structure">Open structure hub</button>
-          </div>
-        </div>
-
-        <aside class="bundle-hero-metrics">
-          <article class="bundle-metric-card bundle-metric-large">
-            <p>current build</p>
-            <strong>Release 0.1</strong>
-            <span>4 aligned database entrances with a unified visual system</span>
-          </article>
-          <article class="bundle-metric-card">
-            <p>species</p>
-            <strong>22</strong>
-            <span>xx</span>
-          </article>
-          <article class="bundle-metric-card">
-            <p>sequences</p>
-            <strong>xx</strong>
-            <span>xx</span>
-          </article>
-          <article class="bundle-metric-card">
-            <p>structures</p>
-            <strong>xx</strong>
-            <span>xx</span>
-          </article>
-          <article class="bundle-metric-card">
-            <p>technology</p>
-            <strong>27</strong>
-            <span>xx</span>
-          </article>
-        </aside>
-      </section>
+      ${renderHomeHero()}
 
     </section>
   </main>`;

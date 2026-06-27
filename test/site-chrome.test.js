@@ -24,3 +24,30 @@ test('primary nav marks the active route', () => {
   const dlHtml = renderPrimaryNav('download-sequences');
   assert.match(dlHtml, /class="nav-btn active"\s+data-route="sequence"/);
 });
+
+import { renderHomeHero, HOME_METRICS } from '../src/siteChrome.js';
+
+test('home hero shows real metrics, no placeholders', () => {
+  const html = renderHomeHero();
+  assert.match(html, /3,610/);
+  assert.match(html, /4,070/);
+  assert.match(html, />27</);
+  assert.match(html, />6</);
+  assert.doesNotMatch(html, /\bxx\b/);
+  assert.doesNotMatch(html, /Release 0\.1/);
+});
+
+test('home hero CTAs target live routes', () => {
+  const html = renderHomeHero();
+  assert.match(html, /data-route="sequence"/);
+  assert.match(html, /data-route="probing"/);
+  assert.doesNotMatch(html, /data-route="download-sequences"/);
+  assert.doesNotMatch(html, /data-route="structure"/);
+});
+
+test('HOME_METRICS carries the launch numbers', () => {
+  assert.equal(HOME_METRICS.structureLinkedRecords, 3610);
+  assert.equal(HOME_METRICS.sourceCases, 4070);
+  assert.equal(HOME_METRICS.probingArticles, 27);
+  assert.equal(HOME_METRICS.mechanismFamilies, 6);
+});
