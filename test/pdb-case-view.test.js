@@ -3,16 +3,17 @@ import assert from 'node:assert/strict';
 import { renderPdbCaseIndexPage, renderPdbCasePage } from '../src/pdbCaseView.js';
 
 const indexRows = [
-  { pdbId: '8CBL', title: 'Group I intron', confidenceClass: 'high', confidenceScore: 1, profileCount: 1, residueCount: 218, detailHref: '#pdb-case?pdbId=8CBL' },
-  { pdbId: '8A57', title: 'Ribozyme <hack>', confidenceClass: 'medium', confidenceScore: 0.5359, profileCount: 10, residueCount: 80, detailHref: '#pdb-case?pdbId=8A57' },
-  { pdbId: '9QQQ', title: 'Aptamer', confidenceClass: 'low', confidenceScore: 0.4953, profileCount: 3, residueCount: 40, detailHref: '#pdb-case?pdbId=9QQQ' }
+  { pdbId: '8CBL', pdbIds: ['8CBL'], title: 'Group I intron', confidenceClass: 'high', confidenceScore: 1, profileCount: 1, residueCount: 218, detailHref: '#pdb-case?pdbId=8CBL', parentName: 'no_registered_parent', hasDetailAssets: true },
+  { pdbId: '8A57', pdbIds: ['8A57'], title: 'Ribozyme <hack>', confidenceClass: 'medium', confidenceScore: 0.5359, profileCount: 10, residueCount: 80, detailHref: '#pdb-case?pdbId=8A57', parentName: 'URS000080E166', parentId: 'pdbmol_000e', hasDetailAssets: true },
+  { pdbId: '9QQQ', pdbIds: ['9QQQ'], title: 'Aptamer', confidenceClass: 'low', confidenceScore: 0.4953, profileCount: 3, residueCount: 40, detailHref: '#pdb-case?pdbId=9QQQ', parentName: 'URS000080E166', parentId: 'pdbmol_000e', hasDetailAssets: false }
 ];
 
-test('PDB case index renders case grain rows with detail links', () => {
+test('PDB case index renders case grain rows with RCSB links and detail buttons', () => {
   const html = renderPdbCaseIndexPage(indexRows);
-  assert.match(html, /PDB case index/);
-  assert.match(html, /#pdb-case\?pdbId=8CBL/);
+  assert.match(html, /RMDB→PDB Case Index/);
+  assert.match(html, /rcsb\.org\/structure\/8CBL/);
   assert.match(html, /Group I intron/);
+  assert.match(html, /data-detail-href="#pdb-case\?pdbId=8CBL"/);
 });
 
 test('PDB case index shows three-tier confidence badges', () => {
@@ -39,7 +40,19 @@ test('PDB case index escapes HTML in titles', () => {
 
 test('PDB case index handles empty list without crashing', () => {
   const html = renderPdbCaseIndexPage([]);
-  assert.match(html, /PDB case index/);
+  assert.match(html, /RMDB→PDB Case Index/);
+});
+
+test('PDB case index groups children under registered parent', () => {
+  const html = renderPdbCaseIndexPage(indexRows);
+  // URS000080E166 parent group should be present with toggle
+  assert.match(html, /data-parent-toggle="URS000080E166"/);
+  assert.match(html, /pdb-case-parent-toggle/);
+  // 8CBL is no_registered_parent → ungrouped row (not child-row)
+  assert.match(html, /rcsb\.org\/structure\/8CBL/);
+  assert.doesNotMatch(html, /pdb-case-child-row[^"]*data-parent-name="no_registered_parent"/);
+  // disabled detail button for hasDetailAssets=false
+  assert.match(html, /data-detail-href="#pdb-case\?pdbId=9QQQ"[^>]*disabled/);
 });
 
 test('PDB case page explains projection semantics and residue-map boundary', () => {

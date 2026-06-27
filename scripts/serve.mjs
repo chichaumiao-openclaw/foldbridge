@@ -33,7 +33,9 @@ const contentTypes = {
   '.ico': 'image/x-icon',
   '.pdb': 'chemical/x-pdb',
   '.cif': 'chemical/x-cif',
+  '.br': 'application/octet-stream',
   '.gz': 'application/gzip',
+  '.wasm': 'application/wasm',
   '.rdat': 'text/plain; charset=utf-8',
   '.xls': 'application/vnd.ms-excel'
 };

@@ -28,6 +28,9 @@ test('5GAG smoke page exposes a complete linked-view workbench contract', () => 
   assert.match(js, /function setViewport/);
   assert.match(js, /function zoomTrack/);
   assert.match(js, /function panTrack/);
+  assert.match(js, /function initialProfileIdFromLocation/);
+  assert.match(js, /function renderProfileById/);
+  assert.match(js, /function installExternalProfileBridge/);
   assert.match(js, /function renderTrackRail/);
   assert.match(js, /function renderInspector/);
   assert.match(js, /function getResidueDetails/);
@@ -59,6 +62,9 @@ test('5GAG smoke page exposes a complete linked-view workbench contract', () => 
   assert.match(js, /Join status/);
   assert.match(js, /Structure locus/);
   assert.match(js, /Assay state/);
+  assert.match(js, /profileId/);
+  assert.match(js, /annojoin:set-profile/);
+  assert.match(js, /window\.location\.search/);
 });
 
 test('5GAG smoke consumes linked-view contract assets for residue semantics', () => {
@@ -143,6 +149,67 @@ test('5GAG smoke manifest registers linked-view projection assets', () => {
   }
   assert.equal(sizeReport.linked_view_total_bytes, totalBytes);
   assert.equal(sizeReport.linked_view_asset_count, linkedViewAssets.length);
+});
+
+test('5GAG smoke resource provenance manifest records source tools and dispatch boundaries', () => {
+  const manifest = JSON.parse(fs.readFileSync(path.join(smokeRoot, 'browser_smoke_manifest.json'), 'utf8'));
+  assert.equal(manifest.assets.resource_provenance, 'assets/resource-provenance.json');
+
+  const provenance = JSON.parse(fs.readFileSync(path.join(smokeRoot, 'assets', 'resource-provenance.json'), 'utf8'));
+  assert.equal(provenance.protocolVersion, 'annojoin-web-resource-provenance.v0.1');
+  assert.equal(provenance.caseId, '5GAG');
+  assert.equal(provenance.consumerRepo, 'docs/foldbridge');
+  assert.equal(provenance.producerRepo, 'docs/rmdb2pdb');
+  assert.match(provenance.documentation, /ANNOJOIN网页资源来源清单_20260626\.md/);
+  assert.ok(Array.isArray(provenance.resourceGroups));
+
+  const byId = new Map(provenance.resourceGroups.map((group) => [group.groupId, group]));
+  for (const groupId of [
+    'page-shell',
+    'dbn-2d-structure',
+    'varna-layout-template',
+    'profile-reactivity-shards',
+    'linked-view-contract-assets',
+    'lss-context',
+    'raw-qcov-scov',
+    'molstar-3d-runtime',
+    'technology-family-smoke',
+  ]) {
+    assert.ok(byId.has(groupId), `${groupId} missing`);
+  }
+
+  const dbn = byId.get('dbn-2d-structure');
+  assert.deepEqual(dbn.viewerAssets, ['assets/case_2d_structure_5gag.json']);
+  assert.match(dbn.sourceDataPaths.join('\n'), /ANNOJOIN\/2d_smoke_5gag_20260618\/dbn\/5gag\.dbn/);
+  assert.equal(dbn.toolRuntime.remoteHost, '10.40.0.132');
+  assert.equal(dbn.toolRuntime.remoteRoot, '/data/rnapdbee-dotbracket-amd64');
+  assert.deepEqual(dbn.toolRuntime.containers, ['rnapdbee-engine', 'rnapdbee-adapters', 'cli2rest-rnaview']);
+  assert.match(dbn.dispatch.command, /batch_rnaview_dotbracket\.py --engine-url http:\/\/127\.0\.0\.1:18081 --recursive/);
+  assert.match(dbn.dispatch.outputs.join('\n'), /summary\.tsv/);
+  assert.match(dbn.dispatch.outputs.join('\n'), /\.dbn/);
+
+  const lss = byId.get('lss-context');
+  assert.equal(lss.viewerAssets[0], 'assets/linked-view/lss-context.json');
+  assert.equal(lss.sourceDataPaths[0], 'ANNOCONFIDENCE/lss_structure_context_annotation.tsv');
+  assert.deepEqual(lss.joinKeys, ['profileId']);
+  assert.equal(lss.matchPolicy, 'profile_id_exact');
+
+  const rawCoverage = byId.get('raw-qcov-scov');
+  assert.equal(rawCoverage.status, 'not_materialized');
+  assert.equal(rawCoverage.viewerAssets[0], 'assets/linked-view/raw-alignment-coverage.json');
+  assert.match(rawCoverage.recommendedSourceDataPaths.join('\n'), /PIPLINE\/rmdb2pdb_v3_exact_query_vs_pdb_normalized_acgun_rasp_params_20260612/);
+  assert.match(rawCoverage.notes.join('\n'), /Do not label RASP feature coverage as RMDB profile qcov\/scov/);
+
+  const molstar = byId.get('molstar-3d-runtime');
+  assert.match(molstar.runtimeUrls.join('\n'), /https:\/\/files\.rcsb\.org\/download\/5GAG\.cif/);
+  assert.match(molstar.runtimeUrls.join('\n'), /pdbe-molstar@3\.3\.0/);
+  assert.equal(molstar.dispatch.mode, 'browser_client_alignment_crop');
+  assert.deepEqual(molstar.joinKeys, ['structure-coverage.atomSiteFilter', 'structure-coverage.sequenceAlignment']);
+  assert.match(molstar.notes.join('\n'), /full CIF reference/);
+
+  const technologyFamilies = byId.get('technology-family-smoke');
+  assert.match(technologyFamilies.sourceDataPaths.join('\n'), /docs\/技术沉淀\/RNA探针技术特性\.tsv/);
+  assert.match(technologyFamilies.sourceDataPaths.join('\n'), /probe_confidence_method_registry\.tsv/);
 });
 
 test('5GAG raw qcov/scov remains an explicit non-materialized alignment contract', () => {

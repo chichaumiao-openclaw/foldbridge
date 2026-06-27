@@ -38,8 +38,290 @@ function splitList(value) {
   return text(value).split(';').map((item) => item.trim()).filter(Boolean);
 }
 
+function assetFamily(row = {}) {
+  return text(row.asset_family || row.assetFamily);
+}
+
+export function atlasCaseKeyFor(row = {}) {
+  const explicit = text(row.atlasCaseKey || row.atlas_case_key);
+  if (explicit) return explicit;
+  const family = assetFamily(row);
+  const caseId = text(row.case_id || row.caseId);
+  const pdbId = text(row.pdb_id || row.pdbId) || caseId;
+  if (family && (pdbId || caseId)) return `${family}:${pdbId || caseId}`;
+  return caseId || pdbId;
+}
+
+function casePathSegment(caseKey = '') {
+  return encodeURIComponent(text(caseKey));
+}
+
+function caseAssetPathFor(row = {}) {
+  const explicit = text(row.caseAssetPath || row.case_asset_path);
+  if (explicit) return explicit;
+  return `cases/${casePathSegment(atlasCaseKeyFor(row))}.json`;
+}
+
 function previewProfiles(value) {
-  return splitList(value).filter((profileId) => !profileId.startsWith('bundle_'));
+  return splitList(value).filter((profileId) => (
+    !profileId.startsWith('bundle_')
+    && !profileId.startsWith('rmdbv3_exact_')
+  ));
+}
+
+function normalizeRdatPath(pathValue = '') {
+  const parts = text(pathValue).split('/').filter(Boolean);
+  if (parts.length >= 3 && parts[0] === parts[1]) parts.splice(0, 1);
+  return parts.join('/');
+}
+
+function profileTraceFromProfileId(profileId = '', { pairId = '', routeId = '' } = {}) {
+  const value = text(profileId);
+  if (!value || value.startsWith('rmdbv3_exact_')) return null;
+  const rdatMatch = value.match(/(.+?\.rdat)#([^|#]+)/i);
+  if (rdatMatch) {
+    const rdatPath = normalizeRdatPath(rdatMatch[1]);
+    const lineValue = Number(rdatMatch[2]);
+    return {
+      pairId: text(pairId),
+      profileId: value,
+      traceType: Number.isFinite(lineValue) ? 'rdat_line' : 'rdat_record',
+      rdatPath,
+      rdatFile: rdatPath.split('/').pop() || rdatPath,
+      ...(Number.isFinite(lineValue) ? { rdatLine: lineValue } : { rdatRecord: rdatMatch[2] }),
+      routeId: text(routeId)
+    };
+  }
+  return {
+    pairId: text(pairId),
+    profileId: value,
+    traceType: 'route_profile_id',
+    routeId: text(routeId)
+  };
+}
+
+function normalizeProfileTraceEntry(row = {}) {
+  if (row.traceType || row.rdatPath || row.rdatFile || row.rdatLine || row.rdatRecord) {
+    const rdatPath = normalizeRdatPath(row.rdatPath || row.rdat_path);
+    return {
+      pairId: text(row.pairId || row.pair_id),
+      profileId: text(row.profileId || row.profile_id),
+      traceType: text(row.traceType || row.trace_type),
+      rdatPath,
+      rdatFile: text(row.rdatFile || row.rdat_file || rdatPath.split('/').pop()),
+      ...(numberOrNull(row.rdatLine ?? row.rdat_line) ? { rdatLine: numberOrNull(row.rdatLine ?? row.rdat_line) } : {}),
+      ...(text(row.rdatRecord || row.rdat_record) ? { rdatRecord: text(row.rdatRecord || row.rdat_record) } : {}),
+      routeId: text(row.routeId || row.route_id || row.track_route_id)
+    };
+  }
+  return profileTraceFromProfileId(row.profileId || row.profile_id, {
+    pairId: row.pairId || row.pair_id,
+    routeId: row.routeId || row.route_id || row.track_route_id
+  });
+}
+
+function buildProfileTracePreview(rows = [], maxEntries = DEFAULT_ROUTE_PREVIEW_SIZE) {
+  const traces = [];
+  const seen = new Set();
+  for (const row of rows || []) {
+    const trace = normalizeProfileTraceEntry(row);
+    if (!trace) continue;
+    const key = [trace.pairId, trace.rdatPath || trace.profileId, trace.rdatLine || trace.rdatRecord || ''].join('|');
+    if (seen.has(key)) continue;
+    seen.add(key);
+    traces.push(trace);
+    if (traces.length >= maxEntries) break;
+  }
+  return traces;
+}
+
+function uniqueOrdered(values = []) {
+  const out = [];
+  const seen = new Set();
+  for (const value of values || []) {
+    const item = text(value);
+    if (!item || seen.has(item)) continue;
+    seen.add(item);
+    out.push(item);
+  }
+  return out;
+}
+
+function familyDisplayLabel(family = '') {
+  const normalized = text(family).toUpperCase();
+  if (normalized.includes('RMDB')) return 'RMDB';
+  if (normalized.includes('RASP')) return 'RASP';
+  return text(family).replace(/2PDB$/i, '') || 'source';
+}
+
+function compactConfidenceLabel(row = {}) {
+  const value = text(row.confidenceDisplayLabel || row.confidence_display_label);
+  if (!value) return 'not annotated';
+  if (/positive confidence not active/i.test(value)) return 'not active';
+  const classes = uniqueOrdered([...value.matchAll(/\b([ABCD])_[A-Z0-9_]+/g)].map((match) => match[1]))
+    .sort((a, b) => 'ABCD'.indexOf(a) - 'ABCD'.indexOf(b));
+  if (classes.length) return classes.join('/');
+  const firstSegment = value.split(';').map((part) => part.trim()).find(Boolean);
+  return firstSegment || value;
+}
+
+function mergedConfidenceLabel(rows = []) {
+  const byFamily = new Map();
+  for (const row of rows) {
+    const family = familyDisplayLabel(row.assetFamily);
+    if (!byFamily.has(family)) byFamily.set(family, []);
+    byFamily.get(family).push(compactConfidenceLabel(row));
+  }
+  return [...byFamily.entries()]
+    .map(([family, labels]) => `${family}: ${uniqueOrdered(labels).join(', ')}`)
+    .join('; ');
+}
+
+function displayMoleculeName(row = {}) {
+  return text(row.biologicalMoleculeName || row.pdbMoleculeName || row.childClassLabel || row.parentClassLabel || row.pdbId || row.caseId);
+}
+
+function representativeScore(row = {}) {
+  const family = text(row.assetFamily);
+  const name = displayMoleculeName(row);
+  const nameSource = text(row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource).toLowerCase();
+  const sourceScore = nameSource.includes('author') || nameSource.includes('pdb_author_entity_description') ? 0 : 1;
+  const familyScore = family === 'RMDB2PDB' ? 0 : family === 'RASP2PDB' ? 1 : 2;
+  const lengthScore = name.length && name.length <= 240 ? 0 : 1;
+  return [familyScore, sourceScore, lengthScore, name.length || 999999, text(row.atlasCaseKey)];
+}
+
+function compareRepresentativeRows(a = {}, b = {}) {
+  const left = representativeScore(a);
+  const right = representativeScore(b);
+  for (let index = 0; index < left.length; index += 1) {
+    if (left[index] < right[index]) return -1;
+    if (left[index] > right[index]) return 1;
+  }
+  return 0;
+}
+
+function sourceCaseDescriptor(row = {}) {
+  return {
+    assetFamily: text(row.assetFamily),
+    familyLabel: familyDisplayLabel(row.assetFamily),
+    atlasCaseKey: text(row.atlasCaseKey),
+    caseId: text(row.caseId),
+    pdbId: text(row.pdbId),
+    caseAssetPath: text(row.caseAssetPath),
+    detailRouteId: text(row.detailRouteId),
+    recommendedDefaultPreset: text(row.recommendedDefaultPreset),
+    moleculeName: displayMoleculeName(row),
+    confidenceDisplayLabel: text(row.confidenceDisplayLabel),
+    compactConfidenceLabel: compactConfidenceLabel(row),
+    profileCount: numberOrZero(row.profileCount),
+    chains: row.chains || []
+  };
+}
+
+function tracePreviewKey(entry = {}) {
+  return [
+    text(entry.pairId),
+    text(entry.rdatPath || entry.profileId),
+    text(entry.rdatLine || entry.rdatRecord || entry.routeId)
+  ].join('|');
+}
+
+function mergeTracePreviews(rows = []) {
+  const out = [];
+  const seen = new Set();
+  for (const row of rows) {
+    for (const trace of row.profileTracePreview || []) {
+      const key = tracePreviewKey(trace);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      out.push(trace);
+      if (out.length >= DEFAULT_ROUTE_PREVIEW_SIZE) return out;
+    }
+  }
+  return out;
+}
+
+function displayGroupKey(row = {}) {
+  return text(row.pdbId || row.caseId || row.atlasCaseKey);
+}
+
+function buildDisplayCases(sourceCases = []) {
+  const grouped = new Map();
+  for (const row of sourceCases) {
+    const key = displayGroupKey(row);
+    if (!key) continue;
+    if (!grouped.has(key)) grouped.set(key, []);
+    grouped.get(key).push(row);
+  }
+
+  const displayRows = [];
+  for (const [pdbKey, rows] of grouped.entries()) {
+    if (rows.length === 1) {
+      const row = rows[0];
+      displayRows.push({
+        ...row,
+        sourceCaseCount: 1,
+        sourceFamilies: uniqueOrdered([row.assetFamily]),
+        sourceCaseKeys: uniqueOrdered([row.atlasCaseKey]),
+        sourceCaseAssetPaths: [sourceCaseDescriptor(row)]
+      });
+      continue;
+    }
+
+    const representative = [...rows].sort(compareRepresentativeRows)[0];
+    const chains = uniqueOrdered(rows.flatMap((row) => row.chains || []));
+    const sourceFamilies = uniqueOrdered(rows.map((row) => row.assetFamily));
+    const sourceCaseKeys = rows.map((row) => text(row.atlasCaseKey)).filter(Boolean);
+    const sourceCaseAssetPaths = rows.map(sourceCaseDescriptor);
+    const profilePreview = uniqueOrdered(rows.flatMap((row) => row.profilePreview || [])).slice(0, DEFAULT_ROUTE_PREVIEW_SIZE);
+    const searchTerms = uniqueOrdered([
+      pdbKey,
+      representative.searchText,
+      representative.biologicalMoleculeName,
+      representative.pdbMoleculeName,
+      ...rows.flatMap((row) => [
+        row.searchText,
+        row.atlasCaseKey,
+        row.assetFamily,
+        row.biologicalMoleculeName,
+        row.pdbMoleculeName,
+        row.confidenceDisplayLabel
+      ])
+    ]);
+    displayRows.push({
+      ...representative,
+      assetFamily: '',
+      sourceLine: '',
+      caseUid: `PDB|${pdbKey}`,
+      atlasCaseKey: `PDB:${pdbKey}`,
+      caseId: pdbKey,
+      pdbId: pdbKey,
+      caseAssetPath: '',
+      routeId: `annojoin:display:pdb:${pdbKey}`,
+      detailRouteId: '',
+      recommendedDefaultPreset: '',
+      isMergedDisplayRow: true,
+      sourceCaseCount: rows.length,
+      sourceFamilies,
+      sourceCaseKeys,
+      sourceCaseAssetPaths,
+      chains,
+      sourceDatabases: uniqueOrdered(rows.flatMap((row) => row.sourceDatabases || [])),
+      assayFamilies: uniqueOrdered(rows.flatMap((row) => row.assayFamilies || [])),
+      profileCount: rows.reduce((sum, row) => sum + numberOrZero(row.profileCount), 0),
+      profilePreview,
+      profilePreviewIsComplete: rows.every((row) => row.profilePreviewIsComplete),
+      profileTracePreview: mergeTracePreviews(rows),
+      confidenceDisplayLabel: mergedConfidenceLabel(rows),
+      confidenceSource: 'source_case_confidence_summary',
+      conflictCandidateCount: rows.reduce((sum, row) => sum + numberOrZero(row.conflictCandidateCount), 0),
+      hasContextAnnotation: rows.some((row) => row.hasContextAnnotation),
+      hasLssAnnotation: rows.some((row) => row.hasLssAnnotation),
+      searchText: searchTerms.join(' ')
+    });
+  }
+  return displayRows;
 }
 
 export function groupByCaseId(rows) {
@@ -53,13 +335,42 @@ export function groupByCaseId(rows) {
   return grouped;
 }
 
+export function groupByAtlasCaseKey(rows) {
+  const grouped = new Map();
+  for (const row of rows || []) {
+    const caseKey = atlasCaseKeyFor(row);
+    if (!caseKey) continue;
+    if (!grouped.has(caseKey)) grouped.set(caseKey, []);
+    grouped.get(caseKey).push(row);
+  }
+  return grouped;
+}
+
 function normalizeCase(row = {}) {
   const caseId = text(row.case_id);
+  const caseKey = atlasCaseKeyFor(row);
   return {
+    assetFamily: assetFamily(row),
+    sourceLine: text(row.source_line || row.sourceLine),
+    evidenceNamespace: text(row.evidence_namespace || row.evidenceNamespace),
+    sourceAssetRoot: text(row.source_asset_root || row.sourceAssetRoot),
+    sourcePublicRoot: text(row.source_public_root || row.sourcePublicRoot),
+    publicCaseStatus: text(row.public_case_status || row.publicCaseStatus),
     caseUid: text(row.case_uid),
+    atlasCaseKey: caseKey,
     caseId,
     pdbId: text(row.pdb_id),
     chains: splitList(row.pdb_chain_ids),
+    parentClassLabel: text(row.parent_class_label),
+    parentClassSource: text(row.parent_class_source),
+    childClassLabel: text(row.child_class_label),
+    childClassSource: text(row.child_class_source),
+    biologicalMoleculeName: text(row.biological_molecule_name),
+    biologicalMoleculeNameSource: text(row.biological_molecule_name_source),
+    pdbMoleculeName: text(row.pdb_molecule_name),
+    pdbMoleculeNameSource: text(row.pdb_molecule_name_source),
+    confidenceDisplayLabel: text(row.confidence_display_label),
+    confidenceSource: text(row.confidence_source),
     sourceDatabases: splitList(row.source_databases),
     assayFamilies: splitList(row.assay_family_set),
     rnaFamily: text(row.rna_family_label),
@@ -68,10 +379,11 @@ function normalizeCase(row = {}) {
     motifProvenance: text(row.motif_provenance),
     structureClass: text(row.structure_class_label),
     structureClassProvenance: text(row.structure_class_provenance),
-    profilePreview: previewProfiles(row.profile_ids),
+    profilePreview: previewProfiles(row.profilePreview || row.profile_ids),
     profileCount: numberOrZero(row.profile_count),
     profilePreviewIsComplete: truthy(row.profile_ids_complete),
     profileMembershipRouteId: text(row.profile_membership_route_id),
+    profileTracePreview: buildProfileTracePreview(row.profileTracePreview),
     fecClaimCeilingDistribution: text(row.fec_claim_ceiling_distribution),
     coverageShapeDistribution: text(row.coverage_shape_distribution),
     conflictCandidateCount: numberOrZero(row.conflict_candidate_count),
@@ -79,8 +391,81 @@ function normalizeCase(row = {}) {
     hasLssAnnotation: truthy(row.has_lss_annotation),
     searchText: text(row.search_text),
     routeId: text(row.route_id),
-    caseAssetPath: `cases/${caseId}.json`
+    caseAssetPath: caseAssetPathFor({ ...row, atlasCaseKey: caseKey })
   };
+}
+
+function caseDisplayLabel(row = {}) {
+  return text(
+    row.biologicalMoleculeName
+      || row.pdbMoleculeName
+      || row.rnaFamily
+      || row.structureClass
+      || row.motif
+      || row.pdbId
+      || row.caseId
+  );
+}
+
+function parentBucketLabel(row = {}) {
+  const parent = text(row.parentClassLabel);
+  if (parent && parent !== '未注释') return parent;
+  return text(row.childClassLabel) || caseDisplayLabel(row);
+}
+
+function childBucketLabel(row = {}) {
+  const child = text(row.childClassLabel);
+  if (child && child !== '未注释') return child;
+  return caseDisplayLabel(row);
+}
+
+function bucketId(label = '') {
+  return text(label)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    || 'unclassified';
+}
+
+function buildCaseHierarchy(cases = []) {
+  const parents = new Map();
+  for (const row of cases) {
+    const parentLabel = parentBucketLabel(row);
+    const childLabel = childBucketLabel(row);
+    const parentId = bucketId(parentLabel);
+    const childId = bucketId(`${parentLabel}-${childLabel}`);
+    if (!parents.has(parentId)) {
+      parents.set(parentId, {
+        id: parentId,
+        label: parentLabel,
+        source: text(row.parentClassSource || row.childClassSource || row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource),
+        caseCount: 0,
+        children: new Map()
+      });
+    }
+    const parent = parents.get(parentId);
+    parent.caseCount += 1;
+    if (!parent.children.has(childId)) {
+      parent.children.set(childId, {
+        id: childId,
+        label: childLabel,
+        source: text(row.childClassSource || row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource),
+        caseCount: 0,
+        cases: []
+      });
+    }
+    const child = parent.children.get(childId);
+    child.caseCount += 1;
+    child.cases.push(row.atlasCaseKey || row.caseId);
+  }
+
+  return [...parents.values()]
+    .map((parent) => ({
+      ...parent,
+      children: [...parent.children.values()]
+        .sort((a, b) => b.caseCount - a.caseCount || a.label.localeCompare(b.label))
+    }))
+    .sort((a, b) => b.caseCount - a.caseCount || a.label.localeCompare(b.label));
 }
 
 function normalizeFacet(row = {}) {
@@ -163,7 +548,10 @@ function normalizePair2d(row = {}) {
     contextEngine: text(row.context_engine),
     supportsPairArcView: truthy(row.supports_pair_arc_view),
     supportsDotBracketView: truthy(row.supports_dot_bracket_view),
-    supportsResidueHover: truthy(row.supports_residue_hover)
+    supportsResidueHover: truthy(row.supports_residue_hover),
+    routeAvailabilityStatus: text(row.route_availability_status),
+    blockerCode: text(row.blocker_code),
+    blockerReason: text(row.blocker_reason)
   };
 }
 
@@ -176,7 +564,10 @@ function normalizeColor3d(row = {}) {
     viewerCompatibility: text(row.viewer_compatibility),
     colorPolicyId: text(row.color_policy_id),
     coordinateKeyColumn: text(row.pdb_residue_coordinate_key_column),
-    valueColumn: text(row.value_column)
+    valueColumn: text(row.value_column),
+    routeAvailabilityStatus: text(row.route_availability_status),
+    blockerCode: text(row.blocker_code),
+    blockerReason: text(row.blocker_reason)
   };
 }
 
@@ -298,30 +689,42 @@ function normalizeConflict(row = {}) {
   };
 }
 
-function pagePath(caseId, routeKey, page) {
-  return `cases/${caseId}/${routeKey}/page-${String(page).padStart(4, '0')}.json`;
+function pagePath(caseKey, routeKey, page) {
+  return `cases/${casePathSegment(caseKey)}/${routeKey}/page-${String(page).padStart(4, '0')}.json`;
+}
+
+function confidenceAssetPaths(caseKey) {
+  const segment = casePathSegment(caseKey);
+  return {
+    confidenceSummaryPath: `cases/${segment}/confidence-summary.json`,
+    confidenceEvidencePath: `cases/${segment}/confidence-evidence.json`,
+    confidenceProvenancePath: `cases/${segment}/confidence-provenance.json`,
+  };
 }
 
 export function buildPagedRouteAssets({
   caseId,
+  caseKey,
   routeKey,
   rows = [],
   pageSize = DEFAULT_ROUTE_PAGE_SIZE,
   previewSize = DEFAULT_ROUTE_PREVIEW_SIZE
 } = {}) {
   const selectedCaseId = text(caseId);
+  const selectedCaseKey = text(caseKey) || selectedCaseId;
   const safeRows = Array.isArray(rows) ? rows : [];
   const pageCount = Math.max(1, Math.ceil(safeRows.length / pageSize));
   const pages = Array.from({ length: pageCount }, (_, index) => {
     const page = index + 1;
     const start = index * pageSize;
     const pageRows = safeRows.slice(start, start + pageSize);
-    const path = pagePath(selectedCaseId, routeKey, page);
+    const path = pagePath(selectedCaseKey, routeKey, page);
     return {
       path,
       asset: {
         schemaVersion: ANNOJOIN_ATLAS_SCHEMA_VERSION,
         version: ANNOJOIN_ATLAS_VERSION,
+        atlasCaseKey: selectedCaseKey,
         caseId: selectedCaseId,
         routeKey,
         page,
@@ -345,12 +748,19 @@ export function buildPagedRouteAssets({
   };
 }
 
-function firstByCase(rows, caseId) {
-  return (rows || []).find((row) => text(row.case_id) === caseId) || null;
+function matchesSelectedCase(row = {}, caseId = '', caseKey = '') {
+  const selectedKey = text(caseKey);
+  if (selectedKey && atlasCaseKeyFor(row) === selectedKey) return true;
+  if (selectedKey && assetFamily(row)) return false;
+  return text(row.case_id || row.caseId) === text(caseId);
 }
 
-function allByCase(rows, caseId) {
-  return (rows || []).filter((row) => text(row.case_id) === caseId);
+function firstByCase(rows, caseId, caseKey = '') {
+  return (rows || []).find((row) => matchesSelectedCase(row, caseId, caseKey)) || null;
+}
+
+function allByCase(rows, caseId, caseKey = '') {
+  return (rows || []).filter((row) => matchesSelectedCase(row, caseId, caseKey));
 }
 
 export function buildAtlasIndexAsset({
@@ -358,10 +768,26 @@ export function buildAtlasIndexAsset({
   facets = [],
   summaries = [],
   routes = [],
+  tracks = [],
   presets = [],
   downloads = [],
+  source = {},
   generatedAt = new Date().toISOString()
 } = {}) {
+  const tracksByCase = groupByAtlasCaseKey(tracks);
+  const normalizedCases = cases.map((row) => {
+    const caseId = text(row.case_id);
+    const caseKey = atlasCaseKeyFor(row);
+    const summary = firstByCase(summaries, caseId, caseKey);
+    const route = firstByCase(routes, caseId, caseKey);
+    return {
+      ...normalizeCase(row),
+      profileTracePreview: buildProfileTracePreview(tracksByCase.get(caseKey) || []),
+      recommendedDefaultPreset: text(summary?.recommended_default_preset),
+      detailRouteId: text(route?.detail_route_id)
+    };
+  });
+  const displayCases = buildDisplayCases(normalizedCases);
   return {
     schemaVersion: ANNOJOIN_ATLAS_SCHEMA_VERSION,
     version: ANNOJOIN_ATLAS_VERSION,
@@ -369,19 +795,14 @@ export function buildAtlasIndexAsset({
     source: {
       entryRoot: 'ANNOJOIN',
       annotationRoot: 'ANNOCONFIDENCE',
-      browserLoadsAnnoconfidenceBigTables: false
+      browserLoadsAnnoconfidenceBigTables: false,
+      ...source
     },
-    totalCaseCount: cases.length,
-    cases: cases.map((row) => {
-      const caseId = text(row.case_id);
-      const summary = firstByCase(summaries, caseId);
-      const route = firstByCase(routes, caseId);
-      return {
-        ...normalizeCase(row),
-        recommendedDefaultPreset: text(summary?.recommended_default_preset),
-        detailRouteId: text(route?.detail_route_id)
-      };
-    }),
+    totalCaseCount: displayCases.length,
+    totalSourceCaseCount: normalizedCases.length,
+    caseHierarchy: buildCaseHierarchy(displayCases),
+    displayCases,
+    cases: normalizedCases,
     facets: facets.map(normalizeFacet),
     presets: presets.map(normalizePreset),
     downloads: downloads.map(normalizeDownload)
@@ -390,6 +811,7 @@ export function buildAtlasIndexAsset({
 
 export function buildAtlasCaseAsset({
   caseId,
+  caseKey,
   cases = [],
   summaries = [],
   routes = [],
@@ -401,37 +823,40 @@ export function buildAtlasCaseAsset({
   conflicts = [],
   residueEvidence = []
 } = {}) {
-  const selectedCaseId = text(caseId);
-  const caseRow = firstByCase(cases, selectedCaseId);
+  const requestedCaseKey = text(caseKey);
+  const requestedCaseId = text(caseId);
+  const caseRow = firstByCase(cases, requestedCaseId, requestedCaseKey);
   if (!caseRow) {
-    throw new Error(`[annojoin-atlas] case_id not found: ${selectedCaseId}`);
+    throw new Error(`[annojoin-atlas] case not found: ${requestedCaseKey || requestedCaseId}`);
   }
+  const selectedCaseId = requestedCaseId || text(caseRow.case_id || caseRow.caseId);
+  const selectedCaseKey = requestedCaseKey || atlasCaseKeyFor(caseRow);
 
-  const membershipRows = allByCase(memberships, selectedCaseId).map((row) => ({
+  const membershipRows = allByCase(memberships, selectedCaseId, selectedCaseKey).map((row) => ({
     pairId: text(row.pair_id),
     profileId: text(row.profile_id),
     routeId: text(row.profile_membership_route_id)
   }));
-  const trackRows = allByCase(tracks, selectedCaseId).map(normalizeTrack);
-  const pairRows = allByCase(pairs2d, selectedCaseId).map(normalizePair2d);
-  const structureRows = allByCase(colors3d, selectedCaseId).map(normalizeColor3d);
-  const conflictRows = allByCase(conflicts, selectedCaseId).map(normalizeConflict);
-  const residueRows = allByCase(residueEvidence, selectedCaseId);
-  const lssRows = allByCase(lssContexts, selectedCaseId);
-  const membershipPages = buildPagedRouteAssets({ caseId: selectedCaseId, routeKey: 'memberships', rows: membershipRows });
-  const trackPages = buildPagedRouteAssets({ caseId: selectedCaseId, routeKey: 'track-routes', rows: trackRows });
-  const pairPages = buildPagedRouteAssets({ caseId: selectedCaseId, routeKey: 'pair-context-routes', rows: pairRows });
-  const structurePages = buildPagedRouteAssets({ caseId: selectedCaseId, routeKey: 'structure-routes', rows: structureRows });
-  const conflictPages = buildPagedRouteAssets({ caseId: selectedCaseId, routeKey: 'conflicts', rows: conflictRows });
+  const trackRows = allByCase(tracks, selectedCaseId, selectedCaseKey).map(normalizeTrack);
+  const pairRows = allByCase(pairs2d, selectedCaseId, selectedCaseKey).map(normalizePair2d);
+  const structureRows = allByCase(colors3d, selectedCaseId, selectedCaseKey).map(normalizeColor3d);
+  const conflictRows = allByCase(conflicts, selectedCaseId, selectedCaseKey).map(normalizeConflict);
+  const residueRows = allByCase(residueEvidence, selectedCaseId, selectedCaseKey);
+  const lssRows = allByCase(lssContexts, selectedCaseId, selectedCaseKey);
+  const membershipPages = buildPagedRouteAssets({ caseId: selectedCaseId, caseKey: selectedCaseKey, routeKey: 'memberships', rows: membershipRows });
+  const trackPages = buildPagedRouteAssets({ caseId: selectedCaseId, caseKey: selectedCaseKey, routeKey: 'track-routes', rows: trackRows });
+  const pairPages = buildPagedRouteAssets({ caseId: selectedCaseId, caseKey: selectedCaseKey, routeKey: 'pair-context-routes', rows: pairRows });
+  const structurePages = buildPagedRouteAssets({ caseId: selectedCaseId, caseKey: selectedCaseKey, routeKey: 'structure-routes', rows: structureRows });
+  const conflictPages = buildPagedRouteAssets({ caseId: selectedCaseId, caseKey: selectedCaseKey, routeKey: 'conflicts', rows: conflictRows });
   const visualPreview = buildVisualPreview({ residueEvidence: residueRows, lssContexts: lssRows, structureRoutes: structureRows });
-  const visualPages = buildPagedRouteAssets({ caseId: selectedCaseId, routeKey: 'visual-preview', rows: visualPreview.mappedResidues });
+  const visualPages = buildPagedRouteAssets({ caseId: selectedCaseId, caseKey: selectedCaseKey, routeKey: 'visual-preview', rows: visualPreview.mappedResidues });
 
   return {
     schemaVersion: ANNOJOIN_ATLAS_SCHEMA_VERSION,
     version: ANNOJOIN_ATLAS_VERSION,
     case: normalizeCase(caseRow),
-    summary: normalizeSummary(firstByCase(summaries, selectedCaseId)),
-    detailRoutes: normalizeRoute(firstByCase(routes, selectedCaseId)),
+    summary: normalizeSummary(firstByCase(summaries, selectedCaseId, selectedCaseKey)),
+    detailRoutes: normalizeRoute(firstByCase(routes, selectedCaseId, selectedCaseKey)),
     memberships: membershipPages.summary,
     trackRoutes: trackPages.summary,
     pairContextRoutes: pairPages.summary,
@@ -446,6 +871,7 @@ export function buildAtlasCaseAsset({
       conflicts: { path: conflictPages.summary.path, totalRows: conflictPages.summary.totalRows, pageCount: conflictPages.summary.pageCount },
       visualPreview: { path: visualPages.summary.path, totalRows: visualPages.summary.totalRows, pageCount: visualPages.summary.pageCount }
     },
+    supplementalAssets: confidenceAssetPaths(selectedCaseKey),
     routeAssetPages: [
       ...membershipPages.pages,
       ...trackPages.pages,

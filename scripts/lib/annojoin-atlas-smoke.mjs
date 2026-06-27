@@ -27,12 +27,41 @@ function hasVisual(detail) {
   );
 }
 
+function firstPreviewRow(value) {
+  return firstRows(value)[0] || {};
+}
+
+function routeBlocked(row = {}, blockerCode = '') {
+  return text(row.routeAvailabilityStatus || row.route_availability_status) === 'blocked'
+    && text(row.blockerCode || row.blocker_code) === blockerCode;
+}
+
+function hasDeclaredRaspVisualBlockers(detail) {
+  return Boolean(
+    hasRows(detail?.trackRoutes)
+      && detail?.visualPreview?.browserLoadsAnnoconfidenceBigTables === false
+      && routeBlocked(firstPreviewRow(detail?.pairContextRoutes), 'RASP_PUBLIC_2D_CONTEXT_NOT_MATERIALIZED_BLOCKER')
+      && routeBlocked(firstPreviewRow(detail?.structureRoutes), 'RASP_PUBLIC_3D_STRUCTURE_ROUTE_NOT_MATERIALIZED_BLOCKER')
+  );
+}
+
 function hasStructureUrl(detail) {
   const route = firstRows(detail?.structureRoutes)[0] || {};
   const preview = detail?.visualPreview?.structureColoring || {};
+  if (routeBlocked(route, 'RASP_PUBLIC_3D_STRUCTURE_ROUTE_NOT_MATERIALIZED_BLOCKER')) return true;
   return text(route.structureFilePath).startsWith('CONFIDENCE/10_structure_context/')
     && text(route.structureUrl).startsWith('/api/annojoin/structure?path=')
     && text(preview.structureUrl).startsWith('/api/annojoin/structure?path=');
+}
+
+function hasWebDisplayFields(row) {
+  return Boolean(
+    text(row.parentClassLabel)
+      && text(row.childClassLabel)
+      && text(row.biologicalMoleculeName)
+      && text(row.pdbMoleculeName)
+      && text(row.confidenceDisplayLabel)
+  );
 }
 
 function sampleCases(cases, sampleSize) {
@@ -56,7 +85,7 @@ function checkCase(detail, caseId) {
   if (!hasRows(detail?.pairContextRoutes)) failures.push('missing 2D pair context route');
   if (!hasRows(detail?.structureRoutes)) failures.push('missing 3D structure route');
   if (!hasStructureUrl(detail)) failures.push('missing 3D mmCIF structure URL');
-  if (!hasVisual(detail)) failures.push('missing visual preview for 1D/2D/3D/mapped residues');
+  if (!hasVisual(detail) && !hasDeclaredRaspVisualBlockers(detail)) failures.push('missing visual preview for 1D/2D/3D/mapped residues');
   if (detail?.annotationPayloadRowsCopied !== 0) failures.push('annotation payload rows copied into browser asset');
   return failures.map((message) => ({ caseId, message }));
 }
@@ -73,10 +102,12 @@ export async function runAnnojointAtlasSmoke({ assetRoot, sampleSize = 20 } = {}
   if ((index.facets || []).length < 12) failures.push({ caseId: '', message: 'facet count below 12' });
   if ((index.presets || []).length < 6) failures.push({ caseId: '', message: 'preset count below 6' });
   if (!(index.downloads || []).length) failures.push({ caseId: '', message: 'download manifest missing' });
+  if (!Array.isArray(index.caseHierarchy) || !index.caseHierarchy.length) failures.push({ caseId: '', message: 'case hierarchy missing' });
   if (sampled.length < sampleSize) failures.push({ caseId: '', message: `sampled ${sampled.length}, expected ${sampleSize}` });
 
   for (const row of sampled) {
     const caseId = text(row.caseId);
+    if (!hasWebDisplayFields(row)) failures.push({ caseId, message: 'missing web display fields in index row' });
     const assetPath = row.caseAssetPath || `cases/${caseId}.json`;
     const detail = await readJson(path.join(root, assetPath));
     failures.push(...checkCase(detail, caseId));

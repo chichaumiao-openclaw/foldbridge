@@ -5,11 +5,18 @@ import path from 'node:path';
 import { createInterface } from 'node:readline';
 import { fileURLToPath } from 'node:url';
 import {
+  atlasCaseKeyFor,
   buildAtlasCaseAsset,
   buildAtlasIndexAsset,
+  groupByAtlasCaseKey,
   groupByCaseId,
   parseTsv
 } from './lib/annojoin-atlas-corpus.mjs';
+import { buildCaseConfidenceSidecars } from './lib/annojoin-atlas-confidence.mjs';
+import {
+  buildCompressedJsonSidecars,
+  buildDetailRouteIndexAsset
+} from './lib/annojoin-atlas-compression.mjs';
 import { resolveVisualPreviewCaseIds } from './lib/annojoin-atlas-build-options.mjs';
 import { buildAnnojointStructureUrl, normalizeStructureRoutePath } from './lib/annojoin-atlas-structure.mjs';
 
@@ -25,7 +32,17 @@ const FEC_EVIDENCE_ROOT = process.env.FOLDBRIDGE_FEC_EVIDENCE_ROOT
   || path.join(ANNO_ROOT, '06_fec_evidence');
 const OUT_ROOT = process.env.FOLDBRIDGE_ANNOJOIN_ATLAS_OUT
   || path.resolve(__dirname, '../src/assets/generated/annojoin-atlas');
+const RMDB_ABC_LSS_ROOT = process.env.FOLDBRIDGE_RMDB_ABC_LSS_ROOT || '';
 const VISUAL_PREVIEW_ROWS_PER_CASE = Number(process.env.FOLDBRIDGE_ANNOJOIN_VISUAL_ROWS_PER_CASE || 48);
+const DETAIL_ASSET_WRITE_CONCURRENCY = Math.max(
+  1,
+  Number(process.env.FOLDBRIDGE_ANNOJOIN_DETAIL_WRITE_CONCURRENCY || 8)
+);
+const VIEW_ID = process.env.FOLDBRIDGE_ANNOJOIN_ATLAS_VIEW_ID || path.basename(OUT_ROOT);
+const VIEW_ASSET_FAMILIES = (process.env.FOLDBRIDGE_ANNOJOIN_ATLAS_ASSET_FAMILIES || '')
+  .split(',')
+  .map((value) => value.trim())
+  .filter(Boolean);
 
 const TABLES = {
   cases: 'anno_case_search_index.tsv',
@@ -55,6 +72,18 @@ async function readOptionalTable(fullPath, label) {
     return [];
   }
   return parseTsv(await readFile(fullPath, 'utf8'));
+}
+
+function groupByField(rows = [], fieldName = '') {
+  const grouped = new Map();
+  for (const row of rows || []) {
+    const key = String(row?.[fieldName] ?? '').trim();
+    if (!key) continue;
+    const bucket = grouped.get(key) || [];
+    bucket.push(row);
+    grouped.set(key, bucket);
+  }
+  return grouped;
 }
 
 function pickColumns(header, cells, wanted) {
@@ -124,16 +153,88 @@ async function readResidueEvidencePreview(fullPath, caseIds, rowsPerCase) {
   return rows;
 }
 
-async function writeJson(relPath, data, manifest) {
+function updateCompressionReport(manifest, descriptor) {
+  if (!manifest.detail_compression) {
+    manifest.detail_compression = {
+      enabled: true,
+      preferred_codec: 'br',
+      fallback_codec: 'gzip',
+      raw_json_fallback: true,
+      asset_count: 0,
+      raw_bytes: 0,
+      brotli_bytes: 0,
+      gzip_bytes: 0,
+      sample_assets: [],
+      largest_raw_assets: []
+    };
+  }
+  const report = manifest.detail_compression;
+  report.asset_count += 1;
+  report.raw_bytes += descriptor.rawBytes;
+  report.brotli_bytes += descriptor.brotli.bytes;
+  report.gzip_bytes += descriptor.gzip.bytes;
+  const row = {
+    path: descriptor.path,
+    raw_bytes: descriptor.rawBytes,
+    brotli_bytes: descriptor.brotli.bytes,
+    gzip_bytes: descriptor.gzip.bytes
+  };
+  if (report.sample_assets.length < 20) report.sample_assets.push(row);
+  report.largest_raw_assets = [...report.largest_raw_assets, row]
+    .sort((left, right) => right.raw_bytes - left.raw_bytes)
+    .slice(0, 20);
+}
+
+async function writeJson(relPath, data, manifest, { compress = false, compressedAssetsByPath = null } = {}) {
   const fullPath = path.join(OUT_ROOT, relPath);
   await mkdir(path.dirname(fullPath), { recursive: true });
-  const text = `${JSON.stringify(data)}\n`;
-  await writeFile(fullPath, text);
+  if (!compress) {
+    const text = `${JSON.stringify(data)}\n`;
+    await writeFile(fullPath, text);
+    manifest.assets.push({
+      path: relPath,
+      size_bytes: Buffer.byteLength(text),
+      row_count: Array.isArray(data) ? data.length : undefined
+    });
+    return null;
+  }
+
+  const sidecars = await buildCompressedJsonSidecars(relPath, data);
+  await writeFile(fullPath, sidecars.raw.bytes);
+  await writeFile(`${fullPath}.br`, sidecars.brotli.bytes);
+  await writeFile(`${fullPath}.gz`, sidecars.gzip.bytes);
+  if (compressedAssetsByPath) compressedAssetsByPath.set(relPath, sidecars.descriptor);
+  updateCompressionReport(manifest, sidecars.descriptor);
   manifest.assets.push({
     path: relPath,
-    size_bytes: Buffer.byteLength(text),
-    row_count: Array.isArray(data) ? data.length : undefined
+    size_bytes: sidecars.raw.sizeBytes,
+    row_count: Array.isArray(data) ? data.length : undefined,
+    compression: {
+      preferred_codec: 'br',
+      fallback_codec: 'gzip',
+      raw_json_fallback: true,
+      brotli_path: sidecars.brotli.path,
+      brotli_size_bytes: sidecars.brotli.sizeBytes,
+      gzip_path: sidecars.gzip.path,
+      gzip_size_bytes: sidecars.gzip.sizeBytes
+    }
   });
+  return sidecars.descriptor;
+}
+
+async function runWithConcurrency(tasks, concurrency) {
+  let nextIndex = 0;
+  const workers = Array.from(
+    { length: Math.min(concurrency, tasks.length) },
+    async () => {
+      while (nextIndex < tasks.length) {
+        const taskIndex = nextIndex;
+        nextIndex += 1;
+        await tasks[taskIndex]();
+      }
+    }
+  );
+  await Promise.all(workers);
 }
 
 function addStructureUrls(rows) {
@@ -177,6 +278,14 @@ async function main() {
     visualCaseIds,
     Math.max(1, VISUAL_PREVIEW_ROWS_PER_CASE)
   );
+  tables.rmdbAbcConfidence = await readOptionalTable(
+    RMDB_ABC_LSS_ROOT ? path.join(RMDB_ABC_LSS_ROOT, 'out/abc_lss_confidence.tsv') : '',
+    'RMDB A/B/C confidence'
+  );
+  tables.rmdbAbcCalibrated = await readOptionalTable(
+    RMDB_ABC_LSS_ROOT ? path.join(RMDB_ABC_LSS_ROOT, 'cal/abc_lss_calibrated.tsv') : '',
+    'RMDB A/B/C calibrated confidence'
+  );
 
   const generatedAt = new Date().toISOString();
 
@@ -187,6 +296,8 @@ async function main() {
     generated_at: generatedAt,
     input_annojoin_root: ANNOJOIN_ROOT,
     output_root: OUT_ROOT,
+    view_id: VIEW_ID,
+    view_asset_families: VIEW_ASSET_FAMILIES,
     entry_root: 'ANNOJOIN',
     annotation_root: 'ANNOCONFIDENCE',
     browser_loads_annoconfidence_big_tables: false,
@@ -198,8 +309,23 @@ async function main() {
     visual_preview_rows_per_case: VISUAL_PREVIEW_ROWS_PER_CASE,
     visual_preview_residue_rows: tables.residueEvidence.length,
     visual_preview_lss_rows: tables.lssContexts.length,
+    rmdb_confidence_root: RMDB_ABC_LSS_ROOT,
+    rmdb_confidence_rows: tables.rmdbAbcConfidence.length,
+    rmdb_calibrated_rows: tables.rmdbAbcCalibrated.length,
     structure_route_unique_paths: 0,
     structure_serving_mode: 'api_on_demand',
+    detail_compression: {
+      enabled: true,
+      preferred_codec: 'br',
+      fallback_codec: 'gzip',
+      raw_json_fallback: true,
+      asset_count: 0,
+      raw_bytes: 0,
+      brotli_bytes: 0,
+      gzip_bytes: 0,
+      sample_assets: [],
+      largest_raw_assets: []
+    },
     assets: []
   };
 
@@ -207,40 +333,114 @@ async function main() {
   tables.colors3d = structureRoutes.rows;
   manifest.structure_route_unique_paths = structureRoutes.uniquePathCount;
 
-  const index = buildAtlasIndexAsset({ ...tables, generatedAt });
+  const index = buildAtlasIndexAsset({
+    ...tables,
+    generatedAt,
+    source: {
+      viewId: VIEW_ID,
+      assetFamilies: VIEW_ASSET_FAMILIES,
+      inputAnnojointRoot: ANNOJOIN_ROOT
+    }
+  });
   const grouped = {
-    memberships: groupByCaseId(tables.memberships),
-    tracks: groupByCaseId(tables.tracks),
-    pairs2d: groupByCaseId(tables.pairs2d),
-    colors3d: groupByCaseId(tables.colors3d),
-    conflicts: groupByCaseId(tables.conflicts),
-    lssContexts: groupByCaseId(tables.lssContexts),
-    residueEvidence: groupByCaseId(tables.residueEvidence)
+    memberships: groupByAtlasCaseKey(tables.memberships),
+    tracks: groupByAtlasCaseKey(tables.tracks),
+    pairs2d: groupByAtlasCaseKey(tables.pairs2d),
+    colors3d: groupByAtlasCaseKey(tables.colors3d),
+    conflicts: groupByAtlasCaseKey(tables.conflicts),
+    lssContexts: groupByAtlasCaseKey(tables.lssContexts),
+    residueEvidence: groupByAtlasCaseKey(tables.residueEvidence),
+    lssContextsByCaseId: groupByCaseId(tables.lssContexts),
+    residueEvidenceByCaseId: groupByCaseId(tables.residueEvidence),
+    rmdbCalibratedByPdb: groupByField(tables.rmdbAbcCalibrated, 'pdb_id')
   };
 
   await writeJson('index.json', index, manifest);
+  const compressedAssetsByPath = new Map();
 
   for (const row of tables.cases) {
     const caseId = row.case_id;
+    const caseKey = atlasCaseKeyFor(row);
+    const family = row.asset_family || '';
+    const useRmdbCaseIdFallback = !family || family === 'RMDB2PDB';
     const caseAsset = buildAtlasCaseAsset({
       caseId,
+      caseKey,
       cases: tables.cases,
       summaries: tables.summaries,
       routes: tables.routes,
-      memberships: grouped.memberships.get(caseId) || [],
-      tracks: grouped.tracks.get(caseId) || [],
-      pairs2d: grouped.pairs2d.get(caseId) || [],
-      lssContexts: grouped.lssContexts.get(caseId) || [],
-      colors3d: grouped.colors3d.get(caseId) || [],
-      conflicts: grouped.conflicts.get(caseId) || [],
-      residueEvidence: grouped.residueEvidence.get(caseId) || []
+      memberships: grouped.memberships.get(caseKey) || [],
+      tracks: grouped.tracks.get(caseKey) || [],
+      pairs2d: grouped.pairs2d.get(caseKey) || [],
+      lssContexts: grouped.lssContexts.get(caseKey) || (useRmdbCaseIdFallback ? grouped.lssContextsByCaseId.get(caseId) : []) || [],
+      colors3d: grouped.colors3d.get(caseKey) || [],
+      conflicts: grouped.conflicts.get(caseKey) || [],
+      residueEvidence: grouped.residueEvidence.get(caseKey) || (useRmdbCaseIdFallback ? grouped.residueEvidenceByCaseId.get(caseId) : []) || []
     });
     const { routeAssetPages, ...overviewAsset } = caseAsset;
-    await writeJson(`cases/${caseId}.json`, overviewAsset, manifest);
-    for (const page of routeAssetPages) {
-      await writeJson(page.path, page.asset, manifest);
+    const writeTasks = [
+      () => writeJson(overviewAsset.case.caseAssetPath, overviewAsset, manifest, {
+        compress: true,
+        compressedAssetsByPath
+      }),
+      ...routeAssetPages.map((page) => () => writeJson(page.path, page.asset, manifest, {
+        compress: true,
+        compressedAssetsByPath
+      })),
+    ];
+    if ((row.asset_family || '') === 'RMDB2PDB') {
+      const confidenceAssets = buildCaseConfidenceSidecars({
+        atlasCaseKey: caseKey,
+        caseId,
+        pdbId: row.pdb_id || caseId,
+        calibratedRows: grouped.rmdbCalibratedByPdb.get(caseId) || [],
+        memberships: grouped.memberships.get(caseKey) || [],
+        tracks: grouped.tracks.get(caseKey) || [],
+        pairs2d: grouped.pairs2d.get(caseKey) || [],
+        colors3d: grouped.colors3d.get(caseKey) || [],
+        generatedAt,
+        source: {
+          confidencePath: RMDB_ABC_LSS_ROOT ? path.join(RMDB_ABC_LSS_ROOT, 'out/abc_lss_confidence.tsv') : '',
+          calibratedPath: RMDB_ABC_LSS_ROOT ? path.join(RMDB_ABC_LSS_ROOT, 'cal/abc_lss_calibrated.tsv') : '',
+          membershipsPath: path.join(ANNOJOIN_ROOT, TABLES.memberships),
+          tracksPath: path.join(ANNOJOIN_ROOT, TABLES.tracks),
+          pairContextPath: path.join(ANNOJOIN_ROOT, TABLES.pairs2d),
+          structurePath: path.join(ANNOJOIN_ROOT, TABLES.colors3d),
+        },
+      });
+      writeTasks.push(
+        () => writeJson(overviewAsset.supplementalAssets.confidenceSummaryPath, confidenceAssets.summary, manifest, {
+          compress: true,
+          compressedAssetsByPath,
+        }),
+        () => writeJson(overviewAsset.supplementalAssets.confidenceEvidencePath, confidenceAssets.evidence, manifest, {
+          compress: true,
+          compressedAssetsByPath,
+        }),
+        () => writeJson(overviewAsset.supplementalAssets.confidenceProvenancePath, confidenceAssets.provenance, manifest, {
+          compress: true,
+          compressedAssetsByPath,
+        }),
+      );
     }
+    await runWithConcurrency(writeTasks, DETAIL_ASSET_WRITE_CONCURRENCY);
   }
+
+  const detailRouteIndex = buildDetailRouteIndexAsset({
+    generatedAt,
+    source: {
+      viewId: VIEW_ID,
+      assetFamilies: VIEW_ASSET_FAMILIES,
+      inputAnnojointRoot: ANNOJOIN_ROOT
+    },
+    cases: index.cases,
+    displayCases: index.displayCases,
+    compressedAssetsByPath
+  });
+  await writeJson('detail-route-index.json', detailRouteIndex, manifest, {
+    compress: true,
+    compressedAssetsByPath
+  });
 
   await writeFile(path.join(OUT_ROOT, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   const totalBytes = manifest.assets.reduce((sum, row) => sum + row.size_bytes, 0);

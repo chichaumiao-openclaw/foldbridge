@@ -13,6 +13,7 @@
     "linked_view_structure_contexts": "assets/linked-view/structure-contexts.json",
     "linked_view_structure_coverage": "assets/linked-view/structure-coverage.json",
     "profile_index": "assets/profile_index_5gag_reference_mapped.json",
+    "resource_provenance": "assets/resource-provenance.json",
     "profile_shard_gzip": "assets/profile_shard_000000_f32.bin.gz",
     "profile_shard_meta": "assets/profile_shard_000000_meta.json",
     "varna_template_svg": "assets/varna_5gag_strand_1_template.svg"

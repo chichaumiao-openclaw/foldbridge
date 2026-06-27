@@ -10,7 +10,9 @@ import { fileURLToPath } from 'node:url';
 import {
   parseTsv,
   selectDisplayableCases,
+  selectDisplayableChildren,
   buildIndexRow,
+  buildChildIndexRow,
   groupReactivityByProfile,
   buildReactivitySummary,
   sliceReactivityWindows,
@@ -28,11 +30,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const JOIN_ROOT = process.env.RMDB_JOIN_ROOT
   || '/Volumes/tianyi/04_foldbridge_data/JOIN/database_center';
 const PUBLIC_ROOT = process.env.RMDB_PUBLIC_ROOT
-  || '/Volumes/tianyi/04_foldbridge_data/PUBLIC/rmdb2pdb_export/cases';
+  || '/Volumes/tianyi/04_foldbridge_data/PUBLIC/rmdb2pdb_export_v3_fec_aligned_20260616_staging/cases';
 const OUT_ROOT = path.resolve(__dirname, '../src/assets/generated/rmdb-pdb-cases');
 
-const SCHEMA_VERSION = 'rmdb-pdb-cases.v1';
-const SOURCE_PACKAGE_ID = 'rmdb2pdb_export_rasp_params_besthit_20260610';
+const SCHEMA_VERSION = 'rmdb-pdb-cases.v2';
+const SOURCE_PACKAGE_ID = 'rmdb2pdb_export_v3_fec_aligned_20260616_staging';
 const REACTIVITY_WINDOW = 100;
 const ALIGNMENT_PAGE = 25;
 
@@ -140,10 +142,27 @@ async function main() {
     }
   }
 
+  // 读取三张 JOIN 表：parent_child（索引粒度）、child_detail_route（展示名）、link（聚合数据+detail assets）
+  const parentChildRows = parseTsv(await readFile(path.join(JOIN_ROOT, 'biological_parent_child_pdb_confidence_index.tsv'), 'utf8'));
+  const routeRows = parseTsv(await readFile(path.join(JOIN_ROOT, 'child_detail_route_index.tsv'), 'utf8'));
   const linkRows = parseTsv(await readFile(path.join(JOIN_ROOT, 'pdb_to_rmdb2pdb_export_link.tsv'), 'utf8'));
   const overviewRows = parseTsv(await readFile(path.join(JOIN_ROOT, 'pdb_case_overview_display_index_v1.tsv'), 'utf8'));
+
+  // 索引：route by pdb_id, overview by pdb_id
+  const routeByPdb = new Map(routeRows.map((r) => [r.pdb_id, r]));
   const overviewByPdb = new Map(overviewRows.map((r) => [r.pdb_id, r]));
 
+  // link 聚合：同一 pdb_id 多 reference 的 profile/residue 合计
+  const linkAggByPdb = new Map();
+  for (const row of linkRows) {
+    const pid = row.pdb_id;
+    if (!linkAggByPdb.has(pid)) linkAggByPdb.set(pid, { profileCount: 0, residueCount: 0 });
+    const agg = linkAggByPdb.get(pid);
+    agg.profileCount += Number(row.filtered_profile_count) || 0;
+    agg.residueCount += Number(row.filtered_residue_count) || 0;
+  }
+
+  // selectDisplayableCases for detail processing (legacy path for sample IDs)
   const displayable = selectDisplayableCases(linkRows);
   const linkByPdb = new Map(displayable.map((r) => [r.pdb_id, r]));
 
@@ -162,25 +181,49 @@ async function main() {
     assets: []
   };
 
-  const indexRows = [];
-  for (const pdbId of SAMPLE_CASE_IDS) {
+  // ── 全量索引：从 parent_child 表选出可显示 child → 构造索引行 ──
+  const displayableChildren = selectDisplayableChildren(parentChildRows);
+  const indexRows = displayableChildren.map((childRow) => {
+    const pdbIds = (childRow.child_pdb_ids || '').split(';').filter(Boolean);
+    const primaryPdb = pdbIds[0] || '';
+    const routeRow = routeByPdb.get(primaryPdb) || null;
+    const linkAgg = linkAggByPdb.get(primaryPdb) || null;
+    return buildChildIndexRow(childRow, routeRow, linkAgg);
+  });
+
+  // ── 详情资产：仅为 SAMPLE_CASE_IDS 生成（full 生成过大，需渐进扩展） ──
+  const detailCaseIds = new Set(SAMPLE_CASE_IDS);
+  let detailCount = 0;
+  for (const pdbId of detailCaseIds) {
     const linkRow = linkByPdb.get(pdbId);
     if (!linkRow) {
-      console.error(`[build-rmdb-cases] 样本 case ${pdbId} 在 link 表中不可显示（非 high/medium/low）。已中止。`);
-      process.exit(1);
+      console.warn(`[build-rmdb-cases] 样本 case ${pdbId} 在 link 表中不可显示，跳过详情生成。`);
+      continue;
     }
     if (!existsSync(path.join(PUBLIC_ROOT, pdbId))) {
-      console.error(`[build-rmdb-cases] PUBLIC case 目录缺失：${pdbId}。已中止。`);
-      process.exit(1);
+      console.warn(`[build-rmdb-cases] PUBLIC case 目录缺失：${pdbId}，跳过详情生成。`);
+      continue;
     }
-    const row = await processCase(pdbId, linkRow, overviewByPdb.get(pdbId), manifest);
-    indexRows.push(row);
+    await processCase(pdbId, linkRow, overviewByPdb.get(pdbId), manifest);
+    detailCount++;
+  }
+
+  // 为有详情资产的 case 补充 caseAssetPath 到 index 行
+  for (const row of indexRows) {
+    if (detailCaseIds.has(row.pdbId)) {
+      row.caseAssetPath = `cases/${row.pdbId}/case.json`;
+      row.hasDetailAssets = true;
+    } else {
+      row.hasDetailAssets = false;
+    }
   }
 
   await writeAsset('index.json', {
     source_package_id: SOURCE_PACKAGE_ID,
     schema_version: SCHEMA_VERSION,
     generated_at: generatedAt,
+    total_displayable: indexRows.length,
+    detail_asset_count: detailCount,
     cases: indexRows
   }, manifest);
 
@@ -188,7 +231,7 @@ async function main() {
 
   const totalBytes = manifest.assets.reduce((sum, a) => sum + a.size_bytes, 0);
   const warnings = manifest.assets.filter((a) => a.large_asset_warning).length;
-  console.log(`[build-rmdb-cases] 生成 ${indexRows.length} 个 case，${manifest.assets.length} 个资产，合计 ${(totalBytes / 1024 / 1024).toFixed(2)} MiB，large-asset 警告 ${warnings} 个。`);
+  console.log(`[build-rmdb-cases] 索引 ${indexRows.length} 个 case（全量），详情资产 ${detailCount} 个 case，${manifest.assets.length} 个资产，合计 ${(totalBytes / 1024 / 1024).toFixed(2)} MiB，large-asset 警告 ${warnings} 个。`);
 }
 
 main().catch((err) => {

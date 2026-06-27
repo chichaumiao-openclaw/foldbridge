@@ -22,10 +22,151 @@ test('groupByCaseId indexes rows by case_id', () => {
   assert.equal(grouped.get('10ZU').length, 1);
 });
 
+test('buildAtlasIndexAsset gives same-PDB RMDB and RASP rows distinct atlas case assets', () => {
+  const asset = buildAtlasIndexAsset({
+    cases: [
+      {
+        asset_family: 'RMDB2PDB',
+        case_id: '10FZ',
+        case_uid: 'rmdb_line_a:10FZ',
+        pdb_id: '10FZ',
+        parent_class_label: 'RMDB parent',
+        child_class_label: 'RMDB child',
+        biological_molecule_name: 'RMDB molecule',
+        pdb_molecule_name: 'RMDB PDB molecule',
+        confidence_display_label: 'RMDB confidence',
+        profile_count: '2'
+      },
+      {
+        asset_family: 'RASP2PDB',
+        case_id: '10FZ',
+        case_uid: 'rasp_public:10FZ',
+        pdb_id: '10FZ',
+        parent_class_label: 'RASP public current',
+        child_class_label: 'raw-hit case',
+        biological_molecule_name: 'RASP molecule',
+        pdb_molecule_name: 'RASP PDB molecule',
+        confidence_display_label: 'RASP public current; positive confidence not active',
+        profile_count: '3'
+      }
+    ],
+    summaries: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', recommended_default_preset: 'rmdb-view' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', recommended_default_preset: 'rasp-view' }
+    ],
+    routes: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', detail_route_id: 'detail:rmdb' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', detail_route_id: 'detail:rasp' }
+    ]
+  });
+
+  assert.deepEqual(asset.cases.map((row) => row.atlasCaseKey), ['RMDB2PDB:10FZ', 'RASP2PDB:10FZ']);
+  assert.deepEqual(asset.cases.map((row) => row.caseAssetPath), [
+    'cases/RMDB2PDB%3A10FZ.json',
+    'cases/RASP2PDB%3A10FZ.json'
+  ]);
+  assert.deepEqual(asset.cases.map((row) => row.recommendedDefaultPreset), ['rmdb-view', 'rasp-view']);
+  assert.deepEqual(asset.cases.map((row) => row.detailRouteId), ['detail:rmdb', 'detail:rasp']);
+  assert.deepEqual(asset.displayCases.map((row) => row.atlasCaseKey), ['PDB:10FZ']);
+  assert.deepEqual(asset.caseHierarchy.flatMap((parent) => parent.children.flatMap((child) => child.cases)), ['PDB:10FZ']);
+});
+
+test('buildAtlasIndexAsset merges same-PDB source rows into display cases for the master table', () => {
+  const asset = buildAtlasIndexAsset({
+    cases: [
+      {
+        asset_family: 'RMDB2PDB',
+        case_id: '10FZ',
+        case_uid: 'rmdb_line_a:10FZ',
+        pdb_id: '10FZ',
+        pdb_chain_ids: 'A;B',
+        parent_class_label: 'RMDB parent',
+        child_class_label: 'RMDB child',
+        biological_molecule_name: 'Short author molecule',
+        biological_molecule_name_source: 'pdb_author_entity_description_author_provided_display_name',
+        pdb_molecule_name: 'Short author molecule',
+        confidence_display_label: 'B_CONTEXT_STRATIFIED (2); C_EXPLORATORY_HINT (1)',
+        confidence_source: 'fec_claim_ceiling_distribution',
+        source_databases: 'RMDB;PDB',
+        assay_family_set: 'rmdb_chemical_probing',
+        profile_count: '2',
+        conflict_candidate_count: '1',
+        search_text: '10FZ Short author molecule'
+      },
+      {
+        asset_family: 'RASP2PDB',
+        case_id: '10FZ',
+        case_uid: 'rasp_public:10FZ',
+        pdb_id: '10FZ',
+        pdb_chain_ids: 'B;C',
+        parent_class_label: 'RASP public current',
+        child_class_label: 'raw-hit case',
+        biological_molecule_name: 'RASP molecule name that should stay source detail only',
+        pdb_molecule_name: 'RASP molecule name that should stay source detail only',
+        confidence_display_label: 'RASP public current; positive confidence not active',
+        confidence_source: 'rasp_public_current_gate',
+        source_databases: 'RASP;PDB',
+        assay_family_set: 'rasp_public_signal',
+        profile_count: '3',
+        conflict_candidate_count: '2',
+        search_text: '10FZ RASP public hit'
+      }
+    ],
+    summaries: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', recommended_default_preset: 'rmdb-view' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', recommended_default_preset: 'rasp-view' }
+    ],
+    routes: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', detail_route_id: 'detail:rmdb' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', detail_route_id: 'detail:rasp' }
+    ]
+  });
+
+  assert.equal(asset.cases.length, 2);
+  assert.equal(asset.displayCases.length, 1);
+  assert.equal(asset.totalSourceCaseCount, 2);
+  assert.equal(asset.totalCaseCount, 1);
+  const row = asset.displayCases[0];
+  assert.equal(row.atlasCaseKey, 'PDB:10FZ');
+  assert.equal(row.caseId, '10FZ');
+  assert.equal(row.pdbId, '10FZ');
+  assert.equal(row.biologicalMoleculeName, 'Short author molecule');
+  assert.equal(row.profileCount, 5);
+  assert.equal(row.conflictCandidateCount, 3);
+  assert.deepEqual(row.chains, ['A', 'B', 'C']);
+  assert.deepEqual(row.sourceFamilies, ['RMDB2PDB', 'RASP2PDB']);
+  assert.deepEqual(row.sourceCaseKeys, ['RMDB2PDB:10FZ', 'RASP2PDB:10FZ']);
+  assert.equal(row.confidenceDisplayLabel, 'RMDB: B/C; RASP: not active');
+  assert.deepEqual(row.sourceCaseAssetPaths.map((entry) => [entry.assetFamily, entry.caseAssetPath, entry.detailRouteId]), [
+    ['RMDB2PDB', 'cases/RMDB2PDB%3A10FZ.json', 'detail:rmdb'],
+    ['RASP2PDB', 'cases/RASP2PDB%3A10FZ.json', 'detail:rasp']
+  ]);
+  assert.deepEqual(asset.caseHierarchy.flatMap((parent) => parent.children.flatMap((child) => child.cases)), ['PDB:10FZ']);
+});
+
 test('buildAtlasIndexAsset keeps ANNOJOIN tables as browser entry and omits large annotation payloads', () => {
   const asset = buildAtlasIndexAsset({
     cases: [
-      { case_id: '10ZT', case_uid: 'RMDB2PDB|10ZT', pdb_id: '10ZT', profile_count: '1', profile_ids: 'profile-a', profile_ids_complete: 'true', search_text: '10ZT ribozyme', route_id: 'annojoin:case:10ZT' }
+      {
+        case_id: '10ZT',
+        case_uid: 'RMDB2PDB|10ZT',
+        pdb_id: '10ZT',
+        parent_class_label: 'Ribosome',
+        parent_class_source: 'PDB/biological_layer/parent_child_pdb_map.tsv',
+        child_class_label: '16S rRNA',
+        child_class_source: 'PDB/biological_layer/parent_child_pdb_map.tsv',
+        biological_molecule_name: '16S rRNA',
+        biological_molecule_name_source: 'PDB/biological_layer/pdb_child_identity_index.tsv',
+        pdb_molecule_name: 'Escherichia coli 70S ribosome',
+        pdb_molecule_name_source: 'pdb_struct_title',
+        confidence_display_label: 'B_CONTEXT_STRATIFIED (1)',
+        confidence_source: 'fec_claim_ceiling_distribution',
+        profile_count: '1',
+        profile_ids: 'profile-a',
+        profile_ids_complete: 'true',
+        search_text: '10ZT ribozyme',
+        route_id: 'annojoin:case:10ZT'
+      }
     ],
     facets: [{ facet_name: 'PDB ID', source_table: 'anno_case_search_index.tsv', source_column: 'pdb_id', display_label: 'PDB ID' }],
     summaries: [{ case_id: '10ZT', recommended_default_preset: 'balanced_segment_view' }],
@@ -40,8 +181,68 @@ test('buildAtlasIndexAsset keeps ANNOJOIN tables as browser entry and omits larg
   assert.equal(asset.cases[0].caseAssetPath, 'cases/10ZT.json');
   assert.equal(asset.cases[0].recommendedDefaultPreset, 'balanced_segment_view');
   assert.equal(asset.cases[0].detailRouteId, '/atlas/rmdb2pdb/10ZT');
+  assert.equal(asset.cases[0].parentClassLabel, 'Ribosome');
+  assert.equal(asset.cases[0].biologicalMoleculeName, '16S rRNA');
+  assert.equal(asset.cases[0].confidenceDisplayLabel, 'B_CONTEXT_STRATIFIED (1)');
+  assert.equal(asset.caseHierarchy[0].label, 'Ribosome');
+  assert.equal(asset.caseHierarchy[0].children[0].label, '16S rRNA');
+  assert.deepEqual(asset.caseHierarchy[0].children[0].cases, ['10ZT']);
   assert.equal(asset.presets.length, 1);
-  assert.deepEqual(Object.keys(asset).sort(), ['cases', 'downloads', 'facets', 'generatedAt', 'presets', 'schemaVersion', 'source', 'totalCaseCount', 'version'].sort());
+  assert.deepEqual(Object.keys(asset).sort(), ['caseHierarchy', 'cases', 'displayCases', 'downloads', 'facets', 'generatedAt', 'presets', 'schemaVersion', 'source', 'totalCaseCount', 'totalSourceCaseCount', 'version'].sort());
+});
+
+test('buildAtlasIndexAsset makes parentless cases their own folding class', () => {
+  const asset = buildAtlasIndexAsset({
+    cases: [
+      {
+        case_id: '10ZU',
+        pdb_id: '10ZU',
+        parent_class_label: '',
+        child_class_label: 'MPNN-fixbb designed RNA molecule',
+        biological_molecule_name: 'MPNN-fixbb designed RNA molecule',
+        pdb_molecule_name: 'MPNN-fixbb designed RNA molecule'
+      }
+    ]
+  });
+
+  assert.equal(asset.caseHierarchy.length, 1);
+  assert.equal(asset.caseHierarchy[0].label, 'MPNN-fixbb designed RNA molecule');
+  assert.equal(asset.caseHierarchy[0].children[0].label, 'MPNN-fixbb designed RNA molecule');
+  assert.deepEqual(asset.caseHierarchy[0].children[0].cases, ['10ZU']);
+});
+
+test('buildAtlasCaseAsset selects same-PDB detail rows by atlasCaseKey', () => {
+  const asset = buildAtlasCaseAsset({
+    caseKey: 'RASP2PDB:10FZ',
+    cases: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', pdb_id: '10FZ', profile_count: '2', profile_ids: 'rmdb-profile' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', pdb_id: '10FZ', profile_count: '3', profile_ids: 'rasp-profile' }
+    ],
+    summaries: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', profile_count: '2', summary_route_id: 'summary:rmdb' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', profile_count: '3', summary_route_id: 'summary:rasp' }
+    ],
+    routes: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', mapping_table_route_id: 'mapping:rmdb' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', mapping_table_route_id: 'mapping:rasp' }
+    ],
+    memberships: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', pair_id: 'rmdb-pair', profile_id: 'rmdb-profile' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', pair_id: 'rasp-pair', profile_id: 'rasp-profile' }
+    ],
+    tracks: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', track_route_id: 'track:rmdb' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', track_route_id: 'track:rasp' }
+    ]
+  });
+
+  assert.equal(asset.case.assetFamily, 'RASP2PDB');
+  assert.equal(asset.case.atlasCaseKey, 'RASP2PDB:10FZ');
+  assert.equal(asset.summary.summaryRouteId, 'summary:rasp');
+  assert.equal(asset.detailRoutes.mappingTableRouteId, 'mapping:rasp');
+  assert.equal(asset.memberships.preview[0].profileId, 'rasp-profile');
+  assert.equal(asset.trackRoutes.preview[0].trackRouteId, 'track:rasp');
+  assert.equal(asset.routeAssets.memberships.path, 'cases/RASP2PDB%3A10FZ/memberships/page-0001.json');
 });
 
 test('buildAtlasCaseAsset writes route-backed detail without copying ANNOCONFIDENCE table contents', () => {
@@ -74,6 +275,11 @@ test('buildAtlasCaseAsset writes route-backed detail without copying ANNOCONFIDE
   assert.equal(asset.structureRoutes.preview[0].structureFilePath.startsWith('CONFIDENCE/10_structure_context/'), true);
   assert.equal(asset.structureRoutes.preview[0].structureUrl, '/api/annojoin/structure?path=CONFIDENCE%2F10_structure_context%2Fx%2F10zt.cif');
   assert.equal(asset.structureRoutes.preview[0].coordinateKeyColumn, 'pdb_residue_coordinate_key');
+  assert.deepEqual(asset.supplementalAssets, {
+    confidenceSummaryPath: 'cases/10ZT/confidence-summary.json',
+    confidenceEvidencePath: 'cases/10ZT/confidence-evidence.json',
+    confidenceProvenancePath: 'cases/10ZT/confidence-provenance.json',
+  });
   assert.equal(asset.routeAssets.memberships.path, 'cases/10ZT/memberships/page-0001.json');
   assert.equal(asset.routeAssets.trackRoutes.path, 'cases/10ZT/track-routes/page-0001.json');
   assert.equal(asset.routeAssets.visualPreview.path, 'cases/10ZT/visual-preview/page-0001.json');
@@ -82,6 +288,36 @@ test('buildAtlasCaseAsset writes route-backed detail without copying ANNOCONFIDE
   assert.equal(asset.visualPreview.structureColoring.structureUrl, '/api/annojoin/structure?path=CONFIDENCE%2F10_structure_context%2Fx%2F10zt.cif');
   assert.equal(asset.visualPreview.structureColoring.points[1].colorBin, 'high');
   assert.equal(asset.annotationPayloadRowsCopied, 0);
+});
+
+test('buildAtlasCaseAsset preserves blocked RASP 2D and 3D route metadata', () => {
+  const asset = buildAtlasCaseAsset({
+    caseId: '2GDI',
+    cases: [{ case_id: '2GDI', pdb_id: '2GDI', profile_count: '1', profile_ids: 'rasp-profile', profile_ids_complete: 'true' }],
+    summaries: [{ case_id: '2GDI', profile_count: '1', pair_count: '0', recommended_default_preset: 'rasp_public_current' }],
+    routes: [{ case_id: '2GDI', mapping_table_route_id: 'annojoin:mapping:2GDI' }],
+    memberships: [{ case_id: '2GDI', pair_id: '2GDI:rasp', profile_id: 'rasp-profile' }],
+    tracks: [{ case_id: '2GDI', track_route_id: 'annojoin:track:2GDI', track_data_path: 'rasp_public_residue_tracks/2GDI.tsv', supports_1d: 'true' }],
+    pairs2d: [{
+      case_id: '2GDI',
+      context_route_id: 'annojoin:2d:2GDI',
+      route_availability_status: 'blocked',
+      blocker_code: 'RASP_PUBLIC_2D_CONTEXT_NOT_MATERIALIZED_BLOCKER'
+    }],
+    colors3d: [{
+      case_id: '2GDI',
+      route_availability_status: 'blocked',
+      blocker_code: 'RASP_PUBLIC_3D_STRUCTURE_ROUTE_NOT_MATERIALIZED_BLOCKER'
+    }],
+    residueEvidence: [
+      { case_id: '2GDI', profile_id: 'rasp-profile', label_asym_id: 'A', label_seq_id: '1', comp_id: 'G', reactivity_value: '0.4' }
+    ]
+  });
+
+  assert.equal(asset.pairContextRoutes.preview[0].routeAvailabilityStatus, 'blocked');
+  assert.equal(asset.pairContextRoutes.preview[0].blockerCode, 'RASP_PUBLIC_2D_CONTEXT_NOT_MATERIALIZED_BLOCKER');
+  assert.equal(asset.structureRoutes.preview[0].routeAvailabilityStatus, 'blocked');
+  assert.equal(asset.structureRoutes.preview[0].blockerCode, 'RASP_PUBLIC_3D_STRUCTURE_ROUTE_NOT_MATERIALIZED_BLOCKER');
 });
 
 test('buildPagedRouteAssets splits route arrays and keeps overview preview bounded', () => {

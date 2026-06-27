@@ -43,6 +43,7 @@ const state = {
   molstarFullViewer: null,
   molstarCroppedUrl: null,
   molstarBridgeInstalled: false,
+  requestedProfileId: "",
 };
 
 const el = {
@@ -1586,6 +1587,7 @@ async function initMolstarViewer() {
 async function renderProfile(index) {
   const started = performance.now();
   const profile = state.profiles[index];
+  if (!profile) return;
   const shard = await loadShard(profile.shard_id);
   const values = profileValues(profile, shard);
   const strandId = profile.render_strand_id || state.caseData.default_render_strand_id;
@@ -1603,6 +1605,8 @@ async function renderProfile(index) {
   wireLinearDebugEvents();
   const elapsed = performance.now() - started;
   state.lastRender = { profile, normalized, shard, elapsed, dmsLoopRecall };
+  state.requestedProfileId = profile.profile_id || "";
+  el.select.value = String(index);
   state.viewport = clampViewport(state.viewport.start, state.viewport.end, strand.sequence.length);
   el.profilePair.textContent = profile.pair_id;
   el.profileId.textContent = profile.profile_id;
@@ -1660,6 +1664,39 @@ async function renderProfile(index) {
     capped_count: normalized.cappedCount,
     unmapped_count: normalized.unmappedCount,
   }, null, 2);
+}
+
+function profileIndexForId(profileId) {
+  const normalized = String(profileId || "").trim();
+  if (!normalized) return -1;
+  return state.profiles.findIndex((profile) => profile.profile_id === normalized);
+}
+
+function initialProfileIdFromLocation() {
+  const params = new URLSearchParams(window.location.search || "");
+  return String(params.get("profileId") || "").trim();
+}
+
+async function renderProfileById(profileId) {
+  const normalized = String(profileId || "").trim();
+  if (!normalized) return;
+  if (!state.profiles.length) {
+    state.requestedProfileId = normalized;
+    return;
+  }
+  const index = profileIndexForId(normalized);
+  if (index < 0) return;
+  await renderProfile(index);
+}
+
+function installExternalProfileBridge() {
+  if (window.__annojoinExternalProfileBridgeInstalled) return;
+  window.__annojoinExternalProfileBridgeInstalled = true;
+  window.addEventListener("message", (event) => {
+    const payload = event?.data;
+    if (!payload || payload.type !== "annojoin:set-profile") return;
+    void renderProfileById(payload.profileId);
+  });
 }
 
 async function benchmarkAll() {
@@ -1738,7 +1775,9 @@ async function init() {
     return `<option value="${idx}">${label}</option>`;
   }).join("");
   el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
-  await renderProfile(0);
+  const initialProfileId = state.requestedProfileId || initialProfileIdFromLocation();
+  const initialIndex = Math.max(0, profileIndexForId(initialProfileId));
+  await renderProfile(initialIndex);
   initMolstarViewer();
 }
 
@@ -1758,6 +1797,8 @@ for (const tab of el.tabs) {
     updateView();
   });
 }
+
+installExternalProfileBridge();
 
 init().catch((error) => {
   el.status.textContent = "asset load failed";

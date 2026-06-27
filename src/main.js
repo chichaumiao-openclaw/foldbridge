@@ -51,9 +51,9 @@ import {
 import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
 import {
-  initAnnojointCasePrototype,
-  renderAnnojointCasePrototypePage
-} from './annojoinCasePrototypeView.js';
+  initAnnojointCasePage,
+  renderAnnojointCasePage
+} from './annojoinCaseView.js';
 import {
   buildSearchHash,
   createSearchService,
@@ -81,6 +81,7 @@ const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail
 let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
 let annojoinDetailRouteIndexState = null; // null=未加载, 'loading', 'error', 或 detail-route-index.json
 const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'error' | generated case asset
+const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
 let pdbCaseConfidenceFilter = 'all';
@@ -2037,6 +2038,16 @@ function resolveAnnojointDetailRouteEntry(caseKey, caseId = '') {
   return lookup[caseKey] || lookup[String(caseKey || '').toUpperCase()] || lookup[caseId] || lookup[String(caseId || '').toUpperCase()] || null;
 }
 
+function annojoinConfidenceAssetPaths(caseKey = '') {
+  const normalizedKey = String(caseKey || '').trim();
+  const segment = encodeURIComponent(normalizedKey);
+  return {
+    summaryPath: `cases/${segment}/confidence-summary.json`,
+    evidencePath: `cases/${segment}/confidence-evidence.json`,
+    provenancePath: `cases/${segment}/confidence-provenance.json`,
+  };
+}
+
 async function loadAnnojointAtlasDetail(caseKey, caseAssetPath = '') {
   if (!caseKey || annojoinAtlasDetailState.get(caseKey) === 'loading') return;
   annojoinAtlasDetailState.set(caseKey, 'loading');
@@ -2048,6 +2059,25 @@ async function loadAnnojointAtlasDetail(caseKey, caseAssetPath = '') {
   } catch (err) {
     console.error('[main] 加载 ANNOJOIN Atlas case 失败', caseKey, err);
     annojoinAtlasDetailState.set(caseKey, 'error');
+  }
+  if (route === 'annojoin-case') render({ preserveScroll: true });
+}
+
+async function loadAnnojointCaseConfidence(caseKey, caseAsset) {
+  if (!caseKey || annojoinCaseConfidenceState.get(caseKey) === 'loading') return;
+  if (String(caseAsset?.case?.assetFamily || '').trim() !== 'RMDB2PDB') return;
+  annojoinCaseConfidenceState.set(caseKey, 'loading');
+  try {
+    const assetPaths = caseAsset?.supplementalAssets || annojoinConfidenceAssetPaths(caseKey);
+    const [summary, evidence, provenance] = await Promise.all([
+      annojoinAtlasStore.loadAssetPath(assetPaths.confidenceSummaryPath || assetPaths.summaryPath, { compressed: true }),
+      annojoinAtlasStore.loadAssetPath(assetPaths.confidenceEvidencePath || assetPaths.evidencePath, { compressed: true }),
+      annojoinAtlasStore.loadAssetPath(assetPaths.confidenceProvenancePath || assetPaths.provenancePath, { compressed: true }),
+    ]);
+    annojoinCaseConfidenceState.set(caseKey, { summary, evidence, provenance });
+  } catch (err) {
+    console.error('[main] 加载 ANNOJOIN case confidence sidecars 失败', caseKey, err);
+    annojoinCaseConfidenceState.set(caseKey, 'error');
   }
   if (route === 'annojoin-case') render({ preserveScroll: true });
 }
@@ -2201,18 +2231,24 @@ function findAnnojointIndexRowByKey(caseKey) {
   return state.find((row) => rowCaseKey(row).toUpperCase() === normalizedKey || rowCaseId(row).toUpperCase() === normalizedKey) || null;
 }
 
-function annojoinCasePrototypePage() {
+function annojoinCasePage() {
   const caseId = getAnnojointCaseIdFromHash();
   const caseKey = getAnnojointCaseKeyFromHash();
   const detailState = annojoinAtlasDetailState.get(caseKey);
+  const confidenceState = annojoinCaseConfidenceState.get(caseKey);
   if (!annojoinDetailRouteIndexState) loadAnnojointDetailRouteIndex();
   const detailRouteEntry = resolveAnnojointDetailRouteEntry(caseKey, caseId);
   const caseAssetPath = detailRouteEntry?.asset?.caseAssetPath || findAnnojointIndexRowByKey(caseKey)?.caseAssetPath;
   if (!detailState && (annojoinDetailRouteIndexState === 'error' || detailRouteEntry || caseAssetPath)) {
     loadAnnojointAtlasDetail(caseKey, caseAssetPath);
   }
-  return renderAnnojointCasePrototypePage({
+  if (detailState && typeof detailState === 'object' && !confidenceState) {
+    loadAnnojointCaseConfidence(caseKey, detailState);
+  }
+  return renderAnnojointCasePage({
     caseAsset: detailState && typeof detailState === 'object' ? detailState : null,
+    confidenceBundle: confidenceState && typeof confidenceState === 'object' ? confidenceState : null,
+    confidenceStatus: confidenceState || 'idle',
     caseId,
     caseKey
   });
@@ -2428,7 +2464,7 @@ function pageFor(name) {
   if (safeRoute === 'structure') return structurePage();
   if (safeRoute === 'pdb-case') return pdbCasePage();
   if (safeRoute === 'annojoin-atlas') return annojoinAtlasPage();
-  if (safeRoute === 'annojoin-case') return annojoinCasePrototypePage();
+  if (safeRoute === 'annojoin-case') return annojoinCasePage();
   if (safeRoute === 'probing') return detailPage();
   if (safeRoute === 'download') return downloadPage();
   if (safeRoute === 'search') return searchPage();
@@ -2736,8 +2772,8 @@ function render(options = {}) {
   initAnnojointStructureViewers().catch((error) => {
     console.error('[main] 初始化 ANNOJOIN 3D viewer 失败', error);
   });
-  initAnnojointCasePrototype().catch((error) => {
-    console.error('[main] 初始化 ANNOJOIN case prototype 失败', error);
+  initAnnojointCasePage().catch((error) => {
+    console.error('[main] 初始化 ANNOJOIN case page 失败', error);
   });
   const downloadSelectedRdatBtn = document.getElementById('download-selected-rdat');
   bindPseudoButton(downloadSelectedRdatBtn, () => {

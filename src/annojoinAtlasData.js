@@ -45,8 +45,114 @@ function splitList(value) {
   return text(value).split(';').map((item) => item.trim()).filter(Boolean);
 }
 
+function assetFamily(row = {}) {
+  return text(row.asset_family || row.assetFamily);
+}
+
+function atlasCaseKeyFor(row = {}) {
+  const explicit = text(row.atlasCaseKey || row.atlas_case_key);
+  if (explicit) return explicit;
+  const family = assetFamily(row);
+  const caseId = text(row.case_id || row.caseId);
+  const pdbId = text(row.pdb_id || row.pdbId) || caseId;
+  if (family && (pdbId || caseId)) return `${family}:${pdbId || caseId}`;
+  return caseId || pdbId;
+}
+
+function caseAssetPathFor(row = {}) {
+  const explicit = text(row.caseAssetPath || row.case_asset_path);
+  if (explicit) return explicit;
+  return `cases/${encodeURIComponent(atlasCaseKeyFor(row))}.json`;
+}
+
 function previewProfiles(value) {
-  return splitList(value).filter((profileId) => !profileId.startsWith('bundle_'));
+  return splitList(value).filter((profileId) => (
+    !profileId.startsWith('bundle_')
+    && !profileId.startsWith('rmdbv3_exact_')
+  ));
+}
+
+function normalizeRdatPath(pathValue = '') {
+  const parts = text(pathValue).split('/').filter(Boolean);
+  if (parts.length >= 3 && parts[0] === parts[1]) parts.splice(0, 1);
+  return parts.join('/');
+}
+
+function profileTraceFromProfileId(profileId = '', { pairId = '', routeId = '' } = {}) {
+  const value = text(profileId);
+  if (!value || value.startsWith('rmdbv3_exact_')) return null;
+  const rdatMatch = value.match(/(.+?\.rdat)#([^|#]+)/i);
+  if (rdatMatch) {
+    const rdatPath = normalizeRdatPath(rdatMatch[1]);
+    const lineValue = Number(rdatMatch[2]);
+    return {
+      pairId: text(pairId),
+      profileId: value,
+      traceType: Number.isFinite(lineValue) ? 'rdat_line' : 'rdat_record',
+      rdatPath,
+      rdatFile: rdatPath.split('/').pop() || rdatPath,
+      ...(Number.isFinite(lineValue) ? { rdatLine: lineValue } : { rdatRecord: rdatMatch[2] }),
+      routeId: text(routeId)
+    };
+  }
+  return {
+    pairId: text(pairId),
+    profileId: value,
+    traceType: 'route_profile_id',
+    routeId: text(routeId)
+  };
+}
+
+function normalizeProfileTraceEntry(row = {}) {
+  if (row.traceType || row.rdatPath || row.rdatFile || row.rdatLine || row.rdatRecord) {
+    return {
+      pairId: text(row.pairId || row.pair_id),
+      profileId: text(row.profileId || row.profile_id),
+      traceType: text(row.traceType || row.trace_type),
+      rdatPath: normalizeRdatPath(row.rdatPath || row.rdat_path),
+      rdatFile: text(row.rdatFile || row.rdat_file),
+      ...(numberOrNull(row.rdatLine ?? row.rdat_line) ? { rdatLine: numberOrNull(row.rdatLine ?? row.rdat_line) } : {}),
+      ...(text(row.rdatRecord || row.rdat_record) ? { rdatRecord: text(row.rdatRecord || row.rdat_record) } : {}),
+      routeId: text(row.routeId || row.route_id || row.track_route_id)
+    };
+  }
+  return profileTraceFromProfileId(row.profileId || row.profile_id, {
+    pairId: row.pairId || row.pair_id,
+    routeId: row.routeId || row.route_id || row.track_route_id
+  });
+}
+
+function profileTracePreview(rows = [], maxEntries = 8) {
+  const traces = [];
+  const seen = new Set();
+  for (const row of asArray(rows)) {
+    const trace = normalizeProfileTraceEntry(row);
+    if (!trace) continue;
+    const key = [trace.pairId, trace.rdatPath || trace.profileId, trace.rdatLine || trace.rdatRecord || ''].join('|');
+    if (seen.has(key)) continue;
+    seen.add(key);
+    traces.push(trace);
+    if (traces.length >= maxEntries) break;
+  }
+  return traces;
+}
+
+function normalizeSourceCaseDescriptor(row = {}) {
+  return {
+    assetFamily: text(row.assetFamily || row.asset_family),
+    familyLabel: text(row.familyLabel || row.family_label),
+    atlasCaseKey: text(row.atlasCaseKey || row.atlas_case_key),
+    caseId: text(row.caseId || row.case_id),
+    pdbId: text(row.pdbId || row.pdb_id),
+    caseAssetPath: text(row.caseAssetPath || row.case_asset_path),
+    detailRouteId: text(row.detailRouteId || row.detail_route_id),
+    recommendedDefaultPreset: text(row.recommendedDefaultPreset || row.recommended_default_preset),
+    moleculeName: text(row.moleculeName || row.molecule_name),
+    confidenceDisplayLabel: text(row.confidenceDisplayLabel || row.confidence_display_label),
+    compactConfidenceLabel: text(row.compactConfidenceLabel || row.compact_confidence_label),
+    profileCount: numberOrZero(row.profileCount ?? row.profile_count),
+    chains: splitList(row.chains || row.pdb_chain_ids)
+  };
 }
 
 function includesFolded(haystack, needle) {
@@ -54,12 +160,95 @@ function includesFolded(haystack, needle) {
   return text(haystack).toLowerCase().includes(text(needle).toLowerCase());
 }
 
+function caseDisplayLabel(row = {}) {
+  return text(
+    row.biologicalMoleculeName
+      || row.pdbMoleculeName
+      || row.rnaFamily
+      || row.structureClass
+      || row.motif
+      || row.pdbId
+      || row.caseId
+  );
+}
+
+function parentBucketLabel(row = {}) {
+  const parent = text(row.parentClassLabel);
+  if (parent && parent !== '未注释') return parent;
+  return text(row.childClassLabel) || caseDisplayLabel(row);
+}
+
+function childBucketLabel(row = {}) {
+  const child = text(row.childClassLabel);
+  if (child && child !== '未注释') return child;
+  return caseDisplayLabel(row);
+}
+
+function bucketId(label = '') {
+  return text(label)
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'unclassified';
+}
+
+function buildCaseHierarchy(cases = []) {
+  const parents = new Map();
+  for (const row of cases) {
+    const parentLabel = parentBucketLabel(row);
+    const childLabel = childBucketLabel(row);
+    const parentKey = bucketId(parentLabel);
+    const childKey = bucketId(`${parentLabel} ${childLabel}`);
+    if (!parents.has(parentKey)) {
+      parents.set(parentKey, {
+        id: parentKey,
+        label: parentLabel,
+        caseCount: 0,
+        children: []
+      });
+    }
+    const parent = parents.get(parentKey);
+    let child = parent.children.find((entry) => entry.id === childKey);
+    if (!child) {
+      child = {
+        id: childKey,
+        label: childLabel,
+        caseCount: 0,
+        caseIds: []
+      };
+      parent.children.push(child);
+    }
+    parent.caseCount += 1;
+    child.caseCount += 1;
+    child.caseIds.push(row.atlasCaseKey || row.caseId);
+  }
+  return [...parents.values()].sort((a, b) => a.label.localeCompare(b.label));
+}
+
 function normalizeCase(row) {
+  const atlasCaseKey = atlasCaseKeyFor(row);
+  const isMergedDisplayRow = row.isMergedDisplayRow === true || truthy(row.is_merged_display_row);
   return {
+    assetFamily: assetFamily(row),
+    sourceLine: text(row.source_line || row.sourceLine),
+    evidenceNamespace: text(row.evidence_namespace || row.evidenceNamespace),
+    sourceAssetRoot: text(row.source_asset_root || row.sourceAssetRoot),
+    sourcePublicRoot: text(row.source_public_root || row.sourcePublicRoot),
+    publicCaseStatus: text(row.public_case_status || row.publicCaseStatus),
     caseUid: text(row.case_uid || row.caseUid),
+    atlasCaseKey,
     caseId: text(row.case_id || row.caseId),
     pdbId: text(row.pdb_id || row.pdbId),
     chains: splitList(row.pdb_chain_ids || row.chains),
+    parentClassLabel: text(row.parent_class_label || row.parentClassLabel),
+    parentClassSource: text(row.parent_class_source || row.parentClassSource),
+    childClassLabel: text(row.child_class_label || row.childClassLabel),
+    childClassSource: text(row.child_class_source || row.childClassSource),
+    biologicalMoleculeName: text(row.biological_molecule_name || row.biologicalMoleculeName),
+    biologicalMoleculeNameSource: text(row.biological_molecule_name_source || row.biologicalMoleculeNameSource),
+    pdbMoleculeName: text(row.pdb_molecule_name || row.pdbMoleculeName),
+    pdbMoleculeNameSource: text(row.pdb_molecule_name_source || row.pdbMoleculeNameSource),
+    confidenceDisplayLabel: text(row.confidence_display_label || row.confidenceDisplayLabel),
+    confidenceSource: text(row.confidence_source || row.confidenceSource),
     sourceDatabases: splitList(row.source_databases || row.sourceDatabases),
     assayFamilies: splitList(row.assay_family_set || row.assayFamilies),
     rnaFamily: text(row.rna_family_label || row.rnaFamily),
@@ -68,17 +257,24 @@ function normalizeCase(row) {
     motifProvenance: text(row.motif_provenance || row.motifProvenance),
     structureClass: text(row.structure_class_label || row.structureClass),
     structureClassProvenance: text(row.structure_class_provenance || row.structureClassProvenance),
-    profilePreview: Array.isArray(row.profilePreview) ? row.profilePreview : previewProfiles(row.profile_ids),
+    profilePreview: previewProfiles(row.profilePreview || row.profile_ids),
     profileCount: numberOrZero(row.profile_count ?? row.profileCount),
     profilePreviewIsComplete: row.profilePreviewIsComplete === true || truthy(row.profile_ids_complete),
     profileMembershipRouteId: text(row.profile_membership_route_id || row.profileMembershipRouteId),
+    profileTracePreview: profileTracePreview(row.profileTracePreview || row.profile_trace_preview),
     fecClaimCeilingDistribution: text(row.fec_claim_ceiling_distribution || row.fecClaimCeilingDistribution),
     coverageShapeDistribution: text(row.coverage_shape_distribution || row.coverageShapeDistribution),
     conflictCandidateCount: numberOrZero(row.conflict_candidate_count ?? row.conflictCandidateCount),
     hasContextAnnotation: row.hasContextAnnotation === true || truthy(row.has_context_annotation),
     hasLssAnnotation: row.hasLssAnnotation === true || truthy(row.has_lss_annotation),
     searchText: text(row.search_text || row.searchText),
-    routeId: text(row.route_id || row.routeId)
+    routeId: text(row.route_id || row.routeId),
+    caseAssetPath: isMergedDisplayRow ? text(row.caseAssetPath || row.case_asset_path) : caseAssetPathFor({ ...row, atlasCaseKey }),
+    isMergedDisplayRow,
+    sourceCaseCount: numberOrZero(row.sourceCaseCount ?? row.source_case_count),
+    sourceFamilies: splitList(row.sourceFamilies || row.source_families),
+    sourceCaseKeys: splitList(row.sourceCaseKeys || row.source_case_keys),
+    sourceCaseAssetPaths: asArray(row.sourceCaseAssetPaths || row.source_case_asset_paths).map(normalizeSourceCaseDescriptor)
   };
 }
 
@@ -290,12 +486,19 @@ function normalizeConflict(row) {
   };
 }
 
-function byCase(rows, caseId) {
-  return asArray(rows).filter((row) => text(row.case_id) === caseId);
+function matchesSelectedCase(row = {}, caseId = '', caseKey = '') {
+  const selectedKey = text(caseKey);
+  if (selectedKey && atlasCaseKeyFor(row) === selectedKey) return true;
+  if (selectedKey && assetFamily(row)) return false;
+  return text(row.case_id || row.caseId) === text(caseId);
 }
 
-function firstByCase(rows, caseId) {
-  return byCase(rows, caseId)[0] || null;
+function byCase(rows, caseId, caseKey = '') {
+  return asArray(rows).filter((row) => matchesSelectedCase(row, caseId, caseKey));
+}
+
+function firstByCase(rows, caseId, caseKey = '') {
+  return byCase(rows, caseId, caseKey)[0] || null;
 }
 
 function filterCases(cases, filters = {}) {
@@ -304,6 +507,11 @@ function filterCases(cases, filters = {}) {
       row.searchText,
       row.caseId,
       row.pdbId,
+      row.parentClassLabel,
+      row.childClassLabel,
+      row.biologicalMoleculeName,
+      row.pdbMoleculeName,
+      row.confidenceDisplayLabel,
       row.rnaFamily,
       row.motif,
       row.structureClass,
@@ -319,10 +527,43 @@ function filterCases(cases, filters = {}) {
 }
 
 export function buildAtlasSearchState(tables = {}, filters = {}) {
-  const normalizedCases = asArray(tables.cases).map(normalizeCase);
+  const membershipsByCase = new Map();
+  for (const row of asArray(tables.memberships)) {
+    const caseKey = atlasCaseKeyFor(row);
+    if (!caseKey) continue;
+    const entry = {
+      pairId: text(row.pair_id),
+      profileId: text(row.profile_id),
+      routeId: text(row.profile_membership_route_id)
+    };
+    if (!membershipsByCase.has(caseKey)) membershipsByCase.set(caseKey, []);
+    membershipsByCase.get(caseKey).push(entry);
+  }
+  const profileTracesByCase = new Map();
+  for (const row of asArray(tables.tracks)) {
+    const caseKey = atlasCaseKeyFor(row);
+    if (!caseKey) continue;
+    if (!profileTracesByCase.has(caseKey)) profileTracesByCase.set(caseKey, []);
+    profileTracesByCase.get(caseKey).push(row);
+  }
+  const sourceRows = asArray(tables.cases);
+  const displayRows = asArray(tables.displayCases).length ? asArray(tables.displayCases) : sourceRows;
+  const normalizedCases = displayRows.map((row) => {
+    const normalized = normalizeCase(row);
+    const routeTracePreview = profileTracePreview(profileTracesByCase.get(normalized.atlasCaseKey));
+    return {
+      ...normalized,
+      profileMembershipPreview: membershipsByCase.get(normalized.atlasCaseKey) || [],
+      profileTracePreview: routeTracePreview.length ? routeTracePreview : normalized.profileTracePreview
+    };
+  });
   const cases = filterCases(normalizedCases, filters);
   return {
-    source: ANNOJOIN_SOURCE_CONTRACT,
+    source: {
+      ...ANNOJOIN_SOURCE_CONTRACT,
+      ...(tables.source || {}),
+      browserLoadsAnnoconfidenceBigTables: false
+    },
     filters: {
       query: text(filters.query),
       rnaFamily: text(filters.rnaFamily),
@@ -332,7 +573,10 @@ export function buildAtlasSearchState(tables = {}, filters = {}) {
       structureClass: text(filters.structureClass)
     },
     cases,
-    totalCaseCount: normalizedCases.length,
+    totalCaseCount: numberOrZero(tables.totalCaseCount) || normalizedCases.length,
+    totalSourceCaseCount: numberOrZero(tables.totalSourceCaseCount) || sourceRows.length || normalizedCases.length,
+    caseHierarchy: buildCaseHierarchy(cases),
+    sourceCaseHierarchy: asArray(tables.caseHierarchy),
     facets: asArray(tables.facets).map(normalizeFacet),
     presets: asArray(tables.presets).map(normalizePreset),
     downloads: asArray(tables.downloads).map(normalizeDownload)
@@ -340,26 +584,28 @@ export function buildAtlasSearchState(tables = {}, filters = {}) {
 }
 
 export function createAtlasCaseDetail(tables = {}, caseIdInput = '') {
-  const caseId = text(caseIdInput);
-  const caseRow = firstByCase(tables.cases, caseId);
+  const caseKey = text(caseIdInput);
+  const caseId = caseKey.includes(':') ? caseKey.split(':').pop() : caseKey;
+  const caseRow = firstByCase(tables.cases, caseId, caseKey);
   if (!caseRow) return null;
-  const structureRoutes = byCase(tables.colors3d, caseId).map(normalizeColor3d);
+  const selectedCaseKey = atlasCaseKeyFor(caseRow);
+  const structureRoutes = byCase(tables.colors3d, caseId, selectedCaseKey).map(normalizeColor3d);
   return {
     ...normalizeCase(caseRow),
-    summary: firstByCase(tables.summaries, caseId) ? normalizeSummary(firstByCase(tables.summaries, caseId)) : null,
-    detailRoutes: firstByCase(tables.routes, caseId) ? normalizeRoute(firstByCase(tables.routes, caseId)) : null,
-    memberships: byCase(tables.memberships, caseId).map((row) => ({
+    summary: firstByCase(tables.summaries, caseId, selectedCaseKey) ? normalizeSummary(firstByCase(tables.summaries, caseId, selectedCaseKey)) : null,
+    detailRoutes: firstByCase(tables.routes, caseId, selectedCaseKey) ? normalizeRoute(firstByCase(tables.routes, caseId, selectedCaseKey)) : null,
+    memberships: byCase(tables.memberships, caseId, selectedCaseKey).map((row) => ({
       pairId: text(row.pair_id),
       profileId: text(row.profile_id),
       routeId: text(row.profile_membership_route_id)
     })),
-    trackRoutes: byCase(tables.tracks, caseId).map(normalizeTrackRoute),
-    pairContextRoutes: byCase(tables.pairs2d, caseId).map(normalizePair2d),
+    trackRoutes: byCase(tables.tracks, caseId, selectedCaseKey).map(normalizeTrackRoute),
+    pairContextRoutes: byCase(tables.pairs2d, caseId, selectedCaseKey).map(normalizePair2d),
     structureRoutes,
-    conflicts: byCase(tables.conflicts, caseId).map(normalizeConflict),
+    conflicts: byCase(tables.conflicts, caseId, selectedCaseKey).map(normalizeConflict),
     visualPreview: buildVisualPreview({
-      residueEvidence: byCase(tables.residueEvidence, caseId),
-      lssContexts: byCase(tables.lssContexts, caseId),
+      residueEvidence: byCase(tables.residueEvidence, caseId, selectedCaseKey),
+      lssContexts: byCase(tables.lssContexts, caseId, selectedCaseKey),
       structureRoutes
     })
   };

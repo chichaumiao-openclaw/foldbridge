@@ -110,3 +110,17 @@ curl -fsS 'http://127.0.0.1:55832/api/annojoin/structure?path=CONFIDENCE%2F10_st
 ```
 
 这些检查分别证明静态资产、ANNOJOIN-first manifest 和按需 mmCIF 结构服务可用。
+
+## 2026-06-26 5GAG linked-view smoke 续作记录
+
+5GAG linked-view smoke 的 1D / 2D / 3D 联动和 qcov / scov 来源判断见：
+
+```text
+docs/annojoin-5gag-linked-smoke-stage-20260626.md
+```
+
+后续全量生成 RMDB / RASP 网页前先读该文档。关键结论：
+
+- RMDB profile 级 qcov / scov 来自 `PIPLINE/rmdb2pdb_v3_exact_query_vs_pdb_normalized_acgun_rasp_params_20260612` 的 per-case export。
+- RASP 侧 `rasp2pdb_signal_fact_mapping_rasp_params_20260611` 是最新 BLAST 资产之一，覆盖轴是 RASP feature query -> PDB subject，应作为独立 coverage 层展示。
+- `structure-coverage.json` 继续只表达 sequence alignment 和 atom_site 坐标覆盖，不承载 raw BLAST qcov / scov。

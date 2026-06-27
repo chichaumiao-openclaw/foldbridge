@@ -131,6 +131,12 @@ export function createAnnojointAtlasStore({
   async function loadCaseAssetPath(caseAssetPath, options = {}) {
     const normalizedPath = String(caseAssetPath ?? '').trim();
     if (!normalizedPath) throw new Error('[annojoinAtlasStore] caseAssetPath is required');
+    return loadAssetPath(normalizedPath, options);
+  }
+
+  async function loadAssetPath(assetPath, options = {}) {
+    const normalizedPath = String(assetPath ?? '').trim();
+    if (!normalizedPath) throw new Error('[annojoinAtlasStore] assetPath is required');
     const cacheKey = `${options.compressed ? 'compressed' : 'raw'}:${normalizedPath}`;
     if (!caseCache.has(cacheKey)) {
       caseCache.set(cacheKey, loadJsonMaybeCompressed(normalizedPath, options));
@@ -148,5 +154,5 @@ export function createAnnojointAtlasStore({
     return routePageCache.get(cacheKey);
   }
 
-  return { loadIndex, loadDetailRouteIndex, loadCase, loadCaseAssetPath, loadRoutePage };
+  return { loadIndex, loadDetailRouteIndex, loadCase, loadCaseAssetPath, loadAssetPath, loadRoutePage };
 }

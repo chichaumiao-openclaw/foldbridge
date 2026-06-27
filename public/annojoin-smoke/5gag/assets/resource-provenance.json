@@ -1,0 +1,331 @@
+{
+  "protocolVersion": "annojoin-web-resource-provenance.v0.1",
+  "caseId": "5GAG",
+  "generatedAt": "2026-06-26T00:00:00+08:00",
+  "consumerRepo": "docs/foldbridge",
+  "producerRepo": "docs/rmdb2pdb",
+  "documentation": "../rmdb2pdb/docs/技术沉淀/ANNOJOIN网页资源来源清单_20260626.md",
+  "resourceGroups": [
+    {
+      "groupId": "page-shell",
+      "label": "5GAG linked-view page shell",
+      "viewerAssets": [
+        "index.html",
+        "workbench.js",
+        "workbench.css"
+      ],
+      "runtimeLoaded": false,
+      "producerRepo": "docs/foldbridge",
+      "producerScript": null,
+      "sourceDataPaths": [],
+      "toolRuntime": {
+        "kind": "handwritten_static_page"
+      },
+      "dispatch": {
+        "mode": "static_es_module",
+        "entry": "index.html",
+        "script": "workbench.js"
+      },
+      "joinKeys": [],
+      "status": "materialized",
+      "notes": [
+        "Page shell only; scientific data are loaded from explicit static assets."
+      ]
+    },
+    {
+      "groupId": "dbn-2d-structure",
+      "label": "DBN-derived 2D structure",
+      "viewerAssets": [
+        "assets/case_2d_structure_5gag.json"
+      ],
+      "runtimeLoaded": true,
+      "producerRepo": "docs/rmdb2pdb",
+      "producerScript": "public/annojoin-smoke/5gag/build_browser_2d_smoke.py",
+      "sourceDataPaths": [
+        "ANNOJOIN/2d_smoke_5gag_20260618/dbn/5gag.dbn"
+      ],
+      "toolRuntime": {
+        "kind": "RNApdbee/RNAView",
+        "remoteHost": "10.40.0.132",
+        "remoteRoot": "/data/rnapdbee-dotbracket-amd64",
+        "engineUrl": "http://127.0.0.1:18081",
+        "containers": [
+          "rnapdbee-engine",
+          "rnapdbee-adapters",
+          "cli2rest-rnaview"
+        ]
+      },
+      "dispatch": {
+        "mode": "remote_batch_job",
+        "command": "python3 scripts/batch_rnaview_dotbracket.py --engine-url http://127.0.0.1:18081 --recursive",
+        "outputs": [
+          "summary.tsv",
+          "*.dbn"
+        ]
+      },
+      "joinKeys": [
+        "strand_id",
+        "position"
+      ],
+      "status": "materialized",
+      "notes": [
+        "Browser consumes parsed DBN JSON; it does not run RNApdbee or RNAView at runtime.",
+        "For 5GAG the active render strand is strand_1 with 113 positions."
+      ]
+    },
+    {
+      "groupId": "varna-layout-template",
+      "label": "VARNA 2D layout template",
+      "viewerAssets": [
+        "assets/varna_5gag_strand_1_template.svg"
+      ],
+      "runtimeLoaded": true,
+      "producerRepo": "docs/rmdb2pdb",
+      "producerScript": "public/annojoin-smoke/5gag/build_browser_2d_smoke.py",
+      "sourceDataPaths": [
+        "ANNOJOIN/2d_smoke_5gag_20260618/render/5gag_sequence_000008_strand_1_reactivity_varna_p95_norm.svg"
+      ],
+      "toolRuntime": {
+        "kind": "VARNA",
+        "commandRetention": "command_not_retained"
+      },
+      "dispatch": {
+        "mode": "precomputed_svg_template",
+        "runtimeMutation": "browser_recolors_base_fill_only"
+      },
+      "joinKeys": [
+        "strand_id",
+        "position"
+      ],
+      "status": "materialized",
+      "notes": [
+        "The browser must not replace the VARNA layout with an approximate layout.",
+        "Exact historical VARNA command is not retained in this smoke bundle."
+      ]
+    },
+    {
+      "groupId": "profile-reactivity-shards",
+      "label": "Profile raw values and compact Float32 shards",
+      "viewerAssets": [
+        "assets/profile_index_5gag_reference_mapped.json",
+        "assets/profile_shard_000000_meta.json",
+        "assets/profile_shard_000000_f32.bin.gz",
+        "assets/profile_shard_000000_f32.bin",
+        "assets/profile_reactivity_5gag_reference_mapped.json"
+      ],
+      "runtimeLoaded": true,
+      "producerRepo": "docs/rmdb2pdb",
+      "producerScript": "public/annojoin-smoke/5gag/build_browser_2d_smoke.py",
+      "sourceDataPaths": [
+        "10_structure_context/alpha_full_20260615/join_schema_v2_from_codex_20260615_profile_specific_allowlist_5gag_9bz1/fec_v0_4_pair_structure_context_summary.tsv",
+        "10_structure_context/alpha_full_20260615/join_schema_v2_from_codex_20260615_profile_specific_allowlist_5gag_9bz1/fec_v0_4_residue_reactivity_structure_join.tsv"
+      ],
+      "toolRuntime": {
+        "kind": "python_static_asset_builder"
+      },
+      "dispatch": {
+        "mode": "build_time_profile_sharding",
+        "normalization": "browser_profile_positive_p95_cap_v1",
+        "compression": "explicit_gzip_with_raw_fallback"
+      },
+      "joinKeys": [
+        "profile_id",
+        "pair_id",
+        "render_strand_id",
+        "row_index",
+        "position"
+      ],
+      "status": "materialized",
+      "notes": [
+        "Browser computes P95 normalization and yellow-to-red DMS fill per active profile.",
+        "Verbose profile JSON is retained for audit and tests, not the primary browser path."
+      ]
+    },
+    {
+      "groupId": "linked-view-contract-assets",
+      "label": "Linked 1D/2D/3D contract assets",
+      "viewerAssets": [
+        "assets/linked-view/residue-index.json",
+        "assets/linked-view/structure-contexts.json",
+        "assets/linked-view/structure-coverage.json",
+        "assets/linked-view/profile-joins.json",
+        "assets/linked-view/bridges.json",
+        "assets/linked-view/interactions.json",
+        "assets/linked-view/confidence-summary.json"
+      ],
+      "runtimeLoaded": true,
+      "producerRepo": "docs/rmdb2pdb",
+      "producerScript": "scripts/build_linked_view_v0_1_5gag_smoke.py",
+      "sourceDataPaths": [
+        "public/annojoin-smoke/5gag/assets/case_2d_structure_5gag.json",
+        "public/annojoin-smoke/5gag/assets/profile_index_5gag_reference_mapped.json",
+        "public/annojoin-smoke/5gag/assets/profile_reactivity_5gag_reference_mapped.json",
+        "public/annojoin-smoke/5gag/assets/linked-view/"
+      ],
+      "toolRuntime": {
+        "kind": "linked_view_contract_v0_1_builder",
+        "validator": "docs/superpowers/contracts/linked-view-v0.1-20260625/validator/validate_linked_view_contract_v0_1.py"
+      },
+      "dispatch": {
+        "mode": "build_time_contract_materialization",
+        "fixtureOutput": "docs/superpowers/contracts/linked-view-v0.1-20260625/fixtures/5gag-smoke",
+        "publicMirror": "public/annojoin-smoke/5gag"
+      },
+      "joinKeys": [
+        "residueKey",
+        "profileId",
+        "pairId",
+        "chainKey"
+      ],
+      "status": "materialized",
+      "notes": [
+        "These are contract assets, not browser-derived fallback semantics.",
+        "structure-coverage separates sequenceAlignment from atom_site coordinate coverage."
+      ]
+    },
+    {
+      "groupId": "lss-context",
+      "label": "ANNOCONFIDENCE LSS context",
+      "viewerAssets": [
+        "assets/linked-view/lss-context.json"
+      ],
+      "runtimeLoaded": true,
+      "producerRepo": "docs/rmdb2pdb",
+      "producerScript": "public/annojoin-smoke/5gag/build_browser_2d_smoke.py",
+      "sourceDataPaths": [
+        "ANNOCONFIDENCE/lss_structure_context_annotation.tsv"
+      ],
+      "sourceAssetRoot": "task_packages/confidence_v3_restart_20260613/remote_root",
+      "toolRuntime": {
+        "kind": "build_time_small_asset_extraction"
+      },
+      "dispatch": {
+        "mode": "build_time_profile_id_exact_lookup"
+      },
+      "joinKeys": [
+        "profileId"
+      ],
+      "matchPolicy": "profile_id_exact",
+      "status": "materialized",
+      "notes": [
+        "No case-level fallback is allowed for LSS context.",
+        "Browser does not load the ANNOCONFIDENCE large table."
+      ]
+    },
+    {
+      "groupId": "raw-qcov-scov",
+      "label": "Raw alignment qcov/scov",
+      "viewerAssets": [
+        "assets/linked-view/raw-alignment-coverage.json"
+      ],
+      "runtimeLoaded": true,
+      "producerRepo": "docs/rmdb2pdb",
+      "producerScript": "not_materialized",
+      "sourceDataPaths": [
+        "not_materialized"
+      ],
+      "recommendedSourceDataPaths": [
+        "PIPLINE/rmdb2pdb_v3_exact_query_vs_pdb_normalized_acgun_rasp_params_20260612/exports/rmdb_pdb_v3_exact_cases_full_20260613_streaming_caseonly/5GAG/provenance_index.tsv",
+        "PIPLINE/rmdb2pdb_v3_exact_query_vs_pdb_normalized_acgun_rasp_params_20260612/exports/rmdb_pdb_v3_exact_cases_full_20260613_streaming_caseonly/5GAG/alignment_pair_summary.tsv",
+        "PIPLINE/rmdb2pdb_v3_exact_query_vs_pdb_normalized_acgun_rasp_params_20260612/exports/rmdb_pdb_v3_exact_cases_full_20260613_streaming_caseonly/5GAG/rmdb_sequence_members.tsv"
+      ],
+      "toolRuntime": {
+        "kind": "future_build_time_materializer"
+      },
+      "dispatch": {
+        "mode": "not_materialized"
+      },
+      "joinKeys": [
+        "profileId",
+        "pairId",
+        "pairSegmentId",
+        "sequenceLabel",
+        "pdbReferenceId"
+      ],
+      "matchPolicy": "profile_id_pair_id_pair_segment_id_exact",
+      "status": "not_materialized",
+      "notes": [
+        "RASP feature coverage is a separate RASP feature query -> PDB subject coverage axis.",
+        "Do not label RASP feature coverage as RMDB profile qcov/scov.",
+        "Do not derive qcov/scov from FEC semantic coverage, atom_site coordinate coverage, or UI sequence equality."
+      ]
+    },
+    {
+      "groupId": "molstar-3d-runtime",
+      "label": "Mol* 3D runtime and structure source",
+      "viewerAssets": [
+        "assets/linked-view/structure-coverage.json",
+        "assets/linked-view/structure-contexts.json"
+      ],
+      "runtimeLoaded": true,
+      "producerRepo": "docs/foldbridge",
+      "producerScript": "public/annojoin-smoke/5gag/workbench.js",
+      "sourceDataPaths": [
+        "assets/linked-view/structure-coverage.json"
+      ],
+      "runtimeUrls": [
+        "https://files.rcsb.org/download/5GAG.cif",
+        "https://cdn.jsdelivr.net/npm/pdbe-molstar@3.3.0/build/pdbe-molstar.css",
+        "https://cdn.jsdelivr.net/npm/pdbe-molstar@3.3.0/build/pdbe-molstar-plugin.js"
+      ],
+      "toolRuntime": {
+        "kind": "PDBeMolstarPlugin",
+        "version": "pdbe-molstar@3.3.0"
+      },
+      "dispatch": {
+        "mode": "browser_client_alignment_crop",
+        "cropSource": "structure-coverage.sequenceAlignment",
+        "chainFilter": "structure-coverage.atomSiteFilter"
+      },
+      "joinKeys": [
+        "structure-coverage.atomSiteFilter",
+        "structure-coverage.sequenceAlignment"
+      ],
+      "status": "runtime_external_dependency",
+      "notes": [
+        "Target-chain view is a client-side alignment crop colored with DMS reactivity fill.",
+        "A full CIF reference is displayed separately for comparison."
+      ]
+    },
+    {
+      "groupId": "technology-family-smoke",
+      "label": "Technology-family smoke index",
+      "viewerAssets": [
+        "../technology-families/assets/technology-family-index.json",
+        "../technology-families/index.html",
+        "../technology-families/family-a.html",
+        "../technology-families/family-b.html",
+        "../technology-families/family-c.html",
+        "../technology-families/family-d.html",
+        "../technology-families/family-e.html",
+        "../technology-families/family-f.html"
+      ],
+      "runtimeLoaded": false,
+      "producerRepo": "docs/foldbridge",
+      "producerScript": "manual_static_asset",
+      "sourceDataPaths": [
+        "docs/技术沉淀/RNA探针技术特性.tsv",
+        "task_packages/fec_lss_rc3_release_20260623/probe_confidence_method_registry.tsv",
+        "src/assets/generated/annojoin-atlas/index.json",
+        "public/annojoin-smoke/5gag"
+      ],
+      "toolRuntime": {
+        "kind": "static_smoke_index"
+      },
+      "dispatch": {
+        "mode": "static_json_fetch",
+        "asset": "assets/technology-family-index.json"
+      },
+      "joinKeys": [
+        "technology",
+        "familyId",
+        "caseKey"
+      ],
+      "status": "materialized",
+      "notes": [
+        "RMDB and RASP coverage axes are recorded separately.",
+        "Family E/F representative cases are explicitly not materialized in the current atlas."
+      ]
+    }
+  ]
+}

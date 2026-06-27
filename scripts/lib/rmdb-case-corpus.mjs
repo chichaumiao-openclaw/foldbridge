@@ -24,7 +24,8 @@ export function parseTsv(text) {
 const CONFIDENCE_CLASS_MAP = {
   high_confidence: 'high',
   medium_confidence: 'medium',
-  low_confidence: 'low'
+  low_confidence: 'low',
+  projection_only_low_confidence: 'low'
 };
 
 /**
@@ -40,6 +41,42 @@ export function selectDisplayableCases(linkRows) {
     out.push(row);
   }
   return out;
+}
+
+/**
+ * 从 biological_parent_child_pdb_confidence_index 表选出可显示的 child 行。
+ * 可显示条件：rmdb2pdb_confidence_class ∈ CONFIDENCE_CLASS_MAP 键集。
+ */
+export function selectDisplayableChildren(parentChildRows) {
+  return parentChildRows.filter((row) => row.rmdb2pdb_confidence_class in CONFIDENCE_CLASS_MAP);
+}
+
+/**
+ * 由 parent_child 行 + child_detail_route 行 + link 聚合数据构造前端索引行。
+ * linkAgg = { profileCount, residueCount }（从 link 表按 pdb_id 聚合所有 reference 的总和）
+ */
+export function buildChildIndexRow(childRow, routeRow, linkAgg) {
+  const pdbIds = (childRow.child_pdb_ids || '').split(';').filter(Boolean);
+  const primaryPdbId = pdbIds[0] || '';
+  const title = routeRow
+    ? (routeRow.display_name || routeRow.list_display_title || '').trim() || primaryPdbId
+    : (childRow.child_biological_name || '').trim() || primaryPdbId;
+  const subtitle = routeRow ? (routeRow.display_subtitle || '').trim() : '';
+  return {
+    pdbId: primaryPdbId,
+    pdbIds,
+    pdbReferenceId: routeRow ? (routeRow.pdb_reference_ids || '').trim() : '',
+    title,
+    subtitle,
+    parentName: childRow.parent_biological_name || 'no_registered_parent',
+    parentId: childRow.parent_biological_id || '',
+    confidenceClass: CONFIDENCE_CLASS_MAP[childRow.rmdb2pdb_confidence_class] || 'low',
+    confidenceScore: toNumber(childRow.rmdb2pdb_confidence_score),
+    pairCount: toNumber(childRow.rmdb2pdb_filtered_pair_count),
+    profileCount: linkAgg ? toNumber(linkAgg.profileCount) : toNumber(childRow.rmdb2pdb_filtered_pair_count),
+    residueCount: linkAgg ? toNumber(linkAgg.residueCount) : 0,
+    detailHref: `#pdb-case?pdbId=${primaryPdbId}`
+  };
 }
 
 function pickTitle(overview, pdbId) {

@@ -64,29 +64,78 @@ export function renderPdbCaseIndexPage(rows = []) {
     })
     .join('');
 
-  const body = rows
-    .map(
-      (row) => `<tr data-confidence-class="${escapeHtml(row.confidenceClass)}">
-        <td><a class="sequence-link" href="${escapeHtml(row.detailHref)}">${escapeHtml(row.pdbId)}</a></td>
+  // 按 parent 分组：有注册 parent 的折叠在组下，no_registered_parent 的独立展示
+  const parentGroups = new Map(); // parentName → { parentId, children: [] }
+  const ungrouped = []; // no_registered_parent children
+  for (const row of rows) {
+    if (!row.parentName || row.parentName === 'no_registered_parent') {
+      ungrouped.push(row);
+    } else {
+      if (!parentGroups.has(row.parentName)) {
+        parentGroups.set(row.parentName, { parentId: row.parentId || '', children: [] });
+      }
+      parentGroups.get(row.parentName).children.push(row);
+    }
+  }
+
+  function renderChildRow(row) {
+    const pdbLinks = (row.pdbIds || [row.pdbId]).map(
+      (pid) => `<a class="sequence-link" href="https://www.rcsb.org/structure/${escapeHtml(pid)}" target="_blank" rel="noopener">${escapeHtml(pid)}</a>`
+    ).join(', ');
+    return `<tr data-confidence-class="${escapeHtml(row.confidenceClass)}" data-parent-name="${escapeHtml(row.parentName || '')}">
+        <td>${pdbLinks}</td>
         <td>${escapeHtml(row.title)}</td>
         <td>${renderConfidenceBadge(row.confidenceClass)}</td>
         <td>${escapeHtml(formatScore(row.confidenceScore))}</td>
         <td>${escapeHtml(row.profileCount)}</td>
         <td>${escapeHtml(row.residueCount)}</td>
+        <td><button type="button" class="pdb-case-detail-btn" data-detail-href="${escapeHtml(row.detailHref)}"${row.hasDetailAssets === false ? ' disabled title="Detail assets not yet generated"' : ''}>Detail</button></td>
+      </tr>`;
+  }
+
+  function renderParentGroupRows(parentName, group) {
+    const bestConf = group.children.reduce((best, c) => {
+      const order = { high: 3, medium: 2, low: 1 };
+      return (order[c.confidenceClass] || 0) > (order[best] || 0) ? c.confidenceClass : best;
+    }, 'low');
+    const parentRow = `<tr class="pdb-case-parent-row" data-confidence-class="${escapeHtml(bestConf)}" data-parent-toggle="${escapeHtml(parentName)}">
+        <td colspan="7">
+          <button type="button" class="pdb-case-parent-toggle" aria-expanded="false">
+            <span class="pdb-case-parent-arrow">&#9654;</span>
+            <strong>${escapeHtml(parentName)}</strong>
+            <span class="pdb-case-filter-count">${group.children.length} case${group.children.length > 1 ? 's' : ''}</span>
+            ${renderConfidenceBadge(bestConf)}
+          </button>
+        </td>
+      </tr>`;
+    const childRows = group.children.map(
+      (row) => `<tr class="pdb-case-child-row" data-confidence-class="${escapeHtml(row.confidenceClass)}" data-parent-name="${escapeHtml(parentName)}" hidden>
+        <td>${(row.pdbIds || [row.pdbId]).map((pid) => `<a class="sequence-link" href="https://www.rcsb.org/structure/${escapeHtml(pid)}" target="_blank" rel="noopener">${escapeHtml(pid)}</a>`).join(', ')}</td>
+        <td>${escapeHtml(row.title)}</td>
+        <td>${renderConfidenceBadge(row.confidenceClass)}</td>
+        <td>${escapeHtml(formatScore(row.confidenceScore))}</td>
+        <td>${escapeHtml(row.profileCount)}</td>
+        <td>${escapeHtml(row.residueCount)}</td>
+        <td><button type="button" class="pdb-case-detail-btn" data-detail-href="${escapeHtml(row.detailHref)}"${row.hasDetailAssets === false ? ' disabled title="Detail assets not yet generated"' : ''}>Detail</button></td>
       </tr>`
-    )
-    .join('');
+    ).join('');
+    return parentRow + childRows;
+  }
+
+  // 先渲染有注册 parent 的组（按 parent name 排序），再渲染 ungrouped
+  const sortedParents = [...parentGroups.entries()].sort((a, b) => a[0].localeCompare(b[0]));
+  const groupedBody = sortedParents.map(([name, group]) => renderParentGroupRows(name, group)).join('');
+  const ungroupedBody = ungrouped.map((row) => renderChildRow(row)).join('');
 
   return `<main class="page-pdb-case page-download-sequences">
     <section class="card bundle-wide-card pdb-case-hero">
       <p class="technology-kicker">PDB case index</p>
-      <h1>PDB case index</h1>
-      <p class="pdb-case-lede">One PDB case can contain multiple PDB references, RMDB unique sequences, and probing profiles. This page keeps that case grain visible instead of flattening each PDB into a single molecule.</p>
-      <p class="pdb-case-lede">Cases are filtered from the RMDB→PDB master table to high, medium, and low displayable confidence. Each case page lazy-loads its own lightweight assets.</p>
+      <h1>RMDB→PDB Case Index</h1>
+      <p class="pdb-case-lede">Cases are organized by biological parent identity. Expand a parent group to see its child PDB cases, or scroll to ungrouped entries. PDB IDs link to the RCSB PDB structure page.</p>
       <div class="pdb-case-status-grid">
-        ${renderMetric('Cases in current site build', rows.length)}
-        ${renderMetric('Page grain', 'PDB case')}
-        ${renderMetric('Confidence tiers', 'high / medium / low')}
+        ${renderMetric('Total cases', rows.length)}
+        ${renderMetric('Parent groups', parentGroups.size)}
+        ${renderMetric('Ungrouped', ungrouped.length)}
       </div>
     </section>
 
@@ -96,13 +145,13 @@ export function renderPdbCaseIndexPage(rows = []) {
           <p class="technology-kicker">lightweight index</p>
           <h2>Case summaries</h2>
         </div>
-        <p>Open a case page to inspect projection quality, profile-level summaries, sequence-axis previews, and base-level alignment.</p>
+        <p>Open a case detail page to inspect projection quality, profile-level summaries, and base-level alignment.</p>
       </div>
       <div class="pdb-case-filter-bar" role="group" aria-label="Filter cases by confidence class">
         ${filterButtons}
       </div>
       <div class="download-table-wrap">
-        <table class="structure-table download-table">
+        <table class="structure-table download-table pdb-case-index-table">
           <thead>
             <tr>
               <th>PDB</th>
@@ -111,9 +160,10 @@ export function renderPdbCaseIndexPage(rows = []) {
               <th>Score</th>
               <th>Profiles</th>
               <th>Residues</th>
+              <th></th>
             </tr>
           </thead>
-          <tbody>${body}</tbody>
+          <tbody>${groupedBody}${ungroupedBody}</tbody>
         </table>
       </div>
     </section>
