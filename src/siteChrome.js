@@ -96,8 +96,8 @@ const HOME_MODULE_CARDS = [
 ];
 
 export function renderHomeModuleCards(cards = HOME_MODULE_CARDS) {
-  const items = cards.map((card, index) => `
-    <article class="bundle-site-card tone-${(index % 3) + 1}">
+  const items = cards.map((card) => `
+    <article class="bundle-site-card">
       <div class="bundle-site-copy">
         <p class="bundle-site-kicker">${card.kicker}</p>
         <h3>${card.title}</h3>
@@ -107,6 +107,6 @@ export function renderHomeModuleCards(cards = HOME_MODULE_CARDS) {
         <button type="button" class="bundle-site-link" data-route="${card.route}">${card.action}</button>
       </div>
     </article>`).join('');
-  return `<section class="bundle-home-modules" aria-label="Core modules">${items}
+  return `<section class="bundle-site-grid" aria-label="Core modules">${items}
   </section>`;
 }
