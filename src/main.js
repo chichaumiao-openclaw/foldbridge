@@ -15,6 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
+import { renderPrimaryNav } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -1596,17 +1597,7 @@ function renderBundleHeader(featuredNamesMarkup = null) {
           </div>
         </div>
 
-        <nav class="bundle-home-route-nav" aria-label="Primary navigation">
-          <button type="button" class="nav-btn ${isRouteActive('home') ? 'active' : ''}" data-route="home">Home</button>
-          <button type="button" class="nav-btn ${isRouteActive('browse') ? 'active' : ''}" data-route="browse">Browse</button>
-          <button type="button" class="nav-btn ${isRouteActive('sequence', 'download-sequences') ? 'active' : ''}" data-route="sequence">Sequence</button>
-          <button type="button" class="nav-btn ${isRouteActive('structure', 'download-structures') ? 'active' : ''}" data-route="structure">Structure</button>
-          <button type="button" class="nav-btn ${isRouteActive('pdb-case') ? 'active' : ''}" data-route="pdb-case">PDB Cases</button>
-          <button type="button" class="nav-btn ${isRouteActive('probing', 'detail') ? 'active' : ''}" data-route="probing">Probing</button>
-          <button type="button" class="nav-btn ${isRouteActive('download') ? 'active' : ''}" data-route="download">Download</button>
-          <button type="button" class="nav-btn ${isRouteActive('search') ? 'active' : ''}" data-route="search">Search</button>
-          <button type="button" class="nav-btn ${isRouteActive('help') ? 'active' : ''}" data-route="help">Help</button>
-        </nav>
+        ${renderPrimaryNav(route)}
       </div>
     </div>
   </header>`;
