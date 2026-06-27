@@ -70,6 +70,9 @@ import { renderHelpBody } from '../src/siteChrome.js';
 test('help body has four sections and live module links', () => {
   const html = renderHelpBody();
   assert.match(html, /What is FoldBridge/i);
+  assert.match(html, /Modules/i);
+  assert.match(html, /Key terms/i);
+  assert.match(html, /Data sources/i);
   assert.match(html, /href="#sequence"/);
   assert.match(html, /href="#probing"/);
   assert.match(html, /href="#search"/);
