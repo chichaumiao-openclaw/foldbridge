@@ -1,11 +1,7 @@
 import { readFileSync } from 'node:fs';
-import {
-  dataTypeCards,
-  recentPublications,
-  siteSummaries
-} from '../data.js';
 
 const GENERATED_CASES_BASE = new URL('../assets/generated/rmdb-pdb-cases/', import.meta.url);
+const PROBING_ARTICLES_BASE = new URL('../assets/generated/probing-articles/', import.meta.url);
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -77,70 +73,35 @@ function buildPdbCaseDocs() {
   });
 }
 
-export function buildSearchDocuments() {
-  const pdbDocs = buildPdbCaseDocs();
-
-  const dataTypeDocs = dataTypeCards.map((card) => ({
-    id: `data-type-${card.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`,
-    type: 'data-type',
-    title: card.name,
-    href: '#browse',
-    tags: ['data', 'probing', 'technology'],
-    summary: card.desc,
-    content: `${card.name} ${card.desc} ${card.count}`
-  }));
-
-  const siteDocs = siteSummaries.map((site) => ({
-    id: `site-${site.site.toLowerCase()}`,
-    type: 'site',
-    title: site.site,
-    href: '#home',
-    tags: ['database', 'portal'],
-    summary: site.scope,
-    content: `${site.site} ${site.scope} records ${site.records}`
-  }));
-
-  const publicationDocs = recentPublications.map((paper) => ({
-    id: `publication-${paper.doi.replace(/[^a-z0-9]+/gi, '-')}`,
-    type: 'publication',
-    title: paper.title,
-    href: '#publications',
-    tags: ['publication', 'reference'],
-    summary: `${paper.year} ${paper.doi}`,
-    content: `${paper.title} ${paper.doi} ${paper.year}`
-  }));
-
-  const technologyDocs = [
-    {
-      id: 'technology-shape',
-      type: 'technology',
-      title: 'SHAPE probing',
-      href: '#detail?tech=shape',
-      tags: ['technology', 'probing', 'structure'],
-      summary: '2-OH acylation workflows for RNA flexibility and structure probing.',
-      content: 'SHAPE SHAPE-MaP NAI-MaP icSHAPE smartSHAPE chemical probing RNA structure'
-    },
-    {
-      id: 'technology-dms',
-      type: 'technology',
-      title: 'DMS probing',
-      href: '#detail?tech=dms-seq',
-      tags: ['technology', 'probing', 'accessibility'],
-      summary: 'DMS-based probing for base accessibility and transcriptome-scale structure readouts.',
-      content: 'DMS DMS-seq DMS-MaPseq Structure-seq CIRS-seq RNA accessibility probing'
-    },
-    {
-      id: 'technology-enzymatic',
-      type: 'technology',
-      title: 'Enzymatic probing',
-      href: '#detail?tech=pars',
-      tags: ['technology', 'probing'],
-      summary: 'RNase and enzymatic probing workflows for single-strand and double-strand accessibility.',
-      content: 'PARS PARTE tNet-RNase-seq enzymatic RNase RNA structure probing'
+function buildProbingArticleDocs() {
+  let index;
+  try {
+    index = JSON.parse(readFileSync(new URL('index.json', PROBING_ARTICLES_BASE), 'utf8'));
+  } catch {
+    return [];
+  }
+  const slugToFamily = {};
+  for (const family of index.families || []) {
+    for (const art of family.articles || []) {
+      slugToFamily[art.slug] = { id: family.id, title: family.title };
     }
-  ];
+  }
+  return (index.articles || []).map((art) => {
+    const fam = slugToFamily[art.slug] || { id: 'probing', title: '' };
+    return {
+      id: `probing-article-${art.slug}`,
+      type: 'probing-article',
+      title: art.title,
+      href: `#detail?tech=${art.slug}`,
+      tags: ['probing', fam.id].filter(Boolean),
+      summary: art.summary || '',
+      content: [art.title, art.summary, fam.title].filter(Boolean).join(' ')
+    };
+  });
+}
 
-  return [...pdbDocs, ...dataTypeDocs, ...siteDocs, ...publicationDocs, ...technologyDocs];
+export function buildSearchDocuments() {
+  return [...buildPdbCaseDocs(), ...buildProbingArticleDocs()];
 }
 
 export function renderSearchDocumentHtml(doc) {

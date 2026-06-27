@@ -2,13 +2,20 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { buildSearchDocuments, renderSearchDocumentHtml } from '../src/search/searchCorpus.js';
 
-test('search corpus exposes lightweight documents with filters and target hrefs', () => {
+test('search corpus exposes probing-article and pdb-case docs, no dead routes', () => {
   const docs = buildSearchDocuments();
 
   assert.ok(docs.length >= 8);
   assert.ok(docs.every((doc) => doc.id && doc.title && doc.href && doc.type));
+
   assert.ok(docs.some((doc) => doc.type === 'pdb-case' && doc.href === '#pdb-case?pdbId=9ELY'));
-  assert.ok(docs.some((doc) => doc.tags.includes('technology')));
+
+  const articles = docs.filter((doc) => doc.type === 'probing-article');
+  assert.equal(articles.length, 27);
+  assert.ok(articles.every((doc) => doc.href.startsWith('#detail?tech=')));
+
+  assert.ok(!docs.some((doc) => ['#browse', '#home', '#publications'].includes(doc.href)));
+  assert.ok(!docs.some((doc) => doc.type === 'technology'));
 });
 
 test('renderSearchDocumentHtml writes Pagefind metadata and filters', () => {

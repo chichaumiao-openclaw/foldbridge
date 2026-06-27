@@ -1991,7 +1991,8 @@ async function loadAnnojointAtlasDetail(caseKey, caseAssetPath = '') {
 
 async function loadAnnojointCaseConfidence(caseKey, caseAsset) {
   if (!caseKey || annojoinCaseConfidenceState.get(caseKey) === 'loading') return;
-  if (String(caseAsset?.case?.assetFamily || '').trim() !== 'RMDB2PDB') return;
+  const family = String(caseAsset?.case?.assetFamily || '').trim();
+  if (!['RMDB2PDB', 'RASP2PDB'].includes(family)) return;
   annojoinCaseConfidenceState.set(caseKey, 'loading');
   try {
     const assetPaths = caseAsset?.supplementalAssets || annojoinConfidenceAssetPaths(caseKey);
@@ -2307,7 +2308,7 @@ function searchPage() {
           id="site-search-input"
           class="site-search-input"
           type="search"
-          placeholder="Search sequence, PDB ID, method, profile, DOI..."
+          placeholder="Search probing methods, PDB ID, molecule name..."
           value="${escapeHtml(query)}"
           aria-label="Search query"
         />
