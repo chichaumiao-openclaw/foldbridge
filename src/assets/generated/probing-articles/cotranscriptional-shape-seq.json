@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "cotranscriptional-shape-seq",
-  "title": "Cotranscriptional SHAPE-seq：在 RNA 边转录边折叠时读 2′-OH 可及性",
-  "date": "2026-06-25",
+  "title": "Cotranscriptional SHAPE-seq: reading 2′-OH accessibility as RNA folds while being transcribed",
+  "date": "",
   "figure_count": 4,
   "rep_pmid": "27798597",
   "rep_pmcid": "PMC5497173",
@@ -11,25 +11,29 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "如果只看那张漂亮的反应性矩阵，Cotranscriptional SHAPE-seq 很容易被误读成一台“能直接拍下 RNA 在转录过程中逐步配对”的结构摄影机。这个理解是错的。Cotranscriptional SHAPE-seq 的解释对象，仍然是核糖 2′-OH 的化学可及性/柔性：当一个核苷酸的 2′ 羟基没有被配对、被蛋白或配体遮挡、也没有被复杂构象保护时，它更容易被 SHAPE 试剂酰化。这个方法的独特之处，是在单轮体外转录中用 roadblock 把转录复合体停在一系列不同长度上，再对这些停住的中间体同时做 SHAPE 探测——于是得到的是带时间/长度分辨的可及性轨迹，而不是配对真值。读出仍然是 2′-OH 可及性，不是“这个碱基在这个长度一定配对”。"
+      "text": "Date: 2026-06-25"
     },
     {
       "type": "paragraph",
-      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 confidence 层，就必须先问一个更具体的问题：这个数字在 Cotranscriptional SHAPE-seq 的 assay model 下能不能被解释为 2′-OH 可及性支持？逐长度的 SHAPE 反应性是 raw provenance；它必须先通过 assay 化学、background/readout 上下文、以及“这是某个转录长度下的可及性、不是配对判定”这一限定，才能成为默认结构颜色或 confidence 的候选。"
+      "text": "If you only look at that elegant reactivity matrix, Cotranscriptional SHAPE-seq is easily misread as a structural camera that can \"directly photograph RNA pairing step by step during transcription\". That understanding is wrong. The interpretable object of Cotranscriptional SHAPE-seq is still the chemical accessibility/flexibility of the ribose 2′-OH: when the 2′-hydroxyl of a nucleotide is not paired, not shielded by protein or ligand, and not protected by a complex conformation, it is more readily acylated by the SHAPE reagent. What is unique about this method is that, within a single round of in vitro transcription, it uses roadblocks to stall the transcription complex at a series of different lengths, and then probes these stalled intermediates with SHAPE simultaneously — so what is obtained is an accessibility trajectory with time/length resolution, not the ground truth of pairing. The readout is still 2′-OH accessibility, not \"this base is definitely paired at this length\"."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary is crucial for FoldBridge. FoldBridge can store the raw observations and can display the experimental signal on a web page; but the moment it enters the default structure colouring, the explanatory text or the confidence layer, a more specific question must be asked first: can this number, under the assay model of Cotranscriptional SHAPE-seq, be interpreted as 2′-OH accessibility support? The per-length SHAPE reactivity is raw provenance; it must first pass the assay chemistry, the background/readout context, and the qualification \"this is the accessibility at a certain transcript length, not a pairing call\", before it can become a candidate for default structure colour or confidence."
     },
     {
       "type": "heading",
-      "text": "把转录停在每个长度：roadblock + 同步 SHAPE 探测"
+      "text": "Stalling transcription at every length: roadblock + synchronised SHAPE probing"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-cotranscriptional-shape-seq-f1",
       "alt": "Cotranscriptional_SHAPE-seq F1",
       "srcBasename": "cotranscriptionalshapeseq_f1__PMC5497173__F1.jpg",
-      "legend": "**图 1。Cotranscriptional SHAPE-seq 的整体方案。** Watters et al. 2016（PMID 27798597，DOI `10.1038/nsmb.3316`）的图注（legend）把方法拆成几个环节：(a) 构建一组模板，每个模板都含有一个 E. coli 启动子、一段可变长度的 RNA 模板区、以及一个 EcoRI Gln111 roadblock 位点；用含有各中间长度 roadblock 的模板库，由 E. coli RNA 聚合酶（RNAP）做单轮体外转录（IVT），随后对这些被阻滞的复合体同时进行 SHAPE 探测并完成测序建库；(b) 双端测序同时读出 SHAPE 修饰位置和每条新生 RNA 转录本的 3′ 端，按转录本长度分箱后计算各长度的 SHAPE 反应性谱，再堆叠成反应性矩阵；矩阵中某些核苷酸（列）在不同转录长度（行）之间反应性的升高或降低，揭示出共转录折叠事件。",
+      "legend": "**Figure 1. The overall scheme of Cotranscriptional SHAPE-seq.** The legend of Watters et al. 2016 (PMID 27798597, DOI `10.1038/nsmb.3316`) breaks the method into several stages: (a) a set of templates is constructed, each containing an E. coli promoter, a variable-length RNA template region and an EcoRI Gln111 roadblock site; using a template library with roadblocks at each intermediate length, single-round in vitro transcription (IVT) is carried out by E. coli RNA polymerase (RNAP), after which these stalled complexes are simultaneously probed with SHAPE and taken through sequencing library preparation; (b) paired-end sequencing reads out both the SHAPE modification position and the 3′ end of each nascent RNA transcript, and after binning by transcript length, the SHAPE reactivity profile at each length is computed and then stacked into a reactivity matrix; the rise or fall of the reactivity of certain nucleotides (columns) between different transcript lengths (rows) reveals cotranscriptional folding events.",
       "body": [
-        "从这张图可以看出 Cotranscriptional SHAPE-seq 的逻辑：它不是凭空“看到”折叠，而是先用 roadblock 把一个连续的转录过程切成一组可重复的长度快照，再在每个快照上做同样的化学探测。读出的物理量始终是 2′-OH 被酰化的程度——也就是可及性——只是现在每个长度都有一张可及性谱。",
-        "更重要的是，把这些谱按长度堆成矩阵之后，行与行之间的差异才是“折叠事件”的来源。换句话说，方法本身不直接报告配对，它报告的是“某个位点的可及性在转录变长时变了”。对 FoldBridge 来说，这意味着同一个核苷酸在不同长度下会有不同的 SHAPE 值，raw provenance 必须带着“这是哪个转录长度”的标签一起保存，否则一个数字脱离了长度上下文就无法解释。"
+        "From this figure one can see the logic of Cotranscriptional SHAPE-seq: it does not \"see\" folding out of thin air, but first uses roadblocks to cut a continuous transcription process into a set of reproducible length snapshots, and then performs the same chemical probing on each snapshot. The physical quantity read out is always the degree to which the 2′-OH is acylated — that is, accessibility — except that now each length has its own accessibility profile.",
+        "More importantly, only after these profiles are stacked by length into a matrix do the differences between rows become the source of \"folding events\". In other words, the method itself does not directly report pairing; it reports that \"the accessibility of a certain site changed as transcription lengthened\". For FoldBridge, this means that the same nucleotide will have different SHAPE values at different lengths, and the raw provenance must be stored together with the label \"which transcript length this is\", otherwise a number divorced from its length context cannot be interpreted."
       ],
       "label": "Cotranscriptional_SHAPE-seq F1",
       "pmid": "27798597",
@@ -40,17 +44,17 @@
     },
     {
       "type": "heading",
-      "text": "SRP RNA：可及性随长度变化，画出一条折叠轨迹"
+      "text": "SRP RNA: accessibility changes with length, tracing out a folding trajectory"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-cotranscriptional-shape-seq-f2",
       "alt": "Cotranscriptional_SHAPE-seq F2",
       "srcBasename": "cotranscriptionalshapeseq_f2__PMC5497173__F2.jpg",
-      "legend": "**图 2。SRP RNA 的共转录折叠。** Watters et al. 2016（PMID 27798597，DOI `10.1038/nsmb.3316`）的图注（legend）说明：(a) SRP RNA 最终折叠的二级结构，按长度 L₄（125 nt）处的反应性强度着色，结构依据 Batey 等人的晶体结构绘制；(b) SRP RNA 折叠路径的 Cotranscriptional SHAPE-seq 反应性矩阵（左），长度 L₁、L₂、L₃、L₄ 分别对应 50、75、100、125 nt，右侧选取的柱状图与上下相邻的矩阵行展示 L₂ 到 L₄ 的反应性，L₂→L₃ 与 L₃→L₄ 的反应性变化用箭头标出；(c) U14、C31、U41、G57 这几个位点在整个转录过程中的反应性值，U14 在长度 117 处发生 loop→helix 转变，C31 在长度 96 处变为配对，曲线颜色对应 (d) 中标出的碱基位置；(d) 据此提出的、与这些转变一致的 SRP RNA 折叠路径，每个长度下 14 nt 的 RNAP footprint 以灰色表示，位于 RNA 出口通道中的约 5 nt 标为小圆点。图 b、c 为 n=1，代表三次生物学重复。",
+      "legend": "**Figure 2. The cotranscriptional folding of SRP RNA.** The legend of Watters et al. 2016 (PMID 27798597, DOI `10.1038/nsmb.3316`) explains: (a) the final folded secondary structure of SRP RNA, coloured by the reactivity intensity at length L₄ (125 nt), with the structure drawn according to the crystal structure of Batey et al.; (b) the Cotranscriptional SHAPE-seq reactivity matrix of the SRP RNA folding pathway (left), with lengths L₁, L₂, L₃, L₄ corresponding to 50, 75, 100, 125 nt respectively, and the selected bar charts and the matrix rows immediately above and below on the right showing the reactivity from L₂ to L₄, with the reactivity changes from L₂→L₃ and L₃→L₄ marked by arrows; (c) the reactivity values of the sites U14, C31, U41, G57 throughout the transcription process, where U14 undergoes a loop→helix transition at length 117 and C31 becomes paired at length 96, with the curve colours corresponding to the base positions marked in (d); (d) the SRP RNA folding pathway proposed accordingly and consistent with these transitions, with the 14 nt RNAP footprint at each length shown in grey, and the ~5 nt in the RNA exit channel marked as small dots. Figures b and c are n=1, representative of three biological replicates.",
       "body": [
-        "这张图是 Cotranscriptional SHAPE-seq 最直观的展示，也是最容易被过度解读的地方。读者看到 c 里 U14、C31 的反应性在某个长度突然下降，很自然会说“它在这里配对了”。但严格地讲，方法测到的是这些位点的 2′-OH 可及性随转录变长而降低；研究者把这种降低解释为 loop→helix 转变或“变为配对”，这是基于晶体结构和折叠模型的合理推断，不是 SHAPE 信号本身直接给出的配对真值。可及性下降可以来自配对，也可以来自构象收紧或被 RNAP 遮挡。",
-        "注意图里那个 14 nt 的 RNAP footprint：靠近 3′ 端、还在聚合酶里或出口通道里的核苷酸，本来就读不到正常的可及性。这正说明为什么 Cotranscriptional SHAPE-seq 的每个数字都离不开“在哪个长度、离 3′ 端多远”这个上下文。对 FoldBridge 来说，这意味着同一位点的 SHAPE 值是“某个转录长度下的可及性观测”，而不是一个静态的配对标签；把 c 这样的轨迹写成“该碱基在长度 N 配对”，就把可及性 readout 越过了它该停的边界。"
+        "This figure is the most intuitive display of Cotranscriptional SHAPE-seq, and also the place most easily over-interpreted. Seeing the reactivity of U14 and C31 in (c) suddenly drop at a certain length, a reader will naturally say \"it paired here\". But strictly speaking, what the method measures is that the 2′-OH accessibility of these sites decreased as transcription lengthened; the researchers interpret this decrease as a loop→helix transition or \"becoming paired\", which is a reasonable inference based on the crystal structure and the folding model, not the ground truth of pairing handed over directly by the SHAPE signal. A drop in accessibility can come from pairing, and equally from conformational tightening or being shielded by RNAP.",
+        "Note the 14 nt RNAP footprint in the figure: nucleotides near the 3′ end, still inside the polymerase or in the exit channel, simply cannot be read for normal accessibility in the first place. This precisely shows why every number in Cotranscriptional SHAPE-seq is inseparable from the context \"at which length, how far from the 3′ end\". For FoldBridge, this means that the SHAPE value of the same site is \"an accessibility observation at a certain transcript length\", not a static pairing label; writing a trajectory like (c) as \"this base is paired at length N\" carries the accessibility readout past the boundary where it ought to stop."
       ],
       "label": "Cotranscriptional_SHAPE-seq F2",
       "pmid": "27798597",
@@ -61,17 +65,17 @@
     },
     {
       "type": "heading",
-      "text": "氟离子核糖开关：有没有配体，折叠轨迹分岔"
+      "text": "The fluoride riboswitch: with or without ligand, the folding trajectory forks"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-cotranscriptional-shape-seq-f3",
       "alt": "Cotranscriptional_SHAPE-seq F3",
       "srcBasename": "cotranscriptionalshapeseq_f3__PMC5497173__F3.jpg",
-      "legend": "**图 3。B. cereus 氟离子核糖开关的 Cotranscriptional SHAPE-seq 数据。** Watters et al. 2016（PMID 27798597，DOI `10.1038/nsmb.3316`）的图注（legend）说明：(a) 氟离子核糖开关的抗终止（antiterminated）与终止（terminated）两种折叠，分别按长度 90 nt 和 82 nt 处的反应性值着色（下方）；(b) 该核糖开关在 10 mM（上）或 0 mM NaF（下）条件下转录得到的 Cotranscriptional SHAPE-seq 反应性矩阵；(c) (b) 中两个矩阵之间的反应性差值（Δρ），并按转录过程中的折叠事件做了标注。转录过程中发生的反应性变化提示：氟离子核糖开关会根据配体是否存在，走两条不同的共转录折叠路径。图 b、c 为 n=1，代表三次生物学重复。",
+      "legend": "**Figure 3. Cotranscriptional SHAPE-seq data for the B. cereus fluoride riboswitch.** The legend of Watters et al. 2016 (PMID 27798597, DOI `10.1038/nsmb.3316`) explains: (a) the antiterminated and terminated folds of the fluoride riboswitch, coloured by the reactivity values at lengths 90 nt and 82 nt respectively (below); (b) the Cotranscriptional SHAPE-seq reactivity matrices of this riboswitch transcribed under 10 mM (top) or 0 mM NaF (bottom); (c) the reactivity difference (Δρ) between the two matrices in (b), annotated by the folding events during transcription. The reactivity changes occurring during transcription suggest that the fluoride riboswitch follows two different cotranscriptional folding pathways depending on whether the ligand is present. Figures b and c are n=1, representative of three biological replicates.",
       "body": [
-        "这张图是 Cotranscriptional SHAPE-seq 最有说服力的应用：同一段 RNA，仅仅因为转录时有没有氟离子配体，反应性矩阵就走出两套不同的轨迹，对应抗终止与终止两种命运。这正是核糖开关“边转录边决定”的本质，而方法能把这个决定过程沿长度展开来看。",
-        "但仍要把读出说清楚。b 里的颜色是各长度的 2′-OH 可及性，c 里的 Δρ 是“有配体减无配体”的可及性差值。Δρ 大的位置，说明配体改变了那里的可及性——可能是因为配对发生了重排，也可能是构象或局部环境变了。研究者把这些差异标注成折叠事件，是结合两种已知折叠做的解释。对 FoldBridge 而言，一个诚实的句子是“在该长度、该配体条件下，此位点的 SHAPE 可及性不同”，而不是“此碱基在有氟离子时配对”。配体依赖的差异越戏剧化，越要把可及性差值和配对判定分开。"
+        "This figure is the most persuasive application of Cotranscriptional SHAPE-seq: for the same stretch of RNA, merely because of whether the fluoride ligand is present during transcription, the reactivity matrix traces out two different trajectories, corresponding to the antiterminated and terminated fates. This is precisely the essence of a riboswitch \"deciding while being transcribed\", and the method can unfold this decision process along length to view it.",
+        "But the readout still needs to be spelt out. The colour in (b) is the 2′-OH accessibility at each length, and the Δρ in (c) is the accessibility difference of \"with ligand minus without ligand\". A position with a large Δρ shows that the ligand changed the accessibility there — possibly because pairing was rearranged, and possibly because the conformation or local environment changed. The researchers annotate these differences as folding events, an interpretation made by combining the two known folds. For FoldBridge, an honest sentence is \"at this length and this ligand condition, the SHAPE accessibility of this site differs\", not \"this base is paired in the presence of fluoride\". The more dramatic the ligand-dependent difference, the more the accessibility difference must be separated from the pairing call."
       ],
       "label": "Cotranscriptional_SHAPE-seq F3",
       "pmid": "27798597",
@@ -82,17 +86,17 @@
     },
     {
       "type": "heading",
-      "text": "单核苷酸轨迹：共转录折叠才能分出配体依赖的结构"
+      "text": "Single-nucleotide trajectories: only cotranscriptional folding resolves the ligand-dependent structure"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-cotranscriptional-shape-seq-f4",
       "alt": "Cotranscriptional_SHAPE-seq F4",
       "srcBasename": "cotranscriptionalshapeseq_f4__PMC5497173__F4.jpg",
-      "legend": "**图 4。单核苷酸反应性随转录长度的变化，凸显氟离子核糖开关共转录折叠路径上的结构转变。** Watters et al. 2016（PMID 27798597，DOI `10.1038/nsmb.3316`）的图注（legend）说明：(a) 在 0 mM（灰）或 10 mM NaF（黑）条件下转录时，参与几个关键结构转变的核苷酸的单核苷酸反应性轨迹，这些轨迹在结构转变发生的长度处出现分岔，数据取自图 3b 的矩阵；(b) 同 (a)，但 RNA 是先转录、提取、变性，再在含 0 mM（灰）或 10 mM NaF（黑）的转录缓冲液中做平衡态重折叠，然后才进行 SHAPE 修饰；平衡态重折叠的轨迹之间缺乏分岔，说明要得到这种配体依赖的不同结构，必须依赖共转录折叠，数据取自补充图 8a 的矩阵。",
+      "legend": "**Figure 4. The change in single-nucleotide reactivity with transcript length, highlighting the structural transitions along the cotranscriptional folding pathway of the fluoride riboswitch.** The legend of Watters et al. 2016 (PMID 27798597, DOI `10.1038/nsmb.3316`) explains: (a) the single-nucleotide reactivity trajectories of nucleotides participating in several key structural transitions, when transcribed under 0 mM (grey) or 10 mM NaF (black) conditions, with these trajectories forking at the lengths where the structural transitions occur, the data taken from the matrix in Figure 3b; (b) the same as (a), but the RNA is first transcribed, extracted and denatured, then equilibrium-refolded in a transcription buffer containing 0 mM (grey) or 10 mM NaF (black), and only then subjected to SHAPE modification; the equilibrium-refolded trajectories lack the forking between them, showing that obtaining these ligand-dependent different structures must rely on cotranscriptional folding, the data taken from the matrix in Supplementary Figure 8a.",
       "body": [
-        "这张图把 Cotranscriptional SHAPE-seq 解释边界里最有价值的一点摆了出来：a 中逐长度的反应性轨迹在某些长度分岔，提示配体依赖的结构转变；而 b 的对照实验显示，如果先把 RNA 转录完、变性、再在试管里平衡态重折叠，这种分岔就消失了。换句话说，配体依赖的不同结构是“边转录边折叠”才出现的，平衡态终点态看不到。这是这篇工作真正的洞见——折叠的路径，而不只是终点，决定了 RNA 的命运。",
-        "也正因为如此，FoldBridge 必须保留这层 assay context。a 里的分岔是可及性轨迹的分岔，研究者据此推断了结构转变；这是一个关于折叠动力学的强结论，但它依然建立在 2′-OH 可及性的差异之上，不是逐碱基的配对真值。同样关键的是，这些结论只在共转录条件下成立——b 的平衡态数据看不到分岔。所以一个完整的句子应当是：在共转录、该配体条件下，此位点 2′-OH 可及性沿长度的轨迹与对照分岔，提示一次结构转变；这种解释依赖共转录上下文，换成平衡态重折叠就不成立。"
+        "This figure lays out the most valuable point within the interpretive boundary of Cotranscriptional SHAPE-seq: the per-length reactivity trajectories in (a) fork at certain lengths, suggesting ligand-dependent structural transitions; whereas the control experiment in (b) shows that if the RNA is first fully transcribed, denatured and then equilibrium-refolded in a tube, this forking disappears. In other words, the ligand-dependent different structures appear only with \"folding while being transcribed\", and cannot be seen in the equilibrium end state. This is the real insight of this work — the folding pathway, not just the endpoint, determines the fate of the RNA.",
+        "It is precisely for this reason that FoldBridge must preserve this layer of assay context. The forking in (a) is the forking of accessibility trajectories, from which the researchers inferred structural transitions; this is a strong conclusion about folding kinetics, but it is still built on differences in 2′-OH accessibility, not the per-base ground truth of pairing. Equally crucial, these conclusions hold only under cotranscriptional conditions — the equilibrium data in (b) show no forking. So a complete sentence should be: under cotranscriptional conditions and this ligand condition, the trajectory of the 2′-OH accessibility of this site along length forks from the control, suggesting a structural transition; this interpretation depends on the cotranscriptional context, and does not hold if switched to equilibrium refolding."
       ],
       "label": "Cotranscriptional_SHAPE-seq F4",
       "pmid": "27798597",
@@ -103,47 +107,47 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 Cotranscriptional SHAPE-seq"
+      "text": "How FoldBridge should write about Cotranscriptional SHAPE-seq"
     },
     {
       "type": "paragraph",
-      "text": "Cotranscriptional SHAPE-seq 没有 DMS 那样清晰的“A/C 可解释、G/U 不可解释”的碱基靶点边界——它和 icSHAPE 一样，靶点是核糖 2′-OH，原则上每个核苷酸都有 2′-OH。但它比静态 SHAPE 多了一个维度：转录长度。所以它的解释闸门不是“哪个碱基能上色”，而是一个面向 2′-OH 可及性、且带长度维度的多级 gate：化学靶点可达性（这个位点的 2′-OH 在该长度的文库里是否被有效酰化与读出，是否落在 RNAP footprint 里读不到）、readout 上下文（反应性是否减过背景、是否做过缩放与归一化、是否按长度正确分箱）、以及 mapping 与 claim gate（坐标是否可靠、这个数字属于哪个转录长度、是否在该转录/配体条件下成立）。"
+      "text": "Cotranscriptional SHAPE-seq does not have a clear \"A/C interpretable, G/U uninterpretable\" base-target boundary like DMS — like icSHAPE, its target is the ribose 2′-OH, and in principle every nucleotide has a 2′-OH. But it has one more dimension than static SHAPE: transcript length. So its interpretive gate is not \"which base can be coloured\", but a multi-stage gate oriented to 2′-OH accessibility and carrying a length dimension: chemical-target accessibility (whether the 2′-OH of this site was effectively acylated and read out in the library at that length, and whether it falls within the RNAP footprint where it cannot be read), readout context (whether the reactivity has had background subtracted, been scaled and normalised, and been correctly binned by length), and the mapping and claim gate (whether the coordinates are reliable, which transcript length this number belongs to, and whether it holds under that transcript/ligand condition)."
     },
     {
       "type": "paragraph",
-      "text": "只有同时通过这些 gate 的可及性，才能进入默认可视化和 confidence 层。逐长度的原始反应性本身只是 provenance：它该被完整保存、可下载、可追溯，而且必须带着“这是哪个转录长度”的标签，但它不应该自动驱动默认结构上色。ANNOJOIN 的默认结构图应读取经过 background 校正、targetability 与长度上下文处理后的可视化值，而不是裸的反应性。confidence / FEC 的要求更高：只有通过化学、readout、mapping、claim 与 context（包括转录长度与共转录条件）gate 的可及性观测，才可以成为 positive confidence 的候选。"
+      "text": "Only accessibility that simultaneously passes these gates can enter the default visualisation and confidence layers. The per-length raw reactivity is itself only provenance: it should be preserved in full, downloadable and traceable, and must carry the label \"which transcript length this is\", but it should not automatically drive the default structure colouring. The default structure figure of ANNOJOIN should read the visualisation values that have been background-corrected and processed for targetability and length context, not the bare reactivity. The requirement for confidence / FEC is higher: only accessibility observations that pass the chemistry, readout, mapping, claim and context (including transcript length and cotranscriptional condition) gates can become candidates for positive confidence."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 Cotranscriptional SHAPE-seq，而是尊重它的强项。这个方法对“RNA 在转录过程中如何一步步折叠”的可及性轨迹非常有力；错误发生在把“可及性沿长度下降”一律写成“配对”，或把某个长度的反应性写成静态结构真值、丢掉长度上下文时。这个方法测的是一整条随长度展开的折叠轨迹，所以 FoldBridge 不仅要把“有观测值”和“可解释为结构支持”分开，还要额外记住每个观测属于哪个转录长度。网页上的默认颜色回答“在 Cotranscriptional SHAPE-seq 解释边界内、在这个转录长度下，这个位点有什么可读信号”；详情表才回答“原始数据里逐长度记录了什么”。这两个问题混在一起，读者就会以为 FoldBridge 认可了所有显示出来的数字，还会以为那是个静态结构。"
+      "text": "This is not a weakening of Cotranscriptional SHAPE-seq but a respect for its strength. This method is very powerful for the accessibility trajectory of \"how RNA folds step by step during transcription\"; the error occurs when \"accessibility falls along length\" is uniformly written as \"pairing\", or when the reactivity at a certain length is written as static structural ground truth and the length context is discarded. This method measures an entire folding trajectory unfolding along length, so FoldBridge must not only separate \"there is a measured value\" from \"interpretable as structural support\", but also additionally remember which transcript length each observation belongs to. The default colour on the web page answers \"within the interpretive boundary of Cotranscriptional SHAPE-seq, and at this transcript length, what readable signal does this site have\"; the details table answers \"what was recorded per length in the raw data\". When these two questions are mixed together, the reader will think that FoldBridge has endorsed every number shown, and will further think it is a static structure."
     },
     {
       "type": "heading",
-      "text": "真实 case：一份共转录反应性矩阵会怎样流过三个图层（示意）"
+      "text": "A real case: how a cotranscriptional reactivity matrix would flow through three layers (illustrative)"
     },
     {
       "type": "paragraph",
-      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 Cotranscriptional SHAPE-seq 矩阵如何分成三个不同的层。"
+      "text": "There is no real FoldBridge accession here, so the following is a clearly labelled illustrative scenario, used to show how a single Cotranscriptional SHAPE-seq matrix splits into three different layers."
     },
     {
       "type": "paragraph",
-      "text": "设想一份氟离子核糖开关的反应性矩阵进入 FoldBridge：行是转录长度，列是核苷酸位点。第一层是 raw observation：每个（长度，位点）格子的反应性、对应的背景与对照、配体条件（0 或 10 mM NaF）、文库元数据、测序坐标，以及每个长度的 RNAP footprint 范围——这些都原样保存，作为 provenance，可下载、可重算。它们是“原始数据里逐长度记录了什么”的答案，但还不是结构，更不是折叠路径。"
+      "text": "Imagine a reactivity matrix of a fluoride riboswitch entering FoldBridge: the rows are transcript lengths, and the columns are nucleotide sites. The first layer is the raw observation: the reactivity of each (length, site) cell, the corresponding background and control, the ligand condition (0 or 10 mM NaF), the library metadata, the sequencing coordinates, and the RNAP footprint range at each length — these are all preserved as-is, as provenance, downloadable and re-computable. They are the answer to \"what was recorded per length in the raw data\", but they are not yet structure, still less a folding pathway."
     },
     {
       "type": "paragraph",
-      "text": "第二层是 visual signal：反应性减背景、做缩放、通过 mapping 与 readout gate、并按长度正确归位之后，得到可以在结构页面上色的 2′-OH 可及性值。读者第一眼看到的颜色应该来自这一层，而且应当明确它对应哪个转录长度，因为它是在 Cotranscriptional SHAPE-seq assay model 下可解释的颜色，而不是裸的、脱离长度的计数。"
+      "text": "The second layer is the visual signal: after the reactivity has had background subtracted, been scaled, passed the mapping and readout gates, and been correctly placed by length, one obtains the 2′-OH accessibility values that can be coloured onto the structure page. The colour a reader sees at first glance should come from this layer, and should make clear which transcript length it corresponds to, because it is a colour interpretable under the Cotranscriptional SHAPE-seq assay model, not a bare count divorced from length."
     },
     {
       "type": "paragraph",
-      "text": "第三层是 confidence candidate：只有那些既通过化学与 readout gate、又通过 mapping/claim/context（含转录长度与共转录条件）检查的可及性观测，才进入 confidence 评估，并且仍要带着两条限定——“可及性变化可能来自配对，也可能来自构象或 RNAP 遮挡”，以及“这个结论依赖共转录上下文，平衡态未必成立”。"
+      "text": "The third layer is the confidence candidate: only those accessibility observations that pass both the chemistry and readout gates and the mapping/claim/context (including transcript length and cotranscriptional condition) checks enter the confidence assessment, and still carry two qualifications — \"the accessibility change may come from pairing, and equally from conformation or RNAP shielding\", and \"this conclusion depends on the cotranscriptional context and may not hold at equilibrium\"."
     },
     {
       "type": "paragraph",
-      "text": "这个示意场景的价值在于把“转录长度”这个维度一路带到三个图层上：同一份共转录矩阵可以同时产出原始观测、逐长度的可视化信号和 confidence 候选，三者都被长度维度串着，却停在不同的解释深度上。Cotranscriptional SHAPE-seq 的科普文章如果把这三层混成一层、又讲不清“折叠轨迹是推断、不是直接拍到的配对”，最危险的后果就是读者把一张张长度快照脑补成一部连续的 RNA 折叠电影，把推断出来的折叠路径当成了被直接拍下的配对过程。越是按长度自动排开、自动上色，越要把“可及性变化可能来自配对、也可能来自构象或 RNAP 遮挡”和“结论依赖共转录上下文”这两条写在轨迹旁边。"
+      "text": "The value of this illustrative scenario lies in carrying the \"transcript length\" dimension all the way through the three layers: the same cotranscriptional matrix can simultaneously produce raw observations, per-length visualisation signal and confidence candidates, all threaded by the length dimension yet stopping at different interpretive depths. If a popular-science article about Cotranscriptional SHAPE-seq mixes these three layers into one, and also fails to make clear that \"the folding trajectory is inferred, not directly photographed pairing\", the most dangerous consequence is that the reader pictures the length snapshots, one by one, as a continuous RNA folding movie, taking the inferred folding pathway as a directly photographed pairing process. The more it is automatically laid out by length and automatically coloured, the more the two notes — \"the accessibility change may come from pairing, and equally from conformation or RNAP shielding\" and \"the conclusion depends on the cotranscriptional context\" — must be written beside the trajectory."
     },
     {
       "type": "paragraph",
-      "text": "所以，Cotranscriptional SHAPE-seq 文章的正确结尾不是“某长度信号下降证明该碱基在此配对”，而是：Cotranscriptional SHAPE-seq 能为 RNA structure interpretation 提供有力的、带时间/长度分辨的 2′-OH 可及性轨迹；在 FoldBridge 中，这种线索只有先作为 raw provenance（带着转录长度）保存、再通过化学与 readout、mapping、claim、context 等 gate 之后，才会成为默认结构解释和 confidence 的一部分。"
+      "text": "So the correct ending for a Cotranscriptional SHAPE-seq article is not \"a signal drop at some length proves the base is paired here\", but rather: Cotranscriptional SHAPE-seq can provide powerful 2′-OH accessibility trajectories with time/length resolution for RNA structure interpretation; in FoldBridge, such clues become part of the default structural interpretation and confidence only after first being stored as raw provenance (carrying the transcript length) and then passing the chemistry and readout, mapping, claim and context gates."
     }
   ]
 }

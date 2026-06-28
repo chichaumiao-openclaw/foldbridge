@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "dms",
-  "title": "DMS 为什么只能严肃地解释 A/C",
-  "date": "2026-06-23",
+  "title": "Why DMS can only seriously interpret A/C",
+  "date": "",
   "figure_count": 4,
   "rep_pmid": "17948004",
   "rep_pmcid": "PMC2701642",
@@ -11,25 +11,29 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "如果只看数据表，DMS 很容易被误读成一种“所有碱基都有分数”的 RNA 结构染色剂。这个理解是错的。DMS 的经典解释对象，是 A 和 C 在 Watson-Crick 配对面上的化学可及性：A 的 N1、C 的 N3 更容易在未被配对、未被蛋白或配体遮挡、也没有被复杂构象保护时被甲基化。也就是说，DMS 首先报告的是一类化学位点是否可及，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”。"
+      "text": "Date: 2026-06-23"
     },
     {
       "type": "paragraph",
-      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 ANNOCONFIDENCE / FEC positive confidence，就必须问一个更具体的问题：这个数字在当前 assay model 下能不能被解释为 DMS 支持？对 DMS 来说，答案从 `DMS_AC_ONLY` 开始。"
+      "text": "If you go by the data table alone, DMS is easily misread as an RNA structure stain that \"gives every base a score\". That reading is wrong. The classical interpretive target of DMS is the chemical accessibility of A and C on the Watson-Crick base-pairing face: the N1 of A and the N3 of C are more readily methylated when they are unpaired, not occluded by protein or ligand, and not protected by a complex conformation. In other words, what DMS reports first is whether a class of chemical site is accessible, not directly that \"this base is definitely paired\" or \"this base is definitely unpaired\"."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary is crucial for FoldBridge. FoldBridge can preserve the raw observed values and can also display experimental signal on the web; but the moment anything enters default structure colouring, interpretive text or ANNOCONFIDENCE / FEC positive confidence, a more specific question must be asked: under the current assay model, can this number be interpreted as DMS support? For DMS, the answer begins with `DMS_AC_ONLY`."
     },
     {
       "type": "heading",
-      "text": "传统 DMS footprinting：读的是保护与可及"
+      "text": "Traditional DMS footprinting: reading protection and accessibility"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-tijerina-2007-f1",
       "alt": "Tijerina et al. 2007 F1",
       "srcBasename": "tijerina2007_f1__PMC2701642__F1.jpg",
-      "legend": "**图 1。传统 DMS footprinting 的基本读出。** Tijerina et al. 2007（PMID 17948004，DOI `10.1038/nprot.2007.380`）的图示把 DMS footprinting 拆成了三个环节：DMS 在 A 的 N1 和 C 的 N3 上留下可检测的甲基化修饰；primer extension 在修饰位点前一位停止；凝胶上的条带再用测序泳道定位到 RNA 序列。图注（legend）还强调了一个实验条件：DMS 反应通常控制在 limiting condition，使单个 RNA 分子平均不超过一个可检测修饰，这样条带强度才更接近每个位点的修饰程度。",
+      "legend": "**Figure 1. The basic readout of traditional DMS footprinting.** The schematic in Tijerina et al. 2007 (PMID 17948004, DOI `10.1038/nprot.2007.380`) breaks DMS footprinting into three stages: DMS leaves a detectable methylation modification on the N1 of A and the N3 of C; primer extension stops one position before the modified site; and the bands on the gel are then located back onto the RNA sequence using sequencing lanes. The legend also stresses one experimental condition: the DMS reaction is usually kept under limiting conditions, so that on average a single RNA molecule carries no more than one detectable modification, which keeps band intensity closer to the degree of modification at each site.",
       "body": [
-        "这张图给读者的第一层直觉是：传统 DMS footprinting 首先回答“哪里被保护、哪里可及”。它不是在给每个碱基贴一个统一结构标签，而是在特定化学位点上读取修饰和保护的差异。",
-        "这张图已经足够说明 DMS 的第一条红线：它不是“每个 residue 都有同等化学意义”的读数。A/C 的高信号可以表示 pairing face 可及；信号降低可能来自 Watson-Crick 配对，也可能来自三级结构、蛋白结合、配体保护或实验读出限制。相反，G 和 U 在这种 primer extension 读法里本来就不是主要可解释对象。把 G/U/T/unknown 的数值直接画成 positive support，会把化学位点和数据表字段混为一谈。"
+        "The first-order intuition this figure gives the reader is that traditional DMS footprinting answers, first of all, \"where is protected and where is accessible\". It is not assigning a uniform structural label to every base, but reading the difference between modification and protection at specific chemical sites.",
+        "This figure is already enough to make DMS's first red line clear: it is not a readout in which \"every residue carries equal chemical meaning\". A high signal at A/C can indicate that the pairing face is accessible; a reduced signal may come from Watson-Crick pairing, but it may also come from tertiary structure, protein binding, ligand protection or experimental readout limits. By contrast, G and U are not the primary interpretable objects in this primer-extension readout to begin with. Plotting the values of G/U/T/unknown directly as positive support conflates the chemical site with the data-table field."
       ],
       "label": "Tijerina et al. 2007 F1",
       "pmid": "17948004",
@@ -40,16 +44,16 @@
     },
     {
       "type": "heading",
-      "text": "DMS-MaPseq：测序把信号放大，也把解释责任放大"
+      "text": "DMS-MaPseq: sequencing amplifies the signal, and amplifies the interpretive responsibility too"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-zubradt-2017-f1",
       "alt": "Zubradt et al. 2017 F1",
       "srcBasename": "zubradt2017_f1__PMC5508988__F1.jpg",
-      "legend": "**图 2。DMS-MaPseq 如何把化学修饰接入测序。** Zubradt et al. 2017（PMID 27819661，DOI `10.1038/nmeth.4057`）的示意图比较了传统 cDNA truncation 策略和 DMS-MaPseq。DMS-MaPseq 的关键变化是把 DMS 修饰转换为逆转录过程中的突变信号，再通过测序读出来。图注（legend）很短，但信息足够关键：DMS-MaPseq 是 library preparation strategy，不是一个绕过解释边界的结构判定器。",
+      "legend": "**Figure 2. How DMS-MaPseq feeds chemical modification into sequencing.** The schematic in Zubradt et al. 2017 (PMID 27819661, DOI `10.1038/nmeth.4057`) compares the traditional cDNA truncation strategy with DMS-MaPseq. The key change in DMS-MaPseq is that it converts the DMS modification into a mutation signal during reverse transcription, which is then read out by sequencing. The legend is short, but its information is critical enough: DMS-MaPseq is a library preparation strategy, not a structure determiner that bypasses the interpretive boundary.",
       "body": [
-        "因此，最终表格里的数值不是 DMS 分子直接给出的“结构标签”，而是化学修饰、逆转录、建库、比对和归一化之后的观测量。这个观测量可以很有用，但它需要被解释。"
+        "The values in the final table are therefore not a \"structural label\" given directly by the DMS molecule, but an observable that has passed through chemical modification, reverse transcription, library construction, alignment and normalisation. This observable can be very useful, but it needs to be interpreted."
       ],
       "label": "Zubradt et al. 2017 F1",
       "pmid": "27819661",
@@ -63,12 +67,12 @@
       "anchor": "paper-figure-zubradt-2017-f2",
       "alt": "Zubradt et al. 2017 F2",
       "srcBasename": "zubradt2017_f2__PMC5508988__F2.jpg",
-      "legend": "**图 3。DMS-MaPseq 的背景、酶和碱基组成问题。** Zubradt et al. 2017 的这张图展示了不同逆转录条件产生的突变类型、内源修饰检测、mismatch nucleotide composition，以及一个 mRNA positive control 的 DMS reactivity。图注（legend）特别指出，G 和 U 碱基可能出现 high background signal；这些位置不能因为数值高就被当作 DMS 支持的 A/C 可及性证据。",
+      "legend": "**Figure 3. The background, enzyme and base-composition issues of DMS-MaPseq.** This figure in Zubradt et al. 2017 shows the mutation types produced under different reverse transcription conditions, the detection of endogenous modifications, the mismatch nucleotide composition, and the DMS reactivity of an mRNA positive control. The legend points out in particular that G and U bases may show high background signal; these positions cannot be taken as evidence of DMS-supported A/C accessibility just because the value is high.",
       "body": [
-        "这一点是 DMS-MaPseq 文章里最值得强调的安全阀：测序读出扩大了 DMS 的覆盖面，也扩大了背景和偏差进入解释链条的机会。对 FoldBridge 来说，raw observation 必须先经过 chemistry targetability 和 readout context，才能变成默认图层或 confidence 的候选。",
-        "这两张图把现代测序型 DMS 的优点和风险放在一起：测序让 DMS 可以扩展到 genome-wide 或 targeted profiling，但也让 readout、background、coverage 和归一化更容易被误读。FoldBridge 因此不能让 `raw_numeric_value` 直接驱动默认结构上色。`raw_numeric_value` 应该先作为 raw provenance 保存下来，然后由 assay-specific gate 判断它能不能进入可视化和 confidence。",
-        "这里最容易出错的是把“测到了突变”写成“测到了结构”。DMS-MaPseq 的突变信号确实来自 DMS 处理后的化学修饰，但这个信号中间经过了酶、文库、比对、覆盖度和背景模型。一个 A/C 位点的高信号通常提示 pairing face 更可及；一个 A/C 位点的低信号可能提示配对或保护；但这两个判断都需要上下文。局部 RNA 构象、离子条件、蛋白或小分子结合、RT bias、局部序列可比对性，都可能影响最后的数值。",
-        "因此，面向非专业读者时，DMS-MaPseq 最合适的说法是“把 DMS 修饰转化成测序可读的可及性线索”。这个说法保留了方法的力量，也保留了科学边界。它不会把 G 和 U 的背景信号写成 DMS target signal，也不会把一个归一化后的数值写成结构真值。"
+        "This is the safeguard most worth stressing in the DMS-MaPseq article: the sequencing readout broadens the coverage of DMS, but it also broadens the opportunity for background and bias to enter the interpretive chain. For FoldBridge, a raw observation must first pass through chemistry targetability and readout context before it can become a candidate for the default layer or confidence.",
+        "These two figures place the advantages and risks of modern sequencing-based DMS side by side: sequencing lets DMS extend to genome-wide or targeted profiling, but it also makes readout, background, coverage and normalisation easier to misread. FoldBridge therefore cannot let `raw_numeric_value` drive default structure colouring directly. `raw_numeric_value` should first be preserved as raw provenance, and then an assay-specific gate decides whether it can enter visualisation and confidence.",
+        "The easiest mistake here is to write \"a mutation was measured\" as \"a structure was measured\". The mutation signal of DMS-MaPseq does indeed come from the chemical modification after DMS treatment, but this signal has passed through the enzyme, the library, alignment, coverage and the background model in between. A high signal at an A/C site usually suggests that the pairing face is more accessible; a low signal at an A/C site may suggest pairing or protection; but both judgements need context. Local RNA conformation, ionic conditions, protein or small-molecule binding, RT bias and local sequence alignability can all affect the final number.",
+        "So, when writing for a non-specialist reader, the most appropriate way to describe DMS-MaPseq is \"turning the DMS modification into a sequencing-readable accessibility cue\". This phrasing preserves the power of the method and preserves the scientific boundary too. It will not write the background signal of G and U as DMS target signal, nor will it write a normalised value as structural ground truth."
       ],
       "label": "Zubradt et al. 2017 F2",
       "pmid": "27819661",
@@ -79,18 +83,18 @@
     },
     {
       "type": "heading",
-      "text": "定量 DMS 可以约束结构，但不能取消 assay 边界"
+      "text": "Quantitative DMS can constrain structure, but it cannot cancel the assay boundary"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-cordero-2012-f1",
       "alt": "Cordero et al. 2012 F1",
       "srcBasename": "cordero2012_f1__PMC3448840__F1.jpg",
-      "legend": "**图 4。DMS 数据如何进入二级结构推断。** Cordero et al. 2012（PMID 22913637，DOI `10.1021/bi3008802`）展示了 6 个 non-coding RNA 的 DMS-guided secondary structure models。图注（legend）明确区分了 missed base pairs、mis-predicted base pairs、helix bootstrap confidence，以及灰色标出的 G/U 或缺失反应性位置。这个图的意义不是“DMS 可以解释所有碱基”，而是“DMS 可以作为结构模型的约束，同时必须保留不可解释或不可用位置”。",
+      "legend": "**Figure 4. How DMS data enter secondary structure inference.** Cordero et al. 2012 (PMID 22913637, DOI `10.1021/bi3008802`) show DMS-guided secondary structure models for 6 non-coding RNAs. The legend clearly distinguishes missed base pairs, mis-predicted base pairs, helix bootstrap confidence, and the G/U or missing-reactivity positions marked in grey. The meaning of this figure is not that \"DMS can interpret every base\", but that \"DMS can serve as a constraint on a structure model, whilst the uninterpretable or unusable positions must be preserved\".",
       "body": [
-        "这张图把 DMS 的价值放在正确的位置上：DMS 数据可以帮助约束结构模型，但模型仍然要区分实验支持、预测错误、置信度和不可用位置。它支持的是“DMS 是有用约束”，不是“DMS 可以取消 assay-specific 解释边界”。",
-        "这正是 FoldBridge 需要的写法：DMS 信号可以帮助解释结构模型，也可以帮助读者理解哪些区域更像是可及的 A/C；但它不能绕过 assay chemistry。定量分析越精细，越需要把 chemical reactivity、accessibility、base pairing、tertiary protection、protein/ligand protection 和 sequencing bias 分开。",
-        "把 DMS 用作结构约束时，文章还要避免另一种常见误读：模型图里的每一种颜色都不等价。A/C 的 DMS reactivity 可以作为约束；缺失值说明没有足够信息；G/U 位置在 DMS primer extension 语境下可能被标成灰色，因为它们本来就不提供同样的 DMS 信号。读者看到同一张结构图时，需要知道哪些颜色是实验支持，哪些颜色是不可用或不可解释区域，哪些线条代表预测错误或置信度。否则，“图很漂亮”会掩盖真正的证据结构。"
+        "This figure places the value of DMS in the right position: DMS data can help constrain a structure model, but the model still has to distinguish experimental support, prediction errors, confidence and unusable positions. What it supports is \"DMS is a useful constraint\", not \"DMS can cancel the assay-specific interpretive boundary\".",
+        "This is exactly the way FoldBridge needs to write it: DMS signal can help interpret a structure model and can help the reader understand which regions look more like accessible A/C; but it cannot bypass assay chemistry. The more refined the quantitative analysis, the greater the need to separate chemical reactivity, accessibility, base pairing, tertiary protection, protein/ligand protection and sequencing bias.",
+        "When DMS is used as a structural constraint, the article must also avoid another common misreading: not every colour in the model figure is equivalent. The DMS reactivity of A/C can serve as a constraint; a missing value means there is not enough information; G/U positions may be marked grey in the DMS primer-extension context, because they do not provide the same DMS signal to begin with. When the reader sees the same structure figure, they need to know which colours are experimental support, which colours are unusable or uninterpretable regions, and which lines represent prediction errors or confidence. Otherwise, \"the figure looks beautiful\" will mask the real structure of the evidence."
       ],
       "label": "Cordero et al. 2012 F1",
       "pmid": "22913637",
@@ -101,59 +105,59 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 DMS"
+      "text": "How FoldBridge should write about DMS"
     },
     {
       "type": "paragraph",
-      "text": "`DMS_AC_ONLY` 是正式文章必须保留的核心规则。A/C 是 targetable base；G/U/T/unknown 是 non-target base。G/U/T/unknown 行即使有数字，也只能保留为 raw provenance、debug 信息或下载表字段，不能自动进入 positive confidence。"
+      "text": "`DMS_AC_ONLY` is the core rule that the formal article must preserve. A/C are targetable bases; G/U/T/unknown are non-target bases. Even if the G/U/T/unknown rows have numbers, they can only be preserved as raw provenance, debug information or download-table fields, and cannot automatically enter positive confidence."
     },
     {
       "type": "paragraph",
-      "text": "ANNOJOIN 的默认结构图应读取经过 targetability mask 的 `visual_colormap_value`，而不是直接读取原始数值。这样读者在结构页面看到的颜色，才是在 DMS assay model 下可解释的颜色。ANNOCONFIDENCE / FEC 的要求更高：只有通过 assay targetability、mapping、claim 和 context gates 的 A/C 行，才可以进入 positive confidence 候选。"
+      "text": "The default ANNOJOIN structure figure should read the `visual_colormap_value` that has passed through the targetability mask, rather than reading the raw value directly. Only then is the colour the reader sees on the structure page a colour that is interpretable under the DMS assay model. The requirement for ANNOCONFIDENCE / FEC is higher still: only A/C rows that pass the assay targetability, mapping, claim and context gates may enter the positive confidence candidates."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 DMS。相反，这是尊重 DMS 的强项。DMS 对 A/C pairing face 的可及性非常有用；错误发生在把这个强项扩展成“所有碱基统一反应性”时。FoldBridge 的任务不是把所有数字都画出来，而是把“有观测值”和“可解释为结构支持”分开。"
+      "text": "This does not weaken DMS. On the contrary, it respects DMS's strengths. DMS is very useful for the accessibility of the A/C pairing face; the error occurs when this strength is stretched into \"uniform reactivity across all bases\". The task of FoldBridge is not to plot every number, but to separate \"there is an observed value\" from \"it can be interpreted as structural support\"."
     },
     {
       "type": "paragraph",
-      "text": "这种写法也能保护下游读者。网页上的默认颜色应该回答“在当前技术解释边界内，这个位点有什么可读信号”；详情表才回答“原始数据里记录了什么”。如果把这两个问题混在一起，读者会误以为 FoldBridge 认可了所有显示出来的数字。正确做法是：raw provenance 不丢，默认 interpretation 不乱给，confidence 层只接收可解释证据。"
+      "text": "This way of writing also protects the downstream reader. The default colour on the web should answer \"within the current technical interpretive boundary, what readable signal does this site have\"; the detail table answers \"what was recorded in the raw data\". If these two questions are mixed together, the reader will mistakenly believe that FoldBridge endorses every displayed number. The correct approach is: do not lose raw provenance, do not hand out default interpretation carelessly, and let the confidence layer accept only interpretable evidence."
     },
     {
       "type": "paragraph",
-      "text": "所以，DMS 技术文章不应该只写“某个位点信号高”。更完整的句子应该写成：在 DMS assay 中，该 A/C 位点具有较高可及性信号；如果 mapping、coverage、背景和上下文都通过检查，这个信号可以作为结构解释的支持。这个句子比“高信号等于 unpaired”啰嗦一点，但科学上更稳，也更适合进入 FoldBridge 的长期知识库。"
+      "text": "So, a DMS technical article should not just write \"the signal at a given site is high\". A more complete sentence should be written as: in the DMS assay, this A/C site has a relatively high accessibility signal; if mapping, coverage, background and context all pass inspection, this signal can serve as support for structural interpretation. This sentence is a little wordier than \"high signal equals unpaired\", but it is more robust scientifically and more suited to entering FoldBridge's long-term knowledge base."
     },
     {
       "type": "heading",
-      "text": "真实 case：5GAG / SRPECLI_DMS_0001"
+      "text": "A real case: 5GAG / SRPECLI_DMS_0001"
     },
     {
       "type": "paragraph",
-      "text": "以 `5GAG / SRPECLI_DMS_0001` 为例，这个 profile 在 ANNOJOIN visual track 中有 116 行：53 行进入默认 visual signal，60 行是 `DMS_NON_TARGET_BASE`，3 行是 `POSITION_UNRESOLVED`。"
+      "text": "Take `5GAG / SRPECLI_DMS_0001` as an example. This profile has 116 rows in the ANNOJOIN visual track: 53 rows enter the default visual signal, 60 rows are `DMS_NON_TARGET_BASE`, and 3 rows are `POSITION_UNRESOLVED`."
     },
     {
       "type": "paragraph",
-      "text": "这组数字给读者的结论非常直接：per-position DMS observation 不等于 per-position DMS positive support。对 A/C 来说，DMS 可以提供强的可及性线索；对 G/U/T/unknown 来说，数值首先是 raw provenance。只有前者在通过 mapping 和 context gates 后，才可能进入 ANNOCONFIDENCE / FEC positive confidence。"
+      "text": "The conclusion this set of numbers gives the reader is very direct: a per-position DMS observation is not the same as per-position DMS positive support. For A/C, DMS can provide a strong accessibility cue; for G/U/T/unknown, the value is first of all raw provenance. Only the former, after passing the mapping and context gates, can possibly enter ANNOCONFIDENCE / FEC positive confidence."
     },
     {
       "type": "paragraph",
-      "text": "如果把 116 行全部按原始数值上色，页面看起来会更满，但解释会变差。60 行 `DMS_NON_TARGET_BASE` 不应该参与默认 DMS positive signal；3 行 `POSITION_UNRESOLVED` 也不能假装已经映射到可靠结构坐标。相反，53 行默认 visual signal 才是读者第一眼应该看到的 DMS 层。剩下的行仍然可以在详情中追溯，因为它们对 provenance、调试和再分析有价值，但它们不应该伪装成同一种证据。"
+      "text": "If all 116 rows were coloured by their raw values, the page would look fuller, but the interpretation would get worse. The 60 `DMS_NON_TARGET_BASE` rows should not take part in the default DMS positive signal; the 3 `POSITION_UNRESOLVED` rows cannot pretend to have been mapped to reliable structural coordinates either. By contrast, the 53 rows of default visual signal are the DMS layer the reader should see first. The remaining rows can still be traced in the detail view, because they have value for provenance, debugging and re-analysis, but they should not disguise themselves as the same kind of evidence."
     },
     {
       "type": "paragraph",
-      "text": "这个 case 的价值不在于数字本身，而在于它把文章前面的原则落到了实际系统行为上：同一份实验 profile 可以同时产生原始观测、可视化信号和 confidence 候选；三者不是同一个东西。DMS 的科普文章如果不能把这三者分开，读者最终会把 FoldBridge 的结构图理解错。"
+      "text": "The value of this case lies not in the numbers themselves, but in the way it grounds the earlier principles of the article in actual system behaviour: the same experimental profile can simultaneously produce a raw observation, a visualisation signal and a confidence candidate; the three are not the same thing. If a popular-science article about DMS cannot separate these three, the reader will end up misunderstanding FoldBridge's structure figures."
     },
     {
       "type": "paragraph",
-      "text": "换句话说，DMS 的文章不能只解释实验，也要解释显示系统为什么要克制。图层越自动，越要把可解释性写清楚；否则自动化只会把错误解释传播得更快。"
+      "text": "In other words, a DMS article cannot only explain the experiment; it must also explain why the display system has to exercise restraint. The more automated the layer, the more clearly its interpretability must be written out; otherwise automation will only spread misinterpretation faster."
     },
     {
       "type": "paragraph",
-      "text": "这也是 FoldBridge 和普通论文图解读之间的差别。论文图可以聚焦一个实验或一个模型；FoldBridge 的页面会把许多 profile、结构坐标和证据层放到一起。如果规则不够明确，读者很容易把“数据库里存在的数值”“图层上显示的颜色”和“系统给出的 confidence”当成同一件事。DMS 是最适合拿来解释这个差别的例子，因为它的化学靶点足够明确，误读后果也足够直观。"
+      "text": "This is also the difference between FoldBridge and ordinary interpretation of paper figures. A paper figure can focus on one experiment or one model; a FoldBridge page puts many profiles, structural coordinates and evidence layers together. If the rules are not clear enough, the reader can easily take \"a value that exists in the database\", \"a colour displayed on the layer\" and \"the confidence the system gives\" to be the same thing. DMS is the example best suited to explaining this difference, because its chemical target is clear enough and the consequences of misreading are intuitive enough."
     },
     {
       "type": "paragraph",
-      "text": "所以，DMS 文章的正确结尾不是“高信号证明该碱基不配对”，而是：DMS 数据能为 RNA structure interpretation 提供强有力的 A/C 可及性线索；在 FoldBridge 中，这种线索只有通过 `DMS_AC_ONLY` 和后续 gates 后，才会成为结构解释和 confidence 的一部分。"
+      "text": "So the correct ending for a DMS article is not \"a high signal proves this base is unpaired\", but rather: DMS data can provide powerful A/C accessibility cues for RNA structure interpretation; in FoldBridge, such a cue becomes part of structural interpretation and confidence only after it passes `DMS_AC_ONLY` and the subsequent gates."
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "smartshape",
-  "title": "smartSHAPE：用极少起始量，在活细胞里读 2′-OH 的柔性",
-  "date": "2026-06-25",
+  "title": "smartSHAPE: reading 2′-OH flexibility in living cells with very little starting material",
+  "date": "",
   "figure_count": 4,
   "rep_pmid": "38933905",
   "rep_pmcid": "PMC11197792",
@@ -11,25 +11,29 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "smartSHAPE 最容易被误读的地方，藏在它的卖点里：因为它能用极少起始量、在活细胞里测出高灵敏度的信号，人们很容易把“连这么微量都测到了”直接当成“连每个碱基的结构都判定了”。这个理解是错的。smartSHAPE 的解释对象，是核糖 2′-OH 在活细胞（in vivo）里的化学可及性与柔性：当一个核苷酸的 2′ 羟基处于单链、没有被配对、被蛋白或配体遮挡、也没有被复杂构象保护时，它更容易被 NAI-N3 这种酰化试剂修饰。smartSHAPE 的特别之处在于它把这套 SHAPE 化学做到了极低的 RNA 起始量和很高的灵敏度上——修饰后的 RNA 经 click 化学接上把手、随机逆转录、RNase I 消化去掉过早终止、再做 streptavidin 富集与建库测序。也就是说，smartSHAPE 首先报告的是一类化学位点是否可及、是否柔性，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”。"
+      "text": "Date: 2026-06-25"
     },
     {
       "type": "paragraph",
-      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 confidence 层，就必须先问一个更具体的问题：这个数字在 smartSHAPE 的 assay model 下能不能被解释为 2′-OH 可及性支持？smartSHAPE 的原始逆转录信号是 raw provenance；它必须先通过 assay 化学、background/readout 上下文，才能成为默认结构颜色或 confidence 的候选。低起始量是 smartSHAPE 的强项，但它不会改变这条解释边界——灵敏度更高，意味着把 readout 和结构真值分清楚反而更重要。"
+      "text": "The point where smartSHAPE is most easily misread is hidden in its selling point: because it can measure a high-sensitivity signal in living cells with very little starting material, it is easy to take \"even such a tiny amount was measured\" directly as \"even the structure of every base has been determined\". That reading is wrong. The object of interpretation of smartSHAPE is the chemical accessibility and flexibility of the ribose 2′-OH in living cells (in vivo): when a nucleotide's 2′-hydroxyl is single-stranded, not paired, not occluded by a protein or ligand, and not protected by a complex conformation, it is more readily modified by an acylating reagent such as NAI-N3. What is special about smartSHAPE is that it carries out this SHAPE chemistry at extremely low RNA starting amounts and high sensitivity: the modified RNA has a handle attached by click chemistry, undergoes random reverse transcription, is digested by RNase I to remove premature termination, and then undergoes streptavidin enrichment and library sequencing. That is to say, what smartSHAPE reports first is whether a class of chemical sites is accessible and flexible, not directly whether \"this base is definitely paired\" or \"this base is definitely unpaired\"."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary matters greatly for FoldBridge. FoldBridge can preserve the raw observations and can display experimental signal on its web pages; but as soon as anything enters default structure colouring, interpretive text or the confidence layer, a more specific question must be asked first: can this number, under the assay model of smartSHAPE, be interpreted as support for 2′-OH accessibility? The raw reverse-transcription signal of smartSHAPE is raw provenance; it must first pass the assay chemistry and the background/readout context before it can become a candidate for default structure colour or confidence. The low starting amount is the strength of smartSHAPE, but it does not change this interpretive boundary: higher sensitivity means it is all the more important to keep the readout and structural ground truth distinct."
     },
     {
       "type": "heading",
-      "text": "smartSHAPE 的化学链条：低起始量下酰化 2′-OH，再 click 富集建库"
+      "text": "The chemistry chain of smartSHAPE: acylate 2′-OH at low starting amount, then click-enrich for library construction"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-smartshape-f1",
       "alt": "smartSHAPE F1",
       "srcBasename": "smartshape_f1__PMC11197792__F1.jpg",
-      "legend": "**图 1。smartSHAPE 面向低起始量 in vivo 结构探测的整体流程。** Piao et al. 2021（PMID 38933905，DOI `10.1016/j.fmre.2021.12.007`）的图注（legend）把 smartSHAPE 拆成一连串环节：单链核苷酸在活细胞内被 NAI-N3 修饰；随后提取总 RNA、去除 rRNA、做 click 反应；用 SuperScript III 做随机逆转录生成 cDNA；再用 RNase I 消化去掉过早的逆转录终止产物，并用 streptavidin 磁珠富集；洗脱后用 CircLigase II 把 cDNA 连上一个 biotin 修饰的 3′ 接头，连接产物再被 streptavidin 磁珠捕获；接着在磁珠上做第二链合成，用 T4 DNA Ligase 加上 5′ 接头；连接好的文库从磁珠洗脱、扩增、测序；smartSHAPE 分值最后用 icSHAPE-pipe（经修改）计算。",
+      "legend": "**Figure 1. The overall smartSHAPE workflow for low-starting-amount in vivo structure probing.** Piao et al. 2021 (PMID 38933905, DOI `10.1016/j.fmre.2021.12.007`). The legend breaks smartSHAPE into a series of steps: single-stranded nucleotides are modified by NAI-N3 in living cells; total RNA is then extracted, rRNA removed and the click reaction performed; SuperScript III is used for random reverse transcription to generate cDNA; RNase I is then used to digest away premature reverse-transcription termination products, and streptavidin magnetic beads are used for enrichment; after elution, CircLigase II ligates a biotin-modified 3′ adapter to the cDNA, and the ligation product is captured again by streptavidin magnetic beads; second-strand synthesis is then performed on the beads, with a 5′ adapter added by T4 DNA Ligase; the ligated library is eluted from the beads, amplified and sequenced; the smartSHAPE score is finally computed using icSHAPE-pipe (modified).",
       "body": [
-        "顺着这条工程化的流程看，要点是：smartSHAPE 的全部巧思都花在“用极少 RNA 也能富集出可读信号”上——NAI-N3 酰化 2′-OH 后接上 click 把手、随机逆转录配合 RNase I 消化去伪，把“2′-OH 可及、柔性”这件事在微量起始量下变成可以富集、可以测序的物理信号。这一连串酶处理与富集步骤共同保证在极少 RNA 起始量下仍能得到可读信号——每一步都决定了最后表格里的数字到底代表什么。",
-        "更重要的是，smartSHAPE 的分值是用 icSHAPE-pipe 经修改计算出来的，也就是说它和 icSHAPE 一样，最终报告的是 2′-OH 的可及性／柔性，而不是碱基配对真值。对 FoldBridge 来说，这意味着同一段 RNA 的 smartSHAPE 信号不能脱离“在哪种条件下、用多少起始量测的”来解释。流程里每多一步酶处理或富集，都会进入最后数字的来历，所以 raw provenance 必须带着完整的 assay context 一起保存。"
+        "Following this engineered workflow, the key point is that all the ingenuity of smartSHAPE is spent on \"obtaining a readable signal even with very little RNA\": after NAI-N3 acylates 2′-OH, a click handle is attached, and random reverse transcription combined with RNase I digestion removes spurious signal, turning the fact that \"2′-OH is accessible and flexible\" into a physical signal that can be enriched and sequenced at a tiny starting amount. This series of enzymatic and enrichment steps together ensures that a readable signal can still be obtained at an extremely low RNA starting amount, and each step determines what the number in the final table actually represents.",
+        "More importantly, the score of smartSHAPE is computed using a modified icSHAPE-pipe, which means that, like icSHAPE, what it ultimately reports is the accessibility/flexibility of 2′-OH, not the ground truth of base pairing. For FoldBridge, this means the smartSHAPE signal of the same stretch of RNA cannot be interpreted apart from \"under which condition and with how much starting material it was measured\". Every additional step of enzymatic processing or enrichment in the workflow enters the provenance of the final number, so the raw provenance must be preserved together with the complete assay context."
       ],
       "label": "smartSHAPE F1",
       "pmid": "38933905",
@@ -40,17 +44,17 @@
     },
     {
       "type": "heading",
-      "text": "RNase I 消化：先去掉过早终止的假信号，才谈可及性"
+      "text": "RNase I digestion: remove the spurious signal from premature termination before discussing accessibility"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-smartshape-f2",
       "alt": "smartSHAPE F2",
       "srcBasename": "smartshape_f2__PMC11197792__F2.jpg",
-      "legend": "**图 2。RNase I 消化如何压低过早逆转录终止造成的假结构信号。** Piao et al. 2021（PMID 38933905，DOI `10.1016/j.fmre.2021.12.007`）的图注（legend）说明：(a) 示意图展示 RNase I 消化如何在与 streptavidin 富集结合时，去掉过早逆转录终止带来的结构探测信号；(b) 28S rRNA 在已知 m1A 修饰（1478 位）附近的结构模型；(c) 对 NAI-N3 修饰的 28S rRNA 逆转录产物经 streptavidin 富集、做或不做 RNase I 消化后的尿素 PAGE 分析，引物针对已知 m1A 修饰上游的序列，模板是 HEK293T 细胞在 in vivo 用 NAI-N3 修饰后提取的总 RNA；(d) HEK293T 的 DMSO 与 NAI-N3 组在已知 m1A 与 m3U 修饰位点的归一化逆转录值；(e) 18S rRNA 结构模型，核苷酸按 HEK293T 细胞中的 smartSHAPE/icSHAPE 分值上色；(f) 18S rRNA smartSHAPE/icSHAPE 分值的 ROC 曲线，用晶体结构算出的可及核苷酸来评估。",
+      "legend": "**Figure 2. How RNase I digestion suppresses the spurious structural signal caused by premature reverse-transcription termination.** Piao et al. 2021 (PMID 38933905, DOI `10.1016/j.fmre.2021.12.007`). The legend explains: (a) a schematic showing how RNase I digestion, combined with streptavidin enrichment, removes the structure-probing signal brought by premature reverse-transcription termination; (b) the structure model of 28S rRNA near a known m1A modification (position 1478); (c) urea PAGE analysis of the reverse-transcription products of NAI-N3-modified 28S rRNA after streptavidin enrichment, with or without RNase I digestion, where the primer targets the sequence upstream of the known m1A modification and the template is total RNA extracted from HEK293T cells modified in vivo with NAI-N3; (d) the normalised reverse-transcription values of the HEK293T DMSO and NAI-N3 groups at known m1A and m3U modification sites; (e) the 18S rRNA structure model, with nucleotides coloured by the smartSHAPE/icSHAPE score in HEK293T cells; (f) the ROC curve of the 18S rRNA smartSHAPE/icSHAPE score, evaluated using the accessible nucleotides computed from the crystal structure.",
       "body": [
-        "这张图是 smartSHAPE 最值得强调的安全阀。逆转录会在被酰化的 2′-OH 位点前停下来，于是修饰被读成逆转录终止。但终止不是只有真实修饰才会产生：随机逆转录、内源修饰（如 m1A、m3U）和模板本身都会带来过早终止。smartSHAPE 用 RNase I 消化加 streptavidin 富集，把这些过早终止的假信号去掉，剩下的才更接近 2′-OH 可及性的线索。raw 逆转录信号本身不等于结构。",
-        "这里最容易出错的，就是把“测到了逆转录终止”写成“测到了结构”。m1A、m3U 这类内源修饰会在没有 NAI-N3 的情况下也产生终止；ROC 曲线和归一化逆转录值都是在告诉读者：smartSHAPE 的数值是 readout、background 和归一化之后的观测量，而不是 smartSHAPE 分子直接给出的结构标签。对 FoldBridge 来说，raw observation 必须先经过 readout context（包括 RNase I 这一步去伪存真），才能成为默认图层或 confidence 的候选；不能让原始逆转录计数直接驱动结构上色。"
+        "This figure is the safeguard most worth emphasising in smartSHAPE. Reverse transcription stops in front of an acylated 2′-OH site, so the modification is read as reverse-transcription termination. But termination is not produced only by true modification: random reverse transcription, endogenous modifications (such as m1A and m3U) and the template itself all bring premature termination. smartSHAPE uses RNase I digestion plus streptavidin enrichment to remove these prematurely terminated spurious signals, and what remains is closer to a clue to 2′-OH accessibility. The raw reverse-transcription signal itself is not equal to structure.",
+        "The easiest mistake to make here is to write \"reverse-transcription termination was measured\" as \"structure was measured\". Endogenous modifications such as m1A and m3U produce termination even in the absence of NAI-N3; both the ROC curve and the normalised reverse-transcription values are telling the reader that the value of smartSHAPE is an observation after readout, background and normalisation, not a structure label given directly by the smartSHAPE molecule. For FoldBridge, the raw observation must first pass the readout context (including the RNase I step of separating true from spurious signal) before it can become a candidate for the default layer or confidence; the raw reverse-transcription count must not be allowed to drive structure colouring directly."
       ],
       "label": "smartSHAPE F2",
       "pmid": "38933905",
@@ -61,17 +65,17 @@
     },
     {
       "type": "heading",
-      "text": "低起始量下的覆盖与准确性：灵敏度高，解释责任也高"
+      "text": "Coverage and accuracy at low starting amount: high sensitivity, high interpretive responsibility too"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-smartshape-f3",
       "alt": "smartSHAPE F3",
       "srcBasename": "smartshape_f3__PMC11197792__F3.jpg",
-      "legend": "**图 3。smartSHAPE 在极低 RNA 起始量下仍能取得高覆盖与高准确性。** Piao et al. 2021（PMID 38933905，DOI `10.1016/j.fmre.2021.12.007`）的图注（legend）展示：(a) HEK293T 细胞中 smartSHAPE 或 icSHAPE 文库在不同 RNA 起始量下 RPS16 基因的归一化逆转录值；(b) 不同 RNA 起始量、不同测序深度下，具有高结构探测覆盖的转录本数量（最高深度为真实深度，其余通过 down-sample 分析文库复杂度与结构覆盖；高覆盖定义为超过 80% 核苷酸通过覆盖度阈值的转录本），饼图展示高覆盖下的 RNA structurome 组成；(c) 各处理步骤对应的 reads 数（比对前去掉重复和短于 25 nt 的 reads）；(d) 不同 RNA 起始量下 18S 与 28S rRNA smartSHAPE/icSHAPE 分值的 ROC 曲线，用晶体结构算出的可及核苷酸评估；(e) XBP1 mRNA 的保守结构模型，核苷酸按不同 RNA 起始量下的 smartSHAPE/icSHAPE 结构分值上色。",
+      "legend": "**Figure 3. smartSHAPE still achieves high coverage and high accuracy at an extremely low RNA starting amount.** Piao et al. 2021 (PMID 38933905, DOI `10.1016/j.fmre.2021.12.007`). The legend shows: (a) the normalised reverse-transcription values of the RPS16 gene at different RNA starting amounts for smartSHAPE or icSHAPE libraries in HEK293T cells; (b) the number of transcripts with high structure-probing coverage at different RNA starting amounts and sequencing depths (the highest depth being the true depth, the rest analysed by down-sampling for library complexity and structure coverage; high coverage defined as transcripts with more than 80% of nucleotides passing the coverage threshold), with a pie chart showing the composition of the RNA structurome under high coverage; (c) the number of reads corresponding to each processing step (duplicates and reads shorter than 25 nt removed before alignment); (d) the ROC curves of the 18S and 28S rRNA smartSHAPE/icSHAPE scores at different RNA starting amounts, evaluated using the accessible nucleotides computed from the crystal structure; (e) the conserved structure model of the XBP1 mRNA, with nucleotides coloured by the smartSHAPE/icSHAPE structure score at different RNA starting amounts.",
       "body": [
-        "这张图说明 smartSHAPE 的核心卖点：在 RNA 起始量大幅降低时，它依然能保持高的结构探测覆盖和接近晶体结构的准确性。对非专业读者来说，这是 smartSHAPE 的吸引力所在——以前需要大量细胞才能做的 in vivo SHAPE，现在可以用很少的样本完成。",
-        "但要小心：灵敏度高不等于解释边界消失。ROC 曲线评估的是“分值能否区分晶体结构里的可及核苷酸”，也就是 2′-OH 可及性，而不是碱基配对真值。起始量越低，文库复杂度、覆盖度和归一化对最终数值的影响越大。FoldBridge 引用这类结果时，应当写成“该位点在此起始量下的 smartSHAPE 可及性信号”，而不是“该碱基在此处配对”。低起始量是工程上的突破，但它放大了 readout 在解释链条里的分量，所以更要把可及性 readout 和结构真值分开。"
+        "This figure shows the core selling point of smartSHAPE: when the RNA starting amount is greatly reduced, it can still maintain high structure-probing coverage and an accuracy close to the crystal structure. For a non-specialist reader, this is the appeal of smartSHAPE: the in vivo SHAPE that previously required a large number of cells can now be done with very few samples.",
+        "But be careful: high sensitivity does not mean the interpretive boundary disappears. What the ROC curve evaluates is \"whether the score can distinguish the accessible nucleotides in the crystal structure\", that is, 2′-OH accessibility, not the ground truth of base pairing. The lower the starting amount, the greater the influence of library complexity, coverage and normalisation on the final value. When FoldBridge cites such results, it should write \"the smartSHAPE accessibility signal of this site at this starting amount\", not \"this base is paired here\". The low starting amount is an engineering breakthrough, but it magnifies the weight of the readout in the interpretive chain, so it is all the more important to separate the accessibility readout from structural ground truth."
       ],
       "label": "smartSHAPE F3",
       "pmid": "38933905",
@@ -82,17 +86,17 @@
     },
     {
       "type": "heading",
-      "text": "原代细胞里的 in vivo 探测：差异信号未必是配对变化"
+      "text": "In vivo probing in primary cells: a differential signal is not necessarily a change in pairing"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-smartshape-f4",
       "alt": "smartSHAPE F4",
       "srcBasename": "smartshape_f4__PMC11197792__F4.jpg",
-      "legend": "**图 4。用 smartSHAPE 对小鼠原代结肠巨噬细胞做 in vivo 结构探测。** Piao et al. 2021（PMID 38933905，DOI `10.1016/j.fmre.2021.12.007`）的图注（legend）说明：(a) 小鼠巨噬细胞分离与结构探测示意——先用 C. rodentium 经口灌胃感染小鼠，感染后第 5 天处死收集结肠组织，组织消化后用 FACS 分选 Ly6C-lo 与 Ly6C-hi 巨噬细胞，再在 in vivo 用 NAI-N3 修饰、用 smartSHAPE 做结构探测；(b) 小鼠结肠 Ly6C-lo 与 Ly6C-hi 巨噬细胞中具有高结构探测覆盖的转录本数量，饼图展示高覆盖转录本的 structurome 组成；(c) Xbp1 的保守结构元件，核苷酸按 smartSHAPE 文库中 Ly6C-lo 与 Ly6C-hi 巨噬细胞、或 mES icSHAPE 文库的结构分值上色；(d) 不同 mRNA 区域、不同 RNA 物种中高差异窗口比例的分布；(e) 对高差异窗口比例排名前 25% 基因的基因本体（GO）分析，柱状图展示按 FDR（二项检验）排序的顶部 GO 条目。",
+      "legend": "**Figure 4. In vivo structure probing of mouse primary colonic macrophages with smartSHAPE.** Piao et al. 2021 (PMID 38933905, DOI `10.1016/j.fmre.2021.12.007`). The legend explains: (a) a schematic of mouse macrophage isolation and structure probing: mice are first infected by oral gavage with C. rodentium, sacrificed on day 5 after infection to collect colonic tissue, the tissue is digested and Ly6C-lo and Ly6C-hi macrophages are sorted by FACS, then modified in vivo with NAI-N3 and probed for structure with smartSHAPE; (b) the number of transcripts with high structure-probing coverage in mouse colonic Ly6C-lo and Ly6C-hi macrophages, with a pie chart showing the structurome composition of the high-coverage transcripts; (c) the conserved structural elements of Xbp1, with nucleotides coloured by the structure score in the Ly6C-lo and Ly6C-hi macrophages of the smartSHAPE library, or the mES icSHAPE library; (d) the distribution of the proportion of high-difference windows across different mRNA regions and different RNA species; (e) the gene ontology (GO) analysis of the top 25% of genes by proportion of high-difference windows, with a bar chart showing the top GO terms ranked by FDR (binomial test).",
       "body": [
-        "这张图把 smartSHAPE 的真正价值摆了出来：它能用极少的原代细胞，在真实生理／感染条件下读出 RNA 的 2′-OH 可及性，并比较不同细胞亚群之间的差异。这是大量起始量方法很难做到的。",
-        "但这也正是 FoldBridge 必须保留 assay context 的原因。Ly6C-lo 与 Ly6C-hi 之间的“高差异窗口”是 smartSHAPE 可及性信号的差异，背后可能是配对变化、构象变化，也可能是蛋白结合或修饰带来的保护差异。如果只看一个差异窗口就判定“此处配对改变”，就会把蛋白保护或环境差异误读成结构。所以一个完整的句子应当是：在该条件下、该细胞亚群中，此位点 2′-OH 可及性发生了变化；这可能来自配对，也可能来自蛋白或修饰带来的保护，需要结合上下文才能判断。"
+        "This figure lays out the real value of smartSHAPE: it can, with very few primary cells, read out the 2′-OH accessibility of RNA under real physiological/infection conditions and compare the differences between different cell subsets. This is something high-starting-amount methods can hardly do.",
+        "But this is also exactly why FoldBridge must preserve the assay context. A \"high-difference window\" between Ly6C-lo and Ly6C-hi is a difference in the smartSHAPE accessibility signal, behind which there may be a change in pairing, a conformational change, or a difference in the protection brought by protein binding or modification. If one looks at a single difference window and judges \"pairing has changed here\", protein protection or environmental differences will be misread as structure. So a complete sentence should be: under this condition and in this cell subset, the 2′-OH accessibility at this site has changed; this may come from pairing, and may come from the protection brought by protein or modification, and judgement requires combining the context."
       ],
       "label": "smartSHAPE F4",
       "pmid": "38933905",
@@ -103,47 +107,47 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 smartSHAPE"
+      "text": "How FoldBridge should write about smartSHAPE"
     },
     {
       "type": "paragraph",
-      "text": "smartSHAPE 没有 DMS 那样清晰的“A/C 可解释、G/U 不可解释”的碱基靶点边界——它的靶点是核糖 2′-OH，原则上每个核苷酸都有 2′-OH。所以 smartSHAPE 的解释闸门不是“哪个碱基能上色”，而是一个面向 2′-OH 可及性的多级 gate：化学靶点可达性（这个位点的 2′-OH 是否在当前低起始量文库里被有效酰化与读出）、readout 上下文（逆转录信号是否经过 RNase I 去伪、是否减过背景、是否做过缩放与归一化）、以及 mapping 与 claim gate（坐标是否可靠、是否在该实验条件和起始量下成立）。"
+      "text": "smartSHAPE has no clear base-target boundary of \"A/C interpretable, G/U not interpretable\" as DMS does; its target is the ribose 2′-OH, and in principle every nucleotide has a 2′-OH. So the interpretive gate of smartSHAPE is not \"which base can be coloured\", but a multi-stage gate oriented toward 2′-OH accessibility: chemical target reachability (whether the 2′-OH at this site is effectively acylated and read out in the current low-starting-amount library), readout context (whether the reverse-transcription signal has had spurious signal removed by RNase I, whether background has been subtracted, and whether scaling and normalisation have been performed), and the mapping and claim gate (whether the coordinates are reliable and whether they hold under this experimental condition and starting amount)."
     },
     {
       "type": "paragraph",
-      "text": "只有同时通过这些 gate 的可及性，才能进入默认可视化和 confidence 层。原始逆转录计数本身只是 provenance：它该被完整保存、可下载、可追溯，但不应该自动驱动默认结构上色。ANNOJOIN 的默认结构图应读取经过 background 校正与 targetability 处理后的可视化值，而不是裸的逆转录计数。confidence / FEC 的要求更高：只有通过化学、readout、mapping、claim 与 context gate 的可及性观测，才可以成为 positive confidence 的候选。"
+      "text": "Only accessibility that passes all of these gates can enter the default visualisation and confidence layers. The raw reverse-transcription count is itself only provenance: it should be preserved in full, downloadable and traceable, but it should not automatically drive default structure colouring. The default structure figure in ANNOJOIN should read the visualisation value after background correction and targetability processing, not the bare reverse-transcription count. The requirements of confidence / FEC are higher still: only accessibility observations that pass the chemistry, readout, mapping, claim and context gates may become candidates for positive confidence."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 smartSHAPE，而是尊重它的强项。smartSHAPE 对低起始量、活细胞 2′-OH 可及性非常有力；错误发生在把“可及性下降”一律写成“配对”，或把 raw 逆转录信号写成结构真值时。低起始量带来的高灵敏度，恰恰要求 FoldBridge 把“有观测值”和“可解释为结构支持”分得更清楚。网页上的默认颜色回答“在 smartSHAPE 解释边界内，这个位点有什么可读信号”；详情表才回答“原始数据里记录了什么”。一旦把这两层混在一起，低起始量放大的那点信号也会被读者当成 smartSHAPE 已经认证的结构判断。"
+      "text": "This is not a weakening of smartSHAPE, but a respect for its strengths. smartSHAPE is very powerful for low-starting-amount, in-cell 2′-OH accessibility; the error occurs when \"a decrease in accessibility\" is uniformly written as \"pairing\", or the raw reverse-transcription signal is written as structural ground truth. The high sensitivity brought by the low starting amount is precisely what requires FoldBridge to separate \"there is an observation\" from \"it can be interpreted as structural support\" more clearly. The default colour on the web page answers \"what readable signal does this site have within the smartSHAPE interpretive boundary\"; the details table answers \"what is recorded in the raw data\". Once these two layers are mixed together, the little signal magnified by the low starting amount will also be taken by the reader as a structural judgement that smartSHAPE has already certified."
     },
     {
       "type": "heading",
-      "text": "真实 case：一份 smartSHAPE profile 会怎样流过三个图层（示意）"
+      "text": "A real example: how a smartSHAPE profile flows through three layers (illustrative)"
     },
     {
       "type": "paragraph",
-      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 smartSHAPE profile 如何分成三个不同的层。"
+      "text": "There is no real FoldBridge accession here, so what follows is a clearly labelled illustrative scenario, used to show how a single smartSHAPE profile separates into three different layers."
     },
     {
       "type": "paragraph",
-      "text": "设想一份在小鼠原代结肠巨噬细胞里、用极少起始量测得的 smartSHAPE profile 进入 FoldBridge。第一层是 raw observation：逐位点的逆转录信号、RNase I 处理前后的读数、文库元数据（起始量、测序深度）、测序坐标——这些都原样保存，作为 provenance，可下载、可重算。它们记录的是“极少起始量下测到了什么逆转录信号”，还不是这个位点的柔性结论。"
+      "text": "Imagine a smartSHAPE profile measured in mouse primary colonic macrophages with a very small starting amount entering FoldBridge. The first layer is the raw observation: the per-position reverse-transcription signal, the readings before and after RNase I treatment, the library metadata (starting amount, sequencing depth) and the sequencing coordinates, all preserved as-is, as provenance, downloadable and recomputable. They record \"what reverse-transcription signal was measured at a very small starting amount\", not yet a flexibility conclusion for the site."
     },
     {
       "type": "paragraph",
-      "text": "第二层是 visual signal：逆转录信号经过 RNase I 去伪、背景校正、缩放，并通过 mapping 与 readout gate 之后，得到可以在结构页面上色的 2′-OH 可及性值。读者第一眼看到的颜色应该来自这一层，因为它是在 smartSHAPE assay model 下可解释的颜色，而不是裸的计数；尤其在低起始量下，未经处理的计数更容易被覆盖度和文库复杂度误导。"
+      "text": "The second layer is the visual signal: after the reverse-transcription signal has had spurious signal removed by RNase I, been background-corrected, scaled and passed the mapping and readout gates, one obtains the 2′-OH accessibility value that can be coloured on the structure page. The colour the reader sees first should come from this layer, because it is a colour interpretable under the smartSHAPE assay model, not a bare count; especially at a low starting amount, an unprocessed count is more easily misled by coverage and library complexity."
     },
     {
       "type": "paragraph",
-      "text": "第三层是 confidence candidate：只有那些既通过化学与 readout gate、又通过 mapping/claim/context 检查的可及性观测，才进入 confidence 评估，并且仍要带着“可及性变化可能来自配对、也可能来自蛋白或修饰保护”这一限定。"
+      "text": "The third layer is the confidence candidate: only those accessibility observations that pass both the chemistry and readout gates and the mapping/claim/context checks enter the confidence assessment, and they must still carry the qualification \"a change in accessibility may come from pairing, and may come from the protection of protein or modification\"."
     },
     {
       "type": "paragraph",
-      "text": "这个示意场景的价值，在于它把低起始量这一工程特性的代价讲清楚：同一份 smartSHAPE profile 可以同时产出原始观测、可视化信号和 confidence 候选，三者不是同一件事。起始量越低，文库复杂度、覆盖度和 RNase I 去伪这些 readout 环节对最终数值的影响就越大，未经处理的计数也越容易被误导。灵敏度越高、图层越自动，越要在颜色和 confidence 里讲清楚每个数字经过了哪几道处理，而不是让“连微量都测到了”被读成“连结构都定下了”。"
+      "text": "The value of this illustrative scenario lies in making clear the cost of the engineering feature of low starting amount: the same smartSHAPE profile can simultaneously produce the raw observation, the visualisation signal and the confidence candidate, and the three are not the same thing. The lower the starting amount, the greater the influence of these readout steps, library complexity, coverage and RNase I despuriation, on the final value, and the more easily an unprocessed count is misled. The higher the sensitivity and the more automatic the layer, the more clearly it must be stated, in the colour and the confidence, which processing steps each number has gone through, rather than letting \"even a tiny amount was measured\" be read as \"even the structure has been determined\"."
     },
     {
       "type": "paragraph",
-      "text": "所以，smartSHAPE 文章的正确结尾不是“低信号证明该碱基配对”，而是：smartSHAPE 能用极少起始量为 RNA structure interpretation 提供有力的 in vivo 2′-OH 可及性线索；在 FoldBridge 中，这种线索只有先作为 raw provenance 保存、再通过化学与 readout、mapping、claim、context 等 gate 之后，才会成为默认结构解释和 confidence 的一部分。"
+      "text": "So the correct ending for a smartSHAPE article is not \"a low signal proves the base is paired\", but: smartSHAPE can, with very little starting material, provide a powerful in vivo 2′-OH accessibility clue for RNA structure interpretation; in FoldBridge, such a clue becomes part of default structural interpretation and confidence only after first being preserved as raw provenance and then passing the chemistry, readout, mapping, claim and context gates."
     }
   ]
 }

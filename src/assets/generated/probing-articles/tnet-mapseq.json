@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "tnet-mapseq",
-  "title": "tNET-MaPseq：在 RNA 还挂在聚合酶上时读它的折叠",
-  "date": "2026-06-25",
+  "title": "tNET-MaPseq: reading the folding of RNA while it is still attached to the polymerase",
+  "date": "",
   "figure_count": 4,
   "rep_pmid": "33631106",
   "rep_pmcid": "PMC8052309",
@@ -11,25 +11,29 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "如果只看数据表，tNET-MaPseq 很容易被误读成一种“能直接给新生 RNA 每个碱基判定结构”的方法。这个理解是错的。tNET-MaPseq 的化学探针其实就是 DMS：它甲基化 A 的 N1、C 的 N3，在这些 Watson-Crick 配对面未被配对、未被蛋白或配体遮挡时留下修饰；随后这些修饰在逆转录时被读成突变（MaP，mutational profiling），通过测序定位。tNET-MaPseq 的新意不在化学，而在对象——它把 DMS 探测加在仍与 RNA 聚合酶 II 结合的新生（nascent）转录本上，所以读出的是共转录折叠（co-transcriptional folding）的线索，而不是成熟、纯化后 RNA 的平衡结构。也就是说，tNET-MaPseq 首先报告的是“A/C 的配对面在新生 RNA 上是否可及”，而不是直接报告“这个碱基一定配对”。"
+      "text": "Date: 2026-06-25"
     },
     {
       "type": "paragraph",
-      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 confidence 层，就必须先问一个更具体的问题：这个数字在 tNET-MaPseq 的 assay model 下能不能被解释为结构支持？这里有两层闸门叠在一起：一层是 DMS 的化学靶点边界（A/C 可解释，G/U 不是主要可解释对象），另一层是 nascent / 染色质背景带来的额外复杂度——新生 RNA 还连着聚合酶、可能被蛋白覆盖、可能正在被剪接，DMS 的突变信号必须放在这个背景里才能被解释。raw MaP 突变计数是 provenance；它必须先通过化学靶点、nascent 上下文与 readout 校正，才能成为默认结构颜色或 confidence 的候选。"
+      "text": "If you look only at the data table, tNET-MaPseq is easily misread as a method that \"directly assigns a structure to every base of nascent RNA\". That reading is wrong. The chemical probe of tNET-MaPseq is in fact DMS: it methylates the N1 of A and the N3 of C, leaving a modification when these Watson-Crick pairing faces are unpaired and not shielded by protein or ligand; these modifications are then read as mutations during reverse transcription (MaP, mutational profiling) and located by sequencing. The novelty of tNET-MaPseq lies not in the chemistry but in the object — it applies DMS probing to nascent transcripts still bound to RNA polymerase II, so what it reads out are clues to co-transcriptional folding, not the equilibrium structure of mature, purified RNA. In other words, tNET-MaPseq first reports \"whether the pairing face of A/C is accessible on the nascent RNA\", rather than directly reporting \"this base must be paired\"."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary matters a great deal for FoldBridge. FoldBridge can preserve the raw observations, and can also display the signal from the experiment on the web page; but the moment it enters the default structure colouring, the explanatory text or the confidence layer, a more specific question must first be asked: can this number, under the assay model of tNET-MaPseq, be interpreted as structural support? Here two gates are stacked together: one is the chemical target boundary of DMS (A/C interpretable, G/U not the main interpretable object), the other is the additional complexity brought by the nascent / chromatin background — the nascent RNA is still attached to the polymerase, may be covered by protein, may be in the process of being spliced, and the DMS mutation signal must be placed in this background to be interpreted. The raw MaP mutation counts are provenance; they must first pass the chemical target, the nascent context and the readout correction before they can become a candidate for the default structure colour or confidence."
     },
     {
       "type": "heading",
-      "text": "探测策略：DMS 加在与聚合酶结合的新生 RNA 上"
+      "text": "Probing strategy: DMS applied to nascent RNA bound to the polymerase"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-tnet-mapseq-f1",
       "alt": "tNet-MaPseq F1",
       "srcBasename": "tnetmapseq_f1__PMC8052309__F1.jpg",
-      "legend": "**图 1。tNET-MaPseq 的探测策略与新生 RNA 结构读出。** Saldi et al. 2021（PMID 33631106，DOI `10.1016/j.molcel.2021.01.040`）的图注（legend）把方法拆成几个环节：(A) 对新生 pol II 转录本同时做酶学探测（tNet-RNAse-seq）和 DMS 探测（tNet-MaPseq）；(B) 在 HEK293 WT α-鹅膏蕈碱抗性 pol II 细胞中，tNet-RNAse-seq、tNet-MaPseq 与 mRNAseq reads 的分布对比；(C) 剪接位点（SS）上游推测的外显子连接复合体（EJC）足迹的 metaplot（RNase I+VI 抗性，蓝色箭头）；(D) 新生 RNA 中非经典 XBP1 内含子（箭头，chr22:29,192,089–29,192,172）与 XIST 外显子 4（chrX:73,050,979–73,051,093）带 DMS 反应性的预测结构；(E) 跨一个内含子（chr16:89,867,703–89,871,732）的新生 RNA 结构，展示归一化 DMS 反应性、RNase I、RNase VI、RNase I+VI 抗性 reads、每碱基 A-I 编辑比例以及新生 RNA 测序 reads（tNET-seq）。",
+      "legend": "**Figure 1. The probing strategy of tNET-MaPseq and the structural readout of nascent RNA.** The legend of Saldi et al. 2021 (PMID 33631106, DOI `10.1016/j.molcel.2021.01.040`) breaks the method into several parts: (A) enzymatic probing (tNet-RNAse-seq) and DMS probing (tNet-MaPseq) are carried out simultaneously on nascent pol II transcripts; (B) a comparison of the read distributions of tNet-RNAse-seq, tNet-MaPseq and mRNAseq in HEK293 WT α-amanitin-resistant pol II cells; (C) a metaplot of the putative exon junction complex (EJC) footprint upstream of the splice site (SS) (RNase I+VI resistance, blue arrow); (D) the predicted structures with DMS reactivity of a non-canonical XBP1 intron (arrow, chr22:29,192,089–29,192,172) and XIST exon 4 (chrX:73,050,979–73,051,093) in nascent RNA; (E) the nascent RNA structure across an intron (chr16:89,867,703–89,871,732), showing the normalised DMS reactivity, the RNase I, RNase VI, RNase I+VI resistant reads, the per-base A-I editing ratio and the nascent RNA sequencing reads (tNET-seq).",
       "body": [
-        "这张图先说清楚一件事：tNET-MaPseq 不是凭空给新生 RNA 贴结构标签，而是把 DMS 这种成熟的化学探针搬到一个特殊场景——RNA 还在被转录、还挂在聚合酶上。DMS 仍然甲基化 A/C 的配对面，MaP 仍然把修饰读成突变；变的是“被探测的那一刻”RNA 处于什么状态。这正是它能谈共转录折叠的原因，也是解释要更小心的原因。",
-        "更重要的是，图里把 DMS 反应性和酶学足迹、A-I 编辑、新生测序 reads 并排放在同一段序列上。这说明同一个位点的 DMS 信号要和上下文一起读：EJC 这样的蛋白足迹会让 A/C 不可及，但那不是配对；正在被剪接或被聚合酶牵引的区域，构象也和成熟 RNA 不同。对 FoldBridge 来说，这意味着 tNET-MaPseq 的 DMS 信号不能脱离“它是在新生、蛋白结合背景下测的”来解释。raw provenance 必须带着这个 nascent context 一起保存。"
+        "This figure first makes one thing clear: tNET-MaPseq does not assign structural labels to nascent RNA out of thin air, but moves DMS, a mature chemical probe, to a special scenario — the RNA is still being transcribed and still attached to the polymerase. DMS still methylates the pairing faces of A/C, and MaP still reads modifications as mutations; what changes is what state the RNA is in \"at the moment it is probed\". This is exactly why it can talk about co-transcriptional folding, and also exactly why the interpretation needs to be more careful.",
+        "More importantly, the figure places DMS reactivity, enzymatic footprints, A-I editing and nascent sequencing reads side by side on the same stretch of sequence. This shows that the DMS signal at a given site must be read together with the context: a protein footprint such as the EJC makes A/C inaccessible, but that is not pairing; a region being spliced or pulled along by the polymerase also has a conformation different from mature RNA. For FoldBridge, this means that the DMS signal of tNET-MaPseq cannot be interpreted apart from \"it was measured in a nascent, protein-bound background\". The raw provenance must be preserved together with this nascent context."
       ],
       "label": "tNet-MaPseq F1",
       "pmid": "33631106",
@@ -40,17 +44,17 @@
     },
     {
       "type": "heading",
-      "text": "高结构区 DMS 反应性下降，但背景里还有蛋白与编辑"
+      "text": "DMS reactivity drops in highly structured regions, but protein and editing remain in the background"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-tnet-mapseq-f2",
       "alt": "tNet-MaPseq F2",
       "srcBasename": "tnetmapseq_f2__PMC8052309__F2.jpg",
-      "legend": "**图 2。DMS 反应性、结构得分、蛋白足迹与 A-I 编辑的关系。** Saldi et al. 2021（PMID 33631106，DOI `10.1016/j.molcel.2021.01.040`）的图注（legend）说明：(A、B) 在高结构得分（Structure Score）区域（A）和蛋白足迹区域（B）DMS 反应性降低（15 碱基分箱），两者反应性不同，是因为高结构得分区多为内含子，而蛋白足迹多在外显子；(C) HEK293 WT α-鹅膏蕈碱抗性 Rpb1 细胞新生 pol II 转录本中的 A-I 编辑，注意基因间区和内含子里编辑占比很大；(D) 新生 RNA 与 mRNA reads 及每碱基 A-I 编辑比例，注意内含子、ACAD9 上游发散反义转录本 3′ 侧翼区的广泛编辑（蓝色箭头）；(E) A-I 编辑在新生 RNA 中富集于结构得分峰（>1.9）周围（15 碱基分箱 metaplot）；(F) 结构得分与反向 Alu 元件处 A-I 编辑的重合。",
+      "legend": "**Figure 2. The relationship between DMS reactivity, structure score, protein footprint and A-I editing.** The legend of Saldi et al. 2021 (PMID 33631106, DOI `10.1016/j.molcel.2021.01.040`) explains: (A, B) DMS reactivity decreases in high structure-score regions (A) and protein-footprint regions (B) (15-base binning), the two having different reactivities because high structure-score regions are mostly introns whereas protein footprints are mostly in exons; (C) A-I editing in nascent pol II transcripts of HEK293 WT α-amanitin-resistant Rpb1 cells, note the large proportion of editing in intergenic regions and introns; (D) nascent RNA versus mRNA reads and the per-base A-I editing ratio, note the widespread editing in introns and the 3′ flanking region of the divergent antisense transcript upstream of ACAD9 (blue arrow); (E) A-I editing is enriched around structure-score peaks (>1.9) in nascent RNA (15-base binned metaplot); (F) the coincidence of structure score and A-I editing at inverted Alu elements.",
       "body": [
-        "这张图是 tNET-MaPseq 最值得强调的安全阀之一。高结构得分区域 DMS 反应性下降，看起来像“配对让 A/C 不可及”，方向是对的；但同一张图也告诉读者，反应性下降的来源并不唯一。蛋白足迹区域的 DMS 反应性同样降低，而那不是配对，是蛋白把配对面盖住了——而且作者特别指出这两类区域的碱基组成与基因结构都不同（高结构得分多在内含子，蛋白足迹多在外显子）。把这两种“低信号”混为一谈，就会把蛋白保护误读成结构。",
-        "A-I 编辑的引入则把 nascent 背景的复杂度摆得更明显。新生 RNA 里的 A-I 编辑富集在结构得分峰周围、富集在反向 Alu 这种容易形成双链的区域——这本身是“此处有双链结构”的另一条独立线索，但它也是一种会改写碱基的化学事件，可能干扰对 DMS 信号的解读。对 FoldBridge 来说，这意味着 tNET-MaPseq 的一个 A/C 低反应性，不能直接写成“配对”：它可能来自配对，可能来自蛋白足迹，也要考虑编辑与新生背景。raw observation 必须先经过 readout 与上下文校正，才能成为默认图层或 confidence 的候选。"
+        "This figure is one of the most worth-emphasising safeguards in tNET-MaPseq. DMS reactivity drops in high structure-score regions, which looks like \"pairing makes A/C inaccessible\", and the direction is right; but the same figure also tells the reader that the source of the reactivity drop is not unique. DMS reactivity in protein-footprint regions drops equally, and that is not pairing — it is the protein covering the pairing face — and the authors specifically point out that the base composition and gene structure of these two kinds of region differ (high structure-score mostly in introns, protein footprints mostly in exons). Lumping these two kinds of \"low signal\" together would misread protein protection as structure.",
+        "The introduction of A-I editing makes the complexity of the nascent background even more evident. A-I editing in nascent RNA is enriched around structure-score peaks and in inverted-Alu regions prone to forming double strands — this is in itself another independent clue of \"there is a double-stranded structure here\", but it is also a chemical event that rewrites the base and may interfere with the interpretation of the DMS signal. For FoldBridge, this means that a low A/C reactivity in tNET-MaPseq cannot be written directly as \"paired\": it may come from pairing, may come from a protein footprint, and editing and the nascent background must also be considered. The raw observation must first pass the readout and context correction before it can become a candidate for the default layer or confidence."
       ],
       "label": "tNet-MaPseq F2",
       "pmid": "33631106",
@@ -61,17 +65,17 @@
     },
     {
       "type": "heading",
-      "text": "DMS 反应性能区分剪接好坏的内含子，但它解释的是结构不是剪接"
+      "text": "DMS reactivity can distinguish well- from poorly-spliced introns, but what it interprets is structure not splicing"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-tnet-mapseq-f3",
       "alt": "tNet-MaPseq F3",
       "srcBasename": "tnetmapseq_f3__PMC8052309__F3.jpg",
-      "legend": "**图 3。共转录剪接效率与新生 RNA 结构的关系。** Saldi et al. 2021（PMID 33631106，DOI `10.1016/j.molcel.2021.01.040`）的图注（legend）展示：(A) 用 Fcov 方法计算共转录剪接效率 SE，蓝线表示理想化的新生 RNA 覆盖；(B) 基于三个生物学重复、对两侧外显子有足够覆盖的内含子，HEK293 WT α-鹅膏蕈碱抗性 pol II 细胞 tNET-seq 的 SE 概率密度分布（去除标准差 > 0.2 的内含子）；(C) mRNA 与 tNET-seq 展示共转录上剪接良好（黑箭头 SE=.91）与剪接差（灰箭头 SE=.009）的内含子，以及剪接协调（SE<0.4）的内含子聚簇；(D) 剪接良好（SE>0.8，n=5739）的内含子比剪接差（SE<0.2，n=1001）的更结构化，纵轴为每核苷酸平均结构得分，P 值由非配对 t 检验给出；(E) 剪接良好与剪接差内含子（>200 碱基，50 分箱）的结构得分，去除推测蛋白足迹区，下方为每分箱 −logₑ 校正 P 值（非配对 Wilcoxon 秩检验），蓝线为 −logₑ0.05；(F、G) 高效共转录剪接与内含子结构峰（蓝色箭头）及 5′、3′ 剪接位点处陡峭的结构转变相关，分别为结构得分（F）和 DMS 反应性（G）在剪接良好与剪接差内含子上的 metaplot（5 碱基分箱）；(H) 实验测得的 3′ 剪接位点结构转变与计算所得 3′ SS 强度中位数之间的相关性（3′SS 上游 −1 至 −100 碱基的平均结构得分减去下游 +1 至 +40 碱基，n=18455）。",
+      "legend": "**Figure 3. The relationship between co-transcriptional splicing efficiency and nascent RNA structure.** The legend of Saldi et al. 2021 (PMID 33631106, DOI `10.1016/j.molcel.2021.01.040`) shows: (A) the co-transcriptional splicing efficiency SE computed by the Fcov method, with the blue line representing idealised nascent RNA coverage; (B) based on three biological replicates and introns with sufficient coverage on both flanking exons, the SE probability density distribution of tNET-seq in HEK293 WT α-amanitin-resistant pol II cells (introns with standard deviation > 0.2 removed); (C) mRNA and tNET-seq showing co-transcriptionally well-spliced (black arrow SE=.91) and poorly-spliced (grey arrow SE=.009) introns, as well as clusters of splicing-coordinated (SE<0.4) introns; (D) well-spliced introns (SE>0.8, n=5739) are more structured than poorly-spliced ones (SE<0.2, n=1001), the vertical axis being the average structure score per nucleotide, with the P value given by an unpaired t-test; (E) the structure score of well- and poorly-spliced introns (>200 bases, 50 bins), with putative protein-footprint regions removed, and below it the per-bin −logₑ corrected P value (unpaired Wilcoxon rank test), the blue line being −logₑ0.05; (F, G) efficient co-transcriptional splicing correlates with intron structure peaks (blue arrows) and steep structural transitions at the 5′ and 3′ splice sites, shown as metaplots (5-base binning) of the structure score (F) and DMS reactivity (G) over well- and poorly-spliced introns; (H) the correlation between the experimentally measured 3′ splice-site structural transition and the computed median 3′ SS strength (the average structure score of bases −1 to −100 upstream of the 3′SS minus that of bases +1 to +40 downstream, n=18455).",
       "body": [
-        "这张图说明 tNET-MaPseq 的吸引力所在：DMS 反应性谱不只是化学测量，它能把“结构”和一个具体的生物学过程——共转录剪接——对应起来。剪接良好的内含子更结构化，剪接位点附近有陡峭的结构转变，结构转变还和独立预测的剪接位点强度相关。对非专业读者来说，这是 tNET-MaPseq 最直观的故事：新生 RNA 折叠得怎样，和它当场被剪接得怎样，是有关系的。",
-        "但要小心两点。第一，这里的“结构”仍然是 DMS 反应性（以及由它和酶学数据算出的结构得分）的差异，不是碱基级的配对真值；作者在做 metaplot 时还专门去掉了推测的蛋白足迹区，正是因为蛋白足迹会污染对结构的读取。第二，剪接效率和结构是相关，不是因果判定——图说的是“剪接良好的内含子更结构化”，不是“DMS 信号能告诉你某个碱基配对所以剪接发生”。FoldBridge 引用这类结果时，应当写成“该区域新生 RNA 的 DMS 反应性谱与高剪接效率相关”，而不是“该碱基在此处配对”。功能故事越漂亮，越要把可及性 readout 和结构真值、把相关和因果分开。"
+        "This figure shows where the appeal of tNET-MaPseq lies: the DMS reactivity profile is not just a chemical measurement, it can map \"structure\" onto a concrete biological process — co-transcriptional splicing. Well-spliced introns are more structured, there are steep structural transitions near the splice sites, and the structural transitions correlate with independently predicted splice-site strength. For non-specialist readers, this is the most intuitive story of tNET-MaPseq: how well a nascent RNA folds is related to how well it is spliced on the spot.",
+        "But two things need care. First, the \"structure\" here is still the difference in DMS reactivity (and in the structure score computed from it and the enzymatic data), not base-level ground truth of pairing; the authors also specifically removed the putative protein-footprint regions when making the metaplots, precisely because protein footprints would contaminate the readout of structure. Second, splicing efficiency and structure are correlated, not a causal determination — what the figure says is \"well-spliced introns are more structured\", not \"the DMS signal can tell you a given base is paired, therefore splicing happens\". When FoldBridge cites such results, it should write \"the DMS reactivity profile of the nascent RNA in this region correlates with high splicing efficiency\", rather than \"this base is paired here\". The prettier the functional story, the more the accessibility readout must be separated from structural ground truth, and correlation from causation."
       ],
       "label": "tNet-MaPseq F3",
       "pmid": "33631106",
@@ -82,17 +86,17 @@
     },
     {
       "type": "heading",
-      "text": "转录变慢，新生 RNA 更结构化——但这恰恰说明结构依赖背景"
+      "text": "Slower transcription, more structured nascent RNA — but this is exactly what shows structure depends on background"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-tnet-mapseq-f4",
       "alt": "tNet-MaPseq F4",
       "srcBasename": "tnetmapseq_f4__PMC8052309__F4.jpg",
-      "legend": "**图 4。转录速度如何改变新生 RNA 结构与 A-I 编辑。** Saldi et al. 2021（PMID 33631106，DOI `10.1016/j.molcel.2021.01.040`）的图注（legend）说明：(A) 转录变慢会增加新生 RNA 结构，图中比较了表达 WT 与慢速（R749H）pol II 细胞中结构得分 >1.9 的碱基比例（每碱基至少 15 reads）；(B) 与图 3E 类似的 metaplot，显示慢速 pol II 转录的内含子全长结构增加；(C) 表达慢速 pol II 的 HEK293 新生 RNA 中的 A-I 编辑，注意相对 WT pol II（图 1C）编辑增加；(D) SRSF3 下游的 A-I 编辑、结构得分与新生 RNA 覆盖，注意慢速 pol II 突变体中编辑（蓝色箭头）和结构得分（绿色箭头）升高；(E) 转录变慢使内含子 A-I 编辑增加且不依赖表达水平，红蓝点 FDR<0.05 且 fold change>1.3；(F) 内含子、UTR、基因上游（US）与下游（DS）基因间区新生 RNA 的 A-I 编辑，注意慢速 pol II 带来的从头编辑（红色柱）。",
+      "legend": "**Figure 4. How transcription speed alters nascent RNA structure and A-I editing.** The legend of Saldi et al. 2021 (PMID 33631106, DOI `10.1016/j.molcel.2021.01.040`) explains: (A) slower transcription increases nascent RNA structure, comparing the proportion of bases with structure score >1.9 in cells expressing WT versus slow (R749H) pol II (at least 15 reads per base); (B) a metaplot similar to Figure 3E, showing increased full-length structure of introns transcribed by slow pol II; (C) A-I editing in nascent RNA of HEK293 expressing slow pol II, note the increased editing relative to WT pol II (Figure 1C); (D) A-I editing, structure score and nascent RNA coverage downstream of SRSF3, note the elevated editing (blue arrow) and structure score (green arrow) in the slow pol II mutant; (E) slower transcription increases intron A-I editing independently of expression level, red and blue points FDR<0.05 and fold change>1.3; (F) A-I editing in nascent RNA of introns, UTRs, gene upstream (US) and downstream (DS) intergenic regions, note the de novo editing brought about by slow pol II (red bars).",
       "body": [
-        "这张图把 nascent 背景的解释意义推到了最前面：同一段 RNA，只是因为聚合酶转录得更慢，DMS/结构得分读出就显示它更结构化，A-I 编辑也更多。换句话说，tNET-MaPseq 测到的“结构”不是一个脱离上下文的固有属性，而是和转录动力学（folding 与 elongation 的竞争）绑在一起的。转录慢，新生 RNA 有更多时间折叠，于是更结构化、更容易被 ADAR 编辑——这正是共转录折叠的核心观点。",
-        "但这对解释是一把双刃剑。它说明 tNET-MaPseq 的信号会随 pol II 速度、随细胞背景而变；同一个位点在 WT 和慢速突变体里可能给出不同的反应性，而这两者都是“真实”的新生 RNA 状态，只是状态不同。所以如果只看一个 tNET-MaPseq 的低 DMS 反应性就判定“此处配对”，不仅可能把蛋白保护误读成结构，还可能忽略了它依赖于转录条件这一前提。一个完整的句子应当是：在该细胞、该转录速度下，此 A/C 位点配对面可及性较低；这可能来自配对，也可能来自蛋白足迹或新生背景，且会随转录动力学改变，需要结合上下文才能判断。这正是 FoldBridge 必须把 assay context 和 nascent context 一起保留的原因。"
+        "This figure pushes the interpretive significance of the nascent background to the very front: for the same stretch of RNA, simply because the polymerase transcribes more slowly, the DMS/structure-score readout shows it as more structured and with more A-I editing. Put differently, the \"structure\" that tNET-MaPseq measures is not an intrinsic property detached from context, but is bound up with transcription kinetics (the competition between folding and elongation). Slow transcription gives the nascent RNA more time to fold, so it becomes more structured and more easily edited by ADAR — and this is precisely the core idea of co-transcriptional folding.",
+        "But this is a double-edged sword for interpretation. It shows that the tNET-MaPseq signal varies with pol II speed and with cellular background; the same site may give different reactivities in WT and slow mutants, and both are \"real\" nascent RNA states, just different states. So if one judges \"paired here\" from a single low DMS reactivity in tNET-MaPseq, one may not only misread protein protection as structure, but also ignore the premise that it depends on the transcription condition. A complete sentence should be: in this cell and at this transcription speed, the pairing-face accessibility of this A/C site is relatively low; this may come from pairing, but may also come from a protein footprint or the nascent background, and will change with transcription kinetics, so it must be judged together with the context. This is exactly why FoldBridge must preserve the assay context and the nascent context together."
       ],
       "label": "tNet-MaPseq F4",
       "pmid": "33631106",
@@ -103,47 +107,47 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 tNET-MaPseq"
+      "text": "How FoldBridge should write about tNET-MaPseq"
     },
     {
       "type": "paragraph",
-      "text": "tNET-MaPseq 的化学探针是 DMS，所以它继承了 DMS 那条清晰的碱基靶点边界：A/C 是 targetable base，N1/N3 配对面可及性是可解释对象；G/U/T/unknown 不是主要可解释对象，即使 MaP 读出里有数字，也首先是 raw provenance。但 tNET-MaPseq 在 DMS 之上叠了第二层闸门——nascent / 染色质背景：被探测的 RNA 还连着聚合酶、可能被 EJC 等蛋白覆盖、可能正在被剪接、还可能被 A-I 编辑改写碱基，转录速度本身也会改变折叠。所以 tNET-MaPseq 的解释闸门不是单层，而是“DMS 化学靶点可达性 + nascent 上下文 + readout/mapping/claim gate”的叠加。"
+      "text": "The chemical probe of tNET-MaPseq is DMS, so it inherits that clear base-target boundary of DMS: A/C are the targetable bases, and N1/N3 pairing-face accessibility is the interpretable object; G/U/T/unknown are not the main interpretable objects, and even if there are numbers in the MaP readout, they are first of all raw provenance. But tNET-MaPseq stacks a second gate on top of DMS — the nascent / chromatin background: the RNA being probed is still attached to the polymerase, may be covered by proteins such as the EJC, may be in the process of being spliced, may have its bases rewritten by A-I editing, and transcription speed itself also changes the folding. So the interpretive gate of tNET-MaPseq is not single-layered, but a stack of \"DMS chemical target accessibility + nascent context + readout/mapping/claim gate\"."
     },
     {
       "type": "paragraph",
-      "text": "只有同时通过这些 gate 的 A/C 反应性，才能进入默认可视化和 confidence 层。原始 MaP 突变计数本身只是 provenance：它该被完整保存、可下载、可追溯，但不应该自动驱动默认结构上色。ANNOJOIN 的默认结构图应读取经过 targetability mask 与 nascent 背景校正后的可视化值，而不是裸的突变率。confidence / FEC 的要求更高：只有通过化学靶点、readout、mapping、claim 以及 nascent context gate 的 A/C 观测，才可以成为 positive confidence 的候选，并且仍要带着“低反应性可能来自配对、也可能来自蛋白足迹或转录背景”这一限定。"
+      "text": "Only A/C reactivities that pass all these gates simultaneously can enter the default visualisation and confidence layer. The raw MaP mutation counts themselves are only provenance: they should be preserved in full, downloadable and traceable, but should not automatically drive the default structure colouring. The default structure figure of ANNOJOIN should read the visualisation value after the targetability mask and nascent-background correction, rather than the bare mutation rate. The requirements of confidence / FEC are higher still: only A/C observations that pass the chemical-target, readout, mapping, claim and nascent-context gates may become positive-confidence candidates, and they must still carry the qualification that \"low reactivity may come from pairing, but may also come from a protein footprint or the transcription background\"."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 tNET-MaPseq，而是尊重它的强项。它对“新生 RNA 在被转录那一刻的折叠”非常有力，能把共转录折叠和剪接、转录速度联系起来；错误发生在把“DMS 反应性下降”一律写成“配对”，把 raw 突变信号写成结构真值，或者忘了这些信号依赖于 nascent、蛋白和转录动力学的背景。在新生 RNA 这种动态背景下，FoldBridge 更要把“某个位点测到了突变信号”和“这个信号能作为折叠证据”分开。网页上的默认颜色回答“在 tNET-MaPseq 解释边界内，这个位点有什么可读信号”；详情表才回答“原始数据里记录了什么”。一旦把这两层混在一起，新生 RNA 上那些依赖转录动力学的突变信号就会被当成 tNET-MaPseq 已经认证的折叠判断。"
+      "text": "This does not weaken tNET-MaPseq, but respects its strengths. It is highly powerful for \"the folding of nascent RNA at the moment it is transcribed\", and can link co-transcriptional folding with splicing and transcription speed; the error occurs when \"a drop in DMS reactivity\" is uniformly written as \"paired\", when the raw mutation signal is written as structural ground truth, or when one forgets that these signals depend on the nascent, protein and transcription-kinetics background. In the dynamic background of nascent RNA, FoldBridge must all the more separate \"a mutation signal was measured at a site\" from \"this signal can serve as folding evidence\". The default colour on the web page answers \"within the interpretive boundary of tNET-MaPseq, what readable signal does this site carry\"; the detail table answers \"what was recorded in the raw data\". Once these two layers are mixed together, the transcription-kinetics-dependent mutation signals on nascent RNA would be taken as folding judgements already certified by tNET-MaPseq."
     },
     {
       "type": "heading",
-      "text": "真实 case：一份 tNET-MaPseq profile 会怎样流过三个图层（示意）"
+      "text": "A real case: how a tNET-MaPseq profile flows through three layers (illustrative)"
     },
     {
       "type": "paragraph",
-      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 tNET-MaPseq profile 如何分成三个不同的层。"
+      "text": "There is no real FoldBridge accession here, so the following is a clearly labelled illustrative scenario, used to explain how the same tNET-MaPseq profile splits into three different layers."
     },
     {
       "type": "paragraph",
-      "text": "设想一份在 HEK293（WT α-鹅膏蕈碱抗性 pol II）新生转录本上测得的 tNET-MaPseq profile 进入 FoldBridge。第一层是 raw observation：逐位点的 MaP 突变计数、对应的对照、文库与细胞背景元数据（包括是 WT 还是慢速 pol II）、酶学足迹与 A-I 编辑信息、测序坐标——这些都原样保存，作为 provenance，可下载、可重算。它们记录的是“新生转录本上读到了多少 MaP 突变”，还不是这个位点的折叠结论。"
+      "text": "Imagine a tNET-MaPseq profile measured on nascent transcripts in HEK293 (WT α-amanitin-resistant pol II) entering FoldBridge. The first layer is the raw observation: the per-site MaP mutation counts, the corresponding controls, the library and cellular-background metadata (including whether it is WT or slow pol II), the enzymatic footprint and A-I editing information, and the sequencing coordinates — all preserved as they are, as provenance, downloadable and recomputable. What they record is \"how many MaP mutations were read on the nascent transcript\", not yet the folding conclusion for this site."
     },
     {
       "type": "paragraph",
-      "text": "第二层是 visual signal：突变率经过 A/C targetability mask、扣除背景、做归一化，并通过 nascent context 与 mapping gate（标出落在蛋白足迹区、或可能受 A-I 编辑影响的位点）之后，得到可以在结构页面上色的 A/C 配对面可及性值。读者第一眼看到的颜色应该来自这一层，因为它是在 tNET-MaPseq assay model 下可解释的颜色，而不是裸的突变计数，也不是 G/U 背景。"
+      "text": "The second layer is the visual signal: after the mutation rate has passed the A/C targetability mask, had the background subtracted, been normalised, and passed the nascent context and mapping gate (marking sites that fall in protein-footprint regions or may be affected by A-I editing), one obtains an A/C pairing-face accessibility value that can be coloured on the structure page. The colour the reader sees at first glance should come from this layer, because it is a colour interpretable under the tNET-MaPseq assay model, rather than the bare mutation counts, and not the G/U background."
     },
     {
       "type": "paragraph",
-      "text": "第三层是 confidence candidate：只有那些既通过 DMS 化学与 readout gate、又通过 mapping/claim/nascent context 检查的 A/C 可及性观测，才进入 confidence 评估，并且仍要带着“低反应性可能来自配对、也可能来自蛋白足迹或转录背景，且依赖转录条件”这一限定。"
+      "text": "The third layer is the confidence candidate: only those A/C accessibility observations that pass both the DMS chemistry and readout gate, and the mapping/claim/nascent-context checks, enter the confidence evaluation, and they must still carry the qualification that \"low reactivity may come from pairing, but may also come from a protein footprint or the transcription background, and depends on the transcription condition\"."
     },
     {
       "type": "paragraph",
-      "text": "这个示意场景落到系统行为上，就是同一份 tNET-MaPseq profile 会派生出原始观测、可视化信号和 confidence 候选这三件不同的东西。tNET-MaPseq 谈的是“新生 RNA 在被转录那一刻的折叠”，这本就是个依赖背景、不能外推的对象：同一个 A/C 在 WT 和慢速 pol II 里都可能给出“真实”但不同的反应性。文章如果不能把这三层分开、也不交代 nascent 背景的限定，读者就会把某个细胞、某个转录速度下测到的新生状态，错当成这条 RNA 普遍的、稳态的结构。"
+      "text": "When this illustrative scenario lands on system behaviour, it means the same tNET-MaPseq profile gives rise to three different things — raw observation, visualisation signal and confidence candidate. What tNET-MaPseq talks about is \"the folding of nascent RNA at the moment it is transcribed\", which is inherently a background-dependent, non-extrapolable object: the same A/C may give \"real\" but different reactivities in WT and slow pol II. If the article cannot separate these three layers, and does not explain the qualification of the nascent background, the reader will mistake the nascent state measured in a particular cell at a particular transcription speed for the general, steady-state structure of this RNA."
     },
     {
       "type": "paragraph",
-      "text": "所以，tNET-MaPseq 文章的正确结尾不是“低信号证明该碱基配对”，而是：tNET-MaPseq 能为共转录 RNA structure interpretation 提供有力的、活体新生 RNA 上 A/C 配对面可及性线索；在 FoldBridge 中，这种线索只有先作为 raw provenance 保存、再通过 DMS 化学与 readout、mapping、claim、nascent context 等 gate 之后，才会成为默认结构解释和 confidence 的一部分。"
+      "text": "So the correct ending for a tNET-MaPseq article is not \"a low signal proves the base is paired\", but rather: tNET-MaPseq can provide powerful A/C pairing-face accessibility clues for co-transcriptional RNA structure interpretation on living nascent RNA; within FoldBridge, such clues become part of the default structural interpretation and confidence only after they have first been preserved as raw provenance and then passed the DMS chemistry and readout, mapping, claim, nascent-context and other gates."
     }
   ]
 }

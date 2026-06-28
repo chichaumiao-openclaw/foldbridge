@@ -26,38 +26,38 @@ const SMOKE_EXCLUDE = 'smoke'; // 排除 dms/smoke 测试残留
 const FAMILY_ORDER = [
   {
     id: 'dms',
-    title: 'DMS 化学探针',
-    summary: 'DMS 在 A 的 N1、C 的 N3 配对面留下甲基化修饰，读出 A/C 可及性。',
+    title: 'DMS chemical probing',
+    summary: 'DMS methylates the Watson-Crick faces at N1 of A and N3 of C, reading out A/C accessibility.',
     slugs: ['dms', 'dms-seq', 'mod-seq', 'structure-seq', 'structure-seq2', 'dim-2p-seq']
   },
   {
     id: 'shape',
-    title: 'SHAPE 2′-OH 酰化',
-    summary: 'SHAPE 试剂酰化核糖 2′-OH，读出主链柔性 / 单链程度。',
+    title: 'SHAPE 2′-OH acylation',
+    summary: 'SHAPE reagents acylate the ribose 2′-OH, reading out backbone flexibility / single-strandedness.',
     slugs: ['shape-reagents', 'shape-map', 'shape-2a3', 'nai-map', 'smartshape', 'chemmodseq']
   },
   {
     id: 'in-cell-shape',
-    title: 'In-cell / 共转录 SHAPE',
-    summary: '把 SHAPE/酰化探测搬进活细胞、细胞核或共转录场景。',
+    title: 'In-cell / co-transcriptional SHAPE',
+    summary: 'Brings SHAPE/acylation probing into living cells, the nucleus, or co-transcriptional settings.',
     slugs: ['icshape', 'icshape-map', 'nuc-shape-structure-seq', 'cotranscriptional-shape-seq', 'iclaser']
   },
   {
     id: 'footprinting',
-    title: '羟自由基 / 酶切 footprinting',
-    summary: '羟自由基或核酸酶切割，读出主链溶剂可及性或 ss/ds 状态。',
+    title: 'Hydroxyl-radical / nuclease footprinting',
+    summary: 'Hydroxyl-radical or nuclease cleavage reads out backbone solvent accessibility or ss/ds state.',
     slugs: ['hrf-seq', 'rl-seq', 'pars', 'parte', 'lead-seq']
   },
   {
     id: 'carbodiimide-special',
-    title: 'Carbodiimide 与特殊化学',
-    summary: 'CMC/CMCT 读 U/G 配对面，kethoxal 读 G，以及其它专门化学。',
+    title: 'Carbodiimide & specialty chemistry',
+    summary: 'CMC/CMCT read the U/G pairing faces, kethoxal reads G, plus other specialized chemistries.',
     slugs: ['cmc-cmct', 'keth-seq', 'tnet-mapseq']
   },
   {
     id: 'inference',
-    title: '突变 / 邻近推断法',
-    summary: 'M² 突变扰动与 MCA 邻近图：配对/接触是推断出来的，不是直接测量。',
+    title: 'Mutational / proximity inference',
+    summary: 'M² mutational perturbation and MCA proximity maps: pairing/contacts are inferred, not directly measured.',
     slugs: ['mutate-and-map', 'mca']
   }
 ];

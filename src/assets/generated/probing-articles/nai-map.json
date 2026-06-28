@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "nai-map",
-  "title": "NAI-MaP：把酰化加合物读成测序突变，报告的是 2′-OH 可及性",
-  "date": "2026-06-25",
+  "title": "NAI-MaP: reading the acylation adduct as a sequencing mutation, reporting 2′-OH accessibility",
+  "date": "",
   "figure_count": 4,
   "rep_pmid": "30926818",
   "rep_pmcid": "PMC6441010",
@@ -11,25 +11,29 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "NAI-MaP 最常被误读的地方，是把同一篇工作里漂亮的配对弧线图当成 NAI 探针的直接读出——仿佛 NAI-MaP 一边测可及性、一边还顺手把哪两段碱基配在一起也测了出来。事实上这是两类来自不同化学、不同读出的信号。NAI-MaP 本身的解释对象，是核糖 2′-OH 的化学可及性与柔性：NAI 是一种 SHAPE 类酰化试剂，当一个核苷酸的 2′ 羟基没有被配对、被蛋白或配体遮挡、也没有被复杂构象保护时，它更容易被 NAI 酰化，在核糖 2′ 位留下一个加合物。也就是说，NAI-MaP 首先报告的是一类化学位点是否可及、是否柔性，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”。"
+      "text": "Date: 2026-06-25"
     },
     {
       "type": "paragraph",
-      "text": "这条边界对 FoldBridge 很关键。NAI-MaP 名字里的 MaP（mutational profiling，突变图谱）说明了它的读出方式：被酰化的 2′-OH 加合物在逆转录经过时，会让逆转录酶读错碱基，于是化学修饰被记录成测序里的突变。这意味着最终表格里的数值不是 NAI 分子直接给出的“结构标签”，而是酰化、逆转录错配、建库、比对和归一化之后的观测量。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 confidence 层，就必须先问一个更具体的问题：这个数字在 NAI-MaP 的 assay model 下能不能被解释为 2′-OH 可及性支持？原始突变率是 raw provenance；它必须先通过 SHAPE 酰化化学、MaP readout 上下文，才能成为默认结构颜色或 confidence 的候选。"
+      "text": "The place where NAI-MaP is most often misread is in taking the beautiful base-pairing arc plot from the same piece of work as a direct readout of the NAI probe, as if NAI-MaP measured accessibility on the one hand whilst also conveniently measuring which two stretches of bases pair together. In fact these are two classes of signal from different chemistries and different readouts. The interpretive object of NAI-MaP itself is the chemical accessibility and flexibility of the ribose 2′-OH: NAI is a SHAPE-class acylation reagent, and when the 2′ hydroxyl of a nucleotide is unpaired, not occluded by protein or ligand, and not protected by a complex conformation, it is more readily acylated by NAI, leaving an adduct at the ribose 2′ position. In other words, what NAI-MaP reports first is whether a class of chemical site is accessible and flexible, not directly that \"this base is definitely paired\" or \"this base is definitely unpaired\"."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary is crucial for FoldBridge. The MaP (mutational profiling) in the name NAI-MaP explains its readout: when the acylated 2′-OH adduct is passed during reverse transcription, it makes the reverse transcriptase misread the base, and so the chemical modification is recorded as a mutation in the sequencing. This means the values in the final table are not a \"structural label\" given directly by the NAI molecule, but an observable that has passed through acylation, reverse transcription mismatch, library construction, alignment and normalisation. FoldBridge can preserve the raw observed values and can also display experimental signal on the web; but the moment anything enters default structure colouring, interpretive text or a confidence layer, a more specific question must be asked first: under the NAI-MaP assay model, can this number be interpreted as support for 2′-OH accessibility? The raw mutation rate is raw provenance; it must first pass the SHAPE acylation chemistry and the MaP readout context before it can become a candidate for the default structure colour or confidence."
     },
     {
       "type": "heading",
-      "text": "NAI 酰化 2′-OH，再用突变图谱读出可及性"
+      "text": "NAI acylates the 2′-OH, then mutational profiling reads out the accessibility"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-nai-map-f1",
       "alt": "NAI-MaP F1",
       "srcBasename": "naimap_f1__PMC6441010__F1.jpg",
-      "legend": "**图 1。在病毒颗粒内对 DENV 与 ZIKV 基因组做全基因组结构图谱。** Huber et al. 2019（PMID 30926818，DOI `10.1038/s41467-019-09391-8`）的图注（legend）把流程拆成几个环节：(a) 在病毒颗粒内用 SHAPE 类化学试剂 NAI 探测八种病毒的全长基因组，NAI 修饰基因组上的单链区域；同时用生物素化 psoralen 交联颗粒内的配对区域，得到局部与配对两类实验数据，再用它们约束计算模型，得到 DENV 与 ZIKV 更准确的结构预测，并通过诱变和病毒适应性实验确定保守与配对相互作用的功能影响；(b) 沿病毒基因组的 NAI-MaP 反应性与 Shannon 熵：上半部分是 DENV1 沿基因组的原始 NAI-MaP 反应性，红、黄、黑分别表示高、中、低反应性，下半部分是 Shannon 熵，低值提示该处更可能有确定结构；(c、d) NAI-MaP 结构信号映射到 DENV2 基因组 5′ UTR 与 3′ UTR 的已知结构上，反应性越高着色越红，提示该碱基更可能是单链；(d) 上方散点图展示每对 DENV 株系在 100 nt 窗口内的序列一致性与结构相似性，红点是结构相似性比序列相似性高出均值 1 个标准差的位置，下方每一行标出这些高结构/序列相似区域沿基因组的位置（在 200、900、2000、3800、4000、4200、4600、6500、7000、10,400 与 10,600 nt 区域，加星标注），说明这种高结构保守不是随机的。",
+      "legend": "**Figure 1. Genome-wide structure mapping of the DENV and ZIKV genomes inside virus particles.** The legend of Huber et al. 2019 (PMID 30926818, DOI `10.1038/s41467-019-09391-8`) breaks the workflow into several stages: (a) the full-length genomes of eight viruses are probed inside virus particles using the SHAPE-class chemical reagent NAI, which modifies the single-stranded regions on the genome; at the same time biotinylated psoralen crosslinks the paired regions inside the particles, yielding two classes of experimental data, local and paired, which are then used to constrain a computational model to obtain more accurate structure predictions for DENV and ZIKV, with mutagenesis and viral fitness experiments determining the functional impact of conserved and paired interactions; (b) NAI-MaP reactivity and Shannon entropy along the viral genome: the upper part is the raw NAI-MaP reactivity of DENV1 along the genome, with red, yellow and black denoting high, medium and low reactivity respectively, and the lower part is the Shannon entropy, where low values suggest a more likely defined structure at that position; (c, d) the NAI-MaP structure signal mapped onto the known structures of the 5′ UTR and 3′ UTR of the DENV2 genome, the higher the reactivity the redder the colour, suggesting the base is more likely single-stranded; (d) the scatter plot above shows the sequence identity and structural similarity within a 100 nt window for each pair of DENV strains, with red dots being positions where structural similarity exceeds sequence similarity by more than one standard deviation from the mean, and each row below marking the positions of these high-structural/sequence-similarity regions along the genome (in the 200, 900, 2000, 3800, 4000, 4200, 4600, 6500, 7000, 10,400 and 10,600 nt regions, marked with stars), showing that this high structural conservation is not random.",
       "body": [
-        "读这张流程图，关键是看清 NAI-MaP 自己的那条链路（区别于图里另一套 psoralen 交联实验）：它先用 NAI 这种 SHAPE 类化学把“2′-OH 可及、柔性”这件事变成可以测序读出的物理信号。NAI 酰化没有被保护的 2′-OH 留下加合物，逆转录经过时把它读成突变，于是高反应性（图里的红色）对应更可能是单链、柔性的位置——这正是 MaP 突变图谱的工作方式：化学加合物在 RT 阶段被翻译成测序里的错配。",
-        "但要注意，b 里同时画出的 Shannon 熵提醒我们，单看反应性还不够。反应性高提示 2′-OH 可及，反应性低可能来自配对，也可能来自蛋白、配体或构象保护；而是否“有确定结构”还要结合熵这类指标来判断。NAI-MaP 报告的是 2′-OH 可及性/柔性这个化学量，不是碱基配对的真值。对 FoldBridge 来说，这意味着原始反应性必须带着 assay context 一起保存：它是在病毒颗粒内、用 NAI 酰化、经 MaP 读出得到的可及性线索，而不是直接的结构判定。"
+        "The key when reading this workflow diagram is to see clearly NAI-MaP's own chain (distinct from the other psoralen-crosslinking experiment in the figure): it first uses the SHAPE-class chemistry of NAI to turn \"the 2′-OH is accessible, flexible\" into a physical signal that can be read out by sequencing. NAI acylates the unprotected 2′-OH, leaving an adduct, and reverse transcription passing through reads it as a mutation, so high reactivity (the red in the figure) corresponds to positions more likely to be single-stranded and flexible. This is exactly how MaP mutational profiling works: the chemical adduct is translated into a mismatch in the sequencing during the RT stage.",
+        "But note that the Shannon entropy drawn alongside in (b) reminds us that reactivity alone is not enough. High reactivity suggests the 2′-OH is accessible; low reactivity may come from pairing, but it may also come from protein, ligand or conformational protection; and whether there is \"a defined structure\" must additionally be judged in conjunction with metrics such as entropy. What NAI-MaP reports is the chemical quantity that is 2′-OH accessibility/flexibility, not the ground truth of base pairing. For FoldBridge, this means the raw reactivity must be preserved together with the assay context: it is an accessibility cue obtained inside virus particles, by NAI acylation, read out via MaP, not a direct structural determination."
       ],
       "label": "NAI-MaP F1",
       "pmid": "30926818",
@@ -40,17 +44,17 @@
     },
     {
       "type": "heading",
-      "text": "用 NAI-MaP 反应性约束结构模型，但不取消化学边界"
+      "text": "Using NAI-MaP reactivity to constrain the structure model, but not cancelling the chemical boundary"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-nai-map-f2",
       "alt": "NAI-MaP F2",
       "srcBasename": "naimap_f2__PMC6441010__F2.jpg",
-      "legend": "**图 2。DENV 基因组含有许多保守的结构元件。** Huber et al. 2019（PMID 30926818，DOI `10.1038/s41467-019-09391-8`）的图注（legend）说明：(a) 沿四个 DENV 基因组的 100 nt 区域中，结构高度相似（灰色）、高度双链（黑色）、以及同义突变累积水平低（蓝色）的区段被分别标出；同时满足上述三项中两项的区域被选为共识区域（紫色），可能在功能上重要，来自图 1e 的结构保守区域以蓝色星号标注；(b) 用 NAI-MaP 作为实验约束，对 a 中识别出的 16 个共识区域建立 DENV1 基因组的结构模型，并把 NAI-MaP 反应性与协变信息（绿色圆圈）映射到结构上。",
+      "legend": "**Figure 2. The DENV genome contains many conserved structural elements.** The legend of Huber et al. 2019 (PMID 30926818, DOI `10.1038/s41467-019-09391-8`) explains: (a) along the four DENV genomes, the 100 nt regions that are highly similar in structure (grey), highly double-stranded (black), and have low accumulated synonymous mutation levels (blue) are marked separately; regions satisfying two of the above three criteria simultaneously are selected as consensus regions (purple), which may be functionally important, and the structurally conserved regions from Figure 1e are marked with blue asterisks; (b) using NAI-MaP as an experimental constraint, structure models of the DENV1 genome are built for the 16 consensus regions identified in (a), and the NAI-MaP reactivity and covariation information (green circles) are mapped onto the structure.",
       "body": [
-        "这张图把 NAI-MaP 的价值放在正确的位置上：反应性数据可以作为约束帮助建立二级结构模型，但模型本身仍然是把多种证据（结构相似性、双链倾向、同义突变、协变）综合起来的产物，而不是单凭 NAI-MaP 反应性就判定的结果。NAI-MaP 在这里扮演的是“有用约束”，不是“碱基级真值发生器”。",
-        "这正是 FoldBridge 需要的写法：NAI-MaP 的 2′-OH 可及性信号可以帮助解释结构模型，也可以帮助读者理解哪些区域更像是柔性单链；但它不能绕过 SHAPE 酰化化学和 MaP 读出这两道闸门。一个共识区域被标为“结构保守”，背后是多重证据叠加；把其中的 NAI-MaP 反应性单独抽出来写成“该碱基配对/不配对”，就把约束误读成了判定。约束越精细，越要把化学反应性、可及性、配对、保护和计算模型分开来说。"
+        "This figure places the value of NAI-MaP in the right position: reactivity data can serve as a constraint to help build a secondary structure model, but the model itself is still a product that synthesises multiple lines of evidence (structural similarity, double-strandedness, synonymous mutation, covariation), not a result determined by NAI-MaP reactivity alone. The role NAI-MaP plays here is \"a useful constraint\", not \"a base-level ground-truth generator\".",
+        "This is exactly the way FoldBridge needs to write it: the 2′-OH accessibility signal of NAI-MaP can help interpret a structure model and can help the reader understand which regions look more like flexible single-stranded ones; but it cannot bypass the two gates of SHAPE acylation chemistry and MaP readout. A consensus region marked as \"structurally conserved\" has multiple lines of evidence stacked behind it; extracting the NAI-MaP reactivity alone and writing it as \"this base is paired/unpaired\" misreads a constraint as a determination. The more refined the constraint, the greater the need to separate chemical reactivity, accessibility, pairing, protection and the computational model."
       ],
       "label": "NAI-MaP F2",
       "pmid": "30926818",
@@ -61,17 +65,17 @@
     },
     {
       "type": "heading",
-      "text": "配对相互作用：另一类信号，不能和 2′-OH 可及性混为一谈"
+      "text": "Pairing interactions: another class of signal, not to be conflated with 2′-OH accessibility"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-nai-map-f3",
       "alt": "NAI-MaP F3",
       "srcBasename": "naimap_f3__PMC6441010__F3.jpg",
-      "legend": "**图 3。DENV 与 ZIKV 基因组形成广泛的配对相互作用。** Huber et al. 2019（PMID 30926818，DOI `10.1038/s41467-019-09391-8`）的图注（legend）展示：(a) 弧线图显示病毒颗粒内 DENV1 基因组中最丰富的前 75 个配对相互作用，已知的环化信号以深蓝色标出；(b) 上方对环化相互作用区域做 peak calling，配对峰出现在 95 与 10,641 位，下方用 RNAcofold 程序对峰附近序列做杂交预测，识别出三个最知名的环化信号；(c) 柱状图显示沿基因组唯一相互作用与多重相互作用的峰数，DENV 与 ZIKV 中超过 40% 的相互作用并非唯一；(d) 箱线图显示存在替代配对（alternate）的区域比基因组全部区域（all）有更高的 Shannon 熵，DENV1 与 ZIKV 法属波利尼西亚株均如此，箱体为第一与第三四分位、中位数标在箱内，须线为排除 1.5× 四分位距离群点后的最小与最大值，离群点以点表示，p 值用 T 检验；(e) 弧线图显示 ZIKV 法属波利尼西亚基因组上一组替代相互作用；(f) 用 RNAcofold 对 e 中替代结构的配对相互作用建模，两条链上的突变分别以蓝色与绿色标出；(g) qPCR 分析 Huh7 细胞及上清中突变型（来自 f）与野生型病毒在感染后 24 与 48 小时的产量，Y 轴为相对野生型的突变病毒产量，统计用单尾 Student T 检验判断突变病毒是否较野生型减弱，*p<0.05，误差棒为 SEM。",
+      "legend": "**Figure 3. The DENV and ZIKV genomes form extensive pairing interactions.** The legend of Huber et al. 2019 (PMID 30926818, DOI `10.1038/s41467-019-09391-8`) shows: (a) an arc plot displays the top 75 most abundant pairing interactions in the DENV1 genome inside virus particles, with known cyclisation signals marked in dark blue; (b) above, peak calling is performed on the cyclisation interaction regions, with pairing peaks appearing at positions 95 and 10,641, and below, the RNAcofold program is used to predict hybridisation for the sequences near the peaks, identifying the three best-known cyclisation signals; (c) a bar chart shows the number of unique-interaction and multiple-interaction peaks along the genome, with more than 40% of interactions in DENV and ZIKV not being unique; (d) a box plot shows that regions with alternate pairing have higher Shannon entropy than all genome regions (all), both for DENV1 and the French Polynesia strain of ZIKV, with the box being the first and third quartiles, the median marked inside the box, the whiskers being the minimum and maximum after excluding outliers beyond 1.5× the interquartile range, outliers shown as dots, and p values by t-test; (e) an arc plot shows a set of alternate interactions on the French Polynesia ZIKV genome; (f) RNAcofold models the pairing interactions of the alternate structure in (e), with mutations on the two strands marked in blue and green respectively; (g) qPCR analysis of the yield of mutant (from f) and wild-type virus in Huh7 cells and supernatant at 24 and 48 hours post-infection, with the Y axis being mutant virus yield relative to wild type, statistics using a one-tailed Student's t-test to judge whether the mutant virus is attenuated relative to wild type, *p<0.05, error bars SEM.",
       "body": [
-        "这张图提醒读者，这篇工作里其实有两类不同的实验信号：一类是 NAI-MaP 报告的局部 2′-OH 可及性，另一类是由生物素化 psoralen 交联与 SPLASH 类方法得到的配对相互作用（弧线图里的连线）。配对相互作用回答“哪两段序列在空间上配在一起”，这和 NAI-MaP 回答的“某个位点的 2′-OH 是否可及、柔性”不是同一个问题。",
-        "对 FoldBridge 来说，这一点必须写清楚：弧线图的连线不是 NAI-MaP 反应性，二者来自不同化学、不同读出。把它们混在同一种颜色或同一个 confidence 里，读者会以为“NAI-MaP 直接测到了配对”。正确的说法是分开陈述——NAI-MaP 提供逐位点的 2′-OH 可及性线索，配对/交联数据提供配对关系线索；二者可以互相印证，但 provenance 和解释边界各自独立。突变病毒实验（g）进一步说明，这些结构线索的功能意义需要独立的扰动实验来确认，而不是从反应性数值直接读出。"
+        "This figure reminds the reader that there are in fact two classes of experimental signal in this piece of work: one is the local 2′-OH accessibility reported by NAI-MaP, and the other is the pairing interactions obtained by biotinylated psoralen crosslinking and SPLASH-class methods (the lines in the arc plot). The pairing interactions answer \"which two stretches of sequence pair together in space\", and this is not the same question as the one NAI-MaP answers, namely \"is the 2′-OH at a given site accessible and flexible\".",
+        "For FoldBridge, this must be written clearly: the lines in the arc plot are not NAI-MaP reactivity; the two come from different chemistries and different readouts. Mixing them into the same colour or the same confidence would make the reader think \"NAI-MaP measured pairing directly\". The correct approach is to state them separately: NAI-MaP provides a per-position 2′-OH accessibility cue, and the pairing/crosslinking data provide a pairing-relationship cue; the two can corroborate one another, but their provenance and interpretive boundaries are each independent. The mutant virus experiment (g) goes on to show that the functional significance of these structural cues needs to be confirmed by an independent perturbation experiment, not read directly off the reactivity values."
       ],
       "label": "NAI-MaP F3",
       "pmid": "30926818",
@@ -82,17 +86,17 @@
     },
     {
       "type": "heading",
-      "text": "长程相互作用的功能解释，仍要和可及性真值分开"
+      "text": "The functional interpretation of long-range interactions must still be kept apart from accessibility ground truth"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-nai-map-f4",
       "alt": "NAI-MaP F4",
       "srcBasename": "naimap_f4__PMC6441010__F4.jpg",
-      "legend": "**图 4。DENV 与 ZIKV 中两种不同模式的长程相互作用。** Huber et al. 2019（PMID 30926818，DOI `10.1038/s41467-019-09391-8`）的图注（legend）说明：(a) 韦恩图显示在每个株系最显著的 250 个相互作用中，DENV（上）与 ZIKV（下）在两、三、四个病毒株之间的相互作用重叠，若两端都在彼此 ±100 nt 内即视为共享；(b) 小提琴图显示两个病毒之间最近的相似相互作用距离相对随机的分布，ZIKV-SIN、ZIKV-FP、ZIKV-BR 等高度相似病毒到相关相互作用的平均距离很短，提示高度保守，p 值用 Wilcoxon 秩和检验，最小值、中位数、最大值以横线标出；(c) 弧线图显示在两个或更多不同 DENV（上）与 ZIKV（下）病毒中都存在的前 100 个保守长程相互作用，粉色与灰色相互作用在 d 与 e 中进一步刻画；(d) DENV 与 ZIKV 中用相似序列把 E 与 NS4B 区域拉到一起的保守长程相互作用，上方为不同病毒 E 与 NS4B 间的 SPLASH 相互作用峰，下方为用 RNAcofold 预测的杂交模型，不同病毒间同源与协变碱基分别以红色与绿色圈出，粉色箭头指示相互作用峰位置；(e) DENV 与 ZIKV 中用不同序列把 NS4 与 NS5 区域拉近的长程相互作用，上方为 NS4 与 NS5 间的 SPLASH 相互作用峰，下方为 RNAcofold 预测的杂交模型，灰色箭头指示峰位置。",
+      "legend": "**Figure 4. Two different modes of long-range interaction in DENV and ZIKV.** The legend of Huber et al. 2019 (PMID 30926818, DOI `10.1038/s41467-019-09391-8`) explains: (a) a Venn diagram shows the overlap of interactions among two, three and four viral strains for DENV (top) and ZIKV (bottom) within the top 250 most significant interactions of each strain, where an interaction is considered shared if both ends are within ±100 nt of each other; (b) a violin plot shows the distance to the nearest similar interaction between two viruses relative to a random distribution, with highly similar viruses such as ZIKV-SIN, ZIKV-FP and ZIKV-BR having very short average distances to the related interaction, suggesting high conservation, p values by Wilcoxon rank-sum test, with minimum, median and maximum marked by horizontal lines; (c) an arc plot shows the top 100 conserved long-range interactions present in two or more different DENV (top) and ZIKV (bottom) viruses, with the pink and grey interactions further characterised in (d) and (e); (d) a conserved long-range interaction in DENV and ZIKV that uses similar sequences to bring the E and NS4B regions together, with the SPLASH interaction peaks between E and NS4B for different viruses above, and the RNAcofold-predicted hybridisation model below, with homologous and covarying bases between different viruses circled in red and green respectively, and pink arrows indicating the interaction peak positions; (e) a long-range interaction in DENV and ZIKV that uses different sequences to bring the NS4 and NS5 regions closer, with the SPLASH interaction peaks between NS4 and NS5 above, the RNAcofold-predicted hybridisation model below, and grey arrows indicating the peak positions.",
       "body": [
-        "这张图展示的是长程配对相互作用的进化保守与功能解释，它非常漂亮：保守的 E–NS4B、NS4–NS5 长程接触能在多个病毒株间复现。但要小心，这些都是基于交联/SPLASH 与计算建模得到的配对关系，不是 NAI-MaP 的 2′-OH 可及性读出。功能解释越吸引人，越要把它和 NAI-MaP 报告的化学量分清楚。",
-        "这正是 FoldBridge 必须保留 assay context 的原因。NAI-MaP 的反应性回答的是“这个 2′-OH 在病毒颗粒内是否可及、柔性”，而长程相互作用回答的是“这两段序列是否配在一起”。如果只看一个低 NAI-MaP 反应性就判定“此处配对”，就会把多种可能的保护（配对、蛋白、构象）压缩成单一结论；如果把弧线图的保守相互作用写成“NAI-MaP 证明了这个碱基配对”，就把两类独立证据混成了一种。完整的句子应当是：在该条件下，此位点 2′-OH 可及性较低或较高，这是 NAI-MaP 报告的化学线索；它是否对应特定配对，要结合交联、协变和建模等独立证据来判断。"
+        "What this figure shows is the evolutionary conservation and functional interpretation of long-range pairing interactions, and it is very beautiful: the conserved E-NS4B and NS4-NS5 long-range contacts recur across multiple viral strains. But take care: these are pairing relationships obtained from crosslinking/SPLASH and computational modelling, not the 2′-OH accessibility readout of NAI-MaP. The more attractive the functional interpretation, the greater the need to distinguish it from the chemical quantity reported by NAI-MaP.",
+        "This is exactly why FoldBridge must preserve the assay context. The reactivity of NAI-MaP answers \"is this 2′-OH accessible and flexible inside the virus particle\", whereas the long-range interactions answer \"do these two stretches of sequence pair together\". If a single low NAI-MaP reactivity is used to determine \"there is pairing here\", several possible kinds of protection (pairing, protein, conformation) get compressed into a single conclusion; if the conserved interactions of the arc plot are written as \"NAI-MaP proved this base is paired\", two independent lines of evidence get blended into one. The complete sentence should be: under this condition, the 2′-OH accessibility at this site is relatively low or high, which is the chemical cue reported by NAI-MaP; whether it corresponds to a particular pairing must be judged in conjunction with independent evidence such as crosslinking, covariation and modelling."
       ],
       "label": "NAI-MaP F4",
       "pmid": "30926818",
@@ -103,47 +107,47 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 NAI-MaP"
+      "text": "How FoldBridge should write about NAI-MaP"
     },
     {
       "type": "paragraph",
-      "text": "NAI-MaP 没有 DMS 那样清晰的“A/C 可解释、G/U 不可解释”的碱基靶点边界——它的靶点是核糖 2′-OH，原则上每个核苷酸都有 2′-OH。所以 NAI-MaP 的解释闸门不是“哪个碱基能上色”，而是一个面向 2′-OH 可及性/柔性的多级 gate：化学靶点可达性（这个位点的 2′-OH 是否在当前文库里被 NAI 有效酰化）、MaP readout 上下文（加合物诱导的突变率是否减过背景、是否做过归一化、突变是否真的来自酰化而非测序或比对噪声）、以及 mapping 与 claim gate（坐标是否可靠、是否在该实验条件——例如病毒颗粒内——下成立）。"
+      "text": "NAI-MaP does not have a clear \"A/C interpretable, G/U uninterpretable\" base-target boundary like DMS; its target is the ribose 2′-OH, and in principle every nucleotide has a 2′-OH. So the interpretive gate of NAI-MaP is not \"which base can be coloured\", but a multi-level gate oriented to 2′-OH accessibility/flexibility: chemical-target reachability (is the 2′-OH at this site effectively acylated by NAI in the current library), MaP readout context (has the adduct-induced mutation rate had its background subtracted, has it been normalised, does the mutation really come from acylation rather than sequencing or alignment noise), and the mapping and claim gate (are the coordinates reliable, does it hold under this experimental condition, for example inside virus particles)."
     },
     {
       "type": "paragraph",
-      "text": "只有同时通过这些 gate 的可及性，才能进入默认可视化和 confidence 层。原始突变率本身只是 provenance：它该被完整保存、可下载、可追溯，但不应该自动驱动默认结构上色。ANNOJOIN 的默认结构图应读取经过 background 校正与 targetability 处理后的可视化值，而不是裸的突变计数。confidence / FEC 的要求更高：只有通过化学、readout、mapping、claim 与 context gate 的可及性观测，才可以成为 positive confidence 的候选；而且要带着“低反应性可能来自配对、也可能来自蛋白或构象保护”这一限定。"
+      "text": "Only accessibility that passes all these gates simultaneously can enter the default visualisation and confidence layer. The raw mutation rate itself is only provenance: it should be preserved in full, downloadable and traceable, but it should not automatically drive default structure colouring. The default ANNOJOIN structure figure should read the visualisation value after background correction and targetability processing, rather than the bare mutation count. The requirement for confidence / FEC is higher still: only accessibility observations that pass the chemistry, readout, mapping, claim and context gates may become candidates for positive confidence, and they must carry the qualifier \"low reactivity may come from pairing, but it may also come from protein or conformational protection\"."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 NAI-MaP，而是尊重它的强项。NAI-MaP 对 2′-OH 可及性/柔性非常有力，还能在病毒颗粒这种贴近真实状态的环境里工作；错误发生在把“反应性高低”一律写成“配对/不配对”，或把 raw 突变率写成结构真值，又或把同篇工作里的配对/交联数据混进 NAI-MaP 的可及性层时。NAI-MaP 越是能在病毒颗粒里同时拿到多种数据，FoldBridge 越要把“某个位点测到了突变”和“这个突变率能作为可及性证据”分开。网页上的默认颜色回答“在 NAI-MaP 解释边界内，这个位点有什么可读信号”；详情表才回答“原始数据里记录了什么”。一旦把这两层混在一起，同篇工作里的配对或交联数据就会被读者当成 NAI-MaP 自己认证的可及性结论。"
+      "text": "This does not weaken NAI-MaP; it respects its strengths. NAI-MaP is very powerful for 2′-OH accessibility/flexibility and can also work inside an environment close to the real state, such as virus particles; the error occurs when \"high or low reactivity\" is uniformly written as \"paired/unpaired\", or the raw mutation rate is written as structural ground truth, or the pairing/crosslinking data from the same piece of work are mixed into the NAI-MaP accessibility layer. The more NAI-MaP can obtain multiple kinds of data inside virus particles at once, the more FoldBridge must separate \"a mutation was measured at a given site\" from \"this mutation rate can serve as accessibility evidence\". The default colour on the web answers \"within the NAI-MaP interpretive boundary, what readable signal does this site have\"; the detail table answers \"what was recorded in the raw data\". Once these two layers are mixed together, the pairing or crosslinking data from the same piece of work will be taken by the reader as an accessibility conclusion certified by NAI-MaP itself."
     },
     {
       "type": "heading",
-      "text": "真实 case：一份 NAI-MaP profile 会怎样流过三个图层（示意）"
+      "text": "A real case: how a NAI-MaP profile flows through three layers (illustrative)"
     },
     {
       "type": "paragraph",
-      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 NAI-MaP profile 如何分成三个不同的层。"
+      "text": "There is no real FoldBridge accession here, so what follows is a clearly labelled illustrative scenario, used to show how a single NAI-MaP profile divides into three different layers."
     },
     {
       "type": "paragraph",
-      "text": "设想一份在病毒颗粒内测得的 DENV NAI-MaP profile 进入 FoldBridge。第一层是 raw observation：逐位点的突变率、对应的无 NAI 背景对照、文库元数据、测序坐标——这些都原样保存，作为 provenance，可下载、可重算。它们记录的是“病毒颗粒里测到了多少突变”，还不是这个位点的可及性结论。NAI 酰化加合物被 MaP 读成突变这一事实，本身就提醒我们：这一层记录的是化学修饰的测序印记，不是配对状态。"
+      "text": "Imagine a DENV NAI-MaP profile measured inside virus particles entering FoldBridge. The first layer is the raw observation: the per-position mutation rate, the corresponding no-NAI background control, the library metadata, the sequencing coordinates, all preserved as is, as provenance, downloadable and recomputable. What they record is \"how many mutations were measured inside the virus particles\", not yet an accessibility conclusion for this site. The very fact that the NAI acylation adduct is read by MaP as a mutation reminds us: this layer records the sequencing imprint of a chemical modification, not a pairing state."
     },
     {
       "type": "paragraph",
-      "text": "第二层是 visual signal：突变率减去背景、做归一化、通过 chemistry targetability 与 MaP readout gate 之后，得到可以在结构页面上色的 2′-OH 可及性/柔性值。读者第一眼看到的颜色应该来自这一层，因为它是在 NAI-MaP assay model 下可解释的颜色，而不是裸的突变计数。高值提示该位点 2′-OH 更可及、更柔性，低值提示被配对或被保护——但这两个判断都需要 background 校正和上下文支撑。"
+      "text": "The second layer is the visual signal: after the mutation rate has had its background subtracted, been normalised, and passed the chemistry targetability and MaP readout gate, one obtains a 2′-OH accessibility/flexibility value that can be coloured on the structure page. The colour the reader sees first should come from this layer, because it is a colour that is interpretable under the NAI-MaP assay model, not the bare mutation count. A high value suggests the 2′-OH at this site is more accessible and flexible, a low value suggests it is paired or protected, but both judgements need background correction and contextual support."
     },
     {
       "type": "paragraph",
-      "text": "第三层是 confidence candidate：只有那些既通过 SHAPE 酰化与 MaP readout gate、又通过 mapping/claim/context 检查的可及性观测，才进入 confidence 评估，并且仍要带着“低可及性可能来自配对、也可能来自蛋白或构象保护”这一限定。来自交联/SPLASH 的配对相互作用是另一类证据，不应被悄悄折叠进 NAI-MaP 的可及性 confidence。"
+      "text": "The third layer is the confidence candidate: only those accessibility observations that pass both the SHAPE acylation and MaP readout gate, and the mapping/claim/context check, enter the confidence assessment, and they must still carry the qualifier \"low accessibility may come from pairing, but it may also come from protein or conformational protection\". The pairing interactions from crosslinking/SPLASH are another class of evidence and should not be quietly folded into the NAI-MaP accessibility confidence."
     },
     {
       "type": "paragraph",
-      "text": "这个示意场景的价值，在于它让 NAI-MaP 这篇工作里两类信号各归其位：同一份 NAI-MaP profile 可以同时产出原始观测、可视化信号和 confidence 候选，而来自 psoralen 交联的配对相互作用又是另一条独立证据线，四者各有 provenance。NAI-MaP 的科普文章如果把可及性 readout 和交联配对混成一种颜色，读者会以为“NAI 直接测到了配对”，这正是本方法最该提防的误读。图层越自动，越要在颜色和 confidence 里把“2′-OH 可及性”与“配对关系”标成两件事。"
+      "text": "The value of this illustrative scenario is that it puts the two classes of signal in this piece of NAI-MaP work each in their proper place: the same NAI-MaP profile can simultaneously produce a raw observation, a visualisation signal and a confidence candidate, whilst the pairing interactions from psoralen crosslinking are yet another independent line of evidence, all four with their own provenance. If a popular-science article about NAI-MaP blends the accessibility readout and the crosslinking pairing into one colour, the reader will think \"NAI measured pairing directly\", and that is precisely the misreading this method must most guard against. The more automated the layer, the more \"2′-OH accessibility\" and \"pairing relationship\" must be marked as two different things in the colour and the confidence."
     },
     {
       "type": "paragraph",
-      "text": "所以，NAI-MaP 文章的正确结尾不是“高反应性证明该碱基不配对”，而是：NAI-MaP 能为 RNA structure interpretation 提供有力的 2′-OH 可及性/柔性线索，并且把化学加合物用突变图谱稳健地读了出来；在 FoldBridge 中，这种线索只有先作为 raw provenance 保存、再通过 SHAPE 化学与 MaP readout、mapping、claim、context 等 gate 之后，才会成为默认结构解释和 confidence 的一部分。"
+      "text": "So the correct ending for a NAI-MaP article is not \"high reactivity proves this base is unpaired\", but rather: NAI-MaP can provide powerful 2′-OH accessibility/flexibility cues for RNA structure interpretation, and reads out the chemical adduct robustly via mutational profiling; in FoldBridge, such a cue becomes part of the default structural interpretation and confidence only after it is first preserved as raw provenance and then passes the gates of SHAPE chemistry and MaP readout, mapping, claim and context."
     }
   ]
 }

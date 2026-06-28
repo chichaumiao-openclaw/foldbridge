@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "shape-2a3",
-  "title": "2A3：新一代 SHAPE 试剂，读的还是 2′-OH",
-  "date": "2026-06-25",
+  "title": "2A3: a next-generation SHAPE reagent that still reads the 2′-OH",
+  "date": "",
   "figure_count": 4,
   "rep_pmid": "33398343",
   "rep_pmcid": "PMC8034653",
@@ -11,25 +11,29 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "如果只看数据表，2A3 很容易被误读成一种“比旧试剂更准、能直接给碱基判定配对”的 RNA 结构染色剂。这个理解是错的。2A3 是一种 SHAPE 酰化试剂，它的解释对象和所有 SHAPE 方法一样，是核糖 2′-OH 的化学可及性：当一个核苷酸的 2′ 羟基没有被配对、被蛋白或配体遮挡、也没有被复杂构象保护时，它更容易被酰化。2A3 相对 1M7、NAI 这些上一代试剂的卖点，是更高的酰化效率和更广的适用性——它能在更多核苷酸上留下可读信号，包括一些旧试剂“看不见”的区域。但更高的效率读的仍然是同一件事：2′-OH 可及性，而不是“这个碱基一定配对”或“这个碱基一定不配对”。"
+      "text": "Date: 2026-06-25"
     },
     {
       "type": "paragraph",
-      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 confidence 层，就必须先问一个更具体的问题：这个数字在 SHAPE 的 assay model 下能不能被解释为 2′-OH 可及性支持？2A3 的原始 mutation frequency 是 raw provenance；它必须先通过 assay 化学、background/readout 上下文，才能成为默认结构颜色或 confidence 的候选。试剂换得更强，并不会取消这条解释链。"
+      "text": "If you go by the data table alone, 2A3 is easily misread as an RNA structure stain that is \"more accurate than the old reagents and can determine base pairing directly\". That reading is wrong. 2A3 is a SHAPE acylation reagent, and its interpretive object, like that of all SHAPE methods, is the chemical accessibility of the ribose 2′-OH: when the 2′ hydroxyl of a nucleotide is unpaired, not occluded by protein or ligand, and not protected by a complex conformation, it is more readily acylated. The selling point of 2A3 over previous-generation reagents such as 1M7 and NAI is higher acylation efficiency and broader applicability; it can leave a readable signal on more nucleotides, including some regions the old reagents \"could not see\". But the higher efficiency still reads the same thing: 2′-OH accessibility, not \"this base is definitely paired\" or \"this base is definitely unpaired\"."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary is crucial for FoldBridge. FoldBridge can preserve the raw observed values and can also display experimental signal on the web; but the moment anything enters default structure colouring, interpretive text or a confidence layer, a more specific question must be asked first: under the SHAPE assay model, can this number be interpreted as support for 2′-OH accessibility? The raw mutation frequency of 2A3 is raw provenance; it must first pass the assay chemistry and the background/readout context before it can become a candidate for the default structure colour or confidence. Switching to a stronger reagent does not cancel this interpretive chain."
     },
     {
       "type": "heading",
-      "text": "ex vivo 比较：2A3 把酰化效率做了出来"
+      "text": "ex vivo comparison: 2A3 delivers on acylation efficiency"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-shape-2a3-f1",
       "alt": "2A3 F1",
       "srcBasename": "shape2a3_f1__PMC8034653__F1.jpg",
-      "legend": "**图 1。多种 SHAPE 试剂在 ex vivo 条件下的比较。** Marinus et al. 2021（PMID 33398343，DOI `10.1093/nar/gkaa1255`）的图注（legend）把比较拆成三部分：(A) E. coli 16S 与 23S rRNA 去蛋白后 ex vivo probing 的 SHAPE−MaP mutation frequency 箱线图，箱体覆盖四分位距（Q1 到 Q3），灰色区间从 DMSO 对照的中位数延伸到 NAI 参考的中位数；(B) 所有测试试剂的 ROC 曲线，以 Comparative RNA Web 系统发育推断的 16S/23S rRNA 接受结构为真值计算，内插图给出每种化合物的曲线下面积（AUC）；(C) 16S rRNA 第 567 至 884 位区域内所有试剂的 mutation frequency 样本，凡 mutation frequency 超过该区域中位数 2 倍的碱基被着色，接受结构以 arc plot 表示。",
+      "legend": "**Figure 1. A comparison of multiple SHAPE reagents under ex vivo conditions.** The legend of Marinus et al. 2021 (PMID 33398343, DOI `10.1093/nar/gkaa1255`) breaks the comparison into three parts: (A) a box plot of the SHAPE-MaP mutation frequency of ex vivo probing on deproteinised E. coli 16S and 23S rRNA, with the box covering the interquartile range (Q1 to Q3) and the grey interval extending from the median of the DMSO control to the median of the NAI reference; (B) ROC curves for all tested reagents, calculated against the accepted structures of 16S/23S rRNA from the phylogenetic inference of the Comparative RNA Web system as ground truth, with an inset giving the area under the curve (AUC) for each compound; (C) samples of the mutation frequency of all reagents within the 16S rRNA region from position 567 to 884, where bases with a mutation frequency exceeding twice the regional median are coloured, and the accepted structure is shown as an arc plot.",
       "body": [
-        "这张图最直接的信息是：2A3 之所以被称作新一代试剂，是因为它在 ex vivo 条件下能把可及位点的酰化信号做得更高、更分得开。箱线图里 2A3 的 mutation frequency 分布相对 DMSO 背景抬得更明显，ROC/AUC 则说明这些信号和已知结构的对应关系是站得住的——也就是说更强的酰化没有以牺牲特异性为代价。",
-        "但要把话说准：图里所有可读出的，依然是 2′-OH 可及性。着色碱基是“信号超过区域中位数 2 倍”的位点，它提示这里 2′-OH 更可及，通常对应未配对或环区，而不是某个分子直接判定它配对与否。对 FoldBridge 来说，这意味着 2A3 的高效率扩大了“有信号”的范围，但每一个数字仍然要先减去 DMSO 背景、再放到 assay 上下文里，才能被解释为结构线索。raw mutation frequency 不等于结构。"
+        "The most direct message of this figure is that 2A3 is called a next-generation reagent because, under ex vivo conditions, it can make the acylation signal of accessible sites higher and better separated. In the box plot, the mutation frequency distribution of 2A3 is raised more clearly relative to the DMSO background, whilst the ROC/AUC shows that the correspondence between these signals and the known structure holds up, that is, the stronger acylation comes at no cost to specificity.",
+        "But to put it precisely: everything readable in the figure is still 2′-OH accessibility. The coloured bases are sites whose \"signal exceeds twice the regional median\", suggesting the 2′-OH is more accessible there, usually corresponding to unpaired or loop regions, rather than some molecule determining directly whether it is paired. For FoldBridge, this means the high efficiency of 2A3 broadens the range of \"having signal\", but every number must still first have the DMSO background subtracted and then be placed in the assay context before it can be interpreted as a structural cue. The raw mutation frequency is not the same as structure."
       ],
       "label": "2A3 F1",
       "pmid": "33398343",
@@ -40,17 +44,17 @@
     },
     {
       "type": "heading",
-      "text": "in vivo 比较：活细胞里也分得清 stem 和 loop"
+      "text": "in vivo comparison: stem and loop can be told apart inside living cells too"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-shape-2a3-f2",
       "alt": "2A3 F2",
       "srcBasename": "shape2a3_f2__PMC8034653__F2.jpg",
-      "legend": "**图 2。多种 SHAPE 试剂在 in vivo 条件下的比较。** Marinus et al. 2021（PMID 33398343，DOI `10.1093/nar/gkaa1255`）的图注（legend）说明：(A) E. coli 16S 与 23S rRNA 在活细胞 in vivo probing 的 SHAPE−MaP mutation frequency 箱线图，箱体覆盖四分位距，灰色区间从 DMSO 对照中位数延伸到 NAI 参考中位数；(B) 各试剂的 ROC 曲线，在 E. coli 核糖体晶体结构（PDB: 5IT8）中溶剂暴露残基上、以系统发育推断的接受结构为真值计算，内插图给出各化合物 AUC；(C) 所有 stem–loop 上 in vivo mutation frequency 的中位数，碱基相对 loop 编号，−3 到 −1 为 stem 碱基，0 与 +1 为 loop 碱基；(D) 由 C 计算的 loop 中位 mutation frequency 与 stem 中位 mutation frequency 之比。",
+      "legend": "**Figure 2. A comparison of multiple SHAPE reagents under in vivo conditions.** The legend of Marinus et al. 2021 (PMID 33398343, DOI `10.1093/nar/gkaa1255`) explains: (A) a box plot of the SHAPE-MaP mutation frequency of in vivo probing of E. coli 16S and 23S rRNA in living cells, with the box covering the interquartile range and the grey interval extending from the median of the DMSO control to the median of the NAI reference; (B) ROC curves for each reagent, calculated on the solvent-exposed residues in the E. coli ribosome crystal structure (PDB: 5IT8) against the phylogenetically inferred accepted structure as ground truth, with an inset giving the AUC for each compound; (C) the median in vivo mutation frequency across all stem-loops, with bases numbered relative to the loop, -3 to -1 being stem bases and 0 and +1 being loop bases; (D) the ratio of the median loop mutation frequency to the median stem mutation frequency calculated from C.",
       "body": [
-        "这张图是 2A3 最值得强调的一点：它在活细胞里仍然能把结构语境区分开。C 和 D 把信号按 stem 与 loop 位置归类，loop 碱基（2′-OH 更可及）的 mutation frequency 高于 stem 碱基（被配对保护），两者的比值就是 2A3 在 in vivo 里仍然“读得出可及性差异”的证据。ROC 这次落在晶体结构的溶剂暴露残基上，也呼应了 SHAPE 的本质——它报告的是可及性。",
-        "这里最容易出错的，就是把“活细胞里测到了高信号”写成“活细胞里测到了结构”。活细胞环境里有蛋白、有离子、有拥挤构象，2′-OH 的可及性会随这些因素变化。一个位点 mutation frequency 高，提示此处 2′-OH 在该条件下更可及；低，则可能来自配对，也可能来自蛋白或构象保护——这两个判断都需要 background 校正和上下文支撑。对 FoldBridge 来说，raw observation 必须先经过 readout context，才能成为默认图层或 confidence 的候选；不能让原始 mutation frequency 直接驱动结构上色，哪怕用的是更强的 2A3。"
+        "This figure is the point most worth stressing about 2A3: it can still distinguish the structural context inside living cells. C and D classify the signal by stem and loop position, and the mutation frequency of loop bases (where the 2′-OH is more accessible) is higher than that of stem bases (protected by pairing), with the ratio between the two being the evidence that 2A3 can still \"read out the accessibility difference\" in vivo. The ROC this time falls on the solvent-exposed residues of the crystal structure, which also echoes the essence of SHAPE: it reports accessibility.",
+        "The easiest mistake here is to write \"a high signal was measured inside living cells\" as \"a structure was measured inside living cells\". The living-cell environment has proteins, ions and crowded conformations, and the accessibility of the 2′-OH varies with these factors. A high mutation frequency at a site suggests the 2′-OH there is more accessible under that condition; a low one may come from pairing, but it may also come from protein or conformational protection, and both judgements need background correction and contextual support. For FoldBridge, a raw observation must first pass through the readout context before it can become a candidate for the default layer or confidence; the raw mutation frequency cannot be allowed to drive structure colouring directly, even when the stronger 2A3 is used."
       ],
       "label": "2A3 F2",
       "pmid": "33398343",
@@ -61,17 +65,17 @@
     },
     {
       "type": "heading",
-      "text": "2A3 能看见旧试剂看不见的区域"
+      "text": "2A3 can see regions the old reagents could not"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-shape-2a3-f3",
       "alt": "2A3 F3",
       "srcBasename": "shape2a3_f3__PMC8034653__F3.jpg",
-      "legend": "**图 3。2A3 能探测其他试剂探测不到的核糖体区域。** Marinus et al. 2021（PMID 33398343，DOI `10.1093/nar/gkaa1255`）的图注（legend）展示：(A) E. coli 23S rRNA 第 990 至 1162 位区域内所有试剂的 SHAPE−MaP mutation frequency 样本，凡超过区域中位数 2 倍的碱基被着色，接受结构以 arc plot 表示，超反应残基 U1032 标为红色、一段 19 个核苷酸的无反应区段标为蓝色；(B) A 中结构域的三维模型，按 B factor 着色（PDB: 5IT8），内插图放大了含 2A3 超反应残基 U1032 的螺旋区域。",
+      "legend": "**Figure 3. 2A3 can probe ribosomal regions that other reagents cannot.** The legend of Marinus et al. 2021 (PMID 33398343, DOI `10.1093/nar/gkaa1255`) shows: (A) samples of the SHAPE-MaP mutation frequency of all reagents within the E. coli 23S rRNA region from position 990 to 1162, where bases exceeding twice the regional median are coloured, the accepted structure is shown as an arc plot, the hyper-reactive residue U1032 is marked in red, and a 19-nucleotide unreactive stretch is marked in blue; (B) a three-dimensional model of the domain in A, coloured by B factor (PDB: 5IT8), with an inset zooming in on the helical region containing the 2A3 hyper-reactive residue U1032.",
       "body": [
-        "这张图说明 2A3 适用性的真正含义：它能在一些旧试剂“盲区”的位点上留下可读信号。U1032 这个被 2A3 标成超反应的残基，正是 2A3 比 1M7/NAI 更高酰化效率带来的覆盖增益——同一位点对其他试剂可能信号不足，对 2A3 却足以超过区域中位数 2 倍而被着色。对非专业读者来说，这是 2A3 的吸引力所在：更全的可及性谱。",
-        "但 B factor 的三维视角恰好提醒了边界。U1032 之所以超反应，是因为它所在的螺旋区域局部柔性/可及性高（高 B factor 往往对应更松动的构象），这仍然是一个关于 2′-OH 可及性的解释，不是碱基级配对真值。同理，那段 19 nt 的无反应区段提示该处 2′-OH 不可及，可能是配对、也可能是结构压实或被遮挡。FoldBridge 引用这类结果时，应当写成“该位点的 2A3 可及性信号高/低”，而不是“该碱基在此处配对/不配对”。试剂能看见更多区域，是把更多 2′-OH 纳入可读范围，而不是把可及性直接升级成结构判定。"
+        "This figure shows the real meaning of 2A3's applicability: it can leave a readable signal at sites that are \"blind spots\" for the old reagents. U1032, the residue marked by 2A3 as hyper-reactive, is exactly the coverage gain brought by 2A3's higher acylation efficiency over 1M7/NAI; the same site may have insufficient signal for other reagents, but for 2A3 it is enough to exceed twice the regional median and be coloured. For a non-specialist reader, this is where the appeal of 2A3 lies: a fuller accessibility spectrum.",
+        "But the three-dimensional view of B factor reminds us precisely of the boundary. U1032 is hyper-reactive because the helical region it sits in has locally high flexibility/accessibility (a high B factor often corresponds to a looser conformation), and this is still an interpretation about 2′-OH accessibility, not a base-level pairing ground truth. By the same token, the 19 nt unreactive stretch suggests the 2′-OH there is inaccessible, which may be pairing, but may also be structural compaction or occlusion. When FoldBridge cites this kind of result, it should be written as \"the 2A3 accessibility signal at this site is high/low\", not \"this base is paired/unpaired here\". The reagent being able to see more regions means bringing more 2′-OH into the readable range, not upgrading accessibility directly into a structural determination."
       ],
       "label": "2A3 F3",
       "pmid": "33398343",
@@ -82,17 +86,17 @@
     },
     {
       "type": "heading",
-      "text": "用 2A3 约束结构：更好的建模，仍是同一条 assay 边界"
+      "text": "Using 2A3 to constrain structure: better modelling, still the same assay boundary"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-shape-2a3-f4",
       "alt": "2A3 F4",
       "srcBasename": "shape2a3_f4__PMC8034653__F4.jpg",
-      "legend": "**图 4。2A3 在实验驱动的 RNA 结构建模上优于 NAI。** Marinus et al. 2021（PMID 33398343，DOI `10.1093/nar/gkaa1255`）的图注（legend）说明：(A) 对 E. coli 16S 与 23S rRNA in vivo probing 数据（NAI 与 2A3）做最优 slope/intercept 取值对的网格搜索（jackknifing），数值为各取值对预测二级结构的 sensitivity 与 PPV 的几何平均，选定的取值对用绿框标出；(B) E. coli 16S rRNA 参考结构（上）与分别用 NAI、2A3 约束推断出的结构（下）的 arc plot 比较，黑/绿色弧为正确预测的碱基对、紫色弧为未预测出的碱基对、红色弧为错误预测的碱基对，并标出每次预测的 PPV 与 sensitivity。",
+      "legend": "**Figure 4. 2A3 outperforms NAI in experiment-driven RNA structure modelling.** The legend of Marinus et al. 2021 (PMID 33398343, DOI `10.1093/nar/gkaa1255`) explains: (A) a grid search (jackknifing) of the optimal slope/intercept value pairs for the E. coli 16S and 23S rRNA in vivo probing data (NAI and 2A3), where the value is the geometric mean of the sensitivity and PPV of the secondary structure predicted by each value pair, with the selected value pair marked in a green box; (B) an arc plot comparison of the E. coli 16S rRNA reference structure (top) and the structures inferred using NAI and 2A3 constraints respectively (bottom), with black/green arcs being correctly predicted base pairs, purple arcs being base pairs not predicted, and red arcs being incorrectly predicted base pairs, and the PPV and sensitivity of each prediction marked.",
       "body": [
-        "这张图把 2A3 的价值放在正确的位置上：作为结构建模的约束，2A3 推断出的结构在 sensitivity 与 PPV 上优于 NAI。换句话说，更高效率、更广覆盖的可及性信号，确实能让实验驱动的结构模型更接近参考结构。这是 2A3 相对上一代试剂的实打实的进步。",
-        "但 arc plot 的配色本身就说明了边界：同一张结构图里有正确预测、未预测出和错误预测三种弧。2A3 是更好的约束，不是结构真值的替代品。定量建模越精细，越需要把 chemical reactivity、accessibility、base pairing、tertiary protection、protein/ligand protection 和 readout bias 分开。FoldBridge 需要的写法是：2A3 信号可以帮助约束结构模型，也可以帮助读者理解哪些区域更像是可及的、未配对的；但它不能绕过 SHAPE 的 assay 化学，更不能让 slope/intercept 调出来的漂亮模型掩盖掉“这仍然是可及性推断”这个前提。"
+        "This figure places the value of 2A3 in the right position: as a constraint for structure modelling, the structure inferred with 2A3 outperforms NAI in sensitivity and PPV. In other words, a higher-efficiency, broader-coverage accessibility signal can indeed make an experiment-driven structure model closer to the reference structure. This is a genuine advance of 2A3 over the previous generation of reagents.",
+        "But the colouring of the arc plot itself illustrates the boundary: the same structure figure has three kinds of arc, correctly predicted, not predicted and incorrectly predicted. 2A3 is a better constraint, not a substitute for structural ground truth. The more refined the quantitative modelling, the greater the need to separate chemical reactivity, accessibility, base pairing, tertiary protection, protein/ligand protection and readout bias. The way FoldBridge needs to write it is: the 2A3 signal can help constrain a structure model and can help the reader understand which regions look more like accessible, unpaired ones; but it cannot bypass the assay chemistry of SHAPE, and even less can it let a beautiful model tuned by slope/intercept mask the premise that \"this is still an accessibility inference\"."
       ],
       "label": "2A3 F4",
       "pmid": "33398343",
@@ -103,47 +107,47 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 SHAPE (2A3)"
+      "text": "How FoldBridge should write about SHAPE (2A3)"
     },
     {
       "type": "paragraph",
-      "text": "2A3 没有 DMS 那样清晰的“A/C 可解释、G/U 不可解释”的碱基靶点边界——它和所有 SHAPE 试剂一样，靶点是核糖 2′-OH，原则上每个核苷酸都有 2′-OH。所以 2A3 的解释闸门不是“哪个碱基能上色”，而是一个面向 2′-OH 可及性的多级 gate：化学靶点可达性（这个位点的 2′-OH 是否在当前文库里被有效酰化与读出，2A3 的高效率会扩大这个范围，但不取消逐位点检查）、readout 上下文（mutation frequency 是否减过 DMSO 背景、是否做过缩放与归一化）、以及 mapping 与 claim gate（坐标是否可靠、是否在该实验条件下成立）。"
+      "text": "2A3 does not have a clear \"A/C interpretable, G/U uninterpretable\" base-target boundary like DMS; like all SHAPE reagents, its target is the ribose 2′-OH, and in principle every nucleotide has a 2′-OH. So the interpretive gate of 2A3 is not \"which base can be coloured\", but a multi-level gate oriented to 2′-OH accessibility: chemical-target reachability (is the 2′-OH at this site effectively acylated and read out in the current library, where 2A3's high efficiency broadens this range but does not cancel the per-position check), readout context (has the mutation frequency had its DMSO background subtracted, has it been scaled and normalised), and the mapping and claim gate (are the coordinates reliable, does it hold under this experimental condition)."
     },
     {
       "type": "paragraph",
-      "text": "只有同时通过这些 gate 的可及性，才能进入默认可视化和 confidence 层。原始 mutation frequency 本身只是 provenance：它该被完整保存、可下载、可追溯，但不应该自动驱动默认结构上色。ANNOJOIN 的默认结构图应读取经过 background 校正与 targetability 处理后的可视化值，而不是裸的 mutation frequency。confidence / FEC 的要求更高：只有通过化学、readout、mapping、claim 与 context gate 的可及性观测，才可以成为 positive confidence 的候选。2A3 能让更多位点“有信号”，恰恰意味着这道闸门要更稳，否则扩大的覆盖就会变成扩大的误读。"
+      "text": "Only accessibility that passes all these gates simultaneously can enter the default visualisation and confidence layer. The raw mutation frequency itself is only provenance: it should be preserved in full, downloadable and traceable, but it should not automatically drive default structure colouring. The default ANNOJOIN structure figure should read the visualisation value after background correction and targetability processing, rather than the bare mutation frequency. The requirement for confidence / FEC is higher still: only accessibility observations that pass the chemistry, readout, mapping, claim and context gates may become candidates for positive confidence. 2A3 being able to give more sites \"signal\" means precisely that this gate has to be steadier, otherwise the broadened coverage becomes broadened misreading."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 2A3，而是尊重它的强项。2A3 对 2′-OH 可及性的探测比上一代更高效、更全面，在 ex vivo、in vivo 和结构建模上都展示了这一点；错误发生在把“可及性更高的覆盖”一律写成“配对判定更准”，或把 raw mutation frequency 写成结构真值时。2A3 覆盖越全，FoldBridge 越要把“某个位点有 mutation frequency”和“这个数值能作为可及性证据”分开，而不是让更高的覆盖率自动变成更多的结构判定。网页上的默认颜色回答“在 SHAPE (2A3) 解释边界内，这个位点有什么可读信号”；详情表才回答“原始数据里记录了什么”。一旦把这两层混在一起，2A3 更全的覆盖反而会让更多原始数值被误当成已认证的配对判定。"
+      "text": "This does not weaken 2A3; it respects its strengths. 2A3 probes 2′-OH accessibility more efficiently and more comprehensively than the previous generation, as shown in ex vivo, in vivo and structure modelling; the error occurs when \"higher-accessibility coverage\" is uniformly written as \"more accurate pairing determination\", or the raw mutation frequency is written as structural ground truth. The fuller the coverage of 2A3, the more FoldBridge must separate \"a given site has a mutation frequency\" from \"this value can serve as accessibility evidence\", rather than letting a higher coverage rate automatically become more structural determinations. The default colour on the web answers \"within the SHAPE (2A3) interpretive boundary, what readable signal does this site have\"; the detail table answers \"what was recorded in the raw data\". Once these two layers are mixed together, the fuller coverage of 2A3 will instead cause more raw values to be mistaken for certified pairing determinations."
     },
     {
       "type": "heading",
-      "text": "真实 case：一份 2A3 profile 会怎样流过三个图层（示意）"
+      "text": "A real case: how a 2A3 profile flows through three layers (illustrative)"
     },
     {
       "type": "paragraph",
-      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 2A3 profile 如何分成三个不同的层。"
+      "text": "There is no real FoldBridge accession here, so what follows is a clearly labelled illustrative scenario, used to show how a single 2A3 profile divides into three different layers."
     },
     {
       "type": "paragraph",
-      "text": "设想一份在 E. coli 活细胞里用 2A3 测得的 SHAPE−MaP profile 进入 FoldBridge。第一层是 raw observation：逐位点的 mutation frequency、对应的 DMSO 对照、文库元数据、测序坐标——这些都原样保存，作为 provenance，可下载、可重算。它们记录的是“2A3 处理后读到了多少 mutation frequency”，还不是这个位点的可及性结论。因为 2A3 效率高，这一层往往比旧试剂记录到更多非零信号位点，正因如此更要把它和解释层分开。"
+      "text": "Imagine a SHAPE-MaP profile measured with 2A3 in living E. coli cells entering FoldBridge. The first layer is the raw observation: the per-position mutation frequency, the corresponding DMSO control, the library metadata, the sequencing coordinates, all preserved as is, as provenance, downloadable and recomputable. What they record is \"how much mutation frequency was read after 2A3 treatment\", not yet an accessibility conclusion for this site. Because 2A3 is highly efficient, this layer often records more non-zero signal sites than the old reagents, which is all the more reason to keep it apart from the interpretive layer."
     },
     {
       "type": "paragraph",
-      "text": "第二层是 visual signal：mutation frequency 减去 DMSO 背景、做归一化缩放、通过 mapping 与 readout gate 之后，得到可以在结构页面上色的 2′-OH 可及性值。读者第一眼看到的颜色应该来自这一层，因为它是在 SHAPE assay model 下可解释的颜色，而不是裸的 mutation frequency。"
+      "text": "The second layer is the visual signal: after the mutation frequency has had the DMSO background subtracted, been normalised and scaled, and passed the mapping and readout gate, one obtains a 2′-OH accessibility value that can be coloured on the structure page. The colour the reader sees first should come from this layer, because it is a colour that is interpretable under the SHAPE assay model, not the bare mutation frequency."
     },
     {
       "type": "paragraph",
-      "text": "第三层是 confidence candidate：只有那些既通过化学与 readout gate、又通过 mapping/claim/context 检查的可及性观测，才进入 confidence 评估，并且仍要带着“可及性下降可能来自配对、也可能来自蛋白或构象保护”这一限定。"
+      "text": "The third layer is the confidence candidate: only those accessibility observations that pass both the chemistry and readout gate, and the mapping/claim/context check, enter the confidence assessment, and they must still carry the qualifier \"a drop in accessibility may come from pairing, but it may also come from protein or conformational protection\"."
     },
     {
       "type": "paragraph",
-      "text": "这个示意场景的价值，在于它点出 2A3 这种高效率试剂特有的张力：同一份 2A3 profile 可以同时产出原始观测、可视化信号和 confidence 候选，三者不是同一件事。2A3 因为效率高、覆盖广，最容易让人以为“信号更多就等于结论更硬”，于是把扩大的覆盖直接读成扩大的结构判定。试剂越强、图层越自动，越要在颜色和 confidence 里讲清楚：多出来的非零位点是更全的可及性谱，不是更硬的配对结论。"
+      "text": "The value of this illustrative scenario is that it highlights the tension specific to a high-efficiency reagent like 2A3: the same 2A3 profile can simultaneously produce a raw observation, a visualisation signal and a confidence candidate, and the three are not the same thing. Because 2A3 is highly efficient and broadly covering, it is easiest to make people think \"more signal equals firmer conclusions\", and so read the broadened coverage directly as broadened structural determination. The stronger the reagent and the more automated the layer, the more the colour and confidence must make clear: the extra non-zero sites are a fuller accessibility spectrum, not firmer pairing conclusions."
     },
     {
       "type": "paragraph",
-      "text": "所以，SHAPE (2A3) 文章的正确结尾不是“信号更高更全就证明该碱基配对状态”，而是：2A3 能为 RNA structure interpretation 提供更高效、更全面的 in vivo 2′-OH 可及性线索；在 FoldBridge 中，这种线索只有先作为 raw provenance 保存、再通过化学与 readout、mapping、claim、context 等 gate 之后，才会成为默认结构解释和 confidence 的一部分。"
+      "text": "So the correct ending for a SHAPE (2A3) article is not \"a higher, fuller signal proves the pairing state of this base\", but rather: 2A3 can provide more efficient and more comprehensive in vivo 2′-OH accessibility cues for RNA structure interpretation; in FoldBridge, such a cue becomes part of the default structural interpretation and confidence only after it is first preserved as raw provenance and then passes the chemistry and readout, mapping, claim and context gates."
     }
   ]
 }

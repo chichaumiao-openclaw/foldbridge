@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "icshape",
-  "title": "icSHAPE：在活细胞里读 2′-OH 的可及性",
-  "date": "2026-06-25",
+  "title": "icSHAPE: reading the accessibility of 2′-OH in living cells",
+  "date": "",
   "figure_count": 4,
   "rep_pmid": "25799993",
   "rep_pmcid": "PMC4376618",
@@ -11,25 +11,29 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "如果只看数据表，icSHAPE 很容易被误读成“既然是在活细胞里测的，那它一定直接看到了每个碱基配没配对”。这个理解是错的。icSHAPE 用 NAI-N3 在活细胞内酰化 2′-OH，再用 click 化学接上生物素、做 streptavidin 亲和富集——这一整套流程抓出来的是“哪些 2′-OH 在体内可及”，而不是配对状态本身。icSHAPE 的解释对象，是核糖 2′-OH 在活细胞（in vivo）里的化学可及性：当一个核苷酸的 2′ 羟基没有被配对、被蛋白或配体遮挡、也没有被复杂构象保护时，它更容易被 NAI-N3 这种酰化试剂修饰。被修饰的 RNA 再经过 click 化学接上生物素、做亲和富集，最后进入测序读出。也就是说，icSHAPE 首先报告的是一类化学位点是否可及，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”。"
+      "text": "Date: 2026-06-25"
     },
     {
       "type": "paragraph",
-      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 confidence 层，就必须先问一个更具体的问题：这个数字在 icSHAPE 的 assay model 下能不能被解释为 2′-OH 可及性支持？icSHAPE 的原始 RT-stop 信号是 raw provenance；它必须先通过 assay 化学、background/readout 上下文，才能成为默认结构颜色或 confidence 的候选。"
+      "text": "If you only look at the data table, icSHAPE is easily misread as \"since it was measured in living cells, it must have directly seen whether each base is paired or not\". That reading is wrong. icSHAPE uses NAI-N3 to acylate the 2′-OH inside living cells, then uses click chemistry to attach biotin and performs streptavidin affinity enrichment; what this whole workflow captures is \"which 2′-OH are accessible in vivo\", not the pairing state itself. The object of interpretation for icSHAPE is the chemical accessibility of the ribose 2′-OH in living cells (in vivo): when a nucleotide's 2′ hydroxyl is not paired, not shielded by a protein or ligand, and not protected by a complex conformation, it is more readily modified by an acylating reagent such as NAI-N3. The modified RNA then has biotin attached by click chemistry, undergoes affinity enrichment, and finally enters the sequencing readout. That is to say, what icSHAPE reports first is whether a class of chemical site is accessible, rather than directly reporting that \"this base must be paired\" or \"this base must be unpaired\"."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary is crucial for FoldBridge. FoldBridge can preserve the raw observed values, and it can display experimentally derived signal on the web; but as soon as the signal enters default structure colouring, interpretive text, or the confidence layer, it must first ask a more specific question: can this number, under the icSHAPE assay model, be interpreted as support for 2′-OH accessibility? The raw RT-stop signal of icSHAPE is raw provenance; it must first pass the assay chemistry and the background/readout context before it can become a candidate for default structure colour or confidence."
     },
     {
       "type": "heading",
-      "text": "icSHAPE 的化学链条：酰化 2′-OH，再 click 富集"
+      "text": "The chemical chain of icSHAPE: acylate the 2′-OH, then click-enrich"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-icshape-f1",
       "alt": "Spitale et al. 2015 F1",
       "srcBasename": "spitale2015_f1__F1.jpg",
-      "legend": "**图 1。icSHAPE 的化学方案与建库流程。** Spitale et al. 2015（PMID 25799993，DOI `10.1038/nature14263`）的图注（legend）把 icSHAPE 拆成几个环节：(a) 酰化 RNA 的化学制备方案，修饰后的 RNA 可以用 biotin-streptavidin 亲和纯化；(b) icSHAPE 的修饰与纯化步骤示意，最终生成测序文库；(c) 经过 streptavidin 亲和分离后，biotin 修饰 RNA 的 dot blot；(d) icSHAPE 处理 mESC 来源 rRNA 的变性凝胶电泳，右侧是由深度测序得到的对应 icSHAPE profile；(e) 与 in vivo 更高反应性区域对应的 rRNA Pymol 表示（PDB 3J3D）；(f) 与 in vitro 更高反应性区域对应的 rRNA Pymol 表示。",
+      "legend": "**Figure 1. The chemical scheme and library workflow of icSHAPE.** The legend of Spitale et al. 2015 (PMID 25799993, DOI `10.1038/nature14263`) breaks icSHAPE down into several stages: (a) the chemical preparation scheme for acylating RNA, with the modified RNA amenable to biotin-streptavidin affinity purification; (b) a schematic of the modification and purification steps of icSHAPE, ultimately generating a sequencing library; (c) a dot blot of biotin-modified RNA after streptavidin affinity separation; (d) denaturing gel electrophoresis of rRNA derived from mESC processed by icSHAPE, with the corresponding icSHAPE profile obtained by deep sequencing on the right; (e) a Pymol representation of rRNA (PDB 3J3D) corresponding to regions of higher in vivo reactivity; (f) a Pymol representation of rRNA corresponding to regions of higher in vitro reactivity.",
       "body": [
-        "从这张图就能看出 icSHAPE 的逻辑：它不是凭空给每个碱基贴标签，而是先用化学把“2′-OH 可及”这件事变成可以富集、可以测序的物理信号。NAI-N3 酰化 2′-OH，click 化学接上把手做富集，再进入文库——每一步都决定了最后表格里的数字到底代表什么。",
-        "更重要的是，e 和 f 把 in vivo 与 in vitro 的反应性差异直接画到了 rRNA 三维结构上。这说明 icSHAPE 报告的是 2′-OH 的可及性，而这个可及性会随环境（活细胞里有蛋白、有离子、有拥挤构象；试管里没有）而变化。对 FoldBridge 来说，这意味着同一段 RNA 的 icSHAPE 信号不能脱离“在哪种条件下测的”来解释。raw provenance 必须带着 assay context 一起保存。"
+        "This figure shows the logic of icSHAPE: it does not assign labels to each base out of thin air, but first uses chemistry to turn \"the 2′-OH is accessible\" into a physical signal that can be enriched and sequenced. NAI-N3 acylates the 2′-OH, click chemistry attaches a handle for enrichment, and the result enters the library; each step determines what the numbers in the final table actually represent.",
+        "More importantly, e and f draw the difference in reactivity between in vivo and in vitro directly onto the three-dimensional structure of rRNA. This shows that icSHAPE reports the accessibility of the 2′-OH, and that this accessibility varies with the environment (in living cells there are proteins, ions, and crowded conformations; in the test tube there are none). For FoldBridge, this means that the icSHAPE signal of the same stretch of RNA cannot be interpreted apart from \"under which condition it was measured\". Raw provenance must be preserved together with its assay context."
       ],
       "label": "Spitale et al. 2015 F1",
       "pmid": "25799993",
@@ -40,17 +44,17 @@
     },
     {
       "type": "heading",
-      "text": "RT-stop 读出：先减背景，才谈可及性"
+      "text": "The RT-stop readout: subtract the background before talking about accessibility"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-icshape-f2",
       "alt": "Spitale et al. 2015 F2",
       "srcBasename": "spitale2015_f2__F2.jpg",
-      "legend": "**图 2。icSHAPE 信号如何从 RT-stop 分布变成可及性度量。** Spitale et al. 2015（PMID 25799993，DOI `10.1038/nature14263`）的图注（legend）说明：(a) transcriptome、DMSO 对照与 icSHAPE 文库各自的 RT stop 分布；(b) MALAT1 RNA（chr19:5796010-5796081）的 icSHAPE data track 与 VTD 计算，icSHAPE 数据被缩放到 0（无反应性）到 1（最大反应性）；(c) icSHAPE 文库的 VTD 分布；(d) icSHAPE 数据在 in vivo 与 in vitro 的 GINI 指数；(e) 转录组中所有 hexamer motif 的 VTD profile 分布，并标出了几个与转录后调控相关 motif 的 bin 位置。",
+      "legend": "**Figure 2. How the icSHAPE signal goes from an RT-stop distribution to a measure of accessibility.** The legend of Spitale et al. 2015 (PMID 25799993, DOI `10.1038/nature14263`) explains: (a) the RT stop distributions of the transcriptome, the DMSO control, and the icSHAPE library respectively; (b) the icSHAPE data track and VTD calculation for MALAT1 RNA (chr19:5796010-5796081), with the icSHAPE data scaled to between 0 (no reactivity) and 1 (maximum reactivity); (c) the VTD distribution of the icSHAPE library; (d) the GINI index of the icSHAPE data for in vivo and in vitro; (e) the distribution of VTD profiles for all hexamer motifs in the transcriptome, with the bin positions of several motifs related to post-transcriptional regulation marked.",
       "body": [
-        "这张图是 icSHAPE 最值得强调的安全阀。逆转录在被酰化的 2′-OH 位点前停下来，于是修饰被读成 RT-stop。但 RT-stop 不是只有修饰才会产生：转录组本身、DMSO 对照里也有 RT-stop。所以 icSHAPE 的信号必须先减去 DMSO 背景、再做缩放（0 到 1），才能被解释为 2′-OH 可及性的线索。raw RT-stop 本身不等于结构。",
-        "这里最容易出错的，就是把“测到了 RT-stop”写成“测到了结构”。VTD（一种基于 RT-stop 的反应性计算）、GINI 指数、hexamer motif 分布，这些都是在告诉读者：icSHAPE 的数值是 readout、background 和归一化之后的观测量，而不是 icSHAPE 分子直接给出的结构标签。一个位点缩放后接近 1，提示 2′-OH 更可及；接近 0 提示被配对或被保护——但这两个判断都需要 background 校正和上下文支撑。对 FoldBridge 来说，raw observation 必须先经过 readout context，才能成为默认图层或 confidence 的候选；不能让原始 RT-stop 计数直接驱动结构上色。"
+        "This figure is the safeguard most worth emphasising for icSHAPE. Reverse transcription halts in front of an acylated 2′-OH site, so the modification is read as an RT-stop. But RT-stops are not produced only by modification: the transcriptome itself, and the DMSO control, also have RT-stops. So the icSHAPE signal must first have the DMSO background subtracted and then be scaled (0 to 1) before it can be interpreted as a clue to 2′-OH accessibility. A raw RT-stop is not in itself structure.",
+        "The easiest mistake to make here is to write \"an RT-stop was measured\" as \"structure was measured\". VTD (a reactivity calculation based on RT-stops), the GINI index, and the hexamer motif distribution are all telling the reader that the icSHAPE number is a measured quantity arrived at after readout, background, and normalisation, rather than a structural label given directly by the icSHAPE molecule. A site that, after scaling, is close to 1 suggests a more accessible 2′-OH; close to 0 suggests it is paired or protected; but both of these judgements require background correction and contextual support. For FoldBridge, the raw observation must first pass through the readout context before it can become a candidate for the default layer or confidence; raw RT-stop counts cannot be allowed to drive structure colouring directly."
       ],
       "label": "Spitale et al. 2015 F2",
       "pmid": "25799993",
@@ -61,17 +65,17 @@
     },
     {
       "type": "heading",
-      "text": "生物学读出：可及性谱能照见功能结构"
+      "text": "The biological readout: an accessibility profile can illuminate functional structures"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-icshape-f3",
       "alt": "Spitale et al. 2015 F3",
       "srcBasename": "spitale2015_f3__F3.jpg",
-      "legend": "**图 3。icSHAPE 可及性谱在翻译相关结构上的读出。** Spitale et al. 2015（PMID 25799993，DOI `10.1038/nature14263`）的图注（legend）展示：(a) 核糖体翻译 mRNA 的卡通示意，uORF 起始位点表现为在经典起始密码子上游起始，经典起始位置标为 “AUG”，N 端截短则表现为核糖体在经典 “AUG” 3′ 端起始；(b) 经典起始密码子位置的 icSHAPE profile；(c) uORF 与 N 端截短位点的 icSHAPE profile；(d) 暂停核糖体及其 A-P-E 位点（A：acceptor；P：peptidyl-transferase；E：exit）的卡通示意；(e) 核糖体暂停位点处的 icSHAPE profile；(f) 暂停序列阴性对照位点的 icSHAPE profile，灰色框标出了真实暂停位点上游相对于对照的结构差异区域。",
+      "legend": "**Figure 3. The readout of the icSHAPE accessibility profile on translation-related structures.** The legend of Spitale et al. 2015 (PMID 25799993, DOI `10.1038/nature14263`) shows: (a) a cartoon schematic of a ribosome translating an mRNA, where a uORF start site is manifested as initiation upstream of the canonical start codon, the canonical start position is marked \"AUG\", and an N-terminal truncation is manifested as the ribosome initiating 3′ of the canonical \"AUG\"; (b) the icSHAPE profile at the canonical start codon position; (c) the icSHAPE profile at uORF and N-terminal truncation sites; (d) a cartoon schematic of a paused ribosome and its A-P-E sites (A: acceptor; P: peptidyl-transferase; E: exit); (e) the icSHAPE profile at ribosome pause sites; (f) the icSHAPE profile at the negative control sites for the pause sequence, with grey boxes marking the regions of structural difference relative to the control upstream of the genuine pause sites.",
       "body": [
-        "这张图说明 icSHAPE 不只是化学测量，它的可及性谱可以照见有功能意义的结构：起始密码子、uORF、核糖体暂停位点上游，这些地方的 2′-OH 可及性模式各有特征。对非专业读者来说，这是 icSHAPE 的吸引力所在——活细胞里的结构线索能和翻译这样的生物学过程对应起来。",
-        "但要小心：这些都是对 in vivo 可及性的解释，而不是碱基级的结构判定。灰色框里的“结构差异”是 icSHAPE 信号的差异，背后可能是配对、构象，也可能是核糖体本身的占据。FoldBridge 引用这类结果时，应当写成“该区域的 icSHAPE 可及性谱与暂停位点相关”，而不是“该碱基在此处配对”。功能解释越漂亮，越要把可及性 readout 和结构真值分开。"
+        "This figure shows that icSHAPE is not just a chemical measurement: its accessibility profile can illuminate structures of functional significance. Start codons, uORFs, and the regions upstream of ribosome pause sites each have characteristic 2′-OH accessibility patterns. For the non-specialist reader, this is where the appeal of icSHAPE lies: structural clues in living cells can be mapped onto biological processes such as translation.",
+        "But take care: these are all interpretations of in vivo accessibility, not base-level structural determinations. The \"structural difference\" inside the grey box is a difference in icSHAPE signal, which could be pairing or conformation, or could be the occupancy of the ribosome itself. When FoldBridge cites this kind of result, it should write \"the icSHAPE accessibility profile of this region is associated with the pause site\", not \"this base is paired here\". The more elegant the functional interpretation, the more one must separate the accessibility readout from structural ground truth."
       ],
       "label": "Spitale et al. 2015 F3",
       "pmid": "25799993",
@@ -82,17 +86,17 @@
     },
     {
       "type": "heading",
-      "text": "可及性下降，未必是配对——也可能是蛋白保护"
+      "text": "A drop in accessibility is not necessarily pairing: it could be protein protection"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-icshape-f4",
       "alt": "Spitale et al. 2015 F4",
       "srcBasename": "spitale2015_f4__F4.jpg",
-      "legend": "**图 4。icSHAPE 可及性与 RNA-蛋白界面、m⁶A 修饰的关系。** Spitale et al. 2015（PMID 25799993，DOI `10.1038/nature14263`）的图注（legend）说明：(a) Rbfox1-RNA 相互作用结构，突出 RNA-蛋白界面，RNA 主链为蓝色、碱基为橙色，每个 2′ 羟基标为绿色（PDB 2ERR）；(b) Rbfox2 靶 mRNA 在 in vivo 与 in vitro 的差异 icSHAPE profile，精确映射到 Rbfox 结合位点；(c) m⁶A 与 RNA 结构互作的模型；(d) 相同序列 motif 下 m⁶A 甲基化与非甲基化位点（均在 in vivo）的差异 icSHAPE 信号，未修饰位点信号被从 m⁶A 修饰位点中减去，星号（*）标记显著差异位置（p<0.05，FDR<0.05），并对比了野生型与 Mettl3 KO mESC 的数据；(e) 纳入 icSHAPE profile 预测 m⁶A 位点的 ROC 曲线；(f) m⁶A 对 Nanog mRNA 结构的影响，上方为 Mettl3 依赖的 m⁶A 位点位置（黄色高亮）及来自 Batista et al. 的 m⁶A-RIP 数据，下方为 WT 与 Mettl3 KO 细胞的 icSHAPE profile。",
+      "legend": "**Figure 4. The relationship of icSHAPE accessibility to the RNA-protein interface and m⁶A modification.** The legend of Spitale et al. 2015 (PMID 25799993, DOI `10.1038/nature14263`) explains: (a) the Rbfox1-RNA interaction structure, highlighting the RNA-protein interface, with the RNA backbone in blue, the bases in orange, and each 2′ hydroxyl marked in green (PDB 2ERR); (b) the differential icSHAPE profile of Rbfox2 target mRNA between in vivo and in vitro, mapping precisely onto the Rbfox binding site; (c) a model of the interaction between m⁶A and RNA structure; (d) the differential icSHAPE signal between m⁶A-methylated and unmethylated sites (both in vivo) within the same sequence motif, with the signal of the unmodified sites subtracted from that of the m⁶A-modified sites, asterisks (*) marking positions of significant difference (p<0.05, FDR<0.05), and data from wild-type and Mettl3 KO mESC compared; (e) the ROC curve for predicting m⁶A sites by incorporating the icSHAPE profile; (f) the effect of m⁶A on the structure of Nanog mRNA, with the positions of Mettl3-dependent m⁶A sites (highlighted in yellow) and m⁶A-RIP data from Batista et al. shown above, and the icSHAPE profiles of WT and Mettl3 KO cells below.",
       "body": [
-        "这张图把 icSHAPE 解释边界里最微妙的一点摆了出来：可及性下降可以来自配对，也可以来自蛋白结合。Rbfox 例子里，in vivo 相对 in vitro 的差异信号精确落在蛋白结合位点上——也就是说，活细胞里 2′-OH 变得不可及，原因是蛋白把它盖住了，而不是它形成了新的碱基配对。",
-        "这正是 FoldBridge 必须保留 assay context 的原因。如果只看一个 in vivo 的低 icSHAPE 信号就判定“此处配对”，就会把蛋白保护误读成结构。同样，m⁶A 的例子显示化学修饰本身也会改变局部可及性。所以一个完整的句子应当是：在该条件下，此位点 2′-OH 可及性较低；这可能来自配对，也可能来自蛋白或修饰带来的保护，需要结合上下文才能判断。"
+        "This figure lays out the most subtle point within the icSHAPE interpretive boundary: a drop in accessibility can come from pairing, or it can come from protein binding. In the Rbfox example, the differential signal of in vivo relative to in vitro falls precisely on the protein binding site; that is, in living cells the 2′-OH becomes inaccessible because a protein has covered it, not because it has formed a new base pair.",
+        "This is exactly why FoldBridge must preserve the assay context. If one looks only at a low in vivo icSHAPE signal and concludes \"this is paired\", one will misread protein protection as structure. Likewise, the m⁶A example shows that the chemical modification itself can also change local accessibility. So a complete sentence should read: under this condition, the 2′-OH accessibility at this site is low; this could come from pairing, or it could come from the protection afforded by a protein or modification, and it requires context to judge."
       ],
       "label": "Spitale et al. 2015 F4",
       "pmid": "25799993",
@@ -103,47 +107,47 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 icSHAPE"
+      "text": "How FoldBridge should write up icSHAPE"
     },
     {
       "type": "paragraph",
-      "text": "icSHAPE 没有 DMS 那样清晰的“A/C 可解释、G/U 不可解释”的碱基靶点边界——它的靶点是核糖 2′-OH，原则上每个核苷酸都有 2′-OH。所以 icSHAPE 的解释闸门不是“哪个碱基能上色”，而是一个面向 2′-OH 可及性的多级 gate：化学靶点可达性（这个位点的 2′-OH 是否在当前文库里被有效酰化与读出）、readout 上下文（RT-stop 是否减过 DMSO 背景、是否做过缩放与归一化）、以及 mapping 与 claim gate（坐标是否可靠、是否在该实验条件下成立）。"
+      "text": "icSHAPE does not have a clear base-target boundary like the \"A/C interpretable, G/U not interpretable\" of DMS: its target is the ribose 2′-OH, and in principle every nucleotide has a 2′-OH. So the interpretive gate for icSHAPE is not \"which base may be coloured\", but a multi-level gate oriented towards 2′-OH accessibility: chemical target reachability (whether the 2′-OH at this site was effectively acylated and read out in the current library), readout context (whether the RT-stop has had the DMSO background subtracted and been scaled and normalised), and the mapping and claim gates (whether the coordinates are reliable, and whether they hold under this experimental condition)."
     },
     {
       "type": "paragraph",
-      "text": "只有同时通过这些 gate 的可及性，才能进入默认可视化和 confidence 层。原始 RT-stop 计数本身只是 provenance：它该被完整保存、可下载、可追溯，但不应该自动驱动默认结构上色。ANNOJOIN 的默认结构图应读取经过 background 校正与 targetability 处理后的可视化值，而不是裸的 RT-stop。confidence / FEC 的要求更高：只有通过化学、readout、mapping、claim 与 context gate 的可及性观测，才可以成为 positive confidence 的候选。"
+      "text": "Only accessibility that passes all of these gates simultaneously may enter the default visualisation and the confidence layer. The raw RT-stop count is itself only provenance: it should be preserved in full, be downloadable, and be traceable, but it should not automatically drive default structure colouring. The default structure diagram in ANNOJOIN should read the visualised value after background correction and targetability processing, rather than the bare RT-stop. Confidence / FEC require more: only accessibility observations that pass the chemistry, readout, mapping, claim, and context gates may become candidates for positive confidence."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 icSHAPE，而是尊重它的强项。icSHAPE 对活细胞 2′-OH 可及性非常有力；错误发生在把“可及性下降”一律写成“配对”，或把 raw RT-stop 写成结构真值时。在活细胞这种背景信号更复杂的环境里，FoldBridge 更要把“某个位点测到了 RT-stop”和“这个信号能作为柔性证据”分开。网页上的默认颜色回答“在 icSHAPE 解释边界内，这个位点有什么可读信号”；详情表才回答“原始数据里记录了什么”。一旦把这两层叠在一张图上，活细胞里那些复杂的背景信号就会被默读成 icSHAPE 认证过的柔性证据。"
+      "text": "This is not a weakening of icSHAPE, but a respect for its strengths. icSHAPE is very powerful for the 2′-OH accessibility of living cells; the error occurs when \"a drop in accessibility\" is uniformly written as \"pairing\", or when a raw RT-stop is written as structural ground truth. In an environment such as living cells, where the background signal is more complex, FoldBridge must all the more separate \"an RT-stop was measured at some site\" from \"this signal can serve as evidence of flexibility\". The default colour on the web answers \"within the icSHAPE interpretive boundary, what readable signal is there at this site\"; the detail table answers \"what was recorded in the raw data\". Once these two layers are overlaid on a single diagram, the complex background signals in living cells will be silently read as icSHAPE-certified evidence of flexibility."
     },
     {
       "type": "heading",
-      "text": "真实 case：一份 icSHAPE profile 会怎样流过三个图层（示意）"
+      "text": "A real case: how an icSHAPE profile flows through three layers (illustrative)"
     },
     {
       "type": "paragraph",
-      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 icSHAPE profile 如何分成三个不同的层。"
+      "text": "There is no real FoldBridge accession here, so what follows is a clearly labelled illustrative scenario, used to explain how a single icSHAPE profile is separated into three different layers."
     },
     {
       "type": "paragraph",
-      "text": "设想一份在 mESC 活细胞里测得的 icSHAPE profile 进入 FoldBridge。第一层是 raw observation：逐位点的 RT-stop 计数、对应的 DMSO 对照、文库元数据、测序坐标——这些都原样保存，作为 provenance，可下载、可重算。它们记录的是“活细胞里测到了多少 RT-stop”，还不是这个位点的柔性结论。"
+      "text": "Imagine an icSHAPE profile measured in living mESC cells entering FoldBridge. The first layer is the raw observation: per-position RT-stop counts, the corresponding DMSO control, library metadata, and sequencing coordinates; these are all preserved as is, as provenance, downloadable and recomputable. What they record is \"how many RT-stops were measured in living cells\", not yet a flexibility conclusion for this site."
     },
     {
       "type": "paragraph",
-      "text": "第二层是 visual signal：RT-stop 减去 DMSO 背景、做 0 到 1 缩放、通过 mapping 与 readout gate 之后，得到可以在结构页面上色的 2′-OH 可及性值。读者第一眼看到的颜色应该来自这一层，因为它是在 icSHAPE assay model 下可解释的颜色，而不是裸的计数。"
+      "text": "The second layer is the visual signal: after the RT-stop has had the DMSO background subtracted, been scaled 0 to 1, and passed the mapping and readout gates, one obtains a 2′-OH accessibility value that can be coloured onto the structure page. The colour the reader sees first should come from this layer, because it is a colour interpretable under the icSHAPE assay model, rather than a bare count."
     },
     {
       "type": "paragraph",
-      "text": "第三层是 confidence candidate：只有那些既通过化学与 readout gate、又通过 mapping/claim/context 检查的可及性观测，才进入 confidence 评估，并且仍要带着“可及性下降可能来自配对、也可能来自蛋白或修饰保护”这一限定。"
+      "text": "The third layer is the confidence candidate: only those accessibility observations that pass both the chemistry and readout gates and the mapping/claim/context checks enter the confidence assessment, and they must still carry the qualification that \"a drop in accessibility could come from pairing, or from protein or modification protection\"."
     },
     {
       "type": "paragraph",
-      "text": "这个示意场景的价值在于把 click 富集、background 校正和分层落到系统行为上：同一份 icSHAPE profile 可以同时产出原始观测、可视化信号和 confidence 候选，但这三者各自停在不同的解释深度上。icSHAPE 的科普文章如果把这三层混成一层，读者就会把“活细胞里测过”直接当成“配对状态已定”，进而误读 FoldBridge 的结构图。越是 in vivo、越是自动上色，越要把“可及性下降可能来自配对、也可能来自蛋白保护”这一条写在颜色旁边。"
+      "text": "The value of this illustrative scenario lies in grounding click enrichment, background correction, and layering in system behaviour: the same icSHAPE profile can simultaneously produce a raw observation, a visual signal, and a confidence candidate, but these three each stop at a different interpretive depth. If an explainer article on icSHAPE merges these three layers into one, the reader will take \"measured in living cells\" directly as \"pairing state determined\", and so misread the FoldBridge structure diagram. The more in vivo, and the more automated the colouring, the more one must write the line \"a drop in accessibility could come from pairing, or from protein protection\" right next to the colour."
     },
     {
       "type": "paragraph",
-      "text": "所以，icSHAPE 文章的正确结尾不是“低信号证明该碱基配对”，而是：icSHAPE 能为 RNA structure interpretation 提供有力的 in vivo 2′-OH 可及性线索；在 FoldBridge 中，这种线索只有先作为 raw provenance 保存、再通过化学与 readout、mapping、claim、context 等 gate 之后，才会成为默认结构解释和 confidence 的一部分。"
+      "text": "So the correct ending for an icSHAPE article is not \"low signal proves this base is paired\", but: icSHAPE can provide powerful in vivo 2′-OH accessibility clues for RNA structure interpretation; in FoldBridge, such a clue becomes part of default structural interpretation and confidence only after it is first preserved as raw provenance and then passes the chemistry, readout, mapping, claim, and context gates."
     }
   ]
 }

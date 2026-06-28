@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "mca",
-  "title": "MCA：用化学可及性读出 RNA 的三级邻近关系",
-  "date": "2026-06-25",
+  "title": "MCA: reading the tertiary proximity relationships of RNA via chemical accessibility",
+  "date": "",
   "figure_count": 4,
   "rep_pmid": "26035425",
   "rep_pmcid": "PMC4495719",
@@ -11,25 +11,29 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "如果只看一张漂亮的邻近图，MCA 很容易被误读成“直接测出了哪两个核苷酸在空间上接触”。这个理解是错的。按照这篇论文（PMID 26035425，DOI `10.7554/eLife.07600`）的图注，它做的事情是把两类化学读出组合起来：一类是 mutate-and-map（M²）——对一个全面的点突变文库做 chemical mapping，用逆转录读出；另一类是 MOHCA-seq（Multiplexed •OH，即羟基自由基 Cleavage Analysis 的测序版本）——把自由基源随机掺进 RNA、断裂、连接接头，再用测序分析。两者的共同点是“化学可及性（chemical accessibility）+ 测序”这一框架，而最终产物不是逐碱基的结构标签，而是一张 proximity map（邻近关系图），再喂给 Rosetta 做三级结构建模。"
+      "text": "Date: 2026-06-25"
     },
     {
       "type": "paragraph",
-      "text": "需要先声明一点边界：这个 Zotero 条目的标题里同时标注了 MAPseq、tagMOHCA、MOHCA-seq 等名称，这些标注与论文实际方法不一定完全对应。所以本文严格依据图注（legend）描述论文实际做了什么，不预先裁决“它到底属于哪一类方法”。这条边界对 FoldBridge 很关键：MCA 的可及性/邻近信号是它自己的 assay model，原始数值可以被保存、也可以在网页上展示，但只要进入默认结构上色、解释性文字或 confidence 层，就必须先问一个具体问题——这个数字在 MCA 的探针靶点（probe target）和读出上下文（readout context）下，能不能被解释为 MCA 支持？任何可及性数值在进入解释之前，都要先确认它在问哪一类化学位点、来自哪一种读出。"
+      "text": "If you only look at an elegant proximity map, MCA is easily misread as having \"directly measured which two nucleotides are in spatial contact\". That understanding is wrong. According to the legends of this paper (PMID 26035425, DOI `10.7554/eLife.07600`), what it does is combine two classes of chemical readout: one is mutate-and-map (M²) — performing chemical mapping on a comprehensive point-mutation library and reading it out by reverse transcription; the other is MOHCA-seq (Multiplexed •OH, that is, the sequencing version of hydroxyl-radical Cleavage Analysis) — randomly doping a radical source into the RNA, cleaving it, ligating adapters, and then analysing by sequencing. What the two share is the framework of \"chemical accessibility plus sequencing\", and the final product is not a per-base structural label but a proximity map, which is then fed to Rosetta for tertiary structure modelling."
+    },
+    {
+      "type": "paragraph",
+      "text": "A boundary needs to be stated first: the title of this Zotero entry simultaneously annotates names such as MAPseq, tagMOHCA and MOHCA-seq, and these annotations do not necessarily correspond exactly to the actual method of the paper. So this article strictly follows what the legends describe the paper as actually doing, and does not pre-adjudicate \"which class of method it ultimately belongs to\". This boundary is crucial for FoldBridge: MCA's accessibility/proximity signal is its own assay model, and the raw values can be stored and displayed on a web page, but the moment they enter the default structure colouring, the explanatory text or the confidence layer, one specific question must be asked first — can this number, under MCA's probe target and readout context, be interpreted as MCA support? Before any accessibility value enters interpretation, it must first be confirmed which class of chemical site it is asking about and which readout it comes from."
     },
     {
       "type": "heading",
-      "text": "M² 与 MOHCA-seq：两类化学读出汇成一张邻近图"
+      "text": "M² and MOHCA-seq: two classes of chemical readout converge into one proximity map"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mca-f1",
       "alt": "MCA F1",
       "srcBasename": "mca_f1__PMC4495719__F1.jpg",
-      "legend": "**图 1。M² 与 MOHCA-seq 工作流，以及 P4–P6 结构域的邻近图。**Cheng et al. 2015（PMID 26035425，DOI `10.7554/eLife.07600`）图注描述了两条并置的流程：（A）mutate-and-map（M²）工作流——转录出一个全面的点突变文库，对文库做 chemical mapping 并用逆转录读出；（B）MOHCA-seq 工作流——随机掺入自由基源、片段化、连接接头，再用测序分析；（C）四膜虫 group I 核酶 P4–P6 结构域的 M² 数据集；（D）同一 P4–P6 的 MOHCA-seq 数据集（邻近图）。在（C）（D）中，圆角矩形标出 helix 元件并与（E、F）配色一致，紫色圆点表示晶体结构中 < 30 Å 的成对距离，粉色圆点表示 > 30 Å；（D）中品红箭头标出自由基源从 P5b 扩散跨过大沟或小沟产生的命中。（E、F）把 MOHCA-seq 的三级邻近关系画到 M² 指导的二级结构（E）和最终的单个 Rosetta 模型（F）上。图注还指出，数据分析在 MAPseeker 软件包中完成，并对 Rosetta 建模使用了基于成对距离的 pseudo-energy 约束。",
+      "legend": "**Figure 1. The M² and MOHCA-seq workflows, and the proximity map of the P4–P6 domain.** Cheng et al. 2015 (PMID 26035425, DOI `10.7554/eLife.07600`) describe two juxtaposed workflows in the legend: (A) the mutate-and-map (M²) workflow — transcribing a comprehensive point-mutation library, performing chemical mapping on the library and reading it out by reverse transcription; (B) the MOHCA-seq workflow — randomly doping in a radical source, fragmenting, ligating adapters, and then analysing by sequencing; (C) the M² dataset of the Tetrahymena group I ribozyme P4–P6 domain; (D) the MOHCA-seq dataset (proximity map) of the same P4–P6. In (C) and (D), rounded rectangles mark the helix elements and match the colour scheme of (E, F), purple dots indicate pairwise distances < 30 Å in the crystal structure, and pink dots indicate > 30 Å; in (D), magenta arrows mark hits produced by the radical source diffusing across the major or minor groove from P5b. (E, F) draw the tertiary proximity relationships from MOHCA-seq onto the M²-guided secondary structure (E) and the final single Rosetta model (F). The legend also notes that the data analysis was done in the MAPseeker package, and that pairwise-distance-based pseudo-energy restraints were used for the Rosetta modelling.",
       "body": [
-        "这里要点明的核心是：MCA 不是在给每个 residue 贴“配对/不配对”的标签，而是把化学读出转换成“哪些位置在空间上彼此靠近”的成对信息，而且这种“靠近”是推断出来的，不是直接测量。M² 用 chemical mapping 读突变扰动，MOHCA-seq 用羟基自由基断裂读自由基源与下游损伤之间的关系，两条线最后都落在 proximity map 上，再约束三级结构建模。",
-        "对 FoldBridge 来说，这意味着 MCA 的每个数值首先要回答“它来自哪一种读出、对应哪一类化学事件”。一个 MOHCA-seq 命中报告的是“某个自由基源位点与某个断裂/损伤位点在空间上相关”，一个 M² 信号报告的是“某次点突变改变了某位点的化学可及性”。这些都是有上下文的观测，不能被压平成一个无差别的“结构分”。targetability gate 在这里的含义是：进入解释层之前，先确认探针靶点（自由基源、化学修饰位点）与读出方式，再判断这个数值能否被解释为 MCA 支持。"
+        "The core point to make clear here is this: MCA does not attach a \"paired/unpaired\" label to each residue, but converts the chemical readout into pairwise information about \"which positions are spatially close to one another\", and this \"closeness\" is inferred, not measured directly. M² uses chemical mapping to read the perturbation of mutations, and MOHCA-seq uses hydroxyl-radical cleavage to read the relationship between the radical source and the downstream damage; the two lines both land on a proximity map, which then constrains the tertiary structure modelling.",
+        "For FoldBridge, this means that each MCA value must first answer \"which readout it comes from and which class of chemical event it corresponds to\". A MOHCA-seq hit reports \"a certain radical-source site is spatially correlated with a certain cleavage/damage site\", and an M² signal reports \"a certain point mutation changed the chemical accessibility of a certain site\". These are all contextual observations and cannot be flattened into an undifferentiated \"structure score\". The targetability gate here means: before entering the interpretation layer, first confirm the probe target (the radical source, the chemical modification site) and the readout mode, and then judge whether this value can be interpreted as MCA support."
       ],
       "label": "MCA F1",
       "pmid": "26035425",
@@ -40,17 +44,17 @@
     },
     {
       "type": "heading",
-      "text": "信号从哪里来：自由基源、断裂与逆转录终止"
+      "text": "Where the signal comes from: the radical source, cleavage and reverse-transcription termination"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mca-f2",
       "alt": "MCA F2",
       "srcBasename": "mca_f2__PMC4495719__F2.jpg",
-      "legend": "**图 2。MOHCA-seq 可检测的 RNA 片段与信号来源。**Cheng et al. 2015（PMID 26035425，DOI `10.7554/eLife.07600`）图注拆解了信号的化学来源：（A）从断裂位点起始的逆转录，可以终止在自由基源处（这类片段 MOHCA-gel 也能测到），也可以终止在同一自由基源造成的额外氧化损伤事件处（这类片段只有 MOHCA-seq 能测到）；（B）一个带单个自由基源附着位点（U13）的概念验证 RNA 的序列与二级结构；（C）该 RNA 的 MOHCA-seq 邻近图，既显示预期命中（青色），也显示由自由基源 3′ 侧氧化损伤产生、且与自由基源空间相关的额外逆转录终止（品红）；（D、E）用毛细管电泳（CE）或双端测序量化的断裂率与逆转录终止修饰率，并与无自由基源的对照样品比较；（F、G）P4–P6 的 MOHCA-seq 与 MOHCA-gel 邻近图对比，图注指出 gel 因电泳迁移率与 RNA 长度非线性而产生畸变；（H–K）转录时按 0.5 摩尔比掺入不同 2′-NH₂ 修饰核苷酸（A/U/G/C）所得的 MOHCA-seq 邻近图。",
+      "legend": "**Figure 2. The RNA fragments detectable by MOHCA-seq and the sources of the signal.** Cheng et al. 2015 (PMID 26035425, DOI `10.7554/eLife.07600`) dissect the chemical sources of the signal in the legend: (A) reverse transcription initiated from the cleavage site can terminate at the radical source (these fragments can also be measured by MOHCA-gel), or at an additional oxidative-damage event caused by the same radical source (these fragments can only be measured by MOHCA-seq); (B) the sequence and secondary structure of a proof-of-concept RNA bearing a single radical-source attachment site (U13); (C) the MOHCA-seq proximity map of this RNA, showing both the expected hits (cyan) and the additional reverse-transcription terminations produced by oxidative damage on the 3′ side of the radical source and spatially correlated with it (magenta); (D, E) the cleavage rate and reverse-transcription modification rate quantified by capillary electrophoresis (CE) or paired-end sequencing, compared with a control sample without a radical source; (F, G) a comparison of the MOHCA-seq and MOHCA-gel proximity maps of P4–P6, with the legend noting that the gel is distorted because of the non-linear relationship between electrophoretic mobility and RNA length; (H–K) MOHCA-seq proximity maps obtained by doping in different 2′-NH₂-modified nucleotides (A/U/G/C) at a 0.5 molar ratio during transcription.",
       "body": [
-        "这张图把 MCA 的“化学可及性”落到具体机制上：信号不是直接的结构判定，而是自由基源造成的断裂、氧化损伤，再经逆转录终止、建库、测序后的观测量。MOHCA-seq 相对 MOHCA-gel 的优势之一，正是能多读出一类“自由基源 3′ 侧、与之空间相关的损伤”片段，从而提供更多邻近信息。",
-        "因此，对 FoldBridge 来说，最终邻近图里的每一个命中都是“化学事件 + 读出链条”的结果，而不是探针直接给出的“这两个位点一定靠近”。一个命中可能来自真实的三级邻近，也可能来自自由基沿沟扩散、背景或读出限制——图 1 就专门标出了跨大沟/小沟扩散造成的命中。这正是为什么任何可及性/邻近数值都要先确认探针靶点与上下文：信号强不等于结构真值，它首先回答的是“在这套化学和读出里，观测到了什么”。"
+        "This figure grounds MCA's \"chemical accessibility\" in a concrete mechanism: the signal is not a direct structural call, but the measured quantity that remains after cleavage and oxidative damage caused by the radical source, followed by reverse-transcription termination, library preparation and sequencing. One of MOHCA-seq's advantages over MOHCA-gel is precisely its ability to read out an additional class of fragments — \"those on the 3′ side of the radical source, spatially correlated with it\" — thereby providing more proximity information.",
+        "Therefore, for FoldBridge, each hit on the final proximity map is the result of a \"chemical event plus a readout chain\", and not \"these two sites are definitely close\" handed over directly by the probe. A hit may come from a genuine tertiary proximity, but it may also come from the radical diffusing along the groove, from background or from readout limitations — Figure 1 specifically marks hits caused by diffusion across the major/minor groove. This is precisely why any accessibility/proximity value must first confirm the probe target and context: a strong signal does not equal structural ground truth, and it first answers \"what was observed in this chemistry and readout\"."
       ],
       "label": "MCA F2",
       "pmid": "26035425",
@@ -61,17 +65,17 @@
     },
     {
       "type": "heading",
-      "text": "把邻近约束加进建模：盲测里的结构改进"
+      "text": "Adding proximity restraints into modelling: structural improvement in blind tests"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mca-f3",
       "alt": "MCA F3",
       "srcBasename": "mca_f3__PMC4495719__F3.jpg",
-      "legend": "**图 3。多个 RNA 上 M²/MOHCA-seq/Rosetta 模型与晶体结构的比较。**Cheng et al. 2015（PMID 26035425，DOI `10.7554/eLife.07600`）图注在六个 RNA 上比较了三栏：仅 M²/Rosetta 模型、晶体结构、以及加入 MOHCA-seq 约束的 M²/MOHCA-seq/Rosetta（MCM）模型，并给出 RMSD：（A）P4–P6 结构域，M²/Rosetta 38.3 Å、MCM 8.6 Å（PDB 1GID）；（B）霍乱弧菌 c-di-GMP 核糖开关 aptamer，11.3 Å → 7.6 Å（PDB 3IRW）；（C）具核梭杆菌双甘氨酸核糖开关配体结合域，30.5 Å → 7.9 Å（PDB 3P49）；（D）嗜热菌 AdoCbl 核糖开关 aptamer（RNA-puzzle 6），17.1 Å → 11.9 Å（PDB 4GXY）；（E）I 类连接酶，global 26.3 Å → 14.5 Å（PDB 3HHN）；（F）虹彩双滴虫套索成帽核酶（RNA-puzzle 5），global 9.6 Å → 8.2 Å（PDB 4P8Z）。每个 RNA 右侧都附有标注 helix 元件与三级命中（紫色/粉色圆点）的 MOHCA-seq 邻近图。",
+      "legend": "**Figure 3. A comparison of the M²/MOHCA-seq/Rosetta models with the crystal structures across several RNAs.** Cheng et al. 2015 (PMID 26035425, DOI `10.7554/eLife.07600`) compare three columns across six RNAs in the legend: the M²/Rosetta model alone, the crystal structure, and the M²/MOHCA-seq/Rosetta (MCM) model with MOHCA-seq restraints added, and give the RMSD: (A) the P4–P6 domain, M²/Rosetta 38.3 Å, MCM 8.6 Å (PDB 1GID); (B) the Vibrio cholerae c-di-GMP riboswitch aptamer, 11.3 Å → 7.6 Å (PDB 3IRW); (C) the Fusobacterium nucleatum glycine riboswitch ligand-binding domain, 30.5 Å → 7.9 Å (PDB 3P49); (D) the thermophile AdoCbl riboswitch aptamer (RNA-puzzle 6), 17.1 Å → 11.9 Å (PDB 4GXY); (E) the class I ligase, global 26.3 Å → 14.5 Å (PDB 3HHN); (F) the Lariat-capping ribozyme of Didymium iridis (RNA-puzzle 5), global 9.6 Å → 8.2 Å (PDB 4P8Z). To the right of each RNA is a MOHCA-seq proximity map annotated with the helix elements and the tertiary hits (purple/pink dots).",
       "body": [
-        "这张图说明 MCA 的真实价值在于约束三级结构建模：在多数案例里，加入 MOHCA-seq 邻近约束后，模型与晶体结构的 RMSD 明显下降。也就是说，这些化学可及性/邻近读出确实携带了可用于结构推断的信息，而且在盲测式的 RNA-puzzle 场景里也站得住。",
-        "但对 FoldBridge 来说，价值正来自保留“这是约束、不是真值”这一层区分。MCM 模型之所以更准，是因为把邻近命中当成 pseudo-energy 约束加进了建模，而不是把命中直接当成结构本身。targetability gate 在这里的延伸含义是：MCA 数值可以作为结构解释的有力约束，但它的解释范围始终绑定在“某类化学事件被观测到”这一前提上。把一个邻近命中直接读成“这两个核苷酸确定接触”，就跳过了建模和上下文这一步。"
+        "This figure shows that the real value of MCA lies in constraining tertiary structure modelling: in most cases, adding the MOHCA-seq proximity restraints markedly reduces the RMSD between the model and the crystal structure. That is, these chemical-accessibility/proximity readouts do indeed carry information usable for structural inference, and they hold up even in blind-test-style RNA-puzzle scenarios.",
+        "But for FoldBridge, the value comes precisely from preserving the distinction \"this is a restraint, not ground truth\". The MCM model is more accurate because the proximity hits were added into the modelling as pseudo-energy restraints, not because the hits were taken directly as the structure itself. The extended meaning of the targetability gate here is: MCA values can serve as powerful restraints for structural interpretation, but their interpretive range is always bound to the premise that \"a certain class of chemical event was observed\". Reading a proximity hit directly as \"these two nucleotides are definitely in contact\" skips the step of modelling and context."
       ],
       "label": "MCA F3",
       "pmid": "26035425",
@@ -82,17 +86,17 @@
     },
     {
       "type": "heading",
-      "text": "用邻近图读出配体与离子依赖的构象"
+      "text": "Reading ligand- and ion-dependent conformations from proximity maps"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mca-f4",
       "alt": "MCA F4",
       "srcBasename": "mca_f4__PMC4495719__F4.jpg",
-      "legend": "**图 4。c-di-GMP 核糖开关在不同配体与 Mg²⁺ 条件下的邻近图。**Cheng et al. 2015（PMID 26035425，DOI `10.7554/eLife.07600`）图注描述了条件依赖的构象变化：（A）在 10 mM Mg²⁺ 下、有（10 µM）或无（0 µM）c-di-GMP 时 aptamer 的邻近图，标注 helix 元件与三级命中（紫色/粉色圆点）；（B）在 0 mM Mg²⁺ 下、有或无 c-di-GMP 时的邻近图，显示在 10 mM Mg²⁺ 下出现的三级邻近在缺 Mg²⁺ 时消失；（C）用 0 µM c-di-GMP、10 mM Mg²⁺ 邻近图作为 pseudo-energy 约束，给出 Rosetta 能量最低的五个 MCM 模型，初步可视化无配体状态的构象系综，右侧附晶体结构作对照。",
+      "legend": "**Figure 4. The proximity maps of the c-di-GMP riboswitch under different ligand and Mg²⁺ conditions.** Cheng et al. 2015 (PMID 26035425, DOI `10.7554/eLife.07600`) describe condition-dependent conformational changes in the legend: (A) the proximity maps of the aptamer under 10 mM Mg²⁺ with (10 µM) or without (0 µM) c-di-GMP, annotated with the helix elements and the tertiary hits (purple/pink dots); (B) the proximity maps under 0 mM Mg²⁺ with or without c-di-GMP, showing that the tertiary proximities present under 10 mM Mg²⁺ disappear in the absence of Mg²⁺; (C) using the 0 µM c-di-GMP, 10 mM Mg²⁺ proximity map as a pseudo-energy restraint, the five lowest-Rosetta-energy MCM models, preliminarily visualising the conformational ensemble of the ligand-free state, with the crystal structure attached on the right as a comparison.",
       "body": [
-        "这张图说明 MCA 的邻近读出能反映条件依赖的结构变化：去掉 Mg²⁺，原本存在的三级邻近就消失了；而无配体条件下的邻近约束还能用来初步描绘一个构象系综。这是化学可及性数据真实而有力的应用——它对环境条件敏感，能捕捉到折叠状态的差异。",
-        "不过，正因为信号对条件敏感，FoldBridge 更要把“信号变化”和“结构结论”分开。邻近图上某个命中的出现或消失，首先意味着“在这套离子/配体条件下，这类化学邻近事件被观测到或没被观测到”，把它解释为某个三级接触的形成或解离，需要结构与上下文支持。同一份 MCA profile 在不同条件下会给出不同数值，这恰恰说明：脱离了探针靶点和读出上下文，单个数字无法独立定义结构。"
+        "This figure shows that MCA's proximity readout can reflect condition-dependent structural changes: remove the Mg²⁺, and the previously present tertiary proximities disappear; and under the ligand-free condition, the proximity restraints can even be used to preliminarily sketch a conformational ensemble. This is a real and powerful application of chemical-accessibility data — it is sensitive to environmental conditions and can capture differences in folding state.",
+        "However, precisely because the signal is sensitive to conditions, FoldBridge must all the more separate \"signal change\" from \"structural conclusion\". The appearance or disappearance of a hit on the proximity map means, first of all, \"under this ion/ligand condition, this class of chemical proximity event was or was not observed\"; interpreting it as the formation or dissociation of a tertiary contact requires structural and contextual support. The same MCA profile gives different values under different conditions, which precisely shows that, divorced from the probe target and readout context, a single number cannot independently define structure."
       ],
       "label": "MCA F4",
       "pmid": "26035425",
@@ -103,47 +107,47 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 MCA"
+      "text": "How FoldBridge should write about MCA"
     },
     {
       "type": "paragraph",
-      "text": "MCA 在 FoldBridge 里的核心待遇，是把它的化学可及性/邻近读出当作它自己的 assay model 来对待，而不是按 Zotero 标题里的方法名（MAPseq、tagMOHCA、MOHCA-seq）预先裁决它属于哪一类、能解释什么。方法分类以文献为准；进入系统的判断，要落在“这个数值来自哪一种读出、对应哪一类化学事件”这一层。"
+      "text": "MCA's core treatment in FoldBridge is to treat its chemical-accessibility/proximity readout as its own assay model, rather than pre-adjudicating which class it belongs to and what it can interpret according to the method names in the Zotero title (MAPseq, tagMOHCA, MOHCA-seq). Method classification follows the literature; the judgement that enters the system must land on the layer of \"which readout this value comes from and which class of chemical event it corresponds to\"."
     },
     {
       "type": "paragraph",
-      "text": "原始数值首先是 raw provenance：它可以被保存、被下载、被用于 debug 和再分析，但不能仅凭“数值高”或“命中存在”就自动进入默认可视化或 confidence。进入默认结构图层的，应该是经过 MCA 自身探针靶点（自由基源/化学修饰位点）加读出与 mapping 上下文检查后、可解释为 MCA 支持的信号。换句话说，读者在结构页面看到的颜色或连线，应该是在 MCA assay model 下站得住的东西，而不是直接来自原始断裂率或命中计数。confidence 层的门槛更高：只有通过 targetability、mapping 和 context 这些 gate 的位点或邻近对，才可以成为 positive confidence 的候选。"
+      "text": "The raw values are first of all raw provenance: they can be stored, downloaded, and used for debugging and reanalysis, but they cannot automatically enter the default visualisation or confidence simply because \"the number is high\" or \"the hit exists\". What enters the default structure layer should be signal that has passed MCA's own probe target (the radical source/chemical modification site) plus a readout and mapping context check, and that can be interpreted as MCA support. In other words, the colour or connecting line a reader sees on the structure page should be something that holds up under the MCA assay model, not something taken straight from the raw cleavage rate or hit count. The threshold for the confidence layer is higher still: only sites or proximity pairs that pass the targetability, mapping and context gates can become candidates for positive confidence."
     },
     {
       "type": "paragraph",
-      "text": "这里要强调的 gate 概念是：FoldBridge 绝不把 MCA 和 SHAPE、DMS 这些其他探针的信号默默 pool 在一起。即使它们都属于“化学可及性 + 测序”的大框架，每一种探针问的化学问题、读出的事件都不一样——MCA 的核心读出是邻近关系与条件依赖的三级约束，DMS 读的是 A/C 配对面，SHAPE 读的是 2′-OH 柔性。合并展示或联合分析可以做，但每个数值必须带着“我来自 MCA 这套读出”的标签，而不是被融进一个无差别的统一图层。"
+      "text": "The gate concept to stress here is this: FoldBridge never silently pools MCA's signal together with that of other probes such as SHAPE and DMS. Even though they all belong to the broad framework of \"chemical accessibility plus sequencing\", each probe asks a different chemical question and reads out a different event — MCA's core readout is proximity relationships and condition-dependent tertiary restraints, DMS reads the A/C pairing face, and SHAPE reads 2′-OH flexibility. Combined display or joint analysis can be done, but each value must carry the label \"I come from MCA's readout\", rather than being fused into one undifferentiated, unified layer."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 MCA，而是尊重它的强项。MCA 通过化学可及性读出三级邻近、再约束建模，这一点非常有用，图 3 的 RMSD 改进和图 4 的条件依赖构象都证明了它的价值；错误发生在把这个强项扩展成“每个数字都是结构真值”或“和别的探针等价”时。FoldBridge 的任务不是把所有数字都画出来，而是把“有观测值”和“可解释为 MCA 结构支持”分开。"
+      "text": "This is not a weakening of MCA but a respect for its strength. MCA reads out tertiary proximity via chemical accessibility and then constrains modelling, which is very useful — the RMSD improvement in Figure 3 and the condition-dependent conformations in Figure 4 both prove its value; the error occurs when this strength is extended into \"every number is structural ground truth\" or \"equivalent to other probes\". FoldBridge's task is not to plot every number, but to separate \"there is a measured value\" from \"interpretable as MCA structural support\"."
     },
     {
       "type": "heading",
-      "text": "真实 case（示意）"
+      "text": "A real case (illustrative)"
     },
     {
       "type": "paragraph",
-      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 MCA profile 如何分成三个不同的层；其中的配对关系是从邻近命中**推断**出来的，不是直接测量。"
+      "text": "There is no real FoldBridge accession here, so the following is a clearly labelled illustrative scenario, used to show how a single MCA profile splits into three different layers; the pairing relationships in it are **inferred** from the proximity hits, not measured directly."
     },
     {
       "type": "paragraph",
-      "text": "设想一份 MCA profile 流过 FoldBridge：它对某条 RNA 做了 M² chemical mapping 与 MOHCA-seq 自由基切割，测序后得到一批断裂率、逆转录终止信号和邻近命中。这批数据进入系统时，首先作为 raw observation 被完整保存——每个位点和每个邻近对的原始数值、覆盖度、来源读出、实验条件（如 Mg²⁺、配体浓度）都记录在案，可追溯、可下载、可再分析。"
+      "text": "Imagine an MCA profile flowing through FoldBridge: it performed M² chemical mapping and MOHCA-seq radical cleavage on a certain RNA, and after sequencing yielded a batch of cleavage rates, reverse-transcription termination signals and proximity hits. When this batch of data enters the system, it is first preserved in full as a raw observation — the raw value, coverage, source readout and experimental conditions (such as Mg²⁺ and ligand concentration) of each site and each proximity pair are all recorded, traceable, downloadable and re-analysable."
     },
     {
       "type": "paragraph",
-      "text": "接着，系统会问这些数值能否进入 visual signal。只有探针靶点明确（自由基源/修饰位点可解释）、能可靠映射到结构坐标、且读出与上下文都通过检查的位点或邻近对，才会成为默认结构图上的 MCA 信号。像图 1 标出的“沿大沟/小沟扩散命中”、图 2 里的背景，或无法可靠定位的位点，即使有数字，也停留在 provenance 层，不伪装成同一种证据。"
+      "text": "Next, the system asks whether these values can enter the visual signal. Only sites or proximity pairs whose probe target is clear (the radical source/modification site is interpretable), that can be reliably mapped to structural coordinates, and that pass the readout and context checks become MCA signal on the default structure figure. Things like the \"diffusion hits along the major/minor groove\" marked in Figure 1, the background in Figure 2, or sites that cannot be reliably located, remain at the provenance layer even when they have numbers, and do not masquerade as the same kind of evidence."
     },
     {
       "type": "paragraph",
-      "text": "最后是 confidence candidate：在前两层都成立的基础上，通过完整 gate 的位点或邻近对才可能进入 positive confidence。这三层——raw observation、visual signal、confidence candidate——是同一份 profile 派生出的三件不同的东西，不能彼此替代。"
+      "text": "Last comes the confidence candidate: building on the first two layers holding, only sites or proximity pairs that pass the full gate can possibly enter positive confidence. These three layers — raw observation, visual signal, confidence candidate — are three different things derived from the same profile, and cannot substitute for one another."
     },
     {
       "type": "paragraph",
-      "text": "这个 case 落到系统行为上，就是同一份 MCA profile 会派生出 raw observation、visual signal、confidence candidate 这三件不同的东西，彼此不能替代。MCA 最需要守住的边界，是“邻近是推断、不是直接测量”：邻近图上一个命中可能来自真实的三级接触，也可能来自自由基沿大沟/小沟扩散，最终的配对/接触结论是 Rosetta 把命中当 pseudo-energy 约束建模出来的。论文图可以聚焦一个实验或一个模型；FoldBridge 的页面会把许多 profile、坐标和证据层叠在一起，文章如果不把这三层和“推断”这层标签讲清楚，读者就会把一个待建模确认的邻近命中，误读成两个核苷酸已被直接测定接触。所以 MCA 文章的正确结尾不是“某个命中存在就说明这两个位点接触”，而是：MCA 能为 RNA 三级结构解释提供有力的化学可及性与邻近约束线索；在 FoldBridge 中，这种线索只有先确认探针靶点与读出上下文、通过后续 gate、并始终与 SHAPE/DMS 等其他探针信号区分开来之后，才会成为默认可视化与 confidence 的一部分。"
+      "text": "Translated into system behaviour, this case means that the same MCA profile derives three different things — raw observation, visual signal and confidence candidate — that cannot substitute for one another. The boundary MCA most needs to hold is that \"proximity is inferred, not measured directly\": a hit on the proximity map may come from a genuine tertiary contact, or it may come from the radical diffusing along the major/minor groove, and the final pairing/contact conclusion is modelled out by Rosetta taking the hits as pseudo-energy restraints. A paper figure can focus on a single experiment or a single model; a FoldBridge page layers many profiles, coordinates and evidence tiers together, and if an article fails to make these three layers and the \"inferred\" label clear, a reader will misread a proximity hit awaiting modelling confirmation as two nucleotides whose contact has already been directly determined. So the correct ending for an MCA article is not \"the existence of some hit shows these two sites are in contact\", but rather: MCA can provide powerful chemical-accessibility and proximity-restraint clues for the tertiary structure interpretation of RNA; in FoldBridge, such clues become part of the default visualisation and confidence only after first confirming the probe target and readout context, passing the subsequent gates, and always being kept distinct from the signals of other probes such as SHAPE/DMS."
     }
   ]
 }

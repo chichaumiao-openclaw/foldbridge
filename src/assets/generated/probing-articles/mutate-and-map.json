@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "mutate-and-map",
-  "title": "mutate-and-map 给出的配对是\"推断\"出来的，不是直接读出来的",
-  "date": "2026-06-26",
+  "title": "The pairings given by mutate-and-map are \"inferred\", not read out directly",
+  "date": "",
   "figure_count": 4,
   "rep_pmid": "22109276",
   "rep_pmcid": "PMC3725140",
@@ -11,24 +11,28 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "如果只看一张漂亮的 mutate-and-map（M²）二维热图，很容易把它误读成\"化学探测直接读出了哪两个碱基在配对\"。这个理解是错的。mutate-and-map 本身不是一个能在单一化学位点上证明配对的实验。它的做法是：对一条 RNA 做系统性的单点突变，再对每一个突变体分别做化学探测（SHAPE 的 2′-OH 酰化、DMS 的 A/C 甲基化、或 CMCT 的 G/U 修饰），然后观察\"在某个位点引入突变后，远端某个位点的化学可及性是否发生了改变\"。如果突变 A 位点会让 B 位点的反应性系统性变化，就把这对位点读成存在结构耦合，多数情况下是碱基配对或三级接触。也就是说，M² 报告的配对是**推断（inference）**出来的——来自突变扰动加化学读出加 Z-score 分析加计算建模，而不是某个化学位点直接给出的真值。"
+      "text": "Date: 2026-06-26"
     },
     {
       "type": "paragraph",
-      "text": "这条边界对 FoldBridge 很关键。化学探测那一层读的仍然是各自 assay 的化学位点：SHAPE 报告 2′-OH 的柔性/可及性，DMS 报告 A/C 的可及性，CMCT 报告 G/U 的可及性。M² 所谓的\"配对\"是这些信号在整个突变扰动矩阵里呈现出的二维模式被分析和建模出来的结论。因此 FoldBridge 必须保留 assay 与推断这两层上下文：raw 化学探测信号、二维 Z-score 推断出来的配对候选、以及最终经过计算建模和 gate 之后的 confidence，三者要分层存储，不能把 M² 推断出的配对升级成直接化学真值或直接的 positive confidence。"
+      "text": "If you only look at a beautiful mutate-and-map (M²) two-dimensional heatmap, it is easy to misread it as \"chemical probing directly read out which two bases are paired\". That reading is wrong. mutate-and-map is not in itself an experiment that can prove pairing at a single chemical site. Its approach is this: it makes systematic single-point mutations to an RNA, then performs chemical probing on each mutant separately (the 2′-OH acylation of SHAPE, the A/C methylation of DMS, or the G/U modification of CMCT), and then observes \"whether, after introducing a mutation at one site, the chemical accessibility at some distant site changes\". If mutating site A systematically changes the reactivity of site B, then this pair of sites is read as having a structural coupling, in most cases a base pairing or a tertiary contact. That is to say, the pairing reported by M² is **inferred (inference)**: it comes from mutational perturbation plus chemical readout plus Z-score analysis plus computational modelling, rather than from a ground truth given directly by any chemical site."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary is crucial for FoldBridge. The chemical probing layer still reads the chemical site of each respective assay: SHAPE reports the flexibility/accessibility of the 2′-OH, DMS reports the accessibility of A/C, and CMCT reports the accessibility of G/U. The so-called \"pairing\" of M² is a conclusion analysed and modelled from the two-dimensional pattern that these signals present across the whole mutational perturbation matrix. FoldBridge must therefore preserve both layers of context, the assay and the inference: the raw chemical probing signal, the pairing candidates inferred from the two-dimensional Z-score, and the final confidence after computational modelling and gates must be stored in separate layers; the pairing inferred by M² cannot be upgraded into a direct chemical ground truth or a direct positive confidence."
     },
     {
       "type": "heading",
-      "text": "二维推断的核心逻辑：突变扰动远端可及性"
+      "text": "The core logic of two-dimensional inference: perturbing distant accessibility"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mutate-and-map-f1",
       "alt": "mutate-and-map F1",
       "srcBasename": "mutateandmap_f1__PMC3725140__F1.jpg",
-      "legend": "**图 1。mutate-and-map 如何从单点突变读出三维相互作用。** Kladwang et al. 2011（Nature Chemistry，PMID 22109276，DOI `10.1038/nchem.1176`）的图示说明：突变一个核苷酸并对其化学可及性成像，就能揭示 RNA 三维结构里的相互作用。图注（legend）中的轨迹比较了 add 腺嘌呤核糖开关结合域的野生型（蓝）与 C18G 突变体（红），用荧光引物逆转录加毛细管电泳读出 2′-OH 酰化（SHAPE）信号；箭头标出突变位点 C18 自身变得暴露，以及因为配对被破坏而被\"拉近\"暴露出来的远端位点——它的配对伙伴 G78。图 b 是 71 个单突变体的完整 mutate-and-map 数据集（灰度图），从中可以读出大量结构要素：沿主对角线的条带（突变对局部的扰动）、标记具体碱基对的离散点（C18–G78、C26–G44、C54–G72）、helix 突变带来的更弥散效应、二级结构重排、腺嘌呤结合的丧失，以及 L2–L3 的长程三级接触。",
+      "legend": "**Figure 1. How mutate-and-map reads out three-dimensional interactions from single-point mutations.** The illustration of Kladwang et al. 2011 (Nature Chemistry, PMID 22109276, DOI `10.1038/nchem.1176`) explains that mutating one nucleotide and imaging its chemical accessibility can reveal the interactions within the three-dimensional structure of an RNA. In the legend, the traces compare the wild type (blue) of the add adenine riboswitch binding domain with the C18G mutant (red), using fluorescent-primer reverse transcription plus capillary electrophoresis to read out the 2′-OH acylation (SHAPE) signal; arrows mark the mutation site C18 itself becoming exposed, and the distant site \"drawn closer\" and exposed because the pairing was disrupted, namely its pairing partner G78. Figure b is the complete mutate-and-map dataset of 71 single mutants (greyscale image), from which many structural elements can be read: bands along the main diagonal (the local perturbation by a mutation), discrete points marking specific base pairs (C18-G78, C26-G44, C54-G72), the more diffuse effects brought by helix mutations, secondary structure rearrangement, the loss of adenine binding, and the long-range L2-L3 tertiary contact.",
       "body": [
-        "这张图是 M² 二维推断逻辑的核心。单看一对轨迹（图 a），结论不是\"C18 的化学位点直接告诉我们它和 G78 配对\"，而是\"破坏 C18 后 G78 的可及性变了，所以推断 C18 与 G78 之间存在配对耦合\"。把这种逻辑扩展到所有位点，就得到图 b 这张矩阵：每一行是一个突变体的探测结果，离散的 off-diagonal 信号点才是被推断出来的配对/接触关系。换句话说，配对信息藏在\"扰动—响应\"的二维模式里，而不是任何单个化学位点的绝对数值里。"
+        "This figure is the core of the two-dimensional inference logic of M². Looking at a single pair of traces (figure a), the conclusion is not \"the chemical site of C18 directly tells us that it is paired with G78\", but \"after disrupting C18, the accessibility of G78 changed, so we infer that there is a pairing coupling between C18 and G78\". Extending this logic to all sites yields the matrix of figure b: each row is the probing result of one mutant, and the discrete off-diagonal signal points are the inferred pairing/contact relationships. In other words, the pairing information is hidden in the two-dimensional pattern of \"perturbation-response\", not in the absolute value of any single chemical site."
       ],
       "label": "Kladwang(M2) nchem.1176 F1",
       "pmid": "22109276",
@@ -39,16 +43,16 @@
     },
     {
       "type": "heading",
-      "text": "在多个独立 RNA 上恢复已知结构"
+      "text": "Recovering known structures across multiple independent RNAs"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mutate-and-map-f2",
       "alt": "mutate-and-map F4",
       "srcBasename": "mutateandmap_f2__PMC3725140__F4.jpg",
-      "legend": "**图 2。mutate-and-map 在多种 RNA 上恢复二级结构。** Kladwang et al. 2011（Nature Chemistry，PMID 22109276，DOI `10.1038/nchem.1176`）展示了三条独立 RNA 的 mutate-and-map Z-score 数据及由此推断出的二级结构模型：Tetrahymena group I 核酶的 P4–P6 域、E. coli 5S rRNA，以及 V. cholerae VC1722 c-di-GMP 核糖开关结合域。图注（legend）里，方块表示实验数据（Z-score 矩阵），线条与核苷酸表示由数据推断出来的结构。",
+      "legend": "**Figure 2. mutate-and-map recovers secondary structure across multiple RNAs.** Kladwang et al. 2011 (Nature Chemistry, PMID 22109276, DOI `10.1038/nchem.1176`) shows the mutate-and-map Z-score data of three independent RNAs and the secondary structure models inferred from them: the P4-P6 domain of the Tetrahymena group I ribozyme, E. coli 5S rRNA, and the V. cholerae VC1722 c-di-GMP riboswitch binding domain. In the legend, the squares represent the experimental data (the Z-score matrix), and the lines and nucleotides represent the structure inferred from the data.",
       "body": [
-        "这张图的意义是方法的可推广性：M² 不是只在某一条精心挑选的 RNA 上凑出答案，而是在多个结构和功能各异的 RNA 上都能恢复已知的二级结构。但要注意，图中的结构模型不是被直接\"测\"出来的——它是 Z-score 数据加计算建模推断出来的结果。同一份 Z-score 矩阵，换一套建模约束或参数，得到的结构细节可能不同。这正是为什么 M² 的产出必须带着\"它是推断\"这层标签存储，而不能当作和晶体结构同级的直接证据。"
+        "The significance of this figure is the generalisability of the method: M² does not just contrive an answer on one carefully chosen RNA, but can recover the known secondary structure on multiple RNAs of differing structure and function. But note that the structure models in the figure were not directly \"measured\": they are the result of Z-score data plus computational modelling inference. From the same Z-score matrix, a different set of modelling constraints or parameters may yield different structural details. This is precisely why the output of M² must be stored with the label \"it is an inference\", and cannot be treated as direct evidence on a par with a crystal structure."
       ],
       "label": "Kladwang(M2) nchem.1176 F4",
       "pmid": "22109276",
@@ -59,16 +63,16 @@
     },
     {
       "type": "heading",
-      "text": "方法学奠基：MedLoop 模型 RNA"
+      "text": "A methodological foundation: the MedLoop model RNA"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mutate-and-map-f3",
       "alt": "mutate-and-map F1",
       "srcBasename": "mutateandmap_f3__PMC3039151__F1.jpg",
-      "legend": "**图 3。建立 mutate-and-map 方法学的模型系统。** Kladwang et al. 2011（RNA，PMID 21239468，DOI `10.1261/rna.2516311`）用一条设计好的 80-nt MedLoop RNA 作为验证 M² 的模型系统。图注（legend）描述了它的结构：一个 10-bp 的发卡加一个 15-nt 的内环（残基 1–35），5′ 侧有 10 nt，3′ 侧有 35 nt（包含引物结合位点）。",
+      "legend": "**Figure 3. The model system that established the mutate-and-map methodology.** Kladwang et al. 2011 (RNA, PMID 21239468, DOI `10.1261/rna.2516311`) uses a designed 80-nt MedLoop RNA as a model system for validating M². The legend describes its structure: a 10-bp hairpin plus a 15-nt internal loop (residues 1-35), with 10 nt on the 5′ side and 35 nt on the 3′ side (including the primer binding site).",
       "body": [
-        "这是 M² 方法学的奠基论文。在把 M² 用到核糖开关、核酶等真实功能 RNA 之前，作者先用一个结构已知、可控的 MedLoop RNA 来确认\"系统性单点突变加化学探测能不能稳定地读出已知碱基对\"。先在受控模型上证明读出逻辑成立，再推广到未知结构——这是 M² 推断链条可信度的起点。"
+        "This is the foundational paper of M² methodology. Before applying M² to real functional RNAs such as riboswitches and ribozymes, the authors first used a MedLoop RNA of known and controllable structure to confirm that \"systematic single-point mutation plus chemical probing can stably read out known base pairs\". Proving the readout logic holds on a controlled model first, and then generalising to unknown structures, is the starting point for the credibility of the M² inference chain."
       ],
       "label": "Kladwang(M2) rna.2516311 F1",
       "pmid": "21239468",
@@ -79,16 +83,16 @@
     },
     {
       "type": "heading",
-      "text": "二维数据如何在单核苷酸分辨率上揭示配对"
+      "text": "How two-dimensional data reveals pairing at single-nucleotide resolution"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mutate-and-map-f4",
       "alt": "mutate-and-map F3",
       "srcBasename": "mutateandmap_f4__PMC3039151__F3.jpg",
-      "legend": "**图 4。MedLoop RNA 的 mutate-and-map 数据集。** Kladwang et al. 2011（RNA，PMID 21239468，DOI `10.1261/rna.2516311`）展示了 MedLoop RNA 的完整 M² 数据集，把 DMS（蓝，标记 A/C）与 CMCT（红，标记 G/U）两种化学可及性叠加，用荧光引物的高通量逆转录加毛细管电泳读出。图注（legend）标出了多个特征：沿主对角线的条带（局部扰动）、对应碱基对的离散 off-diagonal 信号、loop 内的保护、与构象变化相关的侧翼保护、实验上被保护但计算却预测为暴露的位点，以及突变位点附近一处未被解释的 U 暴露。",
+      "legend": "**Figure 4. The mutate-and-map dataset of the MedLoop RNA.** Kladwang et al. 2011 (RNA, PMID 21239468, DOI `10.1261/rna.2516311`) shows the complete M² dataset of the MedLoop RNA, overlaying the two chemical accessibilities of DMS (blue, marking A/C) and CMCT (red, marking G/U), read out by high-throughput reverse transcription with fluorescent primers plus capillary electrophoresis. The legend marks several features: bands along the main diagonal (local perturbation), discrete off-diagonal signals corresponding to base pairs, protection within the loop, flanking protection associated with conformational change, sites experimentally protected but computationally predicted to be exposed, and an unexplained U exposure near the mutation site.",
       "body": [
-        "这张图既展示了 M² 二维数据的力量，也展示了它的诚实之处。一方面，DMS 与 CMCT 叠加后，off-diagonal 的离散信号能在单核苷酸分辨率上指认碱基对——这正是 M² 相对于单次化学探测的增量。另一方面，图注明确标出了实验与计算预测不一致的位点，以及未能解释的特征。这些\"不一致\"和\"未解释\"恰恰呼应了核心边界：M² 的配对是推断出来的，依赖建模假设，会和预测打架，也会留下解释不了的信号。把这些信息抹平成一张干净的配对图，等于丢掉了证据结构里最重要的部分。"
+        "This figure shows both the power of the two-dimensional data of M² and its honesty. On the one hand, after DMS and CMCT are overlaid, the discrete off-diagonal signals can identify base pairs at single-nucleotide resolution: this is exactly the increment of M² over a single round of chemical probing. On the other hand, the legend clearly marks the sites where experiment and computational prediction disagree, as well as features that cannot be explained. These \"disagreements\" and \"unexplained\" features echo exactly the core boundary: the pairing of M² is inferred, it depends on modelling assumptions, it will clash with predictions, and it will leave behind signals that cannot be explained. Smoothing this information into a clean pairing diagram amounts to throwing away the most important part of the evidence structure."
       ],
       "label": "Kladwang(M2) rna.2516311 F3",
       "pmid": "21239468",
@@ -99,39 +103,39 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 mutate-and-map"
+      "text": "How FoldBridge should write up mutate-and-map"
     },
     {
       "type": "paragraph",
-      "text": "mutate-and-map 的产出是\"推断出来的配对/结构模型\"，FoldBridge 必须把它和 assay 上下文一起存储，绝不能把它升级成直接化学真值或直接的 positive confidence。"
+      "text": "The output of mutate-and-map is an \"inferred pairing/structure model\", and FoldBridge must store it together with the assay context, never upgrading it into a direct chemical ground truth or a direct positive confidence."
     },
     {
       "type": "paragraph",
-      "text": "具体来说，要分清三层。第一层是 raw 化学探测信号：每个突变体在 SHAPE / DMS / CMCT 下的逐位点反应性，这层的解释边界和各自 assay 一致——SHAPE 是 2′-OH 柔性，DMS 是 A/C 可及，CMCT 是 G/U 可及，这层是 raw provenance。第二层是二维推断：把整个突变扰动矩阵做 Z-score 分析后得到的\"两位点之间存在耦合\"的配对候选，这一层是 M² 特有的推断产物，必须明确标注它来自扰动矩阵而非单点化学位点。第三层是计算建模后的结构模型与 confidence：只有在通过 assay、mapping、claim 和 context gates 之后，推断出来的配对候选才可以进入 confidence 候选。"
+      "text": "Specifically, three layers must be distinguished. The first layer is the raw chemical probing signal: the per-position reactivity of each mutant under SHAPE / DMS / CMCT; the interpretive boundary of this layer is consistent with each respective assay, SHAPE being 2′-OH flexibility, DMS being A/C accessibility, and CMCT being G/U accessibility, and this layer is raw provenance. The second layer is the two-dimensional inference: the pairing candidate of \"there is a coupling between two sites\" obtained after Z-score analysis of the whole mutational perturbation matrix; this layer is the inference product specific to M², and it must be clearly labelled as coming from the perturbation matrix rather than from a single-point chemical site. The third layer is the structure model and confidence after computational modelling: only after passing the assay, mapping, claim, and context gates may an inferred pairing candidate enter the confidence candidate pool."
     },
     {
       "type": "paragraph",
-      "text": "这种分层不是削弱 M²，而是尊重它的强项。M² 擅长用扰动—响应模式把碱基配对和长程三级接触从一维化学探测里\"解\"出来；错误发生在把这个推断结果当成和直接结构测定同级的真值。FoldBridge 还要保留两类容易被抹平的信息：实验与计算预测不一致的位点，以及未被解释的特征。它们不是噪声，而是推断不确定性的直接证据，应该作为 provenance 保留，而不是在可视化时悄悄删掉。"
+      "text": "This layering is not a weakening of M², but a respect for its strengths. M² is good at \"solving out\" base pairings and long-range tertiary contacts from one-dimensional chemical probing using perturbation-response patterns; the error occurs when this inferred result is treated as a ground truth on a par with direct structural determination. FoldBridge must also preserve two kinds of information that are easily smoothed away: the sites where experiment and computational prediction disagree, and the features that cannot be explained. These are not noise, but direct evidence of inferential uncertainty, and they should be preserved as provenance, not quietly deleted during visualisation."
     },
     {
       "type": "paragraph",
-      "text": "所以，面向读者的正确说法不是\"M² 测出了 C18 和 G78 配对\"，而是：在 mutate-and-map 实验中，突变 C18 会系统性改变 G78 的化学可及性，由此推断两者之间存在配对耦合；这个配对候选在通过建模和 gate 检查后，才会作为结构解释的一部分进入 FoldBridge 的 confidence 层。"
+      "text": "So the correct statement for the reader is not \"M² measured that C18 and G78 are paired\", but: in the mutate-and-map experiment, mutating C18 systematically changes the chemical accessibility of G78, from which it is inferred that there is a pairing coupling between the two; this pairing candidate becomes part of structural interpretation, entering the confidence layer of FoldBridge, only after passing the modelling and gate checks."
     },
     {
       "type": "heading",
-      "text": "真实 case：一份 M² profile 在 FoldBridge 中的三层分离（示意）"
+      "text": "A real case: the three-layer separation of an M² profile within FoldBridge (illustrative)"
     },
     {
       "type": "paragraph",
-      "text": "设想 FoldBridge 接收到一份类似 add 核糖开关结合域的 mutate-and-map profile（此处为示意，不代表任何具体内部 ID 或真值）。系统应当把它拆成三层来处理，而不是直接把热图上色成一张配对图。"
+      "text": "Imagine FoldBridge receiving a mutate-and-map profile resembling that of the add riboswitch binding domain (this is illustrative here, and does not represent any specific internal ID or ground truth). The system should split it into three layers for processing, rather than directly colouring the heatmap into a pairing diagram."
     },
     {
       "type": "paragraph",
-      "text": "第一层，raw 化学探测 provenance：保存每个突变体逐位点的 SHAPE/DMS/CMCT 反应性，并标明各自的 assay 解释边界。这一层即使数值很高，也只是某种化学可及性信号，不直接等于配对。第二层，二维推断的配对候选：对扰动矩阵做 Z-score 分析后得到若干 off-diagonal 耦合点（例如示意性的 C18–G78、C26–G44 一类），把它们标记为\"由扰动矩阵推断、待建模确认\"的配对候选，并把对应的实验—预测不一致和未解释特征一并附上。第三层，经 gate 后的 confidence：只有通过 assay targetability、mapping、claim 与 context gates 的配对候选，才进入 positive confidence；其余的留在 provenance 与 debug 层，可追溯但不冒充结构真值。"
+      "text": "The first layer, raw chemical probing provenance: preserve the per-position SHAPE/DMS/CMCT reactivity of each mutant, and state the respective assay interpretive boundaries. Even where the values in this layer are very high, they are only a chemical accessibility signal of some kind, not directly equivalent to pairing. The second layer, the inferred pairing candidates of the two dimensions: after Z-score analysis of the perturbation matrix, a number of off-diagonal coupling points are obtained (for example, the illustrative C18-G78, C26-G44 and the like), labelled as pairing candidates \"inferred from the perturbation matrix, awaiting modelling confirmation\", with the corresponding experiment-prediction disagreements and unexplained features attached alongside. The third layer, the confidence after the gates: only pairing candidates that pass the assay targetability, mapping, claim, and context gates enter positive confidence; the rest remain in the provenance and debug layers, traceable but not posing as structural ground truth."
     },
     {
       "type": "paragraph",
-      "text": "这个 case 落到系统行为上，就是同一份 M² profile 会派生出 raw 化学观测、二维推断的配对候选和 confidence 候选这三件不同的东西。M² 最需要被讲清楚的边界，恰恰藏在第二层：那些 off-diagonal 耦合点是从扰动—响应矩阵里 Z-score 出来、还可能和预测打架的推断，不是某个化学位点直接给出的真值。如果 FoldBridge 不把这三层、以及“配对是推断出来的”这层标签分开，读者就会把一张待建模确认的耦合图，误读成 M² 直接测出了哪两个碱基在配对。"
+      "text": "Grounded in system behaviour, this case means that the same M² profile derives three different things: the raw chemical observation, the inferred pairing candidates of the two dimensions, and the confidence candidates. The boundary that M² most needs to have made clear is hidden precisely in the second layer: those off-diagonal coupling points are inferences Z-scored out of the perturbation-response matrix, and may still clash with predictions; they are not a ground truth given directly by some chemical site. If FoldBridge does not separate these three layers, and the label \"pairing is inferred\", the reader will misread a coupling diagram awaiting modelling confirmation as M² having directly measured which two bases are paired."
     }
   ]
 }

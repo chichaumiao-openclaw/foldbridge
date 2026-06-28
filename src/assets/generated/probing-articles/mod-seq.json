@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "mod-seq",
-  "title": "Mod-seq：把 DMS 修饰位点用高通量测序画到核糖体上",
-  "date": "2026-06-25",
+  "title": "Mod-seq: drawing DMS modification sites onto the ribosome with high-throughput sequencing",
+  "date": "",
   "figure_count": 3,
   "rep_pmid": "24664469",
   "rep_pmcid": "PMC3988572",
@@ -11,24 +11,28 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "如果只看数据表，Mod-seq 最常见的误读，是把测序里数出来的每一个 reverse-transcriptase 停顿都当成 DMS 修饰，进而当成结构判定——可它的原始信号里本来就混着内源 rRNA 甲基化这类非 DMS 的峰，不先把这些背景峰减掉，强信号就被读偏了。这个理解是错的。Mod-seq 的本质，是把 DMS 化学探测和高通量测序连在一起：DMS 在活细胞里修饰 RNA，逆转录在修饰位点前停下来，再用测序把这些 reverse-transcriptase block 的位置高通量地读出来。它真正报告的，仍然是 A 和 C 在 Watson-Crick 配对面上的化学可及性：A 的 N1、C 的 N3 在没有被配对、没有被蛋白或配体遮挡、也没有被复杂构象保护时更容易被甲基化。换句话说，Mod-seq 首先报告的是一类化学位点在活细胞里是否可及，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”，更不是给 rRNA 或核糖体上的每个 residue 都贴上同等的结构标签。"
+      "text": "Date: 2026-06-25"
     },
     {
       "type": "paragraph",
-      "text": "在核糖体这种高丰度、高结构复杂度的对象上，这条边界对 FoldBridge 尤其要守住。因为 Mod-seq 继承的是 DMS 的化学，所以它沿用同一条 A/C 靶点边界：信号落在 A/C 上时，反映的是 pairing face 的可及性；G/U 在这种 DMS 读法里本来就不是主要可解释对象。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 ANNOCONFIDENCE / FEC positive confidence，raw signal 就必须先经过 assay chemistry 和 readout context 的检查，才能成为默认上色或 confidence 的候选。对 Mod-seq 来说，这条检查同样从 `DMS_AC_ONLY` 开始，只是被应用在 rRNA 和核糖体这个高丰度、高结构复杂度的上下文里。"
+      "text": "If you look only at the data table, the most common misreading of Mod-seq is to take every reverse-transcriptase stop counted in the sequencing as a DMS modification, and hence as a structural call. But its raw signal contains, mixed in from the start, non-DMS peaks such as endogenous rRNA methylation, and without first subtracting these background peaks the strong signal is read off-target. That reading is wrong. The essence of Mod-seq is to connect DMS chemical probing with high-throughput sequencing: DMS modifies RNA in living cells, reverse transcription stops in front of the modified site, and sequencing then reads out the positions of these reverse-transcriptase blocks at high throughput. What it actually reports is still the chemical accessibility of A and C on their Watson-Crick pairing face: the N1 of A and the N3 of C are more readily methylated when they are not paired, not occluded by a protein or ligand, and not protected by a complex conformation. In other words, what Mod-seq reports first is whether a class of chemical sites is accessible in living cells, not directly whether \"this base is definitely paired\" or \"this base is definitely unpaired\", and still less does it assign an equal structural label to every residue on the rRNA or the ribosome."
+    },
+    {
+      "type": "paragraph",
+      "text": "On an object as high-abundance and structurally complex as the ribosome, this boundary must be held especially firmly for FoldBridge. Because Mod-seq inherits the chemistry of DMS, it follows the same A/C target boundary: when the signal falls on A/C, it reflects the accessibility of the pairing face; G/U were never the principal interpretable objects under this DMS readout in the first place. FoldBridge can preserve the raw observations and can display experimental signal on its web pages; but as soon as anything enters default structure colouring, interpretive text or ANNOCONFIDENCE / FEC positive confidence, the raw signal must first pass checks on assay chemistry and readout context before it can become a candidate for default colouring or confidence. For Mod-seq, this check likewise begins with `DMS_AC_ONLY`, only applied within the high-abundance, structurally complex context of the rRNA and the ribosome."
     },
     {
       "type": "heading",
-      "text": "从 DMS 修饰到测序读出：reverse-transcriptase block 落在 A/C 上"
+      "text": "From DMS modification to sequencing readout: the reverse-transcriptase block falls on A/C"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mod-seq-f1",
       "alt": "Mod-seq F1",
       "srcBasename": "modseq_f1__PMC3988572__F1.jpg",
-      "legend": "**图 1。用高通量测序定位 DMS 修饰位点。** Talkish et al. 2014（PMID 24664469，DOI `10.1261/rna.042218.113`）的这张图把 Mod-seq 的流程和读出拆开来看。图注（legend）描述：DMS 处理过的细胞 RNA 被随机打断、连上特定的 5′ 与 3′ 接头、逆转录后环化建库，再经 PCR 引入 Illumina 测序序列并加上 6-nt 条码池化测序；随后用 genome browser（IGV）比较 DMS 处理（+）与未处理（−）样本的 5′ read end 数量，未处理样本里的峰对应一处已知的内源 rRNA 甲基化位点，两者之差才代表真正的化学修饰位点。图注还特别指出，在 5.8S rRNA 的放大视图里，DMS 造成的 reverse-transcriptase block 大多落在 A 和 C 上，并且与已知的单链区域吻合。",
+      "legend": "**Figure 1. Locating DMS modification sites with high-throughput sequencing.** Talkish et al. 2014 (PMID 24664469, DOI `10.1261/rna.042218.113`). This figure breaks down the workflow and readout of Mod-seq. The legend describes: cellular RNA treated with DMS is randomly fragmented, ligated with specific 5′ and 3′ adapters, reverse transcribed and circularised for library construction, and then PCR introduces the Illumina sequencing sequences and adds a 6-nt barcode for pooled sequencing; a genome browser (IGV) is then used to compare the number of 5′ read ends between the DMS-treated (+) and untreated (−) samples, where the peak in the untreated sample corresponds to a known endogenous rRNA methylation site, and only the difference between the two represents a true chemical modification site. The legend also points out specifically that, in the zoomed-in view of the 5.8S rRNA, the reverse-transcriptase blocks caused by DMS mostly fall on A and C, and agree with the known single-stranded regions.",
       "body": [
-        "这张图最该让读者记住的是：Mod-seq 测的不是“结构”本身，而是 DMS 修饰在测序里留下的停顿信号，而这个停顿信号本来就集中在 A/C 上。它本质上是 in vivo DMS + 测序的 readout——化学还是那套 A/C 化学，只是把检测手段换成了高通量测序，并且要先减掉像内源 rRNA 甲基化这样的背景峰，才能逼近真正的化学修饰位点。对 FoldBridge 来说，这意味着即便 reverse-transcriptase block 与已知单链区一致，进入数据库的每一行仍然要回到 assay model 去解释：A/C 上的停顿可以读成可及性线索，但这条线索的强弱依旧受配对、三级结构、蛋白或配体保护、内源修饰和测序背景的共同影响。读出方式换成测序，并不会改变这条 A/C 边界。"
+        "What the reader should most remember from this figure is that Mod-seq measures not \"structure\" itself, but the stop signal that DMS modification leaves in the sequencing, and this stop signal is concentrated on A/C in the first place. It is in essence an in vivo DMS + sequencing readout: the chemistry is still the same A/C chemistry, only the detection method is changed to high-throughput sequencing, and background peaks such as endogenous rRNA methylation must first be subtracted before approaching the true chemical modification sites. For FoldBridge, this means that even though the reverse-transcriptase blocks agree with the known single-stranded regions, every row entering the database must still return to the assay model for interpretation: a stop on A/C can be read as an accessibility clue, but the strength of this clue is still jointly influenced by pairing, tertiary structure, protein or ligand protection, endogenous modification and sequencing background. Changing the readout to sequencing does not change this A/C boundary."
       ],
       "label": "Mod-seq F1",
       "pmid": "24664469",
@@ -39,16 +43,16 @@
     },
     {
       "type": "heading",
-      "text": "碱基组成证据：强信号几乎只来自 A 和 C"
+      "text": "Base-composition evidence: the strong signal comes almost only from A and C"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mod-seq-f2",
       "alt": "Mod-seq F2",
       "srcBasename": "modseq_f2__PMC3988572__F2.jpg",
-      "legend": "**图 2。Mod-seq 在酵母体内识别到的 DMS 修饰位点。** Talkish et al. 2014（PMID 24664469，DOI `10.1261/rna.042218.113`）的这张图直接给出了 A/C 边界的实验证据。图注（legend）描述：以 522-nt 长的 SRP RNA（SCR1）为例，显著富集的 DMS 修饰位点用彩色条表示相对修饰强度（fold enrichment）；而把所有显著修饰位点按四种碱基统计后，高 fold enrichment 的位点几乎只出现在 A 和 C 上，G 即使被显著修饰，其富集值也明显更小。",
+      "legend": "**Figure 2. DMS modification sites identified by Mod-seq in vivo in yeast.** Talkish et al. 2014 (PMID 24664469, DOI `10.1261/rna.042218.113`). This figure directly gives the experimental evidence for the A/C boundary. The legend describes: taking the 522-nt SRP RNA (SCR1) as an example, the significantly enriched DMS modification sites are represented by coloured bars indicating the relative modification strength (fold enrichment); and when all significant modification sites are tallied by the four bases, the sites with high fold enrichment appear almost only on A and C, while even G that is significantly modified has a clearly smaller enrichment value.",
       "body": [
-        "这张图几乎是 `DMS_AC_ONLY` 的实验注脚：当 Talkish 等人把全部显著位点按碱基拆开，强信号的分布几乎完全落在 A/C 这两类碱基上。这正是 Mod-seq 继承 DMS 边界的核心体现——它能看见的修饰特征，归根结底来自 A/C 的化学可及性读数。所以这些位点的解释同样受 `DMS_AC_ONLY` 约束：A/C 上的高 fold enrichment 提示 pairing face 更可及，低信号可能提示配对或保护，但这两种判断都需要上下文。G/U 在这种读法里不提供同样的 DMS 信号，不能因为它们在表里也有富集数值，就被当作结构特征的正面证据。对 FoldBridge 来说，这张图说明了为什么默认图层必须把可解释的 A/C 信号和非靶点位置分开：方法自己的数据就已经显示，强信号和 A/C 是绑定的。"
+        "This figure is almost an experimental footnote to `DMS_AC_ONLY`: when Talkish et al. split all the significant sites by base, the distribution of the strong signal falls almost entirely on the two base types A/C. This is precisely the core embodiment of Mod-seq inheriting the DMS boundary: the modification features it can see ultimately come from the chemical accessibility readout of A/C. So the interpretation of these sites is likewise constrained by `DMS_AC_ONLY`: a high fold enrichment on A/C suggests the pairing face is more accessible, and a low signal may suggest pairing or protection, but both judgements require context. G/U do not provide the same DMS signal under this readout, and they should not be treated as positive evidence for a structural feature simply because they also have enrichment values in the table. For FoldBridge, this figure shows why the default layer must separate interpretable A/C signal from non-target positions: the method's own data already show that the strong signal is bound to A/C."
       ],
       "label": "Mod-seq F2",
       "pmid": "24664469",
@@ -59,16 +63,16 @@
     },
     {
       "type": "heading",
-      "text": "蛋白结合位点足迹：A/C 信号被放进核糖体的三维上下文"
+      "text": "Footprinting of protein binding sites: the A/C signal placed in the three-dimensional context of the ribosome"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-mod-seq-f3",
       "alt": "Mod-seq F3",
       "srcBasename": "modseq_f3__PMC3988572__F3.jpg",
-      "legend": "**图 3。用 Mod-seq 给 RNA 结合蛋白的结合位点做足迹。** Talkish et al. 2014（PMID 24664469，DOI `10.1261/rna.042218.113`）的这张图把 Mod-seq 信号放回核糖体的三维结构里。图注（legend）描述：比较 L26 缺失突变体与野生型细胞的 Mod-seq 结果，再结合酵母 80S 核糖体的 X 射线晶体结构模型（PDB: 3U5F, 3U5G, 3U5H, 3U5I）；在缺少 L26 蛋白时体内 DMS 修饰增强的核苷酸，按 fold-enrichment 值上色后，恰好聚集在 L26 的结合位点周围。",
+      "legend": "**Figure 3. Footprinting the binding site of an RNA-binding protein with Mod-seq.** Talkish et al. 2014 (PMID 24664469, DOI `10.1261/rna.042218.113`). This figure puts the Mod-seq signal back into the three-dimensional structure of the ribosome. The legend describes: comparing the Mod-seq results of an L26 deletion mutant with wild-type cells, combined with the X-ray crystal structure model of the yeast 80S ribosome (PDB: 3U5F, 3U5G, 3U5H, 3U5I); the nucleotides whose in vivo DMS modification is enhanced in the absence of the L26 protein, coloured by fold-enrichment value, cluster precisely around the L26 binding site.",
       "body": [
-        "这张图把 Mod-seq 的强项放进了它最自然的上下文——核糖体。它说明 A/C 可及性的变化不是孤立数字：当 L26 蛋白被去掉，原本被蛋白遮挡的 A/C 位点变得更可及，DMS 修饰随之增强，这些位点在三维结构上聚成一团，正好勾勒出蛋白结合的足迹。这恰恰印证了文章开头那条边界：DMS 信号的降低或增强，可能来自配对，也可能来自蛋白或配体保护，必须靠上下文区分。对 FoldBridge 来说，这是一个提醒——Mod-seq 的 A/C 信号在 rRNA / 核糖体上下文里尤其受蛋白保护、三级结构和内源修饰影响，所以把这些信号写进默认图层时，更要强调它们是“在特定 assay 和特定上下文下可解释的 A/C 可及性线索”，而不是直接的配对结论。G/U 位置依旧不进入这条正面证据链。"
+        "This figure puts the strength of Mod-seq into its most natural context, the ribosome. It shows that the change in A/C accessibility is not an isolated number: when the L26 protein is removed, the A/C sites previously occluded by the protein become more accessible, the DMS modification is enhanced accordingly, and these sites cluster together in the three-dimensional structure, outlining precisely the footprint of protein binding. This corroborates exactly the boundary set out at the start of the article: a decrease or increase in the DMS signal may come from pairing, and may come from protein or ligand protection, and the two must be distinguished by context. For FoldBridge, this is a reminder: the A/C signal of Mod-seq is especially affected by protein protection, tertiary structure and endogenous modification in the rRNA / ribosome context, so when these signals are written into the default layer, it is all the more important to emphasise that they are \"A/C accessibility clues interpretable under a particular assay and a particular context\", not direct pairing conclusions. G/U positions still do not enter this chain of positive evidence."
       ],
       "label": "Mod-seq F3",
       "pmid": "24664469",
@@ -79,51 +83,51 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 Mod-seq"
+      "text": "How FoldBridge should write about Mod-seq"
     },
     {
       "type": "paragraph",
-      "text": "Mod-seq 是字面意义上的 DMS-based 方法（DMS 处理 + 高通量测序），所以它直接继承 `DMS_AC_ONLY` 这条核心规则——只是把它应用在 rRNA 和核糖体这个高丰度、富含蛋白和三级结构的上下文里。A/C 是 targetable base；G/U/T/unknown 是 non-target base。G/U/T/unknown 行即使有数字，也只能保留为 raw provenance、debug 信息或下载表字段，不能因为是在核糖体上测到的就自动进入 positive confidence。Talkish 等人自己的碱基组成分析（图 2）已经表明，强信号几乎只属于 A/C，这条规则因此不是外加的约束，而是和数据本身一致的写法。"
+      "text": "Mod-seq is a DMS-based method in the literal sense (DMS treatment + high-throughput sequencing), so it directly inherits the core rule `DMS_AC_ONLY`, only applied within the high-abundance, protein- and tertiary-structure-rich context of the rRNA and the ribosome. A/C are targetable bases; G/U/T/unknown are non-target bases. Even where G/U/T/unknown rows carry numbers, they can only be retained as raw provenance, debug information or download-table fields, and should not automatically enter positive confidence simply because they were measured on the ribosome. Talkish et al.'s own base-composition analysis (Figure 2) has already shown that the strong signal belongs almost only to A/C, so this rule is not an externally imposed constraint, but a way of writing that is consistent with the data itself."
     },
     {
       "type": "paragraph",
-      "text": "ANNOJOIN 的默认结构图应读取经过 targetability mask 的 `visual_colormap_value`，而不是直接读取原始数值。这样读者在结构页面看到的颜色，才是在 Mod-seq（即 in vivo DMS + 测序）assay model 下可解释的颜色。ANNOCONFIDENCE / FEC 的要求更高：只有通过 assay targetability、mapping、claim 和 context gates 的 A/C 行，才可以进入 positive confidence 候选。这条 chemistry gate 和 DMS 文章里的完全一致，区别只在于 Mod-seq 的信号常常落在核糖体这种被蛋白和内源修饰高度调制的环境里，因此 context gate 反而更重要——内源 rRNA 甲基化峰、蛋白保护、三级结构都可能改变 A/C 的读数。"
+      "text": "The default structure figure in ANNOJOIN should read the `visual_colormap_value` after the targetability mask, rather than reading raw values directly. Only then is the colour that readers see on the structure page a colour interpretable under the Mod-seq (i.e. in vivo DMS + sequencing) assay model. The requirements of ANNOCONFIDENCE / FEC are higher still: only A/C rows that pass the assay targetability, mapping, claim and context gates may enter the positive confidence candidate set. This chemistry gate is identical to the one in the DMS article; the only difference is that the Mod-seq signal often falls in an environment such as the ribosome that is highly modulated by proteins and endogenous modifications, so the context gate is all the more important: endogenous rRNA methylation peaks, protein protection and tertiary structure may all alter the A/C readout."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 Mod-seq。相反，这是尊重它的强项。Mod-seq 对 A/C pairing face 在活细胞里、尤其是在核糖体上的可及性非常有用，还能像图 3 那样勾勒出蛋白结合足迹；错误发生在把这个强项扩展成“核糖体上所有碱基统一反应性”时。FoldBridge 要守住的分界，是“核糖体上数出了一个 A/C 停顿计数”和“这个计数能作为结构证据”不是一回事。上下文越复杂，越要把 chemical reactivity、accessibility、base pairing、tertiary protection、protein/ligand protection、endogenous modification 和 sequencing bias 分开来谈。"
+      "text": "This is not a weakening of Mod-seq. On the contrary, it respects its strengths. Mod-seq is very useful for the accessibility of the A/C pairing face in living cells, especially on the ribosome, and can also outline protein binding footprints as in Figure 3; the error occurs when this strength is extended into \"a uniform reactivity for every base on the ribosome\". The boundary FoldBridge must hold is that \"an A/C stop count was tallied on the ribosome\" and \"this count can serve as structural evidence\" are not the same thing. The more complex the context, the more chemical reactivity, accessibility, base pairing, tertiary protection, protein/ligand protection, endogenous modification and sequencing bias must be discussed separately."
     },
     {
       "type": "paragraph",
-      "text": "所以，Mod-seq 技术文章不应该只写“某个位点信号高”或“我们覆盖了整条 rRNA”。更完整的句子应该写成：在 Mod-seq 的 in vivo DMS + 测序 assay 中，该 A/C 位点具有较高可及性信号；如果 mapping、coverage、背景（包括内源修饰）和上下文都通过检查，这个信号可以作为结构解释的支持。多写出内源修饰这道背景检查虽然啰嗦，却能避免把 rRNA 上的天然甲基化误当成 DMS 的配对判定。"
+      "text": "So a Mod-seq technical article should not write only \"the signal is high at a certain site\" or \"we covered the entire rRNA\". A more complete sentence should read: in the in vivo DMS + sequencing assay of Mod-seq, this A/C site has a relatively high accessibility signal; if mapping, coverage, background (including endogenous modification) and context all pass the checks, this signal can serve as support for structural interpretation. Spelling out the endogenous-modification background check is wordier, but it avoids mistaking natural methylation on the rRNA for a DMS pairing call."
     },
     {
       "type": "heading",
-      "text": "真实 case（示意）"
+      "text": "A real example (illustrative)"
     },
     {
       "type": "paragraph",
-      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 Mod-seq profile 如何分成三个不同的层。"
+      "text": "There is no real FoldBridge accession here, so what follows is a clearly labelled illustrative scenario, used to show how a single Mod-seq profile separates into three different layers."
     },
     {
       "type": "paragraph",
-      "text": "设想一份 Mod-seq profile 流进 FoldBridge：它来自一次 in vivo DMS + 测序实验，覆盖了一段 rRNA 上连续的若干位点，背景里还混着像内源甲基化这样的非 DMS 峰。在 ANNOJOIN visual track 里，这条 profile 会被自然地分成两类——落在 A/C 上的位点，和落在 G/U/T 或位置未解析（unresolved）上的位点。前者是 DMS 可解释的靶点，后者则不是；而且即便是 A/C 行，也要先减掉内源修饰这类背景峰，才能逼近真正的化学修饰位点。"
+      "text": "Imagine a Mod-seq profile flowing into FoldBridge: it comes from a round of in vivo DMS + sequencing experiment, covering a number of consecutive sites on a stretch of rRNA, with non-DMS peaks such as endogenous methylation also mixed into the background. In the ANNOJOIN visual track, this profile is naturally split into two classes: sites falling on A/C, and sites falling on G/U/T or at positions that are unresolved. The former are DMS-interpretable targets, the latter are not; and even the A/C rows must first have background peaks such as endogenous modification subtracted before they can approach the true chemical modification sites."
     },
     {
       "type": "paragraph",
-      "text": "这组划分给读者的结论非常直接：per-position 的 Mod-seq observation 不等于 per-position 的 DMS positive support。对 A/C 来说，核糖体上下文里的 DMS 可以提供强的可及性线索，甚至能反映蛋白结合的足迹；对 G/U/T/unknown 来说，数值首先是 raw provenance。只有前者在通过 mapping 和 context gates（包括内源修饰和蛋白保护的判断）后，才可能进入 ANNOCONFIDENCE / FEC positive confidence。"
+      "text": "The conclusion this division gives the reader is very direct: a per-position Mod-seq observation is not equivalent to per-position DMS positive support. For A/C, DMS in the ribosome context can provide a strong accessibility clue, and can even reflect the footprint of protein binding; for G/U/T/unknown, the value is first of all raw provenance. Only the former, after passing the mapping and context gates (including the judgement of endogenous modification and protein protection), may enter ANNOCONFIDENCE / FEC positive confidence."
     },
     {
       "type": "paragraph",
-      "text": "如果把这条 profile 上的所有位点都按原始数值上色，页面看起来会更满，但解释会变差。非靶点位置不应该参与默认 DMS positive signal；位置未解析的行也不能假装已经映射到可靠结构坐标；内源修饰造成的背景峰更不能被当作 DMS 可及性证据。相反，A/C-targetable 且已扣除背景的那一层，才是读者第一眼应该看到的 Mod-seq 层。剩下的行仍然可以在详情里追溯，因为它们对 provenance、调试和再分析有价值，但它们不应该伪装成同一种证据。"
+      "text": "If every site on this profile were coloured by its raw value, the page would look fuller, but the interpretation would get worse. Non-target positions should not participate in the default DMS positive signal; rows at unresolved positions cannot pretend to have already been mapped to reliable structural coordinates; and background peaks caused by endogenous modification cannot be taken as evidence of DMS accessibility. Instead, the layer that is A/C-targetable and has had the background subtracted is the Mod-seq layer that readers should see first. The remaining rows can still be traced in the details, because they have value for provenance, debugging and reanalysis, but they should not masquerade as the same kind of evidence."
     },
     {
       "type": "paragraph",
-      "text": "这个示意场景真正想说的，不是某个数字，而是同一份 Mod-seq profile 在系统里会同时活成三种身份：原始观测、可视化信号和 confidence 候选。这三层各管各的事——原始观测层记录“实验测到了什么”，可视化信号层只显示“在 in vivo DMS + 测序、且已扣除内源修饰背景的解释边界内能读出什么”，confidence 层只接收通过 gates 的可解释证据。一旦科普文章把它们揉成一团，最坏的结果不是少画了几个点，而是读者把一处内源 rRNA 甲基化的背景峰、或者落在 G/U/T 上的非靶点信号，错当成 DMS 在核糖体上探到的 A/C 可及性证据——而在被蛋白和内源修饰高度调制的 rRNA 上，这种错读会被自动化图层成倍地传播下去。"
+      "text": "What this illustrative scenario really wants to say is not about any one number, but that the same Mod-seq profile lives as three identities at once in the system: the raw observation, the visualisation signal and the confidence candidate. These three layers each mind their own business: the raw observation layer records \"what the experiment measured\", the visualisation signal layer shows only \"what can be read out within the interpretive boundary of in vivo DMS + sequencing, with the endogenous-modification background already subtracted\", and the confidence layer receives only the interpretable evidence that has passed the gates. Once a popular-science article kneads them into one, the worst outcome is not that a few points are left undrawn, but that the reader mistakes a background peak from endogenous rRNA methylation, or a non-target signal falling on G/U/T, for evidence of A/C accessibility that DMS probed on the ribosome; and on an rRNA highly modulated by proteins and endogenous modifications, such a misreading would be propagated manyfold by the automated layer."
     },
     {
       "type": "paragraph",
-      "text": "所以，Mod-seq 文章的正确结尾不是“高信号证明该碱基不配对”，也不是“覆盖了整条 rRNA 就等于解释了整个核糖体”，而是：Mod-seq 能在活细胞里、在 rRNA 和核糖体的上下文中，为 RNA structure interpretation 提供强有力的 A/C 可及性线索，甚至勾勒出蛋白结合足迹；在 FoldBridge 中，这种线索只有通过 `DMS_AC_ONLY` 和后续 gates 后，才会成为结构解释和 confidence 的一部分。"
+      "text": "So the correct ending for a Mod-seq article is not \"a high signal proves the base is unpaired\", nor \"covering the entire rRNA is equivalent to explaining the entire ribosome\", but: Mod-seq can, in living cells and in the context of the rRNA and the ribosome, provide a powerful A/C accessibility clue for RNA structure interpretation, and can even outline protein binding footprints; in FoldBridge, such a clue becomes part of structural interpretation and confidence only after passing `DMS_AC_ONLY` and the subsequent gates."
     }
   ]
 }

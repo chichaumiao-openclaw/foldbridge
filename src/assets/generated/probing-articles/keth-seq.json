@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "keth-seq",
-  "title": "keth-seq 为什么只能严肃地解释 G",
-  "date": "2026-06-25",
+  "title": "Why keth-seq can only seriously interpret G",
+  "date": "",
   "figure_count": 2,
   "rep_pmid": "32015521",
   "rep_pmcid": "PMC7182492",
@@ -11,25 +11,29 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "如果只看数据表，keth-seq 很容易被误读成一种“四种碱基都在报告结构”的 RNA 染色剂。这个理解是错的。keth-seq 用 kethoxal（更准确地说是 N3-kethoxal 这种酮醛类试剂）标记鸟嘌呤 G 的 N1/N2 位点：当 G 处于未配对、未被蛋白或配体遮挡、也没有被复杂构象保护的状态时，它的 Watson-Crick 配对面更容易被这类酮醛试剂修饰。也就是说，keth-seq 首先报告的是 G 这一类化学位点是否可及，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”。它和 DMS（靶向 A/C）、CMC（靶向 U/G）的化学逻辑是互补的，但靶点不同。"
+      "text": "Date: 2026-06-25"
     },
     {
       "type": "paragraph",
-      "text": "这条边界对 FoldBridge 很关键。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 ANNOCONFIDENCE / FEC positive confidence，就必须问一个更具体的问题：这个数字在当前 assay model 下能不能被解释为 keth-seq 支持？对 keth-seq 来说，答案从一条 G targetability gate 开始——它在结构上等价于 DMS 的 `DMS_AC_ONLY`，只是把可解释碱基从 A/C 换成了 G。"
+      "text": "If you go by the data table alone, keth-seq is easily misread as an RNA stain in which \"all four bases report structure\". That reading is wrong. keth-seq uses kethoxal (more precisely, the ketoaldehyde-class reagent N3-kethoxal) to label the N1/N2 sites of guanine, G: when G is unpaired, not occluded by protein or ligand, and not protected by a complex conformation, its Watson-Crick pairing face is more readily modified by this kind of ketoaldehyde reagent. In other words, what keth-seq reports first is whether the class of chemical site that is G is accessible, not directly that \"this base is definitely paired\" or \"this base is definitely unpaired\". Its chemical logic is complementary to that of DMS (which targets A/C) and CMC (which targets U/G), but its target is different."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary is crucial for FoldBridge. FoldBridge can preserve the raw observed values and can also display experimental signal on the web; but the moment anything enters default structure colouring, interpretive text or ANNOCONFIDENCE / FEC positive confidence, a more specific question must be asked: under the current assay model, can this number be interpreted as keth-seq support? For keth-seq, the answer begins with a G targetability gate, which is structurally equivalent to DMS's `DMS_AC_ONLY`, only with the interpretable base switched from A/C to G."
     },
     {
       "type": "heading",
-      "text": "kethoxal 标记 G：化学靶点决定了可解释的碱基"
+      "text": "kethoxal labels G: the chemical target determines the interpretable base"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-keth-seq-f1",
       "alt": "Keth-seq F1",
       "srcBasename": "kethseq_f1__PMC7182492__F1.jpg",
-      "legend": "**图 1。N3-kethoxal 与鸟嘌呤的反应及其碱基特异性。** Weng et al. 2020（PMID 32015521，DOI `10.1038/s41589-019-0459-3`）展示了 N3-kethoxal 的结构以及它与 guanine 的反应；变性凝胶电泳说明 N3-kethoxal 只和单链 RNA（ssRNA）反应。图注（legend）还把这条化学逻辑接到下游检测上：只有被 N3-kethoxal 标记的 RNA 才能用 biotin-DBCO 进行生物素化，dot blot 进一步确认了标记随反应时间累积，并且在 50 mM GTP、95 °C 条件下孵育约 10 分钟后修饰可被完全去除（可逆）。",
+      "legend": "**Figure 1. The reaction of N3-kethoxal with guanine and its base specificity.** Weng et al. 2020 (PMID 32015521, DOI `10.1038/s41589-019-0459-3`) show the structure of N3-kethoxal and its reaction with guanine; denaturing gel electrophoresis shows that N3-kethoxal reacts only with single-stranded RNA (ssRNA). The legend also connects this chemical logic to the downstream detection: only RNA labelled with N3-kethoxal can be biotinylated using biotin-DBCO, a dot blot further confirms that labelling accumulates with reaction time, and after incubation for about 10 minutes at 50 mM GTP, 95 °C the modification can be completely removed (reversible).",
       "body": [
-        "这张图先回答的是“哪些 G 被保护、哪些 G 可及”。它不是在给每个碱基贴一个统一结构标签，而是在 G 这一类化学位点上读取修饰和保护的差异。N3-kethoxal 只标记单链状态的 G，这正是把“可及性”和“结构”联系起来的化学基础。",
-        "这张图也已经足够说明 keth-seq 的第一条红线：它不是“每个 residue 都有同等化学意义”的读数。G 的高信号可以表示其配对面可及；信号降低可能来自 Watson-Crick 配对，也可能来自三级结构、蛋白结合、配体保护或实验读出限制。相反，A、C、U 在这种 kethoxal 化学里本来就不是主要可解释对象。把 A/C/U/unknown 的数值直接画成 positive support，会把化学位点和数据表字段混为一谈。"
+        "This figure answers, first of all, \"which G are protected and which G are accessible\". It is not assigning a uniform structural label to every base, but reading the difference between modification and protection at the class of chemical site that is G. N3-kethoxal labels only G in the single-stranded state, which is precisely the chemical basis that links \"accessibility\" to \"structure\".",
+        "This figure is also already enough to make keth-seq's first red line clear: it is not a readout in which \"every residue carries equal chemical meaning\". A high signal at G can indicate that its pairing face is accessible; a reduced signal may come from Watson-Crick pairing, but it may also come from tertiary structure, protein binding, ligand protection or experimental readout limits. By contrast, A, C and U are not the primary interpretable objects in this kethoxal chemistry to begin with. Plotting the values of A/C/U/unknown directly as positive support conflates the chemical site with the data-table field."
       ],
       "label": "Keth-seq F1",
       "pmid": "32015521",
@@ -40,18 +44,18 @@
     },
     {
       "type": "heading",
-      "text": "测序读出：G 的信号被放大，背景与解释责任也被放大"
+      "text": "Sequencing readout: the signal of G is amplified, and so are background and interpretive responsibility"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-keth-seq-f2",
       "alt": "Keth-seq F2",
       "srcBasename": "kethseq_f2__PMC7182492__F2.jpg",
-      "legend": "**图 2。Keth-seq 的测序信号、重现性与结构验证。** Weng et al. 2020（PMID 32015521，DOI `10.1038/s41589-019-0459-3`）用一组分析说明 keth-seq 如何把 kethoxal 修饰接入测序读出：逆转录（RT）在修饰位点停止，两个重复之间的 RT stop reads 高度相关，而内嵌饼图显示 RT 停在 G 上的 reads 数量（数百万）远高于 A、T、C（数十万），印证了标记的碱基特异性。图注（legend）还显示，keth-seq 与 icSHAPE 在 guanine reactivity 上相关性很高（例如 Rpl6 转录本 Pearson R 约 0.789），在 32 个已知结构模型上 AUC 一致，并能在 18S rRNA 片段上把 G 反应性填回结构模型；keth-seq 还能用 Gini index 检出 +PDS 处理后的 rG4 区域。",
+      "legend": "**Figure 2. The sequencing signal, reproducibility and structural validation of keth-seq.** Weng et al. 2020 (PMID 32015521, DOI `10.1038/s41589-019-0459-3`) use a set of analyses to show how keth-seq feeds the kethoxal modification into the sequencing readout: reverse transcription (RT) stops at the modified site, the RT stop reads between two replicates are highly correlated, and an inset pie chart shows that the number of reads with RT stopping on G (in the millions) is far higher than on A, T, C (in the hundreds of thousands), confirming the base specificity of the labelling. The legend also shows that keth-seq correlates very well with icSHAPE on guanine reactivity (for example, a Pearson R of about 0.789 on the Rpl6 transcript), agrees in AUC on 32 known structure models, and can fill G reactivity back onto the structure model of an 18S rRNA fragment; keth-seq can also use the Gini index to detect rG4 regions after +PDS treatment.",
       "body": [
-        "因此，最终表格里的数值不是 kethoxal 分子直接给出的“结构标签”，而是化学修饰、逆转录、建库、比对和归一化之后的观测量。RT stop 的碱基分布清楚地告诉我们：keth-seq 的可解释信号集中在 G 上；A、T、C 上仍然会出现少量 stop，但它们更接近背景，不能因为数值非零就当作 keth-seq 支持的可及性证据。这个观测量可以很有用，但它需要被解释。",
-        "这一点是 keth-seq 文章里最值得强调的安全阀：测序读出扩大了 keth-seq 的覆盖面，也扩大了背景和偏差进入解释链条的机会。对 FoldBridge 来说，raw observation 必须先经过 chemistry targetability 和 readout context，才能变成默认图层或 confidence 的候选。这里最容易出错的是把“测到了 RT stop”写成“测到了结构”。一个 G 位点的高信号通常提示其配对面更可及；一个 G 位点的低信号可能提示配对或保护；但这两个判断都需要上下文。局部 RNA 构象、离子条件、蛋白或小分子结合、RT bias、局部序列可比对性，都可能影响最后的数值。",
-        "因此，面向非专业读者时，keth-seq 最合适的说法是“把 kethoxal 对 G 的修饰转化成测序可读的可及性线索”。这个说法保留了方法的力量（它和 icSHAPE 在 G 上高度一致，还能定位 rG4），也保留了科学边界。它不会把 A、C、U 的背景信号写成 keth-seq target signal，也不会把一个归一化后的数值写成结构真值。"
+        "The values in the final table are therefore not a \"structural label\" given directly by the kethoxal molecule, but an observable that has passed through chemical modification, reverse transcription, library construction, alignment and normalisation. The base distribution of RT stops tells us clearly: the interpretable signal of keth-seq is concentrated on G; a small number of stops still occur on A, T, C, but they are closer to background and cannot be taken as evidence of keth-seq-supported accessibility just because the value is non-zero. This observable can be very useful, but it needs to be interpreted.",
+        "This is the safeguard most worth stressing in the keth-seq article: the sequencing readout broadens the coverage of keth-seq, but it also broadens the opportunity for background and bias to enter the interpretive chain. For FoldBridge, a raw observation must first pass through chemistry targetability and readout context before it can become a candidate for the default layer or confidence. The easiest mistake here is to write \"an RT stop was measured\" as \"a structure was measured\". A high signal at a G site usually suggests that its pairing face is more accessible; a low signal at a G site may suggest pairing or protection; but both judgements need context. Local RNA conformation, ionic conditions, protein or small-molecule binding, RT bias and local sequence alignability can all affect the final number.",
+        "So, when writing for a non-specialist reader, the most appropriate way to describe keth-seq is \"turning the kethoxal modification of G into a sequencing-readable accessibility cue\". This phrasing preserves the power of the method (it agrees highly with icSHAPE on G and can also locate rG4) and preserves the scientific boundary too. It will not write the background signal of A, C, U as keth-seq target signal, nor will it write a normalised value as structural ground truth."
       ],
       "label": "Keth-seq F2",
       "pmid": "32015521",
@@ -62,59 +66,59 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 keth-seq"
+      "text": "How FoldBridge should write about keth-seq"
     },
     {
       "type": "paragraph",
-      "text": "keth-seq 的核心规则可以写成一条 G targetability gate：G 是 targetable base；A/C/U/T/unknown 是 non-target base。non-target 行即使有数字，也只能保留为 raw provenance、debug 信息或下载表字段，不能自动进入 positive confidence。这条规则在结构上和 DMS 的 `DMS_AC_ONLY` 完全平行，只是可解释碱基换成了 G。"
+      "text": "The core rule of keth-seq can be written as a single G targetability gate: G is the targetable base; A/C/U/T/unknown are non-target bases. Even if the non-target rows have numbers, they can only be preserved as raw provenance, debug information or download-table fields, and cannot automatically enter positive confidence. This rule is structurally exactly parallel to DMS's `DMS_AC_ONLY`, only with the interpretable base switched to G."
     },
     {
       "type": "paragraph",
-      "text": "ANNOJOIN 的默认结构图不应直接读原始数值，而要先过这条 G targetability gate：只有 G 行通过后才进入默认图层、贡献 `visual_colormap_value`，A/C/U/T/unknown 行被挡在默认上色之外。这样读者在结构页面看到的颜色，才是在 keth-seq assay model 下可解释的颜色——即“这个 G 的配对面更可及”，而不是把背景里 A/C/U 的非靶点信号也染上同一种颜色。ANNOCONFIDENCE / FEC 的要求更高：只有通过 assay targetability、mapping、claim 和 context gates 的 G 行，才可以进入 positive confidence 候选。"
+      "text": "The default ANNOJOIN structure figure should not read the raw value directly, but should first pass through this G targetability gate: only after a G row passes does it enter the default layer and contribute a `visual_colormap_value`, whilst A/C/U/T/unknown rows are kept out of the default colouring. Only then is the colour the reader sees on the structure page a colour that is interpretable under the keth-seq assay model, namely \"the pairing face of this G is more accessible\", rather than colouring the non-target signal of background A/C/U the same shade. The requirement for ANNOCONFIDENCE / FEC is higher still: only G rows that pass the assay targetability, mapping, claim and context gates may enter the positive confidence candidates."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 keth-seq。相反，这是尊重 keth-seq 的强项。kethoxal 对单链 G 配对面的可及性非常有用；错误发生在把这个强项扩展成“所有碱基统一反应性”时。对一个只认 G 的方法，FoldBridge 更要把“某个 G 有信号”和“这个信号能支撑结构解释”分开，更不能让 A/C/U 的背景数值跟着 G 一起被当成证据。"
+      "text": "This does not weaken keth-seq. On the contrary, it respects keth-seq's strengths. kethoxal is very useful for the accessibility of the pairing face of single-stranded G; the error occurs when this strength is stretched into \"uniform reactivity across all bases\". For a method that recognises only G, FoldBridge must all the more separate \"a given G has signal\" from \"this signal can support structural interpretation\", and must all the more not let the background values of A/C/U be taken as evidence along with G."
     },
     {
       "type": "paragraph",
-      "text": "这种写法也能保护下游读者。网页上的默认颜色应该回答“在当前技术解释边界内，这个位点有什么可读信号”；详情表才回答“原始数据里记录了什么”。如果把这两个问题混在一起，读者会误以为 FoldBridge 认可了所有显示出来的数字。正确做法是：raw provenance 不丢，默认 interpretation 不乱给，confidence 层只接收可解释证据。"
+      "text": "This way of writing also protects the downstream reader. The default colour on the web should answer \"within the current technical interpretive boundary, what readable signal does this site have\"; the detail table answers \"what was recorded in the raw data\". If these two questions are mixed together, the reader will mistakenly believe that FoldBridge endorses every displayed number. The correct approach is: do not lose raw provenance, do not hand out default interpretation carelessly, and let the confidence layer accept only interpretable evidence."
     },
     {
       "type": "paragraph",
-      "text": "所以，keth-seq 技术文章不应该只写“某个位点信号高”。更完整的句子应该写成：在 keth-seq assay 中，该 G 位点具有较高可及性信号；如果 mapping、coverage、背景和上下文都通过检查，这个信号可以作为结构解释的支持。把范围限定在 G 上虽然啰嗦，却能避免读者把 A/C/U 的背景数值也当成 keth-seq 的配对判定。"
+      "text": "So, a keth-seq technical article should not just write \"the signal at a given site is high\". A more complete sentence should be written as: in the keth-seq assay, this G site has a relatively high accessibility signal; if mapping, coverage, background and context all pass inspection, this signal can serve as support for structural interpretation. Restricting the scope to G is wordy, but it avoids the reader taking the background values of A/C/U as keth-seq's pairing judgement."
     },
     {
       "type": "heading",
-      "text": "真实 case（示意）：G targetable 与 non-target 的分层"
+      "text": "A real case (illustrative): the layering of G-targetable and non-target"
     },
     {
       "type": "paragraph",
-      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 keth-seq profile 如何分成三个不同的层。"
+      "text": "There is no real FoldBridge accession here, so what follows is a clearly labelled illustrative scenario, used to show how a single keth-seq profile divides into three different layers."
     },
     {
       "type": "paragraph",
-      "text": "设想一份 keth-seq profile 在 ANNOJOIN visual track 中有若干行：一部分行落在 G 上，进入默认 visual signal；其余落在 A/C/U 上的行被标为 non-target base；还有少量行因为没有映射到可靠结构坐标而标为 position unresolved。这三层不是同一个东西，正是文章前面原则的落地。"
+      "text": "Imagine a keth-seq profile with a number of rows in the ANNOJOIN visual track: some rows fall on G and enter the default visual signal; the rest, which fall on A/C/U, are marked as non-target bases; and a small number of rows, which are not mapped to reliable structural coordinates, are marked as position unresolved. These three layers are not the same thing, which is exactly the grounding of the earlier principles of the article."
     },
     {
       "type": "paragraph",
-      "text": "这组分层给读者的结论非常直接：per-position keth-seq observation 不等于 per-position keth-seq positive support。对 G 来说，keth-seq 可以提供强的可及性线索；对 A/C/U/T/unknown 来说，数值首先是 raw provenance。只有前者在通过 mapping 和 context gates 后，才可能进入 ANNOCONFIDENCE / FEC positive confidence。"
+      "text": "The conclusion this layering gives the reader is very direct: a per-position keth-seq observation is not the same as per-position keth-seq positive support. For G, keth-seq can provide a strong accessibility cue; for A/C/U/T/unknown, the value is first of all raw provenance. Only the former, after passing the mapping and context gates, can possibly enter ANNOCONFIDENCE / FEC positive confidence."
     },
     {
       "type": "paragraph",
-      "text": "如果把所有行都按原始数值上色，页面看起来会更满，但解释会变差。non-target base 行不应该参与默认 keth-seq positive signal；position unresolved 行也不能假装已经映射到可靠结构坐标。相反，落在 G 上的默认 visual signal 才是读者第一眼应该看到的 keth-seq 层。剩下的行仍然可以在详情中追溯，因为它们对 provenance、调试和再分析有价值，但它们不应该伪装成同一种证据。"
+      "text": "If all rows were coloured by their raw values, the page would look fuller, but the interpretation would get worse. The non-target base rows should not take part in the default keth-seq positive signal; the position unresolved rows cannot pretend to have been mapped to reliable structural coordinates either. By contrast, the default visual signal falling on G is the keth-seq layer the reader should see first. The remaining rows can still be traced in the detail view, because they have value for provenance, debugging and re-analysis, but they should not disguise themselves as the same kind of evidence."
     },
     {
       "type": "paragraph",
-      "text": "这个 case 落到实际系统行为上，就是同一份 keth-seq profile 会派生出原始观测、可视化信号和 confidence 候选这三件不同的东西。keth-seq 最直观的误读，是因为它只认 G，读者容易把落在 A/C/U 上的背景数值也当成 keth-seq 在说话；文章如果不能把这三层、以及 G 这一条窄靶点讲清楚，FoldBridge 的结构图就会被当成“所有碱基的可及性都被 keth-seq 测过了”。"
+      "text": "Grounded in actual system behaviour, this case means that the same keth-seq profile gives rise to three different things: a raw observation, a visualisation signal and a confidence candidate. The most intuitive misreading of keth-seq, because it recognises only G, is for the reader to take the background values falling on A/C/U as keth-seq speaking too; if an article cannot explain these three layers, and the narrow target that is G, clearly, FoldBridge's structure figures will be taken to mean \"the accessibility of every base has been measured by keth-seq\"."
     },
     {
       "type": "paragraph",
-      "text": "换句话说，keth-seq 的文章不能只解释实验，也要解释显示系统为什么要克制。图层越自动，越要把 G 这条窄靶点写清楚；否则一份只在 G 上说话的数据，会被自动上色伪装成对全部碱基的判断。这也是 FoldBridge 和普通论文图解读之间的差别：论文图可以聚焦一个实验或一个模型；FoldBridge 的页面会把许多 profile、结构坐标和证据层放到一起。keth-seq 是最适合拿来解释这个差别的例子之一，因为它的化学靶点（G）足够明确，误把非 G 信号读进来的后果也足够直观。"
+      "text": "In other words, a keth-seq article cannot only explain the experiment; it must also explain why the display system has to exercise restraint. The more automated the layer, the more clearly the narrow target that is G must be written out; otherwise data that speaks only on G will be disguised by automatic colouring as a judgement on all bases. This is also the difference between FoldBridge and ordinary interpretation of paper figures: a paper figure can focus on one experiment or one model; a FoldBridge page puts many profiles, structural coordinates and evidence layers together. keth-seq is one of the examples best suited to explaining this difference, because its chemical target (G) is clear enough and the consequences of misreading a non-G signal into it are intuitive enough."
     },
     {
       "type": "paragraph",
-      "text": "所以，keth-seq 文章的正确结尾不是“高信号证明该 G 不配对”，而是：keth-seq 数据能为 RNA structure interpretation 提供强有力的 G 可及性线索；在 FoldBridge 中，这种线索只有通过 G targetability gate 和后续 gates 后，才会成为结构解释和 confidence 的一部分。"
+      "text": "So the correct ending for a keth-seq article is not \"a high signal proves this G is unpaired\", but rather: keth-seq data can provide powerful G accessibility cues for RNA structure interpretation; in FoldBridge, such a cue becomes part of structural interpretation and confidence only after it passes the G targetability gate and the subsequent gates."
     }
   ]
 }

@@ -1,8 +1,8 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "dim-2p-seq",
-  "title": "DIM-2P-seq：在活细胞里读 mRNA 3'端结构，化学边界仍然是 A/C",
-  "date": "2026-06-25",
+  "title": "DIM-2P-seq: reading mRNA 3' end structure in living cells, where the chemical boundary is still A/C",
+  "date": "",
   "figure_count": 4,
   "rep_pmid": "28525757",
   "rep_pmcid": "PMC5546744",
@@ -11,24 +11,28 @@
   "blocks": [
     {
       "type": "paragraph",
-      "text": "如果只看数据表，DIM-2P-seq 很容易被误读成一种“能给 mRNA 3'端每个碱基都打结构分”的探测器。这个理解是错的。DIM-2P-seq（Wu & Bartel）的本质，是把 DMS 化学探测搬进活细胞（in vivo），再配上一套专门针对多聚腺苷酸化转录本 3'端区域的文库策略，去研究 mRNA 3'端结构如何影响切割、加尾（polyadenylation）与稳定性。它真正报告的，仍然是 A 和 C 在 Watson-Crick 配对面上的化学可及性：A 的 N1、C 的 N3 在没有被配对、没有被蛋白或配体遮挡、也没有被复杂构象保护时更容易被甲基化。换句话说，DIM-2P-seq 首先报告的是一类化学位点在活细胞里是否可及，而不是直接报告“这个碱基一定配对”或“这个碱基一定不配对”，更不是给 3'端区域的每个 residue 都贴上同等结构标签。"
+      "text": "Date: 2026-06-25"
     },
     {
       "type": "paragraph",
-      "text": "这条边界对 FoldBridge 很关键。因为 DIM-2P-seq 继承的是 DMS 的化学，所以它沿用同一条 A/C 靶点边界：信号落在 A/C 上时，反映的是 pairing face 的可及性；G/U 在这种 DMS 读法里本来就不是主要可解释对象。更要紧的是，DIM-2P-seq 的读出还受到它专门处理的 3'端区域和文库策略的影响——它只在 polyadenylated transcript 的 3'端附近测量，所以信号的覆盖范围、能解释什么、不能解释什么，都被这套 3'端上下文限定。FoldBridge 可以保存原始观测值，也可以在网页上展示来自实验的信号；但只要进入默认结构上色、解释性文字或 ANNOCONFIDENCE / FEC positive confidence，raw signal 就必须先经过 assay chemistry 和 readout context 的检查，才能成为默认上色或 confidence 的候选。对 DIM-2P-seq 来说，这条检查同样从 `DMS_AC_ONLY` 开始，只是要再叠上一层 3'端区域与文库策略的限定。"
+      "text": "If you look only at the data table, DIM-2P-seq is easily misread as a probe that \"can assign a structural score to every base at the mRNA 3' end\". That reading is wrong. The essence of DIM-2P-seq (Wu & Bartel) is to bring DMS chemical probing into living cells (in vivo), paired with a library strategy aimed specifically at the 3' end region of polyadenylated transcripts, in order to study how mRNA 3' end structure influences cleavage, polyadenylation and stability. What it actually reports is still the chemical accessibility of A and C on their Watson-Crick pairing face: the N1 of A and the N3 of C are more readily methylated when they are not paired, not occluded by a protein or ligand, and not protected by a complex conformation. In other words, what DIM-2P-seq reports first is whether a class of chemical sites is accessible in living cells, not directly whether \"this base is definitely paired\" or \"this base is definitely unpaired\", and still less does it assign an equal structural label to every residue in the 3' end region."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary matters greatly for FoldBridge. Because DIM-2P-seq inherits the chemistry of DMS, it follows the same A/C target boundary: when the signal falls on A/C, it reflects the accessibility of the pairing face; G/U were never the principal interpretable objects under this DMS readout in the first place. More importantly, the readout of DIM-2P-seq is also shaped by the 3' end region and library strategy it deals with specifically. It only measures near the 3' end of polyadenylated transcripts, so the coverage of the signal, what it can explain and what it cannot, are all bounded by this 3' end context. FoldBridge can preserve the raw observations and can display experimental signal on its web pages; but as soon as anything enters default structure colouring, interpretive text or ANNOCONFIDENCE / FEC positive confidence, the raw signal must first pass checks on assay chemistry and readout context before it can become a candidate for default colouring or confidence. For DIM-2P-seq, this check likewise begins with `DMS_AC_ONLY`, only with an additional layer of qualification from the 3' end region and library strategy."
     },
     {
       "type": "heading",
-      "text": "3'端结构会影响加尾：从距离分布到文库实验"
+      "text": "3' end structure influences polyadenylation: from distance distributions to library experiments"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-dim-2p-seq-f1",
       "alt": "DIM-2P-seq F1",
       "srcBasename": "dim2pseq_f1__PMC5546744__F1.jpg",
-      "legend": "**图 1。3'端区域的结构如何影响 PAS 到 poly(A) 位点的加工。** Wu & Bartel 2017（PMID 28525757，DOI `10.1016/j.cell.2017.04.036`）这张图先统计了人类 RefSeq mRNA 中经典 PAS（AAUAAA/AUUAAA）到 poly(A) 位点的距离分布，再用一套质粒文库实验同时测量大量 3'端变体的加工效率：每个文库成员都带两个潜在 poly(A) 位点，上游是查询 3'端区域，其中一段（红色）在碱基种类和长度上都被随机化，使 PAS 到 poly(A) 位点的距离 D 覆盖 5–41 nt；下游则是 β-globin 的 3'端。图注（legend）把切割效率和预测折叠稳定性分别对这个距离作图，比较在查询位点被切割（cleaved）和未被切割而改用下游 β-globin 位点（uncleaved）的转录本。",
+      "legend": "**Figure 1. How structure in the 3' end region influences processing from the PAS to the poly(A) site.** Wu & Bartel 2017 (PMID 28525757, DOI `10.1016/j.cell.2017.04.036`). This figure first tallies the distribution of distances from the canonical PAS (AAUAAA/AUUAAA) to the poly(A) site across human RefSeq mRNAs, and then uses a plasmid library experiment to measure the processing efficiency of a large number of 3' end variants simultaneously: each library member carries two potential poly(A) sites, with the queried 3' end region upstream, one segment of which (in red) is randomised in both base composition and length so that the PAS-to-poly(A)-site distance D spans 5-41 nt; the downstream site is the 3' end of β-globin. The legend plots cleavage efficiency and predicted folding stability against this distance, comparing transcripts cleaved at the query site (cleaved) with those that were not cleaved and instead used the downstream β-globin site (uncleaved).",
       "body": [
-        "这张图说明的是：3'端区域的二级结构会实打实地影响加尾位点的选择，而要把这种影响讲清楚，需要一个能同时扫过大量变体的文库策略。它也提前交代了 DIM-2P-seq 的研究对象边界——讨论的不是整条 mRNA，而是 PAS 与 poly(A) 位点之间这一小段 3'端区域。对 FoldBridge 来说，这意味着即便后面引入了 in vivo DMS 信号，进入数据库的每一行也要记住自己来自哪种上下文：信号是围绕 3'端加工区域测的，不能被当成对整条转录本结构的普遍描述。"
+        "What this figure shows is that the secondary structure of the 3' end region genuinely influences the choice of polyadenylation site, and that explaining this influence clearly requires a library strategy able to sweep across a large number of variants at once. It also signals, in advance, the boundary of what DIM-2P-seq studies: not the whole mRNA, but this short 3' end region between the PAS and the poly(A) site. For FoldBridge, this means that even once in vivo DMS signal is introduced later, every row entering the database must remember which context it came from: the signal is measured around the 3' end processing region and cannot be taken as a general description of the structure of the entire transcript."
       ],
       "label": "DIM-2P-seq F1",
       "pmid": "28525757",
@@ -39,16 +43,16 @@
     },
     {
       "type": "heading",
-      "text": "预测层面的证据：PAS 下游更倾向稳定折叠"
+      "text": "Evidence at the prediction level: regions downstream of the PAS favour stable folding"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-dim-2p-seq-f2",
       "alt": "DIM-2P-seq F2",
       "srcBasename": "dim2pseq_f2__PMC5546744__F2.jpg",
-      "legend": "**图 2。内源 mRNA PAS 上下游的配对倾向与折叠稳定性。** Wu & Bartel 2017（PMID 28525757，DOI `10.1016/j.cell.2017.04.036`）这张图用计算预测的方式，把内源 3'端按 PAS 到 poly(A) 位点的距离分组（10-nt 滑窗、1-nt 步长），用热图展示相对 poly(A) 位点（位置 0）各处的平均配对概率；并比较 PAS 下游序列、长度匹配的 PAS 上游序列各自与打乱（shuffled）对照之间的折叠稳定性差异。图注（legend）还给出 PAS 下游、上游区域中显著比打乱对照更稳定折叠（P<0.05）的比例，并随 PAS–poly(A) 距离变化作图；其中较大距离处的波动增大，反映的是这类区域样本数更少。",
+      "legend": "**Figure 2. Pairing tendency and folding stability upstream and downstream of the PAS in endogenous mRNAs.** Wu & Bartel 2017 (PMID 28525757, DOI `10.1016/j.cell.2017.04.036`). Using computational prediction, this figure groups endogenous 3' ends by the distance from the PAS to the poly(A) site (10-nt sliding window, 1-nt step) and uses a heatmap to display the mean pairing probability at each position relative to the poly(A) site (position 0); it also compares the difference in folding stability between PAS-downstream sequences, length-matched PAS-upstream sequences and their respective shuffled controls. The legend further gives the proportion of PAS-downstream and PAS-upstream regions that fold significantly more stably than the shuffled control (P<0.05), plotted as a function of the PAS-poly(A) distance; the larger fluctuations at greater distances reflect the smaller number of samples in such regions.",
       "body": [
-        "这一步是纯预测层面的论证：它先用序列折叠预测说明 PAS 下游区域更倾向于形成稳定结构，为“3'端结构影响加工”提供了一个可计算的旁证。值得注意的是，这里还没有引入任何 DMS 化学信号——它是 in silico 的折叠倾向，不是 in vivo 的可及性测量。对 FoldBridge 来说，这正好提醒一件事：预测出来的配对概率和实验测到的 A/C 可及性是两类不同证据，不能因为它们都指向“这里有结构”就在默认图层里混为一谈。预测可以提出假设，但进入 confidence 的门槛要留给经过 assay gate 的实验信号。"
+        "This step is an argument purely at the prediction level: it first uses sequence folding prediction to show that the region downstream of the PAS is more inclined to form stable structure, providing a computable piece of corroborating evidence for \"3' end structure influences processing\". It is worth noting that no DMS chemical signal has yet been introduced here: this is an in silico folding tendency, not an in vivo accessibility measurement. For FoldBridge, this is a timely reminder: a predicted pairing probability and an experimentally measured A/C accessibility are two different kinds of evidence, and they should not be conflated in the default layer simply because both point to \"there is structure here\". Prediction can propose hypotheses, but the threshold for entering confidence should be reserved for experimental signal that has passed the assay gate."
       ],
       "label": "DIM-2P-seq F2",
       "pmid": "28525757",
@@ -59,16 +63,16 @@
     },
     {
       "type": "heading",
-      "text": "DIM-2P-seq 本体：in vivo DMS 接入 3'端文库读出"
+      "text": "DIM-2P-seq itself: in vivo DMS connected to a 3' end library readout"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-dim-2p-seq-f3",
       "alt": "DIM-2P-seq F3",
       "srcBasename": "dim2pseq_f3__PMC5546744__F3.jpg",
-      "legend": "**图 3。DIM-2P-seq 如何在活细胞里探测 3'端结构。** Wu & Bartel 2017（PMID 28525757，DOI `10.1016/j.cell.2017.04.036`）这张图给出 DIM-2P-seq 的流程示意——一种在细胞内探测多聚腺苷酸化转录本 3'端区域 RNA 结构的方法——并以 RPS5 mRNA 最后 100 nt 为例展示结果：DIM-2P-seq 的突变频率代表 A 和 C 残基在细胞内的 DMS 可及性，既画成柱状图，也按色标标注在预测的二级结构上（该区域覆盖度 >70,000 reads，PAS 基序 AAUAAA 上下游的核苷酸分别编号为 −1 和 +1）。图注（legend）还用与图 2A 相同方式生成热图，只是数值换成了 A、C 残基的平均 DIM-2P-seq 突变频率。",
+      "legend": "**Figure 3. How DIM-2P-seq probes 3' end structure in living cells.** Wu & Bartel 2017 (PMID 28525757, DOI `10.1016/j.cell.2017.04.036`). This figure gives a schematic of the DIM-2P-seq workflow, a method for probing RNA structure in the 3' end region of polyadenylated transcripts within cells, and uses the last 100 nt of the RPS5 mRNA as an example to show the results: the mutation frequency from DIM-2P-seq represents the in-cell DMS accessibility of A and C residues, drawn both as a bar chart and annotated by a colour scale on the predicted secondary structure (this region has coverage of >70,000 reads, with nucleotides upstream and downstream of the PAS motif AAUAAA numbered −1 and +1, respectively). The legend also generates a heatmap in the same way as Figure 2A, except that the values are replaced by the mean DIM-2P-seq mutation frequency of A and C residues.",
       "body": [
-        "这张图是整篇方法的核心，也是化学边界最该被点明的地方。图注里写得很直白：突变频率代表的是 A 和 C 残基的 DMS 可及性——不是所有碱基，而正是 A 和 C。这与 `DMS_AC_ONLY` 完全一致：A/C 上的高突变频率提示 pairing face 更可及，低频率可能提示配对或保护，但这两种判断都需要上下文；G/U 在这种读法里不提供同样的 DMS 信号，不能因为表里也有数值就被当作结构特征的正面证据。同时，DIM-2P-seq 把这套 A/C 化学接进了一个特定的文库与读出框架——只在 3'端区域、围绕 PAS 与 poly(A) 位点测量。所以解释 RPS5 那张漂亮的结构着色图时，FoldBridge 要同时守住两条线：化学上只认 A/C，上下文上只认 3'端加工区域。把着色图当成“整条 mRNA 每个碱基都被测准了”，就同时越过了这两条边界。"
+        "This figure is the core of the whole method, and the place where the chemical boundary most needs to be made explicit. The legend states it plainly: the mutation frequency represents the DMS accessibility of A and C residues, not all bases, but precisely A and C. This is entirely consistent with `DMS_AC_ONLY`: a high mutation frequency on A/C suggests the pairing face is more accessible, and a low frequency may suggest pairing or protection, but both judgements require context; G/U do not provide the same DMS signal under this readout, and they should not be treated as positive evidence for a structural feature simply because the table also contains values for them. At the same time, DIM-2P-seq connects this A/C chemistry into a particular library and readout framework, measuring only in the 3' end region, around the PAS and poly(A) site. So when interpreting that elegant structure-coloured figure for RPS5, FoldBridge must hold two lines at once: chemically, only A/C count; contextually, only the 3' end processing region counts. Treating the coloured figure as \"every base of the entire mRNA has been measured accurately\" crosses both of these boundaries at once."
       ],
       "label": "DIM-2P-seq F3",
       "pmid": "28525757",
@@ -79,16 +83,16 @@
     },
     {
       "type": "heading",
-      "text": "单分子级别的因果验证：突变与补偿突变"
+      "text": "Causal validation at the single-molecule level: mutations and compensatory mutations"
     },
     {
       "type": "figure",
       "anchor": "paper-figure-dim-2p-seq-f4",
       "alt": "DIM-2P-seq F4",
       "srcBasename": "dim2pseq_f4__PMC5546744__F4.jpg",
-      "legend": "**图 4。CENPB 3'端茎环结构对加尾位点使用的因果影响。** Wu & Bartel 2017（PMID 28525757，DOI `10.1016/j.cell.2017.04.036`）这张图聚焦 CENPB 3'端一个保守茎环：基因组浏览器轨道展示 3P-seq 信号、RefSeq 注释和哺乳动物 PhastCons 保守性，预测结构上标出有多重协变（covariation）支持配对的位置；随后用一套类似图 1B 的质粒文库实验测量大量 CENPB 3'端变体的加工效率，给出使用率与预测折叠稳定性（−ΔG）的关系，并用序列 logo 展示单核苷酸替换对 poly(A) 位点使用的影响。图注（legend）还给出一个突变–拯救（mutant–rescue）配对的例子（野生型、G27C 突变、G27C+C7G 补偿突变），以及全部 48 对互补突变与 96 对非互补突变的相对使用率，并标出与拯救预期不符的配对及相应 P 值。",
+      "legend": "**Figure 4. The causal influence of the CENPB 3' end stem-loop structure on poly(A) site usage.** Wu & Bartel 2017 (PMID 28525757, DOI `10.1016/j.cell.2017.04.036`). This figure focuses on a conserved stem-loop at the CENPB 3' end: genome browser tracks display the 3P-seq signal, RefSeq annotation and mammalian PhastCons conservation, and positions with multiple covariation supporting pairing are marked on the predicted structure; a plasmid library experiment similar to that in Figure 1B is then used to measure the processing efficiency of a large number of CENPB 3' end variants, giving the relationship between usage and predicted folding stability (−ΔG), and a sequence logo is used to show the effect of single-nucleotide substitutions on poly(A) site usage. The legend also gives an example of a mutant-rescue pair (wild type, the G27C mutant, and the G27C+C7G compensatory mutant), as well as the relative usage of all 48 complementary mutation pairs and 96 non-complementary mutation pairs, marking the pairings that do not match the rescue expectation and their corresponding P values.",
       "body": [
-        "这张图把证据从“相关”推到“因果”：协变分析说明结构在进化上被保守，突变–补偿突变实验则直接验证了正是配对结构、而非单纯序列，在调节加尾位点的使用。它和前面的 in vivo DMS 探测互相印证——化学可及性、计算预测、协变保守性、突变拯救，四类证据指向同一个结论，但每一类都有自己的解释边界。对 FoldBridge 来说，这是一个很好的提醒：即使多条证据汇聚，把它们落进数据库时仍要分清来源。DMS 突变频率属于 A/C 可及性这一层，协变和突变拯救属于另一类结构证据，它们可以彼此支持，但不应在默认图层里被压成同一种“分数”。"
+        "This figure pushes the evidence from \"correlation\" to \"causation\": the covariation analysis shows that the structure is evolutionarily conserved, while the mutation-compensatory-mutation experiment directly verifies that it is the pairing structure, rather than sequence alone, that regulates poly(A) site usage. It corroborates the earlier in vivo DMS probing: chemical accessibility, computational prediction, covariation conservation and mutant rescue, four kinds of evidence pointing to the same conclusion, but each with its own interpretive boundary. For FoldBridge, this is a good reminder: even when multiple lines of evidence converge, their sources must still be kept distinct when they land in the database. DMS mutation frequency belongs to the layer of A/C accessibility, while covariation and mutant rescue belong to another kind of structural evidence; they can support one another, but they should not be compressed into the same \"score\" in the default layer."
       ],
       "label": "DIM-2P-seq F4",
       "pmid": "28525757",
@@ -99,51 +103,51 @@
     },
     {
       "type": "heading",
-      "text": "FoldBridge 应该怎么写 DIM-2P-seq"
+      "text": "How FoldBridge should write about DIM-2P-seq"
     },
     {
       "type": "paragraph",
-      "text": "DIM-2P-seq 是一种 in vivo DMS 方法，所以它直接继承 `DMS_AC_ONLY` 这条核心规则——只是把它套进了 3'端区域的文库读出框架里。A/C 是 targetable base；G/U/T/unknown 是 non-target base。图 3 的图注已经替我们说清楚：DIM-2P-seq 的突变频率代表的就是 A 和 C 残基的细胞内 DMS 可及性。G/U/T/unknown 行即使有数字，也只能保留为 raw provenance、debug 信息或下载表字段，不能因为它出现在一个设计精巧的 3'端探测实验里就自动进入 positive confidence。"
+      "text": "DIM-2P-seq is an in vivo DMS method, so it directly inherits the core rule `DMS_AC_ONLY`, only fitted into a 3' end region library readout framework. A/C are targetable bases; G/U/T/unknown are non-target bases. The legend of Figure 3 has already made it clear for us: the mutation frequency of DIM-2P-seq represents the in-cell DMS accessibility of A and C residues. Even where G/U/T/unknown rows carry numbers, they can only be retained as raw provenance, debug information or download-table fields, and should not automatically enter positive confidence simply because they arise in a finely designed 3' end probing experiment."
     },
     {
       "type": "paragraph",
-      "text": "ANNOJOIN 的默认结构图不应直接读原始数值，而要先过 `DMS_AC_ONLY` 这层 targetability gate：A/C 行通过后才进入默认图层、贡献 `visual_colormap_value`，G/U/T/unknown 行被挡在默认上色之外。对 DIM-2P-seq 还要再叠一层 3'端上下文：上色值只在 PAS 与 poly(A) 位点附近这段被实际探测的区域里成立。这样读者在结构页面看到的颜色，才是在 in vivo DMS assay model、且在 3'端解释范围内可解释的颜色。ANNOCONFIDENCE / FEC 的要求更高：只有通过 assay targetability、mapping、claim 和 context gates 的 A/C 行，才可以进入 positive confidence 候选。这条 chemistry gate 和 DMS 文章里的完全一致，区别在于 DIM-2P-seq 还多了一层上下文 gate——它的信号只在 3'端加工区域有意义，所以解释时既要问“这是不是 A/C”，也要问“这是不是落在该方法实际探测的 3'端范围内”。"
+      "text": "The default structure figure in ANNOJOIN should not read raw values directly, but should first pass them through the `DMS_AC_ONLY` targetability gate: A/C rows enter the default layer and contribute `visual_colormap_value` only after passing, while G/U/T/unknown rows are held out of default colouring. For DIM-2P-seq, one more layer of 3' end context must be added: the colouring value holds only within the actually probed region near the PAS and poly(A) site. Only then is the colour that readers see on the structure page a colour that is interpretable under the in vivo DMS assay model and within the 3' end interpretive range. The requirements of ANNOCONFIDENCE / FEC are higher still: only A/C rows that pass the assay targetability, mapping, claim and context gates may enter the positive confidence candidate set. This chemistry gate is identical to the one in the DMS article; the difference is that DIM-2P-seq has an extra layer of context gate, since its signal is only meaningful in the 3' end processing region. So when interpreting, one must ask both \"is this an A/C?\" and \"does this fall within the 3' end range the method actually probes?\"."
     },
     {
       "type": "paragraph",
-      "text": "这不是削弱 DIM-2P-seq。相反，这是尊重它的强项。DIM-2P-seq 把 in vivo DMS 的 A/C 可及性、文库筛选、协变分析和突变拯救串起来，专门把 mRNA 3'端结构对加尾和稳定性的影响讲透；错误发生在把这个针对 3'端的强项扩展成“整条 mRNA 所有碱基统一反应性”时。FoldBridge 的任务不是把所有数字都画出来，而是把“有观测值”和“可解释为结构支持”分开，并且把“在哪段区域可解释”一并记清楚。"
+      "text": "This is not a weakening of DIM-2P-seq. On the contrary, it respects its strengths. DIM-2P-seq strings together in vivo DMS A/C accessibility, library screening, covariation analysis and mutant rescue to explain thoroughly how mRNA 3' end structure influences polyadenylation and stability; the error occurs when this 3'-end-specific strength is extended into \"a uniform reactivity for every base of the entire mRNA\". FoldBridge's task is not to draw every number, but to separate \"there is an observation\" from \"it can be interpreted as structural support\", and to record clearly \"over which region it is interpretable\" along with it."
     },
     {
       "type": "paragraph",
-      "text": "所以，DIM-2P-seq 技术文章不应该只写“某个位点信号高”或“3'端有很强的结构”。更完整的句子应该写成：在 DIM-2P-seq 的 in vivo DMS assay 中，该 A/C 位点在 mRNA 3'端区域具有较高可及性信号；如果 mapping、coverage、背景和 3'端上下文都通过检查，这个信号可以作为结构解释的支持。多写出 3'端这个上下文条件虽然啰嗦，却能避免把一段区域偏好读成逐碱基的配对判定。"
+      "text": "So a DIM-2P-seq technical article should not write only \"the signal is high at a certain site\" or \"the 3' end has strong structure\". A more complete sentence should read: in the in vivo DMS assay of DIM-2P-seq, this A/C site has a relatively high accessibility signal within the mRNA 3' end region; if mapping, coverage, background and 3' end context all pass the checks, this signal can serve as support for structural interpretation. Spelling out the 3' end context condition is wordier, but it avoids reading a regional preference as a per-base pairing call."
     },
     {
       "type": "heading",
-      "text": "真实 case（示意）"
+      "text": "A real example (illustrative)"
     },
     {
       "type": "paragraph",
-      "text": "这里没有真实的 FoldBridge accession，所以下面是一个明确标注的示意场景，用来说明同一份 DIM-2P-seq profile 如何分成三个不同的层。"
+      "text": "There is no real FoldBridge accession here, so what follows is a clearly labelled illustrative scenario, used to show how a single DIM-2P-seq profile separates into three different layers."
     },
     {
       "type": "paragraph",
-      "text": "设想一份 DIM-2P-seq profile 流进 FoldBridge：它来自一次活细胞内的 DMS 探测，覆盖了某条 mRNA 3'端区域、PAS 与 poly(A) 位点附近连续的若干位点。在 ANNOJOIN visual track 里，这条 profile 会被自然地分成两类——落在 A/C 上的位点，和落在 G/U/T 或位置未解析（unresolved）上的位点。前者是 DMS 可解释的靶点，后者则不是；而且整条 profile 本身还被限定在 3'端这一段上下文里。"
+      "text": "Imagine a DIM-2P-seq profile flowing into FoldBridge: it comes from a round of DMS probing within living cells, covering a number of consecutive sites in an mRNA 3' end region, near the PAS and poly(A) site. In the ANNOJOIN visual track, this profile is naturally split into two classes: sites falling on A/C, and sites falling on G/U/T or at positions that are unresolved. The former are DMS-interpretable targets, the latter are not; and the entire profile itself is also confined to the context of this 3' end region."
     },
     {
       "type": "paragraph",
-      "text": "这组划分给读者的结论非常直接：per-position 的 DIM-2P-seq observation 不等于 per-position 的 DMS positive support。对 A/C 来说，活细胞里的 DMS 可以提供强的可及性线索；对 G/U/T/unknown 来说，数值首先是 raw provenance。只有前者在通过 mapping 和 context gates 后，才可能进入 ANNOCONFIDENCE / FEC positive confidence。这里的 context gate 还要额外确认：这个位点确实落在该方法能探测的 3'端区域内，而不是被外推到方法没有覆盖的转录本主体。"
+      "text": "The conclusion this division gives the reader is very direct: a per-position DIM-2P-seq observation is not equivalent to per-position DMS positive support. For A/C, in vivo DMS can provide a strong accessibility clue; for G/U/T/unknown, the value is first of all raw provenance. Only the former, after passing the mapping and context gates, may enter ANNOCONFIDENCE / FEC positive confidence. Here the context gate must additionally confirm that the site does indeed fall within the 3' end region the method can probe, rather than being extrapolated to the body of the transcript that the method does not cover."
     },
     {
       "type": "paragraph",
-      "text": "如果把这条 profile 上的所有位点都按原始数值上色，页面看起来会更满，但解释会变差。非靶点位置不应该参与默认 DMS positive signal；位置未解析的行也不能假装已经映射到可靠结构坐标；而那些超出 3'端探测范围的推断更不该混进来。相反，3'端区域里 A/C-targetable 的那一层，才是读者第一眼应该看到的 DIM-2P-seq 层。剩下的行仍然可以在详情里追溯，因为它们对 provenance、调试和再分析有价值，但它们不应该伪装成同一种证据。"
+      "text": "If every site on this profile were coloured by its raw value, the page would look fuller, but the interpretation would get worse. Non-target positions should not participate in the default DMS positive signal; rows at unresolved positions cannot pretend to have already been mapped to reliable structural coordinates; and inferences beyond the 3' end probing range should not be mixed in either. Instead, the A/C-targetable layer within the 3' end region is the DIM-2P-seq layer that readers should see first. The remaining rows can still be traced in the details, because they have value for provenance, debugging and reanalysis, but they should not masquerade as the same kind of evidence."
     },
     {
       "type": "paragraph",
-      "text": "这个 case 落到实际系统行为上，就是同一份 DIM-2P-seq profile 会派生出三个不同的图层：原始观测层记录“实验测到了什么”，可视化信号层只显示“在 in vivo DMS、且在 3'端解释边界内能读出什么”，confidence 层只接收通过 gates 的可解释证据。DIM-2P-seq 最特有的误读有两种：把 A/C 之外的数值当成 DMS 信号，以及把只覆盖 3'端的读出外推成整条 mRNA 的结构描述。一份 profile 同时携带 DMS 可及性、折叠预测和协变证据，自动化图层若不分层，就会把这两种越界一起放大——读者会以为 FoldBridge 替整条转录本的每个碱基都背了书。"
+      "text": "When this example lands on actual system behaviour, the same DIM-2P-seq profile derives three different layers: the raw observation layer records \"what the experiment measured\", the visualisation signal layer shows only \"what can be read out under in vivo DMS and within the 3' end interpretive boundary\", and the confidence layer receives only the interpretable evidence that has passed the gates. There are two misreadings most specific to DIM-2P-seq: treating values outside A/C as DMS signal, and extrapolating a readout that covers only the 3' end into a structural description of the entire mRNA. A single profile carries DMS accessibility, folding prediction and covariation evidence at once, and if the automated layer does not separate them, it will magnify both kinds of overreach together: readers would think FoldBridge had vouched for every base of the entire transcript."
     },
     {
       "type": "paragraph",
-      "text": "所以，DIM-2P-seq 文章的正确结尾不是“高信号证明该碱基不配对”，也不是“3'端有结构就等于解释了整条 mRNA”，而是：DIM-2P-seq 能在活细胞里、针对 mRNA 3'端区域，为 RNA structure interpretation 以及结构对加尾、稳定性的影响提供强有力的 A/C 可及性线索；在 FoldBridge 中，这种线索只有通过 `DMS_AC_ONLY` 和后续 gates（包括 3'端上下文检查）后，才会成为结构解释和 confidence 的一部分。"
+      "text": "So the correct ending for a DIM-2P-seq article is not \"a high signal proves the base is unpaired\", nor \"the 3' end has structure, so the entire mRNA is explained\", but: DIM-2P-seq can, in living cells and for the mRNA 3' end region, provide a powerful A/C accessibility clue for RNA structure interpretation and for the influence of structure on polyadenylation and stability; in FoldBridge, such a clue becomes part of structural interpretation and confidence only after passing `DMS_AC_ONLY` and the subsequent gates (including the 3' end context check)."
     }
   ]
 }
