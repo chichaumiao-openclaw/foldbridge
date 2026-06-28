@@ -1289,12 +1289,28 @@ function parseRdatMatrix(text) {
   const annotationLabels = [];
   const annotationTypes = [];
   let colLabels = [];
+  let sourceSequence = '';
+  let sourceOffset = 0;
+
+  const parseRdatValueFields = (input) => {
+    const payload = String(input ?? '').trim();
+    if (!payload) return [];
+    if (payload.includes('\t')) {
+      return payload.split('\t').filter(Boolean);
+    }
+    return payload.split(/\s+/).filter(Boolean);
+  };
 
   for (const rawLine of lines) {
     const line = rawLine.trimEnd();
     if (!line) continue;
 
-    if (line.startsWith('ANNOTATION_DATA:')) {
+    if (line.startsWith('SEQUENCE ')) {
+      sourceSequence = line.replace(/^SEQUENCE\s+/, '').trim();
+    } else if (line.startsWith('OFFSET ')) {
+      const parsedOffset = Number.parseInt(line.replace(/^OFFSET\s+/, '').trim(), 10);
+      sourceOffset = Number.isFinite(parsedOffset) ? parsedOffset : 0;
+    } else if (line.startsWith('ANNOTATION_DATA:')) {
       const [, indexPart = ''] = line.split(':');
       const cols = line.split('\t').filter(Boolean);
       const mutationCol = cols.find((entry) => entry.startsWith('mutation:'));
@@ -1327,23 +1343,17 @@ function parseRdatMatrix(text) {
               ? modifierCol.replace('modifier:', '')
               : cols.slice(1).join(' | ') || `Row ${index}`;
     } else if (line.startsWith('SEQPOS')) {
-      colLabels = line.split('\t').slice(1).filter(Boolean);
+      colLabels = parseRdatValueFields(line.replace(/^SEQPOS\b/, ''));
     } else if (line.startsWith('REACTIVITY_ERROR:')) {
       const [, indexPart = ''] = line.split(':');
       const index = Number(indexPart.split(/\s+/)[0]);
-      errorRows[index - 1] = line
-        .split('\t')
-        .slice(1)
-        .filter(Boolean)
+      errorRows[index - 1] = parseRdatValueFields(line.replace(/^REACTIVITY_ERROR:\d+\s*/, ''))
         .map((value) => Number.parseFloat(value));
     } else if (line.startsWith('REACTIVITY:')) {
       const [, indexPart = ''] = line.split(':');
       const index = Number(indexPart.split(/\s+/)[0]);
       rowLabels[index - 1] = annotationLabels[index - 1] || `Row ${index}`;
-      reactivityRows[index - 1] = line
-        .split('\t')
-        .slice(1)
-        .filter(Boolean)
+      reactivityRows[index - 1] = parseRdatValueFields(line.replace(/^REACTIVITY:\d+\s*/, ''))
         .map((value) => Number.parseFloat(value));
     } else if (line.startsWith('DATA:')) {
       const [, indexPart = ''] = line.split(':');
@@ -1373,9 +1383,50 @@ function parseRdatMatrix(text) {
     }))
     .filter((entry) => Array.isArray(entry.values) && entry.values.length);
 
+  const cleanSequence = sourceSequence.replace(/\s+/g, '');
+  const normalizeBase = (base) => {
+    const upper = String(base ?? '').toUpperCase();
+    if (upper === 'T') return 'U';
+    return ['A', 'U', 'G', 'C'].includes(upper) ? upper : '';
+  };
+  const colLabelDetails = colLabels.map((label) => {
+    const raw = String(label ?? '').trim();
+    const embeddedBaseMatch = raw.match(/^([AUGCTaugct])(-?\d+)$/);
+    if (embeddedBaseMatch) {
+      const [, baseText, positionText] = embeddedBaseMatch;
+      const base = normalizeBase(baseText);
+      return {
+        raw,
+        base,
+        position: positionText,
+        display: base ? `${base}${positionText}` : raw
+      };
+    }
+
+    const numericPosition = Number.parseInt(raw, 10);
+    if (Number.isFinite(numericPosition) && cleanSequence) {
+      const sequenceIndex = numericPosition - sourceOffset - 1;
+      const base = normalizeBase(cleanSequence[sequenceIndex] || '');
+      return {
+        raw,
+        base,
+        position: raw,
+        display: base ? `${base}${raw}` : raw
+      };
+    }
+
+    return {
+      raw,
+      base: '',
+      position: raw,
+      display: raw
+    };
+  });
+
   return {
     rowLabels: compactRows.map((entry) => entry.label),
     colLabels,
+    colLabelDetails,
     reactivityRows: compactRows.map((entry) => entry.values),
     errorRows: compactRows.map((entry) => entry.error || [])
   };
@@ -1481,10 +1532,13 @@ async function renderRdatHeatmap(host, status, rdatUrl) {
 
       for (let col = 0; col < cols; col += 1) {
         const x = leftLabelBand + col * cellSize + cellSize / 2;
-        const label = parsed.colLabels[col];
-        const base = label.match(/^([AUGC])(\d+)$/);
-        const nt = base?.[1] ?? '';
-        const pos = base?.[2] ?? label;
+        const label = parsed.colLabelDetails?.[col] || {
+          base: '',
+          position: parsed.colLabels[col],
+          display: parsed.colLabels[col]
+        };
+        const nt = label.base || '';
+        const pos = label.position || parsed.colLabels[col];
 
         ctx.save();
         ctx.translate(x, topLabelBand - labelGap);
@@ -1553,8 +1607,8 @@ async function renderRdatHeatmap(host, status, rdatUrl) {
       paint(activeCell);
 
       const rowLabel = formatHeatmapLabel(parsed.rowLabels[row]);
-      const colLabel = formatHeatmapLabel(parsed.colLabels[col]);
-      const base = colLabel.match(/^([AUGC])\d+$/)?.[1] ?? '';
+      const colLabel = parsed.colLabelDetails?.[col]?.display || formatHeatmapLabel(parsed.colLabels[col]);
+      const base = parsed.colLabelDetails?.[col]?.base || '';
       const value = parsed.reactivityRows[row]?.[col];
       const error = parsed.errorRows[row]?.[col];
 

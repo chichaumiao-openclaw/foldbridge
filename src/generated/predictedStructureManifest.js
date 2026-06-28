@@ -23,6 +23,7 @@ export const predictedStructureIds = [
   "RMDB_RNAPZ5_NMD_0002",
   "RMDB_RNAPZ5_RSQ_0001",
   "RMDB_RNAPZ5_STD_0000",
+  "RMDB_SAMRSW_1M7_0001",
   "RMDB_TPPSC_1M7_0005",
   "RMDB_TRP4P6_DMS_0014"
 ];
@@ -51,6 +52,7 @@ export const rnaComposerPredictedStructureIds = [
   "RMDB_RNAPZ5_NMD_0002",
   "RMDB_RNAPZ5_RSQ_0001",
   "RMDB_RNAPZ5_STD_0000",
+  "RMDB_SAMRSW_1M7_0001",
   "RMDB_TPPSC_1M7_0005",
   "RMDB_TRP4P6_DMS_0014"
 ];

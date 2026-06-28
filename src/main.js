@@ -793,20 +793,21 @@ function getFilteredSequenceRows() {
   );
 }
 
-function renderColoredSequence(sequence) {
+function renderColoredSequence(sequence, { forceUppercaseDisplay = false } = {}) {
   return String(sequence ?? '')
     .split('')
     .map((char) => {
       const upper = char.toUpperCase();
       if (!'AUGCT'.includes(upper)) return char;
       const cls = upper === 'T' ? 'nucleotide-u' : `nucleotide-${upper.toLowerCase()}`;
-      const display = upper === 'T' ? 'U' : char;
+      const displayChar = forceUppercaseDisplay ? upper : char;
+      const display = upper === 'T' ? 'U' : displayChar;
       return `<span class="sequence-nucleotide ${cls}">${display}</span>`;
     })
     .join('');
 }
 
-function renderFormattedDetailSequence(sequence, groupSize = 5) {
+function renderFormattedDetailSequence(sequence, groupSize = 5, options = {}) {
   const cleanSequence = String(sequence ?? '').replace(/\s+/g, '').trim();
   if (!cleanSequence) return 'Sequence unavailable';
 
@@ -817,7 +818,7 @@ function renderFormattedDetailSequence(sequence, groupSize = 5) {
   }
 
   const groupedMarkup = groups
-    .map((group) => `<span class="case-sequence-group">${renderColoredSequence(group)}</span>`)
+    .map((group) => `<span class="case-sequence-group">${renderColoredSequence(group, options)}</span>`)
     .join('');
 
   return `<span class="case-sequence-direction">5′-</span>${groupedMarkup}<span class="case-sequence-direction">-3′</span>`;
@@ -857,6 +858,10 @@ function renderAlignedSequenceStructure(sequence, structure = '') {
     .join('');
 
   return `<span class="case-sequence-structure-wrap" aria-label="RNA secondary structure in dot-bracket notation">${chars}</span>`;
+}
+
+function sequenceHasLowercaseAnnotation(sequence) {
+  return /[a-z]/.test(String(sequence ?? ''));
 }
 
 function renderSequenceDetailTimeline() {
@@ -1291,8 +1296,16 @@ function renderStructureDetailDescription(row) {
     return `add Adenine Riboswitch, <em>Vibrio vulnificus</em> is an adenine-sensing bacterial riboswitch aptamer profiled here by 1M7 SHAPE-Seq v2.0 under standard-state conditions. The RMDB record notes that all replicates were probed in the presence of 1 uM adenine, making this entry a ligand-bound probing snapshot that can be compared against the matched tertiary structure represented by PDB entry 1Y26. Together, the chemical probing profile and the crystallographic model provide a compact reference for adenine recognition and local fold organization in the <em>add</em> riboswitch family.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
   }
 
+  if (row?.foldBridgeId === 'RMDB_GLYCFN_KNK_0001') {
+    return `glycine riboswitch, <em>Fusobacterium nucleatum</em> is a double glycine riboswitch construct used to test whether the inter-aptamer linker contains an additional structured element beyond the previously truncated core aptamers. In the packaged RDAT, this 205 nt RNA was profiled by multiple chemical probing conditions, and the lowercase flanking bases mark auxiliary sequence context included to preserve the native linker architecture. The matched tertiary structure, represented here by PDB entry 6WLM, makes this record a useful reference for comparing chemical reactivity with the kink-turn-containing linker model proposed for cooperative glycine sensing.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
   if (row?.foldBridgeId === 'RMDB_TPPSC_1M7_0005') {
     return `TPP Riboswitch is an <em>E. coli</em> thiamine pyrophosphate (TPP) riboswitch construct profiled by SHAPE-Seq to measure how the ligand-sensing RNA folds across its aptamer and expression-platform regions. TPP riboswitches directly bind the coenzyme thiamine pyrophosphate and regulate bacterial gene expression through metabolite-dependent structural rearrangements, making this record a compact model for comparing chemical probing reactivity with a well-studied riboswitch architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_SAMRSW_1M7_0001') {
+    return `SAM I riboswitch, <em>T. tengcongensis</em> is a SHAPE-Seq 2.0 1M7 probing record collected for a SAM-bound SAM-I riboswitch aptamer under the packaged ligand and buffer conditions. The bundled RDAT intentionally leaves the curated STRUCTURE field as all dots, so this entry is best interpreted as an experimental reactivity profile linked to the matched SAM-I riboswitch tertiary architecture represented here by PDB entry 4KQY. In FoldBridge, it serves as a probing-to-structure example for comparing ligand-dependent chemical reactivity with a well-characterized SAM-I riboswitch fold.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
   }
 
   return `${row?.name || 'Untitled record'} is a probing-centered FoldBridge record with a matched tertiary-structure target.`;
@@ -1408,6 +1421,31 @@ function renderStructureDetailReferenceContent(row) {
     </div>`;
   }
 
+  if (row?.foldBridgeId === 'RMDB_GLYCFN_KNK_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Automated RNA structure prediction uncovers a missing link in double glycine riboswitches.</h3>
+          <p class="sequence-detail-reference-authors">Kladwang W, Chou FC, Das R. (2011)</p>
+          <p class="sequence-detail-reference-source">Journal of the American Chemical Society 134(3):1204-1212</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/22192063/" target="_blank" rel="noopener noreferrer">PubMed: 22192063</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1021/ja2093508" target="_blank" rel="noopener noreferrer">DOI: 10.1021/ja2093508</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] Structural insights into ligand recognition by a sensing domain of the cooperative glycine riboswitch.</h3>
+          <p class="sequence-detail-reference-authors">Huang L, Serganov A, Patel DJ. (2010)</p>
+          <p class="sequence-detail-reference-source">Molecular Cell 40(5):774-786</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/21145485/" target="_blank" rel="noopener noreferrer">PubMed: 21145485</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.molcel.2010.11.026" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.molcel.2010.11.026</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
   if (row?.foldBridgeId === 'RMDB_TPPSC_1M7_0005') {
     return `<div class="sequence-detail-reference-card">
       <div class="sequence-detail-reference-list">
@@ -1434,6 +1472,31 @@ function renderStructureDetailReferenceContent(row) {
     </div>`;
   }
 
+  if (row?.foldBridgeId === 'RMDB_SAMRSW_1M7_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] SHAPE-Seq 2.0: systematic optimization and extension of high-throughput chemical probing of RNA secondary structure with next generation sequencing.</h3>
+          <p class="sequence-detail-reference-authors">Loughrey D, Watters KE, Settle AH, Lucks JB. (2014)</p>
+          <p class="sequence-detail-reference-source">Nucleic Acids Research 42(21):e165</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25303992/" target="_blank" rel="noopener noreferrer">PubMed: 25303992</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gku909" target="_blank" rel="noopener noreferrer">DOI: 10.1093/nar/gku909</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] SAM recognition and conformational switching mechanism in the Bacillus subtilis yitJ S box/SAM-I riboswitch.</h3>
+          <p class="sequence-detail-reference-authors">Lu C, Ding F, Chowdhury A, Pradhan V, Tomsic J, Holmes WM, Henkin TM, Ke A. (2010)</p>
+          <p class="sequence-detail-reference-source">Journal of Molecular Biology 404(5):803-818</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/20951706/" target="_blank" rel="noopener noreferrer">PubMed: 20951706</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.jmb.2010.09.059" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.jmb.2010.09.059</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
   return `<div class="sequence-detail-reference-card">
     <p>No curated references are attached to this structure-linked record yet.</p>
   </div>`;
@@ -1454,6 +1517,158 @@ function sequenceDetailPage() {
       </section>
     </main>`;
   }
+
+  const heatmapSection = showReactivityHeatmap
+    ? `<section class="sequence-detail-panel">
+        <h2>Reactivity Heatmap</h2>
+        <div class="sequence-detail-section-intro">
+          <p>${
+            isReactivityGuidedStructure
+              ? 'This heatmap is the starting point for this record because no curated dot-bracket annotation was packaged with the RDAT. The secondary-structure view below is estimated from these reactivity measurements.'
+              : 'This heatmap summarizes per-position chemical probing reactivity across the RDAT measurements, helping relate experimental signal to structural context.'
+          }</p>
+        </div>
+        <section class="sequence-secondary-card sequence-secondary-heatmap-card structure-detail-heatmap-card">
+          <div
+            id="structure-detail-heatmap"
+            class="sequence-secondary-heatmap-host"
+            data-rdat-url="${row.rdatPath}"
+          ></div>
+          <p id="structure-detail-heatmap-status" class="mini-note" hidden></p>
+        </section>
+      </section>`
+    : '';
+
+  const secondaryStructureSection = hasSecondaryStructureConstraints
+    ? `<section class="sequence-detail-panel">
+        <h2>${isReactivityGuidedStructure ? 'Predicted Secondary Structure' : 'Secondary Structure'}</h2>
+        <div class="sequence-detail-section-intro">
+          <p>${
+            isReactivityGuidedStructure
+              ? 'This panel shows a local reactivity-guided secondary-structure estimate derived from the bundled RDAT measurements and rendered as an interactive 2D layout.'
+              : 'This panel shows the RNA secondary structure derived from the packaged dot-bracket annotation and rendered as an interactive 2D layout.'
+          }</p>
+        </div>
+        <section class="sequence-secondary-card sequence-secondary-forna-card">
+          <div class="sequence-detail-forna-copy">
+            <p class="sequence-detail-forna-title">RNA Secondary Structure Viewer (Forna)</p>
+            ${
+              isReactivityGuidedStructure
+                ? `<p class="mini-note">${predictedSecondaryStructure?.method || 'Reactivity-guided prediction.'}</p>
+                   <p class="mini-note">Use this as a working hypothesis rather than a final curated structure. High reactivity often suggests flexible or exposed positions, but it does not guarantee a unique fold.</p>`
+                : ''
+            }
+          </div>
+          <div class="sequence-detail-forna-frame">
+            <div
+              id="structure-detail-forna-host"
+              class="sequence-detail-forna-host"
+              data-rdat-url="${rdatDownloadPath(row.foldBridgeId)}"
+              data-foldbridge-id="${row.foldBridgeId}"
+              data-sequence="${(row.sourceSequence || row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+              data-structure="${detailSecondaryStructure || ''}"
+            ></div>
+          </div>
+          <div id="structure-detail-sequence-structure-block" class="sequence-detail-dot-bracket-block">
+            <p class="case-sequence-structure-label">Dot-bracket notation</p>
+            <code
+              id="structure-detail-sequence-structure"
+              class="case-sequence-structure"
+              data-sequence="${detailSequence || ''}"
+              data-chunk-size="120"
+            >${renderAlignedSequenceStructure(detailSequence, detailSecondaryStructure)}</code>
+          </div>
+          <p id="structure-detail-forna-status" class="sequence-detail-forna-note" hidden></p>
+        </section>
+      </section>`
+    : '';
+
+  const tertiaryStructureSection =
+    hasSecondaryStructureConstraints && (showPredictedStructureSection || row.bestPdbId)
+      ? `<section class="sequence-detail-panel">
+          <h2>${isReactivityGuidedStructure ? 'Tertiary Structure Follow-up' : 'Tertiary Structure Comparison'}</h2>
+          <div class="sequence-detail-section-intro">
+            <p>${
+              isReactivityGuidedStructure
+                ? 'Three-dimensional follow-up depends on whether a precomputed model is available. When no predicted 3D file has been generated yet, the 2D structure above should be treated as the current endpoint.'
+                : 'Compare the secondary-structure-derived RNA model with the matched experimental PDB structure side by side.'
+            }</p>
+          </div>
+          <div class="structure-detail-comparison-grid">
+            <section class="structure-detail-comparison-card">
+              <div class="structure-detail-comparison-copy">
+                <h3>Predicted 3D from dot-bracket</h3>
+              </div>
+              ${
+                showPredictedStructureViewer
+                  ? `<div class="sequence-detail-media">
+                      <div id="predicted-structure-detail-molstar-status" class="mini-note">Loading predicted 3D model…</div>
+                      <div
+                        id="predicted-structure-detail-molstar"
+                        class="sequence-detail-viewer"
+                        data-structure-url="${predictedStructurePath(row.foldBridgeId)}"
+                        data-structure-format="pdb"
+                        data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
+                        data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                        data-structure-source="${rnaComposerPredictedStructureIds.has(row.foldBridgeId) ? 'rnacomposer' : 'local-fallback'}"
+                      ></div>
+                    </div>`
+                  : `<div class="sequence-detail-placeholder">
+                      <p>Predicted 3D model is not available yet for this record.</p>
+                      ${
+                        isReactivityGuidedStructure
+                          ? '<p class="mini-note">If we want a 3D view here, the next step is to run a dedicated generator such as RNAComposer or another RNA 3D modeling workflow from the predicted dot-bracket.</p>'
+                          : ''
+                      }
+                    </div>`
+              }
+            </section>
+            <section class="structure-detail-comparison-card">
+              <div class="structure-detail-comparison-copy">
+                <h3>Matched PDB tertiary structure</h3>
+              </div>
+              ${
+                row.bestPdbId
+                  ? `<div class="sequence-detail-media">
+                      <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
+                      <div
+                        id="structure-detail-molstar"
+                        class="sequence-detail-viewer"
+                        data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
+                        data-structure-format="cif"
+                        data-structure-label="${row.bestPdbId}"
+                        data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                        data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
+                      ></div>
+                    </div>`
+                  : `<div class="sequence-detail-placeholder">
+                      <p>No matched PDB structure is available for this record.</p>
+                    </div>`
+              }
+            </section>
+          </div>
+        </section>`
+      : row.bestPdbId
+        ? `<section class="sequence-detail-panel">
+            <h2>Tertiary Structure</h2>
+            <div class="sequence-detail-media">
+              <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
+              <div
+                id="structure-detail-molstar"
+                class="sequence-detail-viewer"
+                data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
+                data-structure-format="cif"
+                data-structure-label="${row.bestPdbId}"
+                data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
+              ></div>
+            </div>
+          </section>`
+        : '';
+
+  const structureWorkflowSections = isReactivityGuidedStructure
+    ? `${heatmapSection}${secondaryStructureSection}${tertiaryStructureSection}`
+    : `${secondaryStructureSection}${heatmapSection}${tertiaryStructureSection}`;
 
   return `<main class="page-sequence-detail">
     ${renderBundleHeader()}
@@ -1679,9 +1894,37 @@ const curatedStructureOverrides = new Map([
     }
   ],
   [
+    'RMDB_ADDSC_1M7_0007',
+    {
+      discoveryYear: '2004'
+    }
+  ],
+  [
+    'RMDB_GLYCFN_KNK_0001',
+    {
+      discoveryYear: '2010'
+    }
+  ],
+  [
+    'RMDB_SAMRSW_1M7_0001',
+    {
+      discoveryYear: '2010'
+    }
+  ],
+  [
     'RMDB_TPPSC_1M7_0005',
     {
       discoveryYear: '2016'
+    }
+  ]
+]);
+
+const reactivityGuidedStructurePredictions = new Map([
+  [
+    'RMDB_SAMRSW_1M7_0001',
+    {
+      structure: '..((((((((..(((((((.(.(((.....)))..))...))))(((.((((((.(.(((((.....)))))))))..))))))...))(..((((((...)..))))))..))))))))',
+      method: 'Local reactivity-guided estimate from the bundled 1M7 and nomod rows in SAMRSW_1M7_0001.rdat.'
     }
   ]
 ]);
@@ -1841,8 +2084,22 @@ function formatBlastPercent(value) {
   return `${numeric.toFixed(1)}%`;
 }
 
+function hasPairedSecondaryStructureText(structure) {
+  return /[()[\]{}<>]/.test(String(structure || ''));
+}
+
+function getPredictedSecondaryStructure(row) {
+  return reactivityGuidedStructurePredictions.get(row?.foldBridgeId) || null;
+}
+
+function getDisplaySecondaryStructure(row) {
+  const sourceStructure = String(row?.sourceStructure || '').trim();
+  if (hasPairedSecondaryStructureText(sourceStructure)) return sourceStructure;
+  return getPredictedSecondaryStructure(row)?.structure || sourceStructure;
+}
+
 function structureHasSecondaryStructure(row) {
-  return /[().[\]{}<>]/.test(String(row?.sourceStructure || ''));
+  return hasPairedSecondaryStructureText(getDisplaySecondaryStructure(row));
 }
 
 function formatBlastEvalue(value) {
@@ -3809,14 +4066,9 @@ function predictedStructurePath(foldBridgeId) {
 
 function structureDetailPage() {
   const foldBridgeId = getStructureRecordIdFromHash();
-  const row = structureEntryRows.find((item) => item.foldBridgeId === foldBridgeId);
-  const detailSequence = String(row?.sourceSequence || row?.sequence || '').replace(/\s*\(\d+nt\)$/i, '');
-  const detailSequenceLength = detailSequence.replace(/\s+/g, '').length;
-  const detailSecondaryStructure = String(row?.sourceStructure || '').trim();
-  const hasSecondaryStructureConstraints = structureHasSecondaryStructure(row);
-  const showPredictedStructureSection = predictedStructureIds.has(row?.foldBridgeId) || hasSecondaryStructureConstraints;
-  const showReactivityHeatmap = Boolean(row?.hasLocalRdat && row?.rdatPath);
-  const showPredictedStructureViewer = predictedStructureIds.has(row?.foldBridgeId);
+  const row =
+    structureEntryRows.find((item) => item.foldBridgeId === foldBridgeId)
+    || browseEntryRows.find((item) => item.foldBridgeId === foldBridgeId);
 
   if (!row) {
     return `<main class="page-sequence-detail">
@@ -3834,6 +4086,165 @@ function structureDetailPage() {
       </section>
     </main>`;
   }
+
+  const detailSequence = String(row?.sourceSequence || row?.sequence || '').replace(/\s*\(\d+nt\)$/i, '');
+  const detailSequenceLength = detailSequence.replace(/\s+/g, '').length;
+  const detailSecondaryStructure = getDisplaySecondaryStructure(row);
+  const predictedSecondaryStructure = getPredictedSecondaryStructure(row);
+  const isReactivityGuidedStructure = Boolean(predictedSecondaryStructure && !hasPairedSecondaryStructureText(String(row?.sourceStructure || '').trim()));
+  const hasLowercaseSequenceAnnotation = sequenceHasLowercaseAnnotation(detailSequence);
+  const hasSecondaryStructureConstraints = structureHasSecondaryStructure(row);
+  const showPredictedStructureSection = predictedStructureIds.has(row?.foldBridgeId) || hasSecondaryStructureConstraints;
+  const showReactivityHeatmap = Boolean(row?.hasLocalRdat && row?.rdatPath);
+  const showPredictedStructureViewer = predictedStructureIds.has(row?.foldBridgeId);
+  const heatmapSection = showReactivityHeatmap
+    ? `<section class="sequence-detail-panel">
+        <h2>Reactivity Heatmap</h2>
+        <div class="sequence-detail-section-intro">
+          <p>${
+            isReactivityGuidedStructure
+              ? 'This heatmap is the starting point for this record because no curated dot-bracket annotation was packaged with the RDAT. The secondary-structure view below is estimated from these reactivity measurements.'
+              : 'This heatmap summarizes per-position chemical probing reactivity across the RDAT measurements, helping relate experimental signal to structural context.'
+          }</p>
+        </div>
+        <section class="sequence-secondary-card sequence-secondary-heatmap-card structure-detail-heatmap-card">
+          <div
+            id="structure-detail-heatmap"
+            class="sequence-secondary-heatmap-host"
+            data-rdat-url="${row.rdatPath}"
+          ></div>
+          <p id="structure-detail-heatmap-status" class="mini-note" hidden></p>
+        </section>
+      </section>`
+    : '';
+  const secondaryStructureSection = hasSecondaryStructureConstraints
+    ? `<section class="sequence-detail-panel">
+        <h2>${isReactivityGuidedStructure ? 'Predicted Secondary Structure' : 'Secondary Structure'}</h2>
+        <div class="sequence-detail-section-intro">
+          <p>${
+            isReactivityGuidedStructure
+              ? 'This panel shows a local reactivity-guided secondary-structure estimate derived from the bundled RDAT measurements and rendered as an interactive 2D layout.'
+              : 'This panel shows the RNA secondary structure derived from the packaged dot-bracket annotation and rendered as an interactive 2D layout.'
+          }</p>
+        </div>
+        <section class="sequence-secondary-card sequence-secondary-forna-card">
+          <div class="sequence-detail-forna-copy">
+            <p class="sequence-detail-forna-title">RNA Secondary Structure Viewer (Forna)</p>
+            ${
+              isReactivityGuidedStructure
+                ? `<p class="mini-note">${predictedSecondaryStructure?.method || 'Reactivity-guided prediction.'}</p>
+                   <p class="mini-note">Treat this as a working hypothesis, not a final curated structure.</p>`
+                : ''
+            }
+          </div>
+          <div class="sequence-detail-forna-frame">
+            <div
+              id="structure-detail-forna-host"
+              class="sequence-detail-forna-host"
+              data-rdat-url="${rdatDownloadPath(row.foldBridgeId)}"
+              data-foldbridge-id="${row.foldBridgeId}"
+              data-sequence="${(row.sourceSequence || row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+              data-structure="${detailSecondaryStructure || ''}"
+            ></div>
+          </div>
+          <div id="structure-detail-sequence-structure-block" class="sequence-detail-dot-bracket-block">
+            <p class="case-sequence-structure-label">Dot-bracket notation</p>
+            <code
+              id="structure-detail-sequence-structure"
+              class="case-sequence-structure"
+              data-sequence="${detailSequence || ''}"
+              data-chunk-size="120"
+            >${renderAlignedSequenceStructure(detailSequence, detailSecondaryStructure)}</code>
+          </div>
+          <p id="structure-detail-forna-status" class="sequence-detail-forna-note" hidden></p>
+        </section>
+      </section>`
+    : '';
+  const tertiaryStructureSection =
+    hasSecondaryStructureConstraints && (showPredictedStructureSection || row.bestPdbId)
+      ? `<section class="sequence-detail-panel">
+          <h2>${isReactivityGuidedStructure ? 'Tertiary Structure Follow-up' : 'Tertiary Structure Comparison'}</h2>
+          <div class="sequence-detail-section-intro">
+            <p>${
+              isReactivityGuidedStructure
+                ? 'Three-dimensional follow-up depends on whether a precomputed model is available. When no predicted 3D file has been generated yet, the 2D structure above should be treated as the current endpoint.'
+                : 'Compare the secondary-structure-derived RNA model with the matched experimental PDB structure side by side.'
+            }</p>
+          </div>
+          <div class="structure-detail-comparison-grid">
+            <section class="structure-detail-comparison-card">
+              <div class="structure-detail-comparison-copy">
+                <h3>Predicted 3D from dot-bracket</h3>
+              </div>
+              ${
+                showPredictedStructureViewer
+                  ? `<div class="sequence-detail-media">
+                      <div id="predicted-structure-detail-molstar-status" class="mini-note">Loading predicted 3D model…</div>
+                      <div
+                        id="predicted-structure-detail-molstar"
+                        class="sequence-detail-viewer"
+                        data-structure-url="${predictedStructurePath(row.foldBridgeId)}"
+                        data-structure-format="pdb"
+                        data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
+                        data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                        data-structure-source="${rnaComposerPredictedStructureIds.has(row.foldBridgeId) ? 'rnacomposer' : 'local-fallback'}"
+                      ></div>
+                    </div>`
+                  : `<div class="sequence-detail-placeholder">
+                      <p>Predicted 3D model is not available yet for this record.</p>
+                      ${
+                        isReactivityGuidedStructure
+                          ? '<p class="mini-note">If we want a 3D view here, the next step is to run a dedicated generator such as RNAComposer or another RNA 3D modeling workflow from the predicted dot-bracket.</p>'
+                          : ''
+                      }
+                    </div>`
+              }
+            </section>
+            <section class="structure-detail-comparison-card">
+              <div class="structure-detail-comparison-copy">
+                <h3>Matched PDB tertiary structure</h3>
+              </div>
+              ${
+                row.bestPdbId
+                  ? `<div class="sequence-detail-media">
+                      <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
+                      <div
+                        id="structure-detail-molstar"
+                        class="sequence-detail-viewer"
+                        data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
+                        data-structure-format="cif"
+                        data-structure-label="${row.bestPdbId}"
+                        data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                        data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
+                      ></div>
+                    </div>`
+                  : `<div class="sequence-detail-placeholder">
+                      <p>No matched PDB structure is available for this record.</p>
+                    </div>`
+              }
+            </section>
+          </div>
+        </section>`
+      : row.bestPdbId
+        ? `<section class="sequence-detail-panel">
+            <h2>Tertiary Structure</h2>
+            <div class="sequence-detail-media">
+              <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
+              <div
+                id="structure-detail-molstar"
+                class="sequence-detail-viewer"
+                data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
+                data-structure-format="cif"
+                data-structure-label="${row.bestPdbId}"
+                data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
+                data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
+              ></div>
+            </div>
+          </section>`
+        : '';
+  const structureWorkflowSections = isReactivityGuidedStructure
+    ? `${heatmapSection}${secondaryStructureSection}${tertiaryStructureSection}`
+    : `${secondaryStructureSection}${heatmapSection}${tertiaryStructureSection}`;
 
   return `<main class="page-sequence-detail">
     ${renderBundleHeader()}
@@ -3863,139 +4274,16 @@ function structureDetailPage() {
       <section class="sequence-detail-panel">
         <h2>Sequence${detailSequenceLength ? ` (${detailSequenceLength} nt)` : ''}</h2>
         <article class="case-sequence-card">
-          <code class="case-sequence-block case-sequence-block-formatted">${detailSequence ? renderFormattedDetailSequence(detailSequence) : 'Sequence unavailable'}</code>
+          <code class="case-sequence-block case-sequence-block-formatted">${detailSequence ? renderFormattedDetailSequence(detailSequence, 5, { forceUppercaseDisplay: true }) : 'Sequence unavailable'}</code>
         </article>
+        ${
+          hasLowercaseSequenceAnnotation
+            ? `<p class="mini-note">The source RDAT marks auxiliary sequence context in lowercase. This view shows those bases in uppercase for readability only.</p>`
+            : ''
+        }
       </section>
 
-      ${
-        hasSecondaryStructureConstraints
-          ? `<section class="sequence-detail-panel">
-              <h2>Secondary Structure</h2>
-              <div class="sequence-detail-section-intro">
-                <p>This panel shows the RNA secondary structure derived from the packaged dot-bracket annotation and rendered as an interactive 2D layout.</p>
-              </div>
-              <section class="sequence-secondary-card sequence-secondary-forna-card">
-                <div class="sequence-detail-forna-copy">
-                  <p class="sequence-detail-forna-title">RNA Secondary Structure Viewer (Forna)</p>
-                </div>
-                <div class="sequence-detail-forna-frame">
-                  <div
-                    id="structure-detail-forna-host"
-                    class="sequence-detail-forna-host"
-                    data-rdat-url="${rdatDownloadPath(row.foldBridgeId)}"
-                    data-foldbridge-id="${row.foldBridgeId}"
-                    data-sequence="${(row.sourceSequence || row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                    data-structure="${row.sourceStructure || ''}"
-                  ></div>
-                </div>
-                <div id="structure-detail-sequence-structure-block" class="sequence-detail-dot-bracket-block">
-                  <p class="case-sequence-structure-label">Dot-bracket notation</p>
-                  <code
-                    id="structure-detail-sequence-structure"
-                    class="case-sequence-structure"
-                    data-sequence="${detailSequence || ''}"
-                    data-chunk-size="120"
-                  >${renderAlignedSequenceStructure(detailSequence, detailSecondaryStructure)}</code>
-                </div>
-                <p id="structure-detail-forna-status" class="sequence-detail-forna-note" hidden></p>
-              </section>
-            </section>`
-          : ''
-      }
-
-      ${
-        showReactivityHeatmap
-          ? `<section class="sequence-detail-panel">
-              <h2>Reactivity Heatmap</h2>
-              <div class="sequence-detail-section-intro">
-                <p>This heatmap summarizes per-position chemical probing reactivity across the RDAT measurements, helping relate experimental signal to structural context.</p>
-              </div>
-              <section class="sequence-secondary-card sequence-secondary-heatmap-card structure-detail-heatmap-card">
-                <div
-                  id="structure-detail-heatmap"
-                  class="sequence-secondary-heatmap-host"
-                  data-rdat-url="${row.rdatPath}"
-                ></div>
-                <p id="structure-detail-heatmap-status" class="mini-note" hidden></p>
-              </section>
-            </section>`
-          : ''
-      }
-
-      ${
-        hasSecondaryStructureConstraints && (showPredictedStructureSection || row.bestPdbId)
-          ? `<section class="sequence-detail-panel">
-              <h2>Tertiary Structure Comparison</h2>
-              <div class="sequence-detail-section-intro">
-                <p>Compare the secondary-structure-derived RNA model with the matched experimental PDB structure side by side.</p>
-              </div>
-              <div class="structure-detail-comparison-grid">
-                <section class="structure-detail-comparison-card">
-                  <div class="structure-detail-comparison-copy">
-                    <h3>Predicted 3D from dot-bracket</h3>
-                  </div>
-                  ${
-                    showPredictedStructureViewer
-                      ? `<div class="sequence-detail-media">
-                          <div id="predicted-structure-detail-molstar-status" class="mini-note">Loading predicted 3D model…</div>
-                          <div
-                            id="predicted-structure-detail-molstar"
-                            class="sequence-detail-viewer"
-                            data-structure-url="${predictedStructurePath(row.foldBridgeId)}"
-                            data-structure-format="pdb"
-                            data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
-                            data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                            data-structure-source="${rnaComposerPredictedStructureIds.has(row.foldBridgeId) ? 'rnacomposer' : 'local-fallback'}"
-                          ></div>
-                        </div>`
-                      : `<div class="sequence-detail-placeholder">
-                          <p>Predicted 3D model is not available yet for this record.</p>
-                        </div>`
-                  }
-                </section>
-                <section class="structure-detail-comparison-card">
-                  <div class="structure-detail-comparison-copy">
-                    <h3>Matched PDB tertiary structure</h3>
-                  </div>
-                  ${
-                    row.bestPdbId
-                      ? `<div class="sequence-detail-media">
-                          <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
-                          <div
-                            id="structure-detail-molstar"
-                            class="sequence-detail-viewer"
-                            data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
-                            data-structure-format="cif"
-                            data-structure-label="${row.bestPdbId}"
-                            data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                            data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
-                          ></div>
-                        </div>`
-                      : `<div class="sequence-detail-placeholder">
-                          <p>No matched PDB structure is available for this record.</p>
-                        </div>`
-                  }
-                </section>
-              </div>
-            </section>`
-          : row.bestPdbId
-            ? `<section class="sequence-detail-panel">
-                <h2>Tertiary Structure</h2>
-                <div class="sequence-detail-media">
-                  <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
-                  <div
-                    id="structure-detail-molstar"
-                    class="sequence-detail-viewer"
-                    data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
-                    data-structure-format="cif"
-                    data-structure-label="${row.bestPdbId}"
-                    data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                    data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
-                  ></div>
-                </div>
-              </section>`
-            : ''
-      }
+      ${structureWorkflowSections}
 
 
       <section class="sequence-detail-panel" id="references">

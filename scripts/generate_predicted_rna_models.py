@@ -16,7 +16,12 @@ OUTPUT_DIR = ROOT / "src" / "assets" / "predicted-structures"
 # whose RDAT secondary structures can be submitted directly.
 TARGET_IDS = [
     "RNAPZ14_HRF_0002",
+    "SAMRSW_1M7_0001",
 ]
+
+STRUCTURE_OVERRIDES = {
+    "SAMRSW_1M7_0001": "..((((((((..(((((((.(.(((.....)))..))...))))(((.((((((.(.(((((.....)))))))))..))))))...))(..((((((...)..))))))..))))))))",
+}
 
 
 OPEN_TO_CLOSE = {"(": ")", "[": "]", "{": "}", "<": ">"}
@@ -37,6 +42,7 @@ def parse_rdat(record_id: str) -> tuple[str, str]:
             structure = "".join(line.replace("STRUCTURE", "", 1).split())
     if not sequence or not structure or len(sequence) != len(structure):
         raise ValueError(f"Invalid RDAT record for {record_id}")
+    structure = STRUCTURE_OVERRIDES.get(record_id, structure)
     return sequence, structure
 
 

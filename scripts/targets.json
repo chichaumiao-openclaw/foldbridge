@@ -24,6 +24,12 @@
     "structure": "........(((......((((((((......((((((....)))))).(((....(((.....)))...)))........))))))))...)))..(((((......(((((.....))))).(((....(((....((((....)))).....)))...))).......))))).............................."
   },
   {
+    "id": "RMDB_SAMRSW_1M7_0001",
+    "filename": "SAMRSW_1M7_0001.pdb",
+    "sequence": "GGUUCUUAUCAAGAGAAGCAGAGGGACUGGCCCGACGAAGCUUCAGCAACCGGUGUAAUGGCGAUCAGCCAUGACCAAGGUGCUAAAUCCAGCAAGCUCGAACAGCUUGGAAGAUAAGAA",
+    "structure": "..((((((((..(((((((.(.(((.....)))..))...))))(((.((((((.(.(((((.....)))))))))..))))))...))(..((((((...)..))))))..))))))))"
+  },
+  {
     "id": "RMDB_TPPSC_1M7_0005",
     "filename": "TPPSC_1M7_0005.pdb",
     "sequence": "GGACUCGGGGUGCCCUUCUGCGUGAAGGCUGAGAAAUACCCGUAUCACCUGAUCUGGAUAAUGCCAGCGUAGGGAAGUUC",
