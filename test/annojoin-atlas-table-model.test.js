@@ -5,6 +5,7 @@ import {
   annojoinExportRow,
   buildAnnojointTableGroups,
   familyBadgeDescriptor,
+  groupSlug,
   isAnnojointSearchActive,
   moleculeName,
   paginateAnnojointRows,
@@ -26,7 +27,8 @@ const rows = [
     assayFamilies: ['rmdb_chemical_probing'],
     chains: ['A'],
     sourceDatabases: ['RMDB', 'PDB'],
-    conflictCandidateCount: 2
+    conflictCandidateCount: 2,
+    chainPlacements: [{ classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' }]
   },
   {
     caseId: '10ZU',
@@ -40,7 +42,8 @@ const rows = [
     assayFamilies: ['rmdb_chemical_probing'],
     chains: [],
     sourceDatabases: ['RMDB', 'PDB'],
-    conflictCandidateCount: 0
+    conflictCandidateCount: 0,
+    chainPlacements: [{ classLabel: 'designed_RNA', nameLabel: 'MPNN-fixbb designed RNA molecule' }]
   },
   {
     caseId: '10ZV',
@@ -50,7 +53,8 @@ const rows = [
     biologicalMoleculeName: '23S ribosomal RNA',
     pdbMoleculeName: '50S ribosomal subunit RNA',
     confidenceDisplayLabel: 'A_HIGH_SUPPORT (1)',
-    profileCount: 1
+    profileCount: 1,
+    chainPlacements: [{ classLabel: 'rRNA', nameLabel: '23S ribosomal RNA' }]
   }
 ];
 
@@ -80,16 +84,36 @@ test('sortAnnojointCases orders by primary placement (class then name)', () => {
 
 test('groups cases into parent and child buckets with parentless fallback', () => {
   const groups = buildAnnojointTableGroups(sortAnnojointCases(rows));
-
   assert.equal(groups.length, 2);
-  assert.equal(groups[0].label, 'Ribosome');
-  assert.deepEqual(groups[0].children.map((child) => [child.label, child.count]), [
-    ['16S rRNA', 1],
-    ['23S rRNA', 1]
+  assert.equal(groups[0].label, 'designed_RNA');
+  assert.equal(groups[0].count, 1);
+  assert.equal(groups[0].children[0].label, 'MPNN-fixbb designed RNA molecule');
+  assert.equal(groups[1].label, 'rRNA');
+  assert.deepEqual(groups[1].children.map((c) => [c.label, c.count]), [
+    ['16S ribosomal RNA', 1],
+    ['23S ribosomal RNA', 1]
   ]);
-  assert.equal(groups[1].label, 'MPNN-fixbb designed RNA molecule');
-  assert.equal(groups[1].count, 1);
-  assert.equal(groups[1].children[0].label, 'MPNN-fixbb designed RNA molecule');
+});
+
+test('buildAnnojointTableGroups fans a multi-identity case into multiple branches', () => {
+  const groups = buildAnnojointTableGroups([{
+    pdbId: '4V99',
+    chainPlacements: [
+      { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+      { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+    ]
+  }]);
+  const labels = groups.map((p) => p.label).sort();
+  assert.deepEqual(labels, ['rRNA', 'tRNA']);
+  const rRNA = groups.find((p) => p.label === 'rRNA');
+  assert.equal(rRNA.children[0].label, '16S ribosomal RNA');
+  assert.equal(rRNA.children[0].rows[0].pdbId, '4V99');
+  assert.equal(rRNA.children[0].id, `${groupSlug('rRNA')}::${groupSlug('16S ribosomal RNA')}`);
+});
+
+test('buildAnnojointTableGroups defends empty chainPlacements as Unclassified RNA', () => {
+  const groups = buildAnnojointTableGroups([{ pdbId: '9ZZZ', chainPlacements: [] }]);
+  assert.equal(groups[0].label, 'Unclassified RNA');
 });
 
 test('paginates rows with clamped page numbers', () => {

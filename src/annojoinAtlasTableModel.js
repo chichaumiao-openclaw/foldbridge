@@ -68,24 +68,32 @@ export function sortAnnojointCases(cases = []) {
   });
 }
 
+function placementsFor(row = {}) {
+  const placements = Array.isArray(row.chainPlacements) ? row.chainPlacements : [];
+  if (!placements.length) return [{ classLabel: 'Unclassified RNA', nameLabel: moleculeName(row) }];
+  return placements;
+}
+
 export function buildAnnojointTableGroups(cases = []) {
   const parentMap = new Map();
   for (const row of cases) {
-    const parentLabel = parentGroupLabel(row);
-    const childLabel = childGroupLabel(row);
-    const parentId = groupSlug(parentLabel);
-    const childId = `${parentId}::${groupSlug(childLabel)}`;
-    if (!parentMap.has(parentId)) {
-      parentMap.set(parentId, { id: parentId, label: parentLabel, count: 0, children: new Map() });
+    for (const placement of placementsFor(row)) {
+      const parentLabel = String(placement.classLabel || 'Unclassified RNA');
+      const childLabel = String(placement.nameLabel || parentLabel);
+      const parentId = groupSlug(parentLabel);
+      const childId = `${parentId}::${groupSlug(childLabel)}`;
+      if (!parentMap.has(parentId)) {
+        parentMap.set(parentId, { id: parentId, label: parentLabel, count: 0, children: new Map() });
+      }
+      const parent = parentMap.get(parentId);
+      if (!parent.children.has(childId)) {
+        parent.children.set(childId, { id: childId, parentId, label: childLabel, count: 0, rows: [] });
+      }
+      const child = parent.children.get(childId);
+      child.rows.push(row);
+      child.count += 1;
+      parent.count += 1;
     }
-    const parent = parentMap.get(parentId);
-    if (!parent.children.has(childId)) {
-      parent.children.set(childId, { id: childId, parentId, label: childLabel, count: 0, rows: [] });
-    }
-    const child = parent.children.get(childId);
-    child.rows.push(row);
-    child.count += 1;
-    parent.count += 1;
   }
   return [...parentMap.values()].map((parent) => ({
     ...parent,
