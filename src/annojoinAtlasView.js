@@ -186,9 +186,11 @@ function renderTableBody({
     const parentExpanded = expandedGroupIds.has(parentToggleId);
     rows.push(`<tr class="annojoin-parent-group-row${parentExpanded ? ' is-expanded-group' : ''}" data-annojoin-parent-group="${escapeHtml(parent.id)}" data-annojoin-group-state="${parentExpanded ? 'expanded' : 'collapsed'}">
       <td colspan="${visibleColumns.length + 1}">
-        <button type="button" data-annojoin-group-toggle="${escapeHtml(parentToggleId)}" aria-expanded="${parentExpanded ? 'true' : 'false'}">${parentExpanded ? '-' : '+'}</button>
-        <strong>${escapeHtml(parent.label)}</strong>
-        <span>${escapeHtml(parent.count)} cases</span>
+        <div class="annojoin-group-row-inner">
+          <button type="button" data-annojoin-group-toggle="${escapeHtml(parentToggleId)}" aria-expanded="${parentExpanded ? 'true' : 'false'}">${parentExpanded ? '-' : '+'}</button>
+          <strong>${escapeHtml(parent.label)}</strong>
+          <span>${escapeHtml(parent.count)} cases</span>
+        </div>
       </td>
     </tr>`);
     if (!parentExpanded) continue;
@@ -205,9 +207,11 @@ function renderTableBody({
       const childExpanded = expandedGroupIds.has(childToggleId);
       rows.push(`<tr class="annojoin-child-group-row${childExpanded ? ' is-expanded-group' : ''}" data-annojoin-child-group="${escapeHtml(child.id)}" data-annojoin-group-state="${childExpanded ? 'expanded' : 'collapsed'}">
         <td colspan="${visibleColumns.length + 1}">
-          <button type="button" data-annojoin-group-toggle="${escapeHtml(childToggleId)}" aria-expanded="${childExpanded ? 'true' : 'false'}">${childExpanded ? '-' : '+'}</button>
-          <span>${escapeHtml(child.label)}</span>
-          <small>${escapeHtml(child.count)} cases</small>
+          <div class="annojoin-group-row-inner">
+            <button type="button" data-annojoin-group-toggle="${escapeHtml(childToggleId)}" aria-expanded="${childExpanded ? 'true' : 'false'}">${childExpanded ? '-' : '+'}</button>
+            <span>${escapeHtml(child.label)}</span>
+            <small>${escapeHtml(child.count)} cases</small>
+          </div>
         </td>
       </tr>`);
       if (!childExpanded) continue;

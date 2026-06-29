@@ -385,15 +385,26 @@ main.page-sequence-detail {
   margin-left: 8px;
 }
 
+.annojoin-group-row-inner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .annojoin-parent-group-row button,
 .annojoin-child-group-row button {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 24px;
   height: 24px;
-  margin-right: 8px;
+  padding: 0;
   border: 1px solid var(--border);
   border-radius: 999px;
   background: var(--surface);
   color: var(--textPrimary);
+  font-size: 1rem;
   line-height: 1;
   cursor: pointer;
   transition: border-color 0.15s ease, background 0.15s ease;
@@ -410,8 +421,7 @@ main.page-sequence-detail {
 
 .annojoin-parent-group-row span,
 .annojoin-child-group-row small {
-  display: inline-block;
-  margin-left: 8px;
+  flex: none;
   padding: 1px 8px;
   border: 1px solid var(--border);
   border-radius: 999px;
