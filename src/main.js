@@ -86,6 +86,7 @@ let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 stor
 let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
+let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let pdbCaseConfidenceFilter = 'all';
 let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
 let homeDashboardFilters = {
@@ -3286,6 +3287,7 @@ function render(options = {}) {
   initAnimatedStats();
   initHomeDashboardFilters();
   initHomeProbingCarousel();
+  initHomeScrollStory();
   initPdbCasePage();
   initSearchPage();
 
@@ -3487,6 +3489,34 @@ function initHomeProbingCarousel() {
   });
 
   restart();
+}
+
+function initHomeScrollStory() {
+  // 幂等：每次 render 都会重跑，先 disconnect 旧 observer 再决定是否重建，
+  // 否则同一 home 会话内反复 render 会叠加多个 observer（同轮播 setInterval 坑）。
+  if (homeScrollStoryObserver) {
+    homeScrollStoryObserver.disconnect();
+    homeScrollStoryObserver = null;
+  }
+  const story = document.querySelector('.home-scroll-story');
+  if (!story) return; // 非 home / placeholder 壳：清理后返回
+  const scenes = Array.from(story.querySelectorAll('.hss-scene'));
+  const layers = Array.from(story.querySelectorAll('.hss-layer'));
+  if (scenes.length === 0 || layers.length === 0) return;
+  if (typeof IntersectionObserver !== 'function') return; // 不支持 → CSS 静态堆叠降级（任务 7）
+
+  const activate = (idx) => {
+    scenes.forEach((s) => s.classList.toggle('is-active', Number(s.dataset.scene) === idx));
+    layers.forEach((l) => l.classList.toggle('is-active', Number(l.dataset.stage) === idx));
+  };
+
+  homeScrollStoryObserver = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) activate(Number(e.target.dataset.scene));
+    });
+  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+
+  scenes.forEach((s) => homeScrollStoryObserver.observe(s));
 }
 
 function initHomeDashboardFilters() {
