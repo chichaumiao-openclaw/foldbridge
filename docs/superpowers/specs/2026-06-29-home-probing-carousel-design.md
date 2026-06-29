@@ -32,9 +32,13 @@ Three small units, each with one responsibility, following existing patterns.
 
 New exported pure function `renderHomeProbingCarousel(articles)`:
 
-- **Input:** an array of article card objects (the same shape already in
-  `index.json` `articles[]`: `{ slug, title, rep_figure, family_title, ... }`),
-  plus a resolved asset base path.
+- **Input:** a single argument — an array of article card objects (the same
+  shape already in `index.json` `articles[]`:
+  `{ slug, title, rep_figure, family_title, ... }`). The card object does **not**
+  carry `asset_base` (only the per-slug detail JSON does), so the pure function
+  derives each image src deterministically from the slug:
+  `./src/assets/generated/probing-articles/assets/<slug>/<rep_figure>` — the same
+  path shape `detail` already uses. No second argument.
 - **Output:** a static HTML string. No timers, no event binding, no DOM access,
   no module-level `window`/`route` reads — consistent with the file's contract
   ("所有函数必须是纯函数：入参 → 返回 HTML 字符串").
@@ -58,8 +62,12 @@ returned by `buildOne()` and therefore to every `articles[]` entry in
 - `rep_figure`: `figureBlocks[0].srcBasename` (the first figure's image
   basename), or `""` when an article has no figures.
 - `family_title`: the mechanism family the article belongs to, so the slide can
-  render its badge without a second lookup. (Derived from `FAMILY_ORDER`, which
-  already groups slugs into families in the builder.)
+  render its badge without a second lookup. **Backfill location:** `buildOne()`
+  does not know an article's family (grouping happens in `main()` via
+  `FAMILY_ORDER` / `cardBySlug`). Build a slug→family-title reverse map from
+  `FAMILY_ORDER` and stamp `family_title` onto each card — either inside
+  `buildOne()` by passing the map in, or in `main()` after the cards are built.
+  The plan picks one; both are correct.
 
 Asset base for the `<img>` is the existing per-slug convention:
 `./src/assets/generated/probing-articles/assets/<slug>/<rep_figure>` (same path
@@ -87,8 +95,12 @@ and must be committed.
   auto-advance on an interval, manual prev/next, and dot navigation. Clicking a
   slide navigates to `#detail/<slug>` (normal hash link — no special handler
   needed). Event binding + the timer live alongside the existing post-render DOM
-  wiring in `main.js`. The timer is cleared/reset on manual interaction and when
-  leaving the home route, to avoid a dangling interval.
+  wiring in `main.js`. **Init must be idempotent — clear any existing carousel
+  timer before starting a new one.** `render()` rebuilds `innerHTML` and re-runs
+  post-render wiring on *every* home interaction (filter, search, etc.), so
+  starting a fresh `setInterval` without clearing the previous one would stack
+  multiple intervals within a single home session. The timer is also cleared
+  when leaving the home route, to avoid a dangling interval.
 
 ## 4. Data flow
 
@@ -128,8 +140,10 @@ homePage() ──> renderHomeProbingCarousel(articles) ──> static HTML
     their `data-*` hooks.
   - empty input returns the placeholder shell (no throw, no slide markup).
 - `test/build-probing-articles*.test.js` (or the existing builder test): assert
-  every `articles[]` entry carries `rep_figure` and `family_title`, and that an
-  article with figures gets a non-empty `rep_figure` basename.
+  every `articles[]` entry carries `rep_figure` and `family_title`, that an
+  article with figures gets a non-empty `rep_figure` basename, and that an
+  article with zero figures yields `rep_figure: ""` (locks the §5 empty-state
+  branch).
 - Full `npm test` stays green (current baseline: 164 pass / 0 fail); `npm run
   build` still succeeds.
 
