@@ -84,3 +84,53 @@ test('help body has four sections and live module links', () => {
   assert.doesNotMatch(html, /Structure hub|Open structure/i);
   assert.doesNotMatch(html, /Download/);
 });
+
+import { renderHomeProbingCarousel } from '../src/siteChrome.js';
+
+const SAMPLE_ARTICLES = [
+  { slug: 'dms', title: 'Why DMS can only seriously interpret A/C', rep_figure: 'cordero2012_f1__PMC3448840__F1.jpg', family_title: 'DMS chemical probing' },
+  { slug: 'shape-map', title: 'SHAPE-MaP: reading 2′-OH as mutations', rep_figure: 'sm_f1.jpg', family_title: 'SHAPE 2′-OH acylation' },
+  { slug: 'pars', title: 'PARS: pairing via two nucleases', rep_figure: 'pars_f1.jpg', family_title: 'Hydroxyl-radical / nuclease footprinting' }
+];
+
+test('carousel renders one slide per article', () => {
+  const html = renderHomeProbingCarousel(SAMPLE_ARTICLES);
+  assert.equal((html.match(/data-carousel-slide=/g) || []).length, 3);
+});
+
+test('each slide links to its detail route', () => {
+  const html = renderHomeProbingCarousel(SAMPLE_ARTICLES);
+  assert.match(html, /href="#detail\/dms"/);
+  assert.match(html, /href="#detail\/shape-map"/);
+  assert.match(html, /href="#detail\/pars"/);
+});
+
+test('each slide uses the per-slug asset path for its figure', () => {
+  const html = renderHomeProbingCarousel(SAMPLE_ARTICLES);
+  assert.match(html, /src="\.\/src\/assets\/generated\/probing-articles\/assets\/dms\/cordero2012_f1__PMC3448840__F1\.jpg"/);
+});
+
+test('each slide shows its family badge', () => {
+  const html = renderHomeProbingCarousel(SAMPLE_ARTICLES);
+  assert.match(html, /DMS chemical probing/);
+  assert.match(html, /SHAPE 2′-OH acylation/);
+});
+
+test('first slide and first dot are marked active', () => {
+  const html = renderHomeProbingCarousel(SAMPLE_ARTICLES);
+  assert.match(html, /data-carousel-slide="0"[^>]*class="[^"]*active/);
+  assert.match(html, /data-carousel-dot="0"[^>]*class="[^"]*active/);
+});
+
+test('carousel exposes prev/next and per-slide dot controls', () => {
+  const html = renderHomeProbingCarousel(SAMPLE_ARTICLES);
+  assert.match(html, /data-carousel-prev/);
+  assert.match(html, /data-carousel-next/);
+  assert.equal((html.match(/data-carousel-dot=/g) || []).length, 3);
+});
+
+test('empty input returns a placeholder shell with no slides', () => {
+  const html = renderHomeProbingCarousel([]);
+  assert.doesNotMatch(html, /data-carousel-slide=/);
+  assert.match(html, /home-probing-carousel/);
+});

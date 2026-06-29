@@ -142,3 +142,48 @@ export function renderHelpBody() {
       <p>Data come from RMDB / RASP / PDB; structure linkage is materialized through the ANNOJOIN master table. Where citation metadata is not provided in the current asset, fields are left unannotated rather than fabricated.</p>
     </section>`;
 }
+
+const PROBING_ASSET_BASE = './src/assets/generated/probing-articles/assets';
+
+// 主页探针文章轮播：纯函数，入参 articles → 静态 HTML。
+// 无 DOM、无定时器、无 window；翻页/自动轮换的行为层在 main.js。
+// 每张 slide = 代表图 + 家族徽标 + 标题，整张是跳详情页的链接。
+export function renderHomeProbingCarousel(articles = []) {
+  if (!Array.isArray(articles) || articles.length === 0) {
+    return `<section class="home-probing-carousel home-probing-carousel-empty" aria-label="Probing method articles">
+      <p class="home-probing-empty-note">Probing articles are loading…</p>
+    </section>`;
+  }
+
+  const slides = articles.map((a, i) => {
+    const activeClass = i === 0 ? ' active' : '';
+    const img = a.rep_figure
+      ? `<img class="home-probing-slide-img" src="${PROBING_ASSET_BASE}/${a.slug}/${a.rep_figure}" alt="${a.title || ''}" loading="lazy" />`
+      : `<div class="home-probing-slide-img home-probing-slide-noimg" aria-hidden="true"></div>`;
+    // 注意属性顺序：data-carousel-slide 在 class 之前，以匹配 active-slide 测试正则
+    // （/data-carousel-slide="0"[^>]*class="[^"]*active/，[^>]* 不跨越 '>'）。
+    return `<a data-carousel-slide="${i}" class="home-probing-slide${activeClass}" href="#detail/${a.slug}">
+        ${img}
+        <div class="home-probing-slide-copy">
+          <span class="home-probing-slide-family">${a.family_title || ''}</span>
+          <h3 class="home-probing-slide-title">${a.title || ''}</h3>
+        </div>
+      </a>`;
+  }).join('\n      ');
+
+  const dots = articles.map((_a, i) =>
+    // 同上：data-carousel-dot 在 class 之前，匹配 active-dot 测试正则。
+    `<button type="button" data-carousel-dot="${i}" class="home-probing-dot${i === 0 ? ' active' : ''}" aria-label="Go to slide ${i + 1}"></button>`
+  ).join('\n        ');
+
+  return `<section class="home-probing-carousel" aria-label="Probing method articles" aria-roledescription="carousel">
+      <div class="home-probing-track" data-carousel-track>
+        ${slides}
+      </div>
+      <button type="button" class="home-probing-nav home-probing-prev" data-carousel-prev aria-label="Previous article">&larr;</button>
+      <button type="button" class="home-probing-nav home-probing-next" data-carousel-next aria-label="Next article">&rarr;</button>
+      <div class="home-probing-dots">
+        ${dots}
+      </div>
+    </section>`;
+}
