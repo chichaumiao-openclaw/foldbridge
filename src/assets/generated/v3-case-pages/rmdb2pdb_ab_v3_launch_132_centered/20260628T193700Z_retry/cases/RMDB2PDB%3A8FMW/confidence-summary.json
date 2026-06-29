@@ -1,0 +1,28 @@
+{
+  "atlasCaseKey": "RMDB2PDB:8FMW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 62,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:8FMW:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#23093",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 31,
+    "B": 31
+  },
+  "generatedAt": "2026-06-28T21:19:08.932330Z",
+  "materializedEvidenceCount": 62,
+  "pdbId": "8FMW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 22,
+    "LSS_MODERATE": 3,
+    "LSS_NOT_SUPPORTED": 25,
+    "LSS_STRONG": 3,
+    "LSS_UNDERPOWERED": 5,
+    "LSS_WEAK": 4
+  },
+  "totalEvidenceCount": 62
+}

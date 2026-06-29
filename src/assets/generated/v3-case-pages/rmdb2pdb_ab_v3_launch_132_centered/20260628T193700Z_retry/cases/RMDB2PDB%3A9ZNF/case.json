@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9ZNF",
+  "biologicalMoleculeName": "9ZNF",
+  "caseId": "9ZNF",
+  "caseKey": "RMDB2PDB:9ZNF",
+  "chains": [
+    "1",
+    "2",
+    "3"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "9ZNF",
+  "profileCount": 374
+}

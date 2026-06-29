@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:3D2V",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:3D2V:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFM100_DMS_0000.rdat#1847",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 4
+  },
+  "generatedAt": "2026-06-28T21:12:52.193227Z",
+  "materializedEvidenceCount": 7,
+  "pdbId": "3D2V",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 7
+  },
+  "totalEvidenceCount": 7
+}

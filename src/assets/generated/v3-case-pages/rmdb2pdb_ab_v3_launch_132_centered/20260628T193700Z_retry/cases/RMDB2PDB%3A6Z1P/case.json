@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6Z1P",
+  "biologicalMoleculeName": "6Z1P",
+  "caseId": "6Z1P",
+  "caseKey": "RMDB2PDB:6Z1P",
+  "chains": [
+    "Aa",
+    "Ba"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "6Z1P",
+  "profileCount": 44
+}

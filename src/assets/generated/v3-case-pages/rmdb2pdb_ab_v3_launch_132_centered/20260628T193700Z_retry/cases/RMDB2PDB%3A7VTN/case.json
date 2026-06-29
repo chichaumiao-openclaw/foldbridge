@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7VTN",
+  "biologicalMoleculeName": "7VTN",
+  "caseId": "7VTN",
+  "caseKey": "RMDB2PDB:7VTN",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "7VTN",
+  "profileCount": 2
+}

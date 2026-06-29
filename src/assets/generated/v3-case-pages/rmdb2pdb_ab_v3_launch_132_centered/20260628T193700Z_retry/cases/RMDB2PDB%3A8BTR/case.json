@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8BTR",
+  "biologicalMoleculeName": "8BTR",
+  "caseId": "8BTR",
+  "caseKey": "RMDB2PDB:8BTR",
+  "chains": [
+    "St"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8BTR",
+  "profileCount": 46
+}

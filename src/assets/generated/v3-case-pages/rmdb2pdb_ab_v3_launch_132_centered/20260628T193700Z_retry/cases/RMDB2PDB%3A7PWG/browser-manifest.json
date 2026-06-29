@@ -1,0 +1,24 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "w": {
+      "case2dPath": "chains/w/case-2d-structure.json.gz",
+      "chainId": "w",
+      "chainRoot": "chains/w",
+      "linkedViewBundlePath": "chains/w/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/w/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/w/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "w",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:7PWG:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#12715": "w",
+    "annojoin:RMDB2PDB:7PWG:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#12715": "w"
+  }
+}

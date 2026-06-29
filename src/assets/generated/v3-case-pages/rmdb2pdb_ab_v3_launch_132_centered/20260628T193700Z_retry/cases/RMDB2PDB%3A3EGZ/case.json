@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3EGZ",
+  "biologicalMoleculeName": "3EGZ",
+  "caseId": "3EGZ",
+  "caseKey": "RMDB2PDB:3EGZ",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "3EGZ",
+  "profileCount": 1
+}

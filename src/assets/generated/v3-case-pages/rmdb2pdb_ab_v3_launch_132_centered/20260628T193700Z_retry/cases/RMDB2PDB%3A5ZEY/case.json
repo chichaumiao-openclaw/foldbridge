@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5ZEY",
+  "biologicalMoleculeName": "5ZEY",
+  "caseId": "5ZEY",
+  "caseKey": "RMDB2PDB:5ZEY",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "5ZEY",
+  "profileCount": 96
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7KKV",
+  "biologicalMoleculeName": "7KKV",
+  "caseId": "7KKV",
+  "caseKey": "RMDB2PDB:7KKV",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "7KKV",
+  "profileCount": 1
+}

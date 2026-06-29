@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8OIN",
+  "biologicalMoleculeName": "8OIN",
+  "caseId": "8OIN",
+  "caseKey": "RMDB2PDB:8OIN",
+  "chains": [
+    "AA",
+    "B8"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "8OIN",
+  "profileCount": 66
+}

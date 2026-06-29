@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4V8N",
+  "biologicalMoleculeName": "4V8N",
+  "caseId": "4V8N",
+  "caseKey": "RMDB2PDB:4V8N",
+  "chains": [
+    "AW"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "4V8N",
+  "profileCount": 2
+}

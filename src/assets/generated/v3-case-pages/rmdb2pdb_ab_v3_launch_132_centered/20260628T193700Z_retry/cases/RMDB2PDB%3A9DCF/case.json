@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9DCF",
+  "biologicalMoleculeName": "9DCF",
+  "caseId": "9DCF",
+  "caseKey": "RMDB2PDB:9DCF",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "9DCF",
+  "profileCount": 6
+}

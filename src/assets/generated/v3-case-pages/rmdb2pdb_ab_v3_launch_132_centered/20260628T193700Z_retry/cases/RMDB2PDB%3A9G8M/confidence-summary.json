@@ -1,0 +1,28 @@
+{
+  "atlasCaseKey": "RMDB2PDB:9G8M",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 40,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:9G8M:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#11417",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 20,
+    "B": 20
+  },
+  "generatedAt": "2026-06-28T21:26:31.631273Z",
+  "materializedEvidenceCount": 40,
+  "pdbId": "9G8M",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 17,
+    "LSS_MODERATE": 2,
+    "LSS_NOT_SUPPORTED": 12,
+    "LSS_STRONG": 1,
+    "LSS_UNDERPOWERED": 4,
+    "LSS_WEAK": 4
+  },
+  "totalEvidenceCount": 40
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:7KD1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:7KD1:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0000.rdat#241",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 1
+  },
+  "generatedAt": "2026-06-28T21:12:52.193227Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "7KD1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 4
+  },
+  "totalEvidenceCount": 4
+}

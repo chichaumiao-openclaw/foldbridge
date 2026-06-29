@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2ZNI",
+  "biologicalMoleculeName": "2ZNI",
+  "caseId": "2ZNI",
+  "caseKey": "RMDB2PDB:2ZNI",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "2ZNI",
+  "profileCount": 2
+}

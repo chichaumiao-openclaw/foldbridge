@@ -1,0 +1,13 @@
+{
+  "case_id": "5GAG",
+  "compression_ratio_raw_over_gzip": 1.643,
+  "format": "float32_le_row_major",
+  "gzip_bytes": 7428,
+  "gzip_path": "profile_shard_000000_f32.bin.gz",
+  "missing_value": "NaN",
+  "profile_count": 27,
+  "raw_bytes": 12204,
+  "raw_path": "profile_shard_000000_f32.bin",
+  "shard_id": "shard_000000",
+  "strand_length": 113
+}

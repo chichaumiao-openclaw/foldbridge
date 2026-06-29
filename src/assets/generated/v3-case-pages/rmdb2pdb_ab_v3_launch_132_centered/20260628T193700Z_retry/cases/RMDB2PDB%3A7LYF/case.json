@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7LYF",
+  "biologicalMoleculeName": "7LYF",
+  "caseId": "7LYF",
+  "caseKey": "RMDB2PDB:7LYF",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "7LYF",
+  "profileCount": 2
+}

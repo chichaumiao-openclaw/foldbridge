@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3KFU",
+  "biologicalMoleculeName": "3KFU",
+  "caseId": "3KFU",
+  "caseKey": "RMDB2PDB:3KFU",
+  "chains": [
+    "N"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "3KFU",
+  "profileCount": 4
+}

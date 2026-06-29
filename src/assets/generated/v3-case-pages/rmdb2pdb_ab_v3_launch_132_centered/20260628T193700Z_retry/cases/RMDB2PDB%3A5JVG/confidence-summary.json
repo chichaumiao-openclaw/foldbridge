@@ -1,0 +1,27 @@
+{
+  "atlasCaseKey": "RMDB2PDB:5JVG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:5JVG:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#23344",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 4
+  },
+  "generatedAt": "2026-06-28T21:19:08.932330Z",
+  "materializedEvidenceCount": 8,
+  "pdbId": "5JVG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 1,
+    "LSS_MODERATE": 1,
+    "LSS_NOT_SUPPORTED": 4,
+    "LSS_STRONG": 1,
+    "LSS_WEAK": 1
+  },
+  "totalEvidenceCount": 8
+}

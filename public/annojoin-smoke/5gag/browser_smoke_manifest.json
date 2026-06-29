@@ -1,0 +1,26 @@
+{
+  "assets": {
+    "browser_entry": "index.html",
+    "case_2d_structure": "assets/case_2d_structure_5gag.json",
+    "legacy_verbose_profiles": "assets/profile_reactivity_5gag_reference_mapped.json",
+    "linked_view_bridges": "assets/linked-view/bridges.json",
+    "linked_view_confidence_summary": "assets/linked-view/confidence-summary.json",
+    "linked_view_interactions": "assets/linked-view/interactions.json",
+    "linked_view_lss_context": "assets/linked-view/lss-context.json",
+    "linked_view_profile_joins": "assets/linked-view/profile-joins.json",
+    "linked_view_raw_alignment_coverage": "assets/linked-view/raw-alignment-coverage.json",
+    "linked_view_residue_index": "assets/linked-view/residue-index.json",
+    "linked_view_structure_contexts": "assets/linked-view/structure-contexts.json",
+    "linked_view_structure_coverage": "assets/linked-view/structure-coverage.json",
+    "profile_index": "assets/profile_index_5gag_reference_mapped.json",
+    "resource_provenance": "assets/resource-provenance.json",
+    "profile_shard_gzip": "assets/profile_shard_000000_f32.bin.gz",
+    "profile_shard_meta": "assets/profile_shard_000000_meta.json",
+    "varna_template_svg": "assets/varna_5gag_strand_1_template.svg"
+  },
+  "case_id": "5GAG",
+  "note": "Browser smoke: DBN/profile index plus compressed Float32 shard; P95 normalization, coloring, SVG layout, and profile switching run in browser JavaScript.",
+  "profile_count": 27,
+  "render_strand_id": "strand_1",
+  "render_strand_length": 113
+}

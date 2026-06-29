@@ -1,0 +1,24 @@
+.DS_Store
+.Rhistory
+
+.bundle/
+.jekyll-cache/
+_site/
+vendor/
+
+node_modules/
+.npm-cache/
+dist/
+
+.worktrees/
+
+*.log
+
+# Generated from the ANNOCONFIDENCE / ANNOJOIN stage package.
+# Rebuild with `npm run build:annojoin-atlas`.
+src/assets/generated/annojoin-atlas/
+
+# Local preview and bridge leftovers not intended for GitHub release.
+.superpowers/
+src/assets/generated/v3-case-pages/
+src/assets/generated/rasp_family_bridge_pages_manifest.js

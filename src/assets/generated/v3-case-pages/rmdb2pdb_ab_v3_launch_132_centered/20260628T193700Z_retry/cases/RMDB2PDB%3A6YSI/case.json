@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6YSI",
+  "biologicalMoleculeName": "6YSI",
+  "caseId": "6YSI",
+  "caseKey": "RMDB2PDB:6YSI",
+  "chains": [
+    "5"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6YSI",
+  "profileCount": 2
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3Q1R",
+  "biologicalMoleculeName": "3Q1R",
+  "caseId": "3Q1R",
+  "caseKey": "RMDB2PDB:3Q1R",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "3Q1R",
+  "profileCount": 14
+}

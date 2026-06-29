@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9OWM",
+  "biologicalMoleculeName": "9OWM",
+  "caseId": "9OWM",
+  "caseKey": "RMDB2PDB:9OWM",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "9OWM",
+  "profileCount": 4
+}

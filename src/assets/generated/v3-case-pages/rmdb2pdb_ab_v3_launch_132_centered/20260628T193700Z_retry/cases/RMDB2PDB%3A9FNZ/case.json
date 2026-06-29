@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9FNZ",
+  "biologicalMoleculeName": "9FNZ",
+  "caseId": "9FNZ",
+  "caseKey": "RMDB2PDB:9FNZ",
+  "chains": [
+    "BA"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "9FNZ",
+  "profileCount": 46
+}

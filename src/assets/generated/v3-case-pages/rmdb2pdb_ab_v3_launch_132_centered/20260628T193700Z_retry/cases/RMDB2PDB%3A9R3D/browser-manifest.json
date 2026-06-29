@@ -1,0 +1,30 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "5": {
+      "case2dPath": "chains/5/case-2d-structure.json.gz",
+      "chainId": "5",
+      "chainRoot": "chains/5",
+      "linkedViewBundlePath": "chains/5/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/5/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/5/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "5",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:9R3D:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFM100_DMS_0000.rdat#20633": "5",
+    "annojoin:RMDB2PDB:9R3D:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFMREP_DMS_0000.rdat#17166": "5",
+    "annojoin:RMDB2PDB:9R3D:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFMREP_DMS_0001.rdat#13326": "5",
+    "annojoin:RMDB2PDB:9R3D:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFMREP_DMS_0001.rdat#13328": "5",
+    "annojoin:RMDB2PDB:9R3D:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RFM100_2A3_0000.rdat#20633": "5",
+    "annojoin:RMDB2PDB:9R3D:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RFMREP_2A3_0000.rdat#17166": "5",
+    "annojoin:RMDB2PDB:9R3D:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RFMREP_2A3_0001.rdat#13326": "5",
+    "annojoin:RMDB2PDB:9R3D:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RFMREP_2A3_0001.rdat#13328": "5"
+  }
+}

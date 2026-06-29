@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8XI2",
+  "biologicalMoleculeName": "8XI2",
+  "caseId": "8XI2",
+  "caseKey": "RMDB2PDB:8XI2",
+  "chains": [
+    "F"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "8XI2",
+  "profileCount": 16
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4PLX",
+  "biologicalMoleculeName": "4PLX",
+  "caseId": "4PLX",
+  "caseKey": "RMDB2PDB:4PLX",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4PLX",
+  "profileCount": 7
+}

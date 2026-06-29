@@ -1,0 +1,157 @@
+{
+  "schema_version": "probing-articles.v1",
+  "slug": "hrf-seq",
+  "title": "HRF-Seq: reading the solvent accessibility of the RNA backbone by hydroxyl-radical sequencing",
+  "date": "",
+  "figure_count": 4,
+  "rep_pmid": "24569351",
+  "rep_pmcid": "PMC4005689",
+  "rep_doi": "10.1093/nar/gku167",
+  "asset_base": "./src/assets/generated/probing-articles/assets/hrf-seq",
+  "blocks": [
+    {
+      "type": "paragraph",
+      "text": "Date: 2026-06-25"
+    },
+    {
+      "type": "paragraph",
+      "text": "If you stare only at that table of sequencing counts, HRF-Seq is easily mistaken for a structure detector that decides \"base by base whether something is paired\". That reading is wrong. The object that HRF-Seq (hydroxyl radical footprinting + sequencing) interprets is the solvent accessibility of the RNA backbone, and the way it reads out accessibility has a very distinctive step: after the hydroxyl radical (•OH) cuts out a radical-induced break, the **reverse transcriptase extends until it stalls at the break (RT-stop)**, and then a **7-nt barcode adapter plus EUC (estimated unique counts)** restores the sequencing counts into a trustworthy probing signal. In other words, what HRF-Seq reports is \"whether a stretch of backbone faces the solvent and therefore makes reverse transcription stall there\", not \"this base must be paired\" or \"must be unpaired\"; a strong signal corresponds to a solvent-exposed backbone, shaped by tertiary-structure folding, and is not the ground truth of base-pairing state."
+    },
+    {
+      "type": "paragraph",
+      "text": "This boundary matters a great deal for FoldBridge. An RT-stop count (even after EUC correction) is in essence a solvent-accessibility event, not a pairing call. FoldBridge can preserve these counts as they are, and can also display the readout from reverse-transcription stalling on the web page; but the moment they are to enter the default structure colouring, the explanatory text or confidence, a more specific question has to be answered first: in the chemical and readout context of \"•OH cleavage + RT-stop + barcode/EUC correction\", can this number count as evidence of backbone solvent accessibility? A raw signal must first pass through its own normalisation context before it is eligible to become a candidate for the default colour or confidence."
+    },
+    {
+      "type": "heading",
+      "text": "The experimental chain: hydroxyl-radical cleavage, reverse-transcription stalling, barcode library construction"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-hrf-seq-f1",
+      "alt": "HRF F1",
+      "srcBasename": "hrfseq_f1__PMC4005689__F1.jpg",
+      "legend": "**Figure 1. The main experimental steps of HRF-Seq.** Kielpinski et al. 2014 (PMID 24569351, DOI `10.1093/nar/gku167`) break the HRF-Seq experimental chain apart in this figure: the RNA is first probed with hydroxyl radical; a primer carrying a 5′ Illumina adapter overhang is extended by reverse transcriptase and stops at the position of the radical-induced break; an adapter carrying a 7-nt barcode is ligated to the 3′ end of the cDNA, followed by PCR amplification with primers carrying Illumina-compatible adapters and index sequences; after fragment size selection, sequencing is carried out with the Illumina paired-end protocol, thereby giving information on both the probing site and the priming site simultaneously.",
+      "body": [
+        "In reading this flow chart, the single most important point to remember is this: the HRF-Seq signal comes from \"reverse transcription stalling at a break\", so what it measures is the solvent accessibility of the backbone (hydroxyl radical footprinting), not the base-pairing state itself. A stretch with many breaks and many RT-stops indicates that this stretch of backbone is exposed to the solvent; few stalls, or no readable signal at all, may come from the backbone being wrapped up by tertiary-structure folding, being buried, or being shielded by a protein or ligand.",
+        "For FoldBridge, this means that the values in the final table are not \"structural labels\" handed out directly by •OH, but observables that arise after cleavage, reverse-transcription stalling, barcode ligation, PCR, sequencing and normalisation. This observable is very useful, but what it reports is solvent exposure, and it needs to be interpreted within the chemical context of HRF-Seq before structure can be discussed."
+      ],
+      "label": "HRF F1",
+      "pmid": "24569351",
+      "pmcid": "PMC4005689",
+      "doi": "10.1093/nar/gku167",
+      "figureId": "F1",
+      "legendText": "Major experimental steps of the HRF-Seq method. Following hydroxyl radical probing, primers containing a 5′ illumina adaptor overhang are extended by reverse transcriptase to positions of radical induced breaks. Adapters containing a 7-nt barcode are ligated to the 3′-ends of cDNAs, followed by PCR amplification with primers containing Illumina compatible adaptor and index sequences. After size selection, the library is sequenced with the Illumina paired-end protocol to provide information of the positions of probing and priming."
+    },
+    {
+      "type": "heading",
+      "text": "Barcode and EUC: restoring sequencing counts into a trustworthy probing signal"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-hrf-seq-f2",
+      "alt": "HRF F2",
+      "srcBasename": "hrfseq_f2__PMC4005689__F2.jpg",
+      "legend": "**Figure 2. Estimating unique counts with barcodes.** Kielpinski et al. 2014 (PMID 24569351, DOI `10.1093/nar/gku167`) organise the legend into several parts: (A) a histogram of the barcode frequency distribution observed in a hydroxyl-radical-treated RNase P experiment, with a vertical dashed line marking the frequency expected if \"all barcodes appeared at equal frequency\"; (B) a comparison of the observed barcode counts against counts simulated under an equal-frequency assumption and under an unequal-frequency assumption estimated by the authors' strategy; (C)(D) the relationship between the observed number of unique barcodes and the EUC (estimated unique counts) under different barcode normalisation strategies, shown for the RNase P and 16S rRNA experiments respectively, with a vertical line marking the highest count observed in the experiment; (E)(F) the length-dependent bias of fragments in the RNase P specificity domain and in 16S rRNA probing respectively.",
+      "body": [
+        "This figure puts an easily overlooked safeguard on the table: the raw read counts obtained from sequencing do not directly equal the probing signal. PCR amplification causes some fragments to be counted repeatedly, barcodes do not appear at equal frequency in the library either, and fragment length introduces a further systematic bias. If these effects are not first corrected into EUC before one talks about \"how many times a site was cut\", the artefacts of amplification and library construction would be mistaken for backbone accessibility.",
+        "For FoldBridge, this is precisely the concrete source of \"a raw observation must first pass through the readout context\". The cleavage count at the same site does not mean the same thing before and after correction. Treating a value that has not been barcode-normalised, and not annotated for length-bias handling, directly as the ground truth of backbone accessibility conflates library-construction parameters with structural interpretation."
+      ],
+      "label": "HRF F2",
+      "pmid": "24569351",
+      "pmcid": "PMC4005689",
+      "doi": "10.1093/nar/gku167",
+      "figureId": "F2",
+      "legendText": "Using barcodes to estimate unique counts. ( A ) Observed barcode frequencies. Histogram showing the distribution of observed barcode frequencies in the hydroxyl radical treated RNase P experiment. The broken vertical line indicates the barcode frequency if all barcodes were present at equal frequencies. ( B ) Estimation of barcode counts. The plot compares the observed barcode counts with simulated barcode counts as estimated by assuming equal barcode frequencies or the unequal barcode frequencies as estimated by our strategy. Data is from the hydroxyl radical treated RNase P experiment. ( C ) Relationship between the number of observed unique barcodes and EUC for different types of barcode normalization strategies for the hydroxyl radical treated RNAse P experiment. The vertical line shows the highest count observed in the experiment. ( D ) Relationship between the number of observed unique barcodes and EUC for different types of barcode-normalization strategies for the hydroxyl radical-treated 16S rRNA. The vertical line shows the highest count observed in the experiment. ( E ) Length dependent bias of fragments in the probing of the RNAse P specificity domain RNA. ( F ) Length dependent bias of fragments in the probing of the 16S rRNA."
+    },
+    {
+      "type": "heading",
+      "text": "Mapping the signal onto ribose accessibility: a strong signal corresponds to a solvent-exposed backbone"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-hrf-seq-f3",
+      "alt": "HRF F3",
+      "srcBasename": "hrfseq_f3__PMC4005689__F3.jpg",
+      "legend": "**Figure 3. HRF-Seq analysis of the RNase P RNA specificity domain.** Kielpinski et al. 2014 (PMID 24569351, DOI `10.1093/nar/gku167`) divide the legend into several parts: (A) the termination signal of the HRF-treated sample, obtained by summing the EUC of fragments terminating at a given position; (B) the coverage of the HRF-treated sample; (C) the normalised HRF-Seq signal, calculated from a 3-nt moving average of the treated sample's termination coverage ratio, with the corresponding values of the control sample subtracted; (D) the correlation between the normalised HRF-Seq signal and the ribose accessibility in a published crystal structure (using a 1.4 Å probe and a 3-nt moving average); (E) the correlation between the normalised HRF-Seq signal and the number of through-space contacts of the ribose in the crystal structure, with the R value computed by Pearson correlation; (F) the normalised HRF-Seq signal painted onto the crystal structure of the RNase P RNA specificity domain, with grey indicating no data.",
+      "body": [
+        "This figure places the value of HRF-Seq in the right position: when the normalised signal is compared against the ribose accessibility in the crystal structure, as well as the number of spatial contacts of the ribose, the correlation confirms that what the HRF-Seq signal reads out is precisely the solvent accessibility of the backbone/ribose; mapping the signal back onto the three-dimensional structural surface also makes the \"signal-accessibility\" correspondence visible.",
+        "But this is exactly the place most prone to misreading. The strong signal of HRF-Seq corresponds to a solvent-exposed backbone, not simply to \"unpaired\". A stretch of backbone can sit in a paired helix yet still face the solvent and make reverse transcription stall there very often; it can equally be single-stranded yet wrapped up inside by tertiary-structure folding, so that almost no RT-stop is readable. In the figure, the more through-space contacts a ribose has, the more buried it is and the weaker the signal, which is exactly what shows that tertiary structure shapes this signal. For FoldBridge, translating a high HRF-Seq signal directly into \"unpaired here\" amounts to skipping the very layer it actually measures: the backbone faces the solvent, and reverse transcription stalls as a result."
+      ],
+      "label": "HRF F3",
+      "pmid": "24569351",
+      "pmcid": "PMC4005689",
+      "doi": "10.1093/nar/gku167",
+      "figureId": "F3",
+      "legendText": "HRF-Seq analysis of RNase P RNA specificity domain. ( A ) Termination signal for HRF-treated sample calculated as the sum of EUC for fragments terminating at a given position. ( B ) Coverage for HRF treated sample. ( C ) Normalized HRF-Seq signal calculated as the 3-nt moving average of the termination coverage ratio for the HRF-treated sample with the termination coverage ratio for the control sample subtracted. ( D ) Correlation between the normalized HRF-Seq signal and a 3-nt moving average of ribose accessibility from the published crystal structure ( 26 ) using a 1.4Å probe. ( E ) Correlation between the normalized HRF-Seq signal the number of ribose through-space contacts from the published crystal structure ( 26 ). R values are calculated using the Pearson correlation. ( F ) Normalized HRF-Seq signal displayed on the crystal structure of the RNase P RNA specificity domain ( 26 ), gray indicates no data."
+    },
+    {
+      "type": "heading",
+      "text": "A full-chain readout on 16S rRNA: from fragments to ribose accessibility"
+    },
+    {
+      "type": "figure",
+      "anchor": "paper-figure-hrf-seq-f4",
+      "alt": "HRF F4",
+      "srcBasename": "hrfseq_f4__PMC4005689__F4.jpg",
+      "legend": "**Figure 4. HRF-Seq analysis of E. coli 16S rRNA.** Kielpinski et al. 2014 (PMID 24569351, DOI `10.1093/nar/gku167`) divide the legend into several parts: (A) the sequenced fragments (EUC) of the treated sample (left) and the control sample (right) mapped onto the 16S rRNA sequence, with the left end of each fragment corresponding to the reverse-transcription termination site and the right end to the priming site; (B) the summed EUC termination signal at each position for the treated and control samples; (C) the EUC-based coverage of the treated and control samples; (D) the TCR (termination coverage ratio) obtained by dividing the termination signal by coverage; (E) the upper red curve is the normalised HRF-Seq signal, obtained by subtracting the control sample's TCR from the treated sample's TCR and taking a 3-nt moving average, while the lower blue curve is the ribose accessibility computed from the crystal structure (using a 3 Å radius probe and a 3-nt moving average), with R computed by Pearson correlation.",
+      "body": [
+        "This figure places the complete HRF-Seq analysis chain on a larger RNA: from raw fragments, to the termination signal, coverage and TCR, then to the normalised signal after subtracting the control and smoothing, and finally aligned with the ribose accessibility of the crystal structure. It shows that this readout holds equally well on a large molecule such as 16S rRNA — the normalised signal correlates with the solvent accessibility inferred from the structure.",
+        "This also serves as a reminder: HRF-Seq and other methods of the same solvent-accessibility family (for instance RL-Seq, another form of hydroxyl radical footprinting) measure the same kind of physical quantity, but the probe radius, the smoothing window, the normalisation and the definition of the reference SASA may all differ. Even if two signals both point to \"solvent accessible\", treating them as equivalent evidence without distinction is not safe; cross-validation is still needed between accessibility methods of the same family. For FoldBridge the conclusion is direct: even if an HRF-Seq signal and an RL-Seq signal both report backbone exposure, they should not be stuffed into the same confidence channel in a way that erases their respective contexts."
+      ],
+      "label": "HRF F4",
+      "pmid": "24569351",
+      "pmcid": "PMC4005689",
+      "doi": "10.1093/nar/gku167",
+      "figureId": "F4",
+      "legendText": "HRF-Seq analysis of E. coli 16S rRNA. ( A ) Sequenced fragments (EUC) from the treated (left) and control (right) sample mapped to 16S rRNA sequence. Left terminus of each fragment corresponds to the reverse transcription termination site and the right terminus to the priming site. ( B ) Sum of EUC termination signal at each position for HRF-treated and control sample. ( C ) EUC-based coverage for HRF-treated and control sample. ( D ) TCR calculated by dividing the termination signal with the coverage for the treated and control samples. ( E ) Top graph (red) shows normalized HRF-Seq signal calculated by subtracting TCR for the control sample from the TCR obtained from the treated sample and taking the 3-nt moving average. Bottom graph (blue) shows the area of ribose accessibility calculated from the crystal structure ( 27 ) as the 3-nt moving average of the accessibility to a probe with 3Å radius. R calculated using the Pearson correlation."
+    },
+    {
+      "type": "heading",
+      "text": "How FoldBridge should write about HRF-Seq"
+    },
+    {
+      "type": "paragraph",
+      "text": "The core rule for HRF-Seq within FoldBridge is to treat the hydroxyl-radical solvent-accessibility signal as evidence of backbone accessibility, not as a pairing call. The raw counts are first of all provenance: they record how many times, under a given probing and library-construction condition, a given backbone site was cut by •OH and read by reverse transcription. Only when this signal has passed through barcode/EUC normalisation, and can be interpreted within the chemical context of HRF-Seq (backbone solvent exposure, not base pairing) and within the readout/mapping context, does it enter the default visualisation and confidence."
+    },
+    {
+      "type": "paragraph",
+      "text": "The key to this boundary is to separate \"reverse transcription stalled here\" from \"the base is unpaired\". Solvent accessible does not equal unpaired: both tertiary structure and burial can make the accessibility of a stretch of backbone deviate from its secondary-structure state. The outer face of a paired helix can be highly exposed with many RT-stops, while a single-stranded stretch can be buried by folding and leave almost no stall signal. What HRF-Seq reads via RT-stop is \"whether this stretch of backbone faces the solvent\", not \"whether these bases are paired\"."
+    },
+    {
+      "type": "paragraph",
+      "text": "FoldBridge therefore needs the concept of a gate, rather than a piece of rule code written out of thin air. The responsibility of this gate is, before sending a raw value into the default structure colouring or confidence, to first confirm that it has undergone barcode/EUC and length-bias correction (the kind of readout context shown in Figure 2), to confirm that it has been reliably mapped to structural coordinates, and to confirm that it is interpreted as backbone solvent accessibility rather than pairing. Only signals that pass the gate enter the default visual track and the confidence candidates; those that do not are kept as raw provenance, debugging information or download-table fields."
+    },
+    {
+      "type": "paragraph",
+      "text": "This does not weaken HRF-Seq; on the contrary, it respects its strengths. HRF-Seq is highly sensitive to backbone solvent accessibility, and barcode/EUC correction lets it restore sequencing counts into a trustworthy signal that correlates with the ribose accessibility of the crystal structure; the error occurs only at the moment this strength is expanded into \"a high signal equals unpaired\". So for non-specialist readers, the most robust statement is \"HRF-Seq turns the degree of backbone solvent exposure, via reverse-transcription stalling and EUC correction, into a sequencing-readable accessibility clue\". Spelt out as a full sentence: in the HRF-Seq assay, this backbone site shows a relatively high solvent-accessibility signal; only if the probing/library-construction conditions, the barcode/EUC correction, the mapping, the coverage and the context all pass inspection can this signal serve as support for structural interpretation. It is more long-winded than \"a high signal equals unpaired\", but it is scientifically more robust, and better suited to being deposited into FoldBridge's long-term knowledge base."
+    },
+    {
+      "type": "heading",
+      "text": "A real case (illustrative)"
+    },
+    {
+      "type": "paragraph",
+      "text": "There is no real FoldBridge accession here, so the following is a clearly labelled illustrative scenario, used to explain how the same HRF-Seq profile splits into three different layers."
+    },
+    {
+      "type": "paragraph",
+      "text": "Imagine an HRF-Seq profile flowing through FoldBridge's three layers. The first layer is the raw observation: the fragment counts where a stretch of 16S rRNA backbone, under controlled probing conditions, was cut out into a break by •OH and read by reverse-transcription stalling at the break, preserved together with the provenance of the 7-nt barcode, the EUC correction and the paired-end sequencing. This layer only answers \"what was recorded in the raw data\", and does not draw conclusions on the reader's behalf."
+    },
+    {
+      "type": "paragraph",
+      "text": "The second layer is the visual signal: only after these counts have undergone barcode/EUC and length-bias correction, have been reliably mapped to structural coordinates, and have been interpreted as backbone solvent accessibility, do they enter the default structure colouring. The colour the reader sees should answer \"within the interpretive boundary of HRF-Seq, what readable accessibility clue does this backbone site carry\", not \"whether this base is paired\". Sites whose EUC correction is incomplete, or that have not yet been mapped to reliable coordinates, should not be mixed into this layer pretending to be the same kind of evidence."
+    },
+    {
+      "type": "paragraph",
+      "text": "The third layer is the confidence candidate: only an accessibility signal that has passed the readout-correction, mapping and context checks can possibly enter confidence. Even for the same profile, its raw counts, visualisation colour and confidence are not the same thing; nor should an HRF-Seq signal and a same-family method (such as the ligation-captured signal of RL-Seq) be treated as equivalent evidence merely because they belong to the same accessibility family."
+    },
+    {
+      "type": "paragraph",
+      "text": "What walking through this illustrative profile is really meant to show is HRF-Seq's own system behaviour: the EUC-corrected RT-stop counts, the coloured visualisation, and the final confidence are three different things that must be kept apart. If an HRF-Seq explainer article muddles these three layers together, the easiest mistake a reader can make is to silently read \"reverse transcription stalled here, indicating the backbone faces the solvent\" as \"unpaired here\"."
+    },
+    {
+      "type": "paragraph",
+      "text": "So the correct ending for an HRF-Seq article is not \"a high signal proves the base is unpaired\", but rather: HRF-Seq data can provide strong backbone solvent-accessibility clues for RNA structure interpretation; within FoldBridge, such clues become part of structural interpretation and confidence only after they have first been interpreted as accessibility (not pairing) and have passed the subsequent gates."
+    }
+  ]
+}

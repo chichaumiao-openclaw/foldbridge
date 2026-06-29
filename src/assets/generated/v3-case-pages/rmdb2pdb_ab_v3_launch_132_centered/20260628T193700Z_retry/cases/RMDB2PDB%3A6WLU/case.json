@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6WLU",
+  "biologicalMoleculeName": "6WLU",
+  "caseId": "6WLU",
+  "caseKey": "RMDB2PDB:6WLU",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "6WLU",
+  "profileCount": 10
+}

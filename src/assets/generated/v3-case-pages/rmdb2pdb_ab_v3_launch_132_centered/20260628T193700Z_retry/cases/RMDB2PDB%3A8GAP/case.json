@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8GAP",
+  "biologicalMoleculeName": "8GAP",
+  "caseId": "8GAP",
+  "caseKey": "RMDB2PDB:8GAP",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8GAP",
+  "profileCount": 3
+}

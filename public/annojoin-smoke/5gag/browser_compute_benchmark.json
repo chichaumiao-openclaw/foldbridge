@@ -1,0 +1,41 @@
+{
+  "case_id": "5GAG",
+  "strands": [
+    {
+      "strand_id": "strand_1",
+      "length": 113,
+      "pair_count": 13
+    },
+    {
+      "strand_id": "strand_2",
+      "length": 3,
+      "pair_count": 0
+    },
+    {
+      "strand_id": "strand_A",
+      "length": 2903,
+      "pair_count": 804
+    },
+    {
+      "strand_id": "strand_B",
+      "length": 120,
+      "pair_count": 36
+    }
+  ],
+  "profile_count": 27,
+  "shard_raw_bytes": 12204,
+  "shard_gzip_bytes": 7428,
+  "shard_decode_ms": 0.504,
+  "first_profile": {
+    "pair_id": "5GAG:sequence_000008",
+    "cap": 9.54800009727478,
+    "mappedCount": 113,
+    "whiteCount": 57,
+    "positiveCount": 56,
+    "cappedCount": 3,
+    "unmappedCount": 3
+  },
+  "total_ms": 2.989,
+  "mean_ms_per_profile": 0.111,
+  "generated_svg_bytes": 384507
+}

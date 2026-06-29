@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5JPQ",
+  "biologicalMoleculeName": "5JPQ",
+  "caseId": "5JPQ",
+  "caseKey": "RMDB2PDB:5JPQ",
+  "chains": [
+    "3"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "5JPQ",
+  "profileCount": 26
+}

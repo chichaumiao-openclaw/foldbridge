@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3P22",
+  "biologicalMoleculeName": "3P22",
+  "caseId": "3P22",
+  "caseKey": "RMDB2PDB:3P22",
+  "chains": [
+    "G"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "3P22",
+  "profileCount": 2
+}

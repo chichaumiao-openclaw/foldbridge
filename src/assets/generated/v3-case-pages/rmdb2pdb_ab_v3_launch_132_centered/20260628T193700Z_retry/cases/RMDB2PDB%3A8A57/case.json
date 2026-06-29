@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8A57",
+  "biologicalMoleculeName": "8A57",
+  "caseId": "8A57",
+  "caseKey": "RMDB2PDB:8A57",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "8A57",
+  "profileCount": 28
+}

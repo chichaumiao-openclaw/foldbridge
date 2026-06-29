@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3SUX",
+  "biologicalMoleculeName": "3SUX",
+  "caseId": "3SUX",
+  "caseKey": "RMDB2PDB:3SUX",
+  "chains": [
+    "X"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3SUX",
+  "profileCount": 3
+}

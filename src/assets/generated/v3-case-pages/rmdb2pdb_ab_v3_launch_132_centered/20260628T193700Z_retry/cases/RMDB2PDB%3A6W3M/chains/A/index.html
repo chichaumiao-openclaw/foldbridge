@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>6W3M chain A</title>
+  <link rel="stylesheet" href="../../../../__family_d_site__/workbench.css">
+</head>
+<body>
+  <main class="workbench-shell">
+    <header>
+      <div>
+        <h1>6W3M chain A</h1>
+        <div class="sub">1D residue tracks, 2D chain layout, 3D chain locus bridge, and residue inspector.</div>
+      </div>
+      <div class="sub" id="assetStatus">loading assets...</div>
+    </header>
+
+    <section class="controls">
+      <div>
+        <label>
+          Profile
+          <select id="profileSelect"></select>
+        </label>
+        <div class="profile-meta" id="profileMeta">
+          <b>Pair</b><span id="profilePair">loading</span>
+          <b>Profile</b><span id="profileId">loading</span>
+        </div>
+      </div>
+      <label>
+        Viewport
+        <div class="viewport-controls">
+          <button id="zoom-out" type="button" title="Zoom out" aria-label="Zoom out">-</button>
+          <button id="zoom-in" type="button" title="Zoom in" aria-label="Zoom in">+</button>
+          <button id="pan-left" type="button" title="Pan left" aria-label="Pan left">&lt;</button>
+          <button id="pan-right" type="button" title="Pan right" aria-label="Pan right">&gt;</button>
+          <button id="reset-view" type="button" title="Reset viewport" aria-label="Reset viewport">1:1</button>
+          <span class="viewport-status" id="viewportStatus">pending</span>
+        </div>
+      </label>
+    </section>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="panel track-panel">
+      <div class="panel-head">
+        <h2>1D residue tracks</h2>
+        <span id="trackStatus">viewport pending</span>
+      </div>
+      <section class="track-viewport" id="track-viewport" aria-label="1D linked residue tracks"></section>
+    </section>
+
+    <section class="view-grid">
+      <section class="panel">
+        <div class="panel-head">
+          <h2>2D VARNA layout</h2>
+          <nav class="tabs" aria-label="2D view mode">
+            <button class="tab active" data-view="varna" type="button">VARNA stem-loop</button>
+            <button class="tab" data-view="linear-debug" type="button">Linear / debug</button>
+          </nav>
+        </div>
+        <section class="viewer varna-frame" id="varnaViewer">
+          <div class="varna-viewport" id="varnaViewport"></div>
+        </section>
+        <section class="viewer linear-viewer" id="linearViewer" hidden></section>
+        <div class="legend">
+          <span class="swatch-empty"></span><span>missing / unmapped / NaN / value &lt;= 0</span>
+          <span class="swatch-gradient"></span><span>positive values, P95-capped 0-1 normalization</span>
+        </div>
+        <div class="view-caption" id="viewCaption"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <h2>3D Mol* instances</h2>
+          <span id="molstar-selection-status">selection: none</span>
+        </div>
+        <section class="view3d-body">
+          <div id="molstar-status" class="sub">waiting for structure asset</div>
+          <div class="molstar-split">
+            <div class="molstar-view">
+              <div class="molstar-label">Target chain alignment crop</div>
+              <div id="molstar-host" class="molstar-host" data-molstar-host></div>
+            </div>
+            <div class="molstar-view">
+              <div class="molstar-label">Full CIF reference</div>
+              <div id="molstar-full-host" class="molstar-host" data-molstar-host="full-cif"></div>
+            </div>
+          </div>
+          <div id="molstarMeta" class="molstar-meta"></div>
+          <div id="molstarFullMeta" class="molstar-meta"></div>
+        </section>
+      </section>
+    </section>
+
+    <section class="panel inspector-panel">
+      <div class="panel-head">
+        <h2>Residue inspector</h2>
+        <span id="inspectorStatus">no residue selected</span>
+      </div>
+      <section class="linked-inspector" id="linked-inspector"></section>
+    </section>
+
+    <details class="debug-panel">
+      <summary>Debug and performance details</summary>
+      <div class="debug-actions">
+        <button id="benchmarkButton" type="button">Run profile benchmark</button>
+      </div>
+      <pre id="log"></pre>
+    </details>
+  </main>
+  <div class="tip" id="tip"></div>
+  <script>window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ = {"caseId": "6W3M", "chainId": "A", "caseUrl": "./case-2d-structure.json.gz", "profileIndexUrl": "./profiles/profile-index.json.gz", "varnaTemplateUrl": "./varna-template.svg.gz", "sourceStructureUrl": "../../structure.cif.gz", "linkedViewBundleUrl": "./linked-view/linked-view.json.gz"};</script>
+  <script type="module" src="../../../../__family_d_site__/workbench.js"></script>
+</body>
+</html>
