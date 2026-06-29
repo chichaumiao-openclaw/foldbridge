@@ -277,7 +277,8 @@ async function buildOne(slug, genDir) {
     figure_count: figureBlocks.length,
     section_count: parsed.blocks.filter((b) => b.type === 'heading').length,
     rep_pmid: repFig.pmid || '',
-    rep_doi: repFig.doi || ''
+    rep_doi: repFig.doi || '',
+    rep_figure: repFig.srcBasename || ''
   };
 }
 
@@ -316,6 +317,17 @@ async function main() {
   }
 
   const cardBySlug = new Map(cards.map((c) => [c.slug, c]));
+
+  // slug → 家族标题反查（FAMILY_ORDER 已把 slug 分到 6 个家族）。
+  // buildOne 不知道家族归属，在这里统一回填，供主页轮播渲染家族徽标。
+  const familyTitleBySlug = new Map();
+  for (const fam of FAMILY_ORDER) {
+    for (const s of fam.slugs) familyTitleBySlug.set(s, fam.title);
+  }
+  for (const card of cards) {
+    card.family_title = familyTitleBySlug.get(card.slug) || '';
+  }
+
   const families = FAMILY_ORDER.map((fam) => ({
     id: fam.id,
     title: fam.title,

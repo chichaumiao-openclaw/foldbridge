@@ -1,6 +1,6 @@
 {
   "schema_version": "probing-articles.v1",
-  "generated_at_utc": "2026-06-28T04:44:37.352Z",
+  "generated_at_utc": "2026-06-29T01:50:37.830Z",
   "article_count": 27,
   "family_count": 6,
   "families": [
@@ -17,7 +17,9 @@
           "figure_count": 4,
           "section_count": 5,
           "rep_pmid": "17948004",
-          "rep_doi": "10.1038/nprot.2007.380"
+          "rep_doi": "10.1038/nprot.2007.380",
+          "rep_figure": "tijerina2007_f1__PMC2701642__F1.jpg",
+          "family_title": "DMS chemical probing"
         },
         {
           "slug": "dms-seq",
@@ -27,7 +29,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "24336214",
-          "rep_doi": "10.1038/nature12894"
+          "rep_doi": "10.1038/nature12894",
+          "rep_figure": "dmsseq_f1__PMC3966492__F1.jpg",
+          "family_title": "DMS chemical probing"
         },
         {
           "slug": "mod-seq",
@@ -37,7 +41,9 @@
           "figure_count": 3,
           "section_count": 5,
           "rep_pmid": "24664469",
-          "rep_doi": "10.1261/rna.042218.113"
+          "rep_doi": "10.1261/rna.042218.113",
+          "rep_figure": "modseq_f1__PMC3988572__F1.jpg",
+          "family_title": "DMS chemical probing"
         },
         {
           "slug": "structure-seq",
@@ -47,7 +53,9 @@
           "figure_count": 3,
           "section_count": 5,
           "rep_pmid": "24270811",
-          "rep_doi": "10.1038/nature12756"
+          "rep_doi": "10.1038/nature12756",
+          "rep_figure": "structureseq_f2__F2.webp",
+          "family_title": "DMS chemical probing"
         },
         {
           "slug": "structure-seq2",
@@ -57,7 +65,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "28637286",
-          "rep_doi": "10.1093/nar/gkx533"
+          "rep_doi": "10.1093/nar/gkx533",
+          "rep_figure": "structureseq2_f1__PMC5737731__F1.jpg",
+          "family_title": "DMS chemical probing"
         },
         {
           "slug": "dim-2p-seq",
@@ -67,7 +77,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "28525757",
-          "rep_doi": "10.1016/j.cell.2017.04.036"
+          "rep_doi": "10.1016/j.cell.2017.04.036",
+          "rep_figure": "dim2pseq_f1__PMC5546744__F1.jpg",
+          "family_title": "DMS chemical probing"
         }
       ]
     },
@@ -84,7 +96,9 @@
           "figure_count": 9,
           "section_count": 5,
           "rep_pmid": "",
-          "rep_doi": "10.1021/ja043822v"
+          "rep_doi": "10.1021/ja043822v",
+          "rep_figure": "shapereagents_nmia_f1__10_1021_ja043822v__F1.gif",
+          "family_title": "SHAPE 2′-OH acylation"
         },
         {
           "slug": "shape-map",
@@ -94,7 +108,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "25028896",
-          "rep_doi": "10.1038/nmeth.3029"
+          "rep_doi": "10.1038/nmeth.3029",
+          "rep_figure": "shapemap_f1__PMC4259394__F1.jpg",
+          "family_title": "SHAPE 2′-OH acylation"
         },
         {
           "slug": "shape-2a3",
@@ -104,7 +120,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "33398343",
-          "rep_doi": "10.1093/nar/gkaa1255"
+          "rep_doi": "10.1093/nar/gkaa1255",
+          "rep_figure": "shape2a3_f1__PMC8034653__F1.jpg",
+          "family_title": "SHAPE 2′-OH acylation"
         },
         {
           "slug": "nai-map",
@@ -114,7 +132,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "30926818",
-          "rep_doi": "10.1038/s41467-019-09391-8"
+          "rep_doi": "10.1038/s41467-019-09391-8",
+          "rep_figure": "naimap_f1__PMC6441010__F1.jpg",
+          "family_title": "SHAPE 2′-OH acylation"
         },
         {
           "slug": "smartshape",
@@ -124,7 +144,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "38933905",
-          "rep_doi": "10.1016/j.fmre.2021.12.007"
+          "rep_doi": "10.1016/j.fmre.2021.12.007",
+          "rep_figure": "smartshape_f1__PMC11197792__F1.jpg",
+          "family_title": "SHAPE 2′-OH acylation"
         },
         {
           "slug": "chemmodseq",
@@ -134,7 +156,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "25200078",
-          "rep_doi": "10.1093/nar/gku815"
+          "rep_doi": "10.1093/nar/gku815",
+          "rep_figure": "chemmodseq_f1__PMC4231735__F1.jpg",
+          "family_title": "SHAPE 2′-OH acylation"
         }
       ]
     },
@@ -151,7 +175,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "25799993",
-          "rep_doi": "10.1038/nature14263"
+          "rep_doi": "10.1038/nature14263",
+          "rep_figure": "spitale2015_f1__F1.jpg",
+          "family_title": "In-cell / co-transcriptional SHAPE"
         },
         {
           "slug": "icshape-map",
@@ -161,7 +187,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "34099665",
-          "rep_doi": "10.1038/s41467-021-23607-w"
+          "rep_doi": "10.1038/s41467-021-23607-w",
+          "rep_figure": "icshapemap_f1__PMC8184798__F1.jpg",
+          "family_title": "In-cell / co-transcriptional SHAPE"
         },
         {
           "slug": "nuc-shape-structure-seq",
@@ -171,7 +199,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "33397430",
-          "rep_doi": "10.1186/s13059-020-02236-4"
+          "rep_doi": "10.1186/s13059-020-02236-4",
+          "rep_figure": "nucshapestructureseq_f1__PMC7784297__F1.jpg",
+          "family_title": "In-cell / co-transcriptional SHAPE"
         },
         {
           "slug": "cotranscriptional-shape-seq",
@@ -181,7 +211,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "27798597",
-          "rep_doi": "10.1038/nsmb.3316"
+          "rep_doi": "10.1038/nsmb.3316",
+          "rep_figure": "cotranscriptionalshapeseq_f1__PMC5497173__F1.jpg",
+          "family_title": "In-cell / co-transcriptional SHAPE"
         },
         {
           "slug": "iclaser",
@@ -191,7 +223,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "34634799",
-          "rep_doi": "10.1093/nar/gkab885"
+          "rep_doi": "10.1093/nar/gkab885",
+          "rep_figure": "iclaser_f1__F1.jpg",
+          "family_title": "In-cell / co-transcriptional SHAPE"
         }
       ]
     },
@@ -208,7 +242,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "24569351",
-          "rep_doi": "10.1093/nar/gku167"
+          "rep_doi": "10.1093/nar/gku167",
+          "rep_figure": "hrfseq_f1__PMC4005689__F1.jpg",
+          "family_title": "Hydroxyl-radical / nuclease footprinting"
         },
         {
           "slug": "rl-seq",
@@ -218,7 +254,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "36369947",
-          "rep_doi": "10.1080/15476286.2022.2145098"
+          "rep_doi": "10.1080/15476286.2022.2145098",
+          "rep_figure": "rlseq_f2__F2.jpg",
+          "family_title": "Hydroxyl-radical / nuclease footprinting"
         },
         {
           "slug": "pars",
@@ -228,7 +266,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "20811459",
-          "rep_doi": "10.1038/nature09322"
+          "rep_doi": "10.1038/nature09322",
+          "rep_figure": "pars_f1__PMC3847670__F1.jpg",
+          "family_title": "Hydroxyl-radical / nuclease footprinting"
         },
         {
           "slug": "parte",
@@ -238,7 +278,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "22981864",
-          "rep_doi": "10.1016/j.molcel.2012.08.008"
+          "rep_doi": "10.1016/j.molcel.2012.08.008",
+          "rep_figure": "parte_f1__PMC3483374__F1.jpg",
+          "family_title": "Hydroxyl-radical / nuclease footprinting"
         },
         {
           "slug": "lead-seq",
@@ -248,7 +290,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "32463449",
-          "rep_doi": "10.1093/nar/gkaa404"
+          "rep_doi": "10.1093/nar/gkaa404",
+          "rep_figure": "leadseq_f1__PMC7337928__F1.jpg",
+          "family_title": "Hydroxyl-radical / nuclease footprinting"
         }
       ]
     },
@@ -265,7 +309,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "30389828",
-          "rep_doi": "10.1261/rna.067561.118"
+          "rep_doi": "10.1261/rna.067561.118",
+          "rep_figure": "cmccmct_f1__PMC6298570__F1.jpg",
+          "family_title": "Carbodiimide & specialty chemistry"
         },
         {
           "slug": "keth-seq",
@@ -275,7 +321,9 @@
           "figure_count": 2,
           "section_count": 4,
           "rep_pmid": "32015521",
-          "rep_doi": "10.1038/s41589-019-0459-3"
+          "rep_doi": "10.1038/s41589-019-0459-3",
+          "rep_figure": "kethseq_f1__PMC7182492__F1.jpg",
+          "family_title": "Carbodiimide & specialty chemistry"
         },
         {
           "slug": "tnet-mapseq",
@@ -285,7 +333,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "33631106",
-          "rep_doi": "10.1016/j.molcel.2021.01.040"
+          "rep_doi": "10.1016/j.molcel.2021.01.040",
+          "rep_figure": "tnetmapseq_f1__PMC8052309__F1.jpg",
+          "family_title": "Carbodiimide & specialty chemistry"
         }
       ]
     },
@@ -302,7 +352,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "22109276",
-          "rep_doi": "10.1038/nchem.1176"
+          "rep_doi": "10.1038/nchem.1176",
+          "rep_figure": "mutateandmap_f1__PMC3725140__F1.jpg",
+          "family_title": "Mutational / proximity inference"
         },
         {
           "slug": "mca",
@@ -312,7 +364,9 @@
           "figure_count": 4,
           "section_count": 6,
           "rep_pmid": "26035425",
-          "rep_doi": "10.7554/eLife.07600"
+          "rep_doi": "10.7554/eLife.07600",
+          "rep_figure": "mca_f1__PMC4495719__F1.jpg",
+          "family_title": "Mutational / proximity inference"
         }
       ]
     }
@@ -326,7 +380,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "25200078",
-      "rep_doi": "10.1093/nar/gku815"
+      "rep_doi": "10.1093/nar/gku815",
+      "rep_figure": "chemmodseq_f1__PMC4231735__F1.jpg",
+      "family_title": "SHAPE 2′-OH acylation"
     },
     {
       "slug": "cmc-cmct",
@@ -336,7 +392,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "30389828",
-      "rep_doi": "10.1261/rna.067561.118"
+      "rep_doi": "10.1261/rna.067561.118",
+      "rep_figure": "cmccmct_f1__PMC6298570__F1.jpg",
+      "family_title": "Carbodiimide & specialty chemistry"
     },
     {
       "slug": "cotranscriptional-shape-seq",
@@ -346,7 +404,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "27798597",
-      "rep_doi": "10.1038/nsmb.3316"
+      "rep_doi": "10.1038/nsmb.3316",
+      "rep_figure": "cotranscriptionalshapeseq_f1__PMC5497173__F1.jpg",
+      "family_title": "In-cell / co-transcriptional SHAPE"
     },
     {
       "slug": "dim-2p-seq",
@@ -356,7 +416,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "28525757",
-      "rep_doi": "10.1016/j.cell.2017.04.036"
+      "rep_doi": "10.1016/j.cell.2017.04.036",
+      "rep_figure": "dim2pseq_f1__PMC5546744__F1.jpg",
+      "family_title": "DMS chemical probing"
     },
     {
       "slug": "dms",
@@ -366,7 +428,9 @@
       "figure_count": 4,
       "section_count": 5,
       "rep_pmid": "17948004",
-      "rep_doi": "10.1038/nprot.2007.380"
+      "rep_doi": "10.1038/nprot.2007.380",
+      "rep_figure": "tijerina2007_f1__PMC2701642__F1.jpg",
+      "family_title": "DMS chemical probing"
     },
     {
       "slug": "dms-seq",
@@ -376,7 +440,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "24336214",
-      "rep_doi": "10.1038/nature12894"
+      "rep_doi": "10.1038/nature12894",
+      "rep_figure": "dmsseq_f1__PMC3966492__F1.jpg",
+      "family_title": "DMS chemical probing"
     },
     {
       "slug": "hrf-seq",
@@ -386,7 +452,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "24569351",
-      "rep_doi": "10.1093/nar/gku167"
+      "rep_doi": "10.1093/nar/gku167",
+      "rep_figure": "hrfseq_f1__PMC4005689__F1.jpg",
+      "family_title": "Hydroxyl-radical / nuclease footprinting"
     },
     {
       "slug": "iclaser",
@@ -396,7 +464,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "34634799",
-      "rep_doi": "10.1093/nar/gkab885"
+      "rep_doi": "10.1093/nar/gkab885",
+      "rep_figure": "iclaser_f1__F1.jpg",
+      "family_title": "In-cell / co-transcriptional SHAPE"
     },
     {
       "slug": "icshape",
@@ -406,7 +476,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "25799993",
-      "rep_doi": "10.1038/nature14263"
+      "rep_doi": "10.1038/nature14263",
+      "rep_figure": "spitale2015_f1__F1.jpg",
+      "family_title": "In-cell / co-transcriptional SHAPE"
     },
     {
       "slug": "icshape-map",
@@ -416,7 +488,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "34099665",
-      "rep_doi": "10.1038/s41467-021-23607-w"
+      "rep_doi": "10.1038/s41467-021-23607-w",
+      "rep_figure": "icshapemap_f1__PMC8184798__F1.jpg",
+      "family_title": "In-cell / co-transcriptional SHAPE"
     },
     {
       "slug": "keth-seq",
@@ -426,7 +500,9 @@
       "figure_count": 2,
       "section_count": 4,
       "rep_pmid": "32015521",
-      "rep_doi": "10.1038/s41589-019-0459-3"
+      "rep_doi": "10.1038/s41589-019-0459-3",
+      "rep_figure": "kethseq_f1__PMC7182492__F1.jpg",
+      "family_title": "Carbodiimide & specialty chemistry"
     },
     {
       "slug": "lead-seq",
@@ -436,7 +512,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "32463449",
-      "rep_doi": "10.1093/nar/gkaa404"
+      "rep_doi": "10.1093/nar/gkaa404",
+      "rep_figure": "leadseq_f1__PMC7337928__F1.jpg",
+      "family_title": "Hydroxyl-radical / nuclease footprinting"
     },
     {
       "slug": "mca",
@@ -446,7 +524,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "26035425",
-      "rep_doi": "10.7554/eLife.07600"
+      "rep_doi": "10.7554/eLife.07600",
+      "rep_figure": "mca_f1__PMC4495719__F1.jpg",
+      "family_title": "Mutational / proximity inference"
     },
     {
       "slug": "mod-seq",
@@ -456,7 +536,9 @@
       "figure_count": 3,
       "section_count": 5,
       "rep_pmid": "24664469",
-      "rep_doi": "10.1261/rna.042218.113"
+      "rep_doi": "10.1261/rna.042218.113",
+      "rep_figure": "modseq_f1__PMC3988572__F1.jpg",
+      "family_title": "DMS chemical probing"
     },
     {
       "slug": "mutate-and-map",
@@ -466,7 +548,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "22109276",
-      "rep_doi": "10.1038/nchem.1176"
+      "rep_doi": "10.1038/nchem.1176",
+      "rep_figure": "mutateandmap_f1__PMC3725140__F1.jpg",
+      "family_title": "Mutational / proximity inference"
     },
     {
       "slug": "nai-map",
@@ -476,7 +560,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "30926818",
-      "rep_doi": "10.1038/s41467-019-09391-8"
+      "rep_doi": "10.1038/s41467-019-09391-8",
+      "rep_figure": "naimap_f1__PMC6441010__F1.jpg",
+      "family_title": "SHAPE 2′-OH acylation"
     },
     {
       "slug": "nuc-shape-structure-seq",
@@ -486,7 +572,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "33397430",
-      "rep_doi": "10.1186/s13059-020-02236-4"
+      "rep_doi": "10.1186/s13059-020-02236-4",
+      "rep_figure": "nucshapestructureseq_f1__PMC7784297__F1.jpg",
+      "family_title": "In-cell / co-transcriptional SHAPE"
     },
     {
       "slug": "pars",
@@ -496,7 +584,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "20811459",
-      "rep_doi": "10.1038/nature09322"
+      "rep_doi": "10.1038/nature09322",
+      "rep_figure": "pars_f1__PMC3847670__F1.jpg",
+      "family_title": "Hydroxyl-radical / nuclease footprinting"
     },
     {
       "slug": "parte",
@@ -506,7 +596,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "22981864",
-      "rep_doi": "10.1016/j.molcel.2012.08.008"
+      "rep_doi": "10.1016/j.molcel.2012.08.008",
+      "rep_figure": "parte_f1__PMC3483374__F1.jpg",
+      "family_title": "Hydroxyl-radical / nuclease footprinting"
     },
     {
       "slug": "rl-seq",
@@ -516,7 +608,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "36369947",
-      "rep_doi": "10.1080/15476286.2022.2145098"
+      "rep_doi": "10.1080/15476286.2022.2145098",
+      "rep_figure": "rlseq_f2__F2.jpg",
+      "family_title": "Hydroxyl-radical / nuclease footprinting"
     },
     {
       "slug": "shape-2a3",
@@ -526,7 +620,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "33398343",
-      "rep_doi": "10.1093/nar/gkaa1255"
+      "rep_doi": "10.1093/nar/gkaa1255",
+      "rep_figure": "shape2a3_f1__PMC8034653__F1.jpg",
+      "family_title": "SHAPE 2′-OH acylation"
     },
     {
       "slug": "shape-map",
@@ -536,7 +632,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "25028896",
-      "rep_doi": "10.1038/nmeth.3029"
+      "rep_doi": "10.1038/nmeth.3029",
+      "rep_figure": "shapemap_f1__PMC4259394__F1.jpg",
+      "family_title": "SHAPE 2′-OH acylation"
     },
     {
       "slug": "shape-reagents",
@@ -546,7 +644,9 @@
       "figure_count": 9,
       "section_count": 5,
       "rep_pmid": "",
-      "rep_doi": "10.1021/ja043822v"
+      "rep_doi": "10.1021/ja043822v",
+      "rep_figure": "shapereagents_nmia_f1__10_1021_ja043822v__F1.gif",
+      "family_title": "SHAPE 2′-OH acylation"
     },
     {
       "slug": "smartshape",
@@ -556,7 +656,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "38933905",
-      "rep_doi": "10.1016/j.fmre.2021.12.007"
+      "rep_doi": "10.1016/j.fmre.2021.12.007",
+      "rep_figure": "smartshape_f1__PMC11197792__F1.jpg",
+      "family_title": "SHAPE 2′-OH acylation"
     },
     {
       "slug": "structure-seq",
@@ -566,7 +668,9 @@
       "figure_count": 3,
       "section_count": 5,
       "rep_pmid": "24270811",
-      "rep_doi": "10.1038/nature12756"
+      "rep_doi": "10.1038/nature12756",
+      "rep_figure": "structureseq_f2__F2.webp",
+      "family_title": "DMS chemical probing"
     },
     {
       "slug": "structure-seq2",
@@ -576,7 +680,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "28637286",
-      "rep_doi": "10.1093/nar/gkx533"
+      "rep_doi": "10.1093/nar/gkx533",
+      "rep_figure": "structureseq2_f1__PMC5737731__F1.jpg",
+      "family_title": "DMS chemical probing"
     },
     {
       "slug": "tnet-mapseq",
@@ -586,7 +692,9 @@
       "figure_count": 4,
       "section_count": 6,
       "rep_pmid": "33631106",
-      "rep_doi": "10.1016/j.molcel.2021.01.040"
+      "rep_doi": "10.1016/j.molcel.2021.01.040",
+      "rep_figure": "tnetmapseq_f1__PMC8052309__F1.jpg",
+      "family_title": "Carbodiimide & specialty chemistry"
     }
   ]
 }
