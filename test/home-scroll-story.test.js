@@ -11,9 +11,9 @@ const SAMPLE_CASE = {
   positions: [27, 28, 29], paired_state: [],
   svg_2d: '1ob5-2d.svg', png_3d: '1ob5-3d.png',
   scenes: [
-    { n: '01', title: 'Probing signal, aligned to a structure', body: 'A.' },
-    { n: '02', title: 'The same residues fold into 2D', body: 'B.' },
-    { n: '03', title: 'And collapse into the 3D fold', body: 'C.' },
+    { n: '01', title: 'Probing signal, aligned to a structure', body: 'A.', chip: 'warm = flexible / unpaired · cool = constrained / paired' },
+    { n: '02', title: 'The same residues fold into 2D', body: 'B.', chip: 'color is conserved across every view' },
+    { n: '03', title: 'And collapse into the 3D fold', body: 'C.', chip: 'probing ↔ structure, one continuous thread' },
   ],
 };
 
@@ -99,6 +99,10 @@ test('renderHomeScrollStory emits 3 scenes + 3 state layers + legend', () => {
   // 否则桌面端首屏所有场景暗着(opacity .35)直到首次 intersection 才亮（初始渲染闪烁）。
   assert.match(html, /class="hss-scene is-active" data-scene="0"/);
   assert.doesNotMatch(html, /data-scene-active/); // 旧死属性应已移除
+  const chips = html.match(/class="hss-chip"/g) || [];
+  assert.equal(chips.length, 3);
+  assert.match(html, /warm = flexible \/ unpaired/);
+  assert.match(html, /one continuous thread/);
 });
 
 test('renderHomeScrollStory returns placeholder shell on empty input', () => {

@@ -258,12 +258,15 @@ export function renderHomeScrollStory(caseData, opts = {}) {
   const layer2 = caseData.png_3d
     ? `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><img class="hss-snapshot" src="${base}/${caseData.png_3d}" alt="${caseData.pdb_id || ''} tertiary structure, reactivity-colored" loading="lazy"></div>`
     : `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><div class="hss-missing">3D snapshot unavailable</div></div>`;
-  const scenes = caseData.scenes.map((s, i) => `
+  const scenes = caseData.scenes.map((s, i) => {
+    const chip = s.chip ? `\n      <span class="hss-chip">${s.chip}</span>` : '';
+    return `
     <div class="hss-scene${i === 0 ? ' is-active' : ''}" data-scene="${i}">
       <div class="hss-scene-num">${s.n || ''}</div>
       <h3 class="hss-scene-title">${s.title || ''}</h3>
-      <p class="hss-scene-body">${s.body || ''}</p>
-    </div>`).join('');
+      <p class="hss-scene-body">${s.body || ''}</p>${chip}
+    </div>`;
+  }).join('');
   const legend = `<div class="hss-legend"><span>low</span><span class="hss-legend-bar"></span><span>high reactivity</span></div>`;
   return `<section class="home-scroll-story" aria-label="From probing signal to 3D fold">
     <div class="hss-grid">

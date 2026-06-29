@@ -215,17 +215,20 @@
         {
           "n": "01",
           "title": "Probing signal, aligned to a structure",
-          "body": "A chemical probing experiment reports how reactive each nucleotide is. FoldBridge aligns that probing-derived sequence to the matching chain in PDB 1OB5, so every reactivity value lands on a real, resolved residue."
+          "body": "A chemical probing experiment reports how reactive each nucleotide is. FoldBridge aligns that probing-derived sequence to the matching chain in PDB 1OB5, so every reactivity value lands on a real, resolved residue.",
+          "chip": "warm = flexible / unpaired · cool = constrained / paired"
         },
         {
           "n": "02",
           "title": "The same residues fold into 2D",
-          "body": "Those exact nucleotides — carrying their exact colors — assemble into the secondary structure. High-reactivity residues fall in loops; low-reactivity ones lock into the paired stems of the cloverleaf."
+          "body": "Those exact nucleotides — carrying their exact colors — assemble into the secondary structure. High-reactivity residues fall in loops; low-reactivity ones lock into the paired stems of the cloverleaf.",
+          "chip": "color is conserved across every view"
         },
         {
           "n": "03",
           "title": "And collapse into the 3D fold",
-          "body": "Finally the cloverleaf folds into the deposited tertiary structure — the classic tRNA L-shape. The reactivity coloring follows all the way into 3D."
+          "body": "Finally the cloverleaf folds into the deposited tertiary structure — the classic tRNA L-shape. The reactivity coloring follows all the way into 3D.",
+          "chip": "probing ↔ structure, one continuous thread"
         }
       ]
     }
