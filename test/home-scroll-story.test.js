@@ -103,12 +103,28 @@ test('renderHomeScrollStory emits 3 scenes + 3 state layers + legend', () => {
   assert.equal(chips.length, 3);
   assert.match(html, /warm = flexible \/ unpaired/);
   assert.match(html, /one continuous thread/);
+    // hero intro
+    assert.match(html, /class="hss-intro"/);
+    assert.match(html, /class="hss-kicker"/);
+    assert.match(html, /A FoldBridge story · tRNA-Phe \(yeast\) \(PDB 1OB5\)/);
+    assert.match(html, /Follow one RNA from/);
+    assert.match(html, /class="hss-headline-grad"/);  // gradient span on second line
+    assert.match(html, /Scroll to watch it transform/);
+    assert.match(html, /class="hss-scrollcue"/);
+    // closing CTA
+    assert.match(html, /class="hss-closing"/);
+    assert.match(html, /Every record in FoldBridge tells this story/);
+    assert.match(html, /3,610 structure-linked records/);
+    assert.match(html, /data-route="entry"/);
+    assert.match(html, /Browse the Entry table/);
 });
 
 test('renderHomeScrollStory returns placeholder shell on empty input', () => {
   const html = renderHomeScrollStory(null, { assetBase: './assets/hss' });
   assert.match(html, /hss-placeholder/);
   assert.doesNotMatch(html, /hss-layer is-active/);
+  assert.doesNotMatch(html, /hss-intro/);
+  assert.doesNotMatch(html, /hss-closing/);
 });
 
 test('renderHomeScrollStory falls back to hss-missing when snapshots absent', () => {

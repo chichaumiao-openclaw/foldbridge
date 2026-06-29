@@ -268,10 +268,25 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     </div>`;
   }).join('');
   const legend = `<div class="hss-legend"><span>low</span><span class="hss-legend-bar"></span><span>high reactivity</span></div>`;
+  const records = HOME_METRICS.structureLinkedRecords.toLocaleString('en-US');
+  const kicker = `A FoldBridge story · ${caseData.molecule_label || ''} (PDB ${caseData.pdb_id || ''})`;
+  const intro = `<header class="hss-intro">
+      <p class="hss-kicker">${kicker}</p>
+      <h1 class="hss-headline">Follow one RNA from<br><span class="hss-headline-grad">probing signal to 3D fold</span></h1>
+      <p class="hss-lede">The same reactivity colors travel with every nucleotide — from the raw alignment, into the secondary structure, and onto the deposited tertiary structure. Scroll to watch it transform.</p>
+      <p class="hss-scrollcue">↓ 向下滚动</p>
+    </header>`;
+  const closing = `<footer class="hss-closing">
+      <h2>Every record in FoldBridge tells this story</h2>
+      <p>${records} structure-linked records, each with calibrated confidence.</p>
+      <button type="button" class="hss-cta" data-route="entry">Browse the Entry table &rarr;</button>
+    </footer>`;
   return `<section class="home-scroll-story" aria-label="From probing signal to 3D fold">
+    ${intro}
     <div class="hss-grid">
       <div class="hss-sticky"><div class="hss-card"><div class="hss-meta">${meta}</div>${layer0}${layer1}${layer2}${legend}</div></div>
       <div class="hss-scenes">${scenes}</div>
     </div>
+    ${closing}
   </section>`;
 }
