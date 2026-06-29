@@ -482,6 +482,19 @@ async function main() {
     };
   });
 
+  // RASP case 若校准合并后仍是 "positive confidence not active" 回退标签，说明该 PDB
+  // 没有可打分的反应性信号（无探针测定 / 反应性无坐标映射 / 输入超 size guard / 缺二级结构），
+  // 两张校准表里都无证据行，没有 LSS 召回层级可展示。这类行从总表移除。
+  // 对于同时存在 RMDB+RASP 的 PDB，移除其 RASP 原始行只是丢掉无信号的 RASP 臂，
+  // 合并展示行退化为 RMDB-only（保留 RMDB 的真实 FEC 层级）。RMDB case 与已获真实
+  // 层级的 RASP case 不受影响。
+  const isRaspNotActive = (row) => (row.asset_family || '') === 'RASP2PDB'
+    && /not active/i.test(row.confidence_display_label || '');
+  const raspNotActiveRemoved = tables.cases.filter(isRaspNotActive).length;
+  tables.cases = tables.cases.filter((row) => !isRaspNotActive(row));
+  manifest.rasp_not_active_rows_removed = raspNotActiveRemoved;
+  manifest.case_count = tables.cases.length;
+
   const index = buildAtlasIndexAsset({
     ...tables,
     generatedAt,

@@ -60,8 +60,13 @@ function runBuild(annojoinRoot, outRoot, extraArgs = []) {
       FOLDBRIDGE_FEC_EVIDENCE_ROOT: path.join(annojoinRoot, '__missing_fec__'),
       FOLDBRIDGE_PDB_CHAIN_IDENTITY: path.join(annojoinRoot, '__missing_identity__.tsv'),
       FOLDBRIDGE_PDB_GOVERNED_MAP: path.join(annojoinRoot, '__missing_governed__.tsv'),
-      FOLDBRIDGE_RMDB_ABC_LSS_ROOT: '',
-      FOLDBRIDGE_RASP_D_LSS_ROOT: ''
+      // Point calibration roots at non-existent paths (NOT empty strings): the
+      // build defaults empty/unset env to the real tianyi tables via `|| <path>`,
+      // so an empty string is falsy and silently loads real calibration data.
+      // A non-existent path degrades to no-calibration deterministically, which
+      // is what these fixtures assume.
+      FOLDBRIDGE_RMDB_ABC_LSS_ROOT: path.join(annojoinRoot, '__missing_rmdb_lss__'),
+      FOLDBRIDGE_RASP_D_LSS_ROOT: path.join(annojoinRoot, '__missing_rasp_lss__')
     },
     encoding: 'utf8'
   });
@@ -95,12 +100,25 @@ test('--index-only writes index.json + detail-route-index.json but no per-case f
   // written index.json is slimmed (no cases key)
   const slim = JSON.parse(readFileSync(path.join(indexOut, 'index.json'), 'utf8'));
   assert.equal('cases' in slim, false);
-  assert.equal(slim.totalSourceCaseCount, 2);
+  // The RASP source row keeps the "not active" fallback label (calibration off),
+  // so the B1 filter drops it from tables.cases before the index is built. The
+  // shared-pdb display case degrades from merged to RMDB-only single-source.
+  assert.equal(slim.totalSourceCaseCount, 1);
   assert.equal(slim.displayCases.length, 1);
+  const displayCase = slim.displayCases[0];
+  assert.equal(displayCase.assetFamily, 'RMDB2PDB');
+  assert.equal(displayCase.sourceCaseCount, 1);
+  assert.equal(displayCase.isMergedDisplayRow ?? false, false);
+  assert.doesNotMatch(displayCase.confidenceDisplayLabel, /not active/i);
 
   // index-only index.json == full-build index.json (modulo generatedAt)
   assert.equal(
     stripGeneratedAt(readFileSync(path.join(indexOut, 'index.json'), 'utf8')),
     stripGeneratedAt(readFileSync(path.join(fullOut, 'index.json'), 'utf8'))
   );
+
+  // B1 filter is recorded in the build manifest (1 RASP "not active" row removed).
+  const manifest = JSON.parse(readFileSync(path.join(indexOut, 'manifest.json'), 'utf8'));
+  assert.equal(manifest.rasp_not_active_rows_removed, 1);
+  assert.equal(manifest.case_count, 1);
 });
