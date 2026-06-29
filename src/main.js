@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody, renderHomeProbingCarousel } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -1455,6 +1455,14 @@ function describeDonutArc(cx, cy, outerRadius, innerRadius, startAngle, endAngle
 }
 
 function homePage() {
+  // 已加载则喂文章，否则空壳占位 + 触发懒加载（与 probing 路由同款）。
+  const articles = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
+    ? (probingArticleIndexState.articles || [])
+    : [];
+  if (probingArticleIndexState === null) {
+    loadProbingArticleIndex();
+  }
+
   const featuredNames = homeBundleSites.map((site, index) => {
     const activeClass = site.href ? '' : 'active';
     if (site.href) {
@@ -1475,6 +1483,7 @@ function homePage() {
     <section class="bundle-home-shell">
       ${bundleHeader}
       ${renderHomeHero()}
+      ${renderHomeProbingCarousel(articles)}
       ${renderHomeModuleCards()}
     </section>
   </main>`;
@@ -1915,7 +1924,7 @@ async function loadProbingArticleIndex() {
     console.error('[main] 加载探针文章索引失败', err);
     probingArticleIndexState = 'error';
   }
-  if (route === 'detail' || route === 'probing') render({ preserveScroll: true });
+  if (route === 'detail' || route === 'probing' || route === 'home') render({ preserveScroll: true });
 }
 
 async function loadProbingArticleDetail(slug) {
