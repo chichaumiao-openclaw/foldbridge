@@ -5,8 +5,7 @@ import { reactivityColor, renderReactivityAlignment } from '../src/siteChrome.js
 test('reactivityColor maps scale anchors to the single-authority colors', () => {
   assert.equal(reactivityColor(0), 'rgb(23, 75, 58)');     // #174B3A 冷绿
   assert.equal(reactivityColor(1), 'rgb(232, 116, 62)');   // #E8743E 暖橙
-  const mid = reactivityColor(0.5);                         // 接近金 #E6C260
-  assert.match(mid, /^rgb\(2\d\d, 1\d\d, \d+\)$/);
+  assert.equal(reactivityColor(0.5), 'rgb(230, 194, 96)'); // #E6C260 金锚点精确值
 });
 
 test('reactivityColor clamps out-of-range input', () => {
@@ -23,7 +22,7 @@ test('renderReactivityAlignment emits one colored cell per residue', () => {
   assert.match(html, /rgb\(23, 75, 58\)/);   // 第一个残基 reactivity 0 → 冷绿
 });
 
-test('renderReactivityAlignment handles empty case as placeholder', () => {
+test('renderReactivityAlignment renders empty alignment when no residues', () => {
   const html = renderReactivityAlignment({ sequence: [], reactivity: [], norm_ceiling: 1 });
   assert.match(html, /hss-alignment/);
   assert.doesNotMatch(html, /class="hss-cell"/);
