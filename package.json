@@ -7,6 +7,7 @@
     "test": "node --test",
     "build:static": "node scripts/build.mjs",
     "build:annojoin-atlas": "node scripts/build-annojoin-atlas.mjs",
+    "build:annojoin-atlas:index": "node scripts/build-annojoin-atlas.mjs --index-only",
     "build:rmdb-cases": "node scripts/build-rmdb-cases.mjs",
     "build:probing-articles": "node scripts/build-probing-articles.mjs",
     "build:search-docs": "node scripts/build-search-docs.mjs",
