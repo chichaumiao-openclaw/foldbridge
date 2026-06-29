@@ -984,6 +984,20 @@ export function buildAtlasIndexAsset({
   };
 }
 
+// Write-time slimming (display-only): strip browser-dead fields from the index
+// before it is written to disk. NEVER mutates the input; the in-memory index
+// keeps its full `cases` array for buildDetailRouteIndexAsset. (See design §4.)
+export function slimAtlasIndexForWrite(index = {}) {
+  const { cases, displayCases, ...rest } = index;
+  const slimDisplayCases = Array.isArray(displayCases)
+    ? displayCases.map((row) => {
+        const { profilePreview, profilePreviewIsComplete, ...keep } = row;
+        return keep;
+      })
+    : displayCases;
+  return { ...rest, displayCases: slimDisplayCases };
+}
+
 export function buildAtlasCaseAsset({
   caseId,
   caseKey,

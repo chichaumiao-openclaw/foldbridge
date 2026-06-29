@@ -5,7 +5,8 @@ import {
   buildAtlasIndexAsset,
   buildPagedRouteAssets,
   groupByCaseId,
-  parseTsv
+  parseTsv,
+  slimAtlasIndexForWrite
 } from '../scripts/lib/annojoin-atlas-corpus.mjs';
 import { buildAnnojointTableGroups } from '../src/annojoinAtlasTableModel.js';
 
@@ -674,4 +675,93 @@ test('buildPagedRouteAssets splits route arrays and keeps overview preview bound
     'cases/10ZT/track-routes/page-0003.json'
   ]);
   assert.deepEqual(paged.pages[2].asset.rows.map((row) => row.id), ['row-5']);
+});
+
+test('slimAtlasIndexForWrite drops the browser-dead cases array', () => {
+  const index = buildAtlasIndexAsset({
+    cases: [
+      { case_id: '10FZ', pdb_id: '10FZ', biological_molecule_name: '16S ribosomal RNA', profile_ids: 'p1', profile_count: '1' }
+    ]
+  });
+  assert.ok(Array.isArray(index.cases), 'precondition: full index has cases');
+  const slim = slimAtlasIndexForWrite(index);
+  assert.equal('cases' in slim, false);
+});
+
+test('slimAtlasIndexForWrite strips profilePreview/profilePreviewIsComplete from every displayCases row', () => {
+  const index = buildAtlasIndexAsset({
+    cases: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', pdb_id: '10FZ', biological_molecule_name: 'm', profile_ids: 'p1;p2', profile_count: '2', profile_ids_complete: 'true' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', pdb_id: '10FZ', biological_molecule_name: 'm', profile_ids: 'p3', profile_count: '1', profile_ids_complete: 'true' }
+    ]
+  });
+  const merged = index.displayCases.find((row) => row.isMergedDisplayRow);
+  assert.ok(merged, 'precondition: a merged display row exists with a profilePreview');
+  assert.ok('profilePreview' in merged);
+  const slim = slimAtlasIndexForWrite(index);
+  for (const row of slim.displayCases) {
+    assert.equal('profilePreview' in row, false);
+    assert.equal('profilePreviewIsComplete' in row, false);
+  }
+});
+
+test('slimAtlasIndexForWrite preserves link-critical and rendered fields on a sample row', () => {
+  const index = buildAtlasIndexAsset({
+    cases: [
+      {
+        asset_family: 'RMDB2PDB', case_id: '10ZT', pdb_id: '10ZT',
+        biological_molecule_name: '16S ribosomal RNA',
+        biological_molecule_name_source: 'PDB/biological_layer/pdb_child_identity_index.tsv',
+        pdb_molecule_name: '30S ribosomal subunit RNA',
+        parent_class_label: 'Ribosome', child_class_label: '16S rRNA',
+        profile_count: '1', profile_ids: 'p1', search_text: '10ZT ribosome'
+      }
+    ],
+    summaries: [{ case_id: '10ZT', recommended_default_preset: 'balanced_segment_view' }],
+    routes: [{ case_id: '10ZT', detail_route_id: '/atlas/rmdb2pdb/10ZT' }]
+  });
+  const slim = slimAtlasIndexForWrite(index);
+  const row = slim.displayCases[0];
+  for (const key of ['atlasCaseKey', 'caseId', 'pdbId', 'assetFamily', 'caseAssetPath',
+    'sourceCaseAssetPaths', 'profileTracePreview', 'searchText', 'moleculeDisplayName',
+    'biologicalMoleculeName', 'biologicalMoleculeNameSource']) {
+    assert.ok(key in row, `expected ${key} preserved`);
+  }
+  assert.equal(row.caseAssetPath, 'cases/RMDB2PDB%3A10ZT.json');
+  assert.equal(row.biologicalMoleculeName, '16S ribosomal RNA');
+});
+
+test('slimAtlasIndexForWrite keeps scalars and top-level structures', () => {
+  const index = buildAtlasIndexAsset({
+    cases: [{ case_id: '10ZT', pdb_id: '10ZT', biological_molecule_name: 'm', parent_class_label: 'Ribosome', child_class_label: '16S rRNA' }],
+    facets: [{ facet_name: 'PDB ID', source_column: 'pdb_id', display_label: 'PDB ID' }],
+    presets: [{ preset_id: 'p', preset_name: 'P' }],
+    downloads: [{ download_id: 'd', download_label: 'D', file_path: 'x.tsv', row_count: '1' }]
+  });
+  const slim = slimAtlasIndexForWrite(index);
+  assert.equal(slim.totalSourceCaseCount, index.totalSourceCaseCount);
+  assert.equal(slim.totalCaseCount, index.totalCaseCount);
+  assert.equal(slim.displayCases.length, index.displayCases.length);
+  assert.deepEqual(slim.caseHierarchy, index.caseHierarchy);
+  assert.deepEqual(slim.facets, index.facets);
+  assert.deepEqual(slim.presets, index.presets);
+  assert.deepEqual(slim.downloads, index.downloads);
+  assert.equal(slim.schemaVersion, index.schemaVersion);
+  assert.equal(slim.version, index.version);
+  assert.equal(slim.generatedAt, index.generatedAt);
+  assert.deepEqual(slim.source, index.source);
+});
+
+test('slimAtlasIndexForWrite does not mutate its input', () => {
+  const index = buildAtlasIndexAsset({
+    cases: [
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', pdb_id: '10FZ', biological_molecule_name: 'm', profile_ids: 'p1;p2', profile_count: '2', profile_ids_complete: 'true' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', pdb_id: '10FZ', biological_molecule_name: 'm', profile_ids: 'p3', profile_count: '1', profile_ids_complete: 'true' }
+    ]
+  });
+  const before = JSON.stringify(index);
+  slimAtlasIndexForWrite(index);
+  assert.equal(JSON.stringify(index), before, 'input index must be unchanged');
+  assert.ok(Array.isArray(index.cases));
+  assert.ok(index.displayCases.some((row) => 'profilePreview' in row));
 });
