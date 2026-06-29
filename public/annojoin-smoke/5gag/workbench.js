@@ -43,6 +43,7 @@ const state = {
   molstarFullViewer: null,
   molstarCroppedUrl: null,
   molstarBridgeInstalled: false,
+  fullRoiColored: false,
   requestedProfileId: "",
 };
 
@@ -74,6 +75,7 @@ const el = {
   molstarSelectionStatus: document.querySelector("#molstar-selection-status"),
   molstarMeta: document.querySelector("#molstarMeta"),
   molstarFullMeta: document.querySelector("#molstarFullMeta"),
+  fullRoiToggle: document.querySelector("#full-roi-toggle"),
   log: document.querySelector("#log"),
   tip: document.querySelector("#tip"),
 };
@@ -590,7 +592,44 @@ function applyLinkedHover(residueKey, origin = "preview") {
   setDomState("hovered", residueKey);
   if (origin === "3d") {
     renderInspector(residueKey || state.selectedResidueKey);
+  } else {
+    // 1D/2D hover -> light up the matching residue in the 3D viewer with Mol*'s
+    // native hover highlight. 3D-originated hovers are already highlighted by
+    // Mol* itself, so skip them to avoid a feedback loop.
+    applyMolstarHoverHighlight(residueKey);
   }
+}
+
+// Trigger Mol*'s native hover-style highlight on the target-chain crop. The
+// effective target is the hovered residue when present, otherwise the selected
+// residue, so the border persists on the selection after the mouse leaves.
+// Hover never moves the camera (focus stays a click affordance).
+function applyMolstarHoverHighlight(_residueKey) {
+  const viewer = state.molstarViewer;
+  if (!viewer?.visual) return;
+  const targetKey = state.hoveredResidueKey || state.selectedResidueKey;
+  if (!targetKey) {
+    if (typeof viewer.visual.clearHighlight === "function") {
+      viewer.visual.clearHighlight();
+    }
+    return;
+  }
+  if (typeof viewer.visual.highlight !== "function" || !state.lastRender) return;
+  const item = buildMolstarTargetDisplayPayload(activeProfileId(), state.selectedResidueKey)
+    .find((entry) => entry.residue_key === targetKey);
+  if (!item) {
+    if (typeof viewer.visual.clearHighlight === "function") {
+      viewer.visual.clearHighlight();
+    }
+    return;
+  }
+  viewer.visual.highlight({
+    data: [{
+      struct_asym_id: item.struct_asym_id,
+      start_residue_number: item.start_residue_number,
+      end_residue_number: item.end_residue_number,
+    }],
+  });
 }
 
 function applyMolstarHover(residueKey, event = null) {
@@ -898,6 +937,8 @@ function applyMolstarTargetDisplay(residueKey = state.selectedResidueKey, attemp
       nonSelectedColor: MOLSTAR_CONTEXT_COLOR,
     });
     focusMolstarOnSelection(viewer, payload, residueKey);
+    // Keep the Full CIF reference ROI in sync when the toggle is on.
+    applyFullRoiColoring();
   } catch (_error) {
     if (attempt < 8) {
       window.setTimeout(() => applyMolstarTargetDisplay(residueKey, attempt + 1), 250);
@@ -927,6 +968,37 @@ function focusMolstarOnSelection(viewer, payload, residueKey) {
   }]);
 }
 
+// Full CIF reference ROI coloring. When the toggle is on, paint the ROI residues
+// with the detail-page reactivity colors via select({data}) WITHOUT nonSelectedColor,
+// so the rest of the structure keeps Mol*'s original/native coloring. When off,
+// clearSelection() restores native colors everywhere. Safe to call repeatedly; it
+// re-reads the active profile/selection so the ROI stays in sync.
+function applyFullRoiColoring(attempt = 0) {
+  const viewer = state.molstarFullViewer;
+  if (!viewer?.visual) return;
+  if (!state.fullRoiColored) {
+    if (typeof viewer.visual.clearSelection === "function") {
+      try { viewer.visual.clearSelection(); } catch (_error) { /* viewer not ready */ }
+    }
+    return;
+  }
+  if (typeof viewer.visual.select !== "function" || !state.lastRender) {
+    if (attempt < 8) {
+      window.setTimeout(() => applyFullRoiColoring(attempt + 1), 250);
+    }
+    return;
+  }
+  const payload = buildMolstarTargetDisplayPayload(activeProfileId(), state.selectedResidueKey);
+  try {
+    viewer.visual.select({ data: payload });
+  } catch (_error) {
+    if (attempt < 8) {
+      window.setTimeout(() => applyFullRoiColoring(attempt + 1), 250);
+    }
+  }
+}
+
+
 function buildMolstarSelectionPayload(profileId = activeProfileId(), selectedKey = state.selectedResidueKey) {
   return buildMolstarTargetDisplayPayload(profileId, selectedKey);
 }
@@ -943,6 +1015,9 @@ function applyLinkedSelection(residueKey = state.selectedResidueKey, origin = "p
     el.molstarSelectionStatus.textContent = residueKey ? `selection: ${residueKey}` : "selection: none";
   }
   if (origin !== "3d") applyMolstarSelection(residueKey);
+  // Keep the native Mol* highlight on the freshly selected residue so the border
+  // stays after the mouse leaves the 1D/2D mark.
+  applyMolstarHoverHighlight(residueKey);
 }
 
 function selectResidue(residueKey, origin = "preview") {
@@ -1816,6 +1891,15 @@ for (const tab of el.tabs) {
   tab.addEventListener("click", () => {
     state.activeView = tab.dataset.view;
     updateView();
+  });
+}
+
+if (el.fullRoiToggle) {
+  el.fullRoiToggle.addEventListener("click", () => {
+    state.fullRoiColored = !state.fullRoiColored;
+    el.fullRoiToggle.setAttribute("aria-pressed", state.fullRoiColored ? "true" : "false");
+    el.fullRoiToggle.textContent = state.fullRoiColored ? "Original colors" : "Color ROI";
+    applyFullRoiColoring();
   });
 }
 
