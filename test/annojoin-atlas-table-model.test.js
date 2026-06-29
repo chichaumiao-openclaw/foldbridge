@@ -69,18 +69,27 @@ test('table model defines the five fixed master-table columns', () => {
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => 'defaultVisible' in column), false);
 });
 
+test('sortAnnojointCases orders by primary placement (class then name)', () => {
+  const cases = [
+    { pdbId: '1', chainPlacements: [{ classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }] },
+    { pdbId: '2', chainPlacements: [{ classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' }] }
+  ];
+  const sorted = sortAnnojointCases(cases);
+  assert.deepEqual(sorted.map((c) => c.pdbId), ['2', '1']); // rRNA < tRNA wins over pdbId 1<2
+});
+
 test('groups cases into parent and child buckets with parentless fallback', () => {
   const groups = buildAnnojointTableGroups(sortAnnojointCases(rows));
 
   assert.equal(groups.length, 2);
-  assert.equal(groups[0].label, 'MPNN-fixbb designed RNA molecule');
-  assert.equal(groups[0].count, 1);
-  assert.equal(groups[0].children[0].label, 'MPNN-fixbb designed RNA molecule');
-  assert.equal(groups[1].label, 'Ribosome');
-  assert.deepEqual(groups[1].children.map((child) => [child.label, child.count]), [
+  assert.equal(groups[0].label, 'Ribosome');
+  assert.deepEqual(groups[0].children.map((child) => [child.label, child.count]), [
     ['16S rRNA', 1],
     ['23S rRNA', 1]
   ]);
+  assert.equal(groups[1].label, 'MPNN-fixbb designed RNA molecule');
+  assert.equal(groups[1].count, 1);
+  assert.equal(groups[1].children[0].label, 'MPNN-fixbb designed RNA molecule');
 });
 
 test('paginates rows with clamped page numbers', () => {

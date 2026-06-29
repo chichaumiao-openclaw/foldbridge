@@ -49,11 +49,18 @@ export function childGroupLabel(row = {}) {
     || parentGroupLabel(row);
 }
 
+export function primaryPlacement(row = {}) {
+  const placements = Array.isArray(row.chainPlacements) ? row.chainPlacements : [];
+  return placements[0] || { classLabel: '', nameLabel: '' };
+}
+
 export function sortAnnojointCases(cases = []) {
   return [...cases].sort((a, b) => {
+    const pa = primaryPlacement(a);
+    const pb = primaryPlacement(b);
     const values = [
-      parentGroupLabel(a).localeCompare(parentGroupLabel(b)),
-      childGroupLabel(a).localeCompare(childGroupLabel(b)),
+      String(pa.classLabel).localeCompare(String(pb.classLabel)),
+      String(pa.nameLabel).localeCompare(String(pb.nameLabel)),
       String(a.pdbId || a.caseId || '').localeCompare(String(b.pdbId || b.caseId || '')),
       rowCaseKey(a).localeCompare(rowCaseKey(b))
     ];
