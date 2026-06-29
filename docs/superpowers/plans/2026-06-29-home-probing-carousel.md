@@ -241,7 +241,9 @@ export function renderHomeProbingCarousel(articles = []) {
     const img = a.rep_figure
       ? `<img class="home-probing-slide-img" src="${PROBING_ASSET_BASE}/${a.slug}/${a.rep_figure}" alt="${a.title || ''}" loading="lazy" />`
       : `<div class="home-probing-slide-img home-probing-slide-noimg" aria-hidden="true"></div>`;
-    return `<a class="home-probing-slide${activeClass}" data-carousel-slide="${i}" href="#detail/${a.slug}">
+    // 注意属性顺序：data-carousel-slide 在 class 之前，以匹配 active-slide 测试正则
+    // （/data-carousel-slide="0"[^>]*class="[^"]*active/，[^>]* 不跨越 '>'）。
+    return `<a data-carousel-slide="${i}" class="home-probing-slide${activeClass}" href="#detail/${a.slug}">
         ${img}
         <div class="home-probing-slide-copy">
           <span class="home-probing-slide-family">${a.family_title || ''}</span>
@@ -251,7 +253,8 @@ export function renderHomeProbingCarousel(articles = []) {
   }).join('\n      ');
 
   const dots = articles.map((_a, i) =>
-    `<button type="button" class="home-probing-dot${i === 0 ? ' active' : ''}" data-carousel-dot="${i}" aria-label="Go to slide ${i + 1}"></button>`
+    // 同上：data-carousel-dot 在 class 之前，匹配 active-dot 测试正则。
+    `<button type="button" data-carousel-dot="${i}" class="home-probing-dot${i === 0 ? ' active' : ''}" aria-label="Go to slide ${i + 1}"></button>`
   ).join('\n        ');
 
   return `<section class="home-probing-carousel" aria-label="Probing method articles" aria-roledescription="carousel">
