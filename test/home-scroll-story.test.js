@@ -76,3 +76,21 @@ test('renderHomeScrollStory returns placeholder shell on empty input', () => {
   assert.match(html, /hss-placeholder/);
   assert.doesNotMatch(html, /hss-layer is-active/);
 });
+
+test('renderHomeScrollStory falls back to hss-missing when snapshots absent', () => {
+  const noSnaps = {
+    pdb_id: '1OB5', molecule_label: 'tRNA-Phe (yeast)', confidence_label: 'A REFERENCE',
+    norm_ceiling: 2.5, sequence: ['G', 'A'], reactivity: [0, 1.25],
+    scenes: [
+      { n: '01', title: 'one', body: 'a' },
+      { n: '02', title: 'two', body: 'b' },
+      { n: '03', title: 'three', body: 'c' },
+    ],
+    // 故意不给 svg_2d / png_3d
+  };
+  const html = renderHomeScrollStory(noSnaps, { assetBase: './assets/hss' });
+  const missing = html.match(/class="hss-missing"/g) || [];
+  assert.equal(missing.length, 2);            // 态1 + 态2 都缺
+  assert.doesNotMatch(html, /class="hss-snapshot"/);  // 无 img 快照
+  assert.match(html, /hss-alignment/);         // 态0 1D 仍正常渲染
+});
