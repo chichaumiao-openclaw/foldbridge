@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5O61",
+  "biologicalMoleculeName": "5O61",
+  "caseId": "5O61",
+  "caseKey": "RASP2PDB:5O61",
+  "chains": [
+    "BW"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "5O61",
+  "profileCount": 13
+}

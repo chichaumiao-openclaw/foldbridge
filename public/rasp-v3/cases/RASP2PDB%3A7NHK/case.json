@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7NHK",
+  "biologicalMoleculeName": "7NHK",
+  "caseId": "7NHK",
+  "caseKey": "RASP2PDB:7NHK",
+  "chains": [
+    "a"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "7NHK",
+  "profileCount": 7
+}

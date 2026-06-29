@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4TNA",
+  "biologicalMoleculeName": "4TNA",
+  "caseId": "4TNA",
+  "caseKey": "RASP2PDB:4TNA",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "4TNA",
+  "profileCount": 26
+}

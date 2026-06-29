@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8P60",
+  "biologicalMoleculeName": "8P60",
+  "caseId": "8P60",
+  "caseKey": "RMDB2PDB:8P60",
+  "chains": [
+    "K50",
+    "S60"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "8P60",
+  "profileCount": 302
+}

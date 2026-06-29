@@ -1,0 +1,21 @@
+{
+  "atlasCaseKey": "RASP2PDB:8GZP",
+  "availableFamilies": [
+    "B"
+  ],
+  "bridgeMissingCount": 1,
+  "defaultEvidenceId": "annojoin:RASP2PDB:8GZP:confidence:B:rasp_bw_dff75e70a1a7",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "B": 1
+  },
+  "generatedAt": "2026-06-29T16:00:20.961297Z",
+  "materializedEvidenceCount": 1,
+  "pdbId": "8GZP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_WEAK": 1
+  },
+  "totalEvidenceCount": 1
+}

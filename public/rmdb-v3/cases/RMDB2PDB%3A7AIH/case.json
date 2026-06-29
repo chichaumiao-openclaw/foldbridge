@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7AIH",
+  "biologicalMoleculeName": "7AIH",
+  "caseId": "7AIH",
+  "caseKey": "RMDB2PDB:7AIH",
+  "chains": [
+    "1"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "7AIH",
+  "profileCount": 84
+}

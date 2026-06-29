@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8BSI",
+  "biologicalMoleculeName": "8BSI",
+  "caseId": "8BSI",
+  "caseKey": "RASP2PDB:8BSI",
+  "chains": [
+    "Lu"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "8BSI",
+  "profileCount": 16
+}

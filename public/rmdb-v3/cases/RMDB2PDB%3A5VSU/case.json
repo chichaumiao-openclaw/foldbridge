@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5VSU",
+  "biologicalMoleculeName": "5VSU",
+  "caseId": "5VSU",
+  "caseKey": "RMDB2PDB:5VSU",
+  "chains": [
+    "I"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "5VSU",
+  "profileCount": 2
+}

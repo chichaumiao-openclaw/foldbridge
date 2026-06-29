@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3NKB",
+  "biologicalMoleculeName": "3NKB",
+  "caseId": "3NKB",
+  "caseKey": "RMDB2PDB:3NKB",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3NKB",
+  "profileCount": 2
+}

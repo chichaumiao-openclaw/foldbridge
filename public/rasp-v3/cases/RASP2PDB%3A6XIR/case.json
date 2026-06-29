@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6XIR",
+  "biologicalMoleculeName": "6XIR",
+  "caseId": "6XIR",
+  "caseKey": "RASP2PDB:6XIR",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "AX"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "6XIR",
+  "profileCount": 120
+}

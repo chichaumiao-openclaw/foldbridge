@@ -146,7 +146,10 @@ const server = createServer((req, res) => {
   }
 
   const requestPath = req.url === '/' ? '/index.html' : req.url ?? '/index.html';
-  let filePath = resolveStaticRequestPath(requestPath, { root });
+  let filePath = resolveStaticRequestPath(requestPath, {
+    root,
+    publicRootPrefixes: ['annojoin-smoke', 'annojoin-ef', 'rasp-v3', 'rmdb-v3'],
+  });
 
   if (!filePath) {
     res.writeHead(403);

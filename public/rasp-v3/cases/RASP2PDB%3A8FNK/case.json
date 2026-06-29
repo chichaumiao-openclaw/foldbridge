@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8FNK",
+  "biologicalMoleculeName": "8FNK",
+  "caseId": "8FNK",
+  "caseKey": "RASP2PDB:8FNK",
+  "chains": [
+    "g"
+  ],
+  "confidenceDisplayLabel": "C UNDERPOWERED",
+  "pdbId": "8FNK",
+  "profileCount": 2
+}

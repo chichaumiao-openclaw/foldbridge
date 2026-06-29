@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6I7V",
+  "biologicalMoleculeName": "6I7V",
+  "caseId": "6I7V",
+  "caseKey": "RASP2PDB:6I7V",
+  "chains": [
+    "CA",
+    "CB",
+    "DA"
+  ],
+  "confidenceDisplayLabel": "D MODERATE",
+  "pdbId": "6I7V",
+  "profileCount": 31
+}

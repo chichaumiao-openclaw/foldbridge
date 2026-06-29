@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8FZD",
+  "biologicalMoleculeName": "8FZD",
+  "caseId": "8FZD",
+  "caseKey": "RASP2PDB:8FZD",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "x"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8FZD",
+  "profileCount": 37
+}

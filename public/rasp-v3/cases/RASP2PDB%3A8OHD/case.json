@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8OHD",
+  "biologicalMoleculeName": "8OHD",
+  "caseId": "8OHD",
+  "caseKey": "RASP2PDB:8OHD",
+  "chains": [
+    "5",
+    "7",
+    "8"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "8OHD",
+  "profileCount": 214
+}

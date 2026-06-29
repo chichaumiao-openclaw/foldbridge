@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1MFQ",
+  "biologicalMoleculeName": "1MFQ",
+  "caseId": "1MFQ",
+  "caseKey": "RASP2PDB:1MFQ",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "1MFQ",
+  "profileCount": 211
+}

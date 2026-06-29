@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7KRO",
+  "biologicalMoleculeName": "7KRO",
+  "caseId": "7KRO",
+  "caseKey": "RMDB2PDB:7KRO",
+  "chains": [
+    "P"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "7KRO",
+  "profileCount": 4
+}

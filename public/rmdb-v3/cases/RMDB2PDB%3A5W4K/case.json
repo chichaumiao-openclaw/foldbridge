@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5W4K",
+  "biologicalMoleculeName": "5W4K",
+  "caseId": "5W4K",
+  "caseKey": "RMDB2PDB:5W4K",
+  "chains": [
+    "2a"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "5W4K",
+  "profileCount": 2
+}

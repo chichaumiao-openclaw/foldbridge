@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6AHU",
+  "biologicalMoleculeName": "6AHU",
+  "caseId": "6AHU",
+  "caseKey": "RMDB2PDB:6AHU",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "6AHU",
+  "profileCount": 12
+}

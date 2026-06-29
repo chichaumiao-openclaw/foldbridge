@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6GAZ",
+  "biologicalMoleculeName": "6GAZ",
+  "caseId": "6GAZ",
+  "caseKey": "RASP2PDB:6GAZ",
+  "chains": [
+    "AA",
+    "AV",
+    "AX"
+  ],
+  "confidenceDisplayLabel": "D MODERATE_CANDIDATE",
+  "pdbId": "6GAZ",
+  "profileCount": 140
+}

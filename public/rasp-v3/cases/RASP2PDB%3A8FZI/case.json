@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8FZI",
+  "biologicalMoleculeName": "8FZI",
+  "caseId": "8FZI",
+  "caseKey": "RASP2PDB:8FZI",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "x"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8FZI",
+  "profileCount": 37
+}

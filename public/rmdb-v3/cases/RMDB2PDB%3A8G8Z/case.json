@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8G8Z",
+  "biologicalMoleculeName": "8G8Z",
+  "caseId": "8G8Z",
+  "caseKey": "RMDB2PDB:8G8Z",
+  "chains": [
+    "R"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8G8Z",
+  "profileCount": 2
+}

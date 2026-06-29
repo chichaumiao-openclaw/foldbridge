@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1ZJW",
+  "biologicalMoleculeName": "1ZJW",
+  "caseId": "1ZJW",
+  "caseKey": "RASP2PDB:1ZJW",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "1ZJW",
+  "profileCount": 2
+}

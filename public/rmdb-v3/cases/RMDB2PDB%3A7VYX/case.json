@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7VYX",
+  "biologicalMoleculeName": "7VYX",
+  "caseId": "7VYX",
+  "caseKey": "RMDB2PDB:7VYX",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "7VYX",
+  "profileCount": 4
+}

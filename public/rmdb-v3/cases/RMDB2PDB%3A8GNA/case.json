@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8GNA",
+  "biologicalMoleculeName": "8GNA",
+  "caseId": "8GNA",
+  "caseKey": "RMDB2PDB:8GNA",
+  "chains": [
+    "J"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8GNA",
+  "profileCount": 1
+}

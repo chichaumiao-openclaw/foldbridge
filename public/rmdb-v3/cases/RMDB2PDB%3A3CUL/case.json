@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3CUL",
+  "biologicalMoleculeName": "3CUL",
+  "caseId": "3CUL",
+  "caseKey": "RMDB2PDB:3CUL",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "3CUL",
+  "profileCount": 2
+}

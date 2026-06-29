@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8YUP",
+  "biologicalMoleculeName": "8YUP",
+  "caseId": "8YUP",
+  "caseKey": "RASP2PDB:8YUP",
+  "chains": [
+    "A",
+    "V",
+    "X",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8YUP",
+  "profileCount": 37
+}

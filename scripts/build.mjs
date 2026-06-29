@@ -16,4 +16,12 @@ try {
   // optional folder
 }
 
+const publicSrc = path.join(root, 'public');
+const publicDist = path.join(dist, 'public');
+try {
+  await cp(publicSrc, publicDist, { recursive: true });
+} catch {
+  // optional folder
+}
+
 console.log('Build complete: dist/');

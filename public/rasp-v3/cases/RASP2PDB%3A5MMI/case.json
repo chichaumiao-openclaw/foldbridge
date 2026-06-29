@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5MMI",
+  "biologicalMoleculeName": "5MMI",
+  "caseId": "5MMI",
+  "caseKey": "RASP2PDB:5MMI",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "5MMI",
+  "profileCount": 11
+}

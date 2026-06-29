@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4WR6",
+  "biologicalMoleculeName": "4WR6",
+  "caseId": "4WR6",
+  "caseKey": "RASP2PDB:4WR6",
+  "chains": [
+    "1K"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "4WR6",
+  "profileCount": 13
+}

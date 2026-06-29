@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5CCX",
+  "biologicalMoleculeName": "5CCX",
+  "caseId": "5CCX",
+  "caseKey": "RASP2PDB:5CCX",
+  "chains": [
+    "N"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "5CCX",
+  "profileCount": 18
+}

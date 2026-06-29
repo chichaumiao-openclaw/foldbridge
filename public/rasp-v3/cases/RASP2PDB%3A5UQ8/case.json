@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5UQ8",
+  "biologicalMoleculeName": "5UQ8",
+  "caseId": "5UQ8",
+  "caseKey": "RASP2PDB:5UQ8",
+  "chains": [
+    "z"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "5UQ8",
+  "profileCount": 13
+}

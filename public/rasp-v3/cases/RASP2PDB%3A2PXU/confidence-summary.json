@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "RASP2PDB:2PXU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 26,
+  "defaultEvidenceId": "annojoin:RASP2PDB:2PXU:confidence:B:rasp_bw_e55180dc2098",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 11,
+    "B": 15
+  },
+  "generatedAt": "2026-06-29T15:58:13.718949Z",
+  "materializedEvidenceCount": 26,
+  "pdbId": "2PXU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 9,
+    "LSS_NOT_SUPPORTED": 9,
+    "LSS_UNDERPOWERED": 8
+  },
+  "totalEvidenceCount": 26
+}

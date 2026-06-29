@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:10ZU",
+  "biologicalMoleculeName": "10ZU",
+  "caseId": "10ZU",
+  "caseKey": "RMDB2PDB:10ZU",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "10ZU",
+  "profileCount": 5
+}

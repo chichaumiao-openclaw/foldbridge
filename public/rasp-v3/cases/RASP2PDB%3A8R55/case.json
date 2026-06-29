@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8R55",
+  "biologicalMoleculeName": "8R55",
+  "caseId": "8R55",
+  "caseKey": "RASP2PDB:8R55",
+  "chains": [
+    "U"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "8R55",
+  "profileCount": 2
+}

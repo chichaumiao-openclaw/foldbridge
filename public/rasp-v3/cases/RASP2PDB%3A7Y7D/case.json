@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7Y7D",
+  "biologicalMoleculeName": "7Y7D",
+  "caseId": "7Y7D",
+  "caseKey": "RASP2PDB:7Y7D",
+  "chains": [
+    "A",
+    "V",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "7Y7D",
+  "profileCount": 54
+}

@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6GXM",
+  "biologicalMoleculeName": "6GXM",
+  "caseId": "6GXM",
+  "caseKey": "RASP2PDB:6GXM",
+  "chains": [
+    "B",
+    "a",
+    "x"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "6GXM",
+  "profileCount": 39
+}

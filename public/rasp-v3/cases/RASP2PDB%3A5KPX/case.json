@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5KPX",
+  "biologicalMoleculeName": "5KPX",
+  "caseId": "5KPX",
+  "caseKey": "RASP2PDB:5KPX",
+  "chains": [
+    "26",
+    "30",
+    "31",
+    "32"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "5KPX",
+  "profileCount": 39
+}

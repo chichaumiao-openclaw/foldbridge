@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8RCT",
+  "biologicalMoleculeName": "8RCT",
+  "caseId": "8RCT",
+  "caseKey": "RASP2PDB:8RCT",
+  "chains": [
+    "71",
+    "82",
+    "A1",
+    "W",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "8RCT",
+  "profileCount": 6
+}

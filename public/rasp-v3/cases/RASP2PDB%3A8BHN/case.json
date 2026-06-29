@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8BHN",
+  "biologicalMoleculeName": "8BHN",
+  "caseId": "8BHN",
+  "caseKey": "RASP2PDB:8BHN",
+  "chains": [
+    "0",
+    "1",
+    "2",
+    "4",
+    "5"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8BHN",
+  "profileCount": 47
+}

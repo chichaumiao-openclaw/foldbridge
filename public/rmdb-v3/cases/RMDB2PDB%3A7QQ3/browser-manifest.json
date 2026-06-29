@@ -1,0 +1,34 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "J": {
+      "case2dPath": "chains/J/case-2d-structure.json.gz",
+      "chainId": "J",
+      "chainRoot": "chains/J",
+      "linkedViewBundlePath": "chains/J/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/J/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/J/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "J",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:7QQ3:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#23072": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#23074": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:A:top_x_279::data-general/data-general/P50LIB_DMS_0000.rdat#397": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:A:top_x_279::data-general/data-general/P50LIB_DMS_0001.rdat#397": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:A:top_x_279::data-general/data-general/P50LIB_DMS_0002.rdat#397": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:A:top_x_279::data-general/data-general/P50LIB_DMS_0003.rdat#397": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#23072": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#23074": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:B:top_x_279::data-general/data-general/P50LIB_2A3_0000.rdat#397": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:B:top_x_279::data-general/data-general/P50LIB_2A3_0001.rdat#397": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:B:top_x_279::data-general/data-general/P50LIB_2A3_0002.rdat#397": "J",
+    "annojoin:RMDB2PDB:7QQ3:confidence:B:top_x_279::data-general/data-general/P50LIB_2A3_0003.rdat#397": "J"
+  }
+}

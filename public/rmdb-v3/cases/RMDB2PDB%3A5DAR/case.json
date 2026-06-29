@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5DAR",
+  "biologicalMoleculeName": "5DAR",
+  "caseId": "5DAR",
+  "caseKey": "RMDB2PDB:5DAR",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "5DAR",
+  "profileCount": 4
+}

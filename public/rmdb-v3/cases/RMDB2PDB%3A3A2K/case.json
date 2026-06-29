@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3A2K",
+  "biologicalMoleculeName": "3A2K",
+  "caseId": "3A2K",
+  "caseKey": "RMDB2PDB:3A2K",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3A2K",
+  "profileCount": 3
+}

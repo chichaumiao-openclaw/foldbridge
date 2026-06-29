@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6IP5",
+  "biologicalMoleculeName": "6IP5",
+  "caseId": "6IP5",
+  "caseKey": "RASP2PDB:6IP5",
+  "chains": [
+    "1A",
+    "1B",
+    "1C",
+    "2m",
+    "zu"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "6IP5",
+  "profileCount": 232
+}

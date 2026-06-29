@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:2LKR",
+  "biologicalMoleculeName": "2LKR",
+  "caseId": "2LKR",
+  "caseKey": "RASP2PDB:2LKR",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "2LKR",
+  "profileCount": 49
+}

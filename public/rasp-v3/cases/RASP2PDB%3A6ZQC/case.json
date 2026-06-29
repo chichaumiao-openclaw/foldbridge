@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6ZQC",
+  "biologicalMoleculeName": "6ZQC",
+  "caseId": "6ZQC",
+  "caseKey": "RASP2PDB:6ZQC",
+  "chains": [
+    "D2",
+    "D3",
+    "D4"
+  ],
+  "confidenceDisplayLabel": "A MODERATE",
+  "pdbId": "6ZQC",
+  "profileCount": 109
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9BUS",
+  "biologicalMoleculeName": "9BUS",
+  "caseId": "9BUS",
+  "caseKey": "RASP2PDB:9BUS",
+  "chains": [
+    "AA"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "9BUS",
+  "profileCount": 6
+}

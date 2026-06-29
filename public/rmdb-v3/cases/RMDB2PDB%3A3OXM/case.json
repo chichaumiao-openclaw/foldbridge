@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3OXM",
+  "biologicalMoleculeName": "3OXM",
+  "caseId": "3OXM",
+  "caseKey": "RMDB2PDB:3OXM",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "3OXM",
+  "profileCount": 2
+}

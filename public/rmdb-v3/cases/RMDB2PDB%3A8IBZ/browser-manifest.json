@@ -1,0 +1,28 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "E": {
+      "case2dPath": "chains/E/case-2d-structure.json.gz",
+      "chainId": "E",
+      "chainRoot": "chains/E",
+      "linkedViewBundlePath": "chains/E/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/E/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/E/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "E",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:8IBZ:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0000.rdat#1632": "E",
+    "annojoin:RMDB2PDB:8IBZ:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0001.rdat#1632": "E",
+    "annojoin:RMDB2PDB:8IBZ:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0002.rdat#1632": "E",
+    "annojoin:RMDB2PDB:8IBZ:confidence:B:top_x_279::data-general/data-general/P90LIB_2A3_0000.rdat#1632": "E",
+    "annojoin:RMDB2PDB:8IBZ:confidence:B:top_x_279::data-general/data-general/P90LIB_2A3_0001.rdat#1632": "E",
+    "annojoin:RMDB2PDB:8IBZ:confidence:B:top_x_279::data-general/data-general/P90LIB_2A3_0002.rdat#1632": "E"
+  }
+}

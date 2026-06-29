@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2VPL",
+  "biologicalMoleculeName": "2VPL",
+  "caseId": "2VPL",
+  "caseKey": "RMDB2PDB:2VPL",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "2VPL",
+  "profileCount": 2
+}

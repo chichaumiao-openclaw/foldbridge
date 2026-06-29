@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9RUC",
+  "biologicalMoleculeName": "9RUC",
+  "caseId": "9RUC",
+  "caseKey": "RMDB2PDB:9RUC",
+  "chains": [
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "9RUC",
+  "profileCount": 4
+}

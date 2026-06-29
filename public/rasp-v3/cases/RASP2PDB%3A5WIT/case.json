@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5WIT",
+  "biologicalMoleculeName": "5WIT",
+  "caseId": "5WIT",
+  "caseKey": "RASP2PDB:5WIT",
+  "chains": [
+    "1w",
+    "1x"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "5WIT",
+  "profileCount": 16
+}

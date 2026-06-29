@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5VZL",
+  "biologicalMoleculeName": "5VZL",
+  "caseId": "5VZL",
+  "caseKey": "RMDB2PDB:5VZL",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "5VZL",
+  "profileCount": 3
+}

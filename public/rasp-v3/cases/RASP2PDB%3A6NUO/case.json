@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6NUO",
+  "biologicalMoleculeName": "6NUO",
+  "caseId": "6NUO",
+  "caseKey": "RASP2PDB:6NUO",
+  "chains": [
+    "QV"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "6NUO",
+  "profileCount": 5
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3HAY",
+  "biologicalMoleculeName": "3HAY",
+  "caseId": "3HAY",
+  "caseKey": "RMDB2PDB:3HAY",
+  "chains": [
+    "E"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3HAY",
+  "profileCount": 2
+}

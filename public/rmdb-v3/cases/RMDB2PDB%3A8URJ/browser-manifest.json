@@ -1,0 +1,57 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "G": {
+      "case2dPath": "chains/G/case-2d-structure.json.gz",
+      "chainId": "G",
+      "chainRoot": "chains/G",
+      "linkedViewBundlePath": "chains/G/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/G/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/G/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "G",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-eterna/data-eterna/OK1LIB_DMS_0000.rdat#67716": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFM100_DMS_0000.rdat#20478": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFMREP_DMS_0000.rdat#17311": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFMREP_DMS_0000.rdat#51639": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24270": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24271": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24272": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24273": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24278": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24292": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24293": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24294": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24295": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24296": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24297": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24298": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0001.rdat#24299": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-eterna/data-eterna/OK1LIB_2A3_0000.rdat#67716": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RFM100_2A3_0000.rdat#20478": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RFMREP_2A3_0000.rdat#17311": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RFMREP_2A3_0000.rdat#51639": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24269": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24270": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24271": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24272": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24273": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24278": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24292": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24293": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24294": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24295": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24296": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24297": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24298": "G",
+    "annojoin:RMDB2PDB:8URJ:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0001.rdat#24299": "G"
+  }
+}
