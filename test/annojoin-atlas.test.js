@@ -294,6 +294,23 @@ test('atlas search state preserves the canonical moleculeDisplayName for groupin
   assert.equal((html.match(/annojoin-molecule-same-as-group/g) || []).length, 2);
 });
 
+test('normalizeCase passes through chainPlacements', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [{
+      pdb_id: '4V99',
+      chainPlacements: [
+        { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+        { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+      ]
+    }]
+  });
+  const c = state.cases.find((row) => row.pdbId === '4V99');
+  assert.deepEqual(c.chainPlacements, [
+    { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+    { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+  ]);
+});
+
 test('atlas search state prefers PDB-level display cases while preserving source case counts', () => {
   const state = buildAtlasSearchState({
     cases: [

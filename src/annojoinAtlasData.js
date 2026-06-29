@@ -224,6 +224,15 @@ function buildCaseHierarchy(cases = []) {
   return [...parents.values()].sort((a, b) => a.label.localeCompare(b.label));
 }
 
+function normalizeChainPlacements(value) {
+  return asArray(value)
+    .map((entry) => ({
+      classLabel: text(entry?.classLabel || entry?.class_label),
+      nameLabel: text(entry?.nameLabel || entry?.name_label)
+    }))
+    .filter((entry) => entry.classLabel || entry.nameLabel);
+}
+
 function normalizeCase(row) {
   const atlasCaseKey = atlasCaseKeyFor(row);
   const isMergedDisplayRow = row.isMergedDisplayRow === true || truthy(row.is_merged_display_row);
@@ -239,10 +248,7 @@ function normalizeCase(row) {
     caseId: text(row.case_id || row.caseId),
     pdbId: text(row.pdb_id || row.pdbId),
     chains: splitList(row.pdb_chain_ids || row.chains),
-    parentClassLabel: text(row.parent_class_label || row.parentClassLabel),
-    parentClassSource: text(row.parent_class_source || row.parentClassSource),
-    childClassLabel: text(row.child_class_label || row.childClassLabel),
-    childClassSource: text(row.child_class_source || row.childClassSource),
+    chainPlacements: normalizeChainPlacements(row.chainPlacements || row.chain_placements),
     moleculeDisplayName: text(row.molecule_display_name || row.moleculeDisplayName),
     biologicalMoleculeName: text(row.biological_molecule_name || row.biologicalMoleculeName),
     biologicalMoleculeNameSource: text(row.biological_molecule_name_source || row.biologicalMoleculeNameSource),
