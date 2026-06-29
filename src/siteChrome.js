@@ -246,7 +246,7 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     ? `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><img class="hss-snapshot" src="${base}/${caseData.png_3d}" alt="${caseData.pdb_id || ''} tertiary structure, reactivity-colored" loading="lazy"></div>`
     : `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><div class="hss-missing">3D snapshot unavailable</div></div>`;
   const scenes = caseData.scenes.map((s, i) => `
-    <div class="hss-scene" data-scene="${i}"${i === 0 ? ' data-scene-active="true"' : ''}>
+    <div class="hss-scene${i === 0 ? ' is-active' : ''}" data-scene="${i}">
       <div class="hss-scene-num">${s.n || ''}</div>
       <h3 class="hss-scene-title">${s.title || ''}</h3>
       <p class="hss-scene-body">${s.body || ''}</p>

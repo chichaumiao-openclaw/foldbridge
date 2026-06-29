@@ -77,7 +77,7 @@ test('pickFeaturedCase tolerates bad input', () => {
 
 test('renderHomeScrollStory emits 3 scenes + 3 state layers + legend', () => {
   const html = renderHomeScrollStory(SAMPLE_CASE, { assetBase: './assets/hss' });
-  const scenes = html.match(/class="hss-scene"/g) || [];
+  const scenes = html.match(/class="hss-scene(?:"| )/g) || [];
   const layers = html.match(/class="hss-layer/g) || [];
   assert.equal(scenes.length, 3);
   assert.equal(layers.length, 3);
@@ -88,6 +88,10 @@ test('renderHomeScrollStory emits 3 scenes + 3 state layers + legend', () => {
   assert.match(html, /tRNA-Phe \(yeast\)/);
   assert.match(html, /And collapse into the 3D fold/);
   assert.match(html, /class="hss-layer is-active"/);
+  // 首个场景初始即 is-active：CSS/JS 都只认 .is-active 类，渲染层须先点亮 scene 0，
+  // 否则桌面端首屏所有场景暗着(opacity .35)直到首次 intersection 才亮（初始渲染闪烁）。
+  assert.match(html, /class="hss-scene is-active" data-scene="0"/);
+  assert.doesNotMatch(html, /data-scene-active/); // 旧死属性应已移除
 });
 
 test('renderHomeScrollStory returns placeholder shell on empty input', () => {
