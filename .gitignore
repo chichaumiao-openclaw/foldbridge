@@ -10,6 +10,8 @@ node_modules/
 .npm-cache/
 dist/
 
+.worktrees/
+
 *.log
 
 # Generated from the ANNOCONFIDENCE / ANNOJOIN stage package.
