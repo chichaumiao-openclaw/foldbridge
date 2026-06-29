@@ -39,8 +39,8 @@
 **零回归护栏：** 现有 `test/` 全套（222）保持绿；`renderHomeProbingCarousel` / `homePage` 现有结构不破坏；顶部锁定模板（黑栏 + bundle header + 主导航）零改动。
 
 **真实数据约束（任务 1 已核对，务必遵守，不得伪造）：**
-- 1OB5 `visualPreview.reactivity1d` = **48 点**，起于 `F:27 G`。每点字段：`index` / `pdbResidue`（如 `"F:27 G"`）/ `rmdbPosition`（27）/ `rmdbBase`（`G`）/ `reactivityValue`（**连续值，0 ~ 2.39+，非归一化**）/ `colorBin`（`low`/`high`）。
-- `reactivityValue` 必须**归一化到 [0,1]** 才能喂色标：`norm = min(1, value / NORM_CEILING)`，`NORM_CEILING` 取该案例 reactivity 的稳健上限（如 P95 或固定 2.5，build 时算好写进 story.json，渲染端只读不算）。
+- 1OB5 `visualPreview.reactivity1d` = **48 点**，起于 `F:27 G`。每点字段：`index` / `pdbResidue`（如 `"F:27 G"`）/ `rmdbPosition`（27）/ `rmdbBase`（`G`）/ `reactivityValue`（**连续值，已核对真实范围 -2.5548 ~ 4.0996，含 5 个负值、1 个 >2.5，非归一化**）/ `colorBin`（`low`/`high`）。
+- `reactivityValue` 必须**钳制并归一化到 [0,1]** 才能喂色标：`norm = max(0, min(1, value / NORM_CEILING))`（负值→0 冷绿，超界→1 暖橙；`reactivityColor` 自身也再钳一次，双保险）。`NORM_CEILING` 取该案例 reactivity 的稳健上限——本案例 **P95 = 1.71**（build 时算好写进 story.json，渲染端只读不算）。注意 1OB5 有负值与 >2.5 的离群点，故必须用钳制而非裸除法。
 - `pairArcs` 是 **segment 级 LSS 统计**（`pairedEvaluable`/`unpairedEvaluable`/`lssStatus`），**不是逐碱基 dot-bracket**。逐碱基 `paired_state` 浏览器资产里没有 → 由任务 8 生成 2D 快照时从离线 dbn（`/Volumes/tianyi/.../dbn/1ob5.dbn`）派生写进 story.json。**1D 着色只依赖归一化 reactivity；paired_state 仅供辅助文案，缺失时省略不报错。**
 
 ---
@@ -55,7 +55,7 @@
 
 - [ ] **步骤 1：从真实 case 资产提取 1OB5 的 48 点 reactivity 写 story.json**
 
-用一次性脚本从 `RMDB2PDB%3A1OB5.json` 读 `visualPreview.reactivity1d.points`，按 `index` 升序拼 `sequence`（取 `rmdbBase`）、`reactivity`（取 `reactivityValue`）、`positions`（取 `rmdbPosition`）。算 `norm_ceiling`（reactivity 的 P95，截断不低于 1.0）。写出 `story.json`：
+用一次性脚本从 `RMDB2PDB%3A1OB5.json` 读 `visualPreview.reactivity1d.points`，按 `index` 升序拼 `sequence`（取 `rmdbBase`）、`reactivity`（取 `reactivityValue`，**原样保留负值与离群点，不预钳制**）、`positions`（取 `rmdbPosition`）。算 `norm_ceiling`=该案例 reactivity 的 **P95**（本案例实测 = **1.71**；若某案例 P95 < 1.0 则截断到 1.0）。写出 `story.json`：
 
 ```json
 {
@@ -69,7 +69,7 @@
       "source_family": "RMDB",
       "confidence_label": "A REFERENCE",
       "profile_id": "data-rna-structures/.../M2PK90_DMS_0000.rdat#8182",
-      "norm_ceiling": 2.5,
+      "norm_ceiling": 1.71,
       "sequence": ["G","A","A","U","G","A", "..."],
       "reactivity": [0, 0, 2.3914, 0, 0.3416, 1.3665, "..."],
       "positions": [27, 28, 29, 30, 31, 32, "..."],
@@ -101,7 +101,7 @@
 ## 反应性色标（单一权威）
 低 0 = 冷绿 #174B3A → 中 0.5 = 金 #E6C260 → 高 1 = 暖橙 #E8743E。
 1D 实时着色（src/siteChrome.js:reactivityColor）、2D VARNA、3D molstar **必须**用这同一组三档锚点。
-归一化：norm = min(1, reactivityValue / norm_ceiling)，norm_ceiling 见 story.json。
+归一化：norm = max(0, min(1, reactivityValue / norm_ceiling))，norm_ceiling 见 story.json（本案例 P95=1.71，负值钳到 0、离群高值钳到 1）。
 
 ## 重生成步骤（手动一次性策展）
 1. story.json：从 annojoin-atlas/cases/RMDB2PDB%3A<PDB>.json 的 visualPreview.reactivity1d.points 提取。
@@ -685,7 +685,7 @@ git commit -m "feat(home-scroll-story): sticky-left scroll-right layout + legend
 
 - [ ] **步骤 2：VARNA 离线导出 2D SVG（反应性着色）**
 
-用仓库 `tools/varna/` 离线加载 1OB5 dot-bracket + 上述色标（按归一化 reactivity 给每残基着色，norm = min(1, value/2.5)）→ 导出 `1ob5-2d.svg`。验证：SVG 打开有 cloverleaf 拓扑、着色与 1D 一致（高反应性暖橙落 loop、低反应性冷绿落 stem）。
+用 VARNA jar（**位于姊妹流水线仓库 `~/docs/rmdb2pdb/tools/varna/VARNAv3-93.jar`，foldbridge 仓库本身无此目录**）离线加载 1OB5 dot-bracket + 上述色标（按钳制归一化 reactivity 给每残基着色，`norm = max(0, min(1, value/1.71))`）→ 导出 `1ob5-2d.svg`。验证：SVG 打开有 cloverleaf 拓扑、着色与 1D 一致（高反应性暖橙落 loop、低反应性冷绿落 stem）。
 
 - [ ] **步骤 3：molstar 离线截图 3D PNG（反应性着色）**
 
