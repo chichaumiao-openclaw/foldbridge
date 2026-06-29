@@ -6244,8 +6244,12 @@ body[data-mode="dark"] .mode-toggle:hover {
   background: linear-gradient(90deg, #174B3A, #E6C260, #E8743E); }
 .hss-scenes { padding: 30px 0 60px; }
 .hss-scene { min-height: 78vh; display: flex; flex-direction: column; justify-content: center;
-  opacity: .35; transform: translateY(18px); transition: opacity .5s, transform .5s; }
-.hss-scene.is-active { opacity: 1; transform: translateY(0); }
+  transition: opacity .5s, transform .5s; }
+/* 滚动渐入仅在 JS 接上 observer 后启用（.hss-js）；无 JS 时场景全部可读（降级，spec §8） */
+@media (min-width: 821px) {
+  .home-scroll-story.hss-js .hss-scene { opacity: .35; transform: translateY(18px); }
+  .home-scroll-story.hss-js .hss-scene.is-active { opacity: 1; transform: translateY(0); }
+}
 .hss-scene-num { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 1px; }
 .hss-scene-title { font-size: 30px; margin: 8px 0 0; letter-spacing: -.5px; color: var(--textPrimary); }
 .hss-scene-body { font-size: 15.5px; line-height: 1.7; color: var(--textSecondary); margin: 14px 0 0; max-width: 440px; }

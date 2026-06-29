@@ -3505,6 +3505,8 @@ function initHomeScrollStory() {
   if (scenes.length === 0 || layers.length === 0) return;
   if (typeof IntersectionObserver !== 'function') return; // 不支持 → CSS 静态堆叠降级（任务 7）
 
+  story.classList.add('hss-js'); // observer 确实接上后才启用滚动渐隐；无 JS/无 observer → 场景全可读（spec §8）
+
   const activate = (idx) => {
     scenes.forEach((s) => s.classList.toggle('is-active', Number(s.dataset.scene) === idx));
     layers.forEach((l) => l.classList.toggle('is-active', Number(l.dataset.stage) === idx));
