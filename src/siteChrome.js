@@ -191,6 +191,8 @@ export function renderHomeProbingCarousel(articles = []) {
 // 反应性色标（单一权威）：0 冷绿 #174B3A → .5 金 #E6C260 → 1 暖橙 #E8743E。
 // 1D 实时着色与 2D/3D 离线快照共用同一组锚点（见 home-scroll-story/README.md）。
 const HSS_COLOR_STOPS = [[23, 75, 58], [230, 194, 96], [232, 116, 62]];
+// 无反应性数据的残基中性灰（spec §3：禁色标外推，与 2D/3D 渲染器一致）。
+const HSS_NEUTRAL = '#E9EDEA';
 
 export function reactivityColor(norm) {
   const t = Math.max(0, Math.min(1, Number(norm) || 0));
@@ -208,7 +210,14 @@ export function renderReactivityAlignment(caseData = {}) {
   const react = Array.isArray(caseData.reactivity) ? caseData.reactivity : [];
   const ceiling = Number(caseData.norm_ceiling) || 1;
   const cells = seq.map((base, i) => {
-    const norm = Math.min(1, (Number(react[i]) || 0) / ceiling);
+    const datum = react[i];
+    const raw = Number(datum);
+    // 无反应性数据（null/undefined/非有限）→ 中性灰占位，绝不外推色标（数据诚实，spec §3）。
+    // 注意 Number(null)===0 是有限值，须显式把 null 当缺失，否则会误着冷绿。
+    if (datum == null || !Number.isFinite(raw)) {
+      return `<span class="hss-cell hss-cell-nodata" style="background:${HSS_NEUTRAL}">${base}</span>`;
+    }
+    const norm = Math.min(1, raw / ceiling);
     return `<span class="hss-cell" style="background:${reactivityColor(norm)}">${base}</span>`;
   }).join('');
   return `<div class="hss-alignment" role="img" aria-label="Per-residue reactivity">${cells}</div>`;

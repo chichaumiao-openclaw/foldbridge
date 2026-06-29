@@ -43,6 +43,24 @@ test('renderReactivityAlignment renders empty alignment when no residues', () =>
   assert.doesNotMatch(html, /class="hss-cell"/);
 });
 
+test('renderReactivityAlignment colors missing-datum residues neutral grey, not cold-green', () => {
+  // 数据诚实（spec §3）：无反应性数据的残基不得用色标外推，须落中性灰 #E9EDEA，
+  // 与 2D/3D 离线渲染器一致——绝不能与真实低反应性(0→冷绿)残基混淆。
+  const caseData = {
+    sequence: ['G', 'A', 'C', 'U'],
+    reactivity: [0, null, undefined, 2.5], // 第2/3个残基缺数据
+    norm_ceiling: 2.5,
+  };
+  const html = renderReactivityAlignment(caseData);
+  const cells = html.match(/class="hss-cell\b/g) || [];
+  assert.equal(cells.length, 4);
+  // 真实 0 → 冷绿；缺数据 → 中性灰；满值 → 暖橙
+  const neutral = html.match(/#E9EDEA/gi) || [];
+  assert.equal(neutral.length, 2, 'two missing-datum residues must be neutral grey');
+  assert.match(html, /rgb\(23, 75, 58\)/);   // 真实 reactivity 0 仍冷绿（不被误判为缺数据）
+  assert.match(html, /rgb\(232, 116, 62\)/); // 满值暖橙
+});
+
 test('pickFeaturedCase is deterministic and wraps by visitIndex', () => {
   const cases = [{ pdb_id: 'A' }, { pdb_id: 'B' }];
   assert.equal(pickFeaturedCase(cases, 0).pdb_id, 'A');
