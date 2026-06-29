@@ -187,3 +187,29 @@ export function renderHomeProbingCarousel(articles = []) {
       </div>
     </section>`;
 }
+
+// 反应性色标（单一权威）：0 冷绿 #174B3A → .5 金 #E6C260 → 1 暖橙 #E8743E。
+// 1D 实时着色与 2D/3D 离线快照共用同一组锚点（见 home-scroll-story/README.md）。
+const HSS_COLOR_STOPS = [[23, 75, 58], [230, 194, 96], [232, 116, 62]];
+
+export function reactivityColor(norm) {
+  const t = Math.max(0, Math.min(1, Number(norm) || 0));
+  const [a, b, c] = HSS_COLOR_STOPS;
+  let lo, hi, f;
+  if (t < 0.5) { lo = a; hi = b; f = t / 0.5; }
+  else { lo = b; hi = c; f = (t - 0.5) / 0.5; }
+  const mix = lo.map((v, i) => Math.round(v + (hi[i] - v) * f));
+  return `rgb(${mix[0]}, ${mix[1]}, ${mix[2]})`;
+}
+
+// 1D alignment 态：每个残基一个带色格。无 DOM / 无 window。
+export function renderReactivityAlignment(caseData = {}) {
+  const seq = Array.isArray(caseData.sequence) ? caseData.sequence : [];
+  const react = Array.isArray(caseData.reactivity) ? caseData.reactivity : [];
+  const ceiling = Number(caseData.norm_ceiling) || 1;
+  const cells = seq.map((base, i) => {
+    const norm = Math.min(1, (Number(react[i]) || 0) / ceiling);
+    return `<span class="hss-cell" style="background:${reactivityColor(norm)}">${base}</span>`;
+  }).join('');
+  return `<div class="hss-alignment" role="img" aria-label="Per-residue reactivity">${cells}</div>`;
+}
