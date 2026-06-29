@@ -897,6 +897,7 @@ function applyMolstarTargetDisplay(residueKey = state.selectedResidueKey, attemp
       // alignment-cropped target chain: dim non-selected target atoms without labeling them unaligned.
       nonSelectedColor: MOLSTAR_CONTEXT_COLOR,
     });
+    focusMolstarOnSelection(viewer, payload, residueKey);
   } catch (_error) {
     if (attempt < 8) {
       window.setTimeout(() => applyMolstarTargetDisplay(residueKey, attempt + 1), 250);
@@ -904,6 +905,26 @@ function applyMolstarTargetDisplay(residueKey = state.selectedResidueKey, attemp
       el.molstarStatus.textContent = "Mol* instance loaded; target display payload rejected.";
     }
   }
+}
+
+// Re-aim the camera at the active residue so a 1D/2D selection does not leave the
+// viewer parked on a previously clicked 3D residue. Clearing the selection resets
+// the camera to the full cropped chain.
+function focusMolstarOnSelection(viewer, payload, residueKey) {
+  if (!residueKey) {
+    if (typeof viewer.visual?.reset === "function") {
+      viewer.visual.reset({ camera: true });
+    }
+    return;
+  }
+  if (typeof viewer.visual?.focus !== "function") return;
+  const selectedItem = payload.find((item) => item.residue_key === residueKey);
+  if (!selectedItem) return;
+  viewer.visual.focus([{
+    struct_asym_id: selectedItem.struct_asym_id,
+    start_residue_number: selectedItem.start_residue_number,
+    end_residue_number: selectedItem.end_residue_number,
+  }]);
 }
 
 function buildMolstarSelectionPayload(profileId = activeProfileId(), selectedKey = state.selectedResidueKey) {
