@@ -46,28 +46,34 @@ parentClassLabel → childClassLabel → PDB
 
 ## 3. 架构总览
 
+> **关键校正（实现前读真实渲染路径得出）**：总表的实际分组渲染**不**走 `annojoinAtlasData.js` 的 `buildCaseHierarchy`（L194/L579-580 产出的 `caseHierarchy`/`sourceCaseHierarchy` 是**死代码**，grep 确认 view 从不消费）。真实路径是 **`src/annojoinAtlasTableModel.js:buildAnnojointTableGroups`**，由 `annojoinAtlasView.js:470` 调用。分组是**逐页**的（在 `paginateAnnojointRows` 之后对当页 ~50 行 case 分组），不是全量静态树。三层折叠 UI **已存在**（`annojoinAtlasView.js:180-219` parent-group-row → child-group-row → case-rows）。本设计的核心（chainPlacements 字段、2+3 placement 展开、distinct-PDB 计数、移除 case-level 标签噪声）不变，仅把改造目标从 `buildCaseHierarchy` 改为 **table model 的分组函数**。
+
 ```
 build-annojoin-atlas.mjs
   │  chainIdentityIndex = buildChainIdentityIndex({declaredIdentityRows, governedRows})
   │  （现状：仅注入 per-case 详情资产 L530）
   ▼
 buildAtlasIndexAsset({ ..., chainIdentityIndex })   ← 新增入参
-  │  对每个 displayCase 派生 chainPlacements = 去重后的 [(class, name)]
-  │  buildChainHierarchy(displayCases) → sourceChainHierarchy（全量静态树）
+  │  对每个 displayCase 派生 chainPlacements = 去重后的 [(classLabel, nameLabel)]
   ▼
-index.json { displayCases[].chainPlacements, sourceChainHierarchy,
-             totalCaseCount, totalPlacementCount, ... }
+index.json { displayCases[].chainPlacements, totalCaseCount, totalPlacementCount, ... }
   ▼
-浏览器 annojoinAtlasData.js: buildChainHierarchy(filteredCases) 在过滤后重算
-  （沿用现状 buildCaseHierarchy(cases) 的过滤响应语义，cases 已过滤）
+浏览器 annojoinAtlasData.js:normalizeCase 透传 chainPlacements（铁律：漏带字段是隐形杀手）
   ▼
-annojoinAtlasView.js: 三层折叠 UI（class → name → PDB）
+annojoinAtlasView.js:465-470 真实渲染管线：
+  sortAnnojointCases(atlasState.cases)        ← 按 case 主 placement 排序
+    → searchAnnojointRows                      ← 搜索（搜索态不分组）
+    → paginateAnnojointRows                    ← 分页（pagination 单元 = case）
+    → buildAnnojointTableGroups(pagination.rows) ← 逐页：每 case 按 chainPlacements 展开成 class→name→PDB
+  ▼
+annojoinAtlasView.js:180-219 三层折叠 UI（已存在，class 行 → name 行 → PDB 行）
 ```
 
 **单元边界**：
-- `buildChainHierarchy(displayCases)` — 纯函数，无 I/O。输入带 `chainPlacements` 字段的 displayCases 数组，输出三层树。build 时（全量）与浏览器侧（过滤后）共用同一函数。可独立单测。
-- placement 派生（需 chain index）发生在 build 的 `buildAtlasIndexAsset` 里，结果写进 displayCase；树构建只读 `chainPlacements`，不再依赖 chain index。
-- 浏览器侧用过滤后的 cases 重算树（与既有"分组树随搜索/facet 收窄"行为一致），不重算 placement（直接读 build 时算好的）。
+- `buildAnnojointTableGroups(rows)`（table model，现签名不变）— 纯函数，无 I/O。改造：从"每 row 一个 (parentLabel, childLabel) 分组"变成"遍历 `row.chainPlacements`，每个 `(classLabel, nameLabel)` 把该 row 挂到 `class → name` 分支"。多身份 case 自然出现在多分支。可独立单测（`test/annojoin-atlas-table-model.test.js`）。
+- `sortAnnojointCases(cases)`（table model）— 改造：按 case 的**主 placement**（`chainPlacements[0]` 的 class，再 name）排序，保证逐页分组确定性。pagination 单元仍是 case，故同一 case 的所有 placement 必落同一页（不会被分页拆散）。
+- placement 派生（需 chain index）发生在 build 的 `buildAtlasIndexAsset` 里，结果写进 displayCase 的 `chainPlacements`；table model 只读 `chainPlacements`，不依赖 chain index。
+- 逐页分组语义沿用现状（`buildAnnojointTableGroups(pagination.rows)` 本就对当页分组，随搜索/分页变化）。
 
 ## 4. 数据流改造（build 脚本 + index builder）
 
@@ -76,13 +82,13 @@ annojoinAtlasView.js: 三层折叠 UI（class → name → PDB）
 
 ### 4.2 corpus.mjs `buildAtlasIndexAsset`
 - 函数签名新增 `chainIdentityIndex = new Map()`。
-- 给每个 displayCase 派生 **`chainPlacements`** 字段：`[{ classLabel, nameLabel }]`，由该 PDB 在 chain index 里所有 RNA chain 按 `(rnaClass, displayName)` 去重而来（见 §5.2）。chain 查无 → 单条兜底 placement（见 §6）。该字段随 displayCase 进 index，供浏览器在**过滤后**重算分组树（见 §7.1）。
-- 在 `buildDisplayCases(normalizedCases)` 之后，调用 `buildChainHierarchy(displayCases)`（消费各 displayCase 的 `chainPlacements`）得到**全量静态树**，作为 `sourceChainHierarchy` 发到 index（仅作未过滤态/计数参考）。
+- 给每个 displayCase 派生 **`chainPlacements`** 字段：`[{ classLabel, nameLabel }]`，由该 PDB 在 chain index 里所有 RNA chain 按 `(rnaClass, displayName)` 去重而来（见 §5.2）。chain 查无 → 单条兜底 placement（见 §6）。该字段随 displayCase 进 index，供浏览器 table model 逐页展开分组（见 §7）。
+- **`chainPlacements` 数组按 `(classLabel, nameLabel)` localeCompare 升序排好再写**（保证 `chainPlacements[0]` = 该 case 的确定性主 placement，供 `sortAnnojointCases` 排序用，见 §3 单元边界）。
 - 返回对象：
-  - `sourceChainHierarchy`（全量静态树，取代旧 `caseHierarchy`）
   - `totalCaseCount` = distinct PDB 数（= `displayCases.length`，不变）
-  - 新增 `totalPlacementCount` = 全量树内所有叶（placement）之和
-- **`chainPlacements` 必须在 `slimAtlasIndexForWrite` 中保留**（浏览器重算树依赖它），不可像 `profilePreview` 那样被瘦身丢弃。
+  - 新增 `totalPlacementCount` = 全量 `displayCases[].chainPlacements.length` 之和（供表头双显，见 §5.3）
+  - **不再产 `caseHierarchy`/`sourceChainHierarchy`** —— 旧 `caseHierarchy` 是死代码（§3 校正），直接删，不替换成新静态树。分组逐页在浏览器 table model 算。
+- **`chainPlacements` 必须在 `slimAtlasIndexForWrite` 中保留**（table model 分组依赖它），不可像 `profilePreview` 那样被瘦身丢弃。
 
 ### 4.3 canonical name 复用
 顶层 class 直接用 `parent_rna_class`（chain index 已带 `rnaClass` 字段）。中层 name 用 chain index 的 `displayName` 字段——它已在 `annojoin-atlas-chain-identity.mjs` 经 `buildCanonicalByFoldKey` 折叠（`declared_identity_phrase || parent_rna_name` 取全库最高频拼写）。**不在本设计里重新折叠**，直接消费 index 已算好的 `displayName`，保证总表与详情页的 name 一致。
@@ -102,18 +108,18 @@ parent_rna_class          顶层（干净受控词表）
 2. 按 `(rnaClass, displayName)` 去重 → 得到该 PDB 的 distinct 身份对集合。
 3. 去重对集合写进 displayCase 的 `chainPlacements` 字段。
 
-**树构建**（`buildChainHierarchy`，build 与浏览器共用）遍历各 displayCase 的 `chainPlacements`，每个 `(class, name)` 对把该 PDB 挂到对应 `class → name` 分支的叶。多 chain 多身份的 PDB 自然出现在多个分支（如核糖体装配体同时在 `rRNA → 16S ribosomal RNA` 和 `tRNA → tRNA-Lys` 下各出现一次）。
+**逐页分组**（`buildAnnojointTableGroups(pagination.rows)`）遍历当页各 case 的 `chainPlacements`，每个 `(classLabel, nameLabel)` 把该 case 挂到对应 `parent(class) → child(name)` 分支的 rows。多 chain 多身份的 case 自然出现在多个分支（如核糖体装配体同时在 `rRNA → 16S ribosomal RNA` 和 `tRNA → tRNA-Lys` 下各出现一次）。
 
 ### 5.3 计数语义（避免误读）
-- `totalCaseCount` = **distinct PDB 数**（唯一 PDB，不变，= displayCases.length）。
-- `totalPlacementCount` = 树内所有叶之和（含跨分支重复的同一 PDB）。
-- 每个 class / name 节点的 `caseCount` = 该节点子树下的 **distinct PDB 数**（不是 placement 数）——防止同一 PDB 在同一分支内因多条同身份链被重复计数。
-- 总表表头同时显示两数，文案如：`1,240 PDBs · 1,890 entries`。
+- `totalCaseCount` = **distinct PDB 数**（唯一 PDB，不变，= displayCases.length），index 顶层字段。
+- `totalPlacementCount` = 全量 `chainPlacements.length` 之和（含同一 PDB 的多身份），index 顶层字段。
+- table model 分组节点的 `count` 语义沿用现状（当页该分支下的 row 计数）。由于逐页分组 + `sortAnnojointCases` 按主 placement 排序保证同 case 落同页，节点 count 反映当页可见 placement 数。**不**追求跨页 distinct-PDB 去重计数（YAGNI：现状逐页 count 已是既有语义，改动会破坏分页边界一致性）。
+- 总表表头同时显示两个 index 顶层数：`1,240 PDBs · 1,890 entries`（distinct PDB · 总 placement）。
 
 ### 5.4 节点排序
-- class 顶层：按 label `localeCompare` 升序（沿用 `buildCaseHierarchy` 的确定性排序）。
-- name 中层：同 class 内按 label `localeCompare` 升序。
-- PDB 叶：按 PDB id 升序。
+- `sortAnnojointCases`：按 case 主 placement（`chainPlacements[0]`）的 classLabel localeCompare、再 nameLabel localeCompare、再 pdbId、再 caseKey 升序。
+- `buildAnnojointTableGroups` 内：parent(class) / child(name) 分支按 label localeCompare 升序（沿用现状 Map 插入序 + 视图渲染序）。
+- 同分支内 case 行：按 sortAnnojointCases 既定序（pdbId 升序为主）。
 
 ## 6. 边界 case 处理（绝不丢 PDB）
 
@@ -127,18 +133,22 @@ build 时派生 `chainPlacements` 的兜底（保证每个 displayCase 至少一
 ## 7. 浏览器渲染层
 
 ### 7.1 数据层 `annojoinAtlasData.js`
-- `buildCaseHierarchy`（L194）替换为 `buildChainHierarchy(cases)`，调用点在 `buildAtlasSearchState` L579，**入参仍是过滤后的 `cases`**（保持现状的过滤响应语义：搜索/facet 收窄时分组树与节点 caseCount 实时随可见行变化）。
-- 浏览器侧 `buildChainHierarchy` 读各 case 的 `chainPlacements`（build 时算好），按 §5 展开树；不重算 placement，也不需要 chain index。
-- index 顶层 `sourceChainHierarchy`（全量静态树）映射到 `sourceCaseHierarchy` 现位（L580），作未过滤态参考。
-- `normalizeCase` 需保留透传 `chainPlacements` 字段（与 `moleculeDisplayName` 同类显式保留，铁律：漏带字段是隐形杀手）。
-- `parentBucketLabel`/`childBucketLabel`（L175/L181）移除（见 §8）。
+- `normalizeCase` 新增透传 `chainPlacements` 字段（`row.chainPlacements || row.chain_placements`，与 `moleculeDisplayName` 同类显式保留，铁律：漏带字段是隐形杀手）。每条 placement 规范成 `{ classLabel, nameLabel }`。
+- **删 `buildCaseHierarchy`（L194）及其调用点 L579 `caseHierarchy` 与 L580 `sourceCaseHierarchy`** —— 死代码（§3 校正，grep 确认 view 从不消费）。删后 `buildAtlasSearchState` 返回对象去掉这两键。
+- `normalizeCase` 里 `parentClassLabel/childClassLabel/parentClassSource/childClassSource` 读取移除（见 §8）。
 - 验证必须走真实 `buildAtlasSearchState`（铁律：验前端行为不能只读 raw index，要过真实 data 层）。
 
-### 7.2 视图层 `annojoinAtlasView.js`
-- 两层折叠组件扩成三层：class 行 → name 行 → PDB 行。
-- 复用现有 `annojoin-group-row-inner` flex 容器 + `+/-` 按钮 + 计数徽章样式（`styles.css:343-433`），第三层缩进沿用同一缩进 token。
-- 同一 PDB 在多分支重复出现是预期；每条 placement 是独立可点行，路由 `detailRouteId` 仍指向同一 PDB 详情页。
-- 折叠状态键需含层级路径。现有两层已用 `bucketId(parentLabel + childLabel)` 把父标签并入子 id 防串台；**第三层（PDB 叶）为新增**，键策略 `classId :: nameId :: pdbId`，避免不同分支同名节点状态串台。
+### 7.2 表模型层 `annojoinAtlasTableModel.js`（真实分组目标）
+- `parentGroupLabel(row)` / `childGroupLabel(row)`：当前读 `row.parentClassLabel || row.childClassLabel || moleculeDisplayName...`。**这两个函数不再用于分组**——分组改由 `chainPlacements` 驱动。保留它们仅作 case 主 placement 的便捷取值（或一并删除，见下）。
+- `sortAnnojointCases(cases)`：改为按 case 主 placement `chainPlacements[0]` 的 `(classLabel, nameLabel)` 排序（无 placement 兜底用空串），再 pdbId、再 caseKey。
+- `buildAnnojointTableGroups(cases)`：核心改造。当前对每 row 取单 `(parentLabel, childLabel)` 建一个分组；改为**遍历 `row.chainPlacements`**，每个 `(classLabel, nameLabel)` 把 row push 到对应 `parentId = groupSlug(classLabel)` / `childId = parentId::groupSlug(nameLabel)` 分支。多身份 case 出现在多分支。空 `chainPlacements` 不应发生（build 兜底保证 ≥1），防御性地按单条 `Unclassified RNA` 处理。
+- `annojoinExportRow(row)`：导出列 `parent_class_label`/`child_class_label`（L156-157）改为 `chain_class_labels`/`chain_name_labels`（`chainPlacements` 的 class/name 用 `;` 拼接），或保留列名但取自 placements——任选其一在计划里定，去掉对已删 `parentClassLabel` 的依赖。
+
+### 7.3 视图层 `annojoinAtlasView.js`
+- 三层折叠组件**已存在**（L180-219 parent-group-row → child-group-row → case-rows），结构无需新建。
+- `buildAnnojointTableGroups(pagination.rows)`（L470）入参不变，因 group 函数内部改为按 placement 展开，view 自动获得 class→name→PDB 三层。
+- 同一 case 在多分支重复出现是预期；每条 placement 渲染为独立可点行，`detailRouteId` 仍指向同一 PDB 详情页。
+- 折叠状态键现状已用 `parentId` / `childId = parentId::groupSlug(childLabel)`（table model L70），父 id 已并入子 id 防串台。placement 改造后 id 由 `(classLabel, nameLabel)` 生成，天然带层级路径，**无需额外改键策略**。
 
 ## 8. 移除（YAGNI 决断）
 
@@ -146,33 +156,37 @@ chain class 上线后，以下 case-level 分类逻辑成为死代码，**全部
 
 | 文件 | 移除项 |
 |---|---|
-| `annojoin-atlas-corpus.mjs` | `PLACEHOLDER_CLASS_LABEL_PATTERNS`、`PLACEHOLDER_CLASS_SOURCES`、`isPlaceholderClassLabel`、`cleanClassLabel`、`classCanonicalMap` 的构建与 parentClassLabel/childClassLabel 覆写、`normalizeCase` 里 `parentClassLabel/childClassLabel/parentClassSource/childClassSource` 派生 |
-| `annojoinAtlasData.js` | `parentBucketLabel`、`childBucketLabel`、`normalizeCase` 里 `parentClassLabel/childClassLabel` 读取 |
+| `annojoin-atlas-corpus.mjs` | `PLACEHOLDER_CLASS_LABEL_PATTERNS`、`PLACEHOLDER_CLASS_SOURCES`、`isPlaceholderClassLabel`、`cleanClassLabel`、`classCanonicalMap` 的构建与 parentClassLabel/childClassLabel 覆写、`normalizeCase` 里 `parentClassLabel/childClassLabel/parentClassSource/childClassSource` 派生；旧 `caseHierarchy` 相关 `caseDisplayLabel`/`parentBucketLabel`/`childBucketLabel`/`bucketId`/`buildCaseHierarchy`（L559-630，若确认无其他消费者）|
+| `annojoinAtlasData.js` | `buildCaseHierarchy`（L194）、调用点 `caseHierarchy`（L579）/`sourceCaseHierarchy`（L580）、`parentBucketLabel`/`childBucketLabel`（L175/L181）、`normalizeCase` 里 `parentClassLabel/childClassLabel` 读取（L242/L244）|
+| `annojoinAtlasTableModel.js` | `parentGroupLabel`/`childGroupLabel` 对 `parentClassLabel`/`childClassLabel` 的读取（改读 placement）；`annojoinExportRow` 对 `parentClassLabel`/`childClassLabel` 的引用 |
 
 **保留**：
 - `moleculeDisplayName` / `moleculeCanonicalMap` / `moleculeBaseName` — 仍作兜底 name（§6）。
 - raw provenance 字段不在范围内（本就只动 display-only 派生标签）。
+- `buildAnnojointTableGroups` / `sortAnnojointCases` / `groupSlug` / `paginateAnnojointRows` / `searchAnnojointRows`（table model 核心，仅改内部逻辑不删）。
 
-index 字段 `caseHierarchy` → 重命名 `sourceChainHierarchy`（全量静态树）；浏览器 data 层 `caseHierarchy` 输出键改为过滤后重算的 chain 树（沿用 L579 调用位）。`ANNOJOIN_ATLAS_SCHEMA_VERSION` bump。
+删 index 死字段 `caseHierarchy`；不引入替代静态树（分组逐页在 table model 算）。`ANNOJOIN_ATLAS_SCHEMA_VERSION` bump（新增 `chainPlacements` + `totalPlacementCount`，删 `caseHierarchy`）。
 
 ## 9. 测试与验证
 
-### 9.1 单元测试（`buildChainHierarchy` 纯函数 + placement 派生）
-- placement 派生（在 corpus 测试，`test/annojoin-atlas-corpus.test.js`）：多 chain 多身份 PDB → 去重后多个 `(class, name)`；chain 查无 → 单条 `Unclassified RNA` 兜底；class 空 → 兜底 class。
-- `buildChainHierarchy`：多身份 PDB 展开到多个 `class → name` 分支；同 PDB 同分支多条同身份 placement → 节点 `caseCount` 仍计 1（distinct PDB）；`totalPlacementCount` = 叶总和；`totalCaseCount` = distinct PDB 数；排序确定性（class/name localeCompare、PDB 升序）。
+### 9.1 单元测试（placement 派生 + table model 分组）
+- placement 派生（corpus 测试，`test/annojoin-atlas-corpus.test.js`）：多 chain 多身份 PDB → 去重后多个 `(classLabel, nameLabel)`、按 localeCompare 排好；chain 查无 → 单条 `Unclassified RNA` 兜底；class 空 → 兜底 class。断言 `totalPlacementCount` = 全量 `chainPlacements.length` 之和、`totalCaseCount` = distinct PDB 数、无 `caseHierarchy` 字段。
+- table model（`test/annojoin-atlas-table-model.test.js`）：`buildAnnojointTableGroups` 对带 `chainPlacements` 的 case 展开到多个 `class → name` 分支；多身份 case 在多分支各出现一次；`sortAnnojointCases` 按主 placement `(class, name)` 确定性排序；分组 id `parentId`/`childId=parentId::slug` 不串台。
 
-### 9.2 data 层测试（真实路径，过滤响应）
-- 经 `buildAtlasSearchState`（`test/annojoin-atlas.test.js`，import 真实 data 层）：断言无过滤时 chain 树三层结构；**加 query/facet 过滤后树随之收窄、节点 caseCount 反映可见行**（锁定过滤响应语义）；折叠状态键三层不串台。表模型层断言可落 `test/annojoin-atlas-table-model.test.js`。
+### 9.2 data 层测试（真实路径，过滤/分页响应）
+- 经 `buildAtlasSearchState`（`test/annojoin-atlas.test.js`，import 真实 data 层）：断言 `normalizeCase` 透传 `chainPlacements`；返回对象不含 `caseHierarchy`/`sourceCaseHierarchy`。
+- 经真实渲染管线 `sortAnnojointCases → searchAnnojointRows → paginateAnnojointRows → buildAnnojointTableGroups`：断言无搜索时三层分组结构；**加 query 过滤进搜索态时不分组（现状 searchActive 行为）**；分页边界——同一多身份 case 的所有 placement 落同一页（被 sortAnnojointCases 主 placement 排序保证），不被分页拆散。
 
 ### 9.3 真实 full build 验证
 - `FOLDBRIDGE_ANNOJOIN_ROOT=.../view_roots/combined` + 校准/identity/ANNO 根（默认 tianyi 路径），跑 `npm run build:annojoin-atlas`。
 - 核 manifest：`totalCaseCount`（distinct PDB）vs 新增 `totalPlacementCount`。
-- grep index.json：`displayCases[].chainPlacements` 存在且非空；无残留旧 `parentClassLabel/childClassLabel` 分组字段与 `caseHierarchy` 旧键。
+- grep index.json：`displayCases[].chainPlacements` 存在且非空；无残留旧 `parentClassLabel/childClassLabel` 字段与 `caseHierarchy` 旧键。
 - 抽样若干多 chain PDB（如 4V99 rRNA+tRNA、6YFT），确认在多分支正确出现。
 - `npm test` 全绿，零回归。
 - dist 同步：`rsync -a --delete src/assets/generated/annojoin-atlas/ → dist/.../`（生成产物 gitignore，本地重建）。
 
 ## 10. 风险与缓解
 - **placement 膨胀**：超多链装配体（4V99 有 120 链）展开 placement 可能放大行数。缓解：按 `(class, name)` 去重后，同一装配体的同身份链折叠为单条，实际 placement 远小于链数；§5.3 计数双显防误读。
+- **逐页分组的分页边界**：分组在 `paginateAnnojointRows` 之后逐页进行（现状语义），故同一 `class → name` 分支可能跨页出现在不同页的分组里。这是现状两层分组本就有的行为，非本设计引入；`sortAnnojointCases` 按主 placement 排序使同分支 case 相邻、尽量同页聚集。多身份**同一 case** 的所有 placement 因 pagination 单元是 case，必落同页（不被拆散）。
 - **schemaVersion 不兼容旧 dist 缓存**：bump version + full build 重写全部资产，浏览器硬刷新（Cmd+Shift+R）。
 - **chain index 覆盖不全**：RASP-only PDB 走 `Unclassified RNA` 兜底，不丢数据；与既有 RASP 上游缺口一致，非本设计引入。
