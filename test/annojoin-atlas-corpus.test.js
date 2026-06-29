@@ -767,6 +767,15 @@ test('slimAtlasIndexForWrite does not mutate its input', () => {
   assert.ok(index.displayCases.some((row) => 'profilePreview' in row));
 });
 
+test('slimAtlasIndexForWrite preserves chainPlacements while dropping profilePreview', () => {
+  const slim = slimAtlasIndexForWrite({
+    displayCases: [{ pdbId: '1ABC', chainPlacements: [{ classLabel: 'tRNA', nameLabel: 'tRNA-Phe' }], profilePreview: ['p1'], profilePreviewIsComplete: true }]
+  });
+  const dc = slim.displayCases[0];
+  assert.deepEqual(dc.chainPlacements, [{ classLabel: 'tRNA', nameLabel: 'tRNA-Phe' }]);
+  assert.equal('profilePreview' in dc, false);
+});
+
 test('shouldWritePerCaseAssets is false only when --index-only is present', () => {
   assert.equal(shouldWritePerCaseAssets([]), true);
   assert.equal(shouldWritePerCaseAssets(['--some-other-flag']), true);
