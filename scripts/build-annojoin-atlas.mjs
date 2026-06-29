@@ -35,8 +35,10 @@ const FEC_EVIDENCE_ROOT = process.env.FOLDBRIDGE_FEC_EVIDENCE_ROOT
   || path.join(ANNO_ROOT, '06_fec_evidence');
 const OUT_ROOT = process.env.FOLDBRIDGE_ANNOJOIN_ATLAS_OUT
   || path.resolve(__dirname, '../src/assets/generated/annojoin-atlas');
-const RMDB_ABC_LSS_ROOT = process.env.FOLDBRIDGE_RMDB_ABC_LSS_ROOT || '';
-const RASP_D_LSS_ROOT = process.env.FOLDBRIDGE_RASP_D_LSS_ROOT || '';
+const RMDB_ABC_LSS_ROOT = process.env.FOLDBRIDGE_RMDB_ABC_LSS_ROOT
+  || '/Volumes/tianyi/foldbridgeAssessert/confidence注册表/RMDB_ABC_LSS';
+const RASP_D_LSS_ROOT = process.env.FOLDBRIDGE_RASP_D_LSS_ROOT
+  || '/Volumes/tianyi/foldbridgeAssessert/confidence注册表/RASP_D_LSS';
 const PDB_CHAIN_IDENTITY_PATH = process.env.FOLDBRIDGE_PDB_CHAIN_IDENTITY
   || '/Volumes/tianyi/tmp/PDB/04_pdb_metadata/pdb_rna_entity_chain_declared_identity.tsv';
 const PDB_GOVERNED_MAP_PATH = process.env.FOLDBRIDGE_PDB_GOVERNED_MAP
