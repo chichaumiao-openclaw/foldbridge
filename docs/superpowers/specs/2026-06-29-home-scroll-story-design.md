@@ -72,7 +72,7 @@ FoldBridge 发布前的 UI/UX 完善工作中，本规格只聚焦**一个子项
 - `<pdb>-3d.png`：molstar 离线截图的三级结构（反应性着色），1～2 个代表角度。
 - `README.md`：记录"如何重生成"（方案 A 文档化流程：VARNA/molstar 离线渲染步骤 + 反应性着色参数 + 数据来源路径）。
 
-起步策展集（均已确认三态完整）：**1OB5（tRNA-Phe）/ 2D6F / 9DPB（tRNA-Lys3）**。9DPB 2D pairArcs 更丰富（12 弧）。
+起步策展集：**先以主角 1OB5（tRNA-Phe）单案例交付完整闭环**（其三态数据已逐一核对存在）。候选扩充 **2D6F / 9DPB（tRNA-Lys3，2D pairArcs 更丰富，12 弧）** 待各自三态资产实际核对后再补入 `story.json` 数组。`pickFeaturedCase` 对单元素数组即可正常工作，因此轮换功能不阻塞首次交付。
 
 ### 单元 2 · 纯渲染函数（放 `src/siteChrome.js`，与 `renderHomeProbingCarousel` 并列）
 - `renderHomeScrollStory(story)`：入参 story（单个主角案例数据）→ 返回整个招牌区 HTML 字符串（左侧三态层容器 + 右侧三场景 + 反应性图例）。无 DOM、无定时器、无 window。
@@ -80,7 +80,7 @@ FoldBridge 发布前的 UI/UX 完善工作中，本规格只聚焦**一个子项
 - `pickFeaturedCase(cases, visitIndex)`：纯函数，按访问次序确定性选一个案例。
 - 空输入 / 资产缺失 → 返回 placeholder 壳（与轮播 `[]` 返回 placeholder 一致）。
 
-着色：reactivity→color 色标（低 0=冷绿 `#174B3A` → 中 0.5=金 `#E6C260` → 高 1=暖橙 `#E8743E`），优先复用站内既有反应性色标 token；新增常量也放 siteChrome 以便单测。
+着色（**单一权威，三态必须共用同一组参数**）：reactivity→color 色标（低 0=冷绿 `#174B3A` → 中 0.5=金 `#E6C260` → 高 1=暖橙 `#E8743E`）。计划阶段先确认站内是否已有反应性色标 token：若有，以该 token 为唯一权威，并据此设置 VARNA/molstar 离线着色参数；若无，以本规格上述十六进制为准。无论哪种，1D 实时着色（JS）与 2D/3D 离线快照（VARNA/molstar）必须取自同一来源，避免三态色标漂移——"三态颜色连续一致"是核心成功标准。该唯一来源须记入 §7 的 `README.md`。着色常量放 siteChrome 以便单测。
 
 ### 单元 3 · 行为层（`src/main.js`）
 - `initHomeScrollStory()`：建 IntersectionObserver，下滑时切换左侧 active 态层 + 右侧 active 场景。**幂等**——重建前先 disconnect 旧 observer（同轮播 `setInterval` 必须先 clear 的坑，observer 同理）。
