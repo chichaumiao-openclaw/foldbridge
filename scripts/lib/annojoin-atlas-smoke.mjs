@@ -55,13 +55,13 @@ function hasStructureUrl(detail) {
 }
 
 function hasWebDisplayFields(row) {
-  return Boolean(
-    text(row.parentClassLabel)
-      && text(row.childClassLabel)
-      && text(row.biologicalMoleculeName)
-      && text(row.pdbMoleculeName)
-      && text(row.confidenceDisplayLabel)
-  );
+  // Web display uses the molecule-name fallback chain (moleculeDisplayName -> raw molecule names);
+  // class labels are intentionally optional and may be blanked for placeholder-only rows
+  // (e.g. RASP raw-hit cases), which then fold under their molecule name in the master table.
+  const moleculeDisplayable = text(row.moleculeDisplayName)
+    || text(row.biologicalMoleculeName)
+    || text(row.pdbMoleculeName);
+  return Boolean(moleculeDisplayable && text(row.confidenceDisplayLabel));
 }
 
 function sampleCases(cases, sampleSize) {

@@ -133,6 +133,63 @@ function renderProvenance(provenance = {}) {
   </details>`;
 }
 
+function renderChainIdentityRow(chain, { verified }) {
+  const chainId = escapeHtml(text(chain?.chainId) || '—');
+  const displayName = escapeHtml(text(chain?.displayName) || 'Unnamed RNA');
+  const metaParts = [
+    text(chain?.rnaClass),
+    Number.isFinite(chain?.lengthNt) ? `${chain.lengthNt} nt` : '',
+    text(chain?.authAsymId) ? `chain ${text(chain.authAsymId)}` : '',
+  ].filter(Boolean);
+  const meta = metaParts.length
+    ? `<span class="annojoin-chain-meta">${escapeHtml(metaParts.join(' · '))}</span>`
+    : '';
+  let ids;
+  if (verified) {
+    const idParts = [text(chain?.ursId), text(chain?.genbank)].filter(Boolean);
+    ids = idParts.length
+      ? idParts.map((part) => escapeHtml(part)).join('<br>')
+      : '—';
+  } else {
+    ids = text(chain?.genbank) ? escapeHtml(text(chain.genbank)) : '—';
+  }
+  return `<tr>
+    <td class="annojoin-chain-id"><b>${chainId}</b></td>
+    <td class="annojoin-chain-name"><b>${displayName}</b>${meta}</td>
+    <td class="annojoin-chain-ids">${ids}</td>
+  </tr>`;
+}
+
+function renderChainIdentityGroup(chains, { verified, label }) {
+  if (!chains.length) return '';
+  const modifier = verified ? 'is-verified' : 'is-declared';
+  const rows = chains.map((chain) => renderChainIdentityRow(chain, { verified })).join('');
+  return `<div class="annojoin-chain-group">
+    <div class="annojoin-chain-group-head ${modifier}">${escapeHtml(`${label} (${chains.length})`)}</div>
+    <table class="annojoin-chain-table">
+      <tbody>${rows}</tbody>
+    </table>
+  </div>`;
+}
+
+function renderChainIdentityPanel(chainIdentities) {
+  if (!Array.isArray(chainIdentities) || !chainIdentities.length) return '';
+  const verified = chainIdentities.filter((chain) => chain?.verified === true);
+  const declared = chainIdentities.filter((chain) => chain?.verified !== true);
+  const groups = [
+    renderChainIdentityGroup(verified, { verified: true, label: 'Sequence-verified identity' }),
+    renderChainIdentityGroup(declared, { verified: false, label: 'Author-declared (unverified)' }),
+  ].filter(Boolean).join('');
+  return `<section class="annojoin-case-panel annojoin-chain-identity">
+    <div class="annojoin-case-panel-head">
+      <p class="technology-kicker">per-chain identity</p>
+      <h2>RNA chain identities</h2>
+      <span>${escapeHtml(`${chainIdentities.length} chains`)}</span>
+    </div>
+    ${groups}
+  </section>`;
+}
+
 export function renderAnnojointCasePage({
   caseAsset,
   caseId,
@@ -171,6 +228,8 @@ export function renderAnnojointCasePage({
       ? 'Loading RMDB calibrated confidence sidecar...'
       : 'RMDB calibrated confidence sidecar unavailable.');
 
+  const chainIdentityPanel = renderChainIdentityPanel(caseAsset.case?.chainIdentities);
+
   return `<main class="page-annojoin-case">
     <section class="annojoin-case-hero">
       <p class="technology-kicker">ANNOJOIN case detail</p>
@@ -190,6 +249,7 @@ export function renderAnnojointCasePage({
 
     <section class="annojoin-case-shell-grid" data-annojoin-case-app>
       <div class="annojoin-case-shell-main">
+        ${chainIdentityPanel}
         <section class="annojoin-case-panel">
           <div class="annojoin-case-panel-head">
             <p class="technology-kicker">confidence-first</p>

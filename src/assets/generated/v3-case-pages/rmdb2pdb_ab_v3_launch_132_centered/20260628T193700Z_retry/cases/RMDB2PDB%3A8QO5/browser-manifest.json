@@ -1,0 +1,34 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "A": {
+      "case2dPath": "chains/A/case-2d-structure.json.gz",
+      "chainId": "A",
+      "chainRoot": "chains/A",
+      "linkedViewBundlePath": "chains/A/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:8QO5:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0004.rdat#27633": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:A:top_x_279::data-rna-structures/data-rna-structures/15KLIB_DMS_0000.rdat#5838": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:A:top_x_279::data-rna-structures/data-rna-structures/15KLIB_DMS_0000.rdat#5842": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:A:top_x_279::data-rna-structures/data-rna-structures/15KLIB_DMS_0000.rdat#5843": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIR15K_DMS_0001.rdat#4318": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIR15K_DMS_0001.rdat#4322": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0004.rdat#27633": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:B:top_x_279::data-rna-structures/data-rna-structures/15KLIB_2A3_0000.rdat#5838": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:B:top_x_279::data-rna-structures/data-rna-structures/15KLIB_2A3_0000.rdat#5842": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIR15K_2A3_0002.rdat#4318": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIR15K_2A3_0002.rdat#4322": "A",
+    "annojoin:RMDB2PDB:8QO5:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIR15K_2A3_0002.rdat#4323": "A"
+  }
+}

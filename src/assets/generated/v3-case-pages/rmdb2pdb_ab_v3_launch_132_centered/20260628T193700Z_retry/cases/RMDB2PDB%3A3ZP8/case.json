@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3ZP8",
+  "biologicalMoleculeName": "3ZP8",
+  "caseId": "3ZP8",
+  "caseKey": "RMDB2PDB:3ZP8",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3ZP8",
+  "profileCount": 1
+}

@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "RMDB2PDB:5FLX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 76,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:5FLX:confidence:B:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_2A3_0000.rdat#37989",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 38,
+    "B": 38
+  },
+  "generatedAt": "2026-06-28T21:05:42.173120Z",
+  "materializedEvidenceCount": 76,
+  "pdbId": "5FLX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 5,
+    "LSS_UNDERPOWERED": 71
+  },
+  "totalEvidenceCount": 76
+}

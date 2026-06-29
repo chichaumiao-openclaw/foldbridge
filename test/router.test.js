@@ -8,6 +8,7 @@ test('normalizeRoute accepts supported routes only', () => {
   assert.equal(normalizeRoute('detail'), 'detail');
   assert.equal(normalizeRoute('pdb-case'), 'pdb-case');
   assert.equal(normalizeRoute('annojoin-case'), 'annojoin-case');
+  assert.equal(normalizeRoute('annojoin-confidence'), 'annojoin-confidence');
   assert.equal(normalizeRoute('unknown'), 'home');
 });
 

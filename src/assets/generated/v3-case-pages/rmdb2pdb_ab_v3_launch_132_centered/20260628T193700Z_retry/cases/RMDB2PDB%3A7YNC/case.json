@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7YNC",
+  "biologicalMoleculeName": "7YNC",
+  "caseId": "7YNC",
+  "caseKey": "RMDB2PDB:7YNC",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "7YNC",
+  "profileCount": 2
+}

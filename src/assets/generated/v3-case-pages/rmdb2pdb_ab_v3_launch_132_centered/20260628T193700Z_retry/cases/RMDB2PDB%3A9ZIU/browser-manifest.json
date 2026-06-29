@@ -1,0 +1,41 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "A": {
+      "case2dPath": "chains/A/case-2d-structure.json.gz",
+      "chainId": "A",
+      "chainRoot": "chains/A",
+      "linkedViewBundlePath": "chains/A/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:9ZIU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4790": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4791": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4792": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4793": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4794": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4801": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4802": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4803": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4804": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RSTRND_DMS_0000.rdat#4805": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4790": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4791": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4792": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4793": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4801": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4802": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4803": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4804": "A",
+    "annojoin:RMDB2PDB:9ZIU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/RSTRND_2A3_0000.rdat#4805": "A"
+  }
+}

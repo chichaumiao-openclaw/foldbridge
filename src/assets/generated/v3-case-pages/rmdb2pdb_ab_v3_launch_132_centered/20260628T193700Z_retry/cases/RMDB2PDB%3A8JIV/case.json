@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8JIV",
+  "biologicalMoleculeName": "8JIV",
+  "caseId": "8JIV",
+  "caseKey": "RMDB2PDB:8JIV",
+  "chains": [
+    "Aa"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "8JIV",
+  "profileCount": 188
+}

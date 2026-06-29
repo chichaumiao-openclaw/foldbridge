@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:8IBZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:8IBZ:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0000.rdat#1632",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-06-28T21:05:42.173120Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "8IBZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 6
+  },
+  "totalEvidenceCount": 6
+}

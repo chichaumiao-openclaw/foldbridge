@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3IVK",
+  "biologicalMoleculeName": "3IVK",
+  "caseId": "3IVK",
+  "caseKey": "RMDB2PDB:3IVK",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3IVK",
+  "profileCount": 4
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2ZZM",
+  "biologicalMoleculeName": "2ZZM",
+  "caseId": "2ZZM",
+  "caseKey": "RMDB2PDB:2ZZM",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "2ZZM",
+  "profileCount": 2
+}

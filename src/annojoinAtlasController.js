@@ -1,13 +1,11 @@
 export function bindAnnojointAtlasTable({
   root = document,
   selectedCaseIds,
-  visibleColumnIds,
   pageRows = [],
   rows = [],
   setQuery,
   setPage,
   setPageSize,
-  setVisibleColumns,
   exportSelectedRows,
   selectRows,
   clearSelection,
@@ -58,17 +56,6 @@ export function bindAnnojointAtlasTable({
   if (pageSizeSelect) {
     pageSizeSelect.addEventListener('change', () => setPageSize?.(Number(pageSizeSelect.value) || 50));
   }
-
-  root.querySelectorAll?.('[data-annojoin-column-toggle]').forEach((checkbox) => {
-    checkbox.addEventListener('change', () => {
-      const current = new Set(visibleColumnIds || []);
-      const columnId = checkbox.getAttribute('data-annojoin-column-toggle');
-      if (!columnId) return;
-      if (checkbox.checked) current.add(columnId);
-      else current.delete(columnId);
-      setVisibleColumns?.([...current]);
-    });
-  });
 
   const exportSelectedBtn = root.getElementById?.('export-selected-annojoin-cases');
   if (exportSelectedBtn) {

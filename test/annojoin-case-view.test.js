@@ -104,3 +104,90 @@ test('annojoin case page stays honest when calibrated confidence sidecars are ab
   assert.match(html, /The RMDB calibrated confidence sidecar is not materialized in the current build/);
   assert.match(html, /Workbench not materialized for this case/);
 });
+
+test('annojoin case page partitions per-chain RNA identities into verified and declared groups', () => {
+  const html = renderAnnojointCasePage({
+    caseAsset: {
+      case: {
+        caseId: '5GAG',
+        pdbId: '5GAG',
+        atlasCaseKey: 'RMDB2PDB:5GAG',
+        assetFamily: 'RMDB2PDB',
+        biologicalMoleculeName: 'SRP 4.5S RNA',
+        chainIdentities: [
+          {
+            pdbReferenceId: '5GAG_1',
+            chainId: 'A',
+            authAsymId: 'A',
+            labelAsymId: 'A',
+            verified: true,
+            ursId: 'URS000044DFF6',
+            displayName: 'Signal recognition particle 4.5S RNA',
+            parentRnaName: 'SRP RNA',
+            rnaClass: 'SRP_RNA',
+            lengthNt: 114,
+            genbank: 'M10657',
+            source: 'rnacentral',
+          },
+          {
+            pdbReferenceId: '5GAG_2',
+            chainId: 'B',
+            authAsymId: 'B',
+            labelAsymId: 'B',
+            verified: false,
+            ursId: null,
+            displayName: 'Author-declared transfer RNA fragment that should never be truncated in the panel',
+            parentRnaName: 'tRNA',
+            rnaClass: 'tRNA',
+            lengthNt: 76,
+            genbank: 'X00001',
+            source: 'author',
+          },
+          {
+            pdbReferenceId: '5GAG_3',
+            chainId: 'C',
+            authAsymId: 'C',
+            labelAsymId: 'C',
+            verified: false,
+            ursId: null,
+            displayName: 'Ribosomal RNA segment',
+            parentRnaName: 'rRNA',
+            rnaClass: 'rRNA',
+            lengthNt: null,
+            genbank: '',
+            source: 'author',
+          },
+        ],
+      },
+      summary: { profileCount: 3 },
+    },
+    confidenceStatus: 'ready',
+  });
+
+  assert.match(html, /annojoin-chain-identity/);
+  assert.match(html, /Sequence-verified identity \(1\)/);
+  assert.match(html, /Author-declared \(unverified\) \(2\)/);
+  assert.match(html, /URS000044DFF6/);
+  assert.match(html, /Signal recognition particle 4\.5S RNA/);
+  // The full declared display name must appear un-truncated.
+  assert.match(html, /Author-declared transfer RNA fragment that should never be truncated in the panel/);
+});
+
+test('annojoin case page omits the chain identity panel when no chain identities exist', () => {
+  const html = renderAnnojointCasePage({
+    caseAsset: {
+      case: {
+        caseId: '10ZT',
+        pdbId: '10ZT',
+        atlasCaseKey: 'RMDB2PDB:10ZT',
+        assetFamily: 'RMDB2PDB',
+        biologicalMoleculeName: 'RNA (519-MER)',
+        chainIdentities: [],
+      },
+      summary: { profileCount: 1 },
+    },
+    confidenceStatus: 'ready',
+  });
+
+  assert.doesNotMatch(html, /annojoin-chain-identity/);
+});

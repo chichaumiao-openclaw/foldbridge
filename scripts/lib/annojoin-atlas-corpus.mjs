@@ -246,6 +246,144 @@ function displayGroupKey(row = {}) {
   return text(row.pdbId || row.caseId || row.atlasCaseKey);
 }
 
+// 分子展示名的折叠键：小写 + 折叠内部空白 + 展开受控 RNA 缩写。
+// Q2 红线（覆盖此前 never-fabricate）：rRNA/RRNA→ribosomal RNA、tRNA/mRNA 等
+// 一并强制为标准全称全名，即使语料只出现缩写也强制展开；并把全大写/异常大小写的
+// 全称（如 5S RIBOSOMAL RNA）归一成标准展示大小写（5S ribosomal RNA）。
+// 数字前缀/限定词（25S、(Phe)、(1584-MER)）原样保留，绝不词干化/去标点。
+const MOLECULE_MISSING_LABELS = new Set(['', '未注释', 'not annotated', 'missing source']);
+
+// 受控 RNA 缩写词典：键=缩写（小写），值=标准展示全称（大小写即最终展示拼写）。
+const RNA_ABBREVIATIONS = [
+  ['rrna', 'ribosomal RNA'],
+  ['trna', 'transfer RNA'],
+  ['mrna', 'messenger RNA'],
+  ['sgrna', 'single guide RNA'],
+  ['grna', 'guide RNA'],
+  ['snorna', 'small nucleolar RNA'],
+  ['snrna', 'small nuclear RNA'],
+  ['crrna', 'CRISPR RNA']
+];
+
+// 折叠键用：在已小写、空白折叠后的文本上，把整词缩写替换为「小写全称」，
+// 使「25S rRNA」「25S RIBOSOMAL RNA」「25s ribosomal rna」落到同一键。
+// 整词边界保证 sgrna 不被 grna 误匹配、crrna/rrna 不匹配 tracrrna 内部。
+const RNA_FOLD_PATTERNS = RNA_ABBREVIATIONS.map(([abbr, full]) => [
+  new RegExp(`\\b${abbr}\\b`, 'g'),
+  full.toLowerCase()
+]);
+
+// 展示归一用：①缩写（任意大小写）→ 标准全称；②已是全称但大小写异常者
+// （如 RIBOSOMAL RNA）→ 标准全称大小写。只动 RNA 术语本身，前缀/限定词不动。
+const RNA_DISPLAY_PATTERNS = [];
+for (const [abbr, full] of RNA_ABBREVIATIONS) {
+  RNA_DISPLAY_PATTERNS.push([new RegExp(`\\b${abbr}\\b`, 'gi'), full]);
+  const fullPattern = full.replace(/\s+/g, '\\s+');
+  RNA_DISPLAY_PATTERNS.push([new RegExp(`\\b${fullPattern}\\b`, 'gi'), full]);
+}
+
+function expandRnaAbbreviations(loweredText = '') {
+  let out = loweredText;
+  for (const [pattern, full] of RNA_FOLD_PATTERNS) {
+    out = out.replace(pattern, full);
+  }
+  return out;
+}
+
+// 受控核糖体 Svedberg 系数集合：仅这些值的「<n>S RNA」会被补全为「<n>S ribosomal RNA」。
+// 科学红线：SRP RNA（4.5S / 7S）与核糖体亚基（30S / 50S / 70S）绝不在此集合内，
+// 避免把信号识别颗粒 RNA 或亚基误标成 rRNA。bare「<n>S」（无 RNA 词）也不展开（保守）。
+const RIBOSOMAL_SVEDBERG = '5\\.8|5|12|16|18|21|23|25|26|28';
+const RIBOSOMAL_SVEDBERG_FOLD = new RegExp(`(?<![\\d.])(${RIBOSOMAL_SVEDBERG})s rna\\b`, 'g');
+const RIBOSOMAL_SVEDBERG_DISPLAY = new RegExp(`(?<![\\d.])(${RIBOSOMAL_SVEDBERG})s\\s+rna\\b`, 'gi');
+
+// 折叠键用：把「16s rna」补成「16s ribosomal rna」，使其与「16s rRNA」「16s ribosomal RNA」同键。
+function expandRibosomalSvedberg(loweredText = '') {
+  return loweredText.replace(RIBOSOMAL_SVEDBERG_FOLD, '$1s ribosomal rna');
+}
+
+// 把展示拼写里的 RNA 术语强制归一成标准全称（覆盖语料拼写）。
+// 下划线视作分隔符（如 16S_rRNA、30S_delta…）归一成空格，再展开 RNA 术语。
+function canonicalizeDisplaySpelling(value = '') {
+  let out = text(value).replace(/_+/g, ' ').replace(/\s+/g, ' ').trim();
+  for (const [pattern, full] of RNA_DISPLAY_PATTERNS) {
+    out = out.replace(pattern, full);
+  }
+  out = out.replace(RIBOSOMAL_SVEDBERG_DISPLAY, (match, svedberg) => `${svedberg}S ribosomal RNA`);
+  return out;
+}
+
+// RASP 的 biological_molecule_name 是 pipe 复合串「molecule | structure_title | organism」。
+// 展示/分组只取首段（真正的分子名）；raw 复合串原样保留在 biologicalMoleculeName 字段。
+function moleculeLeadingSegment(value = '') {
+  const raw = text(value);
+  if (!raw.includes('|')) return raw;
+  for (const part of raw.split('|')) {
+    const seg = part.trim();
+    if (seg) return seg;
+  }
+  return raw;
+}
+
+function moleculeBaseName(row = {}) {
+  const bio = text(row.biologicalMoleculeName);
+  if (bio && !MOLECULE_MISSING_LABELS.has(bio)) return moleculeLeadingSegment(bio);
+  const pdb = text(row.pdbMoleculeName);
+  if (pdb && !MOLECULE_MISSING_LABELS.has(pdb)) return moleculeLeadingSegment(pdb);
+  return '';
+}
+
+function moleculeFoldKey(name = '') {
+  const base = text(name).toLowerCase().replace(/[_\s]+/g, ' ').trim();
+  // Svedberg/abbreviation expansion runs first because "5.8s" carries a dot that
+  // the trailing punctuation collapse would otherwise split into "5 8s".
+  const expanded = expandRibosomalSvedberg(expandRnaAbbreviations(base));
+  // Collapse remaining punctuation last so spacing/hyphen variants share one key
+  // (e.g. "single-guide RNA" == "single guide RNA", "HCV-IRES" == "HCV IRES").
+  return expanded.replace(/[^0-9a-z]+/g, ' ').trim();
+}
+
+// 语料级 canonical 映射：按折叠键归并；同键下选代表拼写（出现次数最高，计数相同
+// 按码点升序，跨运行时/locale 确定性），再对代表拼写强制展开/归一 RNA 术语。
+// 代表拼写只决定前缀/限定词的大小写（25S / (Phe)），RNA 术语一律强制标准全称。
+function buildCanonicalSpellingMap(values = []) {
+  const byKey = new Map();
+  for (const value of values) {
+    const base = text(value);
+    if (!base || MOLECULE_MISSING_LABELS.has(base)) continue;
+    const key = moleculeFoldKey(base);
+    if (!key) continue;
+    if (!byKey.has(key)) byKey.set(key, new Map());
+    const variants = byKey.get(key);
+    variants.set(base, (variants.get(base) || 0) + 1);
+  }
+  const canonical = new Map();
+  for (const [key, variants] of byKey) {
+    let best = '';
+    let bestCount = -1;
+    for (const [spelling, count] of variants) {
+      // 种子 best='' / bestCount=-1 安全：真实 count 恒 ≥1，首个条目必经 count>bestCount 胜出。
+      if (count > bestCount || (count === bestCount && spelling < best)) {
+        best = spelling;
+        bestCount = count;
+      }
+    }
+    canonical.set(key, canonicalizeDisplaySpelling(best));
+  }
+  return canonical;
+}
+
+function canonicalSpelling(canonicalMap, value) {
+  const base = text(value);
+  if (!base || MOLECULE_MISSING_LABELS.has(base)) return base;
+  return canonicalMap.get(moleculeFoldKey(base)) ?? canonicalizeDisplaySpelling(base);
+}
+
+function buildMoleculeCanonicalMap(normalizedCases = []) {
+  return buildCanonicalSpellingMap(normalizedCases.map(moleculeBaseName));
+}
+
+
 function buildDisplayCases(sourceCases = []) {
   const grouped = new Map();
   for (const row of sourceCases) {
@@ -346,6 +484,29 @@ export function groupByAtlasCaseKey(rows) {
   return grouped;
 }
 
+// Task 13：上游对没有真实生物学分类的 case 会塞占位标签——RASP raw-hit 桶
+// （parent="RASP public current" / child="raw-hit case"，source PUBLIC/RASP/raw_hit_cases_current）
+// 以及治理待定项（"pending parent display group ..." 等，source governance_context_display_name）。
+// 这些占位标签会造出假的父/子分组。把它们当作缺失（置空），让 parentGroupLabel/childGroupLabel
+// 的回退链落到 moleculeDisplayName。只动 display-only 派生标签，raw *Source provenance 不碰。
+const PLACEHOLDER_CLASS_LABEL_PATTERNS = [
+  /^rasp public current$/i,
+  /^raw-?hit case$/i,
+  /^pending\b/i
+];
+const PLACEHOLDER_CLASS_SOURCES = new Set(['PUBLIC/RASP/raw_hit_cases_current']);
+
+function isPlaceholderClassLabel(label = '', source = '') {
+  const value = text(label);
+  if (!value) return false;
+  if (PLACEHOLDER_CLASS_LABEL_PATTERNS.some((pattern) => pattern.test(value))) return true;
+  return PLACEHOLDER_CLASS_SOURCES.has(text(source));
+}
+
+function cleanClassLabel(label = '', source = '') {
+  return isPlaceholderClassLabel(label, source) ? '' : text(label);
+}
+
 function normalizeCase(row = {}) {
   const caseId = text(row.case_id);
   const caseKey = atlasCaseKeyFor(row);
@@ -361,9 +522,9 @@ function normalizeCase(row = {}) {
     caseId,
     pdbId: text(row.pdb_id),
     chains: splitList(row.pdb_chain_ids),
-    parentClassLabel: text(row.parent_class_label),
+    parentClassLabel: cleanClassLabel(row.parent_class_label, row.parent_class_source),
     parentClassSource: text(row.parent_class_source),
-    childClassLabel: text(row.child_class_label),
+    childClassLabel: cleanClassLabel(row.child_class_label, row.child_class_source),
     childClassSource: text(row.child_class_source),
     biologicalMoleculeName: text(row.biological_molecule_name),
     biologicalMoleculeNameSource: text(row.biological_molecule_name_source),
@@ -787,6 +948,20 @@ export function buildAtlasIndexAsset({
       detailRouteId: text(route?.detail_route_id)
     };
   });
+  // 加性 canonical 展示名（display-only）：不改 raw biologicalMoleculeName/pdbMoleculeName。
+  const moleculeCanonicalMap = buildMoleculeCanonicalMap(normalizedCases);
+  // class 层级标签也折叠大小写/空白变体（总表按 parent/child class label 分组）。
+  // 同样 display-only：覆写 normalizedCase 上派生的 parentClassLabel/childClassLabel
+  // （这两个字段本就是展示标签，raw provenance 在各自 *Source 字段，未触碰）。
+  const classCanonicalMap = buildCanonicalSpellingMap(
+    normalizedCases.flatMap((row) => [row.parentClassLabel, row.childClassLabel])
+  );
+  for (const row of normalizedCases) {
+    const base = moleculeBaseName(row);
+    row.moleculeDisplayName = base ? canonicalSpelling(moleculeCanonicalMap, base) : '';
+    row.parentClassLabel = canonicalSpelling(classCanonicalMap, row.parentClassLabel);
+    row.childClassLabel = canonicalSpelling(classCanonicalMap, row.childClassLabel);
+  }
   const displayCases = buildDisplayCases(normalizedCases);
   return {
     schemaVersion: ANNOJOIN_ATLAS_SCHEMA_VERSION,
@@ -821,7 +996,8 @@ export function buildAtlasCaseAsset({
   lssContexts = [],
   colors3d = [],
   conflicts = [],
-  residueEvidence = []
+  residueEvidence = [],
+  chainIdentities = []
 } = {}) {
   const requestedCaseKey = text(caseKey);
   const requestedCaseId = text(caseId);
@@ -854,7 +1030,7 @@ export function buildAtlasCaseAsset({
   return {
     schemaVersion: ANNOJOIN_ATLAS_SCHEMA_VERSION,
     version: ANNOJOIN_ATLAS_VERSION,
-    case: normalizeCase(caseRow),
+    case: { ...normalizeCase(caseRow), chainIdentities: Array.isArray(chainIdentities) ? chainIdentities : [] },
     summary: normalizeSummary(firstByCase(summaries, selectedCaseId, selectedCaseKey)),
     detailRoutes: normalizeRoute(firstByCase(routes, selectedCaseId, selectedCaseKey)),
     memberships: membershipPages.summary,

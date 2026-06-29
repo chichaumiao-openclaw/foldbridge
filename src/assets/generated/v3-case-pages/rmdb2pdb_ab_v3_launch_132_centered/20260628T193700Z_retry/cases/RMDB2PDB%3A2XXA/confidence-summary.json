@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:2XXA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:2XXA:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#3684",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 2
+  },
+  "generatedAt": "2026-06-28T21:26:31.631273Z",
+  "materializedEvidenceCount": 5,
+  "pdbId": "2XXA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 5
+  },
+  "totalEvidenceCount": 5
+}

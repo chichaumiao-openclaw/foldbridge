@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4ERL",
+  "biologicalMoleculeName": "4ERL",
+  "caseId": "4ERL",
+  "caseKey": "RMDB2PDB:4ERL",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "4ERL",
+  "profileCount": 3
+}

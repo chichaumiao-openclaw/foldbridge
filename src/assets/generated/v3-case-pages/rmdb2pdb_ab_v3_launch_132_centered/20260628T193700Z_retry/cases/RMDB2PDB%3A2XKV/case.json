@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2XKV",
+  "biologicalMoleculeName": "2XKV",
+  "caseId": "2XKV",
+  "caseKey": "RMDB2PDB:2XKV",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "2XKV",
+  "profileCount": 2
+}

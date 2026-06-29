@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8ZYD",
+  "biologicalMoleculeName": "8ZYD",
+  "caseId": "8ZYD",
+  "caseKey": "RMDB2PDB:8ZYD",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8ZYD",
+  "profileCount": 3
+}

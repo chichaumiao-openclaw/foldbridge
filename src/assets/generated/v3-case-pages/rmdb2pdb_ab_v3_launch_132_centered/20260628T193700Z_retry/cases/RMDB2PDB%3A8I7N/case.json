@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8I7N",
+  "biologicalMoleculeName": "8I7N",
+  "caseId": "8I7N",
+  "caseKey": "RMDB2PDB:8I7N",
+  "chains": [
+    "N"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "8I7N",
+  "profileCount": 1
+}

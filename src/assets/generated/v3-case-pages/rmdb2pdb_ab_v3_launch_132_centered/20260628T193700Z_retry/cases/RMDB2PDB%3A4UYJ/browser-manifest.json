@@ -1,0 +1,26 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "S": {
+      "case2dPath": "chains/S/case-2d-structure.json.gz",
+      "chainId": "S",
+      "chainRoot": "chains/S",
+      "linkedViewBundlePath": "chains/S/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/S/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/S/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "S",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:4UYJ:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#15593": "S",
+    "annojoin:RMDB2PDB:4UYJ:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#15613": "S",
+    "annojoin:RMDB2PDB:4UYJ:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#15593": "S",
+    "annojoin:RMDB2PDB:4UYJ:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#15613": "S"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9QRP",
+  "biologicalMoleculeName": "9QRP",
+  "caseId": "9QRP",
+  "caseKey": "RMDB2PDB:9QRP",
+  "chains": [
+    "T"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "9QRP",
+  "profileCount": 2
+}

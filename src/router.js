@@ -15,7 +15,8 @@ const ALLOWED_ROUTES = new Set([
   'sequence-detail',
   'pdb-case',
   'annojoin-atlas',
-  'annojoin-case'
+  'annojoin-case',
+  'annojoin-confidence'
 ]);
 
 export function normalizeRoute(value) {

@@ -1,15 +1,12 @@
 const MISSING_LABELS = new Set(['', '未注释', 'not annotated', 'missing source']);
 
 export const ANNOJOIN_TABLE_COLUMNS = [
-  { id: 'pdbId', label: 'PDB', defaultVisible: true },
-  { id: 'moleculeName', label: 'Molecule name', defaultVisible: true },
-  { id: 'confidenceDisplayLabel', label: 'Confidence distribution', defaultVisible: true },
-  { id: 'profileCount', label: 'Profiles', defaultVisible: true },
-  { id: 'chains', label: 'Chains', defaultVisible: true },
-  { id: 'conflictCandidateCount', label: 'Conflicts', defaultVisible: true }
+  { id: 'pdbId', label: 'PDB' },
+  { id: 'moleculeName', label: 'Molecule name' },
+  { id: 'confidenceDisplayLabel', label: 'Confidence distribution' },
+  { id: 'profileCount', label: 'Profiles' },
+  { id: 'chains', label: 'Chains' }
 ];
-
-const COLUMN_IDS = new Set(ANNOJOIN_TABLE_COLUMNS.map((column) => column.id));
 
 function cleanLabel(value) {
   const label = String(value ?? '').trim();
@@ -31,12 +28,13 @@ export function rowCaseKey(row = {}) {
 }
 
 export function moleculeName(row = {}) {
-  return cleanLabel(row.biologicalMoleculeName) || cleanLabel(row.pdbMoleculeName) || rowCaseId(row) || 'not annotated';
+  return cleanLabel(row.moleculeDisplayName) || cleanLabel(row.biologicalMoleculeName) || cleanLabel(row.pdbMoleculeName) || rowCaseId(row) || 'not annotated';
 }
 
 export function parentGroupLabel(row = {}) {
   return cleanLabel(row.parentClassLabel)
     || cleanLabel(row.childClassLabel)
+    || cleanLabel(row.moleculeDisplayName)
     || cleanLabel(row.biologicalMoleculeName)
     || cleanLabel(row.pdbMoleculeName)
     || rowCaseId(row)
@@ -45,24 +43,10 @@ export function parentGroupLabel(row = {}) {
 
 export function childGroupLabel(row = {}) {
   return cleanLabel(row.childClassLabel)
+    || cleanLabel(row.moleculeDisplayName)
     || cleanLabel(row.biologicalMoleculeName)
     || cleanLabel(row.pdbMoleculeName)
     || parentGroupLabel(row);
-}
-
-export function defaultVisibleAnnojointColumnIds() {
-  return ANNOJOIN_TABLE_COLUMNS
-    .filter((column) => column.defaultVisible)
-    .map((column) => column.id);
-}
-
-export function normalizeVisibleAnnojointColumnIds(columnIds) {
-  const requested = Array.isArray(columnIds) ? columnIds : [];
-  const requestedSet = new Set(requested.filter((id) => COLUMN_IDS.has(id)));
-  if (!requestedSet.size) return defaultVisibleAnnojointColumnIds();
-  return ANNOJOIN_TABLE_COLUMNS
-    .map((column) => column.id)
-    .filter((id) => requestedSet.has(id));
 }
 
 export function sortAnnojointCases(cases = []) {

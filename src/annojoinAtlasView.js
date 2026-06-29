@@ -1,17 +1,15 @@
 import {
   ANNOJOIN_TABLE_COLUMNS,
   buildAnnojointTableGroups,
-  defaultVisibleAnnojointColumnIds,
-  familyBadgeDescriptor,
   isAnnojointSearchActive,
   moleculeName,
-  normalizeVisibleAnnojointColumnIds,
   paginateAnnojointRows,
   rowCaseId,
   rowCaseKey,
   searchAnnojointRows,
   sortAnnojointCases
 } from './annojoinAtlasTableModel.js';
+import { resolveRmdb2pdbAbV3DetailHref } from './rmdb2pdbAbV3PageLinks.js';
 
 const DEFAULT_GROUP_ROW_LIMIT = 25;
 
@@ -32,6 +30,13 @@ function atlasHref(routeName = 'annojoin-atlas', params = {}) {
   }
   const suffix = query.toString();
   return `#${route}${suffix ? `?${suffix}` : ''}`;
+}
+
+function detailPageHref(detail = {}) {
+  const { atlasCaseKey = '', caseId = '' } = detail;
+  const v3Href = resolveRmdb2pdbAbV3DetailHref(detail);
+  if (v3Href) return v3Href;
+  return atlasHref('annojoin-case', caseId && atlasCaseKey ? { caseId, caseKey: atlasCaseKey } : { caseId });
 }
 
 function panelHref(routeName = 'annojoin-atlas', row = {}, field = '') {
@@ -70,27 +75,6 @@ function fieldLink(row = {}, routeName = 'annojoin-atlas', field = '', label = '
   return `<a class="annojoin-field-link" href="${escapeHtml(panelHref(routeName, row, field))}">${label}</a>`;
 }
 
-function rowSourceFamilies(row = {}) {
-  if (Array.isArray(row.sourceFamilies) && row.sourceFamilies.length) return row.sourceFamilies;
-  return row.assetFamily ? [row.assetFamily] : [];
-}
-
-// 来源徽标：RMDB/RASP 激活态由 familyBadgeDescriptor 数据驱动。
-// 浏览行、搜索行、侧栏三处共用此 helper（块 5 一致性护栏）。
-function renderFamilyBadges(row = {}) {
-  const families = rowSourceFamilies(row);
-  if (!families.length) return '';
-  return `<span class="annojoin-family-badges">${families.map((family) => {
-    const descriptor = familyBadgeDescriptor(family);
-    const stateClass = descriptor.active ? 'is-active' : 'is-inactive';
-    const titleText = descriptor.note ? `${descriptor.label} (${descriptor.note})` : descriptor.label;
-    const note = descriptor.note
-      ? `<small class="annojoin-family-badge-note">${escapeHtml(descriptor.note)}</small>`
-      : '';
-    return `<span class="annojoin-family-badge ${stateClass}" title="${escapeHtml(titleText)}">${escapeHtml(descriptor.label)}${note}</span>`;
-  }).join('')}</span>`;
-}
-
 // confidence 复合标签分段呈现且不截断；完整原文保留在 title，便于追溯与对比。
 function renderConfidenceSegments(label = '') {
   const full = String(label ?? '');
@@ -106,28 +90,31 @@ function renderConfidenceSegments(label = '') {
   return `<span class="annojoin-confidence" title="${escapeHtml(full)}">${segs || `<span class="annojoin-confidence-seg">${escapeHtml(full)}</span>`}</span>`;
 }
 
-function columnValue(row = {}, columnId, routeName = 'annojoin-atlas') {
-  const caseId = rowCaseId(row);
-  const values = {
-    pdbId: `${fieldLink(row, routeName, 'pdbId', escapeHtml(row.pdbId || caseId))}${renderFamilyBadges(row)}`,
-    moleculeName: fieldLink(row, routeName, 'moleculeName', sourceValue(moleculeName(row), row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource)),
-    confidenceDisplayLabel: fieldLink(row, routeName, 'confidenceDisplayLabel', renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution)),
-    profileCount: fieldLink(row, routeName, 'profileCount', `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`),
-    chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated')),
-    conflictCandidateCount: fieldLink(row, routeName, 'conflictCandidateCount', escapeHtml(row.conflictCandidateCount || 0))
-  };
-  return values[columnId] ?? escapeHtml(row[columnId] || '');
+function sameGroupLabel(value = '', groupLabels = []) {
+  const a = String(value ?? '').trim().toLowerCase();
+  if (!a) return false;
+  return (Array.isArray(groupLabels) ? groupLabels : [groupLabels])
+    .some((label) => a === String(label ?? '').trim().toLowerCase());
 }
 
-function renderColumnPicker(visibleColumnIds = []) {
-  const visible = new Set(visibleColumnIds);
-  return `<fieldset class="annojoin-column-picker">
-    <legend>Columns</legend>
-    ${ANNOJOIN_TABLE_COLUMNS.map((column) => `<label>
-      <input type="checkbox" data-annojoin-column-toggle="${escapeHtml(column.id)}" ${visible.has(column.id) ? 'checked' : ''} />
-      <span>${escapeHtml(column.label)}</span>
-    </label>`).join('')}
-  </fieldset>`;
+function moleculeCellLabel(row = {}, groupLabels = []) {
+  const name = moleculeName(row);
+  if (sameGroupLabel(name, groupLabels)) {
+    return `<span class="annojoin-molecule-same-as-group" title="${escapeHtml(name)}">—</span>`;
+  }
+  return sourceValue(name, row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource);
+}
+
+function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabels = []) {
+  const caseId = rowCaseId(row);
+  const values = {
+    pdbId: fieldLink(row, routeName, 'pdbId', escapeHtml(row.pdbId || caseId)),
+    moleculeName: fieldLink(row, routeName, 'moleculeName', moleculeCellLabel(row, groupLabels)),
+    confidenceDisplayLabel: fieldLink(row, routeName, 'confidenceDisplayLabel', renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution)),
+    profileCount: fieldLink(row, routeName, 'profileCount', `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`),
+    chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated'))
+  };
+  return values[columnId] ?? escapeHtml(row[columnId] || '');
 }
 
 function renderPagination(pagination) {
@@ -148,11 +135,11 @@ function renderPagination(pagination) {
   </section>`;
 }
 
-function renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass = '' }) {
+function renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass = '', groupLabels = [] }) {
   const caseKey = rowCaseKey(row);
   return `<tr class="annojoin-case-row${rowClass ? ` ${rowClass}` : ''}" data-annojoin-case-row="${escapeHtml(caseKey)}">
       <td><input type="checkbox" class="annojoin-case-select" data-annojoin-case-id="${escapeHtml(caseKey)}" ${selectedCaseIds.has(caseKey) ? 'checked' : ''} /></td>
-      ${visibleColumns.map((column) => `<td>${columnValue(row, column.id, routeName)}</td>`).join('')}
+      ${visibleColumns.map((column) => `<td>${columnValue(row, column.id, routeName, groupLabels)}</td>`).join('')}
     </tr>`;
 }
 
@@ -174,12 +161,12 @@ function renderTableBody({
     return `<tr><td colspan="${visibleColumns.length + 1}">No ANNOJOIN cases match the current filters.</td></tr>`;
   }
   const rows = [];
-  const renderRow = (row, rowClass = '') => renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass });
-  const renderExpandedRows = (caseRows = [], groupToggleId) => {
+  const renderRow = (row, rowClass = '', groupLabels = []) => renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass, groupLabels });
+  const renderExpandedRows = (caseRows = [], groupToggleId, groupLabels = []) => {
     const isUncapped = uncappedGroupIds.has(groupToggleId);
     const visibleRows = isUncapped ? caseRows : caseRows.slice(0, groupRowLimit);
     for (const row of visibleRows) {
-      rows.push(renderRow(row, 'is-in-expanded-group'));
+      rows.push(renderRow(row, 'is-in-expanded-group', groupLabels));
     }
     if (caseRows.length > groupRowLimit) {
       rows.push(`<tr class="annojoin-group-overflow-row">
@@ -206,12 +193,12 @@ function renderTableBody({
     </tr>`);
     if (!parentExpanded) continue;
     if (parent.children.length === 1) {
-      renderExpandedRows(parent.children[0].rows, parentToggleId);
+      renderExpandedRows(parent.children[0].rows, parentToggleId, [parent.label, parent.children[0].label]);
       continue;
     }
     for (const child of parent.children) {
       if (child.count <= 1) {
-        child.rows.forEach((row) => rows.push(renderRow(row, 'is-in-expanded-group')));
+        child.rows.forEach((row) => rows.push(renderRow(row, 'is-in-expanded-group', [parent.label, child.label])));
         continue;
       }
       const childToggleId = `child:${child.id}`;
@@ -224,7 +211,7 @@ function renderTableBody({
         </td>
       </tr>`);
       if (!childExpanded) continue;
-      renderExpandedRows(child.rows, childToggleId);
+      renderExpandedRows(child.rows, childToggleId, [parent.label, child.label]);
     }
   }
   return rows.join('');
@@ -266,7 +253,7 @@ function renderSourceCaseLinks(row = {}) {
             <span>${escapeHtml(entry.atlasCaseKey)}</span>
             <small>${escapeHtml(`${profiles} ${profiles === 1 ? 'profile' : 'profiles'}; ${confidence}`)}</small>
           </div>
-          <a class="download-outline-btn" href="${escapeHtml(atlasHref('annojoin-case', { caseId, caseKey: entry.atlasCaseKey }))}">Open detail page</a>
+          <a class="download-outline-btn" href="${escapeHtml(detailPageHref({ caseId, atlasCaseKey: entry.atlasCaseKey, assetFamily: entry.assetFamily, caseUid: entry.caseUid, pdbId: entry.pdbId || caseId }))}">Open detail page</a>
         </li>`;
       }).join('')}
     </ul>
@@ -302,14 +289,13 @@ function renderEmptySidebar() {
   return `<aside class="annojoin-detail-sidebar annojoin-detail-sidebar-empty" aria-label="ANNOJOIN field explanation">
     <p class="technology-kicker">Field inspector</p>
     <h2>Click a table field</h2>
-    <p>Molecule, confidence, PDB, profiles, chains, and conflicts each open a focused explanation here.</p>
+    <p>Molecule, confidence, PDB, profiles, and chains each open a focused explanation here.</p>
   </aside>`;
 }
 
 function renderMoleculePanel(row, routeName) {
   const caseId = rowCaseId(row);
   const caseKey = rowCaseKey(row);
-  const detailParams = row.assetFamily || caseKey.includes(':') ? { caseId, caseKey } : { caseId };
   const entries = sourceCaseEntries(row);
   const isMergedDisplayRow = row.isMergedDisplayRow || entries.length > 1;
   return `<aside class="annojoin-detail-sidebar" aria-label="ANNOJOIN index row detail">
@@ -320,7 +306,7 @@ function renderMoleculePanel(row, routeName) {
       </div>
       ${isMergedDisplayRow
     ? `<span class="mini-note">${escapeHtml(sourceCaseCountLabel(row))}</span>`
-    : `<a class="download-outline-btn" href="${escapeHtml(atlasHref('annojoin-case', detailParams))}">Open detail page</a>`}
+    : `<a class="download-outline-btn" href="${escapeHtml(detailPageHref({ caseId, atlasCaseKey: caseKey, assetFamily: row.assetFamily, caseUid: row.caseUid, pdbId: row.pdbId || caseId }))}">Open detail page</a>`}
     </div>
     <dl>
       ${sidebarField('Molecule name', moleculeName(row), row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource)}
@@ -334,6 +320,19 @@ function renderMoleculePanel(row, routeName) {
   </aside>`;
 }
 
+const LEGACY_COVERAGE_POINTERS = [
+  /^see\s+annoconfidence\/coverage_topology_annotation\.tsv$/i,
+  /coverage_topology_annotation\.tsv/i
+];
+
+function coverageTopologyValue(row = {}) {
+  const value = String(row.coverageShapeDistribution ?? '').trim();
+  if (!value || LEGACY_COVERAGE_POINTERS.some((pattern) => pattern.test(value))) {
+    return 'Coverage topology distribution is summarized at the case level; see the linked route assets for per-segment detail.';
+  }
+  return value;
+}
+
 function renderConfidencePanel(row) {
   const hasContext = row.hasContextAnnotation ? 'context annotation present' : 'context annotation not present';
   const hasLss = row.hasLssAnnotation ? 'LSS annotation present' : 'LSS annotation not present';
@@ -345,10 +344,11 @@ function renderConfidencePanel(row) {
     <dl>
       ${sidebarField('Current case', row.confidenceDisplayLabel || row.fecClaimCeilingDistribution, row.confidenceSource || 'fec_claim_ceiling_distribution')}
       <dt>Annotation coverage</dt><dd>${escapeHtml(`${hasContext}; ${hasLss}`)}</dd>
-      <dt>Coverage topology</dt><dd>${escapeHtml(row.coverageShapeDistribution || 'Current index asset points to ANNOCONFIDENCE coverage topology annotations.')}</dd>
+      <dt>Coverage topology</dt><dd>${escapeHtml(coverageTopologyValue(row))}</dd>
     </dl>
     ${entries.length > 1 ? renderSourceCaseLinks(row) : ''}
     <p class="mini-note">A/B/C labels summarize confidence-relevant annotation support. C-level labels are exploratory hints and should be reviewed with the underlying route assets.</p>
+    <p><a class="annojoin-confidence-explainer-link" href="#annojoin-confidence">What do these confidence labels mean?</a></p>
   </aside>`;
 }
 
@@ -356,7 +356,7 @@ function renderPdbPanel(row) {
   const pdbId = row.pdbId || rowCaseId(row);
   return `<aside class="annojoin-detail-sidebar" aria-label="ANNOJOIN PDB metadata">
     <p class="technology-kicker">PDB metadata</p>
-    <h2>${escapeHtml(pdbId)}${renderFamilyBadges(row)}</h2>
+    <h2>${escapeHtml(pdbId)}</h2>
     <dl>
       ${sidebarField('Author-provided molecule name', row.pdbMoleculeName, row.pdbMoleculeNameSource)}
       <dt>Published article</dt><dd>Current index asset does not provide citation metadata.</dd>
@@ -381,11 +381,20 @@ function renderProfilesPanel(row) {
 }
 
 function renderChainsPanel(row) {
+  const chains = Array.isArray(row.chains) ? row.chains.filter(Boolean) : [];
+  const count = chains.length;
+  const countLabel = `${count} ${count === 1 ? 'chain' : 'chains'} listed`;
+  const body = count
+    ? `<ol class="annojoin-chain-list">${chains.map((chain) => `<li>${escapeHtml(chain)}</li>`).join('')}</ol>`
+    : '<p class="mini-note">No PDB chain identifiers are annotated for this case in the current index asset.</p>';
   return `<aside class="annojoin-detail-sidebar" aria-label="ANNOJOIN chain definitions">
     <p class="technology-kicker">Chain definitions</p>
-    <h2>${escapeHtml((row.chains || []).join(', ') || 'not annotated')}</h2>
+    <h2>${escapeHtml(countLabel)}</h2>
     <p>Chains are PDB chain identifiers associated with this ANNOJOIN case.</p>
-    <pre class="annojoin-sequence-box">Chain sequences are not present in the current index asset.</pre>
+    <div class="annojoin-chain-scroll" role="region" aria-label="PDB chain identifiers" tabindex="0">
+      ${body}
+    </div>
+    <p class="mini-note">Per-chain residue sequences are not present in the current index asset; chain identifiers map to the deposited PDB entry.</p>
   </aside>`;
 }
 
@@ -437,7 +446,6 @@ export function renderAnnojointAtlasPage({
   collapsedGroupIds = new Set(),
   expandedGroupIds,
   uncappedGroupIds = new Set(),
-  visibleColumnIds,
   page = 1,
   pageSize = 50,
   selectedCaseId = '',
@@ -448,8 +456,7 @@ export function renderAnnojointAtlasPage({
   const selected = selectedCaseIds instanceof Set ? selectedCaseIds : new Set(selectedCaseIds || []);
   const expanded = expandedGroupIds instanceof Set ? expandedGroupIds : new Set(expandedGroupIds || []);
   const uncapped = uncappedGroupIds instanceof Set ? uncappedGroupIds : new Set(uncappedGroupIds || []);
-  const visibleIds = visibleColumnIds ? normalizeVisibleAnnojointColumnIds(visibleColumnIds) : defaultVisibleAnnojointColumnIds();
-  const visibleColumns = ANNOJOIN_TABLE_COLUMNS.filter((column) => visibleIds.includes(column.id));
+  const visibleColumns = ANNOJOIN_TABLE_COLUMNS;
   const sortedRows = sortAnnojointCases(atlasState.cases);
   const query = atlasState.filters?.query || '';
   const searchActive = isAnnojointSearchActive(query);
@@ -504,7 +511,6 @@ export function renderAnnojointAtlasPage({
       <a class="download-outline-btn" href="${escapeHtml(atlasHref(routeName))}">Reset</a>
     </section>
 
-    ${renderColumnPicker(visibleIds)}
     ${renderActiveConditionChips(atlasState.filters, query)}
     ${searchModeNote}
     ${renderPagination(pagination)}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6P5N",
+  "biologicalMoleculeName": "6P5N",
+  "caseId": "6P5N",
+  "caseKey": "RMDB2PDB:6P5N",
+  "chains": [
+    "1"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "6P5N",
+  "profileCount": 50
+}

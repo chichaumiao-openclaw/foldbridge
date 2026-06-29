@@ -13,6 +13,7 @@ import {
   parseTsv
 } from './lib/annojoin-atlas-corpus.mjs';
 import { buildCaseConfidenceSidecars } from './lib/annojoin-atlas-confidence.mjs';
+import { buildChainIdentityIndex } from './lib/annojoin-atlas-chain-identity.mjs';
 import {
   buildCompressedJsonSidecars,
   buildDetailRouteIndexAsset
@@ -33,6 +34,11 @@ const FEC_EVIDENCE_ROOT = process.env.FOLDBRIDGE_FEC_EVIDENCE_ROOT
 const OUT_ROOT = process.env.FOLDBRIDGE_ANNOJOIN_ATLAS_OUT
   || path.resolve(__dirname, '../src/assets/generated/annojoin-atlas');
 const RMDB_ABC_LSS_ROOT = process.env.FOLDBRIDGE_RMDB_ABC_LSS_ROOT || '';
+const RASP_D_LSS_ROOT = process.env.FOLDBRIDGE_RASP_D_LSS_ROOT || '';
+const PDB_CHAIN_IDENTITY_PATH = process.env.FOLDBRIDGE_PDB_CHAIN_IDENTITY
+  || '/Volumes/tianyi/tmp/PDB/04_pdb_metadata/pdb_rna_entity_chain_declared_identity.tsv';
+const PDB_GOVERNED_MAP_PATH = process.env.FOLDBRIDGE_PDB_GOVERNED_MAP
+  || '/Volumes/tianyi/tmp/PDB/biological_layer/parent_child_pdb_map.tsv';
 const VISUAL_PREVIEW_ROWS_PER_CASE = Number(process.env.FOLDBRIDGE_ANNOJOIN_VISUAL_ROWS_PER_CASE || 48);
 const DETAIL_ASSET_WRITE_CONCURRENCY = Math.max(
   1,
@@ -74,6 +80,13 @@ async function readOptionalTable(fullPath, label) {
   return parseTsv(await readFile(fullPath, 'utf8'));
 }
 
+function firstExistingPath(paths = []) {
+  for (const fullPath of paths || []) {
+    if (fullPath && existsSync(fullPath)) return fullPath;
+  }
+  return paths[0] || '';
+}
+
 function groupByField(rows = [], fieldName = '') {
   const grouped = new Map();
   for (const row of rows || []) {
@@ -84,6 +97,45 @@ function groupByField(rows = [], fieldName = '') {
     grouped.set(key, bucket);
   }
   return grouped;
+}
+
+function confidenceEnabledCaseFamily(family = '') {
+  return family === 'RMDB2PDB' || family === 'RASP2PDB';
+}
+
+function tierSuffix(tier = '') {
+  const normalized = String(tier || '').trim();
+  return normalized.startsWith('LSS_') ? normalized.slice(4) : normalized;
+}
+
+function sourceConfidenceDisplayLabel(row = {}, confidenceAssets = null) {
+  // 线1（LSS recall tier）口径：RMDB 与 RASP 都改用校准后的 LSS 召回层级展示，
+  // 取默认选中的证据行 -> "{measurement_family} {tier}"（如 "B MODERATE" / "D STRONG"）。
+  // 没有校准证据时回退原标签：RMDB 保留 FEC 分布，RASP 保留 "not active"（红线②）。
+  if (!confidenceEnabledCaseFamily(row.asset_family || '')) return row.confidence_display_label || '';
+  const chosen = confidenceAssets?.evidence?.rows?.find((entry) => entry.selectedByDefault)
+    || confidenceAssets?.evidence?.rows?.[0]
+    || null;
+  if (!chosen) return row.confidence_display_label || '';
+  const tier = tierSuffix(chosen.lssTierCalibrated);
+  if (!tier) return row.confidence_display_label || '';
+  return [String(chosen.family || '').trim(), tier].filter(Boolean).join(' ');
+}
+
+function raspDFamilyPathCandidates(root = '') {
+  if (!root) {
+    return { calibrated: [''], gate: [''] };
+  }
+  return {
+    calibrated: [
+      path.join(root, '家族D校准结果_20260627.tsv'),
+      path.join(root, 'cal/def_lss_calibrated.tsv'),
+    ],
+    gate: [
+      path.join(root, '家族D校准门禁_20260627.tsv'),
+      path.join(root, 'cal/def_lss_calibration_gate.tsv'),
+    ],
+  };
 }
 
 function pickColumns(header, cells, wanted) {
@@ -264,6 +316,7 @@ async function main() {
   for (const name of Object.keys(TABLES)) {
     tables[name] = await readTable(name);
   }
+  const raspDFamilyPaths = raspDFamilyPathCandidates(RASP_D_LSS_ROOT);
   const visualCaseIds = resolveVisualPreviewCaseIds(
     tables.cases,
     process.env.FOLDBRIDGE_ANNOJOIN_VISUAL_CASE_LIMIT
@@ -286,6 +339,14 @@ async function main() {
     RMDB_ABC_LSS_ROOT ? path.join(RMDB_ABC_LSS_ROOT, 'cal/abc_lss_calibrated.tsv') : '',
     'RMDB A/B/C calibrated confidence'
   );
+  tables.raspDCalibrated = await readOptionalTable(
+    firstExistingPath(raspDFamilyPaths.calibrated),
+    'RASP Family D calibrated confidence'
+  );
+
+  const declaredIdentityRows = await readOptionalTable(PDB_CHAIN_IDENTITY_PATH, 'PDB chain declared identity');
+  const governedMapRows = await readOptionalTable(PDB_GOVERNED_MAP_PATH, 'PDB governed identity map');
+  const chainIdentityIndex = buildChainIdentityIndex({ declaredIdentityRows, governedRows: governedMapRows });
 
   const generatedAt = new Date().toISOString();
 
@@ -312,6 +373,11 @@ async function main() {
     rmdb_confidence_root: RMDB_ABC_LSS_ROOT,
     rmdb_confidence_rows: tables.rmdbAbcConfidence.length,
     rmdb_calibrated_rows: tables.rmdbAbcCalibrated.length,
+    rasp_family_d_confidence_root: RASP_D_LSS_ROOT,
+    rasp_family_d_calibrated_rows: tables.raspDCalibrated.length,
+    pdb_chain_identity_path: PDB_CHAIN_IDENTITY_PATH,
+    pdb_chain_identity_rows: declaredIdentityRows.length,
+    pdb_chain_identity_pdbs: chainIdentityIndex.size,
     structure_route_unique_paths: 0,
     structure_serving_mode: 'api_on_demand',
     detail_compression: {
@@ -333,15 +399,6 @@ async function main() {
   tables.colors3d = structureRoutes.rows;
   manifest.structure_route_unique_paths = structureRoutes.uniquePathCount;
 
-  const index = buildAtlasIndexAsset({
-    ...tables,
-    generatedAt,
-    source: {
-      viewId: VIEW_ID,
-      assetFamilies: VIEW_ASSET_FAMILIES,
-      inputAnnojointRoot: ANNOJOIN_ROOT
-    }
-  });
   const grouped = {
     memberships: groupByAtlasCaseKey(tables.memberships),
     tracks: groupByAtlasCaseKey(tables.tracks),
@@ -352,8 +409,80 @@ async function main() {
     residueEvidence: groupByAtlasCaseKey(tables.residueEvidence),
     lssContextsByCaseId: groupByCaseId(tables.lssContexts),
     residueEvidenceByCaseId: groupByCaseId(tables.residueEvidence),
-    rmdbCalibratedByPdb: groupByField(tables.rmdbAbcCalibrated, 'pdb_id')
+    rmdbCalibratedByPdb: groupByField(tables.rmdbAbcCalibrated, 'pdb_id'),
+    raspDCalibratedByPdb: groupByField(tables.raspDCalibrated, 'pdb_id')
   };
+
+  // 线1（LSS 召回层级）实际数据特征：两张校准表（A/B/C 与 D 家族）都属于 RASP 域
+  // （profile_key 全为 rasp_bw_，pdb 全部落在 RASP 原子，RMDB 原子 0 命中）。
+  // 因此 RASP case 的 Line 1 证据要取「两表按 pdb 合并」后跨家族选最优层级；
+  // RMDB case 本地无 LSS 召回校准，优雅降级保留其 FEC 分布（红线：不伪造）。
+  const raspCalibratedByPdb = new Map();
+  for (const map of [grouped.rmdbCalibratedByPdb, grouped.raspDCalibratedByPdb]) {
+    for (const [pdb, rows] of map) {
+      if (!raspCalibratedByPdb.has(pdb)) raspCalibratedByPdb.set(pdb, []);
+      raspCalibratedByPdb.get(pdb).push(...rows);
+    }
+  }
+
+  const confidenceAssetsByCaseKey = new Map();
+  for (const row of tables.cases) {
+    const caseId = row.case_id;
+    const caseKey = atlasCaseKeyFor(row);
+    const family = row.asset_family || '';
+    if (!confidenceEnabledCaseFamily(family)) continue;
+    const calibratedRows = family === 'RMDB2PDB'
+      ? grouped.rmdbCalibratedByPdb.get(caseId) || []
+      : raspCalibratedByPdb.get(caseId) || [];
+    confidenceAssetsByCaseKey.set(caseKey, buildCaseConfidenceSidecars({
+      atlasCaseKey: caseKey,
+      caseId,
+      pdbId: row.pdb_id || caseId,
+      calibratedRows,
+      memberships: grouped.memberships.get(caseKey) || [],
+      tracks: grouped.tracks.get(caseKey) || [],
+      pairs2d: grouped.pairs2d.get(caseKey) || [],
+      colors3d: grouped.colors3d.get(caseKey) || [],
+      generatedAt,
+      source: {
+        confidencePath: family === 'RMDB2PDB' && RMDB_ABC_LSS_ROOT ? path.join(RMDB_ABC_LSS_ROOT, 'out/abc_lss_confidence.tsv') : '',
+        calibratedPath: family === 'RMDB2PDB'
+          ? (RMDB_ABC_LSS_ROOT ? path.join(RMDB_ABC_LSS_ROOT, 'cal/abc_lss_calibrated.tsv') : '')
+          : [
+            RMDB_ABC_LSS_ROOT ? path.join(RMDB_ABC_LSS_ROOT, 'cal/abc_lss_calibrated.tsv') : '',
+            firstExistingPath(raspDFamilyPaths.calibrated)
+          ].filter(Boolean).join(';'),
+        calibrationGatePath: family === 'RASP2PDB' ? firstExistingPath(raspDFamilyPaths.gate) : '',
+        membershipsPath: path.join(ANNOJOIN_ROOT, TABLES.memberships),
+        tracksPath: path.join(ANNOJOIN_ROOT, TABLES.tracks),
+        pairContextPath: path.join(ANNOJOIN_ROOT, TABLES.pairs2d),
+        structurePath: path.join(ANNOJOIN_ROOT, TABLES.colors3d),
+      },
+    }));
+  }
+
+  tables.cases = tables.cases.map((row) => {
+    const caseKey = atlasCaseKeyFor(row);
+    const confidenceAssets = confidenceAssetsByCaseKey.get(caseKey);
+    if (!confidenceAssets || !confidenceEnabledCaseFamily(row.asset_family || '')) return row;
+    const nextLabel = sourceConfidenceDisplayLabel(row, confidenceAssets);
+    if (!nextLabel || nextLabel === row.confidence_display_label) return row;
+    return {
+      ...row,
+      confidence_display_label: nextLabel,
+      confidence_source: 'build_time_case_confidence_sidecar',
+    };
+  });
+
+  const index = buildAtlasIndexAsset({
+    ...tables,
+    generatedAt,
+    source: {
+      viewId: VIEW_ID,
+      assetFamilies: VIEW_ASSET_FAMILIES,
+      inputAnnojointRoot: ANNOJOIN_ROOT
+    }
+  });
 
   await writeJson('index.json', index, manifest);
   const compressedAssetsByPath = new Map();
@@ -375,7 +504,8 @@ async function main() {
       lssContexts: grouped.lssContexts.get(caseKey) || (useRmdbCaseIdFallback ? grouped.lssContextsByCaseId.get(caseId) : []) || [],
       colors3d: grouped.colors3d.get(caseKey) || [],
       conflicts: grouped.conflicts.get(caseKey) || [],
-      residueEvidence: grouped.residueEvidence.get(caseKey) || (useRmdbCaseIdFallback ? grouped.residueEvidenceByCaseId.get(caseId) : []) || []
+      residueEvidence: grouped.residueEvidence.get(caseKey) || (useRmdbCaseIdFallback ? grouped.residueEvidenceByCaseId.get(caseId) : []) || [],
+      chainIdentities: chainIdentityIndex.get((row.pdb_id || '').toUpperCase()) || []
     });
     const { routeAssetPages, ...overviewAsset } = caseAsset;
     const writeTasks = [
@@ -388,26 +518,8 @@ async function main() {
         compressedAssetsByPath
       })),
     ];
-    if ((row.asset_family || '') === 'RMDB2PDB') {
-      const confidenceAssets = buildCaseConfidenceSidecars({
-        atlasCaseKey: caseKey,
-        caseId,
-        pdbId: row.pdb_id || caseId,
-        calibratedRows: grouped.rmdbCalibratedByPdb.get(caseId) || [],
-        memberships: grouped.memberships.get(caseKey) || [],
-        tracks: grouped.tracks.get(caseKey) || [],
-        pairs2d: grouped.pairs2d.get(caseKey) || [],
-        colors3d: grouped.colors3d.get(caseKey) || [],
-        generatedAt,
-        source: {
-          confidencePath: RMDB_ABC_LSS_ROOT ? path.join(RMDB_ABC_LSS_ROOT, 'out/abc_lss_confidence.tsv') : '',
-          calibratedPath: RMDB_ABC_LSS_ROOT ? path.join(RMDB_ABC_LSS_ROOT, 'cal/abc_lss_calibrated.tsv') : '',
-          membershipsPath: path.join(ANNOJOIN_ROOT, TABLES.memberships),
-          tracksPath: path.join(ANNOJOIN_ROOT, TABLES.tracks),
-          pairContextPath: path.join(ANNOJOIN_ROOT, TABLES.pairs2d),
-          structurePath: path.join(ANNOJOIN_ROOT, TABLES.colors3d),
-        },
-      });
+    if (confidenceEnabledCaseFamily(row.asset_family || '')) {
+      const confidenceAssets = confidenceAssetsByCaseKey.get(caseKey);
       writeTasks.push(
         () => writeJson(overviewAsset.supplementalAssets.confidenceSummaryPath, confidenceAssets.summary, manifest, {
           compress: true,

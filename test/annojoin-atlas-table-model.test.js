@@ -4,10 +4,9 @@ import {
   ANNOJOIN_TABLE_COLUMNS,
   annojoinExportRow,
   buildAnnojointTableGroups,
-  defaultVisibleAnnojointColumnIds,
   familyBadgeDescriptor,
   isAnnojointSearchActive,
-  normalizeVisibleAnnojointColumnIds,
+  moleculeName,
   paginateAnnojointRows,
   scoreAnnojointMatch,
   searchAnnojointRows,
@@ -55,26 +54,19 @@ const rows = [
   }
 ];
 
-test('table model defines conservative default visible columns', () => {
-  assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'moleculeName'), true);
+test('table model defines the five fixed master-table columns', () => {
   assert.deepEqual(
-    defaultVisibleAnnojointColumnIds().slice(0, 5),
+    ANNOJOIN_TABLE_COLUMNS.map((column) => column.id),
     ['pdbId', 'moleculeName', 'confidenceDisplayLabel', 'profileCount', 'chains']
   );
+  assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'conflictCandidateCount'), false);
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'biologicalMoleculeName'), false);
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'pdbMoleculeName'), false);
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'assayFamilies'), false);
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'parentClassLabel'), false);
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'childClassLabel'), false);
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'sourceDatabases'), false);
-});
-
-test('normalizes visible columns and preserves valid ordering', () => {
-  assert.deepEqual(
-    normalizeVisibleAnnojointColumnIds(['profileCount', 'biologicalMoleculeName', 'parentClassLabel', 'unknown', 'pdbId', 'profileCount']),
-    ['pdbId', 'profileCount']
-  );
-  assert.deepEqual(normalizeVisibleAnnojointColumnIds([]), defaultVisibleAnnojointColumnIds());
+  assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => 'defaultVisible' in column), false);
 });
 
 test('groups cases into parent and child buckets with parentless fallback', () => {
@@ -201,4 +193,17 @@ test('familyBadgeDescriptor respects activation override for future RASP activat
 test('export row never contains a derived UI column', () => {
   const exported = annojoinExportRow({ pdbId: '9ELY', chains: ['A'] });
   assert.equal('pdbCaseDetail' in exported, false);
+});
+
+test('moleculeName prefers the additive canonical moleculeDisplayName for display', () => {
+  assert.equal(
+    moleculeName({ moleculeDisplayName: '16S ribosomal RNA', biologicalMoleculeName: '16S RIBOSOMAL RNA' }),
+    '16S ribosomal RNA'
+  );
+});
+
+test('moleculeName falls back to raw fields when moleculeDisplayName is absent', () => {
+  assert.equal(moleculeName({ biologicalMoleculeName: 'X' }), 'X');
+  assert.equal(moleculeName({ pdbMoleculeName: 'Y' }), 'Y');
+  assert.equal(moleculeName({ caseId: 'ABCD' }), 'ABCD');
 });

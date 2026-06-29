@@ -1,0 +1,28 @@
+{
+  "atlasCaseKey": "RMDB2PDB:8RWG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 150,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:8RWG:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#22981",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 75,
+    "B": 75
+  },
+  "generatedAt": "2026-06-28T21:12:52.193227Z",
+  "materializedEvidenceCount": 150,
+  "pdbId": "8RWG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 33,
+    "LSS_MODERATE": 5,
+    "LSS_NOT_SUPPORTED": 14,
+    "LSS_STRONG": 3,
+    "LSS_UNDERPOWERED": 94,
+    "LSS_WEAK": 1
+  },
+  "totalEvidenceCount": 150
+}

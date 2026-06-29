@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4WJ3",
+  "biologicalMoleculeName": "4WJ3",
+  "caseId": "4WJ3",
+  "caseKey": "RMDB2PDB:4WJ3",
+  "chains": [
+    "T"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "4WJ3",
+  "profileCount": 2
+}

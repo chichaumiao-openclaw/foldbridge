@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4WFM",
+  "biologicalMoleculeName": "4WFM",
+  "caseId": "4WFM",
+  "caseKey": "RMDB2PDB:4WFM",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4WFM",
+  "profileCount": 2
+}

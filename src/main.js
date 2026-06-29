@@ -40,9 +40,7 @@ import { bindAnnojointAtlasTable } from './annojoinAtlasController.js';
 import {
   annojoinExportRow,
   buildAnnojointTableGroups,
-  defaultVisibleAnnojointColumnIds,
   isAnnojointSearchActive,
-  normalizeVisibleAnnojointColumnIds,
   paginateAnnojointRows,
   rowCaseId,
   rowCaseKey,
@@ -68,7 +66,6 @@ let selectedSequenceIds = new Set();
 let selectedAnnojointCaseIds = new Set();
 let expandedAnnojointGroupIds = new Set();
 let uncappedAnnojointGroupIds = new Set();
-let visibleAnnojointColumnIds = defaultVisibleAnnojointColumnIds();
 let annojoinPageSize = 50;
 let sequenceSearchQuery = '';
 // RMDB→PDB case 资产懒加载层与浏览器侧渲染缓存。
@@ -1204,7 +1201,7 @@ function downloadSequencesPage() {
 
 
 
-const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case'];
+const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case', 'annojoin-confidence'];
 let route = routeFromHash(window.location.hash);
 let theme = 'ribocentre';
 let mode = localStorage.getItem('foldbridge-mode') === 'dark' ? 'dark' : 'light';
@@ -2069,7 +2066,6 @@ function annojoinAtlasPage() {
       selectedCaseIds: selectedAnnojointCaseIds,
       expandedGroupIds: expandedAnnojointGroupIds,
       uncappedGroupIds: uncappedAnnojointGroupIds,
-      visibleColumnIds: visibleAnnojointColumnIds,
       page,
       pageSize,
       selectedCaseId,
@@ -2085,7 +2081,6 @@ function annojoinAtlasPage() {
       selectedCaseIds: selectedAnnojointCaseIds,
       expandedGroupIds: expandedAnnojointGroupIds,
       uncappedGroupIds: uncappedAnnojointGroupIds,
-      visibleColumnIds: visibleAnnojointColumnIds,
       page,
       pageSize,
       selectedCaseId,
@@ -2101,7 +2096,6 @@ function annojoinAtlasPage() {
     selectedCaseIds: selectedAnnojointCaseIds,
     expandedGroupIds: expandedAnnojointGroupIds,
     uncappedGroupIds: uncappedAnnojointGroupIds,
-    visibleColumnIds: visibleAnnojointColumnIds,
     page,
     pageSize,
     selectedCaseId,
@@ -2246,11 +2240,6 @@ function setAnnojointAtlasPageSize(value) {
   window.location.hash = next ? `${routeName}?${next}` : routeName;
 }
 
-function setAnnojointAtlasVisibleColumns(columnIds) {
-  visibleAnnojointColumnIds = normalizeVisibleAnnojointColumnIds(columnIds);
-  render({ preserveScroll: true });
-}
-
 function toggleAnnojointAtlasGroup(groupId) {
   if (expandedAnnojointGroupIds.has(groupId)) expandedAnnojointGroupIds.delete(groupId);
   else expandedAnnojointGroupIds.add(groupId);
@@ -2379,6 +2368,72 @@ function helpPage() {
   </main>`;
 }
 
+// ANNOJOIN 置信度科普页：解释主表 Confidence distribution 列里 A/B/C/D 族、
+// LSS 召回层级（STRONG/MODERATE/WEAK/...）、以及 RASP "not active" 的含义。
+function annojoinConfidencePage() {
+  return `<main class="page-annojoin-confidence annojoin-confidence-article">
+    <section class="annojoin-confidence-article-head">
+      <p class="technology-kicker">ANNOJOIN · Confidence guide</p>
+      <h1>Reading the ANNOJOIN confidence labels</h1>
+      <p class="pdb-case-lede">The master table summarizes how much annotation support each PDB entry has. The label is a
+        <strong>case-level distribution</strong>, not a single best-profile score. This page explains what each part means
+        so you can judge how far to trust a row before opening the underlying route assets.</p>
+      <p><a class="download-outline-btn" href="#annojoin-atlas">Back to the master table</a></p>
+    </section>
+
+    <section class="annojoin-confidence-article-body">
+      <h2>What the label is measuring</h2>
+      <p>Confidence reflects how well the chemical-probing evidence linked to a PDB entry supports its structural annotation.
+        It is a summary across every source profile that maps to the entry, so a single row can carry several signals at once.
+        High confidence means the supporting evidence is strong and consistent; low confidence means the evidence is sparse,
+        weak, or disagrees with itself.</p>
+
+      <h2>The measurement family: A, B, C, D</h2>
+      <p>The leading letter is the <em>measurement family</em> — which evidence pipeline produced the signal, ordered roughly
+        from most to least directly supported:</p>
+      <ul class="annojoin-confidence-legend">
+        <li><strong>A</strong> — the most directly supported reference-grade measurements.</li>
+        <li><strong>B</strong> — solid supporting measurements with good coverage.</li>
+        <li><strong>C</strong> — exploratory or context-stratified measurements; treat as hints.</li>
+        <li><strong>D</strong> — the broadest, least-filtered measurement family.</li>
+      </ul>
+      <p>A family letter on its own (for example <code>A_REFERENCE</code> or <code>C_EXPLORATORY_HINT</code>) names the kind of
+        evidence; it does not by itself promise a strong result. Always read it together with the recall tier below.</p>
+
+      <h2>The recall tier: STRONG, MODERATE, WEAK …</h2>
+      <p>The second word is the <em>calibrated LSS recall tier</em> — how reliably the evidence recovers the known structure
+        after calibration. From most to least confident:</p>
+      <ul class="annojoin-confidence-legend">
+        <li><strong>STRONG</strong> — evidence recovers the structure reliably.</li>
+        <li><strong>MODERATE</strong> — usable support, with some uncertainty.</li>
+        <li><strong>MODERATE_CANDIDATE</strong> — borderline; promising but not yet confirmed.</li>
+        <li><strong>WEAK</strong> — limited support; interpret cautiously.</li>
+        <li><strong>UNDERPOWERED</strong> — too little data to draw a conclusion.</li>
+        <li><strong>DISCORDANT</strong> — signals disagree with the annotation; needs review.</li>
+        <li><strong>NOT_SUPPORTED</strong> — evidence does not back the annotation.</li>
+      </ul>
+      <p>So a label like <code>B MODERATE</code> reads as “family-B evidence with a moderate, calibrated recall tier,” while
+        <code>A WEAK</code> means reference-grade evidence that still only weakly recovers the structure.</p>
+
+      <h2>RASP entries: “not active”</h2>
+      <p>RASP-derived rows can appear with <code>RASP public current; positive confidence not active</code> or
+        <code>RASP: not active</code>. This means the RASP positive-confidence track is <strong>not yet switched on</strong> for
+        public display. These rows are listed for completeness, but their confidence should be read as “pending,” not as a
+        positive score. A merged PDB entry may show its RMDB family tier alongside <code>RASP: not active</code>.</p>
+
+      <h2>Distributions and merged entries</h2>
+      <p>Because one PDB entry can summarize several source cases, you may see compound labels (for example
+        <code>RMDB: A/B/C; RASP: not active</code>). The slash-separated letters list the families present across the merged
+        source cases. Open the entry’s side panel or detail page to see the per-source breakdown and the route assets that
+        back each claim.</p>
+
+      <p class="mini-note">C-level labels and candidate tiers are exploratory and should be reviewed against the underlying
+        route assets before being used in analysis.</p>
+      <p><a class="download-outline-btn" href="#annojoin-atlas">Back to the master table</a></p>
+    </section>
+  </main>`;
+}
+
 
 function pageFor(name) {
   const safeRoute = normalizeRoute(name);
@@ -2389,6 +2444,7 @@ function pageFor(name) {
   if (safeRoute === 'pdb-case') return pdbCasePage();
   if (safeRoute === 'annojoin-atlas') return annojoinAtlasPage();
   if (safeRoute === 'annojoin-case') return annojoinCasePage();
+  if (safeRoute === 'annojoin-confidence') return annojoinConfidencePage();
   if (safeRoute === 'probing') return detailPage();
   if (safeRoute === 'download') return downloadPage();
   if (safeRoute === 'search') return searchPage();
@@ -2599,6 +2655,12 @@ function render(options = {}) {
   const { preserveScroll = false } = options;
   const previousScrollX = window.scrollX;
   const previousScrollY = window.scrollY;
+  // 宽表横向滚动位置存在内部容器上，整页重渲染会重建它并丢失用户的横向拖拽。
+  // 渲染前抓取、渲染后恢复，避免点击 Chains 等字段链接后横向滚动被重置。
+  const previousTableWrap = document.querySelector('.annojoin-master-table-wrap');
+  const previousTableScroll = previousTableWrap
+    ? { left: previousTableWrap.scrollLeft, top: previousTableWrap.scrollTop }
+    : null;
   let activeSearch = null;
   if (document.activeElement?.id === 'annojoin-search-input') {
     const el = document.activeElement;
@@ -2656,13 +2718,11 @@ function render(options = {}) {
     bindAnnojointAtlasTable({
       root: document,
       selectedCaseIds: selectedAnnojointCaseIds,
-      visibleColumnIds: visibleAnnojointColumnIds,
       pageRows: annojoinState.pageRows,
       rows: annojoinState.rows,
       setQuery: setAnnojointAtlasQuery,
       setPage: setAnnojointAtlasPage,
       setPageSize: setAnnojointAtlasPageSize,
-      setVisibleColumns: setAnnojointAtlasVisibleColumns,
       exportSelectedRows: (selectedRows) => {
         downloadRowsAsCsv(selectedRows.map(annojoinExportRow), 'annojoin-selected-cases.csv');
       },
@@ -2799,6 +2859,14 @@ document.addEventListener('click', () => {
           // type="search" 可能不支持 setSelectionRange，忽略。
         }
       }
+    }
+  }
+
+  if (previousTableScroll) {
+    const nextTableWrap = document.querySelector('.annojoin-master-table-wrap');
+    if (nextTableWrap) {
+      nextTableWrap.scrollLeft = previousTableScroll.left;
+      nextTableWrap.scrollTop = previousTableScroll.top;
     }
   }
 
@@ -2940,8 +3008,11 @@ function initHomeDashboardFilters() {
 }
 
 window.addEventListener('hashchange', () => {
+  const previousRoute = route;
   route = routeFromHash(window.location.hash);
-  render();
+  // 同路由内仅参数变化（如点击字段链接切换右侧面板）保留滚动位置；
+  // 真正切换路由时才重置到顶部。
+  render({ preserveScroll: route === previousRoute });
 });
 
 

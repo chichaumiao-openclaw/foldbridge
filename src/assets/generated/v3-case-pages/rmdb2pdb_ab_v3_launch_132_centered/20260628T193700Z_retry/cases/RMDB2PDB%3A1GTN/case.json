@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:1GTN",
+  "biologicalMoleculeName": "1GTN",
+  "caseId": "1GTN",
+  "caseKey": "RMDB2PDB:1GTN",
+  "chains": [
+    "W"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "1GTN",
+  "profileCount": 1
+}

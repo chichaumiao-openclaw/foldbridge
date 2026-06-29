@@ -17,7 +17,9 @@ function text(value) {
 }
 
 function numberOrNull(value) {
-  const parsed = Number(text(value));
+  const normalized = text(value);
+  if (!normalized) return null;
+  const parsed = Number(normalized);
   return Number.isFinite(parsed) ? parsed : null;
 }
 
@@ -124,11 +126,36 @@ function sourceTables(source = {}) {
   return {
     calibratedPath: text(source.calibratedPath),
     confidencePath: text(source.confidencePath),
+    calibrationGatePath: text(source.calibrationGatePath),
     membershipsPath: text(source.membershipsPath),
     tracksPath: text(source.tracksPath),
     pairContextPath: text(source.pairContextPath),
     structurePath: text(source.structurePath),
   };
+}
+
+function evidenceMetricDescriptor(row = {}) {
+  const family = text(row.measurement_family).toUpperCase();
+  const recallPath = text(row.recall_path);
+  if (family !== 'D') {
+    return { kind: 'auc', label: 'AUC' };
+  }
+  if (recallPath === 'spearman_primary') {
+    return { kind: 'spearman_rho', label: 'Spearman rho' };
+  }
+  return { kind: 'auc', label: 'AUC' };
+}
+
+function normalizedDirectionalMetric(row = {}) {
+  return numberOrNull(firstValue(row.auc_directional, row.directional_metric));
+}
+
+function normalizedEmpiricalPValue(row = {}) {
+  return numberOrNull(firstValue(row.auc_empirical_p_value, row.empirical_p_value));
+}
+
+function normalizedEffectSizeZ(row = {}) {
+  return numberOrNull(firstValue(row.auc_effect_size_z, row.effect_size_z));
 }
 
 export function buildCaseConfidenceSidecars({
@@ -154,6 +181,7 @@ export function buildCaseConfidenceSidecars({
 
   for (const row of calibratedRows || []) {
     const profileKey = text(row.profile_key);
+    const metric = evidenceMetricDescriptor(row);
     const membershipChoice = chooseMembership(membershipByProfileKey.get(profileKey) || []);
     const membership = membershipChoice.row;
     const pairId = text(membership?.pair_id);
@@ -191,15 +219,19 @@ export function buildCaseConfidenceSidecars({
       duplicateMembershipCount: membershipChoice.duplicateCount,
       lssTierCalibrated: text(row.lss_tier_calibrated),
       lssTierUncalibrated: text(row.lss_tier_uncalibrated),
-      aucDirectional: numberOrNull(row.auc_directional),
-      aucEmpiricalPValue: numberOrNull(row.auc_empirical_p_value),
-      aucEffectSizeZ: numberOrNull(row.auc_effect_size_z),
+      aucDirectional: normalizedDirectionalMetric(row),
+      aucEmpiricalPValue: normalizedEmpiricalPValue(row),
+      aucEffectSizeZ: normalizedEffectSizeZ(row),
+      directionalMetricKind: metric.kind,
+      directionalMetricLabel: metric.label,
       conflictFraction: numberOrNull(row.conflict_fraction),
       partnerInsideFraction: numberOrNull(row.partner_inside_fraction),
       partnerOutsideFraction: numberOrNull(row.partner_outside_fraction),
       nEvaluable: numberOrNull(row.n_evaluable),
       nPairedEvaluable: numberOrNull(row.n_paired_evaluable),
       nUnpairedEvaluable: numberOrNull(row.n_unpaired_evaluable),
+      sasaReferenceStatus: text(row.sasa_reference_status),
+      recallPath: text(row.recall_path),
       permutationStatus: text(row.permutation_status),
       permutationN: numberOrNull(row.permutation_n),
       calibrationNote: text(row.calibration_note),

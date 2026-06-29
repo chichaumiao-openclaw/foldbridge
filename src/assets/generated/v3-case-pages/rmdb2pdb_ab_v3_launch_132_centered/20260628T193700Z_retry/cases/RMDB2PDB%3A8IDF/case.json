@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8IDF",
+  "biologicalMoleculeName": "8IDF",
+  "caseId": "8IDF",
+  "caseKey": "RMDB2PDB:8IDF",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "8IDF",
+  "profileCount": 1
+}

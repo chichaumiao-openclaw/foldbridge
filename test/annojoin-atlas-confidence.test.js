@@ -138,3 +138,81 @@ test('buildCaseConfidenceSidecars records bridge failures when memberships are m
   assert.equal(assets.evidence.rows[0].bridgeSelectionReason, 'missing_membership_profile');
   assert.deepEqual(assets.provenance.failureReasons, { 'membership+track+pair_context': 1 });
 });
+
+test('buildCaseConfidenceSidecars maps Family D calibrated rows into sidecars without inventing pair routes', () => {
+  const assets = buildCaseConfidenceSidecars({
+    atlasCaseKey: 'RASP2PDB:8IDT',
+    caseId: '8IDT',
+    pdbId: '8IDT',
+    calibratedRows: [
+      {
+        profile_key: 'rasp_bw_6382c1bbc197',
+        pdb_id: '8IDT',
+        chain: '2',
+        technology: 'icLASER',
+        measurement_family: 'D',
+        sasa_reference_status: 'SASA_PRESENT',
+        recall_path: 'spearman_primary',
+        lss_tier_uncalibrated: 'LSS_MODERATE_CANDIDATE',
+        lss_tier_calibrated: 'LSS_STRONG',
+        directional_metric: '0.516357',
+        empirical_p_value: '0.000999',
+        effect_size_z: '2.410',
+        n_evaluable: '50',
+        permutation_status: 'RUN',
+        permutation_n: '1000',
+        calibration_note: '',
+        confidence_ranked_set_eligible: 'true',
+      },
+      {
+        profile_key: 'rasp_bw_81424efa6c6b',
+        pdb_id: '8IDT',
+        chain: '2',
+        technology: 'icLASER',
+        measurement_family: 'D',
+        sasa_reference_status: 'SASA_PRESENT',
+        recall_path: 'spearman_primary',
+        lss_tier_uncalibrated: 'LSS_WEAK',
+        lss_tier_calibrated: 'LSS_NOT_SUPPORTED',
+        directional_metric: '0.221074',
+        empirical_p_value: '0.088911',
+        effect_size_z: '0.921',
+        n_evaluable: '40',
+        permutation_status: 'RUN',
+        permutation_n: '1000',
+        calibration_note: 'not_significant_after_permutation',
+        confidence_ranked_set_eligible: 'false',
+      },
+    ],
+    memberships: [
+      { profile_id: 'rasp_bw_6382c1bbc197', pair_id: '' },
+      { profile_id: 'rasp_bw_81424efa6c6b', pair_id: '' },
+    ],
+    tracks: [],
+    pairs2d: [],
+    colors3d: [],
+    source: {
+      calibratedPath: 'family_d_lss_run_20260627/cal/def_lss_calibrated.tsv',
+      membershipsPath: 'ANNOJOIN/anno_case_profile_membership.tsv',
+      tracksPath: 'ANNOJOIN/anno_residue_track_route_index.tsv',
+      pairContextPath: 'ANNOJOIN/anno_2d_pair_context_route_index.tsv',
+      structurePath: 'ANNOJOIN/anno_3d_residue_coloring_route_index.tsv',
+    },
+  });
+
+  assert.equal(assets.summary.status, 'materialized');
+  assert.equal(assets.summary.defaultEvidenceId, 'annojoin:RASP2PDB:8IDT:confidence:rasp_bw_6382c1bbc197');
+  assert.deepEqual(assets.summary.availableFamilies, ['D']);
+  assert.deepEqual(assets.summary.tierCounts, { LSS_STRONG: 1, LSS_NOT_SUPPORTED: 1 });
+  assert.equal(assets.evidence.rows[0].bridgeStatus, 'bridge_missing');
+  assert.equal(assets.evidence.rows[0].pairId, '');
+  assert.equal(assets.evidence.rows[0].aucDirectional, 0.516357);
+  assert.equal(assets.evidence.rows[0].aucEmpiricalPValue, 0.000999);
+  assert.equal(assets.evidence.rows[0].directionalMetricKind, 'spearman_rho');
+  assert.equal(assets.evidence.rows[0].directionalMetricLabel, 'Spearman rho');
+  assert.equal(assets.evidence.rows[0].sasaReferenceStatus, 'SASA_PRESENT');
+  assert.equal(assets.evidence.rows[0].recallPath, 'spearman_primary');
+  assert.equal(assets.evidence.rows[0].conflictFraction, null);
+  assert.equal(assets.evidence.rows[0].partnerInsideFraction, null);
+  assert.equal(assets.provenance.failureReasons['track+pair_context'], 2);
+});

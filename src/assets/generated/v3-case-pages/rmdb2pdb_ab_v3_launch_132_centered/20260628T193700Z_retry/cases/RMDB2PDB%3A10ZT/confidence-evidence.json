@@ -1,0 +1,34 @@
+{
+  "atlasCaseKey": "RMDB2PDB:10ZT",
+  "generatedAt": "2026-06-28T21:26:31.631273Z",
+  "pdbId": "10ZT",
+  "rows": [
+    {
+      "aucDirectional": 0.303385,
+      "aucEffectSizeZ": -2.794149,
+      "aucEmpiricalPValue": 0.997003,
+      "bridgeStatus": "bridge_missing",
+      "chain": "A",
+      "conflictFraction": 0.4375,
+      "directionalMetricKind": "auc_unpaired_vs_paired",
+      "directionalMetricLabel": "AUC unpaired vs paired",
+      "evidenceId": "annojoin:RMDB2PDB:10ZT:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#5914",
+      "family": "B",
+      "lssTierCalibrated": "LSS_DISCORDANT",
+      "lssTierUncalibrated": "LSS_DISCORDANT",
+      "nEvaluable": 68,
+      "pairId": "",
+      "pairSegmentId": "",
+      "partnerInsideFraction": 0.3125,
+      "profileKey": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#5914",
+      "recallPath": "",
+      "sasaReferenceStatus": "",
+      "selectedByDefault": true,
+      "signalDirection": "unpaired_positive",
+      "technology": "2A3",
+      "trackProfileId": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#5914"
+    }
+  ],
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized"
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9I78",
+  "biologicalMoleculeName": "9I78",
+  "caseId": "9I78",
+  "caseKey": "RMDB2PDB:9I78",
+  "chains": [
+    "L1",
+    "L3"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "9I78",
+  "profileCount": 262
+}

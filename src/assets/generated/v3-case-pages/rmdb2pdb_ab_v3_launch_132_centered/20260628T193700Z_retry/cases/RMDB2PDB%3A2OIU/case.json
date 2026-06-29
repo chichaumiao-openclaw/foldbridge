@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2OIU",
+  "biologicalMoleculeName": "2OIU",
+  "caseId": "2OIU",
+  "caseKey": "RMDB2PDB:2OIU",
+  "chains": [
+    "Q"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "2OIU",
+  "profileCount": 2
+}

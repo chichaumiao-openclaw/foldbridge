@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2WWB",
+  "biologicalMoleculeName": "2WWB",
+  "caseId": "2WWB",
+  "caseKey": "RMDB2PDB:2WWB",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "2WWB",
+  "profileCount": 4
+}

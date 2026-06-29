@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8ZMI",
+  "biologicalMoleculeName": "8ZMI",
+  "caseId": "8ZMI",
+  "caseKey": "RMDB2PDB:8ZMI",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8ZMI",
+  "profileCount": 2
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5WTI",
+  "biologicalMoleculeName": "5WTI",
+  "caseId": "5WTI",
+  "caseKey": "RMDB2PDB:5WTI",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "5WTI",
+  "profileCount": 4
+}

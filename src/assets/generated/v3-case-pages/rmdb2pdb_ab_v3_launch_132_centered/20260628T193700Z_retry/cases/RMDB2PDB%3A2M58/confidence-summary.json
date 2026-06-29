@@ -1,0 +1,21 @@
+{
+  "atlasCaseKey": "RMDB2PDB:2M58",
+  "availableFamilies": [
+    "B"
+  ],
+  "bridgeMissingCount": 1,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:2M58:confidence:B:top_x_279::data-rna-structures/data-rna-structures/POS240_2A3_0000.rdat#1535",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "B": 1
+  },
+  "generatedAt": "2026-06-28T21:12:52.193227Z",
+  "materializedEvidenceCount": 1,
+  "pdbId": "2M58",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 1
+  },
+  "totalEvidenceCount": 1
+}

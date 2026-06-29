@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4UYK",
+  "biologicalMoleculeName": "4UYK",
+  "caseId": "4UYK",
+  "caseKey": "RMDB2PDB:4UYK",
+  "chains": [
+    "R"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4UYK",
+  "profileCount": 4
+}

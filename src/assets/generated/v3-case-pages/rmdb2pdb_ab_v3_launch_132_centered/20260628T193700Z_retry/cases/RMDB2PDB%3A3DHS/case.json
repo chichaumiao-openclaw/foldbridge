@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3DHS",
+  "biologicalMoleculeName": "3DHS",
+  "caseId": "3DHS",
+  "caseKey": "RMDB2PDB:3DHS",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3DHS",
+  "profileCount": 5
+}

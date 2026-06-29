@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6MJ0",
+  "biologicalMoleculeName": "6MJ0",
+  "caseId": "6MJ0",
+  "caseKey": "RMDB2PDB:6MJ0",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "6MJ0",
+  "profileCount": 4
+}

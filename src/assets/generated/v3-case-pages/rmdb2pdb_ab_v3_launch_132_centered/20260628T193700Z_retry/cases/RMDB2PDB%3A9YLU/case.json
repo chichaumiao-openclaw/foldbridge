@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9YLU",
+  "biologicalMoleculeName": "9YLU",
+  "caseId": "9YLU",
+  "caseKey": "RMDB2PDB:9YLU",
+  "chains": [
+    "J"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "9YLU",
+  "profileCount": 2
+}

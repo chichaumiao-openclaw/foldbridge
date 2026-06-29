@@ -333,6 +333,93 @@ test('atlas page renders merged PDB rows with source detail links in the side pa
   assert.doesNotMatch(html, /href="#annojoin-case\?caseId=10FZ" class="download-outline-btn">Open detail page/);
 });
 
+test('atlas page upgrades completed RMDB source-case links to V3 static detail pages', () => {
+  const state = buildAtlasSearchState({
+    cases: [
+      { atlasCaseKey: 'RMDB2PDB:10ZT', caseId: '10ZT', pdbId: '10ZT', assetFamily: 'RMDB2PDB', profileCount: 1 },
+      { atlasCaseKey: 'RASP2PDB:10ZT', caseId: '10ZT', pdbId: '10ZT', assetFamily: 'RASP2PDB', profileCount: 3 }
+    ],
+    displayCases: [
+      {
+        atlasCaseKey: 'PDB:10ZT',
+        caseId: '10ZT',
+        pdbId: '10ZT',
+        biologicalMoleculeName: 'RNA (519-MER)',
+        confidenceDisplayLabel: 'RMDB: C_EXPLORATORY_HINT (1); RASP: not active',
+        profileCount: 4,
+        chains: ['A'],
+        sourceCaseCount: 2,
+        sourceCaseKeys: ['RMDB2PDB:10ZT', 'RASP2PDB:10ZT'],
+        sourceFamilies: ['RMDB2PDB', 'RASP2PDB'],
+        sourceCaseAssetPaths: [
+          { assetFamily: 'RMDB2PDB', atlasCaseKey: 'RMDB2PDB:10ZT', caseId: '10ZT', caseAssetPath: 'cases/RMDB2PDB%3A10ZT.json', profileCount: 1 },
+          { assetFamily: 'RASP2PDB', atlasCaseKey: 'RASP2PDB:10ZT', caseId: '10ZT', caseAssetPath: 'cases/RASP2PDB%3A10ZT.json', profileCount: 3 }
+        ]
+      }
+    ],
+    totalSourceCaseCount: 2,
+    totalCaseCount: 1,
+    facets: []
+  }, {});
+  const html = renderAnnojointAtlasPage({
+    state,
+    routeName: 'sequence',
+    selectedCaseKey: 'PDB:10ZT',
+    selectedField: 'moleculeName'
+  });
+
+  assert.match(html, /href="\.\/src\/assets\/generated\/v3-case-pages\/rmdb2pdb_ab_v3_launch_132_centered\/20260628T193700Z_retry\/cases\/RMDB2PDB%3A10ZT\/index\.html"/);
+  assert.match(html, /href="#annojoin-case\?caseId=10ZT&amp;caseKey=RASP2PDB%3A10ZT"/);
+});
+
+test('confidence panel never surfaces the legacy ANNOCONFIDENCE coverage_topology pointer string', () => {
+  const state = buildAtlasSearchState({
+    cases: [
+      {
+        atlasCaseKey: 'RMDB2PDB:10ZT',
+        caseId: '10ZT',
+        pdbId: '10ZT',
+        assetFamily: 'RMDB2PDB',
+        confidenceDisplayLabel: 'B MODERATE',
+        confidenceSource: 'build_time_case_confidence_sidecar',
+        coverageShapeDistribution: 'see ANNOCONFIDENCE/coverage_topology_annotation.tsv',
+        profileCount: 1,
+        chains: ['A']
+      }
+    ],
+    displayCases: [
+      {
+        atlasCaseKey: 'RMDB2PDB:10ZT',
+        caseId: '10ZT',
+        pdbId: '10ZT',
+        assetFamily: 'RMDB2PDB',
+        confidenceDisplayLabel: 'B MODERATE',
+        confidenceSource: 'build_time_case_confidence_sidecar',
+        coverageShapeDistribution: 'see ANNOCONFIDENCE/coverage_topology_annotation.tsv',
+        profileCount: 1,
+        chains: ['A'],
+        sourceCaseCount: 1,
+        sourceCaseKeys: ['RMDB2PDB:10ZT'],
+        sourceFamilies: ['RMDB2PDB']
+      }
+    ],
+    totalSourceCaseCount: 1,
+    totalCaseCount: 1,
+    facets: []
+  }, {});
+  const html = renderAnnojointAtlasPage({
+    state,
+    routeName: 'sequence',
+    selectedCaseKey: 'RMDB2PDB:10ZT',
+    selectedField: 'confidenceDisplayLabel'
+  });
+
+  // Line 1 (LSS recall tier) label is shown, legacy file pointer is suppressed.
+  assert.match(html, /B MODERATE/);
+  assert.doesNotMatch(html, /coverage_topology_annotation\.tsv/);
+  assert.doesNotMatch(html, /see ANNOCONFIDENCE/);
+});
+
 test('atlas detail preserves profile preview boundary and route-backed evidence panes', () => {
   const detail = createAtlasCaseDetail(fixtures, '10ZT');
   assert.equal(detail.caseId, '10ZT');
@@ -387,16 +474,14 @@ test('atlas page renders only the compact master table surface', () => {
   assert.match(html, /Clear Selection/);
   assert.match(html, /Page 1 \/ 2/);
   assert.match(html, /Rows 1-1 of 2/);
-  assert.match(html, /Columns/);
+  assert.doesNotMatch(html, /annojoin-column-picker/);
   assert.match(html, /Expand All/);
   assert.match(html, /Collapse All/);
   assert.match(html, /class="annojoin-master-table"/);
   assert.doesNotMatch(html, /class="annojoin-parent-group-row"/);
   assert.doesNotMatch(html, /class="annojoin-child-group-row"/);
   assert.match(html, /type="checkbox" class="annojoin-case-select"/);
-  assert.doesNotMatch(html, /data-annojoin-column-toggle="parentClassLabel"/);
-  assert.doesNotMatch(html, /data-annojoin-column-toggle="childClassLabel"/);
-  assert.doesNotMatch(html, /data-annojoin-column-toggle="sourceDatabases"/);
+  assert.doesNotMatch(html, /data-annojoin-column-toggle=/);
   assert.doesNotMatch(html, /data-atlas-capability=/);
   assert.doesNotMatch(html, /Selected case/);
   assert.doesNotMatch(html, /1D reactivity profile/);
@@ -442,15 +527,51 @@ test('atlas page expands singleton-child parent groups with one click', () => {
   }, {});
   const html = renderAnnojointAtlasPage({
     state,
-    visibleColumnIds: ['pdbId', 'moleculeName'],
     expandedGroupIds: new Set(['parent:Ribosome'])
   });
 
   assert.match(html, /Molecule name/);
-  assert.doesNotMatch(html, /<th>Confidence distribution<\/th>/);
+  assert.match(html, /<th>Confidence distribution<\/th>/);
   assert.match(html, /data-annojoin-group-state="expanded"/);
   assert.doesNotMatch(html, /annojoin-child-group-row/);
   assert.match(html, /class="annojoin-case-row is-in-expanded-group"/);
+});
+
+test('atlas page suppresses molecule name inside a group whose label already shows it', () => {
+  const state = buildAtlasSearchState({
+    ...fixtures,
+    cases: [
+      {
+        ...fixtures.cases[0],
+        case_id: '20AA',
+        case_uid: 'RMDB2PDB|20AA',
+        pdb_id: '20AA',
+        parent_class_label: '5S ribosomal RNA',
+        child_class_label: '5S ribosomal RNA',
+        biological_molecule_name: '5S ribosomal RNA',
+        pdb_molecule_name: '5S ribosomal RNA',
+        search_text: '20AA 5S ribosomal RNA'
+      },
+      {
+        ...fixtures.cases[0],
+        case_id: '20AB',
+        case_uid: 'RMDB2PDB|20AB',
+        pdb_id: '20AB',
+        parent_class_label: '5S ribosomal RNA',
+        child_class_label: '5S ribosomal RNA',
+        biological_molecule_name: '5S ribosomal RNA',
+        pdb_molecule_name: '5S ribosomal RNA',
+        search_text: '20AB 5S ribosomal RNA'
+      }
+    ]
+  }, {});
+  const html = renderAnnojointAtlasPage({
+    state,
+    expandedGroupIds: new Set(['parent:5S-ribosomal-RNA'])
+  });
+
+  assert.match(html, /class="annojoin-molecule-same-as-group"/);
+  assert.doesNotMatch(html, /annojoin-field-link[^>]*>\s*<span[^>]*>5S ribosomal RNA<\/span>/);
 });
 
 test('atlas page keeps second-level child folding when a parent has multiple child classes', () => {
@@ -563,7 +684,7 @@ test('atlas page renders an index-row detail sidebar without loading detail pane
 
   assert.match(html, /class="annojoin-detail-sidebar/);
   assert.match(html, /Click a table field/);
-  assert.match(html, /Molecule, confidence, PDB, profiles, chains, and conflicts each open a focused explanation here/);
+  assert.match(html, /Molecule, confidence, PDB, profiles, and chains each open a focused explanation here/);
   assert.doesNotMatch(html, /Index row detail/);
 });
 
@@ -572,12 +693,15 @@ test('atlas side panel renders field-specific explanations', () => {
   const moleculeHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'moleculeName', routeName: 'sequence' });
   assert.match(moleculeHtml, /Index row detail/);
   assert.match(moleculeHtml, /Molecule name/);
-  assert.match(moleculeHtml, /href="#annojoin-case\?caseId=10ZT"/);
+  assert.match(moleculeHtml, /href="\.\/src\/assets\/generated\/v3-case-pages\/rmdb2pdb_ab_v3_launch_132_centered\/20260628T193700Z_retry\/cases\/RMDB2PDB%3A10ZT\/index\.html"/);
 
   const confidenceHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'confidenceDisplayLabel' });
   assert.match(confidenceHtml, /Confidence classification/);
   assert.match(confidenceHtml, /B_CONTEXT_STRATIFIED \(1\); C_EXPLORATORY_HINT \(2\)/);
   assert.match(confidenceHtml, /Annotation coverage/);
+  // confidence panel links out to the dedicated explainer page
+  assert.match(confidenceHtml, /href="#annojoin-confidence"/);
+  assert.match(confidenceHtml, /What do these confidence labels mean\?/);
 
   const pdbHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'pdbId' });
   assert.match(pdbHtml, /PDB metadata/);
@@ -596,8 +720,10 @@ test('atlas side panel renders field-specific explanations', () => {
 
   const chainsHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'chains' });
   assert.match(chainsHtml, /Chain definitions/);
-  assert.match(chainsHtml, /class="annojoin-sequence-box"/);
-  assert.match(chainsHtml, /Chain sequences are not present in the current index asset/);
+  assert.match(chainsHtml, /class="annojoin-chain-scroll"/);
+  assert.match(chainsHtml, /class="annojoin-chain-list"/);
+  // chain identifiers are listed rather than hidden behind a "not present" message
+  assert.doesNotMatch(chainsHtml, /Chain sequences are not present in the current index asset/);
 
   const conflictsHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'conflictCandidateCount' });
   assert.match(conflictsHtml, /Conflict candidates/);
@@ -613,8 +739,9 @@ test('atlas table field links target the side panel', () => {
   assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=confidenceDisplayLabel"/);
   assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=profileCount"/);
   assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=chains"/);
-  assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=conflictCandidateCount"/);
   assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=pdbId"/);
+  // Conflicts column was removed from the master table; no cell links to it.
+  assert.doesNotMatch(html, /field=conflictCandidateCount"/);
 });
 
 test('atlas page can render as the sequence route entry', () => {
