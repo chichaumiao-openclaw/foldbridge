@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody, renderHomeProbingCarousel } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -30,6 +30,7 @@ import { downloadRowsAsCsv } from './modules.js';
 import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
 import { createProbingArticleStore } from './probingArticleStore.js';
+import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
 import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
 import {
   buildAtlasSearchState
@@ -73,6 +74,7 @@ let sequenceSearchQuery = '';
 const pdbCaseStore = createCaseStore();
 const annojoinAtlasStore = createAnnojointAtlasStore();
 const probingArticleStore = createProbingArticleStore();
+const homeScrollStoryStore = createHomeScrollStoryStore();
 let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
 const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
 let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
@@ -80,6 +82,7 @@ let annojoinDetailRouteIndexState = null; // null=未加载, 'loading', 'error',
 const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'error' | generated case asset
 const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
+let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let pdbCaseConfidenceFilter = 'all';
@@ -1463,6 +1466,16 @@ function homePage() {
     loadProbingArticleIndex();
   }
 
+  if (homeScrollStoryState === null) {
+    loadHomeScrollStory();
+  }
+  let scrollStoryHtml = '';
+  if (homeScrollStoryState && typeof homeScrollStoryState === 'object') {
+    const visitIndex = readHomeScrollVisitIndex();
+    const featured = pickFeaturedCase(homeScrollStoryState.cases || [], visitIndex);
+    scrollStoryHtml = renderHomeScrollStory(featured, { assetBase: homeScrollStoryStore.assetBase });
+  }
+
   const featuredNames = homeBundleSites.map((site, index) => {
     const activeClass = site.href ? '' : 'active';
     if (site.href) {
@@ -1483,6 +1496,7 @@ function homePage() {
     <section class="bundle-home-shell">
       ${bundleHeader}
       ${renderHomeHero()}
+      ${scrollStoryHtml}
       ${renderHomeProbingCarousel(articles)}
       ${renderHomeModuleCards()}
     </section>
@@ -1925,6 +1939,40 @@ async function loadProbingArticleIndex() {
     probingArticleIndexState = 'error';
   }
   if (route === 'detail' || route === 'probing' || route === 'home') render({ preserveScroll: true });
+}
+
+// 访问计数：每次成功加载招牌 story 自增（localStorage），用于 pickFeaturedCase 轮换。
+// 隐私模式 localStorage 抛错 → 退回 0，绝不报错（规格 §8 降级）。
+function readHomeScrollVisitIndex() {
+  try {
+    const raw = globalThis.localStorage?.getItem('fb.hss.visitIndex');
+    const n = Number.parseInt(raw, 10);
+    return Number.isFinite(n) ? n : 0;
+  } catch (_err) {
+    return 0;
+  }
+}
+
+function bumpHomeScrollVisitIndex() {
+  try {
+    const next = readHomeScrollVisitIndex() + 1;
+    globalThis.localStorage?.setItem('fb.hss.visitIndex', String(next));
+  } catch (_err) {
+    /* 隐私模式：忽略 */
+  }
+}
+
+async function loadHomeScrollStory() {
+  if (homeScrollStoryState === 'loading') return;
+  homeScrollStoryState = 'loading';
+  try {
+    homeScrollStoryState = await homeScrollStoryStore.loadStory();
+    bumpHomeScrollVisitIndex();
+  } catch (err) {
+    console.error('[main] 加载主页招牌叙事失败', err);
+    homeScrollStoryState = 'error';
+  }
+  if (route === 'home') render({ preserveScroll: true });
 }
 
 async function loadProbingArticleDetail(slug) {
