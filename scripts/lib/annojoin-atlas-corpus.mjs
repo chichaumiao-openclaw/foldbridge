@@ -1,4 +1,4 @@
-export const ANNOJOIN_ATLAS_SCHEMA_VERSION = 'annojoin-atlas.v1';
+export const ANNOJOIN_ATLAS_SCHEMA_VERSION = 'annojoin-atlas.v2';
 export const ANNOJOIN_ATLAS_VERSION = 'V2.1_RMDB_LINE_A_20260617';
 export const DEFAULT_ROUTE_PAGE_SIZE = 500;
 export const DEFAULT_ROUTE_PREVIEW_SIZE = 8;
