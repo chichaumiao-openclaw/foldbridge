@@ -32,9 +32,7 @@ export function moleculeName(row = {}) {
 }
 
 export function parentGroupLabel(row = {}) {
-  return cleanLabel(row.parentClassLabel)
-    || cleanLabel(row.childClassLabel)
-    || cleanLabel(row.moleculeDisplayName)
+  return cleanLabel(row.moleculeDisplayName)
     || cleanLabel(row.biologicalMoleculeName)
     || cleanLabel(row.pdbMoleculeName)
     || rowCaseId(row)
@@ -42,7 +40,7 @@ export function parentGroupLabel(row = {}) {
 }
 
 export function childGroupLabel(row = {}) {
-  return cleanLabel(row.childClassLabel)
+  return cleanLabel(row.moleculeDisplayName)
     || cleanLabel(row.moleculeDisplayName)
     || cleanLabel(row.biologicalMoleculeName)
     || cleanLabel(row.pdbMoleculeName)
@@ -168,8 +166,8 @@ export function annojoinExportRow(row = {}) {
   const out = {
     case_id: row.caseId,
     pdb_id: row.pdbId,
-    parent_class_label: row.parentClassLabel,
-    child_class_label: row.childClassLabel,
+    chain_class_labels: (row.chainPlacements || []).map((p) => p.classLabel).join(';'),
+    chain_name_labels: (row.chainPlacements || []).map((p) => p.nameLabel).join(';'),
     biological_molecule_name: row.biologicalMoleculeName,
     pdb_molecule_name: row.pdbMoleculeName,
     confidence_display_label: row.confidenceDisplayLabel,

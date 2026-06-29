@@ -128,8 +128,8 @@ test('exports case-level display fields without choosing a best profile', () => 
   assert.deepEqual(annojoinExportRow(rows[0]), {
     case_id: '10ZT',
     pdb_id: '10ZT',
-    parent_class_label: 'Ribosome',
-    child_class_label: '16S rRNA',
+    chain_class_labels: 'rRNA',
+    chain_name_labels: '16S ribosomal RNA',
     biological_molecule_name: '16S ribosomal RNA',
     pdb_molecule_name: '30S ribosomal subunit RNA',
     confidence_display_label: 'B_CONTEXT_STRATIFIED (1)',
@@ -156,8 +156,8 @@ test('exports merged display row lineage back to source cases', () => {
   }), {
     case_id: '10FZ',
     pdb_id: '10FZ',
-    parent_class_label: undefined,
-    child_class_label: undefined,
+    chain_class_labels: '',
+    chain_name_labels: '',
     biological_molecule_name: 'Short author molecule',
     pdb_molecule_name: 'Short author molecule',
     confidence_display_label: 'RMDB: B; RASP: not active',
@@ -169,6 +169,19 @@ test('exports merged display row lineage back to source cases', () => {
     source_families: 'RMDB2PDB;RASP2PDB',
     source_case_keys: 'RMDB2PDB:10FZ;RASP2PDB:10FZ'
   });
+});
+
+test('annojoinExportRow emits chain placement label columns', () => {
+  const out = annojoinExportRow({
+    pdbId: '4V99',
+    chainPlacements: [
+      { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+      { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+    ]
+  });
+  assert.equal(out.chain_class_labels, 'rRNA;tRNA');
+  assert.equal(out.chain_name_labels, '16S ribosomal RNA;tRNA-Lys');
+  assert.equal('parent_class_label' in out, false);
 });
 
 test('scoreAnnojointMatch ranks PDB exact over prefix over molecule substring over PDB substring', () => {
