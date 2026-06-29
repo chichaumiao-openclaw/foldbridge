@@ -213,3 +213,40 @@ export function renderReactivityAlignment(caseData = {}) {
   }).join('');
   return `<div class="hss-alignment" role="img" aria-label="Per-residue reactivity">${cells}</div>`;
 }
+
+// 确定性按访问次序选主角案例。空/非数组 → null；visitIndex 非有限数 → 0。
+export function pickFeaturedCase(cases, visitIndex) {
+  if (!Array.isArray(cases) || cases.length === 0) return null;
+  const idx = Number.isFinite(Number(visitIndex)) ? Math.abs(Math.trunc(Number(visitIndex))) : 0;
+  return cases[idx % cases.length];
+}
+
+// 招牌滚动叙事区。左侧三态层 + 右侧三场景 + 图例。无 DOM/无 window/无定时器。
+// 资产基址由调用方注入（与 probing 轮播一致），渲染层只拼 src。
+export function renderHomeScrollStory(caseData, opts = {}) {
+  const base = String(opts.assetBase || '.').replace(/\/$/, '');
+  if (!caseData || !Array.isArray(caseData.scenes) || caseData.scenes.length === 0) {
+    return `<section class="home-scroll-story hss-placeholder" aria-hidden="true"></section>`;
+  }
+  const meta = `${caseData.molecule_label || ''} · PDB ${caseData.pdb_id || ''} · ${caseData.confidence_label || ''}`;
+  const layer0 = `<div class="hss-layer is-active" data-stage="0"><div class="hss-tag">1 · Alignment</div>${renderReactivityAlignment(caseData)}</div>`;
+  const layer1 = caseData.svg_2d
+    ? `<div class="hss-layer" data-stage="1"><div class="hss-tag">2 · Secondary structure</div><img class="hss-snapshot" src="${base}/${caseData.svg_2d}" alt="${caseData.pdb_id || ''} secondary structure, reactivity-colored" loading="lazy"></div>`
+    : `<div class="hss-layer" data-stage="1"><div class="hss-tag">2 · Secondary structure</div><div class="hss-missing">2D snapshot unavailable</div></div>`;
+  const layer2 = caseData.png_3d
+    ? `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><img class="hss-snapshot" src="${base}/${caseData.png_3d}" alt="${caseData.pdb_id || ''} tertiary structure, reactivity-colored" loading="lazy"></div>`
+    : `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><div class="hss-missing">3D snapshot unavailable</div></div>`;
+  const scenes = caseData.scenes.map((s, i) => `
+    <div class="hss-scene" data-scene="${i}"${i === 0 ? ' data-scene-active="true"' : ''}>
+      <div class="hss-scene-num">${s.n || ''}</div>
+      <h3 class="hss-scene-title">${s.title || ''}</h3>
+      <p class="hss-scene-body">${s.body || ''}</p>
+    </div>`).join('');
+  const legend = `<div class="hss-legend"><span>low</span><span class="hss-legend-bar"></span><span>high reactivity</span></div>`;
+  return `<section class="home-scroll-story" aria-label="From probing signal to 3D fold">
+    <div class="hss-grid">
+      <div class="hss-sticky"><div class="hss-card"><div class="hss-meta">${meta}</div>${layer0}${layer1}${layer2}${legend}</div></div>
+      <div class="hss-scenes">${scenes}</div>
+    </div>
+  </section>`;
+}
