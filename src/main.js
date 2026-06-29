@@ -82,6 +82,7 @@ const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'er
 const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
+let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let pdbCaseConfidenceFilter = 'all';
 let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
 let homeDashboardFilters = {
@@ -2814,6 +2815,7 @@ function render(options = {}) {
   initSequenceDetailSecondaryHeatmap();
   initAnimatedStats();
   initHomeDashboardFilters();
+  initHomeProbingCarousel();
   initPdbCasePage();
   initSearchPage();
 
@@ -2968,6 +2970,53 @@ function initPdbCasePage() {
       });
     });
   }
+}
+
+function initHomeProbingCarousel() {
+  // 幂等：每次 render 都会重跑本函数，先清旧定时器再决定是否重启，
+  // 否则同一 home 会话内反复 render 会叠加多个 interval。
+  if (homeProbingCarouselTimer) {
+    clearInterval(homeProbingCarouselTimer);
+    homeProbingCarouselTimer = null;
+  }
+  const carousel = document.querySelector('.home-probing-carousel');
+  // 非 home 路由 / 空壳无 slide：清掉定时器后直接返回（已在上面清理）。
+  if (!carousel) return;
+  const slides = Array.from(carousel.querySelectorAll('[data-carousel-slide]'));
+  const dots = Array.from(carousel.querySelectorAll('[data-carousel-dot]'));
+  if (slides.length <= 1) return;
+
+  let current = 0;
+  const show = (next) => {
+    current = (next + slides.length) % slides.length;
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  };
+
+  const restart = () => {
+    if (homeProbingCarouselTimer) clearInterval(homeProbingCarouselTimer);
+    homeProbingCarouselTimer = setInterval(() => show(current + 1), 6000);
+  };
+
+  carousel.querySelector('[data-carousel-prev]')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    show(current - 1);
+    restart();
+  });
+  carousel.querySelector('[data-carousel-next]')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    show(current + 1);
+    restart();
+  });
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', (e) => {
+      e.preventDefault();
+      show(i);
+      restart();
+    });
+  });
+
+  restart();
 }
 
 function initHomeDashboardFilters() {
