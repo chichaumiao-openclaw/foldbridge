@@ -6,6 +6,7 @@ import {
   createAtlasCaseDetail
 } from '../src/annojoinAtlasData.js';
 import { renderAnnojointAtlasPage } from '../src/annojoinAtlasView.js';
+import { buildAtlasIndexAsset, slimAtlasIndexForWrite } from '../scripts/lib/annojoin-atlas-corpus.mjs';
 import { LOCAL_PAGES_BRIDGE_MANIFEST } from '../src/assets/generated/local_pages_bridge_manifest.js';
 
 const fixtures = {
@@ -870,4 +871,43 @@ test('atlas page shows an error status banner when the index fails to load', () 
   assert.match(html, /data-status-tone="error"/);
   assert.match(html, /could not be loaded/);
   assert.doesNotMatch(html, /10ZT/);
+});
+
+test('a slimmed index still resolves merged and single detail-page links', () => {
+  const index = buildAtlasIndexAsset({
+    cases: [
+      // single-source PDB
+      { asset_family: 'RMDB2PDB', case_id: '10ZT', pdb_id: '10ZT', biological_molecule_name: 'm', profile_count: '1', profile_ids: 'p1', search_text: '10ZT' },
+      // merged PDB (two source families, same pdb_id)
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', pdb_id: '10FZ', biological_molecule_name: 'm', profile_count: '2', profile_ids: 'a;b', search_text: '10FZ rmdb' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', pdb_id: '10FZ', biological_molecule_name: 'm', profile_count: '3', profile_ids: 'c', search_text: '10FZ rasp' }
+    ],
+    summaries: [
+      { asset_family: 'RMDB2PDB', case_id: '10ZT', recommended_default_preset: 'balanced_segment_view' },
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', recommended_default_preset: 'rmdb-view' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', recommended_default_preset: 'rasp-view' }
+    ],
+    routes: [
+      { asset_family: 'RMDB2PDB', case_id: '10ZT', detail_route_id: 'detail:10ZT' },
+      { asset_family: 'RMDB2PDB', case_id: '10FZ', detail_route_id: 'detail:rmdb' },
+      { asset_family: 'RASP2PDB', case_id: '10FZ', detail_route_id: 'detail:rasp' }
+    ]
+  });
+  const slim = slimAtlasIndexForWrite(index);
+  // browser reads displayCases via buildAtlasSearchState(...).cases
+  const state = buildAtlasSearchState(slim, {});
+  // Single-source rows keep their original family-prefixed atlasCaseKey
+  // (buildDisplayCases L398-407 spreads the row verbatim); ONLY merged rows
+  // (≥2 sources, same pdb_id) are rekeyed to `PDB:<pdbId>` (L435).
+  const single = state.cases.find((row) => row.atlasCaseKey === 'RMDB2PDB:10ZT');
+  const merged = state.cases.find((row) => row.atlasCaseKey === 'PDB:10FZ');
+  assert.ok(single, 'single-source PDB row resolvable');
+  assert.ok(merged, 'merged PDB row resolvable');
+  // single row keeps a direct caseAssetPath
+  assert.equal(single.caseAssetPath, 'cases/RMDB2PDB%3A10ZT.json');
+  // merged row keeps explicit sub-links for "Open detail page"
+  assert.ok(Array.isArray(merged.sourceCaseAssetPaths) && merged.sourceCaseAssetPaths.length === 2);
+  for (const entry of merged.sourceCaseAssetPaths) {
+    assert.ok(entry.caseAssetPath && entry.caseAssetPath.length > 0);
+  }
 });

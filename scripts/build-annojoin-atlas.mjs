@@ -10,7 +10,8 @@ import {
   buildAtlasIndexAsset,
   groupByAtlasCaseKey,
   groupByCaseId,
-  parseTsv
+  parseTsv,
+  slimAtlasIndexForWrite
 } from './lib/annojoin-atlas-corpus.mjs';
 import { buildCaseConfidenceSidecars } from './lib/annojoin-atlas-confidence.mjs';
 import { buildChainIdentityIndex } from './lib/annojoin-atlas-chain-identity.mjs';
@@ -484,7 +485,7 @@ async function main() {
     }
   });
 
-  await writeJson('index.json', index, manifest);
+  await writeJson('index.json', slimAtlasIndexForWrite(index), manifest);
   const compressedAssetsByPath = new Map();
 
   for (const row of tables.cases) {
