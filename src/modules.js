@@ -911,13 +911,16 @@ export async function initSecondaryStructureModule() {
 export async function initStructureDetailSecondaryForna() {
   const status = document.getElementById('structure-detail-forna-status');
   const host = document.getElementById('structure-detail-forna-host');
+  const code = document.getElementById('structure-detail-sequence-structure');
   if (!status || !host) return;
 
   const foldBridgeId = host.dataset.foldbridgeId || 'this RDAT record';
   const directStructure = host.dataset.structure || '';
   const directSequence = host.dataset.sequence || '';
+  const cleanDirectSequence = normalizeRnaSequence(directSequence);
+  const cleanDirectStructure = directStructure.replace(/\s+/g, '').trim();
 
-  if (directStructure && directSequence) {
+  if (cleanDirectStructure && cleanDirectSequence && cleanDirectStructure.length === cleanDirectSequence.length) {
     try {
       await loadFornaAssets();
       host.innerHTML = '';
@@ -927,15 +930,14 @@ export async function initStructureDetailSecondaryForna() {
         initialSize: [640, 420]
       });
 
-      const cleanSequence = normalizeRnaSequence(directSequence);
-      const cleanStructure = directStructure.replace(/\s+/g, '').trim();
-      syncStructureDetailSecondaryText(cleanStructure);
+      if (code) code.dataset.sequence = cleanDirectSequence;
+      syncStructureDetailSecondaryText(cleanDirectStructure);
 
-      container.addRNA(cleanStructure, {
-        sequence: cleanSequence,
-        structure: cleanStructure
+      container.addRNA(cleanDirectStructure, {
+        sequence: cleanDirectSequence,
+        structure: cleanDirectStructure
       });
-      container.addCustomColorsText(buildFornaCustomColorsText(cleanSequence));
+      container.addCustomColorsText(buildFornaCustomColorsText(cleanDirectSequence));
       status.hidden = true;
       status.textContent = '';
       return;
@@ -963,6 +965,9 @@ export async function initStructureDetailSecondaryForna() {
       status.textContent = `Secondary structure unavailable for ${foldBridgeId} in the current RDAT.`;
       return;
     }
+    if (code) code.dataset.sequence = config.sequence;
+    host.dataset.sequence = config.sequence;
+    host.dataset.structure = config.structure;
     syncStructureDetailSecondaryText(config.structure);
 
     await loadFornaAssets();
@@ -1281,13 +1286,14 @@ export async function initHomeStructureShowcase() {
   );
 }
 
-function parseRdatMatrix(text) {
+function parseRdatMatrix(text, targetSequence = '') {
   const lines = text.split(/\r?\n/);
   const rowLabels = [];
   const reactivityRows = [];
   const errorRows = [];
   const annotationLabels = [];
   const annotationTypes = [];
+  const annotationSequences = [];
   let colLabels = [];
   let sourceSequence = '';
   let sourceOffset = 0;
@@ -1315,6 +1321,7 @@ function parseRdatMatrix(text) {
       const cols = line.split('\t').filter(Boolean);
       const mutationCol = cols.find((entry) => entry.startsWith('mutation:'));
       const chemicalCol = cols.find((entry) => entry.startsWith('chemical:'));
+      const seqCol = cols.find((entry) => entry.startsWith('sequence:'));
       const index = Number(indexPart.split(/\s+/)[0]);
       annotationLabels[index - 1] = mutationCol
         ? mutationCol.replace('mutation:', '')
@@ -1322,6 +1329,9 @@ function parseRdatMatrix(text) {
           ? chemicalCol.replace('chemical:', '')
           : cols.slice(1).join(' | ') || `Row ${index}`;
       annotationTypes[index - 1] = 'REACTIVITY';
+      if (seqCol) {
+        annotationSequences[index - 1] = seqCol.replace('sequence:', '');
+      }
     } else if (line.startsWith('DATA_ANNOTATION:')) {
       const [, indexPart = ''] = line.split(':');
       const cols = line.split('\t').filter(Boolean);
@@ -1331,6 +1341,7 @@ function parseRdatMatrix(text) {
       const mutationCol = cols.find((entry) => entry.startsWith('mutation:'));
       const chemicalCol = cols.find((entry) => entry.startsWith('chemical:'));
       const modifierCol = cols.find((entry) => entry.startsWith('modifier:'));
+      const seqCol = cols.find((entry) => entry.startsWith('sequence:'));
       const datatype = datatypeCol.replace('datatype:', '');
       annotationTypes[index - 1] = datatype;
       annotationLabels[index - 1] = mutationCol
@@ -1342,6 +1353,9 @@ function parseRdatMatrix(text) {
             : modifierCol
               ? modifierCol.replace('modifier:', '')
               : cols.slice(1).join(' | ') || `Row ${index}`;
+      if (seqCol) {
+        annotationSequences[index - 1] = seqCol.replace('sequence:', '');
+      }
     } else if (line.startsWith('SEQPOS')) {
       colLabels = parseRdatValueFields(line.replace(/^SEQPOS\b/, ''));
     } else if (line.startsWith('REACTIVITY_ERROR:')) {
@@ -1375,13 +1389,27 @@ function parseRdatMatrix(text) {
     }
   }
 
-  const compactRows = reactivityRows
+  let compactRows = reactivityRows
     .map((values, index) => ({
       label: rowLabels[index] || `Row ${index + 1}`,
       values,
-      error: errorRows[index]
+      error: errorRows[index],
+      sequence: annotationSequences[index] || ''
     }))
     .filter((entry) => Array.isArray(entry.values) && entry.values.length);
+
+  if (targetSequence) {
+    const normTarget = String(targetSequence).toUpperCase().replace(/T/g, 'U').replace(/[^AUGC]/g, '');
+    if (normTarget) {
+      const filtered = compactRows.filter((entry) => {
+        const normSeq = String(entry.sequence).toUpperCase().replace(/T/g, 'U').replace(/[^AUGC]/g, '');
+        return normSeq && (normSeq.includes(normTarget) || normTarget.includes(normSeq));
+      });
+      if (filtered.length > 0) {
+        compactRows = filtered;
+      }
+    }
+  }
 
   const cleanSequence = sourceSequence.replace(/\s+/g, '');
   const normalizeBase = (base) => {
@@ -1445,17 +1473,18 @@ export async function initSequenceDetailSecondaryHeatmap() {
   if (!host || !status) return;
 
   const rdatUrl = host.dataset.rdatUrl;
+  const targetSequence = host.dataset.sequence || '';
   if (!rdatUrl) return;
 
-  await renderRdatHeatmap(host, status, rdatUrl);
+  await renderRdatHeatmap(host, status, rdatUrl, targetSequence);
 }
 
-async function renderRdatHeatmap(host, status, rdatUrl) {
+async function renderRdatHeatmap(host, status, rdatUrl, targetSequence = '') {
   try {
     const response = await fetch(rdatUrl);
     if (!response.ok) throw new Error('Failed to load RDAT');
     const text = await response.text();
-    const parsed = parseRdatMatrix(text);
+    const parsed = parseRdatMatrix(text, targetSequence);
     const labelGap = 10;
     const leftLabelBand = 28;
     const rightLabelBand = 108;
@@ -1649,9 +1678,10 @@ export async function initStructureDetailSecondaryHeatmap() {
   if (!host || !status) return;
 
   const rdatUrl = host.dataset.rdatUrl;
+  const targetSequence = host.dataset.sequence || '';
   if (!rdatUrl) return;
 
-  await renderRdatHeatmap(host, status, rdatUrl);
+  await renderRdatHeatmap(host, status, rdatUrl, targetSequence);
 }
 
 export function downloadRowsAsCsv(rows, filename = 'sequences.csv') {

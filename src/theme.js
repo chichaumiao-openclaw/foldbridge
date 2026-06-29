@@ -48,6 +48,63 @@ export const themeTokens = {
       accentSoft: '#d9e99d',
       border: '#2c3a34'
     },
+  },
+  ribocentre: {
+    label: 'RiboCentre Teal',
+    light: {
+      primary: '#0F766E',
+      primaryHover: '#115E59',
+      primarySoft: '#F0FDFA',
+      accent: '#0D9488',
+      accentSoft: '#99F6E4',
+      border: '#CCFBF1'
+    },
+    dark: {
+      primary: '#2DD4BF',
+      primaryHover: '#5EEAD4',
+      primarySoft: 'rgba(45, 212, 191, 0.14)',
+      accent: '#14B8A6',
+      accentSoft: '#99F6E4',
+      border: '#115E59'
+    }
+  },
+  riboswitch: {
+    label: 'Riboswitch Purple',
+    light: {
+      primary: '#6D28D9',
+      primaryHover: '#5B21B6',
+      primarySoft: '#F5F3FF',
+      accent: '#7C3AED',
+      accentSoft: '#DDD6FE',
+      border: '#EDE9FE'
+    },
+    dark: {
+      primary: '#A78BFA',
+      primaryHover: '#C4B5FD',
+      primarySoft: 'rgba(167, 139, 250, 0.14)',
+      accent: '#8B5CF6',
+      accentSoft: '#DDD6FE',
+      border: '#4C1D95'
+    }
+  },
+  aptamer: {
+    label: 'Aptamer Amber',
+    light: {
+      primary: '#B45309',
+      primaryHover: '#92400E',
+      primarySoft: '#FFFBEB',
+      accent: '#D97706',
+      accentSoft: '#FDE68A',
+      border: '#FEF3C7'
+    },
+    dark: {
+      primary: '#FBBF24',
+      primaryHover: '#FCD34D',
+      primarySoft: 'rgba(251, 191, 36, 0.14)',
+      accent: '#F59E0B',
+      accentSoft: '#FDE68A',
+      border: '#78350F'
+    }
   }
 };
 

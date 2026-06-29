@@ -97,6 +97,22 @@
   },
   {
     "representative": {
+      "id": "RMDB_TRP4P6_HRF_0003",
+      "filename": "TRP4P6_HRF_0003.pdb",
+      "sequence": "GGAAUUGCGGGAAAGGGGUCAACAGCCGUUCAGUACCAAGUCUCAGGGGAAACUUUGAGAUGGCCUUGCAAAGGGUAUGGUAAUAAGCUGACGGACAUGGUCCUAACCACGCAGCCAAGUCCUAAGUCAACAGAUCUUCUGUUGAUAUGGAUGCAGUUCAAAACC",
+      "structure": ".....((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...))........"
+    },
+    "all_members": [
+      {
+        "id": "RMDB_TRP4P6_HRF_0003",
+        "filename": "TRP4P6_HRF_0003.pdb",
+        "sequence": "GGAAUUGCGGGAAAGGGGUCAACAGCCGUUCAGUACCAAGUCUCAGGGGAAACUUUGAGAUGGCCUUGCAAAGGGUAUGGUAAUAAGCUGACGGACAUGGUCCUAACCACGCAGCCAAGUCCUAAGUCAACAGAUCUUCUGUUGAUAUGGAUGCAGUUCAAAACC",
+        "structure": ".....((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...))........"
+      }
+    ]
+  },
+  {
+    "representative": {
       "id": "RMDB_16SFWJ_1M7_0001",
       "filename": "16SFWJ_1M7_0001.pdb",
       "sequence": "GGGAAACUGCCUGAUGGAGGGGGAUAACUACUGGAAACGGUAGCUAAUACCGCAUAACGUCGCAAGACCAAAGAGGGGGACCUUCGGGCCUCUUGCCAUCGGAUGUGCCC",

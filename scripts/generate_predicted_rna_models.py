@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 from __future__ import annotations
 
+import argparse
+import json
 import math
 from pathlib import Path
 
@@ -11,6 +13,7 @@ import numpy as np
 ROOT = Path(__file__).resolve().parents[1]
 RDAT_DIR = ROOT / "src" / "assets" / "data" / "rmdb-puzzle"
 OUTPUT_DIR = ROOT / "src" / "assets" / "predicted-structures"
+TARGETS_PATH = ROOT / "scripts" / "targets.json"
 # Keep this generator for local fallback models only. Atomic RNAComposer
 # predictions are checked into src/assets/predicted-structures for records
 # whose RDAT secondary structures can be submitted directly.
@@ -28,6 +31,19 @@ OPEN_TO_CLOSE = {"(": ")", "[": "]", "{": "}", "<": ">"}
 CLOSE_TO_OPEN = {close: open_ for open_, close in OPEN_TO_CLOSE.items()}
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Generate local fallback RNA 3D models from RDAT or targets.json secondary structures."
+    )
+    parser.add_argument(
+        "--ids",
+        nargs="*",
+        default=[],
+        help="Optional RMDB IDs to generate. Uses targets.json when available, otherwise falls back to RDAT parsing.",
+    )
+    return parser.parse_args()
+
+
 def parse_rdat(record_id: str) -> tuple[str, str]:
     path = RDAT_DIR / f"{record_id}.rdat"
     sequence = ""
@@ -42,6 +58,24 @@ def parse_rdat(record_id: str) -> tuple[str, str]:
             structure = "".join(line.replace("STRUCTURE", "", 1).split())
     if not sequence or not structure or len(sequence) != len(structure):
         raise ValueError(f"Invalid RDAT record for {record_id}")
+    structure = STRUCTURE_OVERRIDES.get(record_id, structure)
+    return sequence, structure
+
+
+def load_targets_map() -> dict[str, dict[str, str]]:
+    targets = json.loads(TARGETS_PATH.read_text(encoding="utf-8"))
+    return {str(entry["id"]): entry for entry in targets}
+
+
+def parse_target(record_id: str, targets_map: dict[str, dict[str, str]]) -> tuple[str, str]:
+    entry = targets_map.get(record_id)
+    if not entry:
+        return parse_rdat(record_id)
+
+    sequence = str(entry.get("sequence", "")).replace(" ", "").upper().replace("T", "U")
+    structure = str(entry.get("structure", "")).replace(" ", "").strip()
+    if not sequence or not structure or len(sequence) != len(structure):
+        return parse_rdat(record_id)
     structure = STRUCTURE_OVERRIDES.get(record_id, structure)
     return sequence, structure
 
@@ -230,8 +264,8 @@ def write_pdb(record_id: str, sequence: str, coordinates: dict[int, np.ndarray])
     return path
 
 
-def generate_model(record_id: str) -> Path:
-    sequence, structure = parse_rdat(record_id)
+def generate_model(record_id: str, targets_map: dict[str, dict[str, str]]) -> Path:
+    sequence, structure = parse_target(record_id, targets_map)
     pairs = parse_pairs(structure)
     stems = find_stems(pairs)
     coordinates = build_initial_layout(len(sequence), pairs)
@@ -241,8 +275,11 @@ def generate_model(record_id: str) -> Path:
 
 
 def main() -> None:
-    for record_id in TARGET_IDS:
-        output_path = generate_model(record_id)
+    args = parse_args()
+    targets_map = load_targets_map()
+    record_ids = args.ids or TARGET_IDS
+    for record_id in record_ids:
+        output_path = generate_model(record_id, targets_map)
         print(f"Generated {output_path.relative_to(ROOT)}")
 
 

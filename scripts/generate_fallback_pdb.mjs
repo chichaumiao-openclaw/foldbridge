@@ -12,21 +12,6 @@ function usage() {
   process.exit(1);
 }
 
-const recordId = process.argv[2];
-if (!recordId) usage();
-
-const targets = JSON.parse(fs.readFileSync(targetsPath, 'utf8'));
-const target = targets.find((entry) => entry.id === recordId);
-if (!target) {
-  throw new Error(`Target ${recordId} not found in scripts/targets.json`);
-}
-
-const sequence = String(target.sequence || '').replace(/\s+/g, '').toUpperCase().replace(/T/g, 'U');
-const structure = String(target.structure || '').replace(/\s+/g, '');
-if (!sequence || !structure || sequence.length !== structure.length) {
-  throw new Error(`Invalid sequence/structure for ${recordId}`);
-}
-
 const OPEN_TO_CLOSE = { '(': ')', '[': ']', '{': '}', '<': '>' };
 const CLOSE_TO_OPEN = Object.fromEntries(Object.entries(OPEN_TO_CLOSE).map(([k, v]) => [v, k]));
 
@@ -59,6 +44,16 @@ function vCross(a, b) {
   ];
 }
 
+function vDot(a, b) {
+  return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+
+function vMean(vectors) {
+  if (!vectors.length) return [0, 0, 0];
+  const total = vectors.reduce((acc, vector) => vAdd(acc, vector), [0, 0, 0]);
+  return vScale(total, 1 / vectors.length);
+}
+
 function parsePairs(dotBracket) {
   const stacks = Object.fromEntries(Object.keys(OPEN_TO_CLOSE).map((key) => [key, []]));
   const pairs = new Map();
@@ -86,51 +81,115 @@ function initializePositions(length) {
   });
 }
 
-function relaxPositions(positions, pairs, iterations = 900) {
-  const n = positions.length;
-  const targetBackbone = 6.2;
-  const targetPair = 8.5;
-  for (let step = 0; step < iterations; step += 1) {
-    const forces = Array.from({ length: n }, () => [0, 0, 0]);
-    const temperature = 0.28 * (1 - step / iterations);
+function findStems(pairs) {
+  const seen = new Set();
+  const leftIndices = Array.from(pairs.keys())
+    .filter((index) => index < pairs.get(index))
+    .sort((a, b) => a - b);
+  const stems = [];
+  for (const left of leftIndices) {
+    if (seen.has(left)) continue;
+    const right = pairs.get(left);
+    const stem = [[left, right]];
+    seen.add(left);
+    seen.add(right);
+    let nextLeft = left + 1;
+    let nextRight = right - 1;
+    while (pairs.get(nextLeft) === nextRight) {
+      stem.push([nextLeft, nextRight]);
+      seen.add(nextLeft);
+      seen.add(nextRight);
+      nextLeft += 1;
+      nextRight -= 1;
+    }
+    stems.push(stem);
+  }
+  return stems;
+}
 
-    for (let i = 0; i < n - 1; i += 1) {
-      const delta = vSub(positions[i + 1], positions[i]);
-      const dist = Math.max(vNorm(delta), 1e-6);
-      const direction = vScale(delta, 1 / dist);
-      const magnitude = (dist - targetBackbone) * 0.22;
-      forces[i] = vAdd(forces[i], vScale(direction, magnitude));
-      forces[i + 1] = vAdd(forces[i + 1], vScale(direction, -magnitude));
+function applyStemGeometry(positions, stems) {
+  const anchored = new Set();
+  for (const stem of stems) {
+    const pairCenters = [];
+    const pairVectors = [];
+    for (const [left, right] of stem) {
+      pairCenters.push(vScale(vAdd(positions[left], positions[right]), 0.5));
+      pairVectors.push(vSub(positions[left], positions[right]));
     }
 
-    for (const [i, j] of pairs.entries()) {
-      if (i > j) continue;
-      const delta = vSub(positions[j], positions[i]);
-      const dist = Math.max(vNorm(delta), 1e-6);
-      const direction = vScale(delta, 1 / dist);
-      const magnitude = (dist - targetPair) * 0.18;
-      forces[i] = vAdd(forces[i], vScale(direction, magnitude));
-      forces[j] = vAdd(forces[j], vScale(direction, -magnitude));
+    const axis =
+      pairCenters.length > 1
+        ? vNormalize(vSub(pairCenters[pairCenters.length - 1], pairCenters[0]), [0, 1, 0])
+        : [0, 1, 0];
+
+    let pairVector = vMean(pairVectors);
+    pairVector = vSub(pairVector, vScale(axis, vDot(pairVector, axis)));
+    pairVector = vNormalize(pairVector, [1, 0, 0]);
+    const orthogonal = vNormalize(vCross(axis, pairVector), [0, 0, 1]);
+
+    const helicalSpacing = 3.4;
+    const radius = 4.2;
+    const twistStep = 0.58;
+    const stemOrigin = vSub(vMean(pairCenters), vScale(axis, (helicalSpacing * (stem.length - 1)) / 2));
+
+    stem.forEach(([left, right], pairIndex) => {
+      const angle = pairIndex * twistStep;
+      const radial = vAdd(vScale(pairVector, Math.cos(angle)), vScale(orthogonal, Math.sin(angle)));
+      const center = vAdd(stemOrigin, vScale(axis, pairIndex * helicalSpacing));
+      positions[left] = vAdd(center, vScale(radial, radius));
+      positions[right] = vSub(center, vScale(radial, radius));
+      anchored.add(left);
+      anchored.add(right);
+    });
+  }
+  return anchored;
+}
+
+function fillUnpairedRegions(positions, anchored) {
+  const length = positions.length;
+  let index = 0;
+  while (index < length) {
+    if (anchored.has(index)) {
+      index += 1;
+      continue;
     }
 
-    for (let i = 0; i < n; i += 1) {
-      for (let j = i + 2; j < n; j += 1) {
-        if (pairs.get(i) === j) continue;
-        const delta = vSub(positions[j], positions[i]);
-        const dist = Math.max(vNorm(delta), 1e-6);
-        if (dist > 18) continue;
-        const direction = vScale(delta, 1 / dist);
-        const magnitude = 5.0 / (dist * dist);
-        forces[i] = vAdd(forces[i], vScale(direction, -magnitude));
-        forces[j] = vAdd(forces[j], vScale(direction, magnitude));
+    const start = index;
+    while (index < length && !anchored.has(index)) index += 1;
+    const end = index - 1;
+    const runLength = end - start + 1;
+    const leftAnchor = start > 0 && anchored.has(start - 1) ? start - 1 : null;
+    const rightAnchor = end + 1 < length && anchored.has(end + 1) ? end + 1 : null;
+
+    if (leftAnchor !== null && rightAnchor !== null) {
+      const leftPosition = positions[leftAnchor];
+      const rightPosition = positions[rightAnchor];
+      const direction = vNormalize(vSub(rightPosition, leftPosition), [1, 0, 0]);
+      const bulge = vNormalize(vCross(direction, [0, 0, 1]), [0, 1, 0]);
+      const span = vNorm(vSub(rightPosition, leftPosition));
+      const amplitude = Math.min(8.0, Math.max(3.0, span / 4.0));
+      for (let offset = 1; offset <= runLength; offset += 1) {
+        const residueIndex = start + offset - 1;
+        const t = offset / (runLength + 1);
+        const basePosition = vAdd(vScale(leftPosition, 1 - t), vScale(rightPosition, t));
+        positions[residueIndex] = vAdd(basePosition, vScale(bulge, Math.sin(Math.PI * t) * amplitude));
       }
+      continue;
     }
 
-    for (let i = 0; i < n; i += 1) {
-      positions[i] = vAdd(positions[i], vScale(forces[i], temperature));
+    const anchorIndex = leftAnchor ?? rightAnchor;
+    const anchorPosition = anchorIndex === null ? [0, 0, 0] : positions[anchorIndex];
+    const direction = leftAnchor === null ? [0, 1, 0] : [0, -1, 0];
+    const sweep = leftAnchor === null ? [1, 0, 0] : [-1, 0, 0];
+    for (let offset = 1; offset <= runLength; offset += 1) {
+      const residueIndex = start + offset - 1;
+      const curve = Math.sin((offset / (runLength + 1)) * Math.PI) * 3.0;
+      positions[residueIndex] = vAdd(
+        anchorPosition,
+        vAdd(vScale(direction, offset * 5.2), vScale(sweep, curve))
+      );
     }
   }
-  return positions;
 }
 
 function atomPositions(positions, index) {
@@ -171,8 +230,35 @@ function writePdb(outputPath, seq, positions, id) {
   fs.writeFileSync(outputPath, `${lines.join('\n')}\n`, 'utf8');
 }
 
-const pairs = parsePairs(structure);
-const positions = relaxPositions(initializePositions(sequence.length), pairs);
-const outputPath = path.join(outputDir, `${recordId.replace(/^RMDB_/, '')}.pdb`);
-writePdb(outputPath, sequence, positions, recordId);
-console.log(outputPath);
+export function generateFallbackPdb(recordId, sequenceText, structureText, destinationPath = '') {
+  const sequence = String(sequenceText || '').replace(/\s+/g, '').toUpperCase().replace(/T/g, 'U');
+  const structure = String(structureText || '').replace(/\s+/g, '');
+  if (!recordId || !sequence || !structure || sequence.length !== structure.length) {
+    throw new Error(`Invalid sequence/structure for ${recordId || 'unknown record'}`);
+  }
+
+  const pairs = parsePairs(structure);
+  const positions = initializePositions(sequence.length);
+  const stems = findStems(pairs);
+  const anchored = applyStemGeometry(positions, stems);
+  fillUnpairedRegions(positions, anchored);
+  const outputPath = destinationPath || path.join(outputDir, `${String(recordId).replace(/^RMDB_/, '')}.pdb`);
+  writePdb(outputPath, sequence, positions, recordId);
+  return outputPath;
+}
+
+const isCliRun = process.argv[1] && path.resolve(process.argv[1]) === path.resolve(new URL(import.meta.url).pathname);
+
+if (isCliRun) {
+  const recordId = process.argv[2];
+  if (!recordId) usage();
+
+  const targets = JSON.parse(fs.readFileSync(targetsPath, 'utf8'));
+  const target = targets.find((entry) => entry.id === recordId);
+  if (!target) {
+    throw new Error(`Target ${recordId} not found in scripts/targets.json`);
+  }
+
+  const outputPath = generateFallbackPdb(recordId, target.sequence, target.structure);
+  console.log(outputPath);
+}

@@ -4,6 +4,7 @@ import {
   predictedStructureIds as generatedPredictedStructureIds,
   rnaComposerPredictedStructureIds as generatedRnaComposerPredictedStructureIds
 } from './generated/predictedStructureManifest.js';
+import { reactivityGuidedStructurePredictions as generatedReactivityGuidedStructurePredictions } from './generated/reactivityGuidedStructureManifest.js';
 import { rmdbPdbBlastRows } from './generated/rmdbPdbBlastRows.js';
 import {
   renderGlobalSearch,
@@ -62,6 +63,9 @@ const CASE_DETAIL_SEQUENCE_PAGE_SIZE = 10;
 const CASE_BUNDLE_ROOT = 'rmdb_pdb_sequence_cases_rasp_params_besthit_20260610';
 const caseDetailCache = new Map();
 const caseDetailLoading = new Set();
+let homeActiveSpecies = '';
+let homeActiveYear = '';
+let homeTablePage = 1;
 let homeDashboardFilters = {
   years: [],
   categories: []
@@ -1018,6 +1022,7 @@ function renderSequenceDetailSecondaryContent(row) {
           id="sequence-secondary-heatmap"
           class="sequence-secondary-heatmap-host"
           data-rdat-url="${rdatUrl}"
+          data-sequence="${(sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
         ></div>
       </section>
 
@@ -1279,6 +1284,191 @@ function renderSequenceDetailReferenceContent(row) {
   </div>`;
 }
 
+function normalizeRecordTitle(value) {
+  return String(value ?? '')
+    .replace(/_/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+function renderReferenceCard(items) {
+  return `<div class="sequence-detail-reference-card">
+    <div class="sequence-detail-reference-list">
+      ${items.join('')}
+    </div>
+  </div>`;
+}
+
+function renderReferenceItem({ index, title, authors, source, links }) {
+  return `<article class="sequence-detail-reference-item" id="reference-${index}">
+    <h3>[${index}] ${title}</h3>
+    <p class="sequence-detail-reference-authors">${authors}</p>
+    <p class="sequence-detail-reference-source">${source}</p>
+    <div class="sequence-detail-reference-links">
+      ${links.join('')}
+    </div>
+  </article>`;
+}
+
+function renderReferenceLink(label, href) {
+  return `<a class="sequence-detail-reference-link" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+}
+
+function inferRmdbReferenceFamily(row) {
+  const id = String(row?.foldBridgeId ?? '');
+  if (!id.startsWith('RMDB_') && !id.startsWith('RASP_')) return '';
+  if (id.startsWith('RMDB_RNAPZ')) return 'rnaPuzzle';
+  if (/^(?:RMDB|RASP)_(?:ETERNA|OK7BLIB|PDB130|POS240|PSEUDOB|RSTRND)/.test(id)) return 'designLibrary';
+  if (/^RMDB_TRP4P6_/.test(id)) return 'p4p6';
+  if (id === 'RMDB_RNASEP_1M7_0001') return 'inCellShapeSeq';
+  if (id === 'RMDB_SRPECLI_BZCN_0001') return 'coTransShapeSeq';
+  if (/^(?:RMDB|RASP)_(?:CIDGMP|SAMRSW|TRNAPH)/.test(id)) return 'shapeSeq20';
+  if (id.startsWith('RASP_')) return 'raspGeneric';
+  return 'rmdbGeneric';
+}
+
+function renderGenericRmdbDescription(row) {
+  const title = normalizeRecordTitle(row?.name || row?.foldBridgeId || 'This RMDB entry');
+  const pdbId = String(row?.pdbName || row?.bestPdbId || '').toUpperCase();
+  const family = inferRmdbReferenceFamily(row);
+  const pdbClause = pdbId ? ` represented here by PDB entry ${pdbId}` : '';
+  const superScript = pdbId
+    ? `<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`
+    : `<sup><a href="/" data-scroll-target="references">[1]</a></sup>`;
+
+  if (family === 'rnaPuzzle') {
+    return `${title} is an RMDB record associated with an RNA-Puzzles community blind-prediction target. The bundled chemical mapping data provide an experimental constraint set or comparison point for a difficult tertiary fold, and FoldBridge links that record to the matched solved structure${pdbClause}.${superScript}`;
+  }
+
+  if (family === 'designLibrary') {
+    return `${title} is a pooled design or benchmark-library RMDB entry rather than a single classical biological transcript. Its RDAT package stores high-throughput chemical mapping data for representative synthetic or benchmark sequences, and FoldBridge uses the matched target to connect that screen to the resolved tertiary structure${pdbClause}.${superScript}`;
+  }
+
+  if (family === 'p4p6') {
+    return `${title} is a probing record for the Tetrahymena group I intron P4-P6 domain, a classic model system for RNA tertiary folding. Depending on the modifier used in this RMDB entry, the RDAT captures hydroxyl-radical, DMS, or CMCT accessibility across a construct that FoldBridge matches to the resolved P4-P6 architecture${pdbClause}.${superScript}`;
+  }
+
+  if (family === 'inCellShapeSeq') {
+    return `${title} is an in-cell SHAPE-Seq RMDB record measured directly in <em>E. coli</em>, giving a cellular reactivity snapshot for the specificity-region fragment shown on this page. FoldBridge pairs that endogenous probing profile with the matched tertiary-structure target${pdbClause}, so the entry can be read as a bridge between cellular accessibility and an experimentally resolved RNA fold.${superScript}`;
+  }
+
+  if (family === 'coTransShapeSeq') {
+    return `${title} is a cotranscriptional SHAPE-Seq RMDB record that emphasizes folding during transcription rather than after a separate refolding step. In FoldBridge, that pathway-sensitive chemical probing profile is linked to the matched resolved tertiary structure${pdbClause}, providing a useful comparison between kinetic accessibility and a structural endpoint.${superScript}`;
+  }
+
+  if (family === 'shapeSeq20') {
+    return `${title} is a SHAPE-Seq 2.0 probing entry archived in RMDB under the packaged buffer and ligand conditions. For these records the curated STRUCTURE field may be intentionally left undefined, so the page should be interpreted primarily as an experimental reactivity profile that FoldBridge connects to the matched tertiary structure${pdbClause}.${superScript}`;
+  }
+
+  if (family === 'raspGeneric') {
+    return `${title} is a transcript-level structure-probing record from RASP (RNA Atlas of Structure Probing), a curated repository of high-throughput transcriptome-wide RNA secondary structure profiles. FoldBridge links this experimental reactivity snapshot to the matched resolved tertiary structure${pdbClause}, bridging cellular or in vitro chemical accessibility with its spatial fold.${superScript}`;
+  }
+
+  return `${title} is an RMDB chemical probing record linked in FoldBridge to the matched tertiary structure${pdbClause}. This page is intended as a bridge between the archived RDAT experiment and the resolved or matched structural model used for comparison.${superScript}`;
+}
+
+function renderGenericRmdbReferenceContent(row) {
+  const pdbId = String(row?.pdbName || row?.bestPdbId || '').toUpperCase();
+  const family = inferRmdbReferenceFamily(row);
+  const pdbTitle = pdbId
+    ? `RCSB PDB entry ${pdbId}: matched tertiary-structure record used for this FoldBridge page.`
+    : '';
+  const pdbAuthors = 'RCSB Protein Data Bank structure record for the tertiary model linked to this RMDB entry.';
+  const pdbSource = 'RCSB PDB / wwPDB structure record';
+  const pdbLinks = [];
+  if (pdbId) {
+    pdbLinks.push(renderReferenceLink(`RCSB: ${pdbId}`, `https://www.rcsb.org/structure/${encodeURIComponent(pdbId)}`));
+    pdbLinks.push(renderReferenceLink(`PDB DOI: 10.2210/pdb${pdbId}/pdb`, `https://doi.org/10.2210/pdb${pdbId}/pdb`));
+  }
+
+  const templates = {
+    rnaPuzzle: {
+      title: 'RNA-Puzzles toolkit: a computational resource of RNA 3D structure benchmark datasets, structure manipulation, and evaluation tools.',
+      authors: 'Magnus M, Antczak M, Zok T, Wiedemann J, Lukasiak P, Cao Y, Bujnicki JM, Westhof E, Szachniuk M, Miao Z. (2016)',
+      source: 'Nucleic Acids Research 48(2):576-588',
+      pmid: '31799609',
+      doi: '10.1093/nar/gkz1108'
+    },
+    designLibrary: {
+      title: 'RNA design rules from a massive open laboratory.',
+      authors: 'Lee J, Kladwang W, Lee M, Cantu D, Azizyan M, Kim H, Limpaecher A, Yoon S, Treuille A, Das R, EteRNA Participants. (2014)',
+      source: 'Proceedings of the National Academy of Sciences 111(6):2122-2127',
+      pmid: '24469816',
+      doi: '10.1073/pnas.1313039111'
+    },
+    p4p6: {
+      title: 'Crystal structure of a group I ribozyme domain: principles of RNA packing.',
+      authors: 'Cate JH, Gooding AR, Podell E, Zhou K, Golden BL, Kundrot CE, Cech TR, Doudna JA. (1996)',
+      source: 'Science 273(5282):1678-1685',
+      pmid: '8781224',
+      doi: '10.1126/science.273.5282.1678'
+    },
+    inCellShapeSeq: {
+      title: 'Simultaneous Characterization of Cellular RNA Structure and Function with in-cell SHAPE-Seq.',
+      authors: 'Watters KE, Abbott TR, Lucks JB. (2016)',
+      source: 'Nucleic Acids Research 44(2):e12',
+      pmid: '26350218',
+      doi: '10.1093/nar/gkv879'
+    },
+    coTransShapeSeq: {
+      title: 'Cotranscriptional Folding of a Riboswitch at Nucleotide Resolution.',
+      authors: 'Watters KE, Strobel EJ, Yu AM, Lis JT, Lucks JB. (2016)',
+      source: 'Nature Structural & Molecular Biology 23(12):1124-1131',
+      pmid: '27798597',
+      doi: '10.1038/nsmb.3316'
+    },
+    shapeSeq20: {
+      title: 'SHAPE-Seq 2.0: systematic optimization and extension of high-throughput chemical probing of RNA secondary structure with next generation sequencing.',
+      authors: 'Loughrey D, Watters KE, Settle AH, Lucks JB. (2014)',
+      source: 'Nucleic Acids Research 42(21):e165',
+      pmid: '25303992',
+      doi: '10.1093/nar/gku909'
+    },
+    raspGeneric: {
+      title: 'RASP: an atlas of transcriptome-wide RNA secondary structure probing data.',
+      authors: 'Li P, Chang Y, Wei Y, Zhang Q, Zhao W, Zhang S, Zhang QC. (2021)',
+      source: 'Nucleic Acids Research 49(D1):D222-D231',
+      pmid: '33174984',
+      doi: '10.1093/nar/gkaa1052'
+    },
+    rmdbGeneric: {
+      title: 'Characterizing RNA structures in vitro and in vivo with selective 2\'-hydroxyl acylation analyzed by primer extension sequencing (SHAPE-Seq).',
+      authors: 'Watters KE, Yu AM, Strobel EJ, Settle AH, Lucks JB. (2016)',
+      source: 'Methods 103:34-48',
+      pmid: '27064082',
+      doi: '10.1016/j.ymeth.2016.04.002'
+    }
+  };
+
+  const template = templates[family] || templates.rmdbGeneric;
+  const items = [
+    renderReferenceItem({
+      index: 1,
+      title: template.title,
+      authors: template.authors,
+      source: template.source,
+      links: [
+        renderReferenceLink(`PubMed: ${template.pmid}`, `https://pubmed.ncbi.nlm.nih.gov/${template.pmid}/`),
+        renderReferenceLink(`DOI: ${template.doi}`, `https://doi.org/${template.doi}`)
+      ]
+    })
+  ];
+
+  if (pdbId) {
+    items.push(
+      renderReferenceItem({
+        index: 2,
+        title: pdbTitle,
+        authors: pdbAuthors,
+        source: pdbSource,
+        links: pdbLinks
+      })
+    );
+  }
+
+  return renderReferenceCard(items);
+}
+
 function renderStructureDetailDescription(row) {
   if (row?.foldBridgeId === 'RMDB_ATTR03_DMS_0001') {
     return `ATP-TTR 3 is a computer-designed ATP-binding RNA aptamer reported within the Ribosolve workflow for RNA-only three-dimensional structure determination. The apo-state ATP-TTR-3 model was resolved as PDB entry 6WLK and was used as part of a benchmark set for evaluating accelerated cryo-EM-guided RNA structure modeling and comparison across apo and ligand-bound states.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
@@ -1297,15 +1487,91 @@ function renderStructureDetailDescription(row) {
   }
 
   if (row?.foldBridgeId === 'RMDB_GLYCFN_KNK_0001') {
-    return `glycine riboswitch, <em>Fusobacterium nucleatum</em> is a double glycine riboswitch construct used to test whether the inter-aptamer linker contains an additional structured element beyond the previously truncated core aptamers. In the packaged RDAT, this 205 nt RNA was profiled by multiple chemical probing conditions, and the lowercase flanking bases mark auxiliary sequence context included to preserve the native linker architecture. The matched tertiary structure, represented here by PDB entry 6WLM, makes this record a useful reference for comparing chemical reactivity with the kink-turn-containing linker model proposed for cooperative glycine sensing.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+    return `glycine riboswitch, <em>Fusobacterium nucleatum</em> is a double glycine riboswitch construct used to test whether the inter-aptamer linker contains an additional structured element beyond the previously truncated core aptamers. In the packaged RDAT, this 205 nt RNA was profiled by multiple chemical probing conditions, and the lowercase flanking bases mark auxiliary sequence context included to preserve the native linker architecture. The matched tertiary structure, represented here by PDB entry 6WLM, makes this record a useful reference for comparing chemical reactivity with the kink-turn-containing linker model proposed for cooperative glycine sensing.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a>, <a href="/" data-scroll-target="references">[3]</a></sup>`;
   }
 
   if (row?.foldBridgeId === 'RMDB_TPPSC_1M7_0005') {
-    return `TPP Riboswitch is an <em>E. coli</em> thiamine pyrophosphate (TPP) riboswitch construct profiled by SHAPE-Seq to measure how the ligand-sensing RNA folds across its aptamer and expression-platform regions. TPP riboswitches directly bind the coenzyme thiamine pyrophosphate and regulate bacterial gene expression through metabolite-dependent structural rearrangements, making this record a compact model for comparing chemical probing reactivity with a well-studied riboswitch architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+    return `TPP Riboswitch is an <em>E. coli</em> thiamine pyrophosphate (TPP) riboswitch construct profiled by SHAPE-Seq to measure how the ligand-sensing RNA folds across its aptamer and expression-platform regions. TPP riboswitches directly bind the coenzyme thiamine pyrophosphate and regulate bacterial gene expression through metabolite-dependent structural rearrangements, making this record a compact model for comparing chemical probing reactivity with a well-studied riboswitch architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a>, <a href="/" data-scroll-target="references">[3]</a></sup>`;
   }
 
   if (row?.foldBridgeId === 'RMDB_SAMRSW_1M7_0001') {
-    return `SAM I riboswitch, <em>T. tengcongensis</em> is a SHAPE-Seq 2.0 1M7 probing record collected for a SAM-bound SAM-I riboswitch aptamer under the packaged ligand and buffer conditions. The bundled RDAT intentionally leaves the curated STRUCTURE field as all dots, so this entry is best interpreted as an experimental reactivity profile linked to the matched SAM-I riboswitch tertiary architecture represented here by PDB entry 4KQY. In FoldBridge, it serves as a probing-to-structure example for comparing ligand-dependent chemical reactivity with a well-characterized SAM-I riboswitch fold.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+    return `SAM I riboswitch, <em>T. tengcongensis</em> is a SHAPE-Seq 2.0 1M7 probing record collected for a SAM-bound SAM-I riboswitch aptamer under the packaged ligand and buffer conditions. The bundled RDAT intentionally leaves the curated STRUCTURE field as all dots, so this entry is best interpreted as an experimental reactivity profile linked to the matched SAM-I riboswitch tertiary architecture represented here by PDB entry 4KQY. In FoldBridge, it serves as a probing-to-structure example for comparing ligand-dependent chemical reactivity with a well-characterized SAM-I riboswitch fold.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a>, <a href="/" data-scroll-target="references">[3]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_16SFWJ_1M7_0001') {
+    return `16S rRNA Four-Way Junction is a mutate-and-map 1M7 probing benchmark derived from a structured bacterial 16S ribosomal RNA junction domain. The packaged RDAT includes a curated dot-bracket annotation together with systematic single-nucleotide mutation measurements, making this entry a compact example of how perturbation-guided chemical mapping can sharpen secondary-structure inference in noncoding RNAs. In FoldBridge, the record links that benchmark probing dataset to a matched tertiary-structure fragment, providing a useful reference for comparing reactivity-guided modeling with an experimentally resolved RNA junction architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a>, <a href="/" data-scroll-target="references">[3]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_TRP4P6_HRF_0003') {
+    return `RMDB_TRP4P6_HRF_0003 is a hydroxyl-radical footprinting dataset for the P4-P6 domain of the <em>Tetrahymena</em> group I intron, one of the classic model RNAs for tertiary folding studies. The bundled RDAT contains a Mg<sup>2+</sup> titration series collected in a 2 M NaCl background, so the experimental signal can be read as a step-by-step view of which parts of P4-P6 become protected as the metal-ion core folds. FoldBridge links that footprinting series to the solved P4-P6 tertiary structure in PDB entry 1GID, making this page a straightforward comparison between folding-dependent protection and the final RNA architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a>, <a href="/" data-scroll-target="references">[3]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ10_STD_0001') {
+    return `RNA Puzzle 10 corresponds to the T-box riboswitch stem I in complex with tRNA, a biological RNA-RNA complex structure. The tertiary structure is represented by PDB entry 4TZZ, which captures the complex containing a T-box Stem I RNA, its cognate tRNA-Gly, and the B. subtilis YbxF protein, revealing key tertiary contacts and molecular recognition mechanisms.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ11_STD_0002') {
+    return `RNA Puzzle 11 corresponds to a SAM-I/IV riboswitch variant, an engineered sequence used as a blind-prediction target in the RNA-Puzzles benchmark. The matched resolved structure, represented by PDB entry 5LYV, captures the riboswitch variant, providing a high-resolution model for comparing chemical probing reactivity with the target's folded conformation.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ14_HRF_0002') {
+    return `RNA Puzzle 14 corresponds to the L-glutamine riboswitch (bound or free form), a metabolite-sensing riboswitch that regulates bacterial gene expression. The matched resolved structure, represented here by PDB entry 5DDO, captures the glutamine-bound state and serves as a high-resolution target in the RNA-Puzzles benchmark.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ5_HRF_0001') {
+    return `RNA Puzzle 5 corresponds to the GIR1 lariat-capping ribozyme from the slime mold Didymium iridis. This catalytic RNA molecule forms a lariat junction to protect mature transcripts from exonucleolytic decay. Its experimentally solved structure, represented by PDB entry 4P8Z, serves as a major benchmark in the RNA-Puzzles project for assessing de novo RNA 3D structure prediction methods.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ6_STD_0001') {
+    return `RNA Puzzle 6 corresponds to the adenosylcobalamin (AdoCbl) riboswitch aptamer from Symbiobacterium thermophilum, a ligand-sensing RNA. The crystallographic target, represented by PDB entry 4GXY, captures the complex in its ligand-bound folded state and serves as a classic blind-prediction benchmark for RNA 3D modeling programs.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ7_1M7_0001') {
+    return `RNA Puzzle 7 corresponds to the Varkud satellite (VS) ribozyme G638A mutant from Neurospora mitochondria, a small catalytic RNA. Its experimentally solved structure, represented by PDB entry 4R4V, serves as a high-resolution target in the RNA-Puzzles benchmark for assessing structural modeling of complex catalytic folds.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ8_1M7_0001') {
+    return `RNA Puzzle 8 corresponds to a SAM-I/IV riboswitch aptamer domain, a metabolite-sensing RNA that regulates translation in response to S-adenosylmethionine. The crystallographic target, represented by PDB entry 4L81, captures the variant riboswitch fold and acts as a blind-prediction benchmark for de novo 3D modeling programs.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ9_1M7_0001') {
+    return `RNA Puzzle 9 corresponds to a 5-hydroxytryptophan RNA aptamer, a selectin biosensor designed to bind serotonin and related compounds. The crystal structure, represented by PDB entry 5KPY, serves as a high-resolution target in the RNA-Puzzles benchmark for assessing structural predictions of small-molecule binding pockets.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_ETERNA_R82_0000') {
+    return `EteRNA Cloud Lab corresponds to the Bacillus anthracis glmS ribozyme, a metabolite-responsive self-cleaving ribozyme that binds glucosamine 6-phosphate (Glc6P). The crystallographic structure, represented by PDB entry 3L3C, captures the active cofactor-bound state, providing a benchmark for high-throughput RNA design and modeling.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_CIDGMP_1M7_0001') {
+    return `cidGMP riboswitch, V. Cholerae corresponds to a cyclic di-GMP-I riboswitch aptamer from Vibrio cholerae bound to a linear dinucleotide analogue (GpG). The crystallographic structure, represented by PDB entry 3UCZ, serves as a high-resolution model for comparing chemical probing reactivity and investigating ligand selectivity.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_SRPECLI_BZCN_0001') {
+    return `SRP RNA, E. coli corresponds to the 4.5S signal recognition particle (SRP) RNA component from Escherichia coli, involved in co-translational protein targeting. The Cryo-EM structure, represented by PDB entry 5GAH, captures the translating ribosome with the bound SRP complex and serves as a structural model for co-translational accessibility.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNASEP_1M7_0001') {
+    return `RNase P specificity region, E. coli corresponds to the catalytic RNA component of Ribonuclease P from Escherichia coli, a ribozyme responsible for 5' maturation of precursor tRNAs. The Cryo-EM structure, represented by PDB entry 7UO5, captures the RNase P holoenzyme with precursor tRNA and Mg2+ ions, showing the dynamic active site details.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_TRP4P6_CMC_0001') {
+    return `RMDB_TRP4P6_CMC_0001 is a CMCT probing record for the Tetrahymena group I intron P4-P6 domain, a classic model system for studying RNA tertiary folding and ligand interactions. The experimental probing data is mapped to the Cryo-EM structure of the Tetrahymena group I intron, represented by PDB entry 8I7N, which captures the G264A mutant intron state.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_TRNAPH_1M7_0000') {
+    return `tRNAphe, E. coli corresponds to the phenylalanine transfer RNA (tRNA-Phe) from Escherichia coli, a key component of the translation machinery. The experimental chemical probing reactivity profile is matched to the resolved tRNA structure within the tuco-tuco ribosome complex, represented by PDB entry 9Y4G, providing a structural reference for tRNA conformation.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_TRP4P6_DMS_0014') {
+    return `RMDB_TRP4P6_DMS_0014 is a DMS probing record for the Tetrahymena group I intron P4-P6 domain. The experimental chemical probing reactivity profile is matched to the resolved structure of the Tetrahymena ribozyme containing 5-methyl-cytidine modifications, represented by PDB entry 9ZC6.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_SARS-CoV-2-SL5') {
+    return `RMDB_SARS-CoV-2-SL5 is a chemical probing record for the SARS-CoV-2 stem-loop 5 (SL5) domain within the 5' untranslated region of the viral genome. The experimental chemical probing reactivity profile is matched to the resolved structure of SL5, represented by PDB entry 8QO5, which captures the conserved Betacoronavirus RNA fold and dynamics.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
+  }
+
+  if (String(row?.foldBridgeId ?? '').startsWith('RMDB_') || String(row?.foldBridgeId ?? '').startsWith('RASP_')) {
+    return renderGenericRmdbDescription(row);
   }
 
   return `${row?.name || 'Untitled record'} is a probing-centered FoldBridge record with a matched tertiary-structure target.`;
@@ -1442,6 +1708,15 @@ function renderStructureDetailReferenceContent(row) {
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.molcel.2010.11.026" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.molcel.2010.11.026</a>
           </div>
         </article>
+        <article class="sequence-detail-reference-item" id="reference-3">
+          <h3>[3] RCSB PDB entry 6WLM: Glycine riboswitch with kink-turn containing linker.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the glycine riboswitch model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/6WLM" target="_blank" rel="noopener noreferrer">RCSB: 6WLM</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb6WLM/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb6WLM/pdb</a>
+          </div>
+        </article>
       </div>
     </div>`;
   }
@@ -1464,6 +1739,13 @@ function renderStructureDetailReferenceContent(row) {
           <div class="sequence-detail-reference-links">
             <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/16728979/" target="_blank" rel="noopener noreferrer">PubMed: 16728979</a>
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/nature04740" target="_blank" rel="noopener noreferrer">DOI: 10.1038/nature04740</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-3">
+          <h3>[3] RCSB PDB entry 7TZS: Crystal structure of the E. coli thiamine pyrophosphate (TPP) riboswitch.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the thiamine pyrophosphate-sensing riboswitch model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
             <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/7TZS" target="_blank" rel="noopener noreferrer">RCSB: 7TZS</a>
             <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb7TZS/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb7TZS/pdb</a>
           </div>
@@ -1493,8 +1775,486 @@ function renderStructureDetailReferenceContent(row) {
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.jmb.2010.09.059" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.jmb.2010.09.059</a>
           </div>
         </article>
+        <article class="sequence-detail-reference-item" id="reference-3">
+          <h3>[3] RCSB PDB entry 4KQY: Crystal structure of the SAM-I riboswitch aptamer domain.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the SAM-I riboswitch model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4KQY" target="_blank" rel="noopener noreferrer">RCSB: 4KQY</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4KQY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4KQY/pdb</a>
+          </div>
+        </article>
       </div>
     </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_16SFWJ_1M7_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] A two-dimensional mutate-and-map strategy for non-coding RNA structure.</h3>
+          <p class="sequence-detail-reference-authors">Kladwang W, VanLang CC, Cordero P, Das R. (2012)</p>
+          <p class="sequence-detail-reference-source">Nature Chemistry 3(12):954-962</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/22109276/" target="_blank" rel="noopener noreferrer">PubMed: 22109276</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/nchem.1176" target="_blank" rel="noopener noreferrer">DOI: 10.1038/nchem.1176</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] High-throughput mutate-map-rescue evaluates SHAPE-directed RNA structure and uncovers excited states.</h3>
+          <p class="sequence-detail-reference-authors">Tian S, Cordero P, Kladwang W, Das R. (2014)</p>
+          <p class="sequence-detail-reference-source">RNA 20(11):1815-1826</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25183835/" target="_blank" rel="noopener noreferrer">PubMed: 25183835</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.044321.114" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.044321.114</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-3">
+          <h3>[3] RCSB PDB entry 4YBB: Crystal structure of the E. coli 70S ribosome showing 16S rRNA.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the ribosome structure containing the 16S rRNA fragment linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4YBB" target="_blank" rel="noopener noreferrer">RCSB: 4YBB</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4YBB/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4YBB/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_TRP4P6_HRF_0003') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Determining the Mg2+ stoichiometry for folding an RNA's metal ion core.</h3>
+          <p class="sequence-detail-reference-authors">Das R, Travers KJ, Bai Y, Herschlag D. (2005)</p>
+          <p class="sequence-detail-reference-source">Journal of the American Chemical Society 127(23):8272-8273</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/15941263/" target="_blank" rel="noopener noreferrer">PubMed: 15941263</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1021/ja052131u" target="_blank" rel="noopener noreferrer">DOI: 10.1021/ja052131u</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] Crystal structure of a group I ribozyme domain: principles of RNA packing.</h3>
+          <p class="sequence-detail-reference-authors">Cate JH, Gooding AR, Podell E, Zhou K, Golden BL, Kundrot CE, Cech TR, Doudna JA. (1996)</p>
+          <p class="sequence-detail-reference-source">Science 273(5282):1678-1685</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/8781224/" target="_blank" rel="noopener noreferrer">PubMed: 8781224</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1126/science.273.5282.1678" target="_blank" rel="noopener noreferrer">DOI: 10.1126/science.273.5282.1678</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-3">
+          <h3>[3] RCSB PDB entry 1GID: P4-P6 domain of the <em>Tetrahymena</em> group I ribozyme.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the crystallographic P4-P6 domain linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/1GID" target="_blank" rel="noopener noreferrer">RCSB: 1GID</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb1GID/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb1GID/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ10_STD_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Dramatic Improvement of Crystals of Large RNAs by Cation Replacement and Dehydration.</h3>
+          <p class="sequence-detail-reference-authors">Zhang J, Ferré-D’Amaré AR. (2014)</p>
+          <p class="sequence-detail-reference-source">Structure 22(9):1363-1371</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25156430/" target="_blank" rel="noopener noreferrer">PubMed: 25156430</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.str.2014.07.011" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.str.2014.07.011</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 4TZZ: Ternary complex of T-box Stem I RNA, tRNA-Gly and YbxF protein.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the T-box-tRNA complex linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4TZZ" target="_blank" rel="noopener noreferrer">RCSB: 4TZZ</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4TZZ/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4TZZ/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ11_STD_0002') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] The crystal structure of the 5' functional domain of the transcription riboregulator 7SK.</h3>
+          <p class="sequence-detail-reference-authors">Martinez-Zapien D, Legrand P, McEwen AG, Pasquali S, Dock-Bregeon AC. (2017)</p>
+          <p class="sequence-detail-reference-source">Nucleic Acids Research 45(6):3535-3544</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/28087754/" target="_blank" rel="noopener noreferrer">PubMed: 28087754</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gkw1355" target="_blank" rel="noopener noreferrer">DOI: 10.1093/nar/gkw1355</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 5LYV: The crystal structure of the 5' functional domain of the transcription riboregulator 7SK.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the 7SK snRNA domain model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5LYV" target="_blank" rel="noopener noreferrer">RCSB: 5LYV</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5LYV/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5LYV/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ14_HRF_0002') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Structural and Dynamic Basis for Low-Affinity, High-Selectivity Binding of L-Glutamine by the Glutamine Riboswitch.</h3>
+          <p class="sequence-detail-reference-authors">Ren A, Xue Y, Peselis A, Serganov A, Al-Hashimi HM, Patel DJ. (2015)</p>
+          <p class="sequence-detail-reference-source">Cell Reports 13:1800-1813</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/26628365/" target="_blank" rel="noopener noreferrer">PubMed: 26628365</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.celrep.2015.10.062" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.celrep.2015.10.062</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 5DDO: Structure of the glutamine riboswitch bound to glutamine.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the glutamine riboswitch model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5DDO" target="_blank" rel="noopener noreferrer">RCSB: 5DDO</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5DDO/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5DDO/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ5_HRF_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] RNA-Puzzles Round II: assessment of RNA structure prediction programs applied to three large RNA structures.</h3>
+          <p class="sequence-detail-reference-authors">Miao Z, Adamiak RW, Blanchet MF, Boniecki M, Bujnicki JM, Chen SJ, ... Westhof E. (2015)</p>
+          <p class="sequence-detail-reference-source">RNA 21(6):1066-1084</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25904128/" target="_blank" rel="noopener noreferrer">PubMed: 25904128</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.049502.114" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.049502.114</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 4P8Z: Crystal structure of the GIR1 lariat-capping ribozyme.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the GIR1 lariat-capping ribozyme model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4P8Z" target="_blank" rel="noopener noreferrer">RCSB: 4P8Z</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4P8Z/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4P8Z/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ6_STD_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] RNA-Puzzles Round II: assessment of RNA structure prediction programs applied to three large RNA structures.</h3>
+          <p class="sequence-detail-reference-authors">Miao Z, Adamiak RW, Blanchet MF, Boniecki M, Bujnicki JM, Chen SJ, ... Westhof E. (2015)</p>
+          <p class="sequence-detail-reference-source">RNA 21(6):1066-1084</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25904128/" target="_blank" rel="noopener noreferrer">PubMed: 25904128</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.049502.114" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.049502.114</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 4GXY: Crystal structure of the Symbiobacterium thermophilum adenosylcobalamin riboswitch aptamer bound to cobalamin.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the cobalamin riboswitch model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4GXY" target="_blank" rel="noopener noreferrer">RCSB: 4GXY</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4GXY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4GXY/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ7_1M7_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] RNA-Puzzles Round II: assessment of RNA structure prediction programs applied to three large RNA structures.</h3>
+          <p class="sequence-detail-reference-authors">Miao Z, Adamiak RW, Blanchet MF, Boniecki M, Bujnicki JM, Chen SJ, ... Westhof E. (2015)</p>
+          <p class="sequence-detail-reference-source">RNA 21(6):1066-1084</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25904128/" target="_blank" rel="noopener noreferrer">PubMed: 25904128</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.049502.114" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.049502.114</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 4R4V: Crystal structure of the Varkud satellite ribozyme mutant.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the VS ribozyme model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4R4V" target="_blank" rel="noopener noreferrer">RCSB: 4R4V</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4R4V/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4R4V/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ8_1M7_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] RNA-Puzzles Round III: 3D RNA structure prediction of five riboswitches and one ribozyme.</h3>
+          <p class="sequence-detail-reference-authors">Miao Z, Adamiak RW, Antczak M, Batey RT, Becka AJ, Biesiada M, Boniecki MJ, Bujnicki JM, ... Westhof E. (2017)</p>
+          <p class="sequence-detail-reference-source">RNA 23(5):655-672</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/28138060/" target="_blank" rel="noopener noreferrer">PubMed: 28138060</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.060368.116" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.060368.116</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 4L81: Structure of the SAM-I/IV riboswitch.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the SAM-I/IV riboswitch model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4L81" target="_blank" rel="noopener noreferrer">RCSB: 4L81</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4L81/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4L81/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNAPZ9_1M7_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] RNA-Puzzles Round IV: 3D structure predictions of four ribozymes and two aptamers.</h3>
+          <p class="sequence-detail-reference-authors">Miao Z, Adamiak RW, Antczak M, Boniecki MJ, Bujnicki J, Chen SJ, Cheng CY, Cheng Y, Chou FC, Das R, Dokholyan NV, Ding F, Geniesse C, Jiang Y, Joshi A, Krokhotin A, Magnus M, Mailhot O, Major F, Mann TH, Piatkowski P, Pluta R, Popenda M, Sarzynska J, Sun L, Szachniuk M, Tian S, Wang J, Wang J, Watkins AM, Wiedemann J, Xiao Y, Xu X, Yesselman JD, Zhang D, Zhang Y, Zhang Z, Zhao C, Zhao P, Zhou Y, Zok T, Zyla A, Ren A, Batey RT, Golden BL, Huang L, Lilley DM, Liu Y, Patel DJ, Westhof E. (2020)</p>
+          <p class="sequence-detail-reference-source">RNA 26(8):982-995</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/32371455/" target="_blank" rel="noopener noreferrer">PubMed: 32371455</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.075341.120" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.075341.120</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 5KPY: 5-HTP RNA aptamer structure.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the 5-HTP RNA aptamer model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5KPY" target="_blank" rel="noopener noreferrer">RCSB: 5KPY</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5KPY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5KPY/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_ETERNA_R82_0000') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Structural and chemical basis for glucosamine 6-phosphate binding and activation of the glmS ribozyme.</h3>
+          <p class="sequence-detail-reference-authors">Cochrane JC, Lipchock SV, Smith KD, Strobel SA. (2009)</p>
+          <p class="sequence-detail-reference-source">Biochemistry 48(15):3239-3246</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/19275185/" target="_blank" rel="noopener noreferrer">PubMed: 19275185</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1021/bi9001389" target="_blank" rel="noopener noreferrer">DOI: 10.1021/bi9001389</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 3L3C: Crystal structure of the Bacillus anthracis glmS ribozyme bound to Glc6P.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the glmS ribozyme model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/3L3C" target="_blank" rel="noopener noreferrer">RCSB: 3L3C</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb3L3C/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb3L3C/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_CIDGMP_1M7_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Structural and biochemical characterization of linear dinucleotide analogues bound to the c-di-GMP-I aptamer.</h3>
+          <p class="sequence-detail-reference-authors">Smith KD, Lipchock SV, Strobel SA. (2012)</p>
+          <p class="sequence-detail-reference-source">Biochemistry 51(10):2062-2070</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/22339598/" target="_blank" rel="noopener noreferrer">PubMed: 22339598</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1021/bi201736k" target="_blank" rel="noopener noreferrer">DOI: 10.1021/bi201736k</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 3UCZ: c-di-GMP-I riboswitch bound to the linear dinucleotide GpG.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the c-di-GMP-I riboswitch model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/3UCZ" target="_blank" rel="noopener noreferrer">RCSB: 3UCZ</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb3UCZ/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb3UCZ/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_SRPECLI_BZCN_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Structures of the E. coli translating ribosome with SRP and its receptor and with the translocon.</h3>
+          <p class="sequence-detail-reference-authors">Jomaa A, Boehringer D, Leibundgut M, Ban N. (2016)</p>
+          <p class="sequence-detail-reference-source">Nature Communications 7:10471</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/26829443/" target="_blank" rel="noopener noreferrer">PubMed: 26829443</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/ncomms10471" target="_blank" rel="noopener noreferrer">DOI: 10.1038/ncomms10471</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 5GAH: Cryo-EM structure of E. coli translating ribosome with SRP.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the SRP-containing ribosome model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5GAH" target="_blank" rel="noopener noreferrer">RCSB: 5GAH</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5GAH/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5GAH/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_RNASEP_1M7_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Structural and mechanistic basis for recognition of alternative tRNA precursor substrates by bacterial ribonuclease P.</h3>
+          <p class="sequence-detail-reference-authors">Zhu J, Huang W, Zhao J, Huynh L, Taylor DJ, Harris ME. (2022)</p>
+          <p class="sequence-detail-reference-source">Nature Communications 13(1):5062</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/36038573/" target="_blank" rel="noopener noreferrer">PubMed: 36038573</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/s41467-022-32843-7" target="_blank" rel="noopener noreferrer">DOI: 10.1038/s41467-022-32843-7</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 7UO5: E. coli RNase P Holoenzyme with Mg2+.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the RNase P holoenzyme model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/7UO5" target="_blank" rel="noopener noreferrer">RCSB: 7UO5</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb7UO5/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb7UO5/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_TRP4P6_CMC_0001') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Cryo-EM reveals dynamics of Tetrahymena group I intron self-splicing.</h3>
+          <p class="sequence-detail-reference-authors">Luo B, Zhang C, Ling X, Mukherjee S, Jia G, Xie J, Jia X, Liu L, Baulin EF, Luo Y, Jiang L, Dong H, Wei X, Bujnicki JM, Su Z. (2023)</p>
+          <p class="sequence-detail-reference-source">Nature Catalysis 6:405–416</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/s41929-023-00934-3" target="_blank" rel="noopener noreferrer">DOI: 10.1038/s41929-023-00934-3</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 8I7N: Cryo-EM structure of the Tetrahymena group I intron in the Tet-S1 state.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the Tetrahymena intron model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/8I7N" target="_blank" rel="noopener noreferrer">RCSB: 8I7N</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb8I7N/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb8I7N/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_TRNAPH_1M7_0000') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Structures of naked mole-rat, tuco-tuco, and guinea pig ribosomes—is rRNA fragmentation linked to translational fidelity?</h3>
+          <p class="sequence-detail-reference-authors">Gutierrez-Vargas C, De S, Maji S, Liu Z, Nieb M, Seluanov A, Gorbunova V, Frank J. (2026)</p>
+          <p class="sequence-detail-reference-source">Nucleic Acids Research</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gkae144" target="_blank" rel="noopener noreferrer">DOI (Journal Base)</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 9Y4G: Structure of tuco-tuco ribosome.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the ribosome-tRNA complex linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/9Y4G" target="_blank" rel="noopener noreferrer">RCSB: 9Y4G</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb9Y4G/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb9Y4G/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_TRP4P6_DMS_0014') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Base modifications shift tertiary structure and activity in synthetic RNA origami and a natural ribozyme.</h3>
+          <p class="sequence-detail-reference-authors">Yadav DK, Yang H, Lee S, McRae EKS. (2026)</p>
+          <p class="sequence-detail-reference-source">Nature Communications</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/s41467-026-72891-x" target="_blank" rel="noopener noreferrer">DOI: 10.1038/s41467-026-72891-x</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 9ZC6: Tetrahymena Ribozyme with 5-methyl-cytidine.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the modified Tetrahymena ribozyme linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/9ZC6" target="_blank" rel="noopener noreferrer">RCSB: 9ZC6</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb9ZC6/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb9ZC6/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (row?.foldBridgeId === 'RMDB_SARS-CoV-2-SL5') {
+    return `<div class="sequence-detail-reference-card">
+      <div class="sequence-detail-reference-list">
+        <article class="sequence-detail-reference-item" id="reference-1">
+          <h3>[1] Conserved structures and dynamics in 5'-proximal regions of Betacoronavirus RNA genomes.</h3>
+          <p class="sequence-detail-reference-authors">de Moura TR, Purta E, Bernat A, Martin-Cuevas EM, Kurkowska M, Baulin EF, Mukherjee S, Nowak J, Biela AP, Rawski M, Glatt S, Moreno-Herrero F, Bujnicki JM. (2024)</p>
+          <p class="sequence-detail-reference-source">Nucleic Acids Research 52:3419-3432</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/38426934/" target="_blank" rel="noopener noreferrer">PubMed: 38426934</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gkae144" target="_blank" rel="noopener noreferrer">DOI: 10.1093/nar/gkae144</a>
+          </div>
+        </article>
+        <article class="sequence-detail-reference-item" id="reference-2">
+          <h3>[2] RCSB PDB entry 8QO5: SARS-CoV-2 SL5 structure model.</h3>
+          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the SARS-CoV-2 SL5 model linked to this FoldBridge entry.</p>
+          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
+          <div class="sequence-detail-reference-links">
+            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/8QO5" target="_blank" rel="noopener noreferrer">RCSB: 8QO5</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb8QO5/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb8QO5/pdb</a>
+          </div>
+        </article>
+      </div>
+    </div>`;
+  }
+
+  if (String(row?.foldBridgeId ?? '').startsWith('RMDB_') || String(row?.foldBridgeId ?? '').startsWith('RASP_')) {
+    return renderGenericRmdbReferenceContent(row);
   }
 
   return `<div class="sequence-detail-reference-card">
@@ -1533,6 +2293,7 @@ function sequenceDetailPage() {
             id="structure-detail-heatmap"
             class="sequence-secondary-heatmap-host"
             data-rdat-url="${row.rdatPath}"
+            data-sequence="${(row.sourceSequence || row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
           ></div>
           <p id="structure-detail-heatmap-status" class="mini-note" hidden></p>
         </section>
@@ -1583,15 +2344,17 @@ function sequenceDetailPage() {
       </section>`
     : '';
 
+  const showPredictedStructureSection = hasUsablePredictedStructure(row?.foldBridgeId) || hasSecondaryStructureConstraints;
+  const showPredictedStructureViewer = hasUsablePredictedStructure(row?.foldBridgeId);
   const tertiaryStructureSection =
     hasSecondaryStructureConstraints && (showPredictedStructureSection || row.bestPdbId)
       ? `<section class="sequence-detail-panel">
-          <h2>${isReactivityGuidedStructure ? 'Tertiary Structure Follow-up' : 'Tertiary Structure Comparison'}</h2>
+          <h2>Tertiary Structure Comparison</h2>
           <div class="sequence-detail-section-intro">
             <p>${
-              isReactivityGuidedStructure
-                ? 'Three-dimensional follow-up depends on whether a precomputed model is available. When no predicted 3D file has been generated yet, the 2D structure above should be treated as the current endpoint.'
-                : 'Compare the secondary-structure-derived RNA model with the matched experimental PDB structure side by side.'
+              (!isReactivityGuidedStructure || (row.bestPdbId && hasUsablePredictedStructure(row.foldBridgeId)))
+                ? 'Compare the secondary-structure-derived RNA model with the matched experimental PDB structure side by side.'
+                : 'Three-dimensional follow-up depends on whether a precomputed model is available. When no predicted 3D file has been generated yet, the 2D structure above should be treated as the current endpoint.'
             }</p>
           </div>
           <div class="structure-detail-comparison-grid">
@@ -1610,13 +2373,17 @@ function sequenceDetailPage() {
                         data-structure-format="pdb"
                         data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
                         data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                        data-structure-source="${rnaComposerPredictedStructureIds.has(row.foldBridgeId) ? 'rnacomposer' : 'local-fallback'}"
+                        data-structure-source="rnacomposer"
                       ></div>
                     </div>`
-                  : `<div class="sequence-detail-placeholder">
-                      <p>Predicted 3D model is not available yet for this record.</p>
+                  : `<div class="sequence-detail-media">
+                      <div class="mini-note">${
+                        unsupportedPredictedStructureIds.has(row?.foldBridgeId)
+                          ? 'RNAComposer prediction unavailable for this record.'
+                          : 'Predicted 3D model is not available yet for this record.'
+                      }</div>
                       ${
-                        isReactivityGuidedStructure
+                        isReactivityGuidedStructure && !unsupportedPredictedStructureIds.has(row?.foldBridgeId)
                           ? '<p class="mini-note">If we want a 3D view here, the next step is to run a dedicated generator such as RNAComposer or another RNA 3D modeling workflow from the predicted dot-bracket.</p>'
                           : ''
                       }
@@ -1719,6 +2486,7 @@ function sequenceDetailPage() {
         <h2>Reference</h2>
         ${renderSequenceDetailReferenceContent(row)}
       </section>
+      ${renderDetailPageFooterActions()}
     </section>
   </main>`;
 }
@@ -1906,9 +2674,44 @@ const curatedStructureOverrides = new Map([
     }
   ],
   [
+    'RMDB_SARS-CoV-2-SL5',
+    {
+      discoveryYear: '2024',
+      species: 'SARS-CoV-2',
+      hasLocalRdat: false,
+      rdatPath: '',
+      sourceStructure: '......(((((.(((((....)))))..)))))...........(((((.....))))).((((.......))))........((((((((.((.((((.(((.....))).)))))).))))))))..((((((.....))))))...(((((((((((..(((((...(((.(((((((((((..((((((.(((((......)))))..))))))......)))(((((((.((......)))))))))(((....)))))))))))))).))))).))))...)))))))......'
+    }
+  ],
+  [
+    'RMDB_16SFWJ_1M7_0001',
+    {
+      discoveryYear: '2012',
+      species: 'Bacterial 16S rRNA'
+    }
+  ],
+  [
     'RMDB_SAMRSW_1M7_0001',
     {
       discoveryYear: '2010'
+    }
+  ],
+  [
+    'RMDB_TRP4P6_CMC_0001',
+    {
+      discoveryYear: '2005'
+    }
+  ],
+  [
+    'RMDB_TRP4P6_DMS_0014',
+    {
+      discoveryYear: '2005'
+    }
+  ],
+  [
+    'RMDB_TRP4P6_HRF_0003',
+    {
+      discoveryYear: '2005'
     }
   ],
   [
@@ -1916,26 +2719,212 @@ const curatedStructureOverrides = new Map([
     {
       discoveryYear: '2016'
     }
+  ],
+  [
+    'RMDB_RNAPZ10_STD_0001',
+    {
+      discoveryYear: '2014',
+      species: 'Bacillus subtilis'
+    }
+  ],
+  [
+    'RMDB_RNAPZ11_STD_0002',
+    {
+      discoveryYear: '2017',
+      species: 'Synthetic construct'
+    }
+  ],
+  [
+    'RMDB_RNAPZ14_HRF_0002',
+    {
+      discoveryYear: '2015',
+      species: 'Synthetic construct'
+    }
+  ],
+  [
+    'RMDB_RNAPZ5_HRF_0001',
+    {
+      discoveryYear: '2015',
+      species: 'Didymium iridis'
+    }
+  ],
+  [
+    'RMDB_RNAPZ6_STD_0001',
+    {
+      discoveryYear: '2015',
+      species: 'Symbiobacterium thermophilum'
+    }
+  ],
+  [
+    'RMDB_RNAPZ7_1M7_0001',
+    {
+      discoveryYear: '2015',
+      species: 'Neurospora crassa'
+    }
+  ],
+  [
+    'RMDB_RNAPZ8_1M7_0001',
+    {
+      discoveryYear: '2017',
+      species: 'Synthetic construct'
+    }
+  ],
+  [
+    'RMDB_RNAPZ9_1M7_0001',
+    {
+      discoveryYear: '2020',
+      species: 'Synthetic construct'
+    }
+  ],
+  [
+    'RMDB_ETERNA_R82_0000',
+    {
+      discoveryYear: '2009',
+      species: 'Bacillus anthracis'
+    }
+  ],
+  [
+    'RMDB_CIDGMP_1M7_0001',
+    {
+      discoveryYear: '2012',
+      species: 'Vibrio cholerae'
+    }
+  ],
+  [
+    'RMDB_SRPECLI_BZCN_0001',
+    {
+      discoveryYear: '2016',
+      species: 'Escherichia coli'
+    }
+  ],
+  [
+    'RMDB_RNASEP_1M7_0001',
+    {
+      discoveryYear: '2022',
+      species: 'Escherichia coli'
+    }
+  ],
+  [
+    'RMDB_TRNAPH_1M7_0000',
+    {
+      discoveryYear: '2026',
+      species: 'Escherichia coli'
+    }
+  ],
+  [
+    'RMDB_RSTRND_DMS_0000',
+    {
+      discoveryYear: '2023',
+      species: 'Synthetic construct'
+    }
+  ],
+  [
+    'RMDB_PSEUDOB_DMS_0000',
+    {
+      discoveryYear: '2023',
+      species: 'Synthetic construct'
+    }
+  ],
+  [
+    'RMDB_POS240_DMS_0000',
+    {
+      discoveryYear: '2023',
+      species: 'Synthetic construct'
+    }
+  ],
+  [
+    'RMDB_PDB130_2A3_0000',
+    {
+      discoveryYear: '2023',
+      species: 'Synthetic construct'
+    }
+  ],
+  [
+    'RMDB_OK7BLIB_2A3_0000',
+    {
+      discoveryYear: '2023',
+      species: 'Synthetic construct'
+    }
   ]
 ]);
 
 const reactivityGuidedStructurePredictions = new Map([
+  ...generatedReactivityGuidedStructurePredictions,
   [
     'RMDB_SAMRSW_1M7_0001',
     {
       structure: '..((((((((..(((((((.(.(((.....)))..))...))))(((.((((((.(.(((((.....)))))))))..))))))...))(..((((((...)..))))))..))))))))',
       method: 'Local reactivity-guided estimate from the bundled 1M7 and nomod rows in SAMRSW_1M7_0001.rdat.'
     }
+  ],
+  [
+    'RMDB_CIDGMP_1M7_0001',
+    {
+      structure: '.(((((((((...)(((...((((((....)))))))((((...))((.((((((..(((((....).))))))))..))))))).))).))(((...)))))))',
+      method: 'Local reactivity-guided estimate from the bundled 1M7 and nomod rows in CIDGMP_1M7_0001.rdat.'
+    }
+  ],
+  [
+    'RMDB_RNAPZ8_1M7_0001',
+    {
+      structure: '...((.(..((((....)))))).)(((((((.((((((((...)))).((.(((((....))))))))))).)))).).((((......))))))',
+      method: 'Local reactivity-guided estimate from the bundled RNAPZ8_1M7_0001.rdat measurements.'
+    }
+  ],
+  [
+    'RMDB_RNAPZ9_1M7_0001',
+    {
+      structure: '(((((((....)(.(((((..(...))))))).......((((((((.......))))).))..)))))))',
+      method: 'Local reactivity-guided estimate from the bundled RNAPZ9_1M7_0001.rdat measurements.'
+    }
+  ],
+  [
+    'RMDB_RNAPZ11_STD_0002',
+    {
+      structure: '((((((((((.(((((..(((((((....))).)))))))..))...))))))))))',
+      method: 'Reactivity-guided comparison workflow for the bundled RNAPZ11_STD_0002.rdat measurements.'
+    }
+  ],
+  [
+    'RMDB_RNAPZ14_HRF_0002',
+    {
+      structure: '(((((.(((((....)))))((....))((((((..........))))))....)))))))',
+      method: 'Reactivity-guided comparison workflow for the bundled RNAPZ14_HRF_0002.rdat measurements.'
+    }
+  ],
+  [
+    'RMDB_RNAPZ5_HRF_0001',
+    {
+      structure: '(((((..(((((..(((((((((.......)))))))))..((((.((((((((......(((((...((((((((((....))))....)).))))((....)).....[[[[[...))))).((((...))))))))))))....]]]]].((((....))))....))))...)))))..)))))',
+      method: 'Reactivity-guided comparison workflow for the bundled RNAPZ5_HRF_0001.rdat measurements.'
+    }
   ]
 ]);
 
 const rnaComposerPredictedStructureIds = new Set(generatedRnaComposerPredictedStructureIds);
+const forceReactivityGuidedWorkflowIds = new Set([
+  'RMDB_RNAPZ5_HRF_0001',
+  'RMDB_RNAPZ8_1M7_0001',
+  'RMDB_RNAPZ9_1M7_0001',
+  'RMDB_RNAPZ11_STD_0002',
+  'RMDB_RNAPZ14_HRF_0002'
+]);
+const unsupportedPredictedStructureIds = new Set([
+  'RMDB_OK7BLIB_2A3_0000'
+]);
+
+function hasUsablePredictedStructure(foldBridgeId) {
+  return rnaComposerPredictedStructureIds.has(foldBridgeId) && !unsupportedPredictedStructureIds.has(foldBridgeId);
+}
 
 function predictedStructureDescription(foldBridgeId) {
+  if (unsupportedPredictedStructureIds.has(foldBridgeId)) {
+    return 'RNAComposer could not produce a usable 3D model for this record, so FoldBridge does not display a local fallback structure here.';
+  }
   if (rnaComposerPredictedStructureIds.has(foldBridgeId)) {
     return 'This predicted 3D model is generated with RNAComposer from the RDAT sequence and available secondary-structure constraints, giving a more PDB-like atomic view for side-by-side comparison with the matched experimental structure below.';
   }
-  return 'This fallback predicted 3D model is generated locally from the RDAT sequence and secondary-structure constraints. It is useful for exploratory comparison when an RNAComposer-ready secondary structure is not available.';
+  return 'RNAComposer has not produced a 3D model for this record yet.';
 }
 
 function choosePreferredBlastHit(current, candidate) {
@@ -2092,8 +3081,20 @@ function getPredictedSecondaryStructure(row) {
   return reactivityGuidedStructurePredictions.get(row?.foldBridgeId) || null;
 }
 
+function usesReactivityGuidedWorkflow(row) {
+  const predicted = getPredictedSecondaryStructure(row);
+  if (!predicted) return false;
+  return (
+    forceReactivityGuidedWorkflowIds.has(row?.foldBridgeId)
+    || !hasPairedSecondaryStructureText(String(row?.sourceStructure || '').trim())
+  );
+}
+
 function getDisplaySecondaryStructure(row) {
   const sourceStructure = String(row?.sourceStructure || '').trim();
+  if (usesReactivityGuidedWorkflow(row)) {
+    return getPredictedSecondaryStructure(row)?.structure || sourceStructure;
+  }
   if (hasPairedSecondaryStructureText(sourceStructure)) return sourceStructure;
   return getPredictedSecondaryStructure(row)?.structure || sourceStructure;
 }
@@ -2173,7 +3174,7 @@ function parseSequenceLength(sequenceText) {
 }
 
 function estimateGlobalFoldSimilarity(row, secondaryStructure) {
-  if (!predictedStructureIds.has(row?.foldBridgeId) || !structureHasSecondaryStructure(row)) {
+  if (!hasUsablePredictedStructure(row?.foldBridgeId) || !structureHasSecondaryStructure(row)) {
     return { label: 'Unavailable', note: 'Predicted 3D model or secondary-structure constraints are missing.' };
   }
 
@@ -2292,6 +3293,173 @@ function inferModifierFromSupplementRow(row) {
   return '';
 }
 
+function expandSpeciesAbbreviation(species) {
+  const clean = String(species || '').trim().replace(/_/g, ' ').toLowerCase();
+  const map = {
+    'pputida': 'Pseudomonas putida',
+    'p putida': 'Pseudomonas putida',
+    'e coli': 'Escherichia coli',
+    'b subtilis': 'Bacillus subtilis',
+    'o sativa': 'Oryza sativa',
+    'y pseudotuberculosis': 'Yersinia pseudotuberculosis',
+    'yeast': 'Saccharomyces cerevisiae',
+    'human': 'Homo sapiens',
+    'mouse': 'Mus musculus'
+  };
+  return map[clean] || species;
+}
+
+function formatRaspRecordName(sourceName, pdbId) {
+  const name = String(sourceName || '').trim();
+  const cleanPdb = String(pdbId || '').toLowerCase().replace(/_[a-z0-9]+$/i, '').trim();
+
+  // 1. Map raw coords or IDs to clean RNA names using matched PDB ID
+  const pdbToName = {
+    '1xjr': 'SARS-CoV-2 s2m element',
+    '7b9v': 'U6 snRNA',
+    '6spg': '5S rRNA',
+    '8t5h': '5S rRNA',
+    '8rgw': '16S rRNA',
+    '8rwg': '16S rRNA',
+    '9n2c': '16S rRNA',
+    '8buu': '16S rRNA',
+    '9ss6': '16S rRNA',
+    '7unw': '23S rRNA',
+    '7nbu': '23S rRNA',
+    '3j3w': '23S rRNA',
+    '8vsa': 'tmRNA',
+    '7uo5': 'tmRNA',
+    '7pnw': 'Mitochondrial 12S rRNA',
+    '7l08': 'Mitochondrial 12S rRNA',
+    '3jcr': '7SL RNA (SRP RNA)',
+    '8jiw': '18S rRNA',
+    '9evt': '18S rRNA',
+    '5x8r': '18S rRNA',
+    '9si0': '5.8S rRNA'
+  };
+
+  if (pdbToName[cleanPdb]) {
+    return pdbToName[cleanPdb];
+  }
+
+  // Handle specific tRNAs by locus/transcript name or PDB
+  const isTrna = 
+    /^[4689][a-z0-9]{3}/.test(cleanPdb) || 
+    /trna/i.test(name) ||
+    /RS02040|RS03150|RS03155|RS03315|RS03325|RS06225|RS08755|RS09650/i.test(name) ||
+    /EBT00049907297|EBT00049907359|EBT00049907667|2IZe0JzJzkFApyV|75SfIwioE-pBoQo|IlICJX4O9Pa4-Mj|W_9xYfxP6Mp8nHP|8XT3|8CBO|8RR3|8Z1G|6ZM6/i.test(name);
+
+  if (isTrna) {
+    if (/RS03315|5LZF|9LPC|8XT3/i.test(name)) return 'tRNA-Ala';
+    if (/RS03150|EBT00049907297|8Z1G/i.test(name)) return 'tRNA-Gly';
+    if (/RS02040|RS03155|RS08755|RS09650|EBT00049907359|EBT00049907667|75Sf|8RR3|1EFW/i.test(name)) return 'tRNA-Phe';
+    if (/RS03325|2IZe0J|9SLZ/i.test(name)) return 'tRNA-Thr';
+    if (/RS06225|9TEX/i.test(name)) return 'tRNA-Met';
+    if (/8CBO|6ZM6/i.test(name)) return 'tRNA-Asn';
+    return 'tRNA';
+  }
+
+  // 2. If it is a transcript name, strip prefix and format
+  let cleanName = name.replace(/^transcript:/i, '');
+  if (cleanName.endsWith('_rRNA') || cleanName.endsWith('_snRNA') || cleanName.endsWith('_snoRNA') || cleanName.endsWith('_ncRNA') || cleanName.endsWith('_tRNA')) {
+    if (cleanName === 'LSR1_snRNA') return 'LSR1 snRNA (U2 snRNA)';
+    if (cleanName === 'snR14_snRNA') return 'snR14 snRNA (U4 snRNA)';
+    if (cleanName === 'snR17a_snoRNA') return 'snR17a snoRNA (U3 snoRNA)';
+    if (cleanName === 'snR17b_snoRNA') return 'snR17b snoRNA (U3 snoRNA)';
+    if (cleanName === 'snR19_snRNA') return 'snR19 snRNA (U1 snRNA)';
+    if (cleanName === 'snR6-L_snRNA') return 'snR6-L snRNA (U6 snRNA)';
+    if (cleanName === 'snR7-L_snRNA') return 'snR7-L snRNA (U5 snRNA)';
+    if (cleanName === 'snR7-S_snRNA') return 'snR7-S snRNA (U5 snRNA)';
+
+    if (cleanName.startsWith('tA(AGC)D_')) return 'tRNA-Ala (tA(AGC)D)';
+    if (cleanName.startsWith('tA(UGC)A_')) return 'tRNA-Ala (tA(UGC)A)';
+    if (cleanName.startsWith('tC(GCA)B_')) return 'tRNA-Cys (tC(GCA)B)';
+    if (cleanName.startsWith('tD(GUC)B_')) return 'tRNA-Asp (tD(GUC)B)';
+    if (cleanName.startsWith('tG(GCC)C_')) return 'tRNA-Gly (tG(GCC)C)';
+    if (cleanName.startsWith('tM(CAU)C_')) return 'tRNA-Met (tM(CAU)C)';
+    if (cleanName.startsWith('tR(ACG)D_')) return 'tRNA-Arg (tR(ACG)D)';
+    if (cleanName.startsWith('tT(UGU)Q1_')) return 'tRNA-Thr (tT(UGU)Q1)';
+
+    return cleanName.replace(/_/g, ' ');
+  }
+
+  return cleanName;
+}
+
+function getPdbDiscoveryYear(pdbId) {
+  const clean = String(pdbId || '').toLowerCase().trim();
+  const map = {
+    '1xjr': '2004',
+    '1efw': '1996',
+    '3epl': '2008',
+    '3j3w': '2013',
+    '3jcr': '2016',
+    '486d': '1997',
+    '4wj4': '2015',
+    '4yye': '2015',
+    '5lzf': '2017',
+    '5x8r': '2017',
+    '5zwm': '2018',
+    '6ah3': '2018',
+    '6exn': '2018',
+    '6gsk': '2019',
+    '6spg': '2019',
+    '6w6v': '2020',
+    '6zm6': '2020',
+    '7b9v': '2021',
+    '7l08': '2020',
+    '7nbu': '2022',
+    '7pnw': '2022',
+    '7r81': '2022',
+    '7unw': '2022',
+    '7uo5': '2022',
+    '8asw': '2023',
+    '8buu': '2023',
+    '8cbo': '2023',
+    '8rgw': '2023',
+    '8rwg': '2023',
+    '8rr3': '2023',
+    '8s1u': '2023',
+    '8t5h': '2023',
+    '8uti': '2024',
+    '8v87': '2023',
+    '8vsa': '2023',
+    '8w2o': '2023',
+    '8xt3': '2024',
+    '8yus': '2024',
+    '8z1g': '2024',
+    '8ztv': '2024',
+    '8zyd': '2024',
+    '9bdp': '2024',
+    '9dtr': '2024',
+    '9evt': '2024',
+    '9g28': '2024',
+    '9hm5': '2024',
+    '9lpc': '2024',
+    '9n2c': '2024',
+    '9n78': '2024',
+    '9n7b': '2024',
+    '9si0': '2024',
+    '9slz': '2024',
+    '9ss6': '2025',
+    '9tex': '2025',
+    '9zxr': '2026'
+  };
+  if (map[clean]) return map[clean];
+
+  const first = clean.charAt(0);
+  if (first === '9') return '2024';
+  if (first === '8') return '2023';
+  if (first === '7') return '2021';
+  if (first === '6') return '2019';
+  if (first === '5') return '2016';
+  if (first === '4') return '2012';
+  if (first === '3') return '2008';
+  if (first === '2') return '2004';
+  if (first === '1') return '1998';
+  return '';
+}
+
 function buildSupplementStructureRows(rows, existingIds = new Set()) {
   return rows
     .map((row) => {
@@ -2303,12 +3471,26 @@ function buildSupplementStructureRows(rows, existingIds = new Set()) {
       const sequenceLength = String(row.source_sequence_length ?? '').trim();
       const sequenceText = String(row.source_sequence ?? '').trim();
       const nameParts = splitNameAndSpecies(row.source_name || '');
+      const isRasp = foldBridgeId.startsWith('RASP_');
+
+      let nameVal = nameParts.name || row.source_name || '';
+      let speciesVal = nameParts.species || '';
+
+      if (isRasp) {
+        nameVal = formatRaspRecordName(row.source_name, row.pdb_id || row.bestPdbId);
+        if (!speciesVal && row.source_annotation_data_id) {
+          speciesVal = expandSpeciesAbbreviation(row.source_annotation_data_id);
+        }
+      }
+
+      const matchedPdb = row.pdb_id || row.bestPdbId || '';
+      const yearVal = matchedPdb ? getPdbDiscoveryYear(matchedPdb) : '';
 
       return {
         foldBridgeId,
-        name: nameParts.name || row.source_name || '',
-        species: nameParts.species || '',
-        discoveryYear: '',
+        name: nameVal,
+        species: speciesVal,
+        discoveryYear: yearVal,
         sequence: sequenceText && sequenceLength ? `${sequenceText} (${sequenceLength}nt)` : sequenceText,
         length: sequenceLength ? `${sequenceLength}nt` : '',
         structureGroupKey: `${normalizeStructureMatchLabel(row.source_name || sourceStem)}::${sequenceLength || sourceStem}`,
@@ -3139,27 +4321,159 @@ function homePage() {
       <span>${site.topLabel ?? ''}</span>
     </span>`;
   }).join('');
-  const cards = homeBundleSites.map((site, index) => `
-    <article class="bundle-site-card tone-${site.tone}">
-      <div class="bundle-site-visual">
-        <div class="bundle-site-strand strand-a"></div>
-        <div class="bundle-site-strand strand-b"></div>
-        <div class="bundle-site-orb orb-${(index % 3) + 1}"></div>
-        <span class="bundle-site-badge">${site.short}</span>
+
+  // Calculate dynamic metrics from browseEntryRows
+  const totalSequences = browseEntryRows.length || 95;
+  const totalStructures = new Set(browseEntryRows.map(r => r.bestPdbId).filter(Boolean)).size || 102;
+  const totalSpecies = new Set(browseEntryRows.map(r => r.species).filter(Boolean)).size || 22;
+  const predictedCount = new Set(browseEntryRows.map(r => r.foldBridgeId).filter(id => hasUsablePredictedStructure(id))).size || 27;
+
+  // Species Distribution (All species)
+  const speciesCounts = {};
+  browseEntryRows.forEach(row => {
+    const sp = row.species || '';
+    if (!sp || sp === 'Unknown' || sp === 'N/A' || sp === 'NA') return;
+    speciesCounts[sp] = (speciesCounts[sp] || 0) + 1;
+  });
+
+  const donutPalette = [
+    '#e2a4f4', '#829fd9', '#78e08f', '#fad390', '#e55039',
+    '#f8c291', '#82ccdd', '#38ada9', '#f6b93b', '#ff9ff3',
+    '#feca57', '#ff6b6b', '#48dbfb', '#1dd1a1', '#a29bfe',
+    '#fd79a8', '#ffeaa7', '#fab1a0', '#74b9ff', '#0984e3',
+    '#00cec9', '#00b894'
+  ];
+
+  const speciesList = Object.entries(speciesCounts)
+    .sort((a, b) => b[1] - a[1]); // Sort descending
+  const totalSpeciesRecords = Object.values(speciesCounts).reduce((a, b) => a + b, 0);
+
+  let accumulatedPercent = 0;
+  const speciesSegments = speciesList.map(([name, count], index) => {
+    const percent = count / totalSpeciesRecords;
+    const strokeLength = 201.06 * percent;
+    const strokeOffset = -201.06 * accumulatedPercent;
+    accumulatedPercent += percent;
+    const color = donutPalette[index % donutPalette.length];
+    return {
+      name,
+      count,
+      percent,
+      color,
+      strokeLength,
+      strokeOffset
+    };
+  });
+
+  const donutCirclesMarkup = speciesSegments.map(seg => {
+    const isActive = homeActiveSpecies === seg.name ? 'is-active' : '';
+    return `<circle cx="50" cy="50" r="32" fill="transparent" stroke="${seg.color}" stroke-width="12" stroke-dasharray="${seg.strokeLength} 201.06" stroke-dashoffset="${seg.strokeOffset}" transform="rotate(-90 50 50)" class="donut-segment ${isActive}" data-filter-species="${seg.name}" title="${seg.name}: ${seg.count} records (${Math.round(seg.percent*100)}%)" />`;
+  }).join('');
+
+  const legendItemsMarkup = speciesSegments.map(seg => {
+    const isActive = homeActiveSpecies === seg.name ? 'is-active' : '';
+    return `
+      <div class="legend-item clickable-legend-item ${isActive}" data-filter-species="${seg.name}">
+        <span class="legend-color-box" style="background-color: ${seg.color}"></span>
+        <span class="legend-label">${seg.name}</span>
+        <span class="legend-count">${seg.count}</span>
       </div>
-      <div class="bundle-site-copy">
-        <p class="bundle-site-kicker">${site.accent}</p>
-        <h3>${site.name}</h3>
-        <p>${site.summary}</p>
+    `;
+  }).join('');
+
+  // Year Distribution (Only showing years with records)
+  const yearCounts = {};
+  browseEntryRows.forEach(row => {
+    const yStr = row.discoveryYear;
+    if (!yStr || yStr === 'N/A' || yStr === 'NA') return;
+    const y = parseInt(yStr, 10);
+    if (y >= 1996 && y <= 2026) {
+      yearCounts[y] = (yearCounts[y] || 0) + 1;
+    }
+  });
+
+  const yearCountsSorted = Object.entries(yearCounts)
+    .sort((a, b) => parseInt(a[0], 10) - parseInt(b[0], 10));
+
+  const maxYearRecords = Math.max(...Object.values(yearCounts), 1);
+  const yearBarsMarkup = yearCountsSorted.map(([year, count]) => {
+    const heightPercent = (count / maxYearRecords) * 100;
+    const isActive = String(homeActiveYear) === String(year) ? 'is-active' : '';
+    const barColor = parseInt(year) < 2000 ? '#e2a4f4' :
+                     parseInt(year) < 2010 ? '#fad390' :
+                     parseInt(year) < 2020 ? '#82ccdd' : '#78e08f';
+    
+    const showLabel = (parseInt(year) % 5 === 0) || year === yearCountsSorted[0][0] || year === yearCountsSorted[yearCountsSorted.length - 1][0];
+    const labelText = showLabel ? year : '';
+
+    return `
+      <div class="year-chart-column clickable-year-bar ${isActive}" data-filter-year="${year}" title="${year}: ${count} records">
+        <div class="year-chart-bar-track">
+          <div class="year-chart-bar-fill" style="height: ${heightPercent}%; background-color: ${barColor};"></div>
+        </div>
+        <span class="year-chart-label">${labelText}</span>
       </div>
-      <div class="bundle-site-footer">
-        <span class="bundle-site-tag">${site.tag}</span>
-        ${site.action.href
-          ? `<a class="bundle-site-link" href="${site.action.href}" target="_blank" rel="noopener noreferrer">${site.action.label}</a>`
-          : `<button type="button" class="bundle-site-link" data-route="${site.action.route}">${site.action.label}</button>`}
+    `;
+  }).join('');
+
+  // 1. Dynamic Table Filtering
+  let filteredStructureRows = structureEntryRows;
+  if (homeActiveSpecies) {
+    filteredStructureRows = filteredStructureRows.filter(r => r.species === homeActiveSpecies);
+  }
+  if (homeActiveYear) {
+    filteredStructureRows = filteredStructureRows.filter(r => String(r.discoveryYear) === String(homeActiveYear));
+  }
+
+  // 2. Filter Badges Markup
+  let activeFiltersMarkup = '';
+  if (homeActiveSpecies || homeActiveYear) {
+    activeFiltersMarkup = `<div class="home-active-filters">
+      <span class="filters-label">Active Filters:</span>
+      <div class="filters-badges-wrap">
+        ${homeActiveSpecies ? `<span class="filter-badge" data-clear-filter="species" title="Clear species filter">${homeActiveSpecies} <span class="badge-close">×</span></span>` : ''}
+        ${homeActiveYear ? `<span class="filter-badge" data-clear-filter="year" title="Clear year filter">${homeActiveYear} <span class="badge-close">×</span></span>` : ''}
+        <button type="button" class="clear-all-btn" id="home-clear-all-filters">Clear All</button>
       </div>
-    </article>
-  `).join('');
+    </div>`;
+  }
+
+  // 3. Table Rows Pagination & Rendering
+  const homeTablePageSize = 10;
+  const totalHomePages = Math.max(1, Math.ceil(filteredStructureRows.length / homeTablePageSize));
+  if (homeTablePage > totalHomePages) homeTablePage = totalHomePages;
+  const homeStartIndex = (homeTablePage - 1) * homeTablePageSize;
+  const visibleHomeRows = filteredStructureRows.slice(homeStartIndex, homeStartIndex + homeTablePageSize);
+
+  const tableRowsMarkup = visibleHomeRows.length
+    ? visibleHomeRows.map((row, idx) => {
+        const globalIndex = homeStartIndex + idx + 1;
+        return `<tr>
+          <td class="structure-index-cell">${globalIndex}</td>
+          <td><a href="${row.detailPage}" class="sequence-link">${row.foldBridgeId}</a></td>
+          <td>${row.name || 'Untitled record'}</td>
+          <td>${row.species || 'N/A'}</td>
+          <td>${row.discoveryYear || 'N/A'}</td>
+          <td><span class="entry-sequence" title="${row.sequence || 'Sequence unavailable'}">${row.sequence || 'N/A'}</span></td>
+          <td>${renderPdbExternalLink(row.bestPdbId)}</td>
+          <td>${formatBlastEvalue(row.bestEvalue)}</td>
+          <td>${formatBlastPercent(row.bestIdentity)}</td>
+          <td>${formatBlastPercent(row.bestCoverage)}</td>
+        </tr>`;
+      }).join('')
+    : `<tr><td colspan="10" class="entry-table-empty">No structure matches match the active filters.</td></tr>`;
+
+  const paginationMarkup = totalHomePages > 1
+    ? `<div class="browse-pagination">
+        <div class="browse-pagination-info">
+          <span class="browse-pagination-status">Page ${homeTablePage} of ${totalHomePages}</span>
+        </div>
+        <div class="browse-pagination-controls">
+          <button type="button" class="browse-pagination-btn" id="home-page-prev" ${homeTablePage === 1 ? 'disabled' : ''}>Previous</button>
+          <button type="button" class="browse-pagination-btn" id="home-page-next" ${homeTablePage === totalHomePages ? 'disabled' : ''}>Next</button>
+        </div>
+      </div>`
+    : '';
 
   const bundleHeader = renderBundleHeader(featuredNames);
 
@@ -3190,25 +4504,107 @@ function homePage() {
           </article>
           <article class="bundle-metric-card">
             <p>species</p>
-            <strong>22</strong>
-            <span>xx</span>
+            <strong>${totalSpecies}</strong>
+            <span>Unique host organisms mapped</span>
           </article>
           <article class="bundle-metric-card">
             <p>sequences</p>
-            <strong>xx</strong>
-            <span>xx</span>
+            <strong>${totalSequences}</strong>
+            <span>Chemical probing experimental rows</span>
           </article>
           <article class="bundle-metric-card">
             <p>structures</p>
-            <strong>xx</strong>
-            <span>xx</span>
+            <strong>${totalStructures}</strong>
+            <span>Aligned tertiary structural targets</span>
           </article>
           <article class="bundle-metric-card">
             <p>technology</p>
-            <strong>27</strong>
-            <span>xx</span>
+            <strong>${predictedCount}</strong>
+            <span>Predicted 3D models integrated</span>
           </article>
         </aside>
+      </section>
+
+      <!-- Combined Statistics Card -->
+      <section class="card bundle-stats-section-combined">
+        <div class="combined-stats-header">
+          <h3>Database Statistics & Insights</h3>
+          <p>Explore the distribution of RNA families, species, and structural solved dates within FoldBridge. Click on any year bar or category segment to dynamically filter the structure table below.</p>
+        </div>
+        <div class="combined-stats-grid">
+          <!-- Left side: Year Distribution -->
+          <div class="combined-stats-column">
+            <div class="card-v2-header">
+              <h4>Year Distribution</h4>
+              <span class="card-v2-sub">Click bars for multi-selection</span>
+            </div>
+            <div class="year-chart-container">
+              <div class="year-chart-y-axis">
+                <span>${maxYearRecords}</span>
+                <span>${Math.round(maxYearRecords / 2)}</span>
+                <span>0</span>
+              </div>
+              <div class="year-chart-bars-wrap">
+                ${yearBarsMarkup}
+              </div>
+            </div>
+          </div>
+
+          <!-- Right side: Category Distribution -->
+          <div class="combined-stats-column">
+            <div class="card-v2-header">
+              <h4>Category Distribution</h4>
+              <span class="card-v2-sub">Click sectors for multi-selection</span>
+            </div>
+            <div class="donut-layout">
+              <div class="donut-chart-wrap">
+                <svg viewBox="0 0 100 100" class="donut-svg">
+                  ${donutCirclesMarkup}
+                  <!-- Inner circle hole and text in the center -->
+                  <circle cx="50" cy="50" r="23" fill="var(--panel-card-bg)" class="donut-center" />
+                  <text x="50" y="54" text-anchor="middle" class="donut-center-text">${totalSpeciesRecords}</text>
+                </svg>
+              </div>
+              <div class="donut-legend-wrap">
+                ${legendItemsMarkup}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider Line -->
+        <hr class="dashboard-section-divider" />
+
+        <!-- Linked Structure Matches Table -->
+        <div class="home-table-container">
+          <div class="home-table-header">
+            <div class="home-table-title-row">
+              <h3>Data Details</h3>
+              <span class="home-table-count">Showing <strong>${filteredStructureRows.length}</strong> records (out of ${structureEntryRows.length} total)</span>
+            </div>
+            ${activeFiltersMarkup}
+          </div>
+          <div class="entry-table-wrap">
+            <table class="entry-table case-detail-table">
+              <thead>
+                <tr>
+                  <th>No.</th>
+                  <th>FoldBridge ID</th>
+                  <th>Name</th>
+                  <th>Species</th>
+                  <th>Discovery year</th>
+                  <th>Sequence</th>
+                  <th>PDB ID</th>
+                  <th>E-value</th>
+                  <th>Identity</th>
+                  <th>Coverage</th>
+                </tr>
+              </thead>
+              <tbody>${tableRowsMarkup}</tbody>
+            </table>
+          </div>
+          ${paginationMarkup}
+        </div>
       </section>
 
     </section>
@@ -3275,6 +4671,12 @@ function renderBundleHeader(featuredNamesMarkup = null) {
   </header>`;
 }
 
+function renderDetailPageFooterActions() {
+  return `<div class="detail-page-footer-actions" style="display: flex !important; justify-content: center !important; align-items: center !important; gap: 16px !important; margin-top: 40px !important; padding-top: 20px !important; width: 100% !important;">
+    <button type="button" class="footer-action-btn back-to-top-btn" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; height: 42px !important; width: 190px !important; padding: 0 !important; border-radius: 8px !important; font-size: 0.94rem !important; font-weight: 600 !important; cursor: pointer !important; border: none !important; white-space: nowrap !important; flex-shrink: 0 !important; box-shadow: none !important; background: rgba(184, 132, 14, 0.08) !important; color: #b8840e !important;"><svg class="footer-btn-icon" style="width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; max-width: 16px !important; max-height: 16px !important; stroke: currentColor !important; fill: none !important; margin: 0 !important; display: inline-block !important; flex-shrink: 0 !important; vertical-align: middle !important;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg><span style="color: inherit !important; display: inline-block !important; margin: 0 !important; padding: 0 !important; font-weight: 600 !important;">Back to Top</span></button>
+    <button type="button" class="footer-action-btn back-to-structure-btn" data-route="structure" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; height: 42px !important; width: 190px !important; padding: 0 !important; border-radius: 8px !important; font-size: 0.94rem !important; font-weight: 600 !important; cursor: pointer !important; border: none !important; white-space: nowrap !important; flex-shrink: 0 !important; box-shadow: none !important; background: rgba(184, 132, 14, 0.08) !important; color: #b8840e !important;"><svg class="footer-btn-icon" style="width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; max-width: 16px !important; max-height: 16px !important; stroke: currentColor !important; fill: none !important; margin: 0 !important; display: inline-block !important; flex-shrink: 0 !important; vertical-align: middle !important;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-13A2.5 2.5 0 0 1 6.5 4H20v18H6.5a2.5 2.5 0 0 1-2.5-2.5z"></path></svg><span style="color: inherit !important; display: inline-block !important; margin: 0 !important; padding: 0 !important; font-weight: 600 !important;">Back to Structure</span></button>
+  </div>`;
+}
 
 function renderTechnologyOverviewPage() {
   const categoryCards = technologyCategories.map((category) => {
@@ -3423,6 +4825,7 @@ function renderTechnologyMethodPage(method) {
         ${references}
       </ul>
     </section>
+    ${renderDetailPageFooterActions()}
   </main>`;
 }
 
@@ -3827,6 +5230,7 @@ function caseDetailPage() {
           </div>
         </div>
       </section>
+      ${renderDetailPageFooterActions()}
     </section>
   </main>`;
 }
@@ -4056,12 +5460,9 @@ function structureDetailPdbUrl(pdbId, subjectId = '') {
 }
 
 function predictedStructurePath(foldBridgeId) {
-  if (!predictedStructureIds.has(foldBridgeId)) return '';
+  if (!hasUsablePredictedStructure(foldBridgeId)) return '';
   const stem = foldBridgeId.replace(/^RMDB_/, '');
-  if (rnaComposerPredictedStructureIds.has(foldBridgeId)) {
-    return `./src/assets/predicted-structures/${stem}.rnacomposer.pdb`;
-  }
-  return `./src/assets/predicted-structures/${stem}.pdb`;
+  return `./src/assets/predicted-structures/${stem}.rnacomposer.pdb`;
 }
 
 function structureDetailPage() {
@@ -4091,12 +5492,12 @@ function structureDetailPage() {
   const detailSequenceLength = detailSequence.replace(/\s+/g, '').length;
   const detailSecondaryStructure = getDisplaySecondaryStructure(row);
   const predictedSecondaryStructure = getPredictedSecondaryStructure(row);
-  const isReactivityGuidedStructure = Boolean(predictedSecondaryStructure && !hasPairedSecondaryStructureText(String(row?.sourceStructure || '').trim()));
+  const isReactivityGuidedStructure = usesReactivityGuidedWorkflow(row);
   const hasLowercaseSequenceAnnotation = sequenceHasLowercaseAnnotation(detailSequence);
   const hasSecondaryStructureConstraints = structureHasSecondaryStructure(row);
-  const showPredictedStructureSection = predictedStructureIds.has(row?.foldBridgeId) || hasSecondaryStructureConstraints;
+  const showPredictedStructureSection = hasUsablePredictedStructure(row?.foldBridgeId) || hasSecondaryStructureConstraints;
   const showReactivityHeatmap = Boolean(row?.hasLocalRdat && row?.rdatPath);
-  const showPredictedStructureViewer = predictedStructureIds.has(row?.foldBridgeId);
+  const showPredictedStructureViewer = hasUsablePredictedStructure(row?.foldBridgeId);
   const heatmapSection = showReactivityHeatmap
     ? `<section class="sequence-detail-panel">
         <h2>Reactivity Heatmap</h2>
@@ -4112,6 +5513,7 @@ function structureDetailPage() {
             id="structure-detail-heatmap"
             class="sequence-secondary-heatmap-host"
             data-rdat-url="${row.rdatPath}"
+            data-sequence="${(row.sourceSequence || row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
           ></div>
           <p id="structure-detail-heatmap-status" class="mini-note" hidden></p>
         </section>
@@ -4163,12 +5565,12 @@ function structureDetailPage() {
   const tertiaryStructureSection =
     hasSecondaryStructureConstraints && (showPredictedStructureSection || row.bestPdbId)
       ? `<section class="sequence-detail-panel">
-          <h2>${isReactivityGuidedStructure ? 'Tertiary Structure Follow-up' : 'Tertiary Structure Comparison'}</h2>
+          <h2>Tertiary Structure Comparison</h2>
           <div class="sequence-detail-section-intro">
             <p>${
-              isReactivityGuidedStructure
-                ? 'Three-dimensional follow-up depends on whether a precomputed model is available. When no predicted 3D file has been generated yet, the 2D structure above should be treated as the current endpoint.'
-                : 'Compare the secondary-structure-derived RNA model with the matched experimental PDB structure side by side.'
+              (!isReactivityGuidedStructure || (row.bestPdbId && hasUsablePredictedStructure(row.foldBridgeId)))
+                ? 'Compare the secondary-structure-derived RNA model with the matched experimental PDB structure side by side.'
+                : 'Three-dimensional follow-up depends on whether a precomputed model is available. When no predicted 3D file has been generated yet, the 2D structure above should be treated as the current endpoint.'
             }</p>
           </div>
           <div class="structure-detail-comparison-grid">
@@ -4187,13 +5589,17 @@ function structureDetailPage() {
                         data-structure-format="pdb"
                         data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
                         data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                        data-structure-source="${rnaComposerPredictedStructureIds.has(row.foldBridgeId) ? 'rnacomposer' : 'local-fallback'}"
+                        data-structure-source="rnacomposer"
                       ></div>
                     </div>`
-                  : `<div class="sequence-detail-placeholder">
-                      <p>Predicted 3D model is not available yet for this record.</p>
+                  : `<div class="sequence-detail-media">
+                      <div class="mini-note">${
+                        unsupportedPredictedStructureIds.has(row?.foldBridgeId)
+                          ? 'RNAComposer prediction unavailable for this record.'
+                          : 'Predicted 3D model is not available yet for this record.'
+                      }</div>
                       ${
-                        isReactivityGuidedStructure
+                        isReactivityGuidedStructure && !unsupportedPredictedStructureIds.has(row?.foldBridgeId)
                           ? '<p class="mini-note">If we want a 3D view here, the next step is to run a dedicated generator such as RNAComposer or another RNA 3D modeling workflow from the predicted dot-bracket.</p>'
                           : ''
                       }
@@ -4290,6 +5696,7 @@ function structureDetailPage() {
         <h2>References</h2>
         ${renderStructureDetailReferenceContent(row)}
       </section>
+      ${renderDetailPageFooterActions()}
 
     </section>
   </main>`;
@@ -4420,28 +5827,32 @@ function downloadStructuresPage() {
   const structureRows = visibleStructureRows.length
     ? visibleStructureRows
         .map(
-          (row) => `<tr>
-            <td>
-              <input
-                type="checkbox"
-                class="structure-select"
-                data-structure-id="${row.foldBridgeId}"
-                ${selectedStructureIds.has(row.foldBridgeId) ? 'checked' : ''}
-              />
-            </td>
-            <td><a href="${row.detailPage}" class="sequence-link">${row.foldBridgeId}</a></td>
-            <td>${row.name || 'Untitled record'}</td>
-            <td>${row.species || 'N/A'}</td>
-            <td>${row.discoveryYear || 'N/A'}</td>
-            <td><span class="entry-sequence" title="${row.sequence || 'Sequence unavailable'}">${row.sequence || 'N/A'}</span></td>
-            <td>${renderPdbExternalLink(row.bestPdbId)}</td>
-            <td>${formatBlastEvalue(row.bestEvalue)}</td>
-            <td>${formatBlastPercent(row.bestIdentity)}</td>
-            <td>${formatBlastPercent(row.bestCoverage)}</td>
-          </tr>`
+          (row, idx) => {
+            const globalIndex = structureStartIndex + idx + 1;
+            return `<tr>
+              <td>
+                <input
+                  type="checkbox"
+                  class="structure-select"
+                  data-structure-id="${row.foldBridgeId}"
+                  ${selectedStructureIds.has(row.foldBridgeId) ? 'checked' : ''}
+                />
+              </td>
+              <td class="structure-index-cell">${globalIndex}</td>
+              <td><a href="${row.detailPage}" class="sequence-link">${row.foldBridgeId}</a></td>
+              <td>${row.name || 'Untitled record'}</td>
+              <td>${row.species || 'N/A'}</td>
+              <td>${row.discoveryYear || 'N/A'}</td>
+              <td><span class="entry-sequence" title="${row.sequence || 'Sequence unavailable'}">${row.sequence || 'N/A'}</span></td>
+              <td>${renderPdbExternalLink(row.bestPdbId)}</td>
+              <td>${formatBlastEvalue(row.bestEvalue)}</td>
+              <td>${formatBlastPercent(row.bestIdentity)}</td>
+              <td>${formatBlastPercent(row.bestCoverage)}</td>
+            </tr>`;
+          }
         )
         .join('')
-    : `<tr><td colspan="10" class="entry-table-empty">No structure matches yet.</td></tr>`;
+    : `<tr><td colspan="11" class="entry-table-empty">No structure matches yet.</td></tr>`;
 
   return `<main class="page-download">
     ${renderBundleHeader()}
@@ -4482,6 +5893,7 @@ function downloadStructuresPage() {
           <thead>
             <tr>
               <th>Select</th>
+              <th>No.</th>
               <th>FoldBridge ID</th>
               <th>Name</th>
               <th>Species</th>
@@ -4976,6 +6388,7 @@ function render(options = {}) {
   initPredictedStructureDetailMolstar();
   initAnimatedStats();
   initHomeDashboardFilters();
+  initHomeInteractiveDashboard();
 
 const subnavMenuToggle = document.getElementById('subnav-menu-toggle');
 const subnavNav = document.querySelector('.hero-subnav nav');
@@ -5014,6 +6427,12 @@ document.addEventListener('click', () => {
       isSubnavMenuOpen = false;
       route = normalizeRoute(el.getAttribute('data-route'));
       window.location.hash = route;
+    });
+  });
+
+  document.querySelectorAll('.back-to-top-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
   });
 
@@ -5087,6 +6506,77 @@ function initHomeDashboardFilters() {
     exportButton.addEventListener('click', () => {
       const rows = getFilteredHomeDashboardRows(sequenceRows);
       downloadRowsAsCsv(rows, 'home-dashboard-filtered.csv');
+    });
+  }
+}
+
+function initHomeInteractiveDashboard() {
+  document.querySelectorAll('[data-filter-species]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const species = el.getAttribute('data-filter-species');
+      if (homeActiveSpecies === species) {
+        homeActiveSpecies = '';
+      } else {
+        homeActiveSpecies = species;
+      }
+      homeTablePage = 1;
+      render({ preserveScroll: true });
+    });
+  });
+
+  document.querySelectorAll('[data-filter-year]').forEach((el) => {
+    el.addEventListener('click', () => {
+      const year = el.getAttribute('data-filter-year');
+      if (homeActiveYear === year) {
+        homeActiveYear = '';
+      } else {
+        homeActiveYear = year;
+      }
+      homeTablePage = 1;
+      render({ preserveScroll: true });
+    });
+  });
+
+  document.querySelectorAll('[data-clear-filter]').forEach((el) => {
+    el.addEventListener('click', (event) => {
+      event.stopPropagation();
+      const type = el.getAttribute('data-clear-filter');
+      if (type === 'species') homeActiveSpecies = '';
+      if (type === 'year') homeActiveYear = '';
+      homeTablePage = 1;
+      render({ preserveScroll: true });
+    });
+  });
+
+  const clearAllBtn = document.getElementById('home-clear-all-filters');
+  if (clearAllBtn) {
+    clearAllBtn.addEventListener('click', () => {
+      homeActiveSpecies = '';
+      homeActiveYear = '';
+      homeTablePage = 1;
+      render({ preserveScroll: true });
+    });
+  }
+
+  const prevBtn = document.getElementById('home-page-prev');
+  if (prevBtn) {
+    prevBtn.addEventListener('click', () => {
+      if (homeTablePage > 1) {
+        homeTablePage -= 1;
+        render({ preserveScroll: true });
+        const section = document.querySelector('.home-table-section');
+        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
+
+  const nextBtn = document.getElementById('home-page-next');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      homeTablePage += 1;
+      render({ preserveScroll: true });
+      const section = document.querySelector('.home-table-section');
+      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   }
 }

@@ -30,6 +30,12 @@
     "structure": "..((((((((..(((((((.(.(((.....)))..))...))))(((.((((((.(.(((((.....)))))))))..))))))...))(..((((((...)..))))))..))))))))"
   },
   {
+    "id": "RMDB_CIDGMP_1M7_0001",
+    "filename": "CIDGMP_1M7_0001.pdb",
+    "sequence": "GGUGUCACGCACAGGGCAAACCAUUCGAAAGAGUGGGACGCAAAGCCUCCGGCCUAAACCAGAAGACAUGGUAGGUAGCGGGGUUACCGAUGGCAAAAUGCAUAC",
+    "structure": ".(((((((((...)(((...((((((....)))))))((((...))((.((((((..(((((....).))))))))..))))))).))).))(((...)))))))"
+  },
+  {
     "id": "RMDB_TPPSC_1M7_0005",
     "filename": "TPPSC_1M7_0005.pdb",
     "sequence": "GGACUCGGGGUGCCCUUCUGCGUGAAGGCUGAGAAAUACCCGUAUCACCUGAUCUGGAUAAUGCCAGCGUAGGGAAGUUC",
@@ -40,6 +46,12 @@
     "filename": "TRP4P6_DMS_0014.pdb",
     "sequence": "GGAAUUGCGGGAAAGGGGUCAACAGCCGUUCAGUACCAAGUCUCAGGGGAAACUUUGAGAUGGCCUUGCAAAGGGUAUGGUAAUAAGCUGACGGACAUGGUCCUAACCACGCAGCCAAGUCCUAAGUCAACAGAUCUUCUGUUGAUAUGGAUGCAGUUCA",
     "structure": ".....((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...))..."
+  },
+  {
+    "id": "RMDB_TRP4P6_HRF_0003",
+    "filename": "TRP4P6_HRF_0003.pdb",
+    "sequence": "GGAAUUGCGGGAAAGGGGUCAACAGCCGUUCAGUACCAAGUCUCAGGGGAAACUUUGAGAUGGCCUUGCAAAGGGUAUGGUAAUAAGCUGACGGACAUGGUCCUAACCACGCAGCCAAGUCCUAAGUCAACAGAUCUUCUGUUGAUAUGGAUGCAGUUCAAAACC",
+    "structure": ".....((((((...((((((.....(((.((((.(((..(((((((((....)))))))))..((.......))....)))......)))))))....))))))..)).))))((...((((...(((((((((...)))))))))..))))...))........"
   },
   {
     "id": "RMDB_16SFWJ_1M7_0001",
@@ -160,5 +172,11 @@
     "filename": "RNAPZ14_STD_0002.pdb",
     "sequence": "CGUUGACCCAGGAAACUGGGCGGAAGUAAGGCCCAUUGCACUCCGGGCCUGAAGCAACGCG",
     "structure": "(((((.(((((....)))))((....))((((((..........))))))....)))))))"
+  },
+  {
+    "id": "RMDB_OK7BLIB_2A3_0000",
+    "filename": "OK7BLIB_2A3_0000.pdb",
+    "sequence": "GGGAACGACUCGAGUAGAGUCGAAAAUAAGAGACGGAGUUGGGGUUUUUCGAAACCCCAACUCCGUCUCUUAAAAAGCACCAUUGCACUCCGGUGCCAGUUGACGAGGUGGGGUUUAUCGAGAUUUCGGCGGAUGACUCCCGGUUGUUCAUCACAACCGCAAGCUUUUACUUAAAUCAUUAAGGUGACUUAGUGGACAAAGGUGAAAGUGUGAUGAAAAAGAUUCACAACGAUUCUCAUGUUUCGACAUGAGAAUCGUUGUGAAUCCUCCCCCCUUCGGGGGGGAGAAAAGAAACAACAACAACAAC",
+    "structure": ".....((((((.....))))))......((((((((.((((((((((((((.......))))))....(((((((.....))))))))))))))).((((((((....)))))))).((((((((((((((.......))))))....(((((((.....))))))))))))))).((((((((....)))))))).(((((((((((((((.....)))))))....(((((((.....))))))))))))))).))))))))..((((((((....))))))))....................."
   }
 ]
