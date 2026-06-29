@@ -924,6 +924,29 @@ function allByCase(rows, caseId, caseKey = '') {
   return (rows || []).filter((row) => matchesSelectedCase(row, caseId, caseKey));
 }
 
+const UNCLASSIFIED_RNA_CLASS = 'Unclassified RNA';
+
+// 由 chain index 派生 displayCase 的 chainPlacements（design §5.2/§6）：
+// 去重 (classLabel, nameLabel)，localeCompare 升序（class 优先再 name），保证 [0] 为确定性主 placement。
+function buildChainPlacements(displayCase, chainIdentityIndex) {
+  const pdbId = text(displayCase.pdbId).toUpperCase();
+  const moleculeFallback = text(displayCase.moleculeDisplayName) || text(displayCase.pdbId) || pdbId;
+  const chains = chainIdentityIndex.get(pdbId) || [];
+  if (!chains.length) {
+    return [{ classLabel: UNCLASSIFIED_RNA_CLASS, nameLabel: moleculeFallback }];
+  }
+  const seen = new Map();
+  for (const chain of chains) {
+    const classLabel = text(chain.rnaClass) || UNCLASSIFIED_RNA_CLASS;
+    const nameLabel = text(chain.displayName) || moleculeFallback;
+    const key = `${classLabel}\u0000${nameLabel}`;
+    if (!seen.has(key)) seen.set(key, { classLabel, nameLabel });
+  }
+  return [...seen.values()].sort((a, b) =>
+    a.classLabel.localeCompare(b.classLabel) || a.nameLabel.localeCompare(b.nameLabel)
+  );
+}
+
 export function buildAtlasIndexAsset({
   cases = [],
   facets = [],
@@ -933,7 +956,8 @@ export function buildAtlasIndexAsset({
   presets = [],
   downloads = [],
   source = {},
-  generatedAt = new Date().toISOString()
+  generatedAt = new Date().toISOString(),
+  chainIdentityIndex = new Map()
 } = {}) {
   const tracksByCase = groupByAtlasCaseKey(tracks);
   const normalizedCases = cases.map((row) => {
@@ -963,6 +987,11 @@ export function buildAtlasIndexAsset({
     row.childClassLabel = canonicalSpelling(classCanonicalMap, row.childClassLabel);
   }
   const displayCases = buildDisplayCases(normalizedCases);
+  let totalPlacementCount = 0;
+  for (const dc of displayCases) {
+    dc.chainPlacements = buildChainPlacements(dc, chainIdentityIndex);
+    totalPlacementCount += dc.chainPlacements.length;
+  }
   return {
     schemaVersion: ANNOJOIN_ATLAS_SCHEMA_VERSION,
     version: ANNOJOIN_ATLAS_VERSION,
@@ -975,7 +1004,7 @@ export function buildAtlasIndexAsset({
     },
     totalCaseCount: displayCases.length,
     totalSourceCaseCount: normalizedCases.length,
-    caseHierarchy: buildCaseHierarchy(displayCases),
+    totalPlacementCount,
     displayCases,
     cases: normalizedCases,
     facets: facets.map(normalizeFacet),

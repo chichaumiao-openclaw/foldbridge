@@ -773,3 +773,39 @@ test('shouldWritePerCaseAssets is false only when --index-only is present', () =
   assert.equal(shouldWritePerCaseAssets(['--index-only']), false);
   assert.equal(shouldWritePerCaseAssets(['node', 'build.mjs', '--index-only']), false);
 });
+
+test('buildAtlasIndexAsset derives deduped sorted chainPlacements per displayCase', () => {
+  const chainIdentityIndex = new Map([
+    ['4V99', [
+      { rnaClass: 'rRNA', displayName: '16S ribosomal RNA' },
+      { rnaClass: 'rRNA', displayName: '16S ribosomal RNA' }, // dup -> collapse
+      { rnaClass: 'tRNA', displayName: 'tRNA-Lys' }
+    ]]
+  ]);
+  const index = buildAtlasIndexAsset({
+    cases: [{ case_id: 'c1', pdb_id: '4V99', pdb_chain_ids: 'A;B' }],
+    chainIdentityIndex
+  });
+  const dc = index.displayCases.find((row) => row.pdbId === '4V99');
+  assert.deepEqual(dc.chainPlacements, [
+    { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+    { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+  ]); // localeCompare(class) asc, then name asc; deduped
+  assert.equal(index.totalPlacementCount, 2);
+  assert.equal(index.totalCaseCount, index.displayCases.length);
+});
+
+test('buildAtlasIndexAsset falls back to Unclassified RNA when chain index misses', () => {
+  const index = buildAtlasIndexAsset({
+    cases: [{ case_id: 'c2', pdb_id: '9XXX', pdb_chain_ids: 'A', biological_molecule_name: 'Some Ribozyme' }],
+    chainIdentityIndex: new Map()
+  });
+  const dc = index.displayCases.find((row) => row.pdbId === '9XXX');
+  assert.deepEqual(dc.chainPlacements, [{ classLabel: 'Unclassified RNA', nameLabel: 'Some Ribozyme' }]);
+  assert.equal(index.totalPlacementCount, 1);
+});
+
+test('buildAtlasIndexAsset no longer emits caseHierarchy', () => {
+  const index = buildAtlasIndexAsset({ cases: [{ case_id: 'c3', pdb_id: '1ABC' }], chainIdentityIndex: new Map() });
+  assert.equal('caseHierarchy' in index, false);
+});
