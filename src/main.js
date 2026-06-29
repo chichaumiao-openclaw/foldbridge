@@ -32,8 +32,7 @@ import { createCaseStore } from './rmdbCaseStore.js';
 import { createProbingArticleStore } from './probingArticleStore.js';
 import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
 import {
-  buildAtlasSearchState,
-  SAMPLE_ANNOJOIN_ATLAS_TABLES
+  buildAtlasSearchState
 } from './annojoinAtlasData.js';
 import { renderAnnojointAtlasPage } from './annojoinAtlasView.js';
 import { bindAnnojointAtlasTable } from './annojoinAtlasController.js';
@@ -1950,7 +1949,7 @@ async function loadAnnojointAtlasIndex() {
     console.error('[main] 加载 ANNOJOIN Atlas 索引失败', err);
     annojoinAtlasIndexState = 'error';
   }
-  if (route === 'sequence' || route === 'annojoin-atlas' || route === 'annojoin-case') render({ preserveScroll: true });
+  if (route === 'entry' || route === 'sequence' || route === 'annojoin-atlas' || route === 'annojoin-case') render({ preserveScroll: true });
 }
 
 async function loadAnnojointDetailRouteIndex() {
@@ -2069,9 +2068,8 @@ function annojoinAtlasPage() {
   const selectedField = params.get('field') || '';
   if (!annojoinAtlasIndexState || annojoinAtlasIndexState === 'loading') {
     if (annojoinAtlasIndexState !== 'loading') loadAnnojointAtlasIndex();
-    const state = buildAtlasSearchState(SAMPLE_ANNOJOIN_ATLAS_TABLES, filters);
     return renderAnnojointAtlasPage({
-      state,
+      state: null,
       routeName,
       selectedCaseIds: selectedAnnojointCaseIds,
       expandedGroupIds: expandedAnnojointGroupIds,
@@ -2080,13 +2078,13 @@ function annojoinAtlasPage() {
       pageSize,
       selectedCaseId,
       selectedCaseKey,
-      selectedField
+      selectedField,
+      statusMessage: { tone: 'loading', text: 'Loading the master table…' }
     });
   }
   if (annojoinAtlasIndexState === 'error') {
-    const state = buildAtlasSearchState(SAMPLE_ANNOJOIN_ATLAS_TABLES, filters);
     return renderAnnojointAtlasPage({
-      state,
+      state: null,
       routeName,
       selectedCaseIds: selectedAnnojointCaseIds,
       expandedGroupIds: expandedAnnojointGroupIds,
@@ -2095,7 +2093,8 @@ function annojoinAtlasPage() {
       pageSize,
       selectedCaseId,
       selectedCaseKey,
-      selectedField
+      selectedField,
+      statusMessage: { tone: 'error', text: 'The master table could not be loaded. Refresh to try again.' }
     });
   }
 
@@ -2128,7 +2127,7 @@ function getAnnojointAtlasFilters(params) {
 function currentAnnojointAtlasTables() {
   return annojoinAtlasIndexState && typeof annojoinAtlasIndexState === 'object'
     ? annojoinAtlasIndexState
-    : SAMPLE_ANNOJOIN_ATLAS_TABLES;
+    : { cases: [], displayCases: [], facets: [], presets: [], downloads: [] };
 }
 
 function currentAnnojointAtlasState() {

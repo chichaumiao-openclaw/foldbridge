@@ -609,6 +609,32 @@ button[data-annojoin-clear-all]:hover {
   font-size: 0.82rem;
 }
 
+/* Index load status banner (loading / error) */
+.annojoin-table-status {
+  margin: 6px 0;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-left-width: 3px;
+  border-radius: 4px;
+  background: var(--surfaceAlt);
+}
+
+.annojoin-table-status p {
+  margin: 0;
+  color: var(--textSecondary);
+  font-size: 0.86rem;
+}
+
+.annojoin-table-status[data-status-tone="error"] p {
+  color: var(--textPrimary);
+}
+
+.annojoin-status-row td {
+  text-align: center;
+  padding: 28px 16px;
+  color: var(--textSecondary);
+}
+
 /* Empty search row */
 .annojoin-empty-search-row td {
   text-align: center;

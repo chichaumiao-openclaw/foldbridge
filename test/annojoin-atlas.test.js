@@ -6,6 +6,7 @@ import {
   createAtlasCaseDetail
 } from '../src/annojoinAtlasData.js';
 import { renderAnnojointAtlasPage } from '../src/annojoinAtlasView.js';
+import { LOCAL_PAGES_BRIDGE_MANIFEST } from '../src/assets/generated/local_pages_bridge_manifest.js';
 
 const fixtures = {
   cases: [
@@ -289,6 +290,8 @@ test('atlas search state prefers PDB-level display cases while preserving source
 });
 
 test('atlas page renders merged PDB rows with source detail links in the side panel', () => {
+  const originalOrigin = LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl;
+  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = 'https://pages.example.test';
   const state = buildAtlasSearchState({
     cases: [
       { atlasCaseKey: 'RMDB2PDB:10FZ', caseId: '10FZ', pdbId: '10FZ', assetFamily: 'RMDB2PDB', profileCount: 2 },
@@ -329,11 +332,14 @@ test('atlas page renders merged PDB rows with source detail links in the side pa
   assert.match(html, /2 source cases/);
   assert.match(html, /Source cases/);
   assert.match(html, /href="#annojoin-case\?caseId=10FZ&amp;caseKey=RMDB2PDB%3A10FZ"/);
-  assert.match(html, /href="#annojoin-case\?caseId=10FZ&amp;caseKey=RASP2PDB%3A10FZ"/);
+  assert.match(html, /href="https:\/\/pages\.example\.test\/rasp\/family-d\/current\/cases\/RASP2PDB%3A10FZ\/index\.html"/);
   assert.doesNotMatch(html, /href="#annojoin-case\?caseId=10FZ" class="download-outline-btn">Open detail page/);
+  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
 
 test('atlas page upgrades completed RMDB source-case links to V3 static detail pages', () => {
+  const originalOrigin = LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl;
+  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = 'https://pages.example.test';
   const state = buildAtlasSearchState({
     cases: [
       { atlasCaseKey: 'RMDB2PDB:10ZT', caseId: '10ZT', pdbId: '10ZT', assetFamily: 'RMDB2PDB', profileCount: 1 },
@@ -368,8 +374,51 @@ test('atlas page upgrades completed RMDB source-case links to V3 static detail p
     selectedField: 'moleculeName'
   });
 
-  assert.match(html, /href="\.\/src\/assets\/generated\/v3-case-pages\/rmdb2pdb_ab_v3_launch_132_centered\/20260628T193700Z_retry\/cases\/RMDB2PDB%3A10ZT\/index\.html"/);
+  assert.match(html, /href="https:\/\/pages\.example\.test\/rmdb\/current\/cases\/RMDB2PDB%3A10ZT\/index\.html"/);
   assert.match(html, /href="#annojoin-case\?caseId=10ZT&amp;caseKey=RASP2PDB%3A10ZT"/);
+  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
+});
+
+test('atlas page routes duplicate RASP family cases to the selector page', () => {
+  const originalOrigin = LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl;
+  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = 'https://pages.example.test';
+  const state = buildAtlasSearchState({
+    cases: [
+      { atlasCaseKey: 'RMDB2PDB:8EWB', caseId: '8EWB', pdbId: '8EWB', assetFamily: 'RMDB2PDB', profileCount: 1 },
+      { atlasCaseKey: 'RASP2PDB:8EWB', caseId: '8EWB', pdbId: '8EWB', assetFamily: 'RASP2PDB', profileCount: 3 }
+    ],
+    displayCases: [
+      {
+        atlasCaseKey: 'PDB:8EWB',
+        caseId: '8EWB',
+        pdbId: '8EWB',
+        biologicalMoleculeName: 'Duplicate family bridge case',
+        confidenceDisplayLabel: 'RMDB: not active; RASP: bridge candidate',
+        profileCount: 4,
+        chains: ['A'],
+        sourceCaseCount: 2,
+        sourceCaseKeys: ['RMDB2PDB:8EWB', 'RASP2PDB:8EWB'],
+        sourceFamilies: ['RMDB2PDB', 'RASP2PDB'],
+        sourceCaseAssetPaths: [
+          { assetFamily: 'RMDB2PDB', atlasCaseKey: 'RMDB2PDB:8EWB', caseId: '8EWB', caseAssetPath: 'cases/RMDB2PDB%3A8EWB.json', profileCount: 1 },
+          { assetFamily: 'RASP2PDB', atlasCaseKey: 'RASP2PDB:8EWB', caseId: '8EWB', caseAssetPath: 'cases/RASP2PDB%3A8EWB.json', profileCount: 3 }
+        ]
+      }
+    ],
+    totalSourceCaseCount: 2,
+    totalCaseCount: 1,
+    facets: []
+  }, {});
+  const html = renderAnnojointAtlasPage({
+    state,
+    routeName: 'sequence',
+    selectedCaseKey: 'PDB:8EWB',
+    selectedField: 'moleculeName'
+  });
+
+  assert.match(html, /href="https:\/\/pages\.example\.test\/selector\/rasp\/RASP2PDB%3A8EWB\/index\.html"/);
+  assert.doesNotMatch(html, /href="#annojoin-case\?caseId=8EWB&amp;caseKey=RASP2PDB%3A8EWB"/);
+  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
 
 test('confidence panel never surfaces the legacy ANNOCONFIDENCE coverage_topology pointer string', () => {
@@ -689,11 +738,13 @@ test('atlas page renders an index-row detail sidebar without loading detail pane
 });
 
 test('atlas side panel renders field-specific explanations', () => {
+  const originalOrigin = LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl;
+  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = 'https://pages.example.test';
   const state = buildAtlasSearchState(fixtures, {});
   const moleculeHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'moleculeName', routeName: 'sequence' });
   assert.match(moleculeHtml, /Index row detail/);
   assert.match(moleculeHtml, /Molecule name/);
-  assert.match(moleculeHtml, /href="\.\/src\/assets\/generated\/v3-case-pages\/rmdb2pdb_ab_v3_launch_132_centered\/20260628T193700Z_retry\/cases\/RMDB2PDB%3A10ZT\/index\.html"/);
+  assert.match(moleculeHtml, /href="https:\/\/pages\.example\.test\/rmdb\/current\/cases\/RMDB2PDB%3A10ZT\/index\.html"/);
 
   const confidenceHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'confidenceDisplayLabel' });
   assert.match(confidenceHtml, /Confidence classification/);
@@ -702,6 +753,7 @@ test('atlas side panel renders field-specific explanations', () => {
   // confidence panel links out to the dedicated explainer page
   assert.match(confidenceHtml, /href="#annojoin-confidence"/);
   assert.match(confidenceHtml, /What do these confidence labels mean\?/);
+  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 
   const pdbHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'pdbId' });
   assert.match(pdbHtml, /PDB metadata/);
@@ -796,4 +848,26 @@ test('atlas page ignores paginated detail route previews on the master table pag
   assert.doesNotMatch(html, /cases\/10ZT\/track-routes\/page-0001\.json/);
   assert.doesNotMatch(html, /profile-a/);
   assert.doesNotMatch(html, /pdb_residue_coordinate_key/);
+});
+
+test('atlas page shows a loading status banner instead of placeholder rows while the index loads', () => {
+  const html = renderAnnojointAtlasPage({ statusMessage: { tone: 'loading', text: 'Loading the master table…' } });
+
+  assert.match(html, /annojoin-table-status/);
+  assert.match(html, /data-status-tone="loading"/);
+  assert.match(html, /Loading the master table…/);
+  // the empty table body must not fabricate demo rows
+  assert.doesNotMatch(html, /10ZT/);
+  assert.doesNotMatch(html, /10ZU/);
+});
+
+test('atlas page shows an error status banner when the index fails to load', () => {
+  const html = renderAnnojointAtlasPage({
+    statusMessage: { tone: 'error', text: 'The master table could not be loaded. Refresh to try again.' }
+  });
+
+  assert.match(html, /annojoin-table-status/);
+  assert.match(html, /data-status-tone="error"/);
+  assert.match(html, /could not be loaded/);
+  assert.doesNotMatch(html, /10ZT/);
 });

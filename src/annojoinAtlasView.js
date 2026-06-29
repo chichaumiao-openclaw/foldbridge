@@ -9,7 +9,7 @@ import {
   searchAnnojointRows,
   sortAnnojointCases
 } from './annojoinAtlasTableModel.js';
-import { resolveRmdb2pdbAbV3DetailHref } from './rmdb2pdbAbV3PageLinks.js';
+import { resolveLocalPagesBridgeDetailHref } from './localPagesBridgeLinks.js';
 
 const DEFAULT_GROUP_ROW_LIMIT = 25;
 
@@ -34,8 +34,8 @@ function atlasHref(routeName = 'annojoin-atlas', params = {}) {
 
 function detailPageHref(detail = {}) {
   const { atlasCaseKey = '', caseId = '' } = detail;
-  const v3Href = resolveRmdb2pdbAbV3DetailHref(detail);
-  if (v3Href) return v3Href;
+  const bridgeHref = resolveLocalPagesBridgeDetailHref(detail);
+  if (bridgeHref) return bridgeHref;
   return atlasHref('annojoin-case', caseId && atlasCaseKey ? { caseId, caseKey: atlasCaseKey } : { caseId });
 }
 
@@ -450,7 +450,8 @@ export function renderAnnojointAtlasPage({
   pageSize = 50,
   selectedCaseId = '',
   selectedCaseKey = '',
-  selectedField = ''
+  selectedField = '',
+  statusMessage = null
 } = {}) {
   const atlasState = state || { cases: [], source: {}, totalCaseCount: 0, filters: {} };
   const selected = selectedCaseIds instanceof Set ? selectedCaseIds : new Set(selectedCaseIds || []);
@@ -484,7 +485,15 @@ export function renderAnnojointAtlasPage({
 
   const tableBody = searchActive
     ? (emptySearchRow || renderFlatRows({ rows: pagination.rows, visibleColumns, selectedCaseIds: selected, routeName }))
-    : renderTableBody({ groups, visibleColumns, selectedCaseIds: selected, expandedGroupIds: expanded, uncappedGroupIds: uncapped, routeName });
+    : (statusMessage && !atlasState.cases.length
+      ? `<tr class="annojoin-status-row"><td colspan="${visibleColumns.length + 1}">${escapeHtml(statusMessage.text || '')}</td></tr>`
+      : renderTableBody({ groups, visibleColumns, selectedCaseIds: selected, expandedGroupIds: expanded, uncappedGroupIds: uncapped, routeName }));
+
+  const statusBanner = statusMessage
+    ? `<section class="annojoin-table-status" role="status" data-status-tone="${escapeHtml(statusMessage.tone || 'info')}">
+      <p>${escapeHtml(statusMessage.text || '')}</p>
+    </section>`
+    : '';
 
   const displayCount = atlasState.totalCaseCount || atlasState.cases.length;
   const sourceCount = atlasState.totalSourceCaseCount;
@@ -513,6 +522,7 @@ export function renderAnnojointAtlasPage({
 
     ${renderActiveConditionChips(atlasState.filters, query)}
     ${searchModeNote}
+    ${statusBanner}
     ${renderPagination(pagination)}
 
     <section class="annojoin-table-meta">
