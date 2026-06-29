@@ -2526,6 +2526,7 @@ function annojoinConfidencePage() {
           <rect x="8" y="64" width="704" height="360" fill="none" stroke="var(--border)" stroke-width="1" rx="2"/>
         </svg>
         <figcaption>The six families differ only by <strong>what they measure</strong>, not by quality. C runs <strong>reversed</strong> (enzymatic V1 marks paired stems, so paired is the positive class), and D carries a <strong>dual path</strong> whose pairing-proxy fallback can never reach STRONG.</figcaption>
+        <p class="annojoin-confidence-figure-cite">Family anchors — A: Burkhardt et al., eLife 2017 · PMID 28371612 · DOI 10.7554/eLife.22037. B: Siegfried et al., Nat Methods 2014 · PMID 25028896 · DOI 10.1038/nmeth.3029. C: Lockard &amp; Kumar, NAR 1981 · PMID 6269089 · DOI 10.1093/nar/9.13.3001. D: Solayman et al., RNA Biology 2022 · PMID 36369947 · DOI 10.1080/15476286.2022.2145098. E: Cheng et al., eLife 2015 · PMID 26035425 · DOI 10.7554/eLife.07600. F: Cheng et al., PNAS 2017 · PMID 28851837 · DOI 10.1073/pnas.1619897114.</p>
       </figure>
       <div class="annojoin-confidence-deep">
         <p class="annojoin-confidence-deep-label">Per-family detail</p>
@@ -2562,7 +2563,7 @@ function annojoinConfidencePage() {
           <line x1="150" y1="434" x2="150" y2="456" stroke="var(--border)" stroke-width="2"/>
           <line x1="150" y1="504" x2="150" y2="540" stroke="var(--primary)" stroke-width="2.5"/>
           <g font-size="12.5" fill="var(--textPrimary)" text-anchor="middle">
-            <rect x="40" y="56" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="74">n_eval &#8805; 20</text>
+            <rect x="40" y="56" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="74">n_eval &#8805; 20 (size)</text>
             <rect x="40" y="126" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="144">paired &#8805; 5 &#183; unpaired &#8805; 5</text>
             <rect x="40" y="196" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="214">directional &#8805; 0.70</text>
             <rect x="40" y="266" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="284">permutation RUN</text>
@@ -2574,7 +2575,7 @@ function annojoinConfidencePage() {
           <text x="150" y="565" text-anchor="middle" font-size="16" font-weight="700" fill="var(--surface)">STRONG</text>
           <g font-size="11" font-weight="700" text-anchor="middle">
             <line x1="260" y1="70" x2="400" y2="70" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
-            <rect x="400" y="56" width="148" height="28" rx="7" fill="var(--border)"/><text x="474" y="74" fill="var(--textPrimary)">UNDERPOWERED</text>
+            <rect x="400" y="56" width="148" height="28" rx="7" fill="var(--accentSoft)"/><text x="474" y="74" fill="var(--textPrimary)">MODERATE (n &#8805; 15)</text>
             <line x1="260" y1="210" x2="400" y2="210" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
             <rect x="400" y="196" width="148" height="28" rx="7" fill="var(--accentSoft)"/><text x="474" y="214" fill="var(--textPrimary)">MODERATE (&#8805;0.65)</text>
             <line x1="260" y1="350" x2="400" y2="350" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
@@ -2585,7 +2586,9 @@ function annojoinConfidencePage() {
             <rect x="400" y="476" width="148" height="28" rx="7" fill="var(--primarySoft)"/><text x="474" y="494" fill="var(--textPrimary)">WEAK</text>
           </g>
           <text x="150" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="var(--textPrimary)">STRONG gate spine (all must pass)</text>
-          <text x="20" y="618" font-size="10.5" fill="var(--textMuted)">Footnote: Family D main path uses discordance_floor = 0.0 (Spearman ranges &#8722;1..1).</text>
+          <text x="20" y="600" font-size="10.5" fill="var(--textMuted)">Footnote: the spine shows STRONG gates. Relaxing the size gate to n_eval &#8805; 15 (with the</text>
+          <text x="20" y="613" font-size="10.5" fill="var(--textMuted)">lower MODERATE cut-points) yields MODERATE; below n_eval 15 it is UNDERPOWERED.</text>
+          <text x="20" y="626" font-size="10.5" fill="var(--textMuted)">Family D main path uses discordance_floor = 0.0 (Spearman ranges &#8722;1..1).</text>
         </svg>
         <figcaption>STRONG is granted only when every gate on the spine passes. Each failure routes the segment to a lower tier; a strong-looking score that fails permutation drops to NOT_SUPPORTED, and an AUC-pass that is not self-contained drops to WEAK.</figcaption>
       </figure>
