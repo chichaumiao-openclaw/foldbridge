@@ -90,11 +90,28 @@ function checkCase(detail, caseId) {
   return failures.map((message) => ({ caseId, message }));
 }
 
+// Resolve the per-case detail asset path for a display row the same way the
+// browser's annojoinCasePage() does: single rows carry a direct caseAssetPath;
+// merged rows (caseAssetPath empty) reach a real asset via sourceCaseAssetPaths.
+function resolveCaseAssetPath(row, caseId) {
+  if (text(row.caseAssetPath)) return row.caseAssetPath;
+  const sources = Array.isArray(row.sourceCaseAssetPaths) ? row.sourceCaseAssetPaths : [];
+  for (const source of sources) {
+    if (text(source?.caseAssetPath)) return source.caseAssetPath;
+  }
+  return `cases/${caseId}.json`;
+}
+
 export async function runAnnojointAtlasSmoke({ assetRoot, sampleSize = 20 } = {}) {
   const root = path.resolve(assetRoot || 'src/assets/generated/annojoin-atlas');
   const index = await readJson(path.join(root, 'index.json'));
-  const cases = Array.isArray(index.cases) ? index.cases : [];
-  const sampled = sampleCases(cases, sampleSize);
+  // The slimmed index (design 2026-06-29) drops the browser-dead top-level
+  // `cases` array; displayCases is the array the browser renders. Prefer it,
+  // falling back to `cases` for any un-slimmed index.
+  const sampleSource = Array.isArray(index.displayCases) && index.displayCases.length
+    ? index.displayCases
+    : (Array.isArray(index.cases) ? index.cases : []);
+  const sampled = sampleCases(sampleSource, sampleSize);
   const failures = [];
 
   if (index.source?.entryRoot !== 'ANNOJOIN') failures.push({ caseId: '', message: 'entry root is not ANNOJOIN' });
@@ -108,7 +125,7 @@ export async function runAnnojointAtlasSmoke({ assetRoot, sampleSize = 20 } = {}
   for (const row of sampled) {
     const caseId = text(row.caseId);
     if (!hasWebDisplayFields(row)) failures.push({ caseId, message: 'missing web display fields in index row' });
-    const assetPath = row.caseAssetPath || `cases/${caseId}.json`;
+    const assetPath = resolveCaseAssetPath(row, caseId);
     const detail = await readJson(path.join(root, assetPath));
     failures.push(...checkCase(detail, caseId));
   }
@@ -117,7 +134,7 @@ export async function runAnnojointAtlasSmoke({ assetRoot, sampleSize = 20 } = {}
     status: failures.length ? 'fail' : 'pass',
     source: index.source || {},
     browserLoadsAnnoconfidenceBigTables: index.source?.browserLoadsAnnoconfidenceBigTables,
-    totalCaseCount: cases.length,
+    totalCaseCount: sampleSource.length,
     sampledCaseCount: sampled.length,
     sampledCaseIds: sampled.map((row) => row.caseId),
     checkedCapabilities: [

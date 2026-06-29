@@ -143,3 +143,72 @@ test('annojoin atlas smoke accepts declared RASP visual blockers without 3D URL 
   assert.equal(result.status, 'pass');
   assert.equal(result.failures.length, 0);
 });
+
+test('annojoin atlas smoke samples slimmed index displayCases (no top-level cases) and resolves merged rows', async () => {
+  const root = await mkdtemp(path.join(tmpdir(), 'annojoin-smoke-slim-'));
+  // 19 single-source display rows + 1 merged display row, mirroring the slimmed
+  // index shape: NO top-level `cases` array, only `displayCases`.
+  const detailFor = (caseId) => ({
+    case: { caseId },
+    summary: { summaryRouteId: `summary:${caseId}` },
+    detailRoutes: { detailRouteId: `/atlas/${caseId}`, mappingTableRouteId: `mapping:${caseId}` },
+    memberships: { totalRows: 1, preview: [{ pairId: `${caseId}:pair`, profileId: 'profile-a' }] },
+    trackRoutes: { totalRows: 1, preview: [{ trackRouteId: `track:${caseId}`, trackDataPath: 'x.tsv' }] },
+    pairContextRoutes: { totalRows: 1, preview: [{ contextRouteId: `2d:${caseId}`, pairContextDataPath: 'y.tsv', supportsPairArcView: true }] },
+    structureRoutes: { totalRows: 1, preview: [{ structureFilePath: `CONFIDENCE/10_structure_context/${caseId}.cif`, structureUrl: `/api/annojoin/structure?path=CONFIDENCE%2F10_structure_context%2F${caseId}.cif`, coordinateKeyColumn: 'pdb_residue_coordinate_key' }] },
+    conflicts: { totalRows: 0, preview: [] },
+    visualPreview: {
+      browserLoadsAnnoconfidenceBigTables: false,
+      reactivity1d: { points: [{ pdbResidue: 'A:1 G', reactivityValue: 0.4 }] },
+      pairArcs: [{ segmentLabel: `${caseId}:1-10`, start: 1, end: 10 }],
+      structureColoring: { structureUrl: `/api/annojoin/structure?path=CONFIDENCE%2F10_structure_context%2F${caseId}.cif`, points: [{ coordinateKey: `${caseId}|1|A|1`, colorBin: 'mid' }] },
+      mappedResidues: [{ pdbResidue: 'A:1 G', reactivityValue: 0.4, coordinateKey: `${caseId}|1|A|1` }]
+    },
+    annotationPayloadRowsCopied: 0
+  });
+
+  const single = Array.from({ length: 19 }, (_, index) => {
+    const caseId = `S${String(index + 1).padStart(4, '0')}`;
+    return {
+      caseId, pdbId: caseId, biologicalMoleculeName: `mol ${index + 1}`,
+      confidenceDisplayLabel: 'B_CONTEXT_STRATIFIED (1)', profileCount: 1,
+      caseAssetPath: `cases/${caseId}.json`, isMergedDisplayRow: false, searchText: caseId
+    };
+  });
+  // merged row: caseAssetPath is empty; the real asset is reached via sourceCaseAssetPaths
+  const mergedSourcePath = 'cases/RMDB2PDB%3AM0001.json';
+  const merged = {
+    caseId: 'M0001', pdbId: 'M0001', biologicalMoleculeName: 'merged mol',
+    confidenceDisplayLabel: 'RMDB: B; RASP: not active', profileCount: 3,
+    caseAssetPath: '', isMergedDisplayRow: true, atlasCaseKey: 'PDB:M0001',
+    sourceCaseAssetPaths: [
+      { assetFamily: 'RMDB2PDB', caseAssetPath: mergedSourcePath },
+      { assetFamily: 'RASP2PDB', caseAssetPath: 'cases/RASP2PDB%3AM0001.json' }
+    ],
+    searchText: 'M0001 merged'
+  };
+  const displayCases = [...single, merged];
+
+  await writeJson(path.join(root, 'index.json'), {
+    version: 'V2.1_RMDB_LINE_A_20260617',
+    source: { entryRoot: 'ANNOJOIN', annotationRoot: 'ANNOCONFIDENCE', browserLoadsAnnoconfidenceBigTables: false },
+    totalSourceCaseCount: 21,
+    caseHierarchy: [{ id: 'p', label: 'P', caseCount: 20, children: [{ id: 'p-c', label: 'C', caseCount: 20, cases: ['S0001'] }] }],
+    // NO `cases` key — this is the slimmed index
+    displayCases,
+    facets: Array.from({ length: 12 }, (_, index) => ({ name: `facet-${index}` })),
+    presets: Array.from({ length: 6 }, (_, index) => ({ id: `preset-${index}` })),
+    downloads: [{ id: 'download:case_search', filePath: 'ANNOJOIN/anno_case_search_index.tsv' }]
+  });
+  for (const row of single) {
+    await writeJson(path.join(root, row.caseAssetPath), detailFor(row.caseId));
+  }
+  await writeJson(path.join(root, mergedSourcePath), detailFor('M0001'));
+
+  const result = await runAnnojointAtlasSmoke({ assetRoot: root, sampleSize: 20 });
+
+  assert.equal('cases' in JSON.parse(await import('node:fs/promises').then((m) => m.readFile(path.join(root, 'index.json'), 'utf8'))), false, 'fixture index is slimmed');
+  assert.equal(result.status, 'pass', JSON.stringify(result.failures));
+  assert.equal(result.sampledCaseCount, 20);
+  assert.equal(result.failures.length, 0);
+});
