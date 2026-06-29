@@ -2384,60 +2384,478 @@ function annojoinConfidencePage() {
     <section class="annojoin-confidence-article-head">
       <p class="technology-kicker">ANNOJOIN · Confidence guide</p>
       <h1>Reading the ANNOJOIN confidence labels</h1>
-      <p class="pdb-case-lede">The master table summarizes how much annotation support each PDB entry has. The label is a
-        <strong>case-level distribution</strong>, not a single best-profile score. This page explains what each part means
-        so you can judge how far to trust a row before opening the underlying route assets.</p>
+      <p class="pdb-case-lede">Every confidence label on the master table is two words doing two different jobs. The first word
+        is a <strong>measurement family</strong> — it tells you <em>which physical quantity</em> the experiment measured. The
+        second word is a <strong>calibrated recall tier</strong> — it tells you <em>how reliably</em> that evidence recovers the
+        structure actually deposited in the PDB, after we test it against chance. Read it as
+        <code>&lt;measurement family&gt; &lt;calibrated recall tier&gt;</code>. The family is not a grade: a bare family letter
+        promises nothing about strength — <code>A</code> is not "better" than <code>D</code>, it just means a different
+        instrument was pointed at the molecule. All of the strength lives in the tier, and the tier has to be earned.</p>
       <p><a class="download-outline-btn" href="#annojoin-atlas">Back to the master table</a></p>
     </section>
 
     <section class="annojoin-confidence-article-body">
-      <h2>What the label is measuring</h2>
-      <p>Confidence reflects how well the chemical-probing evidence linked to a PDB entry supports its structural annotation.
-        It is a summary across every source profile that maps to the entry, so a single row can carry several signals at once.
-        High confidence means the supporting evidence is strong and consistent; low confidence means the evidence is sparse,
-        weak, or disagrees with itself.</p>
+      <h2>What a confidence label encodes</h2>
+      <div class="annojoin-confidence-plain">
+        <p>Take a badge like <span class="annojoin-confidence-badge"><span class="annojoin-confidence-badge-family">D</span><span class="annojoin-confidence-badge-tier">MODERATE</span></span> and split it down the middle. The <code>D</code> is the
+          <strong>family</strong> — the kind of measurement. Here it means the experiment reported solvent accessibility of the
+          RNA backbone. That is all the letter says; it does not mean the evidence is weak, broad, or unfiltered. The
+          <code>MODERATE</code> is the <strong>tier</strong> — the verdict on how well that evidence matches the deposited
+          structure once we have checked it against chance and a handful of quality gates. A family letter on its own tells you
+          what was measured; you always need the tier next to it to know how strong the support is.</p>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 520 220" role="img" aria-label="Anatomy of a confidence badge: family zone plus calibrated recall tier zone">
+          <g transform="translate(150,28)">
+            <rect x="0" y="0" width="220" height="56" rx="28" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+            <path d="M 28 0 L 110 0 L 110 56 L 28 56 A 28 28 0 0 1 28 0 Z" fill="var(--primarySoft)"><title>Family zone: which physical quantity was measured</title></path>
+            <path d="M 110 0 L 192 0 A 28 28 0 0 1 192 56 L 110 56 Z" fill="var(--accentSoft)"><title>Tier zone: calibrated recall reliability</title></path>
+            <line x1="110" y1="4" x2="110" y2="52" stroke="var(--border)" stroke-width="1"/>
+            <text x="69" y="35" text-anchor="middle" font-size="22" font-weight="700" fill="var(--textPrimary)">D</text>
+            <text x="151" y="35" text-anchor="middle" font-size="18" font-weight="700" fill="var(--textPrimary)">MODERATE</text>
+          </g>
+          <line x1="219" y1="88" x2="219" y2="132" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="219" y1="132" x2="130" y2="132" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="301" y1="88" x2="301" y2="132" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="301" y1="132" x2="390" y2="132" stroke="var(--border)" stroke-width="1.2"/>
+          <g transform="translate(8,134)">
+            <rect x="0" y="0" width="244" height="70" rx="10" fill="var(--primarySoft)" stroke="var(--border)" stroke-width="1"/>
+            <text x="14" y="24" font-size="12" font-weight="700" fill="var(--textPrimary)">FAMILY = D</text>
+            <text x="14" y="44" font-size="11.5" fill="var(--textPrimary)">which physical quantity was</text>
+            <text x="14" y="60" font-size="11.5" fill="var(--textPrimary)">measured (here: SASA)</text>
+          </g>
+          <g transform="translate(268,134)">
+            <rect x="0" y="0" width="244" height="70" rx="10" fill="var(--accentSoft)" stroke="var(--border)" stroke-width="1"/>
+            <text x="14" y="24" font-size="12" font-weight="700" fill="var(--textPrimary)">TIER = MODERATE</text>
+            <text x="14" y="44" font-size="11.5" fill="var(--textPrimary)">how reliably it recovers the</text>
+            <text x="14" y="60" font-size="11.5" fill="var(--textPrimary)">deposited structure after calibration</text>
+          </g>
+        </svg>
+        <figcaption>A confidence label reads <strong>family + tier</strong>. The family letter names the physical quantity that was measured and promises nothing about strength; the tier names how reliably that evidence recovers the deposited structure after calibration.</figcaption>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">How it's computed</p>
+        <p>LSS (Local Structure-Signal Support) is computed per <strong>segment</strong>, where a segment is one
+          <code>(profile, pdb_id, chain)</code> group: a single reactivity profile mapped onto one chain of one PDB entry. For
+          that segment we ask a single question — do the per-residue chemical-probing values agree with the paired/unpaired (or
+          geometric) state of the residues in the deposited structure? The family fixes <em>which</em> agreement statistic we
+          compute; the tier is the calibrated answer.</p>
+      </div>
 
-      <h2>The measurement family: A, B, C, D</h2>
-      <p>The leading letter is the <em>measurement family</em> — which evidence pipeline produced the signal, ordered roughly
-        from most to least directly supported:</p>
-      <ul class="annojoin-confidence-legend">
-        <li><strong>A</strong> — the most directly supported reference-grade measurements.</li>
-        <li><strong>B</strong> — solid supporting measurements with good coverage.</li>
-        <li><strong>C</strong> — exploratory or context-stratified measurements; treat as hints.</li>
-        <li><strong>D</strong> — the broadest, least-filtered measurement family.</li>
-      </ul>
-      <p>A family letter on its own (for example <code>A_REFERENCE</code> or <code>C_EXPLORATORY_HINT</code>) names the kind of
-        evidence; it does not by itself promise a strong result. Always read it together with the recall tier below.</p>
+      <h2>The six measurement families</h2>
+      <div class="annojoin-confidence-plain">
+        <p>There are six families, one per physical quantity. They are categories of instrument, not a ranking — pick any one
+          and you can still land in any tier from STRONG down to NOT_SUPPORTED.</p>
+        <ul class="annojoin-confidence-legend">
+          <li><strong>A — base-specific chemistry.</strong> Probes that hit the Watson-Crick face of specific bases (DMS, CMCT, Keth-seq). High signal means that base is unpaired.</li>
+          <li><strong>B — backbone flexibility.</strong> SHAPE reagents that report 2′-OH flexibility on any of the four bases. High signal means a flexible, likely unpaired residue.</li>
+          <li><strong>C — enzymatic, run backwards.</strong> Nucleases like PARS/PARTE where the enzyme cuts <em>paired</em> stems, so the logic is reversed: high signal means paired.</li>
+          <li><strong>D — solvent accessibility.</strong> Hydroxyl-radical and related probes (RL-Seq, HRF, Lead-seq, icLASER) that report how exposed the backbone is. More signal should track more exposed surface.</li>
+          <li><strong>E — spatial contacts.</strong> Methods (MCA/MOHCA) that report which residue pairs sit close together in 3D. Near equals a hit.</li>
+          <li><strong>F — base-pair sets.</strong> Mutate-and-map approaches that infer an entire set of base pairs, scored against the reference pair set.</li>
+        </ul>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 720 470" role="img" aria-label="Matrix of six measurement families with physical quantity, statistic and positive-class direction">
+          <rect x="8" y="12" width="704" height="44" rx="8" fill="var(--surfaceAlt)" stroke="var(--border)" stroke-width="1"/>
+          <text x="52" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textMuted)">FAMILY</text>
+          <text x="215" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textMuted)">PHYSICAL QUANTITY</text>
+          <text x="450" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textMuted)">STATISTIC</text>
+          <text x="640" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textMuted)">POSITIVE CLASS</text>
+          <g>
+            <rect x="8" y="64" width="704" height="60" fill="var(--surface)"/>
+            <rect x="22" y="78" width="60" height="32" rx="8" fill="var(--primarySoft)" stroke="var(--border)"/>
+            <text x="52" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">A</text>
+            <text x="100" y="99" font-size="12.5" fill="var(--textPrimary)">WC-face base-specific (DMS/CMCT/Keth)</text>
+            <text x="335" y="99" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">auc_unpaired_vs_paired</text>
+            <text x="600" y="99" font-size="12.5" fill="var(--textPrimary)">unpaired</text>
+            <text x="668" y="99" font-size="16" font-weight="700" fill="var(--accent)">&#8594;</text>
+            <title>Family A: Watson-Crick face base-specific reagents, unpaired-positive</title>
+          </g>
+          <g>
+            <rect x="8" y="124" width="704" height="60" fill="var(--surfaceAlt)"/>
+            <rect x="22" y="138" width="60" height="32" rx="8" fill="var(--accentSoft)" stroke="var(--border)"/>
+            <text x="52" y="160" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">B</text>
+            <text x="100" y="159" font-size="12.5" fill="var(--textPrimary)">SHAPE 2&#8242;-OH flexibility (ACGU)</text>
+            <text x="335" y="159" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">auc_unpaired_vs_paired</text>
+            <text x="600" y="159" font-size="12.5" fill="var(--textPrimary)">unpaired</text>
+            <text x="668" y="159" font-size="16" font-weight="700" fill="var(--accent)">&#8594;</text>
+            <title>Family B: SHAPE flexibility proxy, unpaired-positive</title>
+          </g>
+          <g>
+            <rect x="8" y="184" width="704" height="60" fill="var(--surface)"/>
+            <rect x="22" y="198" width="60" height="32" rx="8" fill="var(--primarySoft)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="52" y="220" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">C</text>
+            <text x="100" y="214" font-size="12.5" fill="var(--textPrimary)">enzymatic (PARS/PARTE)</text>
+            <text x="100" y="232" font-size="10.5" font-weight="700" fill="var(--accent)">REVERSED &#183; V1 cleaves paired stems</text>
+            <text x="335" y="219" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">auc_paired_vs_unpaired (1&#8722;AUC)</text>
+            <text x="600" y="219" font-size="12.5" fill="var(--textPrimary)">paired</text>
+            <text x="654" y="219" font-size="16" font-weight="700" fill="var(--accent)">&#8592;</text>
+            <title>Family C: enzymatic, REVERSED direction, paired-positive</title>
+          </g>
+          <g>
+            <rect x="8" y="244" width="704" height="60" fill="var(--surfaceAlt)"/>
+            <rect x="22" y="258" width="60" height="32" rx="8" fill="var(--accentSoft)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="52" y="280" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">D</text>
+            <text x="100" y="274" font-size="12.5" fill="var(--textPrimary)">SASA solvent accessibility</text>
+            <text x="100" y="292" font-size="10.5" font-weight="700" fill="var(--accent)">DUAL PATH &#183; fallback never STRONG</text>
+            <text x="335" y="279" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">spearman(reactivity, sasa)</text>
+            <text x="600" y="279" font-size="12.5" fill="var(--textPrimary)">high</text>
+            <text x="638" y="279" font-size="15" font-weight="700" fill="var(--accent)">&#8596;</text>
+            <text x="660" y="279" font-size="12.5" fill="var(--textPrimary)">high</text>
+            <title>Family D: SASA, dual path; Spearman main, AUC pairing-proxy fallback</title>
+          </g>
+          <g>
+            <rect x="8" y="304" width="704" height="60" fill="var(--surface)"/>
+            <rect x="22" y="318" width="60" height="32" rx="8" fill="var(--primarySoft)" stroke="var(--border)"/>
+            <text x="52" y="340" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">E</text>
+            <text x="100" y="339" font-size="12.5" fill="var(--textPrimary)">contact map (MCA/MOHCA)</text>
+            <text x="335" y="339" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">contact_pair_auc</text>
+            <text x="600" y="339" font-size="12.5" fill="var(--textPrimary)">near = hit</text>
+            <title>Family E: contact map, near = hit</title>
+          </g>
+          <g>
+            <rect x="8" y="364" width="704" height="60" fill="var(--surfaceAlt)"/>
+            <rect x="22" y="378" width="60" height="32" rx="8" fill="var(--accentSoft)" stroke="var(--border)"/>
+            <text x="52" y="400" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">F</text>
+            <text x="100" y="399" font-size="12.5" fill="var(--textPrimary)">pair-set F1 (mutate-and-map)</text>
+            <text x="335" y="399" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">pair_set_prf</text>
+            <text x="600" y="399" font-size="12.5" fill="var(--textPrimary)">F1 inferred vs ref</text>
+            <title>Family F: pair-set F1 of inferred vs reference pairs</title>
+          </g>
+          <rect x="8" y="64" width="704" height="360" fill="none" stroke="var(--border)" stroke-width="1" rx="2"/>
+        </svg>
+        <figcaption>The six families differ only by <strong>what they measure</strong>, not by quality. C runs <strong>reversed</strong> (enzymatic V1 marks paired stems, so paired is the positive class), and D carries a <strong>dual path</strong> whose pairing-proxy fallback can never reach STRONG.</figcaption>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">Per-family detail</p>
+        <ul class="annojoin-confidence-legend">
+          <li><strong>A — Watson-Crick-face base-specific</strong> (DMS, CMCT, Keth-seq). Statistic <code>auc_unpaired_vs_paired</code>; <strong>unpaired-positive</strong>. Evaluated on targetable bases only — DMS → A, C; CMCT → G, U; Keth-seq → G.</li>
+          <li><strong>B — SHAPE 2′-OH flexibility</strong> (all four bases). Statistic <code>auc_unpaired_vs_paired</code>; <strong>unpaired-positive</strong>.</li>
+          <li><strong>C — enzymatic, REVERSED</strong> (PARS, PARTE, tNet-RNase-seq). Statistic <code>auc_paired_vs_unpaired</code>, computed as <code>1 − auc_unpaired_vs_paired</code>; <strong>paired-positive</strong>, because RNase V1 cleaves paired stems.</li>
+          <li><strong>D — solvent-accessible surface area, dual path</strong> (RL-Seq, HRF, Lead-seq, icLASER). Main path <code>spearman(reactivity, sasa)</code> with high reactivity ↔ high SASA; when SASA is unavailable it falls back to a pairing-proxy <code>auc_unpaired_vs_paired</code> that is tier-capped and <strong>can never reach STRONG</strong>.</li>
+          <li><strong>E — residue-residue contact map</strong> (MCA, MOHCA). Statistic <code>contact_pair_auc</code> = P(signal pair is nearer than a decoy pair); <strong>near = hit</strong>.</li>
+          <li><strong>F — base-pair set F1</strong> (mutate-and-map). Statistic <code>pair_set_prf</code> → F1 of the inferred base-pair set against the reference, with pairs canonicalised so <code>(i, j)</code> and <code>(j, i)</code> are the same pair.</li>
+        </ul>
+      </div>
 
-      <h2>The recall tier: STRONG, MODERATE, WEAK …</h2>
-      <p>The second word is the <em>calibrated LSS recall tier</em> — how reliably the evidence recovers the known structure
-        after calibration. From most to least confident:</p>
-      <ul class="annojoin-confidence-legend">
-        <li><strong>STRONG</strong> — evidence recovers the structure reliably.</li>
-        <li><strong>MODERATE</strong> — usable support, with some uncertainty.</li>
-        <li><strong>MODERATE_CANDIDATE</strong> — borderline; promising but not yet confirmed.</li>
-        <li><strong>WEAK</strong> — limited support; interpret cautiously.</li>
-        <li><strong>UNDERPOWERED</strong> — too little data to draw a conclusion.</li>
-        <li><strong>DISCORDANT</strong> — signals disagree with the annotation; needs review.</li>
-        <li><strong>NOT_SUPPORTED</strong> — evidence does not back the annotation.</li>
-      </ul>
-      <p>So a label like <code>B MODERATE</code> reads as “family-B evidence with a moderate, calibrated recall tier,” while
-        <code>A WEAK</code> means reference-grade evidence that still only weakly recovers the structure.</p>
+      <h2>The recall tiers and their gates</h2>
+      <div class="annojoin-confidence-plain">
+        <ul class="annojoin-confidence-legend">
+          <li><strong>STRONG</strong> — the evidence reliably recovers the deposited structure and has passed every gate, including a chance test.</li>
+          <li><strong>MODERATE</strong> — solid, calibrated agreement that clears a slightly lower bar than STRONG.</li>
+          <li><strong>MODERATE_CANDIDATE</strong> — would qualify, but calibration has not run yet, so it is held one step below as a candidate.</li>
+          <li><strong>WEAK</strong> — the score is decent but the segment is not self-contained enough to lean on.</li>
+          <li><strong>NOT_SUPPORTED</strong> — the score did not survive the chance test; it could be luck.</li>
+          <li><strong>DISCORDANT</strong> — the signal points the wrong way or conflicts with the structure.</li>
+          <li><strong>UNDERPOWERED</strong> — too few evaluable residues to judge at all.</li>
+          <li><strong>NOT_EVALUABLE</strong> — the technology or data could not be resolved to a family, so no score is attempted.</li>
+        </ul>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 560 640" role="img" aria-label="STRONG gate decision ladder with fail branches to lower recall tiers">
+          <line x1="150" y1="84" x2="150" y2="106" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="154" x2="150" y2="176" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="224" x2="150" y2="246" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="294" x2="150" y2="316" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="364" x2="150" y2="386" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="434" x2="150" y2="456" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="504" x2="150" y2="540" stroke="var(--primary)" stroke-width="2.5"/>
+          <g font-size="12.5" fill="var(--textPrimary)" text-anchor="middle">
+            <rect x="40" y="56" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="74">n_eval &#8805; 20</text>
+            <rect x="40" y="126" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="144">paired &#8805; 5 &#183; unpaired &#8805; 5</text>
+            <rect x="40" y="196" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="214">directional &#8805; 0.70</text>
+            <rect x="40" y="266" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="284">permutation RUN</text>
+            <rect x="40" y="336" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="354">empirical p &#8804; 0.05</text>
+            <rect x="40" y="406" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="424">conflict &#8804; 0.25</text>
+            <rect x="40" y="476" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="494">partner_inside &#8805; 0.70</text>
+          </g>
+          <rect x="60" y="540" width="180" height="40" rx="20" fill="var(--primary)"/>
+          <text x="150" y="565" text-anchor="middle" font-size="16" font-weight="700" fill="var(--surface)">STRONG</text>
+          <g font-size="11" font-weight="700" text-anchor="middle">
+            <line x1="260" y1="70" x2="400" y2="70" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <rect x="400" y="56" width="148" height="28" rx="7" fill="var(--border)"/><text x="474" y="74" fill="var(--textPrimary)">UNDERPOWERED</text>
+            <line x1="260" y1="210" x2="400" y2="210" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <rect x="400" y="196" width="148" height="28" rx="7" fill="var(--accentSoft)"/><text x="474" y="214" fill="var(--textPrimary)">MODERATE (&#8805;0.65)</text>
+            <line x1="260" y1="350" x2="400" y2="350" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <rect x="400" y="336" width="148" height="28" rx="7" fill="var(--textMuted)"/><text x="474" y="354" fill="var(--surface)">NOT_SUPPORTED</text>
+            <line x1="260" y1="420" x2="400" y2="420" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <rect x="400" y="406" width="148" height="28" rx="7" fill="var(--accentSoft)"/><text x="474" y="424" fill="var(--textPrimary)">DISCORDANT</text>
+            <line x1="260" y1="490" x2="400" y2="490" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <rect x="400" y="476" width="148" height="28" rx="7" fill="var(--primarySoft)"/><text x="474" y="494" fill="var(--textPrimary)">WEAK</text>
+          </g>
+          <text x="150" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="var(--textPrimary)">STRONG gate spine (all must pass)</text>
+          <text x="20" y="618" font-size="10.5" fill="var(--textMuted)">Footnote: Family D main path uses discordance_floor = 0.0 (Spearman ranges &#8722;1..1).</text>
+        </svg>
+        <figcaption>STRONG is granted only when every gate on the spine passes. Each failure routes the segment to a lower tier; a strong-looking score that fails permutation drops to NOT_SUPPORTED, and an AUC-pass that is not self-contained drops to WEAK.</figcaption>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">Exact gates</p>
+        <p><strong>STRONG</strong> requires all of: n_eval ≥ 20, n_paired ≥ 5, n_unpaired ≥ 5, directional metric ≥ 0.70,
+          permutation status = RUN, empirical p ≤ 0.05, conflict ≤ 0.25, and partner_inside ≥ 0.70. <strong>MODERATE</strong>
+          relaxes these to n_eval ≥ 15, directional ≥ 0.65, p ≤ 0.10, conflict ≤ 0.35, partner_inside ≥ 0.50. The "directional
+          metric" is the family's own positive-class statistic (for Family C the reversed <code>1 − AUC</code>; for Family D's
+          main path the Spearman correlation). Because Spearman lives on −1..1 with no-correlation at 0 (not an AUC centred at
+          0.5), Family D's main path sets <code>discordance_floor = 0.0</code> — only a genuinely negative correlation reads as
+          DISCORDANT, while a small positive correlation below the support band reads as NOT_SUPPORTED.</p>
+      </div>
 
-      <h2>RASP entries: “not active”</h2>
-      <p>RASP-derived rows can appear with <code>RASP public current; positive confidence not active</code> or
-        <code>RASP: not active</code>. This means the RASP positive-confidence track is <strong>not yet switched on</strong> for
-        public display. These rows are listed for completeness, but their confidence should be read as “pending,” not as a
-        positive score. A merged PDB entry may show its RMDB family tier alongside <code>RASP: not active</code>.</p>
+      <h2>Where the thresholds come from</h2>
+      <div class="annojoin-confidence-plain">
+        <p>Be clear about one thing: the A/B/C cut-points of <strong>0.70 / 0.65 / 0.55 are not thresholds that any paper
+          published.</strong> No study reported "an AUC of 0.70 means a strong match." External benchmarks establish only two
+          things — first, that the metric itself works (paired and unpaired residues really are separable by AUC/ROC); second,
+          that the STRONG tier is <em>attainable</em> (SHAPE-directed modeling recovers more than 90% of base pairs). The
+          specific numeric cut-points are RC3 operating values, set as reasonable defaults and waiting on calibration. That
+          honesty is exactly why the calibration step in the next section exists.</p>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 720 380" role="img" aria-label="Three-grade threshold provenance ladder from measured to operating values">
+          <line x1="40" y1="30" x2="40" y2="350" stroke="var(--border)" stroke-width="1.5"/>
+          <path d="M 40 350 L 36 340 L 44 340 Z" fill="var(--border)"/>
+          <text x="30" y="44" font-size="11" font-weight="700" fill="var(--textPrimary)" transform="rotate(-90 30 44)" text-anchor="end">measured</text>
+          <text x="30" y="340" font-size="11" font-weight="700" fill="var(--textMuted)" transform="rotate(-90 30 340)" text-anchor="start">operating</text>
+          <g>
+            <rect x="90" y="30" width="590" height="92" rx="10" fill="var(--primarySoft)" stroke="var(--border)"/>
+            <rect x="90" y="30" width="8" height="92" rx="4" fill="var(--primary)"/>
+            <text x="112" y="56" font-size="14" font-weight="700" fill="var(--textPrimary)">LITERATURE_SUPPORTED</text>
+            <text x="112" y="78" font-size="12" fill="var(--textPrimary)">Band set directly by measured values. Rep: RL-Seq &#183; Solayman 2022</text>
+            <text x="112" y="98" font-size="11.5" fill="var(--textMuted)">ribose-ASA Spearman 0.39&#8211;0.57 sets Family D&#8217;s 0.50/0.40/0.30</text>
+            <circle cx="638" cy="76" r="26" fill="var(--surface)" stroke="var(--primary)" stroke-width="2"/>
+            <text x="638" y="83" text-anchor="middle" font-size="22" font-weight="700" fill="var(--textPrimary)">1</text>
+            <title>LITERATURE_SUPPORTED: exactly 1 technology (RL-Seq)</title>
+          </g>
+          <g>
+            <rect x="90" y="140" width="555" height="92" rx="10" fill="var(--surfaceAlt)" stroke="var(--border)"/>
+            <rect x="90" y="140" width="8" height="92" rx="4" fill="var(--accent)"/>
+            <text x="112" y="166" font-size="14" font-weight="700" fill="var(--textPrimary)">LITERATURE_INFORMED</text>
+            <text x="112" y="188" font-size="12" fill="var(--textPrimary)">Benchmark proves STRONG attainable; exact cut-point not published.</text>
+            <text x="112" y="208" font-size="11.5" fill="var(--textMuted)">SHAPE, SHAPE-MaP, DMS, DMS-MaPseq, HRF, Lead-seq, icLASER &#8230;</text>
+            <circle cx="603" cy="186" r="26" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="603" y="193" text-anchor="middle" font-size="22" font-weight="700" fill="var(--textPrimary)">10</text>
+            <title>LITERATURE_INFORMED: 10 technologies</title>
+          </g>
+          <g>
+            <rect x="90" y="250" width="520" height="92" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+            <rect x="90" y="250" width="8" height="92" rx="4" fill="var(--textMuted)"/>
+            <text x="112" y="276" font-size="14" font-weight="700" fill="var(--textMuted)">OPERATING_VALUE_PENDING_CALIBRATION</text>
+            <text x="112" y="298" font-size="12" fill="var(--textPrimary)">No published discrimination metric &#8212; beta operating value.</text>
+            <text x="112" y="318" font-size="11.5" fill="var(--textMuted)">PARS, PARTE, tNet-RNase-seq &#8230; (no AUC published)</text>
+            <circle cx="568" cy="296" r="26" fill="var(--surface)" stroke="var(--textMuted)" stroke-width="2"/>
+            <text x="568" y="303" text-anchor="middle" font-size="22" font-weight="700" fill="var(--textMuted)">23</text>
+            <title>OPERATING_VALUE_PENDING_CALIBRATION: 23 technologies</title>
+          </g>
+        </svg>
+        <figcaption>Of 34 technologies only <strong>one</strong> (RL-Seq) has a literature-set band; 10 are literature-informed and 23 remain RC3 operating values pending calibration. This is why permutation calibration exists: most cut-points must earn the right to ever emit STRONG.</figcaption>
+        <p class="annojoin-confidence-figure-cite">Solayman et al., RNA Biology 2022 · PMID 36369947 · DOI 10.1080/15476286.2022.2145098</p>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">The three honesty grades</p>
+        <ul class="annojoin-confidence-legend">
+          <li><strong>LITERATURE_SUPPORTED</strong> — the band is set directly by measured literature values. <strong>Exactly one technology qualifies: RL-Seq</strong> (Family D). Its ribose-ASA Spearman of 0.39–0.57 (16S 0.53–0.57 / 23S 0.47–0.50 / 5S 0.39–0.52, vs PDB 4V7T; Solayman et al., RNA Biology 2022) directly sets Family D's 0.50 / 0.40 / 0.30 band.</li>
+          <li><strong>LITERATURE_INFORMED</strong> — a related benchmark makes STRONG attainable and shows the metric is sound, but the exact cut-point is not published. This applies to exactly ten technologies: DMS, DMS-seq, DMS-MaPseq, Structure-Seq, Structure-seq2, SHAPE, SHAPE-MaP, HRF, Lead-seq, icLASER. (This is <em>not</em> "the whole DMS family" or "the whole SHAPE family" — Mod-seq, DIM-2P-seq, CMC, CMCT, Keth-seq, NMIA, 1M7, BzCN, 2A3, icSHAPE and the rest are operating values.) Anchors: orthogonal DMS reproducibility r ≈ 0.91, &gt;90% base-pair recovery of SHAPE-directed modeling (Siegfried et al., Nat Methods 2014), and the shared SASA reference quantity for HRF/Lead-seq/icLASER.</li>
+          <li><strong>OPERATING_VALUE_PENDING_CALIBRATION</strong> — no published discrimination metric; a beta operating value awaiting calibration. This covers the remaining 23 technologies, including the entire Family C set (PARS, PARTE, tNet-RNase-seq), whose <em>direction</em> is mechanistically anchored (RNase V1 cleaves paired stems; Lockard &amp; Kumar, NAR 1981) but for which no discrimination AUC was ever published, plus the contact and pair-set methods and the long tail.</li>
+        </ul>
+        <p>Because most cut-points are operating values rather than published thresholds, calibration is what earns a segment the
+          right to ever be called STRONG.</p>
+      </div>
 
-      <h2>Distributions and merged entries</h2>
-      <p>Because one PDB entry can summarize several source cases, you may see compound labels (for example
-        <code>RMDB: A/B/C; RASP: not active</code>). The slash-separated letters list the families present across the merged
-        source cases. Open the entry’s side panel or detail page to see the per-source breakdown and the route assets that
-        back each claim.</p>
+      <h2>Why "candidate" exists: permutation calibration</h2>
+      <div class="annojoin-confidence-plain">
+        <p>A high score can just be luck. If a segment only has a handful of residues, a strong-looking AUC might appear by
+          chance. To guard against that, we keep the reactivity values exactly as measured but reshuffle which residues are
+          labelled paired versus unpaired, many times over, and watch how often a shuffled (random) labelling scores as well as
+          the real one. If the real score rarely beats the shuffles, the support is real. If chance reproduces it easily, the
+          score does not earn its tier.</p>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 640 320" role="img" aria-label="Permutation calibration: fixed reactivity, shuffled labels, null distribution with observed marker">
+          <text x="70" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textPrimary)">reactivity (fixed)</text>
+          <g>
+            <rect x="40" y="44" width="60" height="220" rx="8" fill="var(--surfaceAlt)" stroke="var(--border)"/>
+            <rect x="58" y="60" width="24" height="18" rx="3" fill="var(--primary)"/>
+            <path d="M 63 60 V 53 a 7 7 0 0 1 14 0 V 60" fill="none" stroke="var(--primary)" stroke-width="2.5"/>
+            <g font-size="11" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)" text-anchor="middle">
+              <text x="70" y="104">0.81</text><text x="70" y="128">0.12</text><text x="70" y="152">0.64</text>
+              <text x="70" y="176">0.05</text><text x="70" y="200">0.77</text><text x="70" y="224">0.21</text><text x="70" y="248">0.58</text>
+            </g>
+          </g>
+          <text x="190" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textPrimary)">paired/unpaired (shuffled)</text>
+          <g>
+            <rect x="160" y="44" width="60" height="220" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+            <g font-size="11" font-weight="700" fill="var(--accent)" text-anchor="middle">
+              <text x="190" y="104">U</text><text x="190" y="128">P</text><text x="190" y="152">P</text>
+              <text x="190" y="176">U</text><text x="190" y="200">P</text><text x="190" y="224">U</text><text x="190" y="248">P</text>
+            </g>
+          </g>
+          <g fill="none" stroke="var(--accent)" stroke-width="1.6">
+            <path d="M 226 104 C 256 96 256 132 226 128"/>
+            <path d="M 226 152 C 256 144 256 204 226 200"/>
+            <path d="M 226 224 C 252 216 252 256 226 248"/>
+          </g>
+          <text x="258" y="160" font-size="11" fill="var(--textMuted)" transform="rotate(90 258 160)" text-anchor="middle">&#215; 1000</text>
+          <text x="470" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textPrimary)">null distribution (schematic)</text>
+          <line x1="350" y1="250" x2="620" y2="250" stroke="var(--border)" stroke-width="1.5"/>
+          <line x1="350" y1="60" x2="350" y2="250" stroke="var(--border)" stroke-width="1.5"/>
+          <g fill="var(--primarySoft)" stroke="var(--border)" stroke-width="0.5">
+            <rect x="356" y="242" width="20" height="8"/><rect x="378" y="232" width="20" height="18"/>
+            <rect x="400" y="216" width="20" height="34"/><rect x="422" y="192" width="20" height="58"/>
+            <rect x="444" y="168" width="20" height="82"/><rect x="466" y="154" width="20" height="96"/>
+            <rect x="488" y="168" width="20" height="82"/><rect x="510" y="192" width="20" height="58"/>
+            <rect x="532" y="216" width="20" height="34"/><rect x="554" y="232" width="20" height="18"/>
+            <rect x="576" y="242" width="20" height="8"/>
+          </g>
+          <line x1="596" y1="70" x2="596" y2="250" stroke="var(--primary)" stroke-width="2.5"/>
+          <text x="596" y="64" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--primary)">observed</text>
+          <text x="350" y="284" font-size="11.5" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">p = (1 + #{null &#8805; obs}) / (1 + n_perm)</text>
+          <text x="350" y="304" font-size="10.5" fill="var(--textMuted)">1000 permutations &#183; seed 12345 &#183; p never zero</text>
+        </svg>
+        <figcaption>To test whether a score is luck, reactivity values are held fixed while paired/unpaired labels are reshuffled 1000 times to build a null distribution. The histogram is schematic. This label-shuffle applies to A/B/C and Family D&#8217;s pairing-proxy fallback; D&#8217;s SASA-Spearman main path has its own calibration path.</figcaption>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">The chance test</p>
+        <p>The empirical p-value is <code>(1 + #{null ≥ observed}) / (1 + n_perm)</code>, with the +1/+1 correction so it is
+          <strong>never zero</strong>. The default is 1000 permutations with seed 12345, which makes the calibration
+          deterministic and reproducible. While a segment is UNCALIBRATED, a would-be-STRONG (or would-be-MODERATE) result is
+          capped down to <strong>MODERATE_CANDIDATE</strong>. Once calibration runs, any segment with p &gt; 0.10 is downgraded
+          to <strong>NOT_SUPPORTED</strong>. Scope: this label-shuffle calibration applies to families A, B, C, and Family D's
+          pairing-proxy fallback; Family D's SASA-Spearman main path is calibrated by its own path, not by this label shuffle.</p>
+      </div>
 
-      <p class="mini-note">C-level labels and candidate tiers are exploratory and should be reviewed against the underlying
-        route assets before being used in analysis.</p>
+      <h2>Self-containment</h2>
+      <div class="annojoin-confidence-plain">
+        <p>A segment is only trustworthy if you can judge it on its own. If a residue is paired, its partner base ideally lives
+          inside the same segment, so the agreement we measure is about base pairs we can actually see. When too many partners
+          sit <em>outside</em> the segment, the segment is judging pairs it can't fully account for, and we hold it back.</p>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 640 280" role="img" aria-label="Self-containment: base-pair partners inside the segment versus spilling outside">
+          <text x="160" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent)">&#10003; partners inside segment</text>
+          <rect x="52" y="150" width="216" height="40" rx="8" fill="var(--accentSoft)" opacity="0.45"/>
+          <g fill="none" stroke="var(--accent)" stroke-width="2.2">
+            <path d="M 66 170 Q 160 96 254 170"><title>partner inside segment</title></path>
+            <path d="M 92 170 Q 160 116 228 170"><title>partner inside segment</title></path>
+            <path d="M 118 170 Q 160 134 202 170"><title>partner inside segment</title></path>
+          </g>
+          <g fill="var(--surface)" stroke="var(--textMuted)" stroke-width="1.2">
+            <circle cx="40" cy="170" r="6"/><circle cx="66" cy="170" r="6"/><circle cx="92" cy="170" r="6"/>
+            <circle cx="118" cy="170" r="6"/><circle cx="150" cy="170" r="6"/><circle cx="176" cy="170" r="6"/>
+            <circle cx="202" cy="170" r="6"/><circle cx="228" cy="170" r="6"/><circle cx="254" cy="170" r="6"/><circle cx="280" cy="170" r="6"/>
+          </g>
+          <line x1="320" y1="40" x2="320" y2="230" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="480" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="var(--textMuted)">&#10007; partner outside segment</text>
+          <rect x="362" y="150" width="170" height="40" rx="8" fill="var(--surfaceAlt)" opacity="0.7"/>
+          <g fill="none" stroke="var(--accent)" stroke-width="2.2">
+            <path d="M 388 170 Q 440 120 492 170"><title>partner inside segment</title></path>
+          </g>
+          <path d="M 414 170 Q 500 60 600 170" fill="none" stroke="var(--textMuted)" stroke-width="2.2" stroke-dasharray="6 4"><title>partner lies outside the segment &#8212; not self-contained</title></path>
+          <g fill="var(--surface)" stroke="var(--textMuted)" stroke-width="1.2">
+            <circle cx="362" cy="170" r="6"/><circle cx="388" cy="170" r="6"/><circle cx="414" cy="170" r="6"/>
+            <circle cx="440" cy="170" r="6"/><circle cx="466" cy="170" r="6"/><circle cx="492" cy="170" r="6"/>
+            <circle cx="518" cy="170" r="6"/><circle cx="548" cy="170" r="6"/><circle cx="574" cy="170" r="6"/>
+          </g>
+          <circle cx="600" cy="170" r="6" fill="var(--surface)" stroke="var(--textMuted)" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <text x="320" y="262" text-anchor="middle" font-size="10.5" fill="var(--textMuted)">STRONG &#8805; 0.70 inside &#183; MODERATE &#8805; 0.50 inside &#183; AUC-pass but &lt; 0.50 &#8594; WEAK (auc_supported_but_not_self_contained)</text>
+        </svg>
+        <figcaption>A segment is self-contained when its paired residues&#8217; base-pair partners also lie inside the same segment. STRONG needs <strong>partner_inside &#8805; 0.70</strong>, MODERATE <strong>&#8805; 0.50</strong>; an AUC-pass that spills below 0.50 is downgraded to WEAK.</figcaption>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">partner_inside_fraction</p>
+        <p><code>partner_inside_fraction</code> is the fraction of evaluable paired residues whose base-pair partner also lies
+          inside the same segment. STRONG requires ≥ 0.70 and MODERATE requires ≥ 0.50. A segment that clears its AUC bar but has
+          partner_inside &lt; 0.50 is downgraded to <strong>WEAK</strong> with the note
+          <code>auc_supported_but_not_self_contained</code>: the signal looks good, but the segment is not self-contained enough
+          to stand on.</p>
+      </div>
+
+      <h2>What this looks like at scale</h2>
+      <div class="annojoin-confidence-plain">
+        <p>Put it all together across a full run and the headline is simple: <strong>STRONG is rare and earned.</strong> Most
+          segments do not clear the gates, and that is the system working as intended — the bar is high on purpose.</p>
+      </div>
+      <figure class="annojoin-confidence-figure annojoin-confidence-chart">
+        <svg viewBox="0 0 700 380" role="img" aria-label="RASP ABC calibrated tier counts on a log-scaled axis">
+          <text x="16" y="28" font-size="14" font-weight="700" fill="var(--textPrimary)">Calibrated recall tiers &#8212; 218,638 segments</text>
+          <text x="16" y="46" font-size="11" fill="var(--textMuted)">x-axis: log scale (counts span 283 to 114,591)</text>
+          <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 4">
+            <line x1="238" y1="66" x2="238" y2="312"/><line x1="316" y1="66" x2="316" y2="312"/>
+            <line x1="394" y1="66" x2="394" y2="312"/><line x1="472" y1="66" x2="472" y2="312"/>
+            <line x1="550" y1="66" x2="550" y2="312"/>
+          </g>
+          <g font-size="10" fill="var(--textMuted)" text-anchor="middle">
+            <text x="238" y="328">10</text><text x="316" y="328">100</text><text x="394" y="328">1,000</text>
+            <text x="472" y="328">10,000</text><text x="550" y="328">100,000</text>
+          </g>
+          <line x1="160" y1="66" x2="160" y2="312" stroke="var(--border)" stroke-width="1.5"/>
+          <g font-size="11.5" fill="var(--textPrimary)">
+            <text x="152" y="84" text-anchor="end" font-weight="700">STRONG</text>
+            <rect x="160" y="68" width="191" height="24" rx="3" fill="var(--primary)"><title>STRONG: 283 segments</title></rect>
+            <text x="357" y="84" font-weight="700" fill="var(--textPrimary)">283</text>
+            <text x="152" y="126" text-anchor="end" font-weight="700">MODERATE</text>
+            <rect x="160" y="110" width="240" height="24" rx="3" fill="var(--accent)"><title>MODERATE: 1,191 segments</title></rect>
+            <text x="406" y="126" font-weight="700">1,191</text>
+            <text x="152" y="168" text-anchor="end" font-weight="700">WEAK</text>
+            <rect x="160" y="152" width="333" height="24" rx="3" fill="var(--primarySoft)"><title>WEAK: 18,635 segments</title></rect>
+            <text x="499" y="168">18,635</text>
+            <text x="152" y="210" text-anchor="end" font-weight="700">DISCORDANT</text>
+            <rect x="160" y="194" width="353" height="24" rx="3" fill="var(--accentSoft)"><title>DISCORDANT: 33,876 segments</title></rect>
+            <text x="519" y="210">33,876</text>
+            <text x="152" y="252" text-anchor="end" font-weight="700">NOT_SUPPORTED</text>
+            <rect x="160" y="236" width="395" height="24" rx="3" fill="var(--textMuted)"><title>NOT_SUPPORTED: 114,591 segments</title></rect>
+            <text x="561" y="252">114,591</text>
+            <text x="152" y="294" text-anchor="end" font-weight="700">UNDERPOWERED</text>
+            <rect x="160" y="278" width="367" height="24" rx="3" fill="var(--border)"><title>UNDERPOWERED: 50,062 segments</title></rect>
+            <text x="533" y="294">50,062</text>
+          </g>
+          <text x="16" y="356" font-size="10.5" fill="var(--textMuted)">Log scale keeps the rare earned tiers (STRONG 283) visible beside NOT_SUPPORTED (114,591). STRONG/MODERATE in earned accents; NOT_SUPPORTED/UNDERPOWERED muted.</text>
+          <text x="16" y="372" font-size="10" fill="var(--textMuted)">STRONG is rare and earned: 283 of 218,638 segments (0.13%).</text>
+        </svg>
+        <figcaption>Calibrated recall tiers across the full RASP ABC run. The x-axis is <strong>log-scaled</strong> so the rare earned tiers stay visible against the dominant NOT_SUPPORTED bucket. STRONG accounts for just 283 of 218,638 segments.</figcaption>
+        <p class="annojoin-confidence-figure-cite">as of run 2026-06-26, source 133:/data/rasp_abc_lss_run_20260626/cal/abc_lss_calibrated.tsv</p>
+      </figure>
+      <figure class="annojoin-confidence-figure annojoin-confidence-chart">
+        <svg viewBox="0 0 220 220" role="img" aria-label="Family D SASA path: 82.3 percent SASA present versus 17.7 percent pairing-proxy fallback">
+          <path d="M 110 30 A 80 80 0 1 1 38.25 74.59 L 65.15 87.87 A 50 50 0 1 0 110 60 Z" fill="var(--primary)"><title>SASA_PRESENT: 82.3% (8,417 segments)</title></path>
+          <path d="M 38.25 74.59 A 80 80 0 0 1 110 30 L 110 60 A 50 50 0 0 0 65.15 87.87 Z" fill="var(--accentSoft)"><title>PAIRING_PROXY_FALLBACK: 17.7% (1,812 segments)</title></path>
+          <text x="110" y="106" text-anchor="middle" font-size="22" font-weight="700" fill="var(--textPrimary)">82.3%</text>
+          <text x="110" y="124" text-anchor="middle" font-size="10.5" fill="var(--textMuted)">SASA present</text>
+        </svg>
+        <figcaption>Family D evidence path across the full run (10,229 segments).
+          <span class="annojoin-confidence-chart-legend">
+            <span class="annojoin-confidence-chart-dot" style="background:var(--primary)"></span>SASA_PRESENT 82.3% (8,417)
+            &#160;&#160;
+            <span class="annojoin-confidence-chart-dot" style="background:var(--accentSoft)"></span>PAIRING_PROXY_FALLBACK 17.7% (1,812)
+          </span>
+        </figcaption>
+        <p class="annojoin-confidence-figure-cite">as of run 2026-06-27, source 130:/home/sunhao/family_d_lss_run_20260627/full/out/def_lss_confidence.tsv</p>
+      </figure>
+
+      <h2>"Not active" and merged labels</h2>
+      <div class="annojoin-confidence-plain">
+        <p><code>RASP: not active</code> does <strong>not</strong> mean the evidence failed. It means the positive-confidence
+          track for that source is not yet switched on for public display — think "pending," not "negative" and not
+          "unsupported." When it's turned on, you'll see real tiers.</p>
+        <p>A compound label like <code>RMDB: A/B/C; RASP: not active</code> appears on merged cases. It simply lists the
+          measurement families present across the underlying source cases (here, families A, B and C from RMDB) and notes that
+          the RASP track is still pending. The slash-separated letters are an inventory of what was measured, not a combined
+          grade. To see how each family and tier breaks down for a specific entry, open the side panel or the case detail page
+          from the master table.</p>
+      </div>
+
+      <h2>What confidence can never do</h2>
+      <div class="annojoin-confidence-plain">
+        <p>LSS is a supporting signal, not a verdict. It can nudge ranking and decide whether an entry is eligible for a ranked
+          set, but it has hard limits by design.</p>
+      </div>
+      <div class="annojoin-confidence-caveat">
+        <ul class="annojoin-confidence-legend">
+          <li>LSS <strong>never proves a full-feature claim</strong> and <strong>never exceeds the <code>claim_ceiling</code></strong> — it cannot promote an entry beyond the claim its underlying data already supports.</li>
+          <li>Its contribution to the score, <code>confidence_score_delta</code>, is bounded to <strong>[−0.10, +0.05]</strong> — a small nudge, never a takeover.</li>
+          <li>Only the tiers <strong>{STRONG, MODERATE, MODERATE_CANDIDATE}</strong> are eligible for ranked-set membership; everything below is informational.</li>
+          <li>High coverage combined with STRONG or MODERATE support raises only an entry's <strong>internal ranking</strong>, not its claim authority.</li>
+        </ul>
+      </div>
+
       <p><a class="download-outline-btn" href="#annojoin-atlas">Back to the master table</a></p>
     </section>
   </main>`;

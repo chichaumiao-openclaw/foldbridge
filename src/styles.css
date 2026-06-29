@@ -724,6 +724,351 @@ button[data-annojoin-clear-all]:hover {
   line-height: 1.7;
 }
 
+/* ============================================================
+   ANNOJOIN confidence article — figures, charts & two-layer text
+   (W3-T1). All colors bound to design tokens so light + dark
+   themes both read correctly; dark overrides grouped at the end
+   of this block. Each contracted class is defined exactly once.
+   ============================================================ */
+
+/* --- Figure scaffold (mirrors .article-figure but token-bound) --- */
+.annojoin-confidence-figure {
+  margin: 28px 0 22px;
+  display: grid;
+  gap: 12px;
+}
+
+.annojoin-confidence-figure svg {
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  border-radius: var(--radiusPanel);
+}
+
+.annojoin-confidence-figure figcaption {
+  margin: 0;
+  color: var(--textMuted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.annojoin-confidence-figure-cite {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  font-family: "SFMono-Regular", "Menlo", "Consolas", monospace;
+}
+
+/* --- Two-layer text: plain explainer + deep technical inset --- */
+.annojoin-confidence-plain {
+  line-height: 1.65;
+  color: var(--textPrimary);
+}
+
+.annojoin-confidence-deep {
+  margin: 14px 0 18px;
+  padding: 14px 18px;
+  background: var(--surfaceAlt);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radiusPanel);
+  line-height: 1.6;
+  color: var(--textSecondary);
+}
+
+.annojoin-confidence-deep-label {
+  display: block;
+  margin: 0 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* --- Badge: family + tier pill --- */
+.annojoin-confidence-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--textPrimary);
+}
+
+.annojoin-confidence-badge-family {
+  background: var(--primarySoft);
+}
+
+.annojoin-confidence-badge-tier {
+  background: var(--accentSoft);
+}
+
+/* --- Matrix: six-family grid --- */
+.annojoin-confidence-matrix {
+  display: grid;
+  gap: 1px;
+  margin: 18px 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radiusPanel);
+  overflow: hidden;
+  background: var(--border);
+}
+
+.annojoin-confidence-matrix-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr) minmax(0, 1.1fr) minmax(0, 0.9fr);
+  gap: 1px;
+  background: var(--border);
+}
+
+.annojoin-confidence-matrix-cell {
+  padding: 10px 14px;
+  background: var(--surface);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--textPrimary);
+}
+
+.annojoin-confidence-matrix-row:nth-child(even) .annojoin-confidence-matrix-cell {
+  background: var(--surfaceAlt);
+}
+
+.annojoin-confidence-matrix-row.is-reversed .annojoin-confidence-matrix-cell {
+  border-top: 2px solid var(--accent);
+}
+
+.annojoin-confidence-matrix-row.is-dual-path .annojoin-confidence-matrix-cell {
+  border-top: 2px dashed var(--primary);
+}
+
+/* --- Ladder: provenance grades --- */
+.annojoin-confidence-ladder {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0;
+}
+
+.annojoin-confidence-ladder-step {
+  padding: 12px 16px;
+  border-radius: var(--radiusPanel);
+  border: 1px solid var(--border);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: var(--textPrimary);
+}
+
+.annojoin-confidence-ladder-step.grade-supported {
+  background: var(--primarySoft);
+  border-left: 4px solid var(--primary);
+}
+
+.annojoin-confidence-ladder-step.grade-informed {
+  background: var(--surfaceAlt);
+  border-left: 4px solid var(--accent);
+}
+
+.annojoin-confidence-ladder-step.grade-pending {
+  background: var(--surface);
+  border-left: 4px solid var(--textMuted);
+  color: var(--textSecondary);
+}
+
+/* --- Tier palette (shared by SVG charts + inline chips) ---
+   Each tier sets --tier-color (read by inline SVG fills) and
+   mirrors it as text/swatch color via currentColor. STRONG +
+   MODERATE earn primary/accent; failure tiers use muted tones. */
+.tier-strong {
+  --tier-color: var(--primary);
+  color: var(--tier-color);
+}
+
+.tier-moderate {
+  --tier-color: var(--accent);
+  color: var(--tier-color);
+}
+
+.tier-moderate-candidate {
+  --tier-color: var(--accentSoft);
+  color: var(--tier-color);
+}
+
+.tier-weak {
+  --tier-color: var(--textSecondary);
+  color: var(--tier-color);
+}
+
+.tier-discordant {
+  --tier-color: var(--textMuted);
+  color: var(--tier-color);
+}
+
+.tier-not-supported {
+  --tier-color: var(--textMuted);
+  color: var(--tier-color);
+}
+
+.tier-underpowered {
+  --tier-color: var(--border);
+  color: var(--tier-color);
+}
+
+.tier-not-evaluable {
+  --tier-color: var(--border);
+  color: var(--tier-color);
+}
+
+/* --- Charts: real-data figure wrappers --- */
+.annojoin-confidence-chart {
+  margin: 18px 0;
+  display: grid;
+  gap: 10px;
+}
+
+.annojoin-confidence-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  font-size: 0.82rem;
+  color: var(--textSecondary);
+}
+
+.annojoin-confidence-chart-legend > * {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.annojoin-confidence-chart-dot {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  flex: 0 0 auto;
+}
+
+.annojoin-confidence-chart-note {
+  margin: 0;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--textMuted);
+  line-height: 1.55;
+}
+
+/* --- Hard-cap caveat callout --- */
+.annojoin-confidence-caveat {
+  margin: 18px 0;
+  padding: 14px 18px;
+  background: var(--primarySoft);
+  border-left: 4px solid var(--primary);
+  border-radius: var(--radiusPanel);
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--textPrimary);
+}
+
+/* --- Dark theme overrides (tokens stay light-mode values here,
+   so surfaces/text/muted swatches need explicit dark tweaks,
+   following the body[data-mode="dark"] pattern at styles.css:4572+) --- */
+body[data-mode="dark"] .annojoin-confidence-figure svg {
+  background: rgba(17, 26, 23, 0.92);
+  border-color: rgba(125, 212, 170, 0.16);
+}
+
+body[data-mode="dark"] .annojoin-confidence-figure figcaption {
+  color: #b8c8bf;
+}
+
+body[data-mode="dark"] .annojoin-confidence-figure-cite {
+  color: #7dd4aa;
+}
+
+body[data-mode="dark"] .annojoin-confidence-plain,
+body[data-mode="dark"] .annojoin-confidence-matrix-cell,
+body[data-mode="dark"] .annojoin-confidence-ladder-step,
+body[data-mode="dark"] .annojoin-confidence-caveat,
+body[data-mode="dark"] .annojoin-confidence-badge {
+  color: #edf4ef;
+}
+
+body[data-mode="dark"] .annojoin-confidence-deep,
+body[data-mode="dark"] .annojoin-confidence-chart-legend {
+  color: #b8c8bf;
+}
+
+body[data-mode="dark"] .annojoin-confidence-deep {
+  background: rgba(17, 26, 23, 0.92);
+  border-left-color: #2F8F6B;
+}
+
+body[data-mode="dark"] .annojoin-confidence-deep-label {
+  color: #7dd4aa;
+}
+
+body[data-mode="dark"] .annojoin-confidence-matrix,
+body[data-mode="dark"] .annojoin-confidence-matrix-row {
+  background: rgba(125, 212, 170, 0.16);
+}
+
+body[data-mode="dark"] .annojoin-confidence-matrix-cell {
+  background: rgba(17, 26, 23, 0.92);
+}
+
+body[data-mode="dark"] .annojoin-confidence-matrix-row:nth-child(even) .annojoin-confidence-matrix-cell {
+  background: rgba(21, 31, 28, 0.96);
+}
+
+body[data-mode="dark"] .annojoin-confidence-ladder-step {
+  border-color: rgba(125, 212, 170, 0.16);
+}
+
+body[data-mode="dark"] .annojoin-confidence-ladder-step.grade-supported,
+body[data-mode="dark"] .annojoin-confidence-caveat {
+  background: rgba(26, 87, 50, 0.32);
+}
+
+body[data-mode="dark"] .annojoin-confidence-ladder-step.grade-informed {
+  background: rgba(21, 31, 28, 0.96);
+}
+
+body[data-mode="dark"] .annojoin-confidence-ladder-step.grade-pending {
+  background: rgba(17, 26, 23, 0.92);
+  color: #b8c8bf;
+}
+
+body[data-mode="dark"] .annojoin-confidence-badge-family {
+  background: rgba(26, 87, 50, 0.42);
+}
+
+body[data-mode="dark"] .annojoin-confidence-badge-tier {
+  background: rgba(124, 163, 49, 0.36);
+}
+
+body[data-mode="dark"] .annojoin-confidence-chart-note {
+  color: #8fa39a;
+}
+
+/* muted-tone tiers need lifting so swatches stay visible on dark */
+body[data-mode="dark"] .tier-weak {
+  --tier-color: #9fb0a7;
+}
+
+body[data-mode="dark"] .tier-discordant,
+body[data-mode="dark"] .tier-not-supported {
+  --tier-color: #8fa39a;
+}
+
+body[data-mode="dark"] .tier-underpowered,
+body[data-mode="dark"] .tier-not-evaluable {
+  --tier-color: #5f7068;
+}
+
 @media (max-width: 980px) {
   .annojoin-table-layout {
     grid-template-columns: 1fr;
@@ -731,6 +1076,16 @@ button[data-annojoin-clear-all]:hover {
 
   .annojoin-detail-sidebar {
     position: static;
+  }
+
+  /* collapse the family matrix + chart legends to a single column */
+  .annojoin-confidence-matrix-row {
+    grid-template-columns: 1fr;
+  }
+
+  .annojoin-confidence-chart-legend {
+    flex-direction: column;
+    gap: 6px;
   }
 }
 
