@@ -83,6 +83,7 @@ const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'er
 const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
 let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
+let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let pdbCaseConfidenceFilter = 'all';
@@ -1471,7 +1472,7 @@ function homePage() {
   }
   let scrollStoryHtml = '';
   if (homeScrollStoryState && typeof homeScrollStoryState === 'object') {
-    const visitIndex = readHomeScrollVisitIndex();
+    const visitIndex = homeScrollVisitIndex;
     const featured = pickFeaturedCase(homeScrollStoryState.cases || [], visitIndex);
     scrollStoryHtml = renderHomeScrollStory(featured, { assetBase: homeScrollStoryStore.assetBase });
   }
@@ -1965,6 +1966,7 @@ function bumpHomeScrollVisitIndex() {
 async function loadHomeScrollStory() {
   if (homeScrollStoryState === 'loading') return;
   homeScrollStoryState = 'loading';
+  homeScrollVisitIndex = readHomeScrollVisitIndex();
   try {
     homeScrollStoryState = await homeScrollStoryStore.loadStory();
     bumpHomeScrollVisitIndex();
