@@ -28,13 +28,20 @@ test('reactivityColor clamps out-of-range input', () => {
   assert.equal(reactivityColor(99), reactivityColor(1));
 });
 
-test('renderReactivityAlignment emits one colored cell per residue', () => {
-  const caseData = { sequence: ['G','A','C'], reactivity: [0, 1.25, 2.5], norm_ceiling: 2.5 };
+test('renderReactivityAlignment emits one colored cell per residue, in two rows', () => {
+  const caseData = { sequence: ['G','A','C'], reactivity: [0, 1.25, 2.5], norm_ceiling: 2.5, pdb_id: '1OB5', chain: 'F' };
   const html = renderReactivityAlignment(caseData);
+  // 3 residues × 2 cell rows (probing query + PDB) = 6 colored cells
   const cells = html.match(/class="hss-cell"/g) || [];
-  assert.equal(cells.length, 3);
+  assert.equal(cells.length, 6);
+  // matchline: one '|' tick per residue
+  const ticks = html.match(/class="hss-match-tick"/g) || [];
+  assert.equal(ticks.length, 3);
   assert.match(html, />G</);
   assert.match(html, /rgb\(23, 75, 58\)/);   // 第一个残基 reactivity 0 → 冷绿
+  // row labels present (prototype wording)
+  assert.match(html, /Probing query \(reactivity\)/);
+  assert.match(html, /chain F/);              // PDB row label carries the chain
 });
 
 test('renderReactivityAlignment renders empty alignment when no residues', () => {
@@ -53,10 +60,10 @@ test('renderReactivityAlignment colors missing-datum residues neutral grey, not 
   };
   const html = renderReactivityAlignment(caseData);
   const cells = html.match(/class="hss-cell\b/g) || [];
-  assert.equal(cells.length, 4);
+  assert.equal(cells.length, 8);
   // 真实 0 → 冷绿；缺数据 → 中性灰；满值 → 暖橙
   const neutral = html.match(/#E9EDEA/gi) || [];
-  assert.equal(neutral.length, 2, 'two missing-datum residues must be neutral grey');
+  assert.equal(neutral.length, 4, 'two missing-datum residues must be neutral grey, in both rows');
   assert.match(html, /rgb\(23, 75, 58\)/);   // 真实 reactivity 0 仍冷绿（不被误判为缺数据）
   assert.match(html, /rgb\(232, 116, 62\)/); // 满值暖橙
 });

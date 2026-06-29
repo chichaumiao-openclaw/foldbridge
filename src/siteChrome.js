@@ -204,23 +204,36 @@ export function reactivityColor(norm) {
   return `rgb(${mix[0]}, ${mix[1]}, ${mix[2]})`;
 }
 
-// 1D alignment 态：每个残基一个带色格。无 DOM / 无 window。
-export function renderReactivityAlignment(caseData = {}) {
-  const seq = Array.isArray(caseData.sequence) ? caseData.sequence : [];
-  const react = Array.isArray(caseData.reactivity) ? caseData.reactivity : [];
-  const ceiling = Number(caseData.norm_ceiling) || 1;
-  const cells = seq.map((base, i) => {
+// 单行带色格：每残基一个格。无反应性数据 → 中性灰（数据诚实，spec §3）。
+// null/undefined/非有限 视为缺失；Number(null)===0 是有限值，须显式判 null。
+function renderAlignmentCells(seq, react, ceiling) {
+  return seq.map((base, i) => {
     const datum = react[i];
     const raw = Number(datum);
-    // 无反应性数据（null/undefined/非有限）→ 中性灰占位，绝不外推色标（数据诚实，spec §3）。
-    // 注意 Number(null)===0 是有限值，须显式把 null 当缺失，否则会误着冷绿。
     if (datum == null || !Number.isFinite(raw)) {
       return `<span class="hss-cell hss-cell-nodata" style="background:${HSS_NEUTRAL}">${base}</span>`;
     }
     const norm = Math.min(1, raw / ceiling);
     return `<span class="hss-cell" style="background:${reactivityColor(norm)}">${base}</span>`;
   }).join('');
-  return `<div class="hss-alignment" role="img" aria-label="Per-residue reactivity">${cells}</div>`;
+}
+
+// 1D alignment 态：3 行（探针查询 / 匹配竖线 / PDB 链），上下两行共用同一着色。
+// 无 DOM / 无 window。色标与缺数据中性灰保持单一权威。
+export function renderReactivityAlignment(caseData = {}) {
+  const seq = Array.isArray(caseData.sequence) ? caseData.sequence : [];
+  const react = Array.isArray(caseData.reactivity) ? caseData.reactivity : [];
+  const ceiling = Number(caseData.norm_ceiling) || 1;
+  const pdbId = caseData.pdb_id || '';
+  const chain = caseData.chain || '';
+  const cells = renderAlignmentCells(seq, react, ceiling);
+  const ticks = seq.map(() => `<span class="hss-match-tick">|</span>`).join('');
+  const pdbLabel = `PDB ${pdbId} · chain ${chain}`.replace(/\s+$/,'').replace(/·\s*chain\s*$/,'· chain');
+  return `<div class="hss-alignment" role="img" aria-label="Per-residue reactivity, probing query aligned to PDB chain">
+    <div class="hss-aln-row"><span class="hss-aln-label">Probing query (reactivity)</span><div class="hss-aln-cells">${cells}</div></div>
+    <div class="hss-aln-row"><div class="hss-matchline">${ticks}</div></div>
+    <div class="hss-aln-row"><span class="hss-aln-label">${pdbLabel}</span><div class="hss-aln-cells">${cells}</div></div>
+  </div>`;
 }
 
 // 确定性按访问次序选主角案例。空/非数组 → null；visitIndex 非有限数 → 0。
