@@ -71,7 +71,6 @@ test('buildAtlasIndexAsset gives same-PDB RMDB and RASP rows distinct atlas case
   assert.deepEqual(asset.cases.map((row) => row.recommendedDefaultPreset), ['rmdb-view', 'rasp-view']);
   assert.deepEqual(asset.cases.map((row) => row.detailRouteId), ['detail:rmdb', 'detail:rasp']);
   assert.deepEqual(asset.displayCases.map((row) => row.atlasCaseKey), ['PDB:10FZ']);
-  assert.deepEqual(asset.caseHierarchy.flatMap((parent) => parent.children.flatMap((child) => child.cases)), ['PDB:10FZ']);
 });
 
 test('buildAtlasIndexAsset merges same-PDB source rows into display cases for the master table', () => {
@@ -144,7 +143,6 @@ test('buildAtlasIndexAsset merges same-PDB source rows into display cases for th
     ['RMDB2PDB', 'cases/RMDB2PDB%3A10FZ.json', 'detail:rmdb'],
     ['RASP2PDB', 'cases/RASP2PDB%3A10FZ.json', 'detail:rasp']
   ]);
-  assert.deepEqual(asset.caseHierarchy.flatMap((parent) => parent.children.flatMap((child) => child.cases)), ['PDB:10FZ']);
 });
 
 test('buildAtlasIndexAsset keeps ANNOJOIN tables as browser entry and omits large annotation payloads', () => {
@@ -184,79 +182,10 @@ test('buildAtlasIndexAsset keeps ANNOJOIN tables as browser entry and omits larg
   assert.equal(asset.cases[0].caseAssetPath, 'cases/10ZT.json');
   assert.equal(asset.cases[0].recommendedDefaultPreset, 'balanced_segment_view');
   assert.equal(asset.cases[0].detailRouteId, '/atlas/rmdb2pdb/10ZT');
-  assert.equal(asset.cases[0].parentClassLabel, 'Ribosome');
   assert.equal(asset.cases[0].biologicalMoleculeName, '16S rRNA');
   assert.equal(asset.cases[0].confidenceDisplayLabel, 'B_CONTEXT_STRATIFIED (1)');
-  assert.equal(asset.caseHierarchy[0].label, 'Ribosome');
-  assert.equal(asset.caseHierarchy[0].children[0].label, '16S ribosomal RNA');
-  assert.deepEqual(asset.caseHierarchy[0].children[0].cases, ['10ZT']);
   assert.equal(asset.presets.length, 1);
-  assert.deepEqual(Object.keys(asset).sort(), ['caseHierarchy', 'cases', 'displayCases', 'downloads', 'facets', 'generatedAt', 'presets', 'schemaVersion', 'source', 'totalCaseCount', 'totalSourceCaseCount', 'version'].sort());
-});
-
-test('buildAtlasIndexAsset makes parentless cases their own folding class', () => {
-  const asset = buildAtlasIndexAsset({
-    cases: [
-      {
-        case_id: '10ZU',
-        pdb_id: '10ZU',
-        parent_class_label: '',
-        child_class_label: 'MPNN-fixbb designed RNA molecule',
-        biological_molecule_name: 'MPNN-fixbb designed RNA molecule',
-        pdb_molecule_name: 'MPNN-fixbb designed RNA molecule'
-      }
-    ]
-  });
-
-  assert.equal(asset.caseHierarchy.length, 1);
-  assert.equal(asset.caseHierarchy[0].label, 'MPNN-fixbb designed RNA molecule');
-  assert.equal(asset.caseHierarchy[0].children[0].label, 'MPNN-fixbb designed RNA molecule');
-  assert.deepEqual(asset.caseHierarchy[0].children[0].cases, ['10ZU']);
-});
-
-test('buildAtlasIndexAsset treats RASP raw-hit and pending placeholder class labels as missing so groups fall back to molecule name', () => {
-  const asset = buildAtlasIndexAsset({
-    cases: [
-      {
-        asset_family: 'RASP2PDB',
-        case_id: '8XR0',
-        pdb_id: '8XR0',
-        parent_class_label: 'RASP public current',
-        parent_class_source: 'PUBLIC/RASP/raw_hit_cases_current',
-        child_class_label: 'raw-hit case',
-        child_class_source: 'PUBLIC/RASP/raw_hit_cases_current',
-        biological_molecule_name: 'Escherichia coli ribonuclease P RNA',
-        pdb_molecule_name: 'Escherichia coli ribonuclease P RNA'
-      },
-      {
-        asset_family: 'RMDB2PDB',
-        case_id: '9PND',
-        pdb_id: '9PND',
-        parent_class_label: 'pending parent display group for pdbmol_deadbeef',
-        parent_class_source: 'PDB/biological_layer/governance_context_display_name',
-        child_class_label: 'pending parent display group for pdbmol_deadbeef',
-        child_class_source: 'PDB/biological_layer/governance_context_display_name',
-        biological_molecule_name: 'Hepatitis delta virus ribozyme',
-        pdb_molecule_name: 'Hepatitis delta virus ribozyme'
-      }
-    ]
-  });
-
-  const rasp = asset.cases.find((row) => row.caseId === '8XR0');
-  const rmdb = asset.cases.find((row) => row.caseId === '9PND');
-  // Placeholder display labels are blanked so the fallback chain takes over.
-  assert.equal(rasp.parentClassLabel, '');
-  assert.equal(rasp.childClassLabel, '');
-  assert.equal(rmdb.parentClassLabel, '');
-  assert.equal(rmdb.childClassLabel, '');
-  // Raw provenance source fields are untouched.
-  assert.equal(rasp.parentClassSource, 'PUBLIC/RASP/raw_hit_cases_current');
-  assert.equal(rmdb.parentClassSource, 'PDB/biological_layer/governance_context_display_name');
-  // No fake "RASP public current" / "raw-hit case" / "pending ..." groups remain;
-  // each case folds under its molecule name instead.
-  const labels = asset.caseHierarchy.map((parent) => parent.label).sort();
-  assert.deepEqual(labels, ['Escherichia coli ribonuclease P RNA', 'Hepatitis delta virus ribozyme']);
-  assert.equal(asset.caseHierarchy.some((parent) => /RASP public current|raw-hit|pending/i.test(parent.label)), false);
+  assert.deepEqual(Object.keys(asset).sort(), ['cases', 'displayCases', 'downloads', 'facets', 'generatedAt', 'presets', 'schemaVersion', 'source', 'totalCaseCount', 'totalPlacementCount', 'totalSourceCaseCount', 'version'].sort());
 });
 
 test('buildAtlasIndexAsset folds molecule-name case variants into a corpus-majority moleculeDisplayName', () => {
@@ -309,159 +238,6 @@ test('buildAtlasIndexAsset leaves moleculeDisplayName empty when no source name 
     ]
   });
   assert.equal(asset.cases[0].moleculeDisplayName, '');
-});
-
-test('buildAtlasIndexAsset folds class-label case variants so the master table groups them together', () => {
-  const asset = buildAtlasIndexAsset({
-    cases: [
-      { case_id: 'G1', pdb_id: 'G1', parent_class_label: '16S ribosomal RNA', child_class_label: '16S ribosomal RNA' },
-      { case_id: 'G2', pdb_id: 'G2', parent_class_label: '16S ribosomal RNA', child_class_label: '16S ribosomal RNA' },
-      { case_id: 'G3', pdb_id: 'G3', parent_class_label: '16S RIBOSOMAL RNA', child_class_label: '16S RIBOSOMAL RNA' },
-      { case_id: 'G4', pdb_id: 'G4', parent_class_label: '16S Ribosomal RNA', child_class_label: '16S Ribosomal RNA' }
-    ]
-  });
-
-  // class labels canonicalized to the corpus-majority spelling
-  for (const row of asset.cases) {
-    assert.equal(row.parentClassLabel, '16S ribosomal RNA');
-    assert.equal(row.childClassLabel, '16S ribosomal RNA');
-  }
-  // the master-table grouping now yields a single parent group with all 4 cases
-  const groups = buildAnnojointTableGroups(asset.displayCases);
-  assert.equal(groups.length, 1);
-  assert.equal(groups[0].label, '16S ribosomal RNA');
-  assert.equal(groups[0].count, 4);
-});
-
-test('buildAtlasIndexAsset folds rRNA <-> ribosomal RNA abbreviation into one full-form parent group', () => {
-  const asset = buildAtlasIndexAsset({
-    cases: [
-      { case_id: 'R1', pdb_id: 'R1', parent_class_label: '25S ribosomal RNA', child_class_label: '25S ribosomal RNA' },
-      { case_id: 'R2', pdb_id: 'R2', parent_class_label: '25S rRNA', child_class_label: '25S rRNA' },
-      { case_id: 'R3', pdb_id: 'R3', parent_class_label: '25S rRNA', child_class_label: '25S rRNA' }
-    ]
-  });
-
-  // even though "25S rRNA" is the majority count, the full form wins as canonical
-  for (const row of asset.cases) {
-    assert.equal(row.parentClassLabel, '25S ribosomal RNA');
-    assert.equal(row.childClassLabel, '25S ribosomal RNA');
-  }
-  const groups = buildAnnojointTableGroups(asset.displayCases);
-  assert.equal(groups.length, 1);
-  assert.equal(groups[0].label, '25S ribosomal RNA');
-  assert.equal(groups[0].count, 3);
-});
-
-test('buildAtlasIndexAsset force-expands tRNA/mRNA/gRNA abbreviations to the standard full form', () => {
-  const asset = buildAtlasIndexAsset({
-    cases: [
-      { case_id: 'T1', pdb_id: 'T1', parent_class_label: 'tRNA', child_class_label: 'tRNA' },
-      { case_id: 'T2', pdb_id: 'T2', parent_class_label: 'transfer RNA', child_class_label: 'transfer RNA' },
-      { case_id: 'M1', pdb_id: 'M1', parent_class_label: 'mRNA', child_class_label: 'mRNA' },
-      { case_id: 'M2', pdb_id: 'M2', parent_class_label: 'messenger RNA', child_class_label: 'messenger RNA' },
-      { case_id: 'G1', pdb_id: 'G1', parent_class_label: 'gRNA', child_class_label: 'gRNA' },
-      { case_id: 'G2', pdb_id: 'G2', parent_class_label: 'Guide RNA', child_class_label: 'Guide RNA' }
-    ]
-  });
-  const labels = new Map(asset.cases.map((row) => [row.caseId, row.parentClassLabel]));
-  assert.equal(labels.get('T1'), 'transfer RNA');
-  assert.equal(labels.get('T2'), 'transfer RNA');
-  assert.equal(labels.get('M1'), 'messenger RNA');
-  assert.equal(labels.get('M2'), 'messenger RNA');
-  // even the corpus full-form spelling is re-cased to the standard dictionary form
-  assert.equal(labels.get('G1'), 'guide RNA');
-  assert.equal(labels.get('G2'), 'guide RNA');
-
-  const groups = buildAnnojointTableGroups(asset.displayCases);
-  const groupLabels = groups.map((group) => group.label).sort();
-  assert.deepEqual(groupLabels, ['guide RNA', 'messenger RNA', 'transfer RNA']);
-});
-
-test('buildAtlasIndexAsset force-expands an abbreviation even when the corpus has no full form', () => {
-  const asset = buildAtlasIndexAsset({
-    cases: [
-      { case_id: 'C1', pdb_id: 'C1', parent_class_label: 'crRNA', child_class_label: 'crRNA' },
-      { case_id: 'C2', pdb_id: 'C2', parent_class_label: 'crRNA', child_class_label: 'crRNA' }
-    ]
-  });
-  for (const row of asset.cases) {
-    assert.equal(row.parentClassLabel, 'CRISPR RNA');
-  }
-});
-
-test('buildAtlasIndexAsset re-cases all-caps full forms to the standard display spelling', () => {
-  const asset = buildAtlasIndexAsset({
-    cases: [
-      { case_id: 'F1', pdb_id: 'F1', parent_class_label: '5S RIBOSOMAL RNA', child_class_label: '5S RIBOSOMAL RNA', biological_molecule_name: '5S RIBOSOMAL RNA' },
-      { case_id: 'F2', pdb_id: 'F2', parent_class_label: '5S rRNA', child_class_label: '5S rRNA', biological_molecule_name: '5S rRNA' },
-      { case_id: 'F3', pdb_id: 'F3', parent_class_label: 'TRANSFER RNA', child_class_label: 'TRANSFER RNA', biological_molecule_name: 'TRANSFER RNA' }
-    ]
-  });
-  const labels = new Map(asset.cases.map((row) => [row.caseId, row.parentClassLabel]));
-  assert.equal(labels.get('F1'), '5S ribosomal RNA');
-  assert.equal(labels.get('F2'), '5S ribosomal RNA');
-  assert.equal(labels.get('F3'), 'transfer RNA');
-  // numeric prefix is preserved verbatim; only the RNA term is normalized
-  const displayNames = new Map(asset.cases.map((row) => [row.caseId, row.moleculeDisplayName]));
-  assert.equal(displayNames.get('F1'), '5S ribosomal RNA');
-  // raw provenance stays exactly as authored
-  assert.equal(asset.cases.find((row) => row.caseId === 'F1').biologicalMoleculeName, '5S RIBOSOMAL RNA');
-});
-
-test('buildAtlasIndexAsset never merges parenthetical-qualified labels via abbreviation expansion', () => {
-  const asset = buildAtlasIndexAsset({
-    cases: [
-      { case_id: 'Q1', pdb_id: 'Q1', parent_class_label: 'tRNA(Phe)', child_class_label: 'tRNA(Phe)' },
-      { case_id: 'Q2', pdb_id: 'Q2', parent_class_label: 'tRNA (Val)', child_class_label: 'tRNA (Val)' },
-      { case_id: 'Q3', pdb_id: 'Q3', parent_class_label: 'transfer RNA', child_class_label: 'transfer RNA' },
-      { case_id: 'Q4', pdb_id: 'Q4', parent_class_label: '16S rRNA (1584-MER)', child_class_label: '16S rRNA (1584-MER)' }
-    ]
-  });
-  const labels = new Map(asset.cases.map((row) => [row.caseId, row.parentClassLabel]));
-  // the RNA term is force-expanded, but the distinct qualifiers keep their own groups
-  assert.equal(labels.get('Q1'), 'transfer RNA(Phe)');
-  assert.equal(labels.get('Q2'), 'transfer RNA (Val)');
-  assert.equal(labels.get('Q3'), 'transfer RNA');
-  assert.equal(labels.get('Q4'), '16S ribosomal RNA (1584-MER)');
-  // four distinct parent groups, no over-merge
-  const groups = buildAnnojointTableGroups(asset.displayCases);
-  assert.equal(groups.length, 4);
-});
-
-test('buildAtlasIndexAsset abbreviation fold never touches raw provenance fields', () => {
-  const asset = buildAtlasIndexAsset({
-    cases: [
-      { case_id: 'P1', pdb_id: 'P1', parent_class_label: '25S rRNA', child_class_label: '25S rRNA', biological_molecule_name: '25S rRNA', pdb_molecule_name: '25S rRNA' },
-      { case_id: 'P2', pdb_id: 'P2', parent_class_label: '25S ribosomal RNA', child_class_label: '25S ribosomal RNA', biological_molecule_name: '25S ribosomal RNA', pdb_molecule_name: '25S ribosomal RNA' }
-    ]
-  });
-  const p1 = asset.cases.find((row) => row.caseId === 'P1');
-  // derived display field is canonicalized to the full form...
-  assert.equal(p1.parentClassLabel, '25S ribosomal RNA');
-  // ...but raw provenance stays verbatim
-  assert.equal(p1.biologicalMoleculeName, '25S rRNA');
-  assert.equal(p1.pdbMoleculeName, '25S rRNA');
-});
-
-test('buildAtlasIndexAsset abbreviation \\b boundaries never cross-match nested abbreviations', () => {
-  const asset = buildAtlasIndexAsset({
-    cases: [
-      { case_id: 'SG', pdb_id: 'SG', parent_class_label: 'sgRNA', child_class_label: 'sgRNA' },
-      { case_id: 'GR', pdb_id: 'GR', parent_class_label: 'gRNA', child_class_label: 'gRNA' },
-      { case_id: 'TR', pdb_id: 'TR', parent_class_label: 'tracrRNA', child_class_label: 'tracrRNA' }
-    ]
-  });
-  const labels = new Map(asset.cases.map((row) => [row.caseId, row.parentClassLabel]));
-  // sgRNA and gRNA fold to DIFFERENT keys (single guide rna vs guide rna), so they
-  // stay separate; tracrRNA has no \b-bounded dictionary match so it is left verbatim.
-  assert.equal(labels.get('TR'), 'tracrRNA');
-  const groups = buildAnnojointTableGroups(asset.displayCases);
-  assert.equal(groups.length, 3);
-  const groupLabels = new Set(groups.map((group) => group.label));
-  assert.ok(groupLabels.has('single guide RNA'));
-  assert.ok(groupLabels.has('guide RNA'));
-  assert.ok(groupLabels.has('tracrRNA'));
 });
 
 test('buildAtlasIndexAsset folds RASP composite pipe-delimited molecule names by their leading segment', () => {
@@ -743,7 +519,6 @@ test('slimAtlasIndexForWrite keeps scalars and top-level structures', () => {
   assert.equal(slim.totalSourceCaseCount, index.totalSourceCaseCount);
   assert.equal(slim.totalCaseCount, index.totalCaseCount);
   assert.equal(slim.displayCases.length, index.displayCases.length);
-  assert.deepEqual(slim.caseHierarchy, index.caseHierarchy);
   assert.deepEqual(slim.facets, index.facets);
   assert.deepEqual(slim.presets, index.presets);
   assert.deepEqual(slim.downloads, index.downloads);

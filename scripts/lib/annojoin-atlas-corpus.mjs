@@ -178,7 +178,7 @@ function mergedConfidenceLabel(rows = []) {
 }
 
 function displayMoleculeName(row = {}) {
-  return text(row.biologicalMoleculeName || row.pdbMoleculeName || row.childClassLabel || row.parentClassLabel || row.pdbId || row.caseId);
+  return text(row.biologicalMoleculeName || row.pdbMoleculeName || row.pdbId || row.caseId);
 }
 
 function representativeScore(row = {}) {
@@ -484,29 +484,6 @@ export function groupByAtlasCaseKey(rows) {
   return grouped;
 }
 
-// Task 13：上游对没有真实生物学分类的 case 会塞占位标签——RASP raw-hit 桶
-// （parent="RASP public current" / child="raw-hit case"，source PUBLIC/RASP/raw_hit_cases_current）
-// 以及治理待定项（"pending parent display group ..." 等，source governance_context_display_name）。
-// 这些占位标签会造出假的父/子分组。把它们当作缺失（置空），让 parentGroupLabel/childGroupLabel
-// 的回退链落到 moleculeDisplayName。只动 display-only 派生标签，raw *Source provenance 不碰。
-const PLACEHOLDER_CLASS_LABEL_PATTERNS = [
-  /^rasp public current$/i,
-  /^raw-?hit case$/i,
-  /^pending\b/i
-];
-const PLACEHOLDER_CLASS_SOURCES = new Set(['PUBLIC/RASP/raw_hit_cases_current']);
-
-function isPlaceholderClassLabel(label = '', source = '') {
-  const value = text(label);
-  if (!value) return false;
-  if (PLACEHOLDER_CLASS_LABEL_PATTERNS.some((pattern) => pattern.test(value))) return true;
-  return PLACEHOLDER_CLASS_SOURCES.has(text(source));
-}
-
-function cleanClassLabel(label = '', source = '') {
-  return isPlaceholderClassLabel(label, source) ? '' : text(label);
-}
-
 function normalizeCase(row = {}) {
   const caseId = text(row.case_id);
   const caseKey = atlasCaseKeyFor(row);
@@ -522,10 +499,6 @@ function normalizeCase(row = {}) {
     caseId,
     pdbId: text(row.pdb_id),
     chains: splitList(row.pdb_chain_ids),
-    parentClassLabel: cleanClassLabel(row.parent_class_label, row.parent_class_source),
-    parentClassSource: text(row.parent_class_source),
-    childClassLabel: cleanClassLabel(row.child_class_label, row.child_class_source),
-    childClassSource: text(row.child_class_source),
     biologicalMoleculeName: text(row.biological_molecule_name),
     biologicalMoleculeNameSource: text(row.biological_molecule_name_source),
     pdbMoleculeName: text(row.pdb_molecule_name),
@@ -554,79 +527,6 @@ function normalizeCase(row = {}) {
     routeId: text(row.route_id),
     caseAssetPath: caseAssetPathFor({ ...row, atlasCaseKey: caseKey })
   };
-}
-
-function caseDisplayLabel(row = {}) {
-  return text(
-    row.biologicalMoleculeName
-      || row.pdbMoleculeName
-      || row.rnaFamily
-      || row.structureClass
-      || row.motif
-      || row.pdbId
-      || row.caseId
-  );
-}
-
-function parentBucketLabel(row = {}) {
-  const parent = text(row.parentClassLabel);
-  if (parent && parent !== '未注释') return parent;
-  return text(row.childClassLabel) || caseDisplayLabel(row);
-}
-
-function childBucketLabel(row = {}) {
-  const child = text(row.childClassLabel);
-  if (child && child !== '未注释') return child;
-  return caseDisplayLabel(row);
-}
-
-function bucketId(label = '') {
-  return text(label)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    || 'unclassified';
-}
-
-function buildCaseHierarchy(cases = []) {
-  const parents = new Map();
-  for (const row of cases) {
-    const parentLabel = parentBucketLabel(row);
-    const childLabel = childBucketLabel(row);
-    const parentId = bucketId(parentLabel);
-    const childId = bucketId(`${parentLabel}-${childLabel}`);
-    if (!parents.has(parentId)) {
-      parents.set(parentId, {
-        id: parentId,
-        label: parentLabel,
-        source: text(row.parentClassSource || row.childClassSource || row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource),
-        caseCount: 0,
-        children: new Map()
-      });
-    }
-    const parent = parents.get(parentId);
-    parent.caseCount += 1;
-    if (!parent.children.has(childId)) {
-      parent.children.set(childId, {
-        id: childId,
-        label: childLabel,
-        source: text(row.childClassSource || row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource),
-        caseCount: 0,
-        cases: []
-      });
-    }
-    const child = parent.children.get(childId);
-    child.caseCount += 1;
-    child.cases.push(row.atlasCaseKey || row.caseId);
-  }
-
-  return [...parents.values()]
-    .map((parent) => ({
-      ...parent,
-      children: [...parent.children.values()]
-        .sort((a, b) => b.caseCount - a.caseCount || a.label.localeCompare(b.label))
-    }))
-    .sort((a, b) => b.caseCount - a.caseCount || a.label.localeCompare(b.label));
 }
 
 function normalizeFacet(row = {}) {
@@ -974,17 +874,9 @@ export function buildAtlasIndexAsset({
   });
   // 加性 canonical 展示名（display-only）：不改 raw biologicalMoleculeName/pdbMoleculeName。
   const moleculeCanonicalMap = buildMoleculeCanonicalMap(normalizedCases);
-  // class 层级标签也折叠大小写/空白变体（总表按 parent/child class label 分组）。
-  // 同样 display-only：覆写 normalizedCase 上派生的 parentClassLabel/childClassLabel
-  // （这两个字段本就是展示标签，raw provenance 在各自 *Source 字段，未触碰）。
-  const classCanonicalMap = buildCanonicalSpellingMap(
-    normalizedCases.flatMap((row) => [row.parentClassLabel, row.childClassLabel])
-  );
   for (const row of normalizedCases) {
     const base = moleculeBaseName(row);
     row.moleculeDisplayName = base ? canonicalSpelling(moleculeCanonicalMap, base) : '';
-    row.parentClassLabel = canonicalSpelling(classCanonicalMap, row.parentClassLabel);
-    row.childClassLabel = canonicalSpelling(classCanonicalMap, row.childClassLabel);
   }
   const displayCases = buildDisplayCases(normalizedCases);
   let totalPlacementCount = 0;
