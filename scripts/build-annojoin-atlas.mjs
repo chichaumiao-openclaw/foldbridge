@@ -11,6 +11,7 @@ import {
   groupByAtlasCaseKey,
   groupByCaseId,
   parseTsv,
+  shouldWritePerCaseAssets,
   slimAtlasIndexForWrite
 } from './lib/annojoin-atlas-corpus.mjs';
 import { buildCaseConfidenceSidecars } from './lib/annojoin-atlas-confidence.mjs';
@@ -313,6 +314,8 @@ async function main() {
     throw new Error(`[build-annojoin-atlas] FOLDBRIDGE_ANNOJOIN_ROOT does not exist: ${ANNOJOIN_ROOT}`);
   }
 
+  const writePerCaseAssets = shouldWritePerCaseAssets(process.argv);
+
   const tables = {};
   for (const name of Object.keys(TABLES)) {
     tables[name] = await readTable(name);
@@ -351,7 +354,9 @@ async function main() {
 
   const generatedAt = new Date().toISOString();
 
-  await rm(OUT_ROOT, { recursive: true, force: true });
+  if (writePerCaseAssets) {
+    await rm(OUT_ROOT, { recursive: true, force: true });
+  }
   await mkdir(OUT_ROOT, { recursive: true });
 
   const manifest = {
@@ -488,7 +493,8 @@ async function main() {
   await writeJson('index.json', slimAtlasIndexForWrite(index), manifest);
   const compressedAssetsByPath = new Map();
 
-  for (const row of tables.cases) {
+  if (writePerCaseAssets) {
+    for (const row of tables.cases) {
     const caseId = row.case_id;
     const caseKey = atlasCaseKeyFor(row);
     const family = row.asset_family || '';
@@ -537,6 +543,9 @@ async function main() {
       );
     }
     await runWithConcurrency(writeTasks, DETAIL_ASSET_WRITE_CONCURRENCY);
+    }
+  } else {
+    console.log('[build-annojoin-atlas] --index-only: skipped per-case asset writes (cases/*.json, route pages, confidence sidecars). Run `npm run build:annojoin-atlas` when case content changes.');
   }
 
   const detailRouteIndex = buildDetailRouteIndexAsset({

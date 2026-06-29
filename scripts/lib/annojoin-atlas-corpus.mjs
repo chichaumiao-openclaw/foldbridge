@@ -998,6 +998,11 @@ export function slimAtlasIndexForWrite(index = {}) {
   return { ...rest, displayCases: slimDisplayCases };
 }
 
+// Module A skip decision: per-case assets are written unless --index-only is set.
+export function shouldWritePerCaseAssets(argv = []) {
+  return !argv.includes('--index-only');
+}
+
 export function buildAtlasCaseAsset({
   caseId,
   caseKey,

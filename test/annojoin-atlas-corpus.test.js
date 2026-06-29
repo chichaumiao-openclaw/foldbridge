@@ -6,6 +6,7 @@ import {
   buildPagedRouteAssets,
   groupByCaseId,
   parseTsv,
+  shouldWritePerCaseAssets,
   slimAtlasIndexForWrite
 } from '../scripts/lib/annojoin-atlas-corpus.mjs';
 import { buildAnnojointTableGroups } from '../src/annojoinAtlasTableModel.js';
@@ -764,4 +765,11 @@ test('slimAtlasIndexForWrite does not mutate its input', () => {
   assert.equal(JSON.stringify(index), before, 'input index must be unchanged');
   assert.ok(Array.isArray(index.cases));
   assert.ok(index.displayCases.some((row) => 'profilePreview' in row));
+});
+
+test('shouldWritePerCaseAssets is false only when --index-only is present', () => {
+  assert.equal(shouldWritePerCaseAssets([]), true);
+  assert.equal(shouldWritePerCaseAssets(['--some-other-flag']), true);
+  assert.equal(shouldWritePerCaseAssets(['--index-only']), false);
+  assert.equal(shouldWritePerCaseAssets(['node', 'build.mjs', '--index-only']), false);
 });
