@@ -212,6 +212,9 @@ All TDD, `node --test`, no jsdom (pure functions + a build-script harness).
   created.
 - Asserts the `--index-only` `index.json` is byte-identical to the same
   fixture's full-build `index.json` (slimming applies equally in both paths).
+  **Freeze `generatedAt`** (pass a fixed value, or compare with it stripped) so
+  the timestamp does not cause a false mismatch — it is the only non-deterministic
+  field in the index.
 
 ### 6.4 Regression
 
