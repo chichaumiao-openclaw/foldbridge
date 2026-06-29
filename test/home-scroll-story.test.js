@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { reactivityColor, renderReactivityAlignment } from '../src/siteChrome.js';
 import { pickFeaturedCase, renderHomeScrollStory } from '../src/siteChrome.js';
+import { createHomeScrollStoryStore } from '../src/homeScrollStoryStore.js';
 
 const SAMPLE_CASE = {
   pdb_id: '1OB5', chain: 'F', molecule_label: 'tRNA-Phe (yeast)',
@@ -93,4 +94,26 @@ test('renderHomeScrollStory falls back to hss-missing when snapshots absent', ()
   assert.equal(missing.length, 2);            // 态1 + 态2 都缺
   assert.doesNotMatch(html, /class="hss-snapshot"/);  // 无 img 快照
   assert.match(html, /hss-alignment/);         // 态0 1D 仍正常渲染
+});
+
+test('createHomeScrollStoryStore loads story.json via injected fetch + caches', async () => {
+  let calls = 0;
+  const fakeStory = { schemaVersion: 1, cases: [{ pdb_id: '1OB5' }] };
+  const fetchImpl = async (url) => {
+    calls += 1;
+    assert.match(url, /story\.json$/);
+    return { ok: true, json: async () => fakeStory };
+  };
+  const store = createHomeScrollStoryStore({ assetBase: './assets/hss', fetchImpl });
+  const first = await store.loadStory();
+  assert.equal(first.cases[0].pdb_id, '1OB5');
+  const second = await store.loadStory();
+  assert.equal(second, first);     // 同引用 = 命中缓存
+  assert.equal(calls, 1);          // 只 fetch 一次
+});
+
+test('createHomeScrollStoryStore throws on non-ok response', async () => {
+  const fetchImpl = async () => ({ ok: false, status: 404 });
+  const store = createHomeScrollStoryStore({ assetBase: './x', fetchImpl });
+  await assert.rejects(() => store.loadStory(), /404/);
 });
