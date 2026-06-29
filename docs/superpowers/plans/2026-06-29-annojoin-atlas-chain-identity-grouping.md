@@ -514,7 +514,8 @@ git -C ~/docs/foldbridge commit -m "feat(annojoin-atlas): sort cases by primary 
 
 - [ ] **步骤 1.6：编写失败的测试（新扇出行为）**
 
-
+```js
+test('buildAnnojointTableGroups fans a multi-identity case into multiple branches', () => {
   const groups = buildAnnojointTableGroups([{
     pdbId: '4V99',
     chainPlacements: [
@@ -632,7 +633,7 @@ test('annojoinExportRow emits chain placement label columns', () => {
 ```
 
 - **迁移已存在的旧 export 测试 `test/annojoin-atlas-table-model.test.js:94-108`**（`'exports case-level display fields…'`）：它断言 `parent_class_label: 'Ribosome'`/`child_class_label: '16S rRNA'`，删列后失败。改为断言新列 `chain_class_labels`/`chain_name_labels`（取自任务 9 已给 fixture 加的 `chainPlacements`），删掉 `parent_class_label`/`child_class_label` 期望键。
-- **检查 L110-139 merged-row export 测试**：它断言 `parent_class_label: undefined`/`child_class_label: undefined`——删列后这两键不再出现，需从期望对象删除这两行（否则 deepEqual 失败）。
+- **检查 L110-139 merged-row export 测试**：它断言 `parent_class_label: undefined`/`child_class_label: undefined`——删列后这两键不再出现，需从期望对象删除这两行。同时：新 `annojoinExportRow` 无条件输出 `chain_class_labels`/`chain_name_labels`，对无 `chainPlacements` 的 merged fixture 它们是 `''`——故须**在期望对象里新增** `chain_class_labels: ''`/`chain_name_labels: ''` 两行，否则 deepEqual 失败。
 
 - [ ] **步骤 4：运行测试验证通过**
 
@@ -659,7 +660,7 @@ git -C ~/docs/foldbridge commit -m "refactor(annojoin-atlas): drop class-label r
 
 旧测试 `'atlas search state preserves the canonical moleculeDisplayName for grouping and dedupe'` 用 `parentClassLabel`/空 class label 驱动分组，断言 4V85 折进 `parent:16S-ribosomal-RNA` 组（`expandedGroupIds: new Set(['parent:16S-ribosomal-RNA'])` + `data-annojoin-case-row="RASP2PDB:4V85"`）。placement 改造后无 `chainPlacements` 的 4V85 落 `Unclassified RNA` 组，expand 键不匹配，断言失败。
 
-迁移做法：给两个 displayCase 加 `chainPlacements: [{ classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' }]`（替代旧 parentClassLabel），把 `expandedGroupIds` 改为按新 group id（parent=`groupSlug('rRNA')`，即 `parent:rRNA`，child=`rRNA::16s-ribosomal-rna`）。保留 4V85 行出现断言与 molecule-same-as-group 断言（name 等于 group child label 时仍显 "—"，逻辑不变）。确认 view 的 fold 键格式（`parent:${parent.id}` / `child:${child.id}`，见 view L180-219）与新 id 一致。
+迁移做法：给两个 displayCase 加 `chainPlacements: [{ classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' }]`（替代旧 parentClassLabel），把 `expandedGroupIds` 改为按新 group id（parent=`groupSlug('rRNA')`=`rRNA`，即 fold 键 `parent:rRNA`；child id=`rRNA::16S-ribosomal-RNA`，注意 `groupSlug` 只把非字母数字替换为 `-`、**不**做小写化，故大小写保持原样）。保留 4V85 行出现断言与 molecule-same-as-group 断言（name 等于 group child label 时仍显 "—"，逻辑不变）。确认 view 的 fold 键格式（`parent:${parent.id}` / `child:${child.id}`，见 view L180-219）与新 id 一致。
 
 - [ ] **步骤 1：编写测试（新管线集成）**
 
