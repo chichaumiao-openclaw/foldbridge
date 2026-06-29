@@ -243,6 +243,7 @@ function normalizeCase(row) {
     parentClassSource: text(row.parent_class_source || row.parentClassSource),
     childClassLabel: text(row.child_class_label || row.childClassLabel),
     childClassSource: text(row.child_class_source || row.childClassSource),
+    moleculeDisplayName: text(row.molecule_display_name || row.moleculeDisplayName),
     biologicalMoleculeName: text(row.biological_molecule_name || row.biologicalMoleculeName),
     biologicalMoleculeNameSource: text(row.biological_molecule_name_source || row.biologicalMoleculeNameSource),
     pdbMoleculeName: text(row.pdb_molecule_name || row.pdbMoleculeName),

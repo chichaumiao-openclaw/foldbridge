@@ -254,6 +254,46 @@ test('atlas search state accepts generated normalized index rows', () => {
   assert.equal(state.cases[0].profileCount, 1);
 });
 
+test('atlas search state preserves the canonical moleculeDisplayName for grouping and dedupe', () => {
+  // Mirrors the real index: build derives a canonical `moleculeDisplayName` per row
+  // (annojoin-atlas-corpus.mjs). The browser data layer must carry it through so the
+  // table model's parentGroupLabel/childGroupLabel/moleculeName fallback chain can
+  // (a) fold a class-label-less PDB (4V85) under its molecule name group, and
+  // (b) suppress the molecule cell ("—") for rows whose name equals the group label.
+  const state = buildAtlasSearchState({
+    displayCases: [
+      {
+        atlasCaseKey: 'RMDB2PDB:1G1X', caseId: '1G1X', pdbId: '1G1X',
+        parentClassLabel: '16S ribosomal RNA', childClassLabel: '16S ribosomal RNA',
+        moleculeDisplayName: '16S ribosomal RNA', biologicalMoleculeName: '16S rRNA',
+        confidenceDisplayLabel: 'A_REFERENCE (1)', profileCount: 1, chains: ['A']
+      },
+      {
+        // 4V85-like: blank class labels, canonical name only in moleculeDisplayName
+        atlasCaseKey: 'RASP2PDB:4V85', caseId: '4V85', pdbId: '4V85',
+        parentClassLabel: '', childClassLabel: '',
+        moleculeDisplayName: '16S ribosomal RNA', biologicalMoleculeName: '16S rRNA',
+        confidenceDisplayLabel: 'B WEAK', profileCount: 1, chains: ['B']
+      }
+    ],
+    totalSourceCaseCount: 2,
+    totalCaseCount: 2,
+    facets: []
+  }, {});
+
+  const folded = state.cases.find((row) => row.caseId === '4V85');
+  assert.equal(folded.moleculeDisplayName, '16S ribosomal RNA');
+
+  const html = renderAnnojointAtlasPage({
+    state,
+    expandedGroupIds: new Set(['parent:16S-ribosomal-RNA'])
+  });
+  // Problem 2: 4V85 folds into the "16S ribosomal RNA" parent group.
+  assert.match(html, /data-annojoin-case-row="RASP2PDB:4V85"/);
+  // Problem 1: both rows render "—" (molecule name equals the group label).
+  assert.equal((html.match(/annojoin-molecule-same-as-group/g) || []).length, 2);
+});
+
 test('atlas search state prefers PDB-level display cases while preserving source case counts', () => {
   const state = buildAtlasSearchState({
     cases: [
