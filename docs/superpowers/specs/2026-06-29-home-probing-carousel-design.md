@@ -155,8 +155,8 @@ homePage() ──> renderHomeProbingCarousel(articles) ──> static HTML
   (committed).
 - `src/main.js` — insert carousel into `homePage()`, extend
   `loadProbingArticleIndex()` guard, add carousel DOM wiring + timer.
-- `src/style.css` (or the relevant stylesheet) — carousel layout, reusing
-  existing card visual language; no new design system.
+- `src/styles.css` — carousel layout, reusing existing card visual language; no
+  new design system.
 - `test/site-chrome.test.js` + builder test — new assertions.
 
 ## 8. Success criteria
