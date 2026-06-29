@@ -968,3 +968,13 @@ test('a slimmed index still resolves merged and single detail-page links', () =>
     assert.ok(entry.caseAssetPath && entry.caseAssetPath.length > 0);
   }
 });
+
+test('buildAtlasSearchState drops dead caseHierarchy and exposes totalPlacementCount', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [{ pdb_id: '1ABC', chainPlacements: [{ classLabel: 'tRNA', nameLabel: 'tRNA-Phe' }] }],
+    totalPlacementCount: 1
+  });
+  assert.equal('caseHierarchy' in state, false);
+  assert.equal('sourceCaseHierarchy' in state, false);
+  assert.equal(state.totalPlacementCount, 1);
+});

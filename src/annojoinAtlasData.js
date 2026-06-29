@@ -160,70 +160,6 @@ function includesFolded(haystack, needle) {
   return text(haystack).toLowerCase().includes(text(needle).toLowerCase());
 }
 
-function caseDisplayLabel(row = {}) {
-  return text(
-    row.biologicalMoleculeName
-      || row.pdbMoleculeName
-      || row.rnaFamily
-      || row.structureClass
-      || row.motif
-      || row.pdbId
-      || row.caseId
-  );
-}
-
-function parentBucketLabel(row = {}) {
-  const parent = text(row.parentClassLabel);
-  if (parent && parent !== '未注释') return parent;
-  return text(row.childClassLabel) || caseDisplayLabel(row);
-}
-
-function childBucketLabel(row = {}) {
-  const child = text(row.childClassLabel);
-  if (child && child !== '未注释') return child;
-  return caseDisplayLabel(row);
-}
-
-function bucketId(label = '') {
-  return text(label)
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '') || 'unclassified';
-}
-
-function buildCaseHierarchy(cases = []) {
-  const parents = new Map();
-  for (const row of cases) {
-    const parentLabel = parentBucketLabel(row);
-    const childLabel = childBucketLabel(row);
-    const parentKey = bucketId(parentLabel);
-    const childKey = bucketId(`${parentLabel} ${childLabel}`);
-    if (!parents.has(parentKey)) {
-      parents.set(parentKey, {
-        id: parentKey,
-        label: parentLabel,
-        caseCount: 0,
-        children: []
-      });
-    }
-    const parent = parents.get(parentKey);
-    let child = parent.children.find((entry) => entry.id === childKey);
-    if (!child) {
-      child = {
-        id: childKey,
-        label: childLabel,
-        caseCount: 0,
-        caseIds: []
-      };
-      parent.children.push(child);
-    }
-    parent.caseCount += 1;
-    child.caseCount += 1;
-    child.caseIds.push(row.atlasCaseKey || row.caseId);
-  }
-  return [...parents.values()].sort((a, b) => a.label.localeCompare(b.label));
-}
-
 function normalizeChainPlacements(value) {
   return asArray(value)
     .map((entry) => ({
@@ -582,8 +518,7 @@ export function buildAtlasSearchState(tables = {}, filters = {}) {
     cases,
     totalCaseCount: numberOrZero(tables.totalCaseCount) || normalizedCases.length,
     totalSourceCaseCount: numberOrZero(tables.totalSourceCaseCount) || sourceRows.length || normalizedCases.length,
-    caseHierarchy: buildCaseHierarchy(cases),
-    sourceCaseHierarchy: asArray(tables.caseHierarchy),
+    totalPlacementCount: numberOrZero(tables.totalPlacementCount),
     facets: asArray(tables.facets).map(normalizeFacet),
     presets: asArray(tables.presets).map(normalizePreset),
     downloads: asArray(tables.downloads).map(normalizeDownload)
