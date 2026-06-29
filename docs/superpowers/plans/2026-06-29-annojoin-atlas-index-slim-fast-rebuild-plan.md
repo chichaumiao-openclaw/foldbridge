@@ -251,7 +251,10 @@ test('a slimmed index still resolves merged and single detail-page links', () =>
   const slim = slimAtlasIndexForWrite(index);
   // browser reads displayCases via buildAtlasSearchState(...).cases
   const state = buildAtlasSearchState(slim, {});
-  const single = state.cases.find((row) => row.atlasCaseKey === 'PDB:10ZT');
+  // Single-source rows keep their original family-prefixed atlasCaseKey
+  // (buildDisplayCases L398-407 spreads the row verbatim); ONLY merged rows
+  // (≥2 sources, same pdb_id) are rekeyed to `PDB:<pdbId>` (L435).
+  const single = state.cases.find((row) => row.atlasCaseKey === 'RMDB2PDB:10ZT');
   const merged = state.cases.find((row) => row.atlasCaseKey === 'PDB:10FZ');
   assert.ok(single, 'single-source PDB row resolvable');
   assert.ok(merged, 'merged PDB row resolvable');
@@ -313,6 +316,8 @@ Leave L541-555 (`buildDetailRouteIndexAsset({ … cases: index.cases, displayCas
 npm test
 ```
 Expect: all tests pass, including the new link-resolution test. (The known pre-existing `5GAG smoke` failure documented for this branch is unrelated and not introduced here.)
+
+Note: this `npm test` only confirms no regression from the source edit. The actual `index.json` write-site wiring (that the written file has no `cases` key) is asserted end-to-end by Task 3's spawn test, not here.
 
 ### Step 2.5 — Commit
 
