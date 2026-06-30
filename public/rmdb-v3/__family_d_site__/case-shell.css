@@ -1,19 +1,23 @@
 :root {
   color-scheme: light;
-  --bg: #f6f7fb;
+  /* Warm cream + green-accent palette, aligned with the portal home page
+     (src/design-tokens.css + src/styles.css body). Token names kept stable;
+     only values retuned so the detail pages share the portal's tone/accent. */
+  --bg: radial-gradient(ellipse at 18% 8%, rgba(255, 223, 120, 0.26), transparent 34%), radial-gradient(ellipse at 84% 14%, rgba(255, 239, 189, 0.24), transparent 32%), linear-gradient(115deg, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0) 42%), linear-gradient(180deg, #fff4cf 0%, #fff8df 30%, #fffbf0 64%, #fffdf7 100%);
   --panel: #ffffff;
-  --line: #d9dee8;
-  --text: #1c2430;
-  --muted: #66758a;
-  --accent: #1759c7;
-  --accent-soft: #e8f0ff;
+  --line: rgba(227, 191, 92, 0.24);
+  --text: #14221C;
+  --muted: #5D6C64;
+  --accent: #2F8F6B;
+  --accent-soft: #E4EFE8;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   color: var(--text);
-  background: linear-gradient(180deg, #f7f8fc 0%, #eef2f7 100%);
+  background: var(--bg);
+  background-attachment: fixed;
 }
 a { color: inherit; }
 .shell {
