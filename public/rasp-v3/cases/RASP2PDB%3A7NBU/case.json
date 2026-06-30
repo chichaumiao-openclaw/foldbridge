@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7NBU",
+  "biologicalMoleculeName": "7NBU",
+  "caseId": "7NBU",
+  "caseKey": "RASP2PDB:7NBU",
+  "chains": [
+    "A",
+    "V",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "7NBU",
+  "profileCount": 38
+}

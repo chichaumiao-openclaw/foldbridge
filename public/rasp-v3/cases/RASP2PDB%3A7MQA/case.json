@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7MQA",
+  "biologicalMoleculeName": "7MQA",
+  "caseId": "7MQA",
+  "caseKey": "RASP2PDB:7MQA",
+  "chains": [
+    "L0",
+    "L1",
+    "L2"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "7MQA",
+  "profileCount": 198
+}

@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7CPU",
+  "biologicalMoleculeName": "7CPU",
+  "caseId": "7CPU",
+  "caseKey": "RASP2PDB:7CPU",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "S2",
+    "S6"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "7CPU",
+  "profileCount": 188
+}

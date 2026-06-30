@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "RASP2PDB:7UNR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 45,
+  "defaultEvidenceId": "annojoin:RASP2PDB:7UNR:confidence:A:rasp_bw_f9579812c67b",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 31,
+    "B": 14
+  },
+  "generatedAt": "2026-06-29T17:03:51.658416Z",
+  "materializedEvidenceCount": 45,
+  "pdbId": "7UNR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 17,
+    "LSS_NOT_SUPPORTED": 11,
+    "LSS_UNDERPOWERED": 17
+  },
+  "totalEvidenceCount": 45
+}

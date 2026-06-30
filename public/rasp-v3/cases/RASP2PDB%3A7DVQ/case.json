@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7DVQ",
+  "biologicalMoleculeName": "7DVQ",
+  "caseId": "7DVQ",
+  "caseKey": "RASP2PDB:7DVQ",
+  "chains": [
+    "B",
+    "F",
+    "H"
+  ],
+  "confidenceDisplayLabel": "C STRONG",
+  "pdbId": "7DVQ",
+  "profileCount": 135
+}

@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7ZUW",
+  "biologicalMoleculeName": "7ZUW",
+  "caseId": "7ZUW",
+  "caseKey": "RASP2PDB:7ZUW",
+  "chains": [
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "7ZUW",
+  "profileCount": 189
+}

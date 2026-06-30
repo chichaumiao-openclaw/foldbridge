@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7NAR",
+  "biologicalMoleculeName": "7NAR",
+  "caseId": "7NAR",
+  "caseKey": "RASP2PDB:7NAR",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "7NAR",
+  "profileCount": 31
+}
