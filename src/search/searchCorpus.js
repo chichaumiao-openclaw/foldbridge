@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
+import { moleculeName, rowCaseId, rowCaseKey } from '../annojoinAtlasTableModel.js';
 
-const GENERATED_CASES_BASE = new URL('../assets/generated/rmdb-pdb-cases/', import.meta.url);
+const ANNOJOIN_ATLAS_BASE = new URL('../assets/generated/annojoin-atlas/', import.meta.url);
 const PROBING_ARTICLES_BASE = new URL('../assets/generated/probing-articles/', import.meta.url);
 
 function escapeHtml(value) {
@@ -12,63 +13,75 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
-function readGeneratedJson(relPath) {
-  return JSON.parse(readFileSync(new URL(relPath, GENERATED_CASES_BASE), 'utf8'));
+function cleanToken(value) {
+  const token = String(value ?? '').trim();
+  return ['', '未注释', 'not annotated', 'missing source'].includes(token) ? '' : token;
+}
+
+function caseDocId(caseKey, caseId) {
+  const raw = String(caseKey || caseId || '').trim().toLowerCase();
+  return `pdb-case-${raw.replace(/[^0-9a-z]+/g, '-').replace(/^-+|-+$/g, '')}`;
+}
+
+// 详情链接走站内 hash 路由 #annojoin-case。Atlas case 资产对每个 displayCase 都存在
+// （cases/<atlasCaseKey>.json），因此该路由对所有 case 可解析——区别于只有部分 case
+// 才物化的 public/<universe>/cases 静态页（静态页缺失时会 404）。
+function caseDetailHref(caseId, caseKey) {
+  const query = new URLSearchParams();
+  if (caseId) query.set('caseId', caseId);
+  if (caseKey && caseKey !== caseId) query.set('caseKey', caseKey);
+  const suffix = query.toString();
+  return `#annojoin-case${suffix ? `?${suffix}` : ''}`;
 }
 
 function tagForCase(row) {
-  const title = `${row.title} ${row.subtitle ?? ''}`.toLowerCase();
+  const structureClass = cleanToken(row.structureClass).toLowerCase();
   return [
     'rna',
     'structure',
     'pdb',
-    title.includes('aptamer') ? 'aptamer' : '',
-    title.includes('riboswitch') ? 'riboswitch' : '',
-    title.includes('virus') || title.includes('viral') ? 'viral-rna' : ''
+    cleanToken(row.assetFamily).toLowerCase(),
+    structureClass.replace(/\s+/g, '-')
   ].filter(Boolean);
 }
 
-// pdb-case 文档来自构建期生成的 index.json（轻量索引）+ 每个 case.json（科学口径字段）。
-// 生成资产缺失时（外接卷未挂载且未提交）静默降级为空集，搜索语料仍可构建。
+// pdb-case 文档来自新的 annojoin-atlas index.json（displayCases，链身份口径）。
+// 资产缺失时静默降级为空集，搜索语料仍可构建。
+// 标题/摘要/正文各司其职、互不重复：title=分子名，summary=PDB+结构类别，
+// content=可检索 token（PDB id、RNA family、motif、assay 等），避免 pagefind 摘要堆叠。
 function buildPdbCaseDocs() {
   let index;
   try {
-    index = readGeneratedJson('index.json');
+    index = JSON.parse(readFileSync(new URL('index.json', ANNOJOIN_ATLAS_BASE), 'utf8'));
   } catch {
     return [];
   }
-  return (index.cases || []).map((row) => {
-    let detail = null;
-    try {
-      detail = readGeneratedJson(`cases/${row.pdbId}/case.json`);
-    } catch {
-      detail = null;
-    }
-    const reactivityKeys = (detail?.reactivity || [])
-      .map((entry) => `${entry.profileId} ${entry.profileKey}`)
-      .join(' ');
-
+  return (index.displayCases || []).map((row) => {
+    const caseId = rowCaseId(row);
+    const caseKey = rowCaseKey(row);
+    const title = moleculeName(row);
+    const structureClass = cleanToken(row.structureClass);
+    const rnaFamily = cleanToken(row.rnaFamily);
+    const summaryParts = [caseId ? `PDB ${caseId}` : '', structureClass || rnaFamily].filter(Boolean);
+    const contentTokens = [
+      caseId,
+      cleanToken(row.pdbId),
+      cleanToken(row.assetFamily),
+      rnaFamily,
+      cleanToken(row.motif),
+      structureClass,
+      ...(Array.isArray(row.assayFamilies) ? row.assayFamilies.map(cleanToken) : []),
+      ...(Array.isArray(row.sourceDatabases) ? row.sourceDatabases.map(cleanToken) : []),
+      row.profileCount ? `profiles ${row.profileCount}` : ''
+    ].filter((part) => part != null && String(part).trim() !== '');
     return {
-      id: `pdb-case-${row.pdbId.toLowerCase()}`,
+      id: caseDocId(caseKey, caseId),
       type: 'pdb-case',
-      title: row.title,
-      href: row.detailHref,
+      title,
+      href: caseDetailHref(caseId, caseKey),
       tags: tagForCase(row),
-      summary: `${row.pdbId} ${row.title}. ${row.subtitle ?? ''}`.trim(),
-      content: [
-        row.pdbId,
-        row.pdbReferenceId,
-        row.title,
-        row.subtitle,
-        `confidence ${row.confidenceClass} ${row.confidenceScore}`,
-        `projection_status ${detail?.projectionStatus ?? ''}`,
-        `identity ${detail?.identityPct ?? ''}`,
-        `query coverage ${detail?.queryCoveragePct ?? ''}`,
-        `subject coverage ${detail?.subjectCoveragePct ?? ''}`,
-        `base mismatch rows ${detail?.baseMismatchRows ?? ''}`,
-        `profiles ${row.profileCount}`,
-        reactivityKeys
-      ].filter((part) => part != null && String(part).trim() !== '').join(' ')
+      summary: summaryParts.join(' · '),
+      content: [...new Set(contentTokens)].join(' ')
     };
   });
 }
