@@ -16,7 +16,7 @@ loadShell(sandbox.module, sandbox.exports, undefined);
 
 const {
   familyCounts, tierCounts, distinctChains, familyLabel, tierDisplay,
-  fmtMetric, fmtP, fmtFraction, pickBestEvidence,
+  fmtMetric, fmtP, fmtFraction, fmtCount, pickBestEvidence,
 } = sandbox.module.exports;
 
 const ROWS = [
@@ -74,10 +74,90 @@ test("fmtMetric 2dp signed for spearman, fmtP 3dp, fmtFraction handles null", ()
   assert.strictEqual(fmtFraction(0.230769), "0.23");
 });
 
+test("fmtCount stringifies counts and renders missing as em dash", () => {
+  assert.strictEqual(fmtCount(699), "699");
+  assert.strictEqual(fmtCount(0), "0");
+  assert.strictEqual(fmtCount(null), "—");
+  assert.strictEqual(fmtCount(undefined), "—");
+});
+
 test("pickBestEvidence: defaultEvidenceId > selectedByDefault > first", () => {
   assert.strictEqual(pickBestEvidence(ROWS, "e2").evidenceId, "e2");
   assert.strictEqual(pickBestEvidence(ROWS, "nope").evidenceId, "e1"); // selectedByDefault
   const noFlag = ROWS.map((r) => ({ ...r, selectedByDefault: false }));
   assert.strictEqual(pickBestEvidence(noFlag, "nope").evidenceId, "e1"); // first
   assert.strictEqual(pickBestEvidence([], "x"), null);
+});
+
+// Guard-path regression: executing the document-guard block must NOT throw.
+// Before the TDZ fix, renderEnrichment() read FAMILY_LABELS/TIER_DISPLAY/TIER_ORDER
+// while those `const`s were still uninitialized (declared below the guard) →
+// ReferenceError. This runs the guard against a minimal DOM stub to catch it.
+test("document-guard path executes without throwing (TDZ regression)", () => {
+  const BOOTSTRAP_JSON = JSON.stringify({
+    defaultChainId: "A",
+    defaultEvidenceId: "e1",
+    chainPageById: { A: "chains/A/index.html" },
+    evidenceChainMap: { e1: "A" },
+    evidenceRows: [{
+      evidenceId: "e1", family: "A", technology: "DMS-seq", chain: "A",
+      lssTierCalibrated: "LSS_WEAK", aucDirectional: 0.56, aucEmpiricalPValue: 0.006,
+      nEvaluable: 699, conflictFraction: 0.23,
+      directionalMetricKind: "auc_unpaired_vs_paired",
+      directionalMetricLabel: "AUC unpaired vs paired",
+      trackProfileId: "p1", profileKey: "pk1", selectedByDefault: true,
+    }],
+  });
+
+  function makeEl() {
+    const node = {
+      className: "",
+      textContent: "",
+      src: "",
+      dataset: {},
+      children: [],
+      classList: { toggle() {} },
+      appendChild(child) { this.children.push(child); return child; },
+      insertBefore(child) { this.children.push(child); return child; },
+      insertAdjacentElement(_pos, child) { this.children.push(child); return child; },
+      setAttribute() {},
+      addEventListener() {},
+      querySelector() { return null; },
+      replaceChildren() { this.children = []; },
+    };
+    return node;
+  }
+
+  const bootstrapNode = { textContent: BOOTSTRAP_JSON };
+  const heroSubtitle = makeEl();
+  const hero = makeEl();
+  hero.querySelector = (sel) => (sel === "p" ? heroSubtitle : null);
+  const metaNode = makeEl();
+  const layoutParent = makeEl();
+  const layout = makeEl();
+  layout.parentNode = layoutParent;
+
+  const fakeDocument = {
+    currentScript: { src: "https://example.test/__family_d_site__/case-shell.js" },
+    head: makeEl(),
+    body: makeEl(),
+    documentElement: makeEl(),
+    getElementById(id) {
+      if (id === "family-case-bootstrap") return bootstrapNode;
+      return makeEl(); // chainFrame / chainStatus
+    },
+    querySelector(sel) {
+      if (sel === ".hero") return hero;
+      if (sel === ".hero .meta") return metaNode;
+      if (sel === ".layout") return layout;
+      return null;
+    },
+    querySelectorAll() { return []; },
+    createElement() { return makeEl(); },
+  };
+
+  const fn = new Function("document", "module", "exports", SRC);
+  assert.doesNotThrow(() => fn(fakeDocument, undefined, undefined));
+  // Prove renderEnrichment actually ran: .meta got its 3 derived chips.
+  assert.strictEqual(metaNode.children.length, 3);
 });
