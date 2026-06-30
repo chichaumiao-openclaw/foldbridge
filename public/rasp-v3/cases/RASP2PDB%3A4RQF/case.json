@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4RQF",
+  "biologicalMoleculeName": "4RQF",
+  "caseId": "4RQF",
+  "caseKey": "RASP2PDB:4RQF",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "4RQF",
+  "profileCount": 15
+}

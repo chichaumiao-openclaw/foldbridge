@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4CXH",
+  "biologicalMoleculeName": "4CXH",
+  "caseId": "4CXH",
+  "caseKey": "RASP2PDB:4CXH",
+  "chains": [
+    "1"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4CXH",
+  "profileCount": 1
+}

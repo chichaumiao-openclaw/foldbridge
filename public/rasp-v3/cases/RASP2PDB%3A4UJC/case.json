@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4UJC",
+  "biologicalMoleculeName": "4UJC",
+  "caseId": "4UJC",
+  "caseKey": "RASP2PDB:4UJC",
+  "chains": [
+    "A2",
+    "A3",
+    "A4",
+    "AC",
+    "C1"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "4UJC",
+  "profileCount": 234
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4H5O",
+  "biologicalMoleculeName": "4H5O",
+  "caseId": "4H5O",
+  "caseKey": "RASP2PDB:4H5O",
+  "chains": [
+    "K"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "4H5O",
+  "profileCount": 11
+}

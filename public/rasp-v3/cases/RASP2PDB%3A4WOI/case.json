@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4WOI",
+  "biologicalMoleculeName": "4WOI",
+  "caseId": "4WOI",
+  "caseKey": "RASP2PDB:4WOI",
+  "chains": [
+    "AA",
+    "AX",
+    "BA",
+    "BB"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "4WOI",
+  "profileCount": 38
+}
