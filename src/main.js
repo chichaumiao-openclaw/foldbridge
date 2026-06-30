@@ -1784,12 +1784,12 @@ function renderProbingArticleLoadingPage(slug, headerHtml, isError) {
   return `<main class="page-detail page-probing-article">
     ${headerHtml}
     <section class="card bundle-wide-card technology-detail-hero">
-      <a class="technology-back-link" href="#detail">← 返回探针技术总览</a>
+      <a class="technology-back-link" href="#detail">← Back to probing methods overview</a>
       <div class="technology-detail-header">
         <div>
           <p class="technology-kicker">probing article</p>
           <h1>${title}</h1>
-          <p class="technology-intro">${isError ? '文章资产加载失败，请稍后重试。' : '正在加载文章…'}</p>
+          <p class="technology-intro">${isError ? 'Failed to load article assets. Please try again later.' : 'Loading article…'}</p>
         </div>
       </div>
     </section>
