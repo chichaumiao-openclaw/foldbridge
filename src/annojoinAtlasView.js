@@ -251,31 +251,6 @@ function renderSourceCaseLinks(row = {}) {
   </section>`;
 }
 
-function renderProfileTraceRows(traces = []) {
-  const rows = (traces || []).filter(Boolean);
-  if (!rows.length) {
-    return '<p class="mini-note">Current index asset does not provide reproducible RDAT trace rows for this case.</p>';
-  }
-  return `<div class="annojoin-profile-trace-list" role="region" aria-label="Reproducible profile trace rows">
-    <table>
-      <thead><tr><th>Pair</th><th>RDAT file</th><th>Trace</th></tr></thead>
-      <tbody>
-        ${rows.map((entry) => {
-          const traceLabel = entry.rdatLine
-            ? `line ${entry.rdatLine}`
-            : entry.rdatRecord || entry.profileId || entry.traceType || 'route profile';
-          const title = entry.rdatPath || entry.profileId || '';
-          return `<tr>
-            <td>${escapeHtml(entry.pairId || 'case-level')}</td>
-            <td title="${escapeHtml(title)}">${escapeHtml(entry.rdatFile || entry.rdatPath || 'route profile')}</td>
-            <td>${escapeHtml(traceLabel)}</td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table>
-  </div>`;
-}
-
 function renderEmptySidebar() {
   return `<aside class="annojoin-detail-sidebar annojoin-detail-sidebar-empty" aria-label="ANNOJOIN field explanation">
     <p class="technology-kicker">Field inspector</p>
@@ -463,7 +438,6 @@ function profileFamilyBreakdownRows(row = {}) {
 
 function renderProfilesPanel(row) {
   const entries = sourceCaseEntries(row);
-  const traceRows = row.profileTracePreview || [];
   return `<aside class="annojoin-detail-sidebar" aria-label="ANNOJOIN profile hits">
     <p class="technology-kicker">Profile hits</p>
     <h2>${escapeHtml(profileValue(row))}</h2>
@@ -473,7 +447,6 @@ function renderProfilesPanel(row) {
       ${profileFamilyBreakdownRows(row)}
     </dl>
     ${entries.length > 1 ? renderSourceCaseLinks(row) : ''}
-    ${traceRows.length ? `<h3>RMDB RDAT trace</h3>${renderProfileTraceRows(traceRows)}` : ''}
   </aside>`;
 }
 
