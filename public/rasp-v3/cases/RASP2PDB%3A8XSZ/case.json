@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8XSZ",
+  "biologicalMoleculeName": "8XSZ",
+  "caseId": "8XSZ",
+  "caseKey": "RASP2PDB:8XSZ",
+  "chains": [
+    "CC",
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8XSZ",
+  "profileCount": 239
+}

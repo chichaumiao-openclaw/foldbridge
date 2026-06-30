@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8FKP",
+  "biologicalMoleculeName": "8FKP",
+  "caseId": "8FKP",
+  "caseKey": "RASP2PDB:8FKP",
+  "chains": [
+    "L1",
+    "L3"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "8FKP",
+  "profileCount": 180
+}

@@ -1,0 +1,46 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "h": {
+      "case2dPath": "chains/h/case-2d-structure.json.gz",
+      "chainId": "h",
+      "chainRoot": "chains/h",
+      "linkedViewBundlePath": "chains/h/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/h/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/h/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "h",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_0d580022a60a": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_0fbf6002d003": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_11af3dd1debd": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_1d723f4b168e": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_5bc329fb7b52": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_77e07c707232": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_7e4ceb91f30e": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_83b3b2c5b0ad": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_904214788bbd": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_93deaa819d97": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_a4dac2a8927a": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_ad170b7fae06": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_ec8b09bc9f9c": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_f219c869e34f": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:A:rasp_bw_f3adfcd87c25": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:B:rasp_bw_0ac5e94788d5": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:B:rasp_bw_0c774a52a757": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:B:rasp_bw_66116403e58c": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:B:rasp_bw_f19b2878af92": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:C:rasp_bw_1bce4cb9b4c1": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:C:rasp_bw_391957bc990d": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:C:rasp_bw_adb74bd90821": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:C:rasp_bw_c8eb2a9bae27": "h",
+    "annojoin:RASP2PDB:8AUV:confidence:C:rasp_bw_df45dbde575d": "h"
+  }
+}

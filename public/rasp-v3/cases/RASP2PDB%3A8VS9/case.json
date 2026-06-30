@@ -1,0 +1,18 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8VS9",
+  "biologicalMoleculeName": "8VS9",
+  "caseId": "8VS9",
+  "caseKey": "RASP2PDB:8VS9",
+  "chains": [
+    "16S",
+    "23S",
+    "5S",
+    "ATRN",
+    "ETRN",
+    "TMRN"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "8VS9",
+  "profileCount": 51
+}

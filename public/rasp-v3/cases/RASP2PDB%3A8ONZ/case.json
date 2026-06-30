@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8ONZ",
+  "biologicalMoleculeName": "8ONZ",
+  "caseId": "8ONZ",
+  "caseKey": "RASP2PDB:8ONZ",
+  "chains": [
+    "1",
+    "2"
+  ],
+  "confidenceDisplayLabel": "C UNDERPOWERED",
+  "pdbId": "8ONZ",
+  "profileCount": 75
+}

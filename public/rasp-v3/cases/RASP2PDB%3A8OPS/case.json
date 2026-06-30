@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8OPS",
+  "biologicalMoleculeName": "8OPS",
+  "caseId": "8OPS",
+  "caseKey": "RASP2PDB:8OPS",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8OPS",
+  "profileCount": 6
+}

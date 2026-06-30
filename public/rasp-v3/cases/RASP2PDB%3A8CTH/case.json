@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8CTH",
+  "biologicalMoleculeName": "8CTH",
+  "caseId": "8CTH",
+  "caseKey": "RASP2PDB:8CTH",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "8CTH",
+  "profileCount": 26
+}

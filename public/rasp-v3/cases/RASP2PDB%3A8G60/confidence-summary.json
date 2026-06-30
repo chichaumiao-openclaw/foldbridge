@@ -1,0 +1,31 @@
+{
+  "atlasCaseKey": "RASP2PDB:8G60",
+  "availableFamilies": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "bridgeMissingCount": 423,
+  "defaultEvidenceId": "annojoin:RASP2PDB:8G60:confidence:B:rasp_bw_9a0ca56c3d2e",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 107,
+    "B": 279,
+    "C": 26,
+    "D": 11
+  },
+  "generatedAt": "2026-06-29T14:48:11.452593Z",
+  "materializedEvidenceCount": 423,
+  "pdbId": "8G60",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 60,
+    "LSS_MODERATE": 3,
+    "LSS_NOT_SUPPORTED": 224,
+    "LSS_UNDERPOWERED": 85,
+    "LSS_WEAK": 51
+  },
+  "totalEvidenceCount": 423
+}

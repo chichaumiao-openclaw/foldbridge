@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8YDH",
+  "biologicalMoleculeName": "8YDH",
+  "caseId": "8YDH",
+  "caseKey": "RASP2PDB:8YDH",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8YDH",
+  "profileCount": 41
+}

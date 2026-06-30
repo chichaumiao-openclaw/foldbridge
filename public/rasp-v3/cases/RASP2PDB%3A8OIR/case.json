@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8OIR",
+  "biologicalMoleculeName": "8OIR",
+  "caseId": "8OIR",
+  "caseKey": "RASP2PDB:8OIR",
+  "chains": [
+    "AA",
+    "AG",
+    "B8",
+    "B9"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "8OIR",
+  "profileCount": 152
+}

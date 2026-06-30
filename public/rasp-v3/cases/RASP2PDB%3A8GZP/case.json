@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8GZP",
+  "biologicalMoleculeName": "8GZP",
+  "caseId": "8GZP",
+  "caseKey": "RASP2PDB:8GZP",
+  "chains": [
+    "S"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8GZP",
+  "profileCount": 1
+}

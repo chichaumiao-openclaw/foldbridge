@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8T5D",
+  "biologicalMoleculeName": "8T5D",
+  "caseId": "8T5D",
+  "caseKey": "RASP2PDB:8T5D",
+  "chains": [
+    "5",
+    "A",
+    "B",
+    "v"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8T5D",
+  "profileCount": 40
+}

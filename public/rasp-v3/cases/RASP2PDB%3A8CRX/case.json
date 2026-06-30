@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8CRX",
+  "biologicalMoleculeName": "8CRX",
+  "caseId": "8CRX",
+  "caseKey": "RASP2PDB:8CRX",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "8CRX",
+  "profileCount": 14
+}

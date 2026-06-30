@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8G5Y",
+  "biologicalMoleculeName": "8G5Y",
+  "caseId": "8G5Y",
+  "caseKey": "RASP2PDB:8G5Y",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "8G5Y",
+  "profileCount": 237
+}

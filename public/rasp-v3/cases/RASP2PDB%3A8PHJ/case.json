@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8PHJ",
+  "biologicalMoleculeName": "8PHJ",
+  "caseId": "8PHJ",
+  "caseKey": "RASP2PDB:8PHJ",
+  "chains": [
+    "7",
+    "A",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8PHJ",
+  "profileCount": 38
+}
