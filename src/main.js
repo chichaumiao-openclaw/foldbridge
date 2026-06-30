@@ -35,7 +35,7 @@ import { renderProbingArticleIndex, renderProbingArticlePage } from './probingAr
 import {
   buildAtlasSearchState
 } from './annojoinAtlasData.js';
-import { renderAnnojointAtlasPage } from './annojoinAtlasView.js';
+import { renderAnnojointAtlasPage, hydrateLssEvidence } from './annojoinAtlasView.js';
 import { bindAnnojointAtlasTable } from './annojoinAtlasController.js';
 import {
   annojoinExportRow,
@@ -3238,6 +3238,22 @@ function render(options = {}) {
       removeFilter: (key) => setAnnojointAtlasFilter(key, ''),
       clearFilters: () => clearAnnojointAtlasFilters()
     });
+    const selectedField = parseHashRoute(window.location.hash).params.get('field') || '';
+    if (selectedField === 'confidenceDisplayLabel') {
+      const selectedKey = getAnnojointCaseKeyFromHash();
+      hydrateLssEvidence({
+        store: annojoinAtlasStore,
+        root: document,
+        caseKey: selectedKey,
+        getCurrentCaseKey: () => {
+          const p = parseHashRoute(window.location.hash).params;
+          if ((p.get('field') || '') !== 'confidenceDisplayLabel') return null;
+          return getAnnojointCaseKeyFromHash();
+        }
+      }).catch((error) => {
+        console.error('[main] hydrate ANNOJOIN LSS 证据失败', error);
+      });
+    }
   }
   initAnnojointStructureViewers().catch((error) => {
     console.error('[main] 初始化 ANNOJOIN 3D viewer 失败', error);

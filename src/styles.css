@@ -492,6 +492,20 @@ main.page-sequence-detail {
   overflow-wrap: anywhere;
 }
 
+/* Per-profile LSS evidence rows (one profile each) */
+.annojoin-lss-evidence-slot {
+  margin-top: 12px;
+}
+
+.annojoin-lss-evidence-row {
+  padding: 8px 0;
+  border-top: 1px solid var(--borderSubtle, rgba(127, 127, 127, 0.25));
+}
+
+.annojoin-lss-evidence-row:first-of-type {
+  border-top: none;
+}
+
 /* Molecule cell de-duplication: dash when it repeats the group label */
 .annojoin-molecule-same-as-group {
   color: var(--textMuted);

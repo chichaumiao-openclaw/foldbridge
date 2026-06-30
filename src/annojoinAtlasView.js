@@ -351,10 +351,82 @@ function coverageTopologyValue(row = {}) {
   return value;
 }
 
+// per-profile LSS 证据：只渲染对外友好字段。内部向字段（evidenceId/calibrationNote/
+// bridgeStatus/pairId/pairSegmentId/rankedSetEligible/selectedByDefault/lssTierUncalibrated
+// 及所有 route/profile 内部标识）绝不进入渲染产物。
+function fmtEvidenceValue(value) {
+  if (value === null || value === undefined) return '';
+  if (typeof value === 'number') return Number.isFinite(value) ? String(value) : '';
+  return String(value).trim();
+}
+
+function renderLssEvidenceRow(row = {}) {
+  const items = [];
+  const push = (label, raw) => {
+    const value = fmtEvidenceValue(raw);
+    if (value !== '') items.push([label, value]);
+  };
+  push('Probe technology', row.technology);
+  push('Measurement family', row.family);
+  push('LSS tier (calibrated)', row.lssTierCalibrated);
+  const metricLabel = fmtEvidenceValue(row.directionalMetricLabel) || 'Directional metric';
+  push(metricLabel, row.aucDirectional);
+  push('Permutation p-value', row.aucEmpiricalPValue);
+  push('Effect size (z)', row.aucEffectSizeZ);
+  push('Evaluable units', row.nEvaluable);
+  if (!items.length) return '';
+  const dl = items.map(([k, v]) => `<dt>${escapeHtml(k)}</dt><dd>${escapeHtml(v)}</dd>`).join('');
+  return `<div class="annojoin-lss-evidence-row"><dl>${dl}</dl></div>`;
+}
+
+const LSS_EVIDENCE_EMPTY = '<p class="mini-note">No per-profile LSS evidence is available for this case.</p>';
+
+export function renderLssEvidenceContent(evidence) {
+  const rows = Array.isArray(evidence?.rows) ? evidence.rows : [];
+  const status = String(evidence?.status || '').trim();
+  if (status !== 'materialized' || !rows.length) return LSS_EVIDENCE_EMPTY;
+  const rendered = rows.map(renderLssEvidenceRow).filter(Boolean);
+  if (!rendered.length) return LSS_EVIDENCE_EMPTY;
+  return `<h3>Per-profile LSS evidence</h3>
+    <p class="mini-note">Each row is one profile's calibrated LSS recall evidence for this case.</p>
+    ${rendered.join('')}`;
+}
+
+function findLssEvidenceSlot(root, caseKey) {
+  if (!root || !caseKey) return null;
+  const slots = root.querySelectorAll('[data-lss-evidence-slot]');
+  for (const el of slots) {
+    if (el.getAttribute('data-lss-evidence-slot') === caseKey) return el;
+  }
+  return null;
+}
+
+// 异步把 per-profile 证据填进同步渲染的占位节点。侧栏切走（caseKey 不再匹配）则丢弃过期响应。
+export async function hydrateLssEvidence({ store, root = document, caseKey, getCurrentCaseKey } = {}) {
+  if (!store || typeof store.loadAssetPath !== 'function') return;
+  const key = String(caseKey || '').trim();
+  if (!key) return;
+  if (!findLssEvidenceSlot(root, key)) return;
+  let evidence = null;
+  try {
+    evidence = await store.loadAssetPath(`cases/${key}/confidence-evidence.json`, { compressed: true });
+  } catch {
+    evidence = null;
+  }
+  if (typeof getCurrentCaseKey === 'function' && getCurrentCaseKey() !== key) return;
+  const liveSlot = findLssEvidenceSlot(root, key);
+  if (!liveSlot) return;
+  liveSlot.innerHTML = evidence ? renderLssEvidenceContent(evidence) : LSS_EVIDENCE_EMPTY;
+}
+
 function renderConfidencePanel(row) {
   const hasContext = row.hasContextAnnotation ? 'context annotation present' : 'context annotation not present';
   const hasLss = row.hasLssAnnotation ? 'LSS annotation present' : 'LSS annotation not present';
   const entries = sourceCaseEntries(row);
+  const caseKey = rowCaseKey(row);
+  const evidenceSlot = row.hasLssAnnotation && caseKey
+    ? `<div class="annojoin-lss-evidence-slot" data-lss-evidence-slot="${escapeHtml(caseKey)}"><p class="mini-note">Loading per-profile LSS evidence…</p></div>`
+    : '';
   return `<aside class="annojoin-detail-sidebar" aria-label="ANNOJOIN confidence explanation">
     <p class="technology-kicker">Confidence classification</p>
     <h2>${escapeHtml(row.confidenceDisplayLabel || 'not annotated')}</h2>
@@ -365,6 +437,7 @@ function renderConfidencePanel(row) {
       <dt>Coverage topology</dt><dd>${escapeHtml(coverageTopologyValue(row))}</dd>
     </dl>
     ${entries.length > 1 ? renderSourceCaseLinks(row) : ''}
+    ${evidenceSlot}
     <p class="mini-note">A/B/C labels summarize confidence-relevant annotation support. C-level labels are exploratory hints and should be reviewed with the underlying route assets.</p>
     <p><a class="annojoin-confidence-explainer-link" href="#annojoin-confidence">What do these confidence labels mean?</a></p>
   </aside>`;

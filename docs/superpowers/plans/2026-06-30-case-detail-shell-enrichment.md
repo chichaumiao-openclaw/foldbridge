@@ -20,12 +20,16 @@
 | `public/rasp-v3/__rasp_v3_site__/case-shell.js` | 与 rmdb 版 byte-identical | `cp` 覆盖 |
 | `public/rmdb-v3/__family_d_site__/case-shell.css` | 新增富化样式块（字面值，无 var）：tier 徽章、chips、计分板卡、family 徽标、tier 药丸（6 个 tone 配色）、最佳证据框、可展开表 | 修改（权威副本） |
 | `public/rasp-v3/__rasp_v3_site__/case-shell.css` | 与 rmdb 版富化块 byte-identical | 同步编辑 |
-| `test/case-shell-enrichment.test.js` | `renderEnrichment` 依赖的纯 helper 的 node --test 断言（计数聚合、tier/family lookup、数值格式化、最佳证据选择） | 创建 |
+| `test/case-shell-enrichment.test.cjs` | 纯 helper 的 node --test 断言（计数聚合、tier/family lookup、数值格式化、最佳证据选择）；`.cjs` 强制 CommonJS，用 `fs.readFileSync`+`vm.runInNewContext` 在无 `document` 沙箱里加载 case-shell.js 取导出 | 创建 |
 
 **关键约束：**
-- `case-shell.js` 是 parse-time classic script，无 `export`。为可测，纯逻辑写成**模块顶层的命名函数**，并在文件末尾用一个 `if (typeof module !== "undefined" && module.exports)` 守卫导出（浏览器里 `module` 未定义，守卫不触发；node --test 里可 require）。DOM 部分（建节点、挂载、事件）不导出、不测。
+- **本仓库根 `package.json` 是 `"type": "module"`**（已核实），且 `test/` 下所有现有测试都用 ESM `import`（如 `import test from 'node:test'`），无任何 `.cjs`。因此：
+  - `case-shell.js` 必须保持 **classic script**（HTML 用 `<script src>` 加载、依赖 `document.currentScript`，不能改成 module，也不能用 `export`——`export` 在 classic script 里是 SyntaxError）。
+  - 但 HTML 是 2386 个 case 各自的静态文件（范围外不可编辑），**不能新增第二个 `<script>` 标签**，所以纯 helper 必须**内联在 case-shell.js 里**，不能拆成单独文件让浏览器额外加载。
+  - node 直接 `require`/`import` 这个文件都拿不到 helper（type:module 下 `module.exports` 是 no-op，ESM 里又无 `require`），且文件顶层的 DOM 代码会在加载时立刻 `document is not defined` 抛错。
+  - **解法（零 public/ 污染）**：① 把所有顶层 DOM/bootstrap 代码包进 `if (typeof document !== "undefined") { … }` 守卫（node 加载时 document 未定义→整块跳过，不抛错；浏览器照常执行）。② 纯 helper 定义在守卫**之外**（顶层函数声明，不引用 DOM）。③ 文件末尾加 `if (typeof module !== "undefined" && module.exports) { module.exports = {…} }`（浏览器 `module` 未定义→`typeof` 返回 `"undefined"` 不抛错、不触发；测试里在 vm 沙箱注入 `module` 后可取到导出）。④ 测试文件命名 **`.cjs`**（`node --test` 会发现 `.cjs`，且 `.cjs` 强制 CommonJS，`require`/`fs`/`vm`/`__dirname` 都可用），用 `fs.readFileSync` 读源码 + `vm.runInNewContext(src, { module:{exports:{}} })`（**不提供 `document`**→DOM 守卫块跳过、末尾导出守卫执行），从 `sandbox.module.exports` 取 helper 断言。这样不需要在 `public/` 下加任何 `package.json`，改动面恰好=规格点名的 4 个文件 + 1 个测试。
 - 两套 `case-shell.js` 必须最终 byte-identical：**只编辑 rmdb 版**，rasp 版用 `cp` 覆盖，最后 `diff` 验证为空。
-- 富化 CSS 块在两套 `case-shell.css` 里 byte-identical：rmdb 改好后把该块 `cp`/粘贴进 rasp（rasp 文件其余 `:root`/既有规则不动）。
+- 富化 CSS 块在两套 `case-shell.css` 里 byte-identical：rmdb 改好后把该块 `cp`/粘贴进 rasp（rasp 文件其余 `:root`/既有规则不动）。用 sentinel 注释标记包住该块（如 `/* FB-ENRICH-START */ … /* FB-ENRICH-END */`），收尾时用 `sed`/awk 抽出两文件该区间 `diff` 验证一致（两文件整体因 `:root` token 名不同**不可**整体 diff）。
 
 **任务顺序：** 任务 1（纯 helper + 测试，TDD）→ 任务 2（接缝重构 loadEvidence/updateFrame/syncUi）→ 任务 3（renderEnrichment DOM 装配 + 挂载）→ 任务 4（同步 rasp case-shell.js + diff）→ 任务 5（CSS 两套）→ 任务 6（浏览器总验证 + commit）。
 
@@ -34,25 +38,44 @@
 ### 任务 1：纯 helper（计数聚合 / lookup / 格式化 / 最佳证据选择）+ node 测试
 
 **文件：**
-- 修改：`public/rmdb-v3/__family_d_site__/case-shell.js`（在 bootstrap parse 之后、现有 `evidenceById` 附近新增纯函数 + 文件末尾加 node 导出守卫）
-- 测试：`test/case-shell-enrichment.test.js`（创建）
+- 修改：`public/rmdb-v3/__family_d_site__/case-shell.js`（① 把现有顶层 DOM/bootstrap 代码 line 20-82 包进 `if (typeof document !== "undefined") {…}` 守卫；② 在守卫**之外**、顶层新增纯函数；③ 文件末尾加 node 导出守卫）
+- 测试：`test/case-shell-enrichment.test.cjs`（创建）
+
+- [ ] **步骤 0：先把顶层 DOM 代码包进 document 守卫**
+
+把现有 `case-shell.js` 的 line 20-82（`const bootstrapNode = …` 到末尾的 `syncUi();`，即顶部 nav-inject IIFE **之后**的全部代码）整体缩进包进：
+
+```js
+if (typeof document !== "undefined") {
+  // …现有 bootstrap parse / state / chainButtons / evidenceById /
+  //   defaultEvidenceForChain / updateFrame / syncUi / 事件绑定 / 调和块 / syncUi() …
+}
+```
+
+顶部的 nav-inject IIFE（line 1-18）本身已 `try/catch` 且引用 `document.currentScript`，也一并放进守卫内（或保持其自身 try/catch——node 加载时 `document` 未定义会进 catch，无害；为统一，建议也移入守卫）。**注意**：纯 helper（步骤 3 新增）和末尾导出守卫必须在这个 `if` 块**外面**。
 
 - [ ] **步骤 1：编写失败的测试**
 
-创建 `test/case-shell-enrichment.test.js`。先确认 require 路径（从 repo 根到 rmdb case-shell.js）。
+创建 `test/case-shell-enrichment.test.cjs`（`.cjs` 后缀，CommonJS）。用 `fs`+`vm` 在**无 `document`** 的沙箱里执行源码——DOM 守卫块整体跳过，只有 helper 定义和末尾 `module.exports` 守卫执行：
 
 ```js
 const test = require("node:test");
 const assert = require("node:assert");
+const fs = require("node:fs");
 const path = require("node:path");
-const helpers = require(path.join(
+const vm = require("node:vm");
+
+const SRC = fs.readFileSync(path.join(
   __dirname, "..", "public", "rmdb-v3", "__family_d_site__", "case-shell.js"
-));
+), "utf8");
+const sandbox = { module: { exports: {} } };
+sandbox.exports = sandbox.module.exports;
+vm.runInNewContext(SRC, sandbox);  // no `document` in sandbox → DOM guard skipped
 
 const {
   familyCounts, tierCounts, distinctChains, familyLabel, tierDisplay,
   fmtMetric, fmtP, fmtFraction, pickBestEvidence,
-} = helpers;
+} = sandbox.module.exports;
 
 const ROWS = [
   { family: "A", chain: "A", lssTierCalibrated: "LSS_WEAK", evidenceId: "e1",
@@ -120,12 +143,12 @@ test("pickBestEvidence: defaultEvidenceId > selectedByDefault > first", () => {
 
 - [ ] **步骤 2：运行测试验证失败**
 
-运行：`node --test test/case-shell-enrichment.test.js`
-预期：FAIL（`case-shell.js` 尚未导出这些函数 → require 得到的解构全为 undefined，`TypeError: familyCounts is not a function`）。
+运行：`node --test test/case-shell-enrichment.test.cjs`
+预期：FAIL（步骤 0 已包好 DOM 守卫，vm 执行不再抛 `document is not defined`；但 helper 与末尾导出守卫尚未写 → `sandbox.module.exports` 为空 → 解构出的 `familyCounts` 等全为 `undefined` → `TypeError: familyCounts is not a function`）。
 
 - [ ] **步骤 3：编写最少实现**
 
-在 `case-shell.js` 中，bootstrap parse（`const bootstrap = ...`）之后、`evidenceById` 函数附近，新增以下纯函数（不依赖 DOM、不依赖 `bootstrap`/`state` 闭包，全部入参显式）：
+在 `case-shell.js` 中，**`if (typeof document !== "undefined") {…}` 守卫块之外**（顶层，建议放在文件靠后、紧邻末尾导出守卫之前），新增以下纯函数（不依赖 DOM、不依赖 `bootstrap`/`state` 闭包，全部入参显式）：
 
 ```js
 const FAMILY_LABELS = {
@@ -206,7 +229,7 @@ function pickBestEvidence(rows, defaultEvidenceId) {
 }
 ```
 
-在**文件末尾**加 node 测试导出守卫（浏览器无 `module`，不触发）：
+在**文件末尾**（同样在 DOM 守卫块**之外**）加 node 测试导出守卫（浏览器无 `module`，`typeof module` 返回 `"undefined"` 不抛错、不触发；vm 沙箱里注入了 `module` 故执行）：
 
 ```js
 if (typeof module !== "undefined" && module.exports) {
@@ -217,17 +240,17 @@ if (typeof module !== "undefined" && module.exports) {
 }
 ```
 
-注意：导出守卫放末尾意味着浏览器解析到此处时 `module` 是 `ReferenceError`？否——`typeof module` 对未声明标识符返回 `"undefined"` 而不抛错，安全。
+注意：`typeof module` 对未声明标识符返回 `"undefined"` 而不抛错，故浏览器 classic-script 加载安全；本仓库 `"type": "module"`，所以即便 node 直接 `import` 此文件该守卫也不会真导出——这正是测试改用 vm 沙箱注入 `module` 的原因。
 
 - [ ] **步骤 4：运行测试验证通过**
 
-运行：`node --test test/case-shell-enrichment.test.js`
-预期：PASS（9 个测试全绿）。
+运行：`node --test test/case-shell-enrichment.test.cjs`
+预期：PASS（8 个测试全绿）。
 
 - [ ] **步骤 5：Commit**
 
 ```bash
-git add test/case-shell-enrichment.test.js public/rmdb-v3/__family_d_site__/case-shell.js
+git add test/case-shell-enrichment.test.cjs public/rmdb-v3/__family_d_site__/case-shell.js
 git commit -m "feat(detail-page): pure helpers for case-shell enrichment (counts/lookup/format)"
 ```
 
@@ -242,7 +265,7 @@ git commit -m "feat(detail-page): pure helpers for case-shell enrichment (counts
 
 - [ ] **步骤 1：新增 loadEvidence，保留 updateFrame 为唯一引用 iframe 处**
 
-在现有 `updateFrame()` 之后新增 `loadEvidence`：
+在现有 `updateFrame()` 之后新增 `loadEvidence`（**注意：此函数引用 `state`/`bootstrap`/`syncUi`，必须放在任务 1 步骤 0 的 `if (typeof document !== "undefined") {…}` 守卫块内部**，和 `updateFrame`/`syncUi` 同级）：
 
 ```js
 function loadEvidence(evidenceId) {
@@ -275,7 +298,7 @@ function syncUi() {
 
 - [ ] **步骤 3：node --test 回归（确保未破坏纯 helper）**
 
-运行：`node --test test/case-shell-enrichment.test.js`
+运行：`node --test test/case-shell-enrichment.test.cjs`
 预期：PASS（重构不影响纯 helper；`node --check` 见步骤 4）。
 
 - [ ] **步骤 4：语法检查**
@@ -299,12 +322,12 @@ git commit -m "refactor(detail-page): extract loadEvidence seam; syncUi drives t
 
 - [ ] **步骤 1：新增 DOM 辅助 + renderEnrichment + refreshEvidenceHighlight**
 
-在纯 helper 之后新增 DOM 装配（用 `textContent`/`createElement`，绝不 innerHTML 注入数据）。要点：
+新增 DOM 装配（用 `textContent`/`createElement`，绝不 innerHTML 注入数据）。**这些函数（`el`/`renderEnrichment`/`refreshEvidenceHighlight`）都引用 `document`，必须放在任务 1 步骤 0 的 `if (typeof document !== "undefined") {…}` 守卫块内部**（与 `updateFrame`/`syncUi`/`loadEvidence` 同级；纯 helper 仍在守卫外）。要点：
 - 建一个小工具 `el(tag, className, text)`。
 - **Hero 增强**：取 `best = pickBestEvidence(rows, bootstrap.defaultEvidenceId)`；在 `.hero` 里（subtitle `<p>` 之后）插入 tier 徽章 `<span class="fb-tier-badge tone-<tone>">`，文本 `${best.family} · ${tierDisplay(best.lssTierCalibrated).label}`。
-- **原地替换 `.meta`**：取 `metaNode = document.querySelector(".hero .meta")`；若存在，`metaNode.replaceChildren()` 清空，再 append 三个 `.chip`：`chains ${distinctChains(rows)}`、`profiles ${rows.length}`、`families ${distinct families join "·"}`。（不重建静态 source/default-chain chip，符合规格取舍。）
-- **计分板卡**：family 徽标（`familyCounts` → `${f} · ${familyLabel(f)} ×${n}`）；tier 药丸（`tierCounts` → `${tierDisplay(t).label} ${n}`，class 带 `tone-<tone>`）；最佳证据框（technology / `directionalMetricLabel` + `fmtMetric` / `fmtP` / nEvaluable / tier label + meaning）。
-- **可展开表**：`<details>`（默认收起）→ `<table>`，每行 Family/Technology/Tier/metric/p/n/profile；行 `addEventListener("click", () => loadEvidence(row.evidenceId))`；行带 `data-evidence-id`。
+- **原地替换 `.meta`**：取 `metaNode = document.querySelector(".hero .meta")`；若存在，`metaNode.replaceChildren()` 清空，再 append 三个 `.chip`：`chains ${distinctChains(rows)}`、`profiles ${rows.length}`、`families ${sortedFamilies join "·"}`。**families 必须排序后再 join**——`familyCounts(rows)` 的 key 按首次出现顺序排列，10FZ 真实数据首现顺序是 `A·D·B`；用 `Object.keys(familyCounts(rows)).sort()` 得到 `A·B·D`，与静态 chip 一致、与任务 6 断言一致。（不重建静态 source/default-chain chip，符合规格取舍。）
+- **计分板卡**：family 徽标（遍历 `Object.keys(familyCounts(rows)).sort()` → `${f} · ${familyLabel(f)} ×${n}`，**同样排序**）；tier 药丸（`tierCounts` → `${tierDisplay(t).label} ${n}`，class 带 `tone-<tone>`）；最佳证据框（technology / `directionalMetricLabel` + `fmtMetric` / `fmtP` / nEvaluable / tier label + meaning）。
+- **可展开表**：`<details>`（默认收起）→ `<table>`，每行 Family/Technology/Tier/metric/p/n/profile；行 `addEventListener("click", () => loadEvidence(row.evidenceId))`；行带 `data-evidence-id`。表行顺序按 `evidenceRows` 原始顺序即可。
 - `refreshEvidenceHighlight(selectedId)`：遍历表行，`toggle("is-active", tr.dataset.evidenceId === selectedId)`。
 - `renderEnrichment(bootstrap)`：`rows = bootstrap.evidenceRows`；空/缺则直接 return（静态 hero 不动）；否则装配上述节点，把计分板+表组成的容器 `insertBefore` 到 `.layout` 之前。
 
@@ -312,13 +335,13 @@ git commit -m "refactor(detail-page): extract loadEvidence seam; syncUi drives t
 
 - [ ] **步骤 2：在 bootstrap 流程末尾调用 renderEnrichment**
 
-在文件末尾现有 `syncUi();`（首次渲染）**之前**插入 `renderEnrichment(bootstrap);`，使表 DOM 在首个 `syncUi()`→`refreshEvidenceHighlight` 之前已存在。
+在 DOM 守卫块内、现有 `syncUi();`（首次渲染）**之前**插入 `renderEnrichment(bootstrap);`，使表 DOM 在首个 `syncUi()`→`refreshEvidenceHighlight` 之前已存在。
 
 - [ ] **步骤 3：语法检查 + 纯 helper 回归**
 
 运行：`node --check public/rmdb-v3/__family_d_site__/case-shell.js`
 预期：无输出。
-运行：`node --test test/case-shell-enrichment.test.js`
+运行：`node --test test/case-shell-enrichment.test.cjs`
 预期：PASS（导出的纯 helper 未受 DOM 代码影响）。
 
 - [ ] **步骤 4：Commit**
@@ -366,15 +389,18 @@ git commit -m "feat(detail-page): sync rasp case-shell.js byte-identical with rm
 
 - [ ] **步骤 1：在 rmdb case-shell.css 末尾追加富化块**
 
-字面值、无 `var(--…)`。覆盖 selector：`.fb-tier-badge` + `.fb-tier-badge.tone-*`（6 tone），`.hero .meta .chip`（已有则不重复定义冲突项），`.fb-scoreboard`（卡），`.fb-fam`（family 徽标），`.fb-tpill` + `.fb-tpill.tone-*`（6 tone），`.fb-best`（最佳证据框），`.fb-evtable details/summary/table/tr.is-active`。配色沿用暖奶油+绿（参考已落地的 `.fb-detail-nav` / 原型 mockup 的 tone 取色：weak 金 `#9a7611`/`#fff4d6`，discordant 红 `#b3322f`/`#fdecec`，not-supported 灰 `#5d6c64`/`#f1f2f3`，strong 绿 `#1f8f52`/`#eafaf0`，moderate 蓝绿，underpowered 浅灰）。响应式：chips/pills `flex-wrap`，表 `overflow-x:auto`。
+字面值、无 `var(--…)`。**用 sentinel 注释包住整块**：以 `/* FB-ENRICH-START */` 开头、`/* FB-ENRICH-END */` 结尾（步骤 3 据此抽块比对）。覆盖 selector：`.fb-tier-badge` + `.fb-tier-badge.tone-*`（6 tone），`.hero .meta .chip`（已有则不重复定义冲突项），`.fb-scoreboard`（卡），`.fb-fam`（family 徽标），`.fb-tpill` + `.fb-tpill.tone-*`（6 tone），`.fb-best`（最佳证据框），`.fb-evtable details/summary/table/tr.is-active`。配色沿用暖奶油+绿（参考已落地的 `.fb-detail-nav` / 原型 mockup 的 tone 取色：weak 金 `#9a7611`/`#fff4d6`，discordant 红 `#b3322f`/`#fdecec`，not-supported 灰 `#5d6c64`/`#f1f2f3`，strong 绿 `#1f8f52`/`#eafaf0`，moderate 蓝绿，underpowered 浅灰）。响应式：chips/pills `flex-wrap`，表 `overflow-x:auto`。
 
 - [ ] **步骤 2：把同一块同步进 rasp case-shell.css**
 
-把步骤 1 追加的整块原样粘贴到 `public/rasp-v3/__rasp_v3_site__/case-shell.css` 末尾（rasp 其余内容不动）。
+把步骤 1 追加的整块（含 sentinel 注释）原样粘贴到 `public/rasp-v3/__rasp_v3_site__/case-shell.css` 末尾（rasp 其余 `:root`/既有内容不动）。
 
-- [ ] **步骤 3：验证两块一致**
+- [ ] **步骤 3：验证两块一致（sentinel 区间 diff）**
 
-提取两文件的富化块比对（或人工核对粘贴无误）。富化块本身应 byte-identical。
+两文件整体因 `:root` token 名不同**不可**整体 `diff`。改为只比对 sentinel 区间：
+
+运行：`diff <(sed -n '/FB-ENRICH-START/,/FB-ENRICH-END/p' public/rmdb-v3/__family_d_site__/case-shell.css) <(sed -n '/FB-ENRICH-START/,/FB-ENRICH-END/p' public/rasp-v3/__rasp_v3_site__/case-shell.css)`
+预期：无输出（富化块 byte-identical）。
 
 - [ ] **步骤 4：Commit**
 
@@ -408,7 +434,7 @@ git commit -m "feat(detail-page): enrichment CSS block (tier tones/scoreboard/ta
 
 - [ ] **步骤 4：关服务器 + 全量 node 测试**
 
-关闭 http.server。运行：`node --test test/case-shell-enrichment.test.js`
+关闭 http.server。运行：`node --test test/case-shell-enrichment.test.cjs`
 预期：PASS。
 
 - [ ] **步骤 5：最终一致性检查**
@@ -422,7 +448,7 @@ git commit -m "feat(detail-page): enrichment CSS block (tier tones/scoreboard/ta
 
 ## 验证清单（完成定义）
 
-- [ ] `node --test test/case-shell-enrichment.test.js` 全绿
+- [ ] `node --test test/case-shell-enrichment.test.cjs` 全绿
 - [ ] 两套 `case-shell.js` `diff` 为空
 - [ ] `node --check` 两套 `case-shell.js` 均通过
 - [ ] RASP 10FZ：徽章/chips/计分板/最佳证据/表/行点击/高亮/Spearman 符号/null→— 全部正确，控制台无报错
