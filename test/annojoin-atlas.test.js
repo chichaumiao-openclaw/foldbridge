@@ -395,7 +395,6 @@ test('atlas page renders merged PDB rows with source detail links in the side pa
     selectedField: 'moleculeName'
   });
 
-  assert.match(html, /Rows 1-1 of 1/);
   assert.equal((html.match(/data-annojoin-case-row="PDB:10FZ"/g) || []).length, 1);
   assert.match(html, /1 PDBs \(2 source cases\)/);
   assert.match(html, /2 source cases/);
@@ -586,11 +585,10 @@ test('atlas page renders only the compact master table surface', () => {
   assert.match(html, /ANNOJOIN master table/);
   assert.match(html, /Export Selected \(1\)/);
   assert.match(html, /Export All Results/);
-  assert.match(html, /Select Current Page/);
   assert.match(html, /Select All Results/);
   assert.match(html, /Clear Selection/);
-  assert.match(html, /Page 1 \/ 2/);
-  assert.match(html, /Rows 1-1 of 2/);
+  assert.doesNotMatch(html, /class="annojoin-pagination"/);
+  assert.doesNotMatch(html, /id="annojoin-page-size"/);
   assert.doesNotMatch(html, /annojoin-column-picker/);
   assert.match(html, /Expand All/);
   assert.match(html, /Collapse All/);
