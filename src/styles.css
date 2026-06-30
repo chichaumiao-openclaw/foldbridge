@@ -6608,30 +6608,7 @@ body[data-mode="dark"] .mode-toggle:hover {
   font-size: 0.78rem;
   color: var(--textSecondary);
 }
-.probing-basis-badge {
-  display: inline-block;
-  padding: 2px 9px;
-  border-radius: 999px;
-  font-size: 0.78rem;
-  font-weight: var(--fontWeightStrong);
-  border: 1px solid var(--border);
-}
-.probing-basis-badge--supported {
-  background: var(--primary);
-  color: var(--onPrimary);
-  border-color: var(--primary);
-}
-.probing-basis-badge--informed {
-  background: var(--primarySoft);
-  color: var(--primary);
-  border-color: var(--accent);
-}
-.probing-basis-badge--pending {
-  background: var(--surfaceAlt);
-  color: var(--textSecondary);
-}
 .probing-tech-article-link { color: var(--textAccent); font-weight: var(--fontWeightStrong); }
-.probing-tech-article-none { color: var(--textSecondary); }
 
 /* glossary */
 .probing-glossary-list {

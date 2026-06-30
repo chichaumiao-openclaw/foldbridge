@@ -571,24 +571,20 @@ export function renderProbingTechTable(registry) {
     const fam = escapeProbingHtml(row.family);
     const famMeaning = escapeProbingHtml(PROBING_FAMILY_MEANING[row.family] || '');
     const bases = escapeProbingHtml(row.targetable_bases);
-    const basis = escapeProbingHtml(row.threshold_basis);
-    const basisClass = `probing-basis-badge probing-basis-badge--${basis.toLowerCase()}`;
-    const link = row.article_slug
-      ? `<a class="probing-tech-article-link" href="#detail?tech=${encodeURIComponent(row.article_slug)}">Read explainer</a>`
-      : '<span class="probing-tech-article-none">—</span>';
+    const techCell = row.article_slug
+      ? `<a class="probing-tech-article-link" href="#detail?tech=${encodeURIComponent(row.article_slug)}">${tech}</a>`
+      : `<span class="probing-tech-name">${tech}</span>`;
     return `<tr data-tech-row>
-        <td data-col="technology"><span class="probing-tech-name">${tech}</span></td>
+        <td data-col="technology">${techCell}</td>
         <td data-col="family"><span class="probing-family-tag" title="${famMeaning}">${fam}</span> <span class="probing-family-meaning">${famMeaning}</span></td>
         <td data-col="bases">${bases}</td>
-        <td data-col="basis"><span class="${basisClass}">${basis}</span></td>
-        <td data-col="article">${link}</td>
       </tr>`;
   }).join('');
   return `<section class="card bundle-wide-card probing-tech-table" aria-label="Probe technology comparison">
       <div class="probing-hub-heading">
         <p class="technology-kicker">technology registry</p>
         <h2>34 RNA probing technologies at a glance</h2>
-        <p class="probing-tech-caption">In this table, <strong>family</strong> labels the physical quantity each method measures (A–F) — it is <strong>not a quality ranking</strong>. The threshold basis flags how each method's confidence cut-points are anchored.</p>
+        <p class="probing-tech-caption">In this table, <strong>family</strong> labels the physical quantity each method measures (A–F) — it is <strong>not a quality ranking</strong>. Technologies with an in-depth explainer are linked by name.</p>
       </div>
       <div class="probing-tech-table-scroll">
         <table class="probing-tech-grid">
@@ -597,8 +593,6 @@ export function renderProbingTechTable(registry) {
               <th scope="col" data-sort="technology">Technology</th>
               <th scope="col" data-sort="family">Family</th>
               <th scope="col" data-sort="bases">Targetable bases</th>
-              <th scope="col" data-sort="basis">Threshold basis</th>
-              <th scope="col" data-sort="article">Explainer</th>
             </tr>
           </thead>
           <tbody>${body}</tbody>
