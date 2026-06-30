@@ -1,10 +1,10 @@
 {
   "schema_version": "about.v1",
   "hero": {
-    "kicker": "About FoldBridge",
+    "kicker": "About & Help · FoldBridge",
     "title": "把 RNA 化学探针数据关联到已解析的三级结构",
     "summary": "FoldBridge 将 RMDB / RASP 的探针反应性派生序列对齐到 PDB 链，物化为可溯源的结构关联记录，并按测量物理量分族评估置信度。",
-    "detail": "本页说明数据来源、建库流水线、置信度方法与阈值的诚实边界。缺少引用元数据的字段一律留空，不编造。"
+    "detail": "本页同时是帮助页：说明数据怎么收集、置信度怎么算、阈值的诚实边界，以及如何阅读总表与详情页。缺少引用元数据的字段一律留空，不编造。"
   },
   "sections": [
     {
@@ -12,9 +12,25 @@
       "title": "三源数据",
       "kind": "cards",
       "items": [
-        { "name": "RMDB", "body": "RNA Mapping Database：社区沉淀的化学探针反应性原始数据。" },
-        { "name": "RASP", "body": "RNA 结构探针公共宇宙：跨技术的反应性派生序列与命中。" },
-        { "name": "PDB", "body": "已实验解析的三级结构，提供 SASA / 配对态等结构真值。" }
+        { "name": "RMDB", "body": "RNA Mapping Database：社区沉淀的化学探针反应性原始数据，覆盖 DMS / SHAPE / CMCT 等多种试剂，按 profile（一次实验的反应性序列）组织。" },
+        { "name": "RASP", "body": "RNA 结构探针公共宇宙：跨技术的反应性派生序列与 PDB 命中，覆盖 icLASER / Lead-seq / RL-Seq 等更丰富的技术谱，按 case（一个 PDB 命中）组织。" },
+        { "name": "PDB", "body": "已实验解析的三级结构。提供结构真值——配对态（来自二级结构）、溶剂可及表面积（SASA）、残基间空间距离——作为置信度评估的金标准。" }
+      ]
+    },
+    {
+      "id": "data-collection",
+      "title": "数据怎么收集与对齐",
+      "kind": "prose",
+      "body": "收集分两步。第一步取信号：从 RMDB / RASP 拿到逐残基的化学探针反应性，每条反应性序列带一个 profile / case 标识，并记录所用探针技术。第二步取真值并对齐：把探针派生序列比对到对应 PDB 条目的某条链，得到「探针位 → PDB 残基」的坐标映射；只有能映射到结构坐标的残基才进入打分。同一个 PDB 若同时有 RMDB 与 RASP 来源，会汇总成总表里的一条展示行，但保留指回各自源 case 的链接。无法映射坐标、或缺少可打分信号的条目会被诚实地剔除或标注，不强行打分。"
+    },
+    {
+      "id": "structure-truth",
+      "title": "结构真值怎么算出来",
+      "kind": "table",
+      "items": [
+        { "term": "配对态（paired / unpaired）", "body": "从该 PDB 链的二级结构点括号（dot-bracket / DBN）文件解析。括号字符（() [] {} <>）记为配对，点和连字符（. - _ : ,）记为非配对，逐残基沿链游标对齐到 PDB 坐标。" },
+        { "term": "溶剂可及表面积（SASA）", "body": "用 Shrake-Rupley 算法在 mmCIF 结构上逐残基计算。注意编号体系：反应性的 pdb_pos 走 label_seq 编号，SASA 走结构作者编号（auth_seq），两者经 auth→label 映射对齐后才连接，避免蛋白-RNA 复合物上整链错位。" },
+        { "term": "空间接触（contact）", "body": "用残基间原子距离判定，优先 O2′(i)→C4′(j)，缺失时回退到最近重原子；近距离对记为接触命中，作为接触类方法（E 族）的真值。" }
       ]
     },
     {
@@ -22,35 +38,75 @@
       "title": "ANNOJOIN 建库流水线",
       "kind": "pipeline",
       "steps": ["probing data", "sequence match", "PDB entry", "confidence scoring", "structure-linked record"],
-      "body": "探针派生序列对齐到 PDB 链，物化为结构关联记录；同一 PDB 的 RMDB / RASP 源会被汇总为一条展示行，但保留指回各自源 case 的链接。"
+      "body": "探针派生序列对齐到 PDB 链 → 连接结构真值（配对态 / SASA / 接触）→ 分族打分并经置换校准 → 物化为结构关联记录。同一 PDB 的 RMDB / RASP 源被汇总为一条展示行，但保留指回各自源 case 的链接。"
     },
     {
-      "id": "confidence",
-      "title": "置信度方法（A–F 测量家族）",
+      "id": "confidence-overview",
+      "title": "置信度怎么读：family + tier",
       "kind": "prose",
-      "body": "family 表示被测量的物理量（A=WC-face 碱基特异 / B=SHAPE 柔性代理 / C=酶切反向 / D=SASA 双参考 / E=接触图 / F=配对集 F1），不是质量排名——A 并不比 D「更好」，只是指向分子的仪器不同。强度全部由 tier（STRONG / MODERATE / WEAK / DISCORDANT / UNDERPOWERED / NOT_SUPPORTED）表达，且 tier 必须经过对随机置换的检验才被授予。"
+      "body": "每个置信度标签是两个词、各管一件事。第一个词是测量家族（family），告诉你这次实验测的是哪一种物理量；第二个词是校准召回层级（tier），告诉你这份证据在对随机置换检验之后、能多可靠地还原 PDB 里真实沉淀的结构。读作「family + tier」。family 不是成绩——单看一个家族字母不代表强弱，A 并不比 D「更好」，只是指向分子的仪器不同。强度全部由 tier 表达，而 tier 必须挣得（要先通过门控与置换检验）。"
+    },
+    {
+      "id": "confidence-families",
+      "title": "六个测量家族（测什么 + 统计量 + 正类方向）",
+      "kind": "table",
+      "items": [
+        { "term": "A — 碱基特异化学", "body": "打击 Watson-Crick 面的特定碱基（DMS / CMCT / Keth-seq）。统计量 auc_unpaired_vs_paired，正类=非配对：高信号意味该碱基未配对。" },
+        { "term": "B — 骨架柔性", "body": "SHAPE 类试剂报告任意四种碱基的 2′-OH 柔性。统计量同 A（auc_unpaired_vs_paired），正类=非配对：高信号意味柔性、很可能未配对的残基。" },
+        { "term": "C — 酶切（方向反转）", "body": "PARS / PARTE 等核酸酶切配对茎区，逻辑反向。统计量 auc_paired_vs_unpaired（= 1 − AUC），正类=配对：高信号意味配对。" },
+        { "term": "D — 溶剂可及性", "body": "羟自由基及相关探针（RL-Seq / HRF / Lead-seq / icLASER）报告骨架暴露程度。统计量 Spearman(reactivity, SASA)，更多信号应对应更大暴露面。SASA 缺失时回退到 AUC 代理（标注 PAIRING_PROXY_FALLBACK，且硬上限不进 STRONG）。" },
+        { "term": "E — 空间接触", "body": "MCA / MOHCA 等方法报告哪些残基对在 3D 中靠近。统计量 contact_pair_auc，近=命中。" },
+        { "term": "F — 碱基对集", "body": "Mutate-and-map 类方法推断整组碱基对，对照参考配对集打分。统计量 pair-set F1（precision/recall/F1）。" }
+      ]
+    },
+    {
+      "id": "confidence-computation",
+      "title": "置信度怎么算：逐 segment 的 LSS",
+      "kind": "prose",
+      "body": "LSS（Local Structure-Signal Support，局部结构-信号支持度）按 segment 计算，一个 segment 是一组 (profile, pdb_id, chain)——一条反应性 profile 映射到某个 PDB 条目的某条链。对该 segment 只问一个问题：逐残基的化学探针值，是否与 PDB 结构里这些残基的配对/非配对（或几何）状态一致？family 决定算哪一个一致性统计量（见上表），tier 是经校准后的回答。打分前先过可评估门控（§9.2/§9.3）：可评估残基 n_eval ≥ 15、配对与非配对各 ≥ 5，否则直接判 UNDERPOWERED——样本不足时不下强结论。所有 AUC / Spearman 等统计量都是纯标准库实现（生产环境无 numpy/scipy）。"
+    },
+    {
+      "id": "confidence-calibration",
+      "title": "置换校准与门控：tier 怎么挣得",
+      "kind": "prose",
+      "body": "AUC 偏高还不够。每个有效 segment 都要做置换检验（§9.6）：固定反应性值不动，随机打乱配对/非配对标签上千次，得到经验 p 值（用 +1/+1 修正，永不为 0）。打乱后仍优于随机才算真支持；AUC 虚高但 p 不显著的会被下调到 NOT_SUPPORTED。授予 STRONG 的完整条件：置换已跑 + p ≤ 0.05 + AUC ≥ 0.70 + n_eval ≥ 20 + 自包含度（配对伙伴也在本段内的比例）≥ 0.70 + 冲突比例 ≤ 0.25。MODERATE 放宽到 p ≤ 0.10 / AUC ≥ 0.65 / 自包含 ≥ 0.50 / 冲突 ≤ 0.35。门控由自动 gate 校验，未跑置换或未校准时，「本应 STRONG」会降级为 MODERATE_CANDIDATE，绝不直接发 STRONG_CALIBRATED。"
+    },
+    {
+      "id": "confidence-tiers",
+      "title": "六个召回层级（tier）",
+      "kind": "table",
+      "items": [
+        { "term": "STRONG", "body": "经置换校准且满足全部 STRONG 门控（p ≤ 0.05、AUC ≥ 0.70、n ≥ 20、自包含 ≥ 0.70、低冲突）。证据强烈支持结构。" },
+        { "term": "MODERATE", "body": "满足放宽门控（p ≤ 0.10、AUC ≥ 0.65、自包含 ≥ 0.50）。证据较好地支持结构。未校准时表现为 MODERATE_CANDIDATE。" },
+        { "term": "WEAK", "body": "AUC 过线但二级门控（自包含 / 冲突 / 样本量）未达，标注 auc_supported_but_not_self_contained。" },
+        { "term": "DISCORDANT", "body": "方向性指标落入冲突区或冲突比例过高——探针信号与结构真值方向不一致，需要复核。" },
+        { "term": "UNDERPOWERED", "body": "未过可评估门控（n_eval < 15，或配对/非配对任一 < 5）。样本不足，不下结论。" },
+        { "term": "NOT_SUPPORTED", "body": "置换检验下不显著（p > 0.10）：即便 AUC 看着高，打乱标签后也不优于随机。" }
+      ]
     },
     {
       "id": "thresholds",
       "title": "阈值诚实声明",
       "kind": "prose",
-      "body": "A/B/C 的 0.70/0.65/0.55 是 RC3 运行值（非论文发布阈值）；只有 RL-Seq 的 Spearman 0.50/0.40/0.30 来自文献设定。threshold_basis 三档：1 SUPPORTED / 10 INFORMED / 23 PENDING（共 34 技术）。"
+      "body": "要说清楚一件事：A/B/C 的 0.70 / 0.65 / 0.55 不是任何论文发布的阈值，而是 RC3 的运行值（operating value）；只有 RL-Seq 的 Spearman 0.50 / 0.40 / 0.30 来自文献设定。注册表用 threshold_basis 列把 34 种技术分三档：1 个 LITERATURE_SUPPORTED（仅 RL-Seq）/ 10 个 LITERATURE_INFORMED / 23 个 OPERATING_VALUE_PENDING_CALIBRATION。换句话说，绝大多数阈值仍待校准，我们如实标注其来源，不把运行值包装成已发表的结论。"
     },
     {
       "id": "cite",
       "title": "如何引用与数据来源",
       "kind": "prose",
-      "body": "数据来源 RMDB / RASP / PDB；结构关联经 ANNOJOIN 主表物化。引用方式待定，当前资产未提供引用元数据处一律留空，不编造 DOI。"
+      "body": "数据来源 RMDB / RASP / PDB；结构关联经 ANNOJOIN 主表物化；置信度按上文 A–F 家族 + 校准召回层级评估。引用方式待定，当前资产未提供引用元数据处一律留空，不编造 DOI。每条置信度记录都可溯源到其 profile / case、所用探针技术与 PDB 链。"
     },
     {
       "id": "terms",
       "title": "关键术语",
       "kind": "table",
       "items": [
+        { "term": "segment", "body": "打分的基本单位 = 一组 (profile, pdb_id, chain)：一条反应性 profile 映射到某 PDB 某条链。LSS 与 tier 都按 segment 计算。" },
         { "term": "source case vs display row", "body": "原始 case 按 PDB 合并为一条展示行；同一 PDB 的 RMDB / RASP 源被汇总，但保留各自的源链接。" },
-        { "term": "RMDB vs RASP", "body": "两个上游探针数据源。RASP 当前为 positive_confidence_active_now=false，显示为 not active——不要读作已激活的正向置信度。" },
-        { "term": "Confidence A/B/C", "body": "case 级别的分布汇总，不是 best-profile 单值评分；C 是探索性提示，应再对照 route 资产复核。" },
-        { "term": "Conflicts", "body": "标记探针信号与结构真值方向不一致、需要复核的注释 / 证据冲突候选。" }
+        { "term": "RMDB vs RASP", "body": "两个上游探针数据源。RASP 中缺少可打分反应信号的条目显示为 not active——这是数据属性（没有可打分信号），不要读作已激活的正向置信度。" },
+        { "term": "Confidence A/B/C", "body": "case 级别的分布汇总，不是 best-profile 单值评分；C 族是探索性提示，应再对照 route 资产复核。" },
+        { "term": "Conflicts", "body": "标记探针信号与结构真值方向不一致、需要复核的注释 / 证据冲突候选。" },
+        { "term": "self-containment（自包含度）", "body": "可评估的配对残基中，其碱基对伙伴也落在本 segment 内的比例。STRONG 要求 ≥ 0.70——保证我们衡量的是真正能看到的碱基对。" }
       ]
     }
   ]
