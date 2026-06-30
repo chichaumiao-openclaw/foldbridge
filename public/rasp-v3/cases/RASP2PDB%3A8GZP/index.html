@@ -18,23 +18,14 @@
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="layout">
-      <section class="viewer">
-        <div class="panel">
-          <h2>Chain</h2>
-          <div class="mini">current chain: <span id="chainStatus">S</span></div>
-        </div>
-        <iframe
-          id="chainFrame"
-          class="viewer-frame"
-          src="chains/S/index.html?profileId=rasp_bw_dff75e70a1a7"
-          loading="lazy"
-          title="8GZP chain page"
-        ></iframe>
-      </section>
+    <section class="panel">
+      <h2>Chains</h2>
+      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
+      <div class="chain-list" data-default-chain-id="S"><a class="chain-btn is-active" href="chains/S/index.html?profileId=rasp_bw_dff75e70a1a7" data-chain-id="S">
+  <strong>S</strong>
+  <span class="mini">chains/S/index.html</span>
+</a></div>
     </section>
   </main>
-  <script id="family-case-bootstrap" type="application/json">{"caseId": "8GZP", "caseKey": "RASP2PDB:8GZP", "defaultChainId": "S", "defaultEvidenceId": "annojoin:RASP2PDB:8GZP:confidence:B:rasp_bw_dff75e70a1a7", "chainPageById": {"S": "chains/S/index.html"}, "evidenceChainMap": {"annojoin:RASP2PDB:8GZP:confidence:B:rasp_bw_dff75e70a1a7": "S"}, "evidenceRows": [{"aucDirectional": 0.60815, "aucEffectSizeZ": 1.534524, "aucEmpiricalPValue": 0.061938, "bridgeStatus": "bridge_missing", "chain": "S", "conflictFraction": 0.181818, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:8GZP:confidence:B:rasp_bw_dff75e70a1a7", "family": "B", "lssTierCalibrated": "LSS_WEAK", "lssTierUncalibrated": "LSS_WEAK", "nEvaluable": 73, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 1.0, "profileKey": "rasp_bw_dff75e70a1a7", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "NAI-MaP", "trackProfileId": "rasp_bw_dff75e70a1a7"}]}</script>
-  <script src="../../__rasp_v3_site__/case-shell.js"></script>
 </body>
 </html>

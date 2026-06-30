@@ -40,17 +40,14 @@ const state = {
   selectedResidueKey: null,
   hoveredResidueKey: null,
   molstarViewer: null,
-  molstarFullViewer: null,
   molstarCroppedUrl: null,
   molstarBridgeInstalled: false,
-  fullRoiColored: false,
   requestedProfileId: "",
 };
 
 const el = {
   status: document.querySelector("#assetStatus"),
   select: document.querySelector("#profileSelect"),
-  benchmark: document.querySelector("#benchmarkButton"),
   stats: document.querySelector("#stats"),
   track: document.querySelector("#track-viewport"),
   trackStatus: document.querySelector("#trackStatus"),
@@ -73,13 +70,9 @@ const el = {
   inspector: document.querySelector("#linked-inspector"),
   inspectorStatus: document.querySelector("#inspectorStatus"),
   molstarHost: document.querySelector("#molstar-host"),
-  molstarFullHost: document.querySelector("#molstar-full-host"),
   molstarStatus: document.querySelector("#molstar-status"),
   molstarSelectionStatus: document.querySelector("#molstar-selection-status"),
   molstarMeta: document.querySelector("#molstarMeta"),
-  molstarFullMeta: document.querySelector("#molstarFullMeta"),
-  fullRoiToggle: document.querySelector("#full-roi-toggle"),
-  log: document.querySelector("#log"),
   tip: document.querySelector("#tip"),
 };
 
@@ -508,11 +501,6 @@ function formatDmsLoopRecall(recall) {
   return `${recall.numerator}/${recall.denominator} (${recall.percentage.toFixed(2)}%)`;
 }
 
-function rawAlignmentCoverageMetric(rawCoverage, metricName) {
-  const value = rawCoverage?.[metricName];
-  return Number.isFinite(value) ? value.toFixed(4) : "not materialized";
-}
-
 function getResidueDetails(residueKey) {
   const position = positionFromResidueKey(residueKey);
   const strand = activeStrand();
@@ -695,6 +683,16 @@ function activeResidues() {
     .sort((a, b) => (a.labelSeqId || 0) - (b.labelSeqId || 0));
 }
 
+function resolveStructureSourceHref(href, caseId) {
+  const original = String(href || "");
+  if (/^https?:\/\//i.test(original)) return original;
+  if (!/structure\.cif(\.gz)?$/i.test(original)) return original;
+  const pdbId = String(caseId || "").trim().toUpperCase();
+  if (!pdbId) return original;
+  const gz = /\.gz$/i.test(original) ? ".gz" : "";
+  return `https://files.rcsb.org/download/${pdbId}.cif${gz}`;
+}
+
 function alignmentCropRange(coverage = state.structureCoverage) {
   const chain = coverage?.polymerChain || {};
   const alignment = coverage?.sequenceAlignment || {};
@@ -712,11 +710,12 @@ async function loadStructureSourceForMolstar() {
     throw new Error("linked-view structure-coverage missing Mol* source metadata");
   }
   const range = alignmentCropRange(coverage);
+  const sourceHref = resolveStructureSourceHref(coverage.sourceStructure.href, coverage.caseId);
   return {
     chainKey: coverage.activeChainKey,
     mode: "source-structure",
-    sourceUrl: coverage.sourceStructure.href,
-    url: coverage.sourceStructure.href,
+    sourceUrl: sourceHref,
+    url: sourceHref,
     authAsymId: coverage.atomSiteFilter.auth_asym_id,
     labelAsymId: coverage.atomSiteFilter.label_asym_id,
     atomSiteFilter: coverage.atomSiteFilter,
@@ -952,8 +951,6 @@ function applyMolstarTargetDisplay(residueKey = state.selectedResidueKey, attemp
       nonSelectedColor: MOLSTAR_CONTEXT_COLOR,
     });
     focusMolstarOnSelection(viewer, payload, residueKey);
-    // Keep the Full CIF reference ROI in sync when the toggle is on.
-    applyFullRoiColoring();
   } catch (_error) {
     if (attempt < 8) {
       window.setTimeout(() => applyMolstarTargetDisplay(residueKey, attempt + 1), 250);
@@ -983,37 +980,6 @@ function focusMolstarOnSelection(viewer, payload, residueKey) {
   }]);
 }
 
-// Full CIF reference ROI coloring. When the toggle is on, paint the ROI residues
-// with the detail-page reactivity colors via select({data}) WITHOUT nonSelectedColor,
-// so the rest of the structure keeps Mol*'s original/native coloring. When off,
-// clearSelection() restores native colors everywhere. Safe to call repeatedly; it
-// re-reads the active profile/selection so the ROI stays in sync.
-function applyFullRoiColoring(attempt = 0) {
-  const viewer = state.molstarFullViewer;
-  if (!viewer?.visual) return;
-  if (!state.fullRoiColored) {
-    if (typeof viewer.visual.clearSelection === "function") {
-      try { viewer.visual.clearSelection(); } catch (_error) { /* viewer not ready */ }
-    }
-    return;
-  }
-  if (typeof viewer.visual.select !== "function" || !state.lastRender) {
-    if (attempt < 8) {
-      window.setTimeout(() => applyFullRoiColoring(attempt + 1), 250);
-    }
-    return;
-  }
-  const payload = buildMolstarTargetDisplayPayload(activeProfileId(), state.selectedResidueKey);
-  try {
-    viewer.visual.select({ data: payload });
-  } catch (_error) {
-    if (attempt < 8) {
-      window.setTimeout(() => applyFullRoiColoring(attempt + 1), 250);
-    }
-  }
-}
-
-
 function buildMolstarSelectionPayload(profileId = activeProfileId(), selectedKey = state.selectedResidueKey) {
   return buildMolstarTargetDisplayPayload(profileId, selectedKey);
 }
@@ -1039,12 +1005,6 @@ function selectResidue(residueKey, origin = "preview") {
   // Toggle: clicking the already-selected residue clears the selection.
   const nextKey = residueKey && residueKey === state.selectedResidueKey ? null : residueKey;
   applyLinkedSelection(nextKey, origin);
-  el.log.textContent = JSON.stringify({
-    selected_residue_key: nextKey,
-    origin,
-    active_profile_id: activeProfileId(),
-    molstar_selection_preview: buildMolstarSelectionPayload(activeProfileId(), nextKey).find((item) => item.visual_state === "selected") || null,
-  }, null, 2);
 }
 
 function trackHoverText(trackKind, details) {
@@ -1703,45 +1663,33 @@ function setMolstarStructureDataset(host, structure, sourceKind) {
 }
 
 async function initMolstarViewer() {
-  if (state.molstarViewer || !el.molstarHost || !el.molstarFullHost) return;
+  if (state.molstarViewer || !el.molstarHost) return;
   el.molstarStatus.textContent = `loading Mol* from ${sourceStructureUrl}`;
   el.molstarMeta.textContent = `${activeChainKey()} will use a target chain alignment crop.`;
-  el.molstarFullMeta.textContent = `${activeChainKey()} full CIF reference pending.`;
   try {
     const sourceCif = await loadStructureSourceForMolstar();
     const croppedCif = await prepareClientAlignmentCroppedCif(sourceCif);
     setMolstarStructureDataset(el.molstarHost, croppedCif, "cropped");
-    setMolstarStructureDataset(el.molstarFullHost, sourceCif, "full");
     installMolstarEventBridge({ events: null }, el.molstarHost);
     const coverage = state.structureCoverage?.coverage;
     const sequenceSummary = materializedSequenceAlignment();
     el.molstarMeta.textContent = coverage
       ? `${croppedCif.chainKey} | ${croppedCif.mode} | target chain alignment crop from ${croppedCif.alignmentRange.label}; auth_asym_id=${croppedCif.authAsymId} label_asym_id=${croppedCif.labelAsymId}; ${croppedCif.croppedAtomSiteRows} atom_site rows kept; displayed with reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel()}.`
       : `${croppedCif.chainKey} | ${croppedCif.mode} | auth_asym_id=${croppedCif.authAsymId} label_asym_id=${croppedCif.labelAsymId}.`;
-    el.molstarFullMeta.textContent = `${sourceCif.chainKey} | full CIF reference | ${sourceCif.sourceUrl} | uncropped source for chain comparison.`;
     await loadPdbeMolstarAssets();
     const croppedViewer = new window.PDBeMolstarPlugin();
-    const fullViewer = new window.PDBeMolstarPlugin();
     state.molstarViewer = croppedViewer;
-    state.molstarFullViewer = fullViewer;
     croppedViewer.render(el.molstarHost, {
       customData: { url: croppedCif.url, format: "cif" },
       expanded: false,
       hideControls: true,
       bgColor: { r: 255, g: 255, b: 255 },
     });
-    fullViewer.render(el.molstarFullHost, {
-      customData: { url: sourceCif.sourceUrl, format: "cif" },
-      expanded: false,
-      hideControls: true,
-      bgColor: { r: 255, g: 255, b: 255 },
-    });
-    el.molstarStatus.textContent = `Mol* instances loaded: target crop ${croppedCif.chainKey}; full CIF reference retained.`;
+    el.molstarStatus.textContent = `Mol* instance loaded: target crop ${croppedCif.chainKey}.`;
     window.setTimeout(() => applyMolstarTargetDisplay(state.selectedResidueKey), 700);
   } catch (error) {
     el.molstarStatus.textContent = "Mol* runtime unavailable; structure views were not rendered.";
     el.molstarHost.innerHTML = `<pre>${escapeHtml(sourceStructureUrl)}\n${escapeHtml(error.message || error)}</pre>`;
-    el.molstarFullHost.innerHTML = `<pre>${escapeHtml(sourceStructureUrl)}\n${escapeHtml(error.message || error)}</pre>`;
   }
 }
 
@@ -1756,7 +1704,6 @@ async function renderProfile(index) {
   const normalized = normalizeProfile(profile, values);
   const dmsLoopRecall = computeDmsLoopRecall(profile, normalized, strand);
   const lssContext = lssContextForProfile(profile.profile_id);
-  const rawAlignmentCoverage = rawAlignmentCoverageForProfile(profile);
   const varnaSvg = recolorVarnaSvg(state.varnaTemplate, strand, normalized, profile);
   el.varnaViewport.innerHTML = varnaSvg;
   state.varnaZoom = 1;
@@ -1773,20 +1720,16 @@ async function renderProfile(index) {
   el.profilePair.title = profile.pair_id;
   el.profileId.title = profile.profile_id;
   el.molstarHost.setAttribute("data-structure-chain-key", activeChainKey());
-  el.molstarFullHost.setAttribute("data-structure-chain-key", activeChainKey());
   const coverage = state.structureCoverage?.coverage;
   const sequenceSummary = materializedSequenceAlignment();
   el.molstarMeta.textContent = coverage
     ? `${activeChainKey()} | profile ${profile.profile_id} | target chain alignment crop displayed with reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel(profile.profile_id)}.`
     : `${activeChainKey()} | profile ${profile.profile_id} | ${activeResidues().length} residues in active profile.`;
-  el.molstarFullMeta.textContent = `${activeChainKey()} | profile ${profile.profile_id} | full CIF reference remains uncropped for comparison.`;
   el.stats.innerHTML = [
     metric("update ms", elapsed.toFixed(2)),
     metric("profiles loaded", state.profiles.length),
     metric("sequence match", `${sequenceSummary.matchedResidues}/${sequenceSummary.profileResidues}`),
     metric("atom_site obs", coverage?.profileResidues ? `${coverage.resolvedResidues}/${coverage.profileResidues}` : "n/a"),
-    metric("RMDB query coverage", rawAlignmentCoverageMetric(rawAlignmentCoverage, "rmdbQueryCoverage")),
-    metric("PDB reference sequence coverage", rawAlignmentCoverageMetric(rawAlignmentCoverage, "pdbReferenceSequenceCoverage")),
     metric("LSS status", lssContext?.lssStatus || "not materialized"),
     metric("LSS evaluable", lssContext ? `${lssContext.pairedEvaluable} paired / ${lssContext.unpairedEvaluable} unpaired` : "not materialized"),
     metric("loop recall", formatDmsLoopRecall(dmsLoopRecall)),
@@ -1799,31 +1742,6 @@ async function renderProfile(index) {
   renderTrackRail();
   renderInspector(state.selectedResidueKey);
   applyMolstarTargetDisplay(state.selectedResidueKey);
-  el.log.textContent = JSON.stringify({
-    pair_id: profile.pair_id,
-    profile_id: profile.profile_id,
-    render_strand_id: strandId,
-    shard_id: profile.shard_id,
-    shard_decode_mode: shard.decodeMode,
-    shard_gzip_bytes: shard.gzipBytes,
-    shard_raw_bytes: shard.rawBytes,
-    layout_source: "VARNA",
-    varna_fit: varnaFit,
-    structure_coverage: state.structureCoverage?.coverage || null,
-    raw_alignment_coverage: rawAlignmentCoverage || {
-      status: state.rawAlignmentCoverage?.status || "not_materialized",
-      sourceDataPath: state.rawAlignmentCoverage?.sourceDataPath || "not_materialized",
-    },
-    lss_context: lssContext || { status: "not_materialized" },
-    dms_loop_recall: dmsLoopRecall,
-    fec_status: state.confidenceSummary?.fec?.status || "not_materialized_in_smoke",
-    lss_status: state.confidenceSummary?.lss?.status || "not_materialized_in_smoke",
-    annoconfidence_status: state.confidenceSummary?.annoconfidence?.status || "not_materialized_in_smoke",
-    elapsed_ms: Number(elapsed.toFixed(3)),
-    p95_positive_cap: normalized.cap,
-    capped_count: normalized.cappedCount,
-    unmapped_count: normalized.unmappedCount,
-  }, null, 2);
 }
 
 function profileIndexForId(profileId) {
@@ -1950,26 +1868,6 @@ function installExternalProfileBridge() {
   });
 }
 
-async function benchmarkAll() {
-  const started = performance.now();
-  let svgBytes = 0;
-  for (let i = 0; i < state.profiles.length; i += 1) {
-    const profile = state.profiles[i];
-    const shard = await loadShard(profile.shard_id);
-    const values = profileValues(profile, shard);
-    const strand = state.caseData.strands.find((item) => item.strand_id === (profile.render_strand_id || state.caseData.default_render_strand_id));
-    const normalized = normalizeProfile(profile, values);
-    svgBytes += recolorVarnaSvg(state.varnaTemplate, strand, normalized, profile).length;
-  }
-  const elapsed = performance.now() - started;
-  el.log.textContent = JSON.stringify({
-    benchmark_profiles: state.profiles.length,
-    total_ms: Number(elapsed.toFixed(3)),
-    mean_ms_per_profile: Number((elapsed / state.profiles.length).toFixed(3)),
-    generated_svg_bytes: svgBytes,
-  }, null, 2);
-}
-
 function updateView() {
   el.caption.textContent = "VARNA layout with active profile coloring.";
 }
@@ -2021,7 +1919,6 @@ async function init() {
 }
 
 el.select.addEventListener("change", () => void renderProfile(Number(el.select.value)));
-el.benchmark.addEventListener("click", () => void benchmarkAll());
 el.zoomIn.addEventListener("click", () => zoomTrack(1));
 el.zoomOut.addEventListener("click", () => zoomTrack(-1));
 el.panLeft.addEventListener("click", () => panTrack(-1));
@@ -2044,18 +1941,8 @@ if (el.varnaZoomIn) el.varnaZoomIn.addEventListener("click", () => zoomVarna(1))
 if (el.varnaZoomOut) el.varnaZoomOut.addEventListener("click", () => zoomVarna(-1));
 if (el.varnaZoomReset) el.varnaZoomReset.addEventListener("click", () => setVarnaZoom(1));
 
-if (el.fullRoiToggle) {
-  el.fullRoiToggle.addEventListener("click", () => {
-    state.fullRoiColored = !state.fullRoiColored;
-    el.fullRoiToggle.setAttribute("aria-pressed", state.fullRoiColored ? "true" : "false");
-    el.fullRoiToggle.textContent = state.fullRoiColored ? "Original colors" : "Color ROI";
-    applyFullRoiColoring();
-  });
-}
-
 installExternalProfileBridge();
 
 init().catch((error) => {
   el.status.textContent = "asset load failed";
-  el.log.textContent = String(error.stack || error);
 });

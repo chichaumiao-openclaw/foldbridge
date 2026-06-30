@@ -231,17 +231,12 @@ test('5GAG raw qcov/scov remains an explicit non-materialized alignment contract
   assert.equal(structureCoverage.coverage.construct_coverage, undefined);
 
   assert.match(js, /rawAlignmentCoverage: "assets\/linked-view\/raw-alignment-coverage\.json"/);
-  assert.match(js, /function rawAlignmentCoverageForProfile/);
-  assert.match(js, /function rawAlignmentCoverageMetric/);
-  assert.match(js, /RMDB query coverage/);
-  assert.match(js, /PDB reference sequence coverage/);
-  assert.match(js, /raw_alignment_coverage/);
   assert.doesNotMatch(js, /scalarCoverageMetric\("qcov"\)/);
   assert.doesNotMatch(js, /scalarCoverageMetric\("scov"\)/);
   assert.doesNotMatch(js, /structureCoverage\?\.coverage\?\.\[metricName\]/);
 });
 
-test('5GAG Molstar renders an alignment-cropped target view plus a full-CIF reference', () => {
+test('5GAG Molstar renders an alignment-cropped target view', () => {
   assert.equal(fs.existsSync(path.join(smokeRoot, 'assets', 'structure')), false);
 
   const coverage = JSON.parse(fs.readFileSync(path.join(smokeRoot, 'assets', 'linked-view', 'structure-coverage.json'), 'utf8'));
@@ -292,9 +287,7 @@ test('5GAG Molstar renders an alignment-cropped target view plus a full-CIF refe
   assert.match(js, /async function prepareClientAlignmentCroppedCif/);
   assert.match(js, /mode: "client-alignment-crop"/);
   assert.match(js, /customData: \{ url: croppedCif\.url, format: "cif" \}/);
-  assert.match(js, /customData: \{ url: sourceCif\.sourceUrl, format: "cif" \}/);
   assert.match(js, /target chain alignment crop/);
-  assert.match(js, /full CIF reference/);
   assert.match(js, /atomSiteFilter/);
   assert.doesNotMatch(js, /5gag_chain_strand_1\.cif/);
 });

@@ -6321,3 +6321,339 @@ body[data-mode="dark"] .mode-toggle:hover {
   .hss-layer, .hss-scene { transition: none; }
   .hss-scrollcue { animation: none; }
 }
+
+/* === ABOUT PAGE === */
+.about-hero {
+  margin: 0 0 28px;
+  padding: 28px 32px;
+  border-radius: var(--radiusCard);
+  background: var(--primarySoft);
+  border: 1px solid rgba(47, 143, 107, 0.18);
+}
+.about-hero-kicker {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+.about-hero h1 {
+  margin: 0 0 12px;
+  color: var(--primary);
+  font-family: var(--fontFamily);
+}
+.about-hero-summary {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--primary);
+}
+.about-hero-detail {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.82;
+}
+.about-section {
+  margin: 0 0 22px;
+}
+.about-section h2 {
+  margin: 0 0 16px;
+  color: var(--primary);
+  font-family: var(--fontFamily);
+}
+.about-prose {
+  margin: 0;
+  line-height: 1.7;
+}
+.about-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+}
+.about-source-card {
+  padding: 18px 20px;
+  border-radius: var(--radiusCard);
+  background: var(--panel-card-bg);
+  border: var(--panel-card-border);
+  box-shadow: var(--panel-card-shadow);
+}
+.about-source-card h3 {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-family: var(--fontFamily);
+}
+.about-source-card p {
+  margin: 0;
+  line-height: 1.6;
+}
+.about-pipeline-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.about-pipeline-svg {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+.about-pipe-node {
+  fill: var(--primarySoft);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+.about-pipe-label {
+  fill: var(--primary);
+  font-family: var(--fontFamily);
+  font-size: 13px;
+  font-weight: 600;
+}
+.about-pipe-arrow {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.about-pipeline-svg marker path {
+  fill: var(--accent);
+}
+.about-pipeline-note {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+.about-terms {
+  margin: 0;
+}
+.about-terms dt {
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 14px;
+}
+.about-terms dt:first-child {
+  margin-top: 0;
+}
+.about-terms dd {
+  margin: 4px 0 0;
+  line-height: 1.6;
+}
+
+/* === STATS PAGE === */
+.stats-page { display: flex; flex-direction: column; gap: 1.75rem; }
+.stats-head h1 { margin: 0 0 0.4rem; }
+.stats-lede { margin: 0; max-width: 60ch; color: var(--textMuted); }
+.stats-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.9rem;
+}
+.stats-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--panel-card-border, var(--border));
+  border-radius: 12px;
+  background: var(--panel-card-bg, var(--surface));
+}
+.stats-metric-value { font-size: 1.8rem; font-weight: 700; color: var(--primary); line-height: 1.1; }
+.stats-metric-label { font-size: 0.85rem; font-weight: 600; color: var(--textPrimary); }
+.stats-metric-note { font-size: 0.75rem; color: var(--textMuted); }
+.stats-section { display: flex; flex-direction: column; gap: 0.7rem; }
+.stats-section h2 { margin: 0; font-size: 1.15rem; color: var(--primary); }
+.stats-section-lede { margin: 0; max-width: 64ch; color: var(--textMuted); font-size: 0.92rem; }
+.stats-footnote { margin: 0; font-size: 0.74rem; color: var(--textMuted); font-style: italic; }
+.stats-empty { margin: 0; color: var(--textMuted); }
+.stats-tier-chart { width: 100%; max-width: 560px; height: auto; }
+.stats-tier-label { font-size: 11px; font-weight: 600; fill: var(--textPrimary); }
+.stats-tier-value { font-size: 11px; fill: var(--textMuted); }
+.stats-sasa { display: flex; flex-direction: column; gap: 0.6rem; max-width: 460px; }
+.stats-sasa-bar {
+  display: flex;
+  width: 100%;
+  height: 30px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.stats-sasa-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+.stats-sasa-present { background: var(--accent); }
+.stats-sasa-fallback { background: var(--border); }
+.stats-sasa-seg-label { font-size: 0.74rem; font-weight: 700; color: var(--surface); }
+.stats-sasa-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.82rem; }
+.stats-sasa-legend li { display: flex; align-items: center; gap: 0.4rem; }
+.stats-swatch { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+.stats-swatch-present { background: var(--accent); }
+.stats-swatch-fallback { background: var(--border); }
+.stats-threshold-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.92rem; }
+.stats-threshold-list strong { color: var(--primary); }
+
+/* === PROBING HUB === */
+.probing-family-index,
+.probing-tech-table,
+.probing-glossary {
+  margin-top: 28px;
+}
+.probing-hub-heading {
+  margin-bottom: 18px;
+}
+.probing-hub-heading h2 {
+  margin: 4px 0 8px;
+  color: var(--primary);
+  font-weight: var(--fontWeightHeading);
+}
+.probing-hub-heading p {
+  margin: 0;
+  color: var(--textSecondary);
+  max-width: 72ch;
+}
+.probing-hub-empty {
+  margin: 0;
+  color: var(--textSecondary);
+  font-style: italic;
+}
+
+/* family index */
+.probing-family-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+.probing-family-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 18px 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radiusPanel);
+  background: var(--surface);
+  text-decoration: none;
+  color: var(--textPrimary);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease, transform 0.16s ease;
+}
+.probing-family-card:hover {
+  border-color: var(--accent);
+  box-shadow: var(--shadowSoft);
+  transform: translateY(-2px);
+}
+.probing-family-card-title {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--primary);
+}
+.probing-family-card-summary {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--textSecondary);
+  line-height: 1.5;
+}
+.probing-family-card-count {
+  margin-top: auto;
+  font-size: 0.82rem;
+  font-weight: var(--fontWeightStrong);
+  color: var(--accent);
+}
+
+/* tech comparison table */
+.probing-tech-caption strong { color: var(--primary); }
+.probing-tech-table-scroll {
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radiusPanel);
+}
+.probing-tech-grid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+.probing-tech-grid th,
+.probing-tech-grid td {
+  padding: 10px 14px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+.probing-tech-grid thead th {
+  position: sticky;
+  top: 0;
+  background: var(--primary);
+  color: var(--onPrimary);
+  font-weight: var(--fontWeightStrong);
+  white-space: nowrap;
+}
+.probing-tech-grid tbody tr:nth-child(even) {
+  background: var(--surfaceAlt);
+}
+.probing-tech-grid tbody tr:hover {
+  background: var(--primarySoft);
+}
+.probing-tech-name { font-weight: var(--fontWeightStrong); color: var(--textPrimary); }
+.probing-family-tag {
+  display: inline-block;
+  min-width: 1.4em;
+  text-align: center;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--onPrimary);
+  font-weight: var(--fontWeightStrong);
+  font-size: 0.82rem;
+}
+.probing-family-meaning {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.78rem;
+  color: var(--textSecondary);
+}
+.probing-basis-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: var(--fontWeightStrong);
+  border: 1px solid var(--border);
+}
+.probing-basis-badge--supported {
+  background: var(--primary);
+  color: var(--onPrimary);
+  border-color: var(--primary);
+}
+.probing-basis-badge--informed {
+  background: var(--primarySoft);
+  color: var(--primary);
+  border-color: var(--accent);
+}
+.probing-basis-badge--pending {
+  background: var(--surfaceAlt);
+  color: var(--textSecondary);
+}
+.probing-tech-article-link { color: var(--textAccent); font-weight: var(--fontWeightStrong); }
+.probing-tech-article-none { color: var(--textSecondary); }
+
+/* glossary */
+.probing-glossary-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+  margin: 0;
+}
+.probing-glossary-term {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radiusPanel);
+  background: var(--surface);
+}
+.probing-glossary-term dt {
+  font-weight: var(--fontWeightStrong);
+  color: var(--primary);
+  margin-bottom: 4px;
+}
+.probing-glossary-term dd {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--textSecondary);
+  line-height: 1.5;
+}

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>4V7M case page</title>
-  <link rel="stylesheet" href="../../__family_d_site__/case-shell.css">
+  <link rel="stylesheet" href="../../__rmdb_v3_site__/case-shell.css">
 </head>
 <body>
   <main class="shell">
@@ -12,27 +12,20 @@
       <h1>4V7M</h1>
       <p>RMDB2PDB:4V7M</p>
       <div class="meta">
+        <span class="chip">source RMDB2PDB</span>
+        <span class="chip">families A,B</span>
         <span class="chip">default chain AY</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="layout">
-      <section class="viewer">
-        <div class="panel">
-          <h2>Chain</h2>
-          <div class="mini">current chain: <span id="chainStatus">AY</span></div>
-        </div>
-        <iframe
-          id="chainFrame"
-          class="viewer-frame"
-          src="chains/AY/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#5198"
-          loading="lazy"
-          title="4V7M chain page"
-        ></iframe>
-      </section>
+    <section class="panel">
+      <h2>Chains</h2>
+      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
+      <div class="chain-list" data-default-chain-id="AY"><a class="chain-btn is-active" href="chains/AY/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#5198" data-chain-id="AY">
+  <strong>AY</strong>
+  <span class="mini">chains/AY/index.html</span>
+</a></div>
     </section>
   </main>
-  <script id="family-case-bootstrap" type="application/json">{"caseId": "4V7M", "caseKey": "RMDB2PDB:4V7M", "defaultChainId": "AY", "defaultEvidenceId": "annojoin:RMDB2PDB:4V7M:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#5198", "chainPageById": {"AY": "chains/AY/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:4V7M:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#5198": "AY", "annojoin:RMDB2PDB:4V7M:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#5198": "AY"}, "evidenceRows": [{"aucDirectional": 0.359375, "aucEffectSizeZ": -1.399681, "aucEmpiricalPValue": 0.935065, "bridgeStatus": "bridge_missing", "chain": "AY", "conflictFraction": 0.333333, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:4V7M:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#5198", "family": "A", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 36, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.291667, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#5198", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#5198"}, {"aucDirectional": 0.488006, "aucEffectSizeZ": -0.136793, "aucEmpiricalPValue": 0.572428, "bridgeStatus": "bridge_missing", "chain": "AY", "conflictFraction": 0.282609, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:4V7M:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#5198", "family": "B", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 75, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.847826, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#5198", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#5198"}]}</script>
-  <script src="../../__family_d_site__/case-shell.js"></script>
 </body>
 </html>

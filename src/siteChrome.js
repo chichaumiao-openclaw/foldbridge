@@ -6,8 +6,9 @@ const PRIMARY_NAV_ITEMS = [
   { route: 'home', label: 'Home', activeRoutes: ['home'] },
   { route: 'entry', label: 'Entry', activeRoutes: ['entry', 'sequence', 'download-sequences'] },
   { route: 'probing', label: 'Probing', activeRoutes: ['probing', 'detail'] },
-  { route: 'search', label: 'Search', activeRoutes: ['search'] },
-  { route: 'help', label: 'Help', activeRoutes: ['help'] }
+  { route: 'stats', label: 'Stats', activeRoutes: ['stats'] },
+  { route: 'about', label: 'About', activeRoutes: ['about', 'help'] },
+  { route: 'search', label: 'Search', activeRoutes: ['search'] }
 ];
 
 export function renderPrimaryNav(activeRoute = 'home') {
@@ -109,38 +110,6 @@ export function renderHomeModuleCards(cards = HOME_MODULE_CARDS) {
     </article>`).join('');
   return `<section class="bundle-site-grid" aria-label="Core modules">${items}
   </section>`;
-}
-
-export function renderHelpBody() {
-  return `<section class="card bundle-wide-card">
-      <h1>Help &amp; guide</h1>
-
-      <h2>What is FoldBridge</h2>
-      <p>FoldBridge links RNA chemical probing data with experimentally resolved tertiary structures. It matches probing-derived RNA sequences to PDB entries, identifies high-confidence structure-linked records, and integrates their secondary- and tertiary-structure information.</p>
-
-      <h2>Modules</h2>
-      <ul>
-        <li><a href="#entry">Entry table</a> &mdash; the master browser table; search, group and export structure-linked PDB entries. Merged rows keep links back to their source cases.</li>
-        <li>PDB case &mdash; a per-PDB detail entry, opened from a case row inside the Entry table.</li>
-        <li><a href="#probing">Probing methods</a> &mdash; ${HOME_METRICS.probingArticles} explainer articles across ${HOME_METRICS.mechanismFamilies} mechanism families.</li>
-        <li><a href="#search">Search</a> &mdash; site-wide search across probing articles and PDB cases.</li>
-      </ul>
-
-      <h2>Key terms</h2>
-      <dl>
-        <dt>source case vs display row</dt>
-        <dd>Source cases are merged into one display row per PDB; RMDB/RASP sources of the same PDB are summarized but keep their source links.</dd>
-        <dt>RMDB vs RASP</dt>
-        <dd>Two source families. RASP is currently <code>positive_confidence_active_now=false</code> and shown as <strong>not active</strong> &mdash; do not read it as an activated positive confidence.</dd>
-        <dt>Confidence (A/B/C)</dt>
-        <dd>A case-level distribution summary, not a best-profile score. C is an exploratory hint and should be re-checked against route assets.</dd>
-        <dt>Conflicts</dt>
-        <dd>Flags annotation/evidence conflict candidates that need review.</dd>
-      </dl>
-
-      <h2>Data sources</h2>
-      <p>Data come from RMDB / RASP / PDB; structure linkage is materialized through the ANNOJOIN master table. Where citation metadata is not provided in the current asset, fields are left unannotated rather than fabricated.</p>
-    </section>`;
 }
 
 const PROBING_ASSET_BASE = './src/assets/generated/probing-articles/assets';
@@ -305,4 +274,357 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     </div>
     ${closing}
   </section>`;
+}
+
+// === ABOUT PAGE (W-A 在此追加 renderAboutPage) ===
+
+// About / 方法学页纯渲染。入参 content（about-content.json 解析对象）→ HTML 字符串。
+// content 为空（未加载 / 加载失败）时降级为最小壳，含 <h1>About</h1>，绝不产出 undefined。
+// 所有字段缺失用空串兜底；about-content.json 是入 git 的静态可信数据，无需 escape。
+const aboutText = (v) => (v == null ? '' : String(v));
+
+function renderAboutCards(section) {
+  const items = (section.items || []).map((item) => `
+        <article class="card about-source-card">
+          <h3>${aboutText(item.name)}</h3>
+          <p>${aboutText(item.body)}</p>
+        </article>`).join('');
+  return `<div class="about-card-grid">${items}
+      </div>`;
+}
+
+function renderAboutPipeline(section) {
+  const steps = Array.isArray(section.steps) ? section.steps : [];
+  const nodeW = 150;
+  const gap = 44;
+  const h = 64;
+  const stepW = nodeW + gap;
+  const width = steps.length > 0 ? steps.length * stepW - gap : nodeW;
+  const cy = h / 2;
+  const parts = steps.map((step, i) => {
+    const x = i * stepW;
+    const rect = `<rect class="about-pipe-node" x="${x}" y="8" rx="12" ry="12" width="${nodeW}" height="${h - 16}"></rect>`;
+    const label = `<text class="about-pipe-label" x="${x + nodeW / 2}" y="${cy}" text-anchor="middle" dominant-baseline="middle">${aboutText(step)}</text>`;
+    const arrow = i < steps.length - 1
+      ? `<line class="about-pipe-arrow" x1="${x + nodeW}" y1="${cy}" x2="${x + nodeW + gap}" y2="${cy}" marker-end="url(#about-arrow)"></line>`
+      : '';
+    return `${rect}${label}${arrow}`;
+  }).join('');
+  return `<div class="about-pipeline-figure">
+        <svg viewBox="0 0 ${width} ${h}" role="img" aria-label="ANNOJOIN pipeline" class="about-pipeline-svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="about-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z"></path>
+            </marker>
+          </defs>
+          ${parts}
+        </svg>
+        ${section.body ? `<p class="about-pipeline-note">${aboutText(section.body)}</p>` : ''}
+      </div>`;
+}
+
+function renderAboutProse(section) {
+  return `<p class="about-prose">${aboutText(section.body)}</p>`;
+}
+
+function renderAboutTable(section) {
+  const rows = (section.items || []).map((item) => `
+        <dt>${aboutText(item.term)}</dt>
+        <dd>${aboutText(item.body)}</dd>`).join('');
+  return `<dl class="about-terms">${rows}
+      </dl>`;
+}
+
+function renderAboutSection(section) {
+  let inner = '';
+  switch (section.kind) {
+    case 'cards': inner = renderAboutCards(section); break;
+    case 'pipeline': inner = renderAboutPipeline(section); break;
+    case 'table': inner = renderAboutTable(section); break;
+    case 'prose':
+    default: inner = renderAboutProse(section); break;
+  }
+  const id = section.id ? ` id="about-${aboutText(section.id)}"` : '';
+  return `<section class="card bundle-wide-card about-section"${id}>
+      <h2>${aboutText(section.title)}</h2>
+      ${inner}
+    </section>`;
+}
+
+export function renderAboutPage(content) {
+  if (!content || typeof content !== 'object') {
+    return `<section class="card bundle-wide-card about-section">
+      <h1>About</h1>
+      <p>About content is unavailable right now.</p>
+    </section>`;
+  }
+  const hero = content.hero || {};
+  const sections = Array.isArray(content.sections) ? content.sections : [];
+  const heroHtml = `<section class="about-hero">
+      ${hero.kicker ? `<p class="about-hero-kicker">${aboutText(hero.kicker)}</p>` : ''}
+      <h1>${aboutText(hero.title) || 'About'}</h1>
+      ${hero.summary ? `<p class="about-hero-summary">${aboutText(hero.summary)}</p>` : ''}
+      ${hero.detail ? `<p class="about-hero-detail">${aboutText(hero.detail)}</p>` : ''}
+    </section>`;
+  const sectionsHtml = sections.map(renderAboutSection).join('\n    ');
+  return `${heroHtml}
+    ${sectionsHtml}`;
+}
+
+// === STATS PAGE (W-B 在此追加 renderStatsPage) ===
+
+// 千分位格式化（纯展示）。非有限值 → '—'，绝不输出 undefined/NaN。
+function statsNumber(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return '—';
+  return n.toLocaleString('en-US');
+}
+
+// LSS 召回层级展示顺序 + 色（强→弱），色用 design token。
+const STATS_TIER_ORDER = [
+  { key: 'STRONG', label: 'STRONG', fill: 'var(--accent)' },
+  { key: 'MODERATE', label: 'MODERATE', fill: 'var(--primary)' },
+  { key: 'WEAK', label: 'WEAK', fill: 'var(--accentSoft)' },
+  { key: 'DISCORDANT', label: 'DISCORDANT', fill: 'var(--warning, #C9772E)' },
+  { key: 'UNDERPOWERED', label: 'UNDERPOWERED', fill: 'var(--textMuted)' },
+  { key: 'NOT_SUPPORTED', label: 'NOT_SUPPORTED', fill: 'var(--border)' }
+];
+
+// LSS tier 分布横向柱状图（内联 SVG，无图表库）。每行 = 一个 tier 标签 + 比例条 + 计数。
+function renderStatsTierChart(tierDistribution = {}) {
+  const rows = STATS_TIER_ORDER.map((t) => ({ ...t, count: Number(tierDistribution[t.key]) || 0 }));
+  const total = rows.reduce((sum, r) => sum + r.count, 0);
+  const maxCount = rows.reduce((m, r) => Math.max(m, r.count), 0) || 1;
+  const rowH = 30;
+  const gap = 10;
+  const labelW = 132;
+  const barMaxW = 300;
+  const valueW = 84;
+  const width = labelW + barMaxW + valueW;
+  const height = rows.length * (rowH + gap);
+  const bars = rows.map((r, i) => {
+    const y = i * (rowH + gap);
+    const w = Math.max(2, Math.round((r.count / maxCount) * barMaxW));
+    const pct = total ? `${((r.count / total) * 100).toFixed(1)}%` : '0%';
+    return `<g transform="translate(0,${y})">
+        <text x="${labelW - 8}" y="${rowH / 2 + 4}" text-anchor="end" class="stats-tier-label">${r.label}</text>
+        <rect x="${labelW}" y="2" width="${w}" height="${rowH - 4}" rx="4" fill="${r.fill}"><title>${r.label}: ${statsNumber(r.count)} segments (${pct})</title></rect>
+        <text x="${labelW + w + 8}" y="${rowH / 2 + 4}" class="stats-tier-value">${statsNumber(r.count)}</text>
+      </g>`;
+  }).join('\n      ');
+  return `<svg class="stats-tier-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="LSS calibrated recall tier distribution across ${statsNumber(total)} segments">
+      ${bars}
+    </svg>`;
+}
+
+// Family D SASA 参考状态分布（小型双段条）。数据缺失 → 占位。
+function renderStatsSasaPanel(familyDSasa) {
+  if (!familyDSasa || typeof familyDSasa !== 'object') {
+    return `<p class="stats-empty">SASA reference distribution not materialized.</p>`;
+  }
+  const present = Number(familyDSasa.SASA_PRESENT) || 0;
+  const fallback = Number(familyDSasa.PAIRING_PROXY_FALLBACK) || 0;
+  const total = present + fallback;
+  if (!total) return `<p class="stats-empty">SASA reference distribution not materialized.</p>`;
+  const presentPct = ((present / total) * 100).toFixed(1);
+  const fallbackPct = ((fallback / total) * 100).toFixed(1);
+  return `<div class="stats-sasa">
+      <div class="stats-sasa-bar" role="img" aria-label="Family D SASA reference: ${presentPct}% present, ${fallbackPct}% pairing-proxy fallback">
+        <span class="stats-sasa-seg stats-sasa-present" style="flex:${present}"><span class="stats-sasa-seg-label">${presentPct}%</span></span>
+        <span class="stats-sasa-seg stats-sasa-fallback" style="flex:${fallback}"><span class="stats-sasa-seg-label">${fallbackPct}%</span></span>
+      </div>
+      <ul class="stats-sasa-legend">
+        <li><span class="stats-swatch stats-swatch-present"></span>SASA present · ${statsNumber(present)}</li>
+        <li><span class="stats-swatch stats-swatch-fallback"></span>Pairing-proxy fallback · ${statsNumber(fallback)}</li>
+      </ul>
+    </div>`;
+}
+
+// 单张数字卡。
+function statsMetricCard(value, label, note = '') {
+  return `<div class="stats-metric">
+      <span class="stats-metric-value">${statsNumber(value)}</span>
+      <span class="stats-metric-label">${label}</span>
+      ${note ? `<span class="stats-metric-note">${note}</span>` : ''}
+    </div>`;
+}
+
+// Stats 总览页纯渲染。stats 缺失（null/undefined）→ 最小壳（含 <h1>Statistics</h1>），
+// 绝不输出 undefined。stats 是构建产物（build-site-stats.mjs），可信插值。
+export function renderStatsPage(stats) {
+  if (!stats || typeof stats !== 'object') {
+    return `<section class="card bundle-wide-card stats-page">
+      <h1>Statistics</h1>
+      <p class="stats-empty">Statistics are still loading. If this persists, the stats asset may not be built yet.</p>
+    </section>`;
+  }
+  const prov = stats.provenance || {};
+  const tierSource = prov.tier_source || prov.tier || 'run-record';
+  const tier = stats.tier_distribution || {};
+  const tierTotal = STATS_TIER_ORDER.reduce((sum, t) => sum + (Number(tier[t.key]) || 0), 0);
+  const tb = stats.technology_threshold_basis || {};
+
+  return `<section class="card bundle-wide-card stats-page" data-pdb-total="${Number(stats.pdb_total) || 0}">
+      <header class="stats-head">
+        <h1>Statistics</h1>
+        <p class="stats-lede">A build-time snapshot of what FoldBridge links: published structure entries, the chemical-probing
+          technologies behind them, and how the per-segment confidence calibration distributes across recall tiers.</p>
+      </header>
+
+      <div class="stats-metric-grid">
+        ${statsMetricCard(stats.pdb_total, 'Published PDB entries', 'with detail pages')}
+        ${statsMetricCard(stats.source_cases, 'Source cases')}
+        ${statsMetricCard(stats.technologies, 'Probe technologies')}
+        ${statsMetricCard(stats.families, 'Measurement families', 'A–F')}
+        ${statsMetricCard(stats.articles, 'Probing articles')}
+      </div>
+      <p class="stats-footnote">Published PDB count is the build-time allowlist: only entries with generated detail-page assets
+        are counted. Source: ${prov.pdb_total || 'published allowlist'}.</p>
+
+      <div class="stats-section">
+        <h2>LSS calibrated recall tiers</h2>
+        <p class="stats-section-lede">Each segment — one <code>(profile, pdb_id, chain)</code> group — earns a calibrated recall
+          tier after a permutation test. Distribution across ${statsNumber(tierTotal)} RMDB ABC segments:</p>
+        ${renderStatsTierChart(tier)}
+        <p class="stats-footnote">Source: ${prov.tier || `RMDB ABC LSS calibrated tiers, ${tierSource}`}.</p>
+      </div>
+
+      <div class="stats-section">
+        <h2>Family D SASA reference</h2>
+        <p class="stats-section-lede">For solvent-accessibility (Family D) segments, how often the deposited structure supplied a
+          real SASA reference versus falling back to a pairing proxy:</p>
+        ${renderStatsSasaPanel(stats.family_d_sasa)}
+        <p class="stats-footnote">Source: ${prov.family_d_sasa || `RASP Family D SASA reference status, ${tierSource}`}.</p>
+      </div>
+
+      <div class="stats-section">
+        <h2>Technology threshold basis</h2>
+        <p class="stats-section-lede">Honesty on thresholds: only a minority of the ${statsNumber(stats.technologies)} probe
+          technologies have literature-published cut-points; most use operating values pending calibration.</p>
+        <ul class="stats-threshold-list">
+          <li><strong>${statsNumber(tb.LITERATURE_SUPPORTED)}</strong> literature-supported</li>
+          <li><strong>${statsNumber(tb.LITERATURE_INFORMED)}</strong> literature-informed</li>
+          <li><strong>${statsNumber(tb.OPERATING_VALUE_PENDING_CALIBRATION)}</strong> operating value pending calibration</li>
+        </ul>
+        <p class="stats-footnote">Source: ${prov.technologies || 'probe technology registry'}.</p>
+      </div>
+    </section>`;
+}
+
+// === PROBING HUB (W-C 在此追加 renderProbingFamilyIndex/TechTable/Glossary) ===
+
+function escapeProbingHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+// 机制家族索引：6 个家族卡片，每张链回 #detail 总览的对应家族锚点。
+export function renderProbingFamilyIndex(families) {
+  const list = Array.isArray(families) ? families : [];
+  if (!list.length) {
+    return `<section class="card bundle-wide-card probing-family-index probing-family-index--empty">
+      <p class="probing-hub-empty">Mechanism families are not available yet.</p>
+    </section>`;
+  }
+  const cards = list.map((fam) => {
+    const id = escapeProbingHtml(fam.id);
+    const count = Array.isArray(fam.articles) ? fam.articles.length : 0;
+    return `<a class="probing-family-card" href="#detail?family=${encodeURIComponent(fam.id || '')}" data-probing-family-link="${id}">
+        <h3 class="probing-family-card-title">${escapeProbingHtml(fam.title)}</h3>
+        <p class="probing-family-card-summary">${escapeProbingHtml(fam.summary)}</p>
+        <span class="probing-family-card-count">${count} ${count === 1 ? 'article' : 'articles'}</span>
+      </a>`;
+  }).join('');
+  return `<section class="card bundle-wide-card probing-family-index" aria-label="Probing mechanism families">
+      <div class="probing-hub-heading">
+        <p class="technology-kicker">browse by mechanism</p>
+        <h2>Six mechanism families</h2>
+        <p>Each family groups methods by the chemical event they read out. Open a family to jump into its explainers.</p>
+      </div>
+      <div class="probing-family-grid">${cards}</div>
+    </section>`;
+}
+
+// 34 行技术对照表：可按列排序（data-sort），无 JS 时仍可读（默认 registry 顺序）。
+const PROBING_FAMILY_MEANING = {
+  A: 'WC-face base-specific',
+  B: 'SHAPE flexibility-proxy',
+  C: 'enzymatic (REVERSED)',
+  D: 'SASA dual-ref',
+  E: 'contact-map',
+  F: 'pair-set F1'
+};
+
+export function renderProbingTechTable(registry) {
+  const rows = (registry && Array.isArray(registry.technologies)) ? registry.technologies : [];
+  if (!rows.length) {
+    return `<section class="card bundle-wide-card probing-tech-table probing-tech-table--empty">
+      <p class="probing-hub-empty">The probe technology registry is not available yet.</p>
+    </section>`;
+  }
+  const body = rows.map((row) => {
+    const tech = escapeProbingHtml(row.technology);
+    const fam = escapeProbingHtml(row.family);
+    const famMeaning = escapeProbingHtml(PROBING_FAMILY_MEANING[row.family] || '');
+    const bases = escapeProbingHtml(row.targetable_bases);
+    const basis = escapeProbingHtml(row.threshold_basis);
+    const basisClass = `probing-basis-badge probing-basis-badge--${basis.toLowerCase()}`;
+    const link = row.article_slug
+      ? `<a class="probing-tech-article-link" href="#detail?tech=${encodeURIComponent(row.article_slug)}">Read explainer</a>`
+      : '<span class="probing-tech-article-none">—</span>';
+    return `<tr data-tech-row>
+        <td data-col="technology"><span class="probing-tech-name">${tech}</span></td>
+        <td data-col="family"><span class="probing-family-tag" title="${famMeaning}">${fam}</span> <span class="probing-family-meaning">${famMeaning}</span></td>
+        <td data-col="bases">${bases}</td>
+        <td data-col="basis"><span class="${basisClass}">${basis}</span></td>
+        <td data-col="article">${link}</td>
+      </tr>`;
+  }).join('');
+  return `<section class="card bundle-wide-card probing-tech-table" aria-label="Probe technology comparison">
+      <div class="probing-hub-heading">
+        <p class="technology-kicker">technology registry</p>
+        <h2>34 RNA probing technologies at a glance</h2>
+        <p class="probing-tech-caption">In this table, <strong>family</strong> labels the physical quantity each method measures (A–F) — it is <strong>not a quality ranking</strong>. The threshold basis flags how each method's confidence cut-points are anchored.</p>
+      </div>
+      <div class="probing-tech-table-scroll">
+        <table class="probing-tech-grid">
+          <thead>
+            <tr>
+              <th scope="col" data-sort="technology">Technology</th>
+              <th scope="col" data-sort="family">Family</th>
+              <th scope="col" data-sort="bases">Targetable bases</th>
+              <th scope="col" data-sort="basis">Threshold basis</th>
+              <th scope="col" data-sort="article">Explainer</th>
+            </tr>
+          </thead>
+          <tbody>${body}</tbody>
+        </table>
+      </div>
+    </section>`;
+}
+
+// 快速术语表：~6-10 条简短定义。
+export function renderProbingGlossary(terms) {
+  const list = Array.isArray(terms) ? terms : [];
+  if (!list.length) {
+    return `<section class="card bundle-wide-card probing-glossary probing-glossary--empty">
+      <p class="probing-hub-empty">Glossary terms are not available yet.</p>
+    </section>`;
+  }
+  const items = list.map((entry) => `<div class="probing-glossary-term">
+        <dt>${escapeProbingHtml(entry.term)}</dt>
+        <dd>${escapeProbingHtml(entry.definition)}</dd>
+      </div>`).join('');
+  return `<section class="card bundle-wide-card probing-glossary" aria-label="Probing quick-reference glossary">
+      <div class="probing-hub-heading">
+        <p class="technology-kicker">quick reference</p>
+        <h2>Probing glossary</h2>
+        <p>Short definitions for the terms used across the probing pages and confidence labels.</p>
+      </div>
+      <dl class="probing-glossary-list">${items}</dl>
+    </section>`;
 }

@@ -93,6 +93,24 @@ function resolveAssetUrl(href, baseUrl = window.location.href) {
   return new URL(href, new URL(baseUrl, window.location.href)).href;
 }
 
+// Case pages no longer bundle a verbatim RCSB mmCIF mirror (structure.cif.gz);
+// that pushed the static artifact past the 1 GB GitHub Pages cap. When the
+// linked-view coverage points at the removed local mirror, resolve the source
+// structure to RCSB's gzipped-text download instead, keyed by the PDB id
+// (coverage.caseId). The ".gz" suffix is preserved so the existing
+// fetch -> DecompressionStream -> text-crop -> reactivity-coloring pipeline is
+// byte-for-byte unchanged. Already-absolute hrefs (e.g. the 5gag smoke demo)
+// pass through untouched.
+function resolveStructureSourceHref(href, caseId) {
+  const original = String(href || "");
+  if (/^https?:\/\//i.test(original)) return original;
+  if (!/structure\.cif(\.gz)?$/i.test(original)) return original;
+  const pdbId = String(caseId || "").trim().toUpperCase();
+  if (!pdbId) return original;
+  const gz = /\.gz$/i.test(original) ? ".gz" : "";
+  return `https://files.rcsb.org/download/${pdbId}.cif${gz}`;
+}
+
 function percentile(values, q) {
   const clean = values.filter((value) => Number.isFinite(value)).sort((a, b) => a - b);
   if (!clean.length) return 0;
@@ -748,7 +766,8 @@ async function loadStructureSourceForMolstar() {
   }
   const range = alignmentCropRange(coverage);
   const structureCoverageUrl = state.structureCoverageUrl || linkedViewUrls.structureCoverage;
-  const resolvedSourceUrl = resolveAssetUrl(coverage.sourceStructure.href, structureCoverageUrl);
+  const sourceHref = resolveStructureSourceHref(coverage.sourceStructure.href, coverage.caseId);
+  const resolvedSourceUrl = resolveAssetUrl(sourceHref, structureCoverageUrl);
   return {
     chainKey: coverage.activeChainKey,
     mode: "source-structure",

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>9DRT case page</title>
-  <link rel="stylesheet" href="../../__family_d_site__/case-shell.css">
+  <link rel="stylesheet" href="../../__rmdb_v3_site__/case-shell.css">
 </head>
 <body>
   <main class="shell">
@@ -12,27 +12,20 @@
       <h1>9DRT</h1>
       <p>RMDB2PDB:9DRT</p>
       <div class="meta">
+        <span class="chip">source RMDB2PDB</span>
+        <span class="chip">families A,B</span>
         <span class="chip">default chain F</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="layout">
-      <section class="viewer">
-        <div class="panel">
-          <h2>Chain</h2>
-          <div class="mini">current chain: <span id="chainStatus">F</span></div>
-        </div>
-        <iframe
-          id="chainFrame"
-          class="viewer-frame"
-          src="chains/F/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#13014"
-          loading="lazy"
-          title="9DRT chain page"
-        ></iframe>
-      </section>
+    <section class="panel">
+      <h2>Chains</h2>
+      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
+      <div class="chain-list" data-default-chain-id="F"><a class="chain-btn is-active" href="chains/F/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#13014" data-chain-id="F">
+  <strong>F</strong>
+  <span class="mini">chains/F/index.html</span>
+</a></div>
     </section>
   </main>
-  <script id="family-case-bootstrap" type="application/json">{"caseId": "9DRT", "caseKey": "RMDB2PDB:9DRT", "defaultChainId": "F", "defaultEvidenceId": "annojoin:RMDB2PDB:9DRT:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#13014", "chainPageById": {"F": "chains/F/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:9DRT:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#13014": "F", "annojoin:RMDB2PDB:9DRT:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#13014": "F"}, "evidenceRows": [{"aucDirectional": 0.329861, "aucEffectSizeZ": -1.387702, "aucEmpiricalPValue": 0.916084, "bridgeStatus": "bridge_missing", "chain": "F", "conflictFraction": 0.416667, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:9DRT:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#13014", "family": "B", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 24, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.5, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#13014", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#13014"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "F", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:9DRT:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#13014", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 10, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#13014", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#13014"}]}</script>
-  <script src="../../__family_d_site__/case-shell.js"></script>
 </body>
 </html>

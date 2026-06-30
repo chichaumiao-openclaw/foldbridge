@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex, renderProbingTechTable, renderProbingGlossary } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -30,8 +30,9 @@ import { downloadRowsAsCsv } from './modules.js';
 import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
 import { createProbingArticleStore } from './probingArticleStore.js';
+import { createAboutContentStore } from './aboutContentStore.js';
 import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
-import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
+import { createSiteStatsStore } from './siteStatsStore.js';import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
 import {
   buildAtlasSearchState
 } from './annojoinAtlasData.js';
@@ -74,6 +75,10 @@ const pdbCaseStore = createCaseStore();
 const annojoinAtlasStore = createAnnojointAtlasStore();
 const probingArticleStore = createProbingArticleStore();
 const homeScrollStoryStore = createHomeScrollStoryStore();
+// About 页策展内容（about-content.json 在 ./src/assets/data/ 下，store 自带 'assets/data/' 后缀）。
+const aboutContentStore = createAboutContentStore({ assetBase: './src/' });
+let aboutContentState = null; // null=未加载, 'loading', 或 about-content.json 对象
+const siteStatsStore = createSiteStatsStore();
 let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
 const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
 let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
@@ -81,9 +86,22 @@ let annojoinDetailRouteIndexState = null; // null=未加载, 'loading', 'error',
 const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'error' | generated case asset
 const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
+let siteStatsState = null; // null=未加载, 'loading', 'error', 或 stats.json
 let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
 let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
+let probeTechRegistryState = null; // null=未加载, 'loading', 'error', 或 probe-technology-registry.json
+// 探针术语速查表（站点内联策展，与 About 概念呼应但无硬依赖）。
+const PROBING_GLOSSARY_TERMS = [
+  { term: 'WC-face', definition: 'The Watson-Crick edge of a base, where canonical pairing hydrogen bonds form; base-specific probes read its accessibility.' },
+  { term: 'SHAPE', definition: 'Selective 2′-hydroxyl acylation analyzed by primer extension; reports local backbone flexibility rather than pairing directly.' },
+  { term: 'SASA', definition: 'Solvent-accessible surface area of a residue, computed from 3D structure; the geometric reference for hydroxyl-radical / footprinting methods.' },
+  { term: 'paired_state', definition: 'Whether a nucleotide is base-paired or unpaired in the reference structure used to score a probing signal.' },
+  { term: 'reactivity', definition: 'The per-nucleotide probing signal magnitude — a chemical readout, not a direct measurement of structure.' },
+  { term: 'tier', definition: 'The confidence label assigned to a structure-linked claim (e.g. strong / moderate / weak), gated by signal–structure agreement and calibration.' },
+  { term: 'measurement family', definition: 'Grouping (A–F) by the physical quantity a method measures; a descriptor of mechanism, not a quality ranking.' },
+  { term: 'threshold basis', definition: 'How a method\u2019s confidence cut-points are anchored: literature-SUPPORTED, literature-INFORMED, or operating-value PENDING calibration.' }
+];
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let pdbCaseConfidenceFilter = 'all';
@@ -1205,7 +1223,7 @@ function downloadSequencesPage() {
 
 
 
-const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case', 'annojoin-confidence'];
+const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'about', 'stats', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case', 'annojoin-confidence'];
 let route = routeFromHash(window.location.hash);
 let theme = 'ribocentre';
 let mode = localStorage.getItem('foldbridge-mode') === 'dark' ? 'dark' : 'light';
@@ -1764,12 +1782,18 @@ function detailPage() {
     // index 已加载但无此 slug → 回退到旧占位方法页（保留 legacy 方法目录）
     const method = technologyMethods.find((item) => item.slug === slug);
     if (method) return renderTechnologyMethodPage(method);
-    return renderProbingArticleIndex(probingArticleIndexState, header);
+    if (probeTechRegistryState !== 'loading' && probeTechRegistryState !== 'error') {
+      loadProbeTechRegistry();
+    }
+    return renderProbingArticleIndex(probingArticleIndexState, header, buildProbingHubSections());
   }
 
   // 无 slug：总览页。优先真实文章索引；未加载则后台拉取并显示原 technology 总览作为占位。
   if (hasIndex) {
-    return renderProbingArticleIndex(probingArticleIndexState, header);
+    if (probeTechRegistryState !== 'loading' && probeTechRegistryState !== 'error') {
+      loadProbeTechRegistry();
+    }
+    return renderProbingArticleIndex(probingArticleIndexState, header, buildProbingHubSections());
   }
   if (probingArticleIndexState !== 'loading' && probingArticleIndexState !== 'error') {
     loadProbingArticleIndex();
@@ -1940,6 +1964,65 @@ async function loadProbingArticleIndex() {
     probingArticleIndexState = 'error';
   }
   if (route === 'detail' || route === 'probing' || route === 'home') render({ preserveScroll: true });
+}
+
+async function loadAboutContent() {
+  if (aboutContentState === 'loading') return;
+  aboutContentState = 'loading';
+  try {
+    // loadContent 失败时返回 null（store 不抛）；null 视为终态 'error'，
+    // 避免 aboutPage() 因 peek() 仍 miss 而无限重试 fetch+render（与 probing 同款 'error' 终态）。
+    aboutContentState = (await aboutContentStore.loadContent()) || 'error';
+  } catch (err) {
+    console.error('[main] 加载 About 内容失败', err);
+    aboutContentState = 'error';
+  }
+  if (route === 'about' || route === 'help') render({ preserveScroll: true });
+}
+
+async function loadSiteStats() {
+  if (siteStatsState === 'loading') return;
+  siteStatsState = 'loading';
+  try {
+    const stats = await siteStatsStore.loadStats();
+    siteStatsState = stats || 'error';
+  } catch (err) {
+    console.error('[main] 加载站点统计失败', err);
+    siteStatsState = 'error';
+  }
+  if (route === 'stats') render({ preserveScroll: true });
+}
+
+// 探针技术 registry（静态资产，无构建依赖）：轻量 fetch+缓存，懒加载，带 re-render guard。
+async function loadProbeTechRegistry() {
+  if (probeTechRegistryState === 'loading') return;
+  if (probeTechRegistryState && typeof probeTechRegistryState === 'object') return;
+  probeTechRegistryState = 'loading';
+  try {
+    const res = await fetch('./src/assets/data/probe-technology-registry.json');
+    if (!res || !res.ok) throw new Error(`status ${res ? res.status : 'no-response'}`);
+    probeTechRegistryState = await res.json();
+  } catch (err) {
+    console.error('[main] 加载探针技术 registry 失败', err);
+    probeTechRegistryState = 'error';
+  }
+  if (route === 'detail' || route === 'probing') render({ preserveScroll: true });
+}
+
+// 组装探针 hub 三块（家族索引 + 技术对照表 + 术语表），注入文章总览页。
+// registry 未就绪时仍渲染可用的家族索引 + 术语表（降级，不阻塞）。
+function buildProbingHubSections() {
+  const families = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
+    ? probingArticleIndexState.families
+    : [];
+  const registry = (probeTechRegistryState && typeof probeTechRegistryState === 'object')
+    ? probeTechRegistryState
+    : { technologies: [] };
+  return [
+    renderProbingFamilyIndex(families),
+    renderProbingTechTable(registry),
+    renderProbingGlossary(PROBING_GLOSSARY_TERMS)
+  ].join('\n');
 }
 
 // 访问计数：每次成功加载招牌 story 自增（localStorage），用于 pickFeaturedCase 轮换。
@@ -2392,11 +2475,20 @@ function publicationsPage() {
   </main>`;
 }
 
-function helpPage() {
-  return `<main class="page-help">
-    ${renderBundleHeader()}
-    ${renderHelpBody()}
-  </main>`;
+function aboutPage() {
+  const cached = aboutContentStore.peek();
+  // 仅在未缓存且加载未在进行/未终态失败时触发，避免失败后无限重试循环。
+  if (!cached && aboutContentState !== 'loading' && aboutContentState !== 'error') loadAboutContent();
+  return `<main class="page-detail">${renderBundleHeader()}${renderAboutPage(cached)}</main>`;
+}
+
+function statsPage() {
+  // 已加载则喂 stats，否则空壳占位 + 触发懒加载（与 probing 路由同款）。
+  const stats = (siteStatsState && typeof siteStatsState === 'object') ? siteStatsState : null;
+  if (siteStatsState === null) {
+    loadSiteStats();
+  }
+  return `<main class="page-detail">${renderBundleHeader()}${renderStatsPage(stats)}</main>`;
 }
 
 // ANNOJOIN 置信度科普页：解释主表 Confidence distribution 列里 A/B/C/D 族、
@@ -2904,7 +2996,8 @@ function pageFor(name) {
   if (safeRoute === 'download-structures') return downloadStructuresPage();
   if (safeRoute === 'detail') return detailPage();
   if (safeRoute === 'publications') return publicationsPage();
-  if (safeRoute === 'help') return helpPage();
+  if (safeRoute === 'help' || safeRoute === 'about') return aboutPage();
+  if (safeRoute === 'stats') return statsPage();
   if (safeRoute === 'sequence-detail') return sequenceDetailPage();
   return homePage();
 }

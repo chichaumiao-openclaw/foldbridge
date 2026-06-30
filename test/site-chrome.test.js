@@ -2,12 +2,23 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { renderPrimaryNav } from '../src/siteChrome.js';
 
-test('primary nav exposes exactly the 5 launch routes', () => {
+test('primary nav exposes the launch routes incl. Stats/About', () => {
   const html = renderPrimaryNav('home');
-  for (const label of ['Home', 'Entry', 'Probing', 'Search', 'Help']) {
+  for (const label of ['Home', 'Entry', 'Probing', 'Stats', 'About', 'Search']) {
     assert.match(html, new RegExp(`>${label}</button>`), `missing nav button: ${label}`);
   }
-  assert.match(html, /data-route="entry"[^>]*>Entry<\/button>/);
+  assert.match(html, /data-route="stats"[^>]*>Stats<\/button>/);
+  assert.match(html, /data-route="about"[^>]*>About<\/button>/);
+});
+
+test('primary nav no longer shows a standalone Help button', () => {
+  const html = renderPrimaryNav('home');
+  assert.doesNotMatch(html, />Help<\/button>/);
+});
+
+test('help route keeps About active', () => {
+  const html = renderPrimaryNav('help');
+  assert.match(html, /class="nav-btn active"\s+data-route="about"/);
 });
 
 test('primary nav drops removed entries', () => {
@@ -65,24 +76,6 @@ test('home module cards link to the three core modules', () => {
   assert.match(html, /Probing methods/);
   assert.match(html, />Search</);
   assert.equal((html.match(/bundle-site-card/g) || []).length, 3);
-});
-
-import { renderHelpBody } from '../src/siteChrome.js';
-
-test('help body has four sections and live module links', () => {
-  const html = renderHelpBody();
-  assert.match(html, /What is FoldBridge/i);
-  assert.match(html, /Modules/i);
-  assert.match(html, /Key terms/i);
-  assert.match(html, /Data sources/i);
-  assert.match(html, /href="#entry"/);
-  assert.match(html, /href="#probing"/);
-  assert.match(html, /href="#search"/);
-  assert.match(html, /source case/i);
-  assert.match(html, /not active/i);
-  assert.doesNotMatch(html, /Browse/);
-  assert.doesNotMatch(html, /Structure hub|Open structure/i);
-  assert.doesNotMatch(html, /Download/);
 });
 
 import { renderHomeProbingCarousel } from '../src/siteChrome.js';

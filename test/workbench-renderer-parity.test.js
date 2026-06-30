@@ -61,12 +61,7 @@ test('latest 1D/2D/3D linkage feature tokens present in BOTH published renderers
     assert.ok(count(js, 'recolorVarnaViewportLink') >= 1, `[${label}] missing recolorVarnaViewportLink`);
     assert.ok(count(js, 'syncViewportSlider') >= 1, `[${label}] missing syncViewportSlider`);
     assert.ok(count(js, 'densestReactivityWindow') >= 1, `[${label}] missing densestReactivityWindow`);
-    assert.ok(
-      count(js, 'applyFullRoiColoring') >= 5,
-      `[${label}] expected >=5 occurrences of applyFullRoiColoring (3D ROI coloring), got ${count(js, 'applyFullRoiColoring')}`
-    );
     assert.ok(count(js, 'applyMolstarHoverHighlight') >= 1, `[${label}] missing applyMolstarHoverHighlight`);
-    assert.ok(count(js, 'fullRoiToggle') >= 1, `[${label}] missing fullRoiToggle`);
     assert.ok(count(js, 'clearHighlight') >= 1, `[${label}] missing clearHighlight`);
     assert.ok(count(js, 'focusMolstarOnSelection') >= 1, `[${label}] missing focusMolstarOnSelection`);
   }

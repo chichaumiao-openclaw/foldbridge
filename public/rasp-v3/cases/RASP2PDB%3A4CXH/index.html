@@ -18,23 +18,14 @@
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="layout">
-      <section class="viewer">
-        <div class="panel">
-          <h2>Chain</h2>
-          <div class="mini">current chain: <span id="chainStatus">1</span></div>
-        </div>
-        <iframe
-          id="chainFrame"
-          class="viewer-frame"
-          src="chains/1/index.html?profileId=rasp_bw_f19b2878af92"
-          loading="lazy"
-          title="4CXH chain page"
-        ></iframe>
-      </section>
+    <section class="panel">
+      <h2>Chains</h2>
+      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
+      <div class="chain-list" data-default-chain-id="1"><a class="chain-btn is-active" href="chains/1/index.html?profileId=rasp_bw_f19b2878af92" data-chain-id="1">
+  <strong>1</strong>
+  <span class="mini">chains/1/index.html</span>
+</a></div>
     </section>
   </main>
-  <script id="family-case-bootstrap" type="application/json">{"caseId": "4CXH", "caseKey": "RASP2PDB:4CXH", "defaultChainId": "1", "defaultEvidenceId": "annojoin:RASP2PDB:4CXH:confidence:B:rasp_bw_f19b2878af92", "chainPageById": {"1": "chains/1/index.html"}, "evidenceChainMap": {"annojoin:RASP2PDB:4CXH:confidence:B:rasp_bw_f19b2878af92": "1"}, "evidenceRows": [{"aucDirectional": 0.550069, "aucEffectSizeZ": 0.691542, "aucEmpiricalPValue": 0.23976, "bridgeStatus": "bridge_missing", "chain": "1", "conflictFraction": 0.222222, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:4CXH:confidence:B:rasp_bw_f19b2878af92", "family": "B", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_WEAK", "nEvaluable": 54, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.0, "profileKey": "rasp_bw_f19b2878af92", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "tNet-MaPseq", "trackProfileId": "rasp_bw_f19b2878af92"}]}</script>
-  <script src="../../__rasp_v3_site__/case-shell.js"></script>
 </body>
 </html>
