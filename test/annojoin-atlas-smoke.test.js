@@ -17,8 +17,7 @@ test('annojoin atlas smoke verifies at least 20 case assets across required pane
     return {
       caseId,
       pdbId: caseId,
-      parentClassLabel: `Parent ${index % 4}`,
-      childClassLabel: `Child ${index % 7}`,
+      chainPlacements: [{ classLabel: 'Ribosome', nameLabel: '16S ribosomal RNA' }],
       biologicalMoleculeName: `Biological molecule ${index + 1}`,
       pdbMoleculeName: `PDB molecule ${index + 1}`,
       confidenceDisplayLabel: 'B_CONTEXT_STRATIFIED (1)',
@@ -32,9 +31,6 @@ test('annojoin atlas smoke verifies at least 20 case assets across required pane
     version: 'V2.1_RMDB_LINE_A_20260617',
     source: { entryRoot: 'ANNOJOIN', annotationRoot: 'ANNOCONFIDENCE', browserLoadsAnnoconfidenceBigTables: false },
     totalCaseCount: 20,
-    caseHierarchy: [
-      { id: 'parent-0', label: 'Parent 0', caseCount: 5, children: [{ id: 'parent-0-child-0', label: 'Child 0', caseCount: 3, cases: ['C0001', 'C0008', 'C0015'] }] }
-    ],
     cases,
     facets: Array.from({ length: 12 }, (_, index) => ({ name: `facet-${index}` })),
     presets: Array.from({ length: 6 }, (_, index) => ({ id: `preset-${index}` })),
@@ -81,8 +77,7 @@ test('annojoin atlas smoke accepts declared RASP visual blockers without 3D URL 
     return {
       caseId,
       pdbId: caseId,
-      parentClassLabel: 'RASP public current',
-      childClassLabel: 'raw-hit case',
+      chainPlacements: [{ classLabel: 'RASP public current', nameLabel: 'raw-hit case' }],
       biologicalMoleculeName: `RASP molecule ${index + 1}`,
       pdbMoleculeName: `RASP PDB molecule ${index + 1}`,
       confidenceDisplayLabel: 'RASP public current; positive confidence not active',
@@ -95,7 +90,6 @@ test('annojoin atlas smoke accepts declared RASP visual blockers without 3D URL 
   await writeJson(path.join(root, 'index.json'), {
     source: { entryRoot: 'ANNOJOIN', annotationRoot: 'ANNOCONFIDENCE', browserLoadsAnnoconfidenceBigTables: false },
     totalCaseCount: 20,
-    caseHierarchy: [{ id: 'rasp', label: 'RASP', caseCount: 20, children: [{ id: 'rasp-current', label: 'current', caseCount: 20, cases: cases.map((row) => row.caseId) }] }],
     cases,
     facets: Array.from({ length: 12 }, (_, index) => ({ name: `facet-${index}` })),
     presets: Array.from({ length: 6 }, (_, index) => ({ id: `preset-${index}` })),
@@ -171,6 +165,7 @@ test('annojoin atlas smoke samples slimmed index displayCases (no top-level case
     const caseId = `S${String(index + 1).padStart(4, '0')}`;
     return {
       caseId, pdbId: caseId, biologicalMoleculeName: `mol ${index + 1}`,
+      chainPlacements: [{ classLabel: 'Ribosome', nameLabel: '16S ribosomal RNA' }],
       confidenceDisplayLabel: 'B_CONTEXT_STRATIFIED (1)', profileCount: 1,
       caseAssetPath: `cases/${caseId}.json`, isMergedDisplayRow: false, searchText: caseId
     };
@@ -179,6 +174,7 @@ test('annojoin atlas smoke samples slimmed index displayCases (no top-level case
   const mergedSourcePath = 'cases/RMDB2PDB%3AM0001.json';
   const merged = {
     caseId: 'M0001', pdbId: 'M0001', biologicalMoleculeName: 'merged mol',
+    chainPlacements: [{ classLabel: 'Ribosome', nameLabel: '16S ribosomal RNA' }],
     confidenceDisplayLabel: 'RMDB: B; RASP: not active', profileCount: 3,
     caseAssetPath: '', isMergedDisplayRow: true, atlasCaseKey: 'PDB:M0001',
     sourceCaseAssetPaths: [
@@ -193,7 +189,6 @@ test('annojoin atlas smoke samples slimmed index displayCases (no top-level case
     version: 'V2.1_RMDB_LINE_A_20260617',
     source: { entryRoot: 'ANNOJOIN', annotationRoot: 'ANNOCONFIDENCE', browserLoadsAnnoconfidenceBigTables: false },
     totalSourceCaseCount: 21,
-    caseHierarchy: [{ id: 'p', label: 'P', caseCount: 20, children: [{ id: 'p-c', label: 'C', caseCount: 20, cases: ['S0001'] }] }],
     // NO `cases` key — this is the slimmed index
     displayCases,
     facets: Array.from({ length: 12 }, (_, index) => ({ name: `facet-${index}` })),

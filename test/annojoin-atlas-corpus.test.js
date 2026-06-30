@@ -241,6 +241,14 @@ test('buildAtlasIndexAsset leaves moleculeDisplayName empty when no source name 
 });
 
 test('buildAtlasIndexAsset folds RASP composite pipe-delimited molecule names by their leading segment', () => {
+  const chainIdentityIndex = new Map([
+    ['C1', [{ rnaClass: 'rRNA', displayName: '16S ribosomal RNA' }]],
+    ['C2', [{ rnaClass: 'rRNA', displayName: '16S ribosomal RNA' }]],
+    ['8T5D', [{ rnaClass: 'rRNA', displayName: '16S ribosomal RNA' }]],
+    ['8P17', [{ rnaClass: 'rRNA', displayName: '16S ribosomal RNA' }]],
+    ['8EYQ', [{ rnaClass: 'rRNA', displayName: '16S ribosomal RNA' }]],
+    ['4V85', [{ rnaClass: 'rRNA', displayName: '16S ribosomal RNA' }]]
+  ]);
   const asset = buildAtlasIndexAsset({
     cases: [
       // clean canonical spelling (majority spelling source)
@@ -251,7 +259,8 @@ test('buildAtlasIndexAsset folds RASP composite pipe-delimited molecule names by
       { case_id: '8P17', pdb_id: '8P17', asset_family: 'RASP2PDB', biological_molecule_name: '16S RNA | E167K RF2 on E. coli 70S release complex with UGG (Structure II) | Escherichia coli' },
       { case_id: '8EYQ', pdb_id: '8EYQ', asset_family: 'RASP2PDB', biological_molecule_name: '16S_rRNA | 30S_delta_ksgA_h44_inactive_conformation | Escherichia coli' },
       { case_id: '4V85', pdb_id: '4V85', asset_family: 'RASP2PDB', biological_molecule_name: '16S rRNA' }
-    ]
+    ],
+    chainIdentityIndex
   });
   const display = new Map(asset.cases.map((row) => [row.caseId, row.moleculeDisplayName]));
   // every variant resolves to the corpus-majority clean spelling
@@ -261,15 +270,22 @@ test('buildAtlasIndexAsset folds RASP composite pipe-delimited molecule names by
   // raw provenance untouched: composite string preserved verbatim
   const raw = asset.cases.find((row) => row.caseId === '8T5D');
   assert.equal(raw.biologicalMoleculeName, '16s RNA | Cryo-EM studies of the interplay between uS2 ribosomal protein | Escherichia coli');
-  // all six PDBs collapse into a single "16S ribosomal RNA" master-table parent group
+  // all six PDBs collapse into a single chain-placement parent group
   const groups = buildAnnojointTableGroups(asset.displayCases);
-  const ribo = groups.find((group) => group.label === '16S ribosomal RNA');
-  assert.ok(ribo, 'expected a single "16S ribosomal RNA" parent group');
+  const ribo = groups.find((group) => group.label === 'rRNA');
+  assert.ok(ribo, 'expected a single "rRNA" parent group');
   assert.equal(ribo.count, 6);
   assert.equal(groups.length, 1);
 });
 
 test('buildAtlasIndexAsset folds punctuation and spacing variants of a molecule name into one group', () => {
+  const chainIdentityIndex = new Map([
+    ['G1', [{ rnaClass: 'single guide RNA', displayName: 'single guide RNA' }]],
+    ['G2', [{ rnaClass: 'single guide RNA', displayName: 'single guide RNA' }]],
+    ['G3', [{ rnaClass: 'single guide RNA', displayName: 'single guide RNA' }]],
+    ['H1', [{ rnaClass: 'HCV IRES', displayName: 'HCV IRES' }]],
+    ['H2', [{ rnaClass: 'HCV IRES', displayName: 'HCV IRES' }]]
+  ]);
   const asset = buildAtlasIndexAsset({
     cases: [
       { case_id: 'G1', pdb_id: 'G1', biological_molecule_name: 'single guide RNA' },
@@ -277,7 +293,8 @@ test('buildAtlasIndexAsset folds punctuation and spacing variants of a molecule 
       { case_id: 'G3', pdb_id: 'G3', biological_molecule_name: 'single-guide RNA' },
       { case_id: 'H1', pdb_id: 'H1', biological_molecule_name: 'HCV IRES' },
       { case_id: 'H2', pdb_id: 'H2', biological_molecule_name: 'HCV-IRES' }
-    ]
+    ],
+    chainIdentityIndex
   });
   const display = new Map(asset.cases.map((row) => [row.caseId, row.moleculeDisplayName]));
   // punctuation/spacing variants resolve to the corpus-majority spelling

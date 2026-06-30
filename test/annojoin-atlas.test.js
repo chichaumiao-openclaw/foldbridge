@@ -7,6 +7,12 @@ import {
 } from '../src/annojoinAtlasData.js';
 import { renderAnnojointAtlasPage } from '../src/annojoinAtlasView.js';
 import { buildAtlasIndexAsset, slimAtlasIndexForWrite } from '../scripts/lib/annojoin-atlas-corpus.mjs';
+import {
+  sortAnnojointCases,
+  searchAnnojointRows,
+  paginateAnnojointRows,
+  buildAnnojointTableGroups
+} from '../src/annojoinAtlasTableModel.js';
 import { LOCAL_PAGES_BRIDGE_MANIFEST } from '../src/assets/generated/local_pages_bridge_manifest.js';
 
 const fixtures = {
@@ -16,6 +22,7 @@ const fixtures = {
       case_uid: 'RMDB2PDB|10ZT',
       pdb_id: '10ZT',
       pdb_chain_ids: 'A',
+      chainPlacements: [{ classLabel: 'Ribosome', nameLabel: '16S rRNA' }],
       parent_class_label: 'Ribosome',
       parent_class_source: 'PDB/biological_layer/governance_context_display_name',
       child_class_label: '16S rRNA',
@@ -51,6 +58,7 @@ const fixtures = {
       case_uid: 'RMDB2PDB|10ZU',
       pdb_id: '10ZU',
       pdb_chain_ids: '',
+      chainPlacements: [{ classLabel: 'designed_RNA', nameLabel: 'MPNN-fixbb designed RNA molecule' }],
       parent_class_label: '',
       parent_class_source: '',
       child_class_label: 'MPNN-fixbb designed RNA molecule',
@@ -264,6 +272,7 @@ test('atlas search state preserves the canonical moleculeDisplayName for groupin
     displayCases: [
       {
         atlasCaseKey: 'RMDB2PDB:1G1X', caseId: '1G1X', pdbId: '1G1X',
+        chainPlacements: [{ classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' }],
         parentClassLabel: '16S ribosomal RNA', childClassLabel: '16S ribosomal RNA',
         moleculeDisplayName: '16S ribosomal RNA', biologicalMoleculeName: '16S rRNA',
         confidenceDisplayLabel: 'A_REFERENCE (1)', profileCount: 1, chains: ['A']
@@ -271,6 +280,7 @@ test('atlas search state preserves the canonical moleculeDisplayName for groupin
       {
         // 4V85-like: blank class labels, canonical name only in moleculeDisplayName
         atlasCaseKey: 'RASP2PDB:4V85', caseId: '4V85', pdbId: '4V85',
+        chainPlacements: [{ classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' }],
         parentClassLabel: '', childClassLabel: '',
         moleculeDisplayName: '16S ribosomal RNA', biologicalMoleculeName: '16S rRNA',
         confidenceDisplayLabel: 'B WEAK', profileCount: 1, chains: ['B']
@@ -286,7 +296,7 @@ test('atlas search state preserves the canonical moleculeDisplayName for groupin
 
   const html = renderAnnojointAtlasPage({
     state,
-    expandedGroupIds: new Set(['parent:16S-ribosomal-RNA'])
+    expandedGroupIds: new Set(['parent:rRNA'])
   });
   // Problem 2: 4V85 folds into the "16S ribosomal RNA" parent group.
   assert.match(html, /data-annojoin-case-row="RASP2PDB:4V85"/);
@@ -386,11 +396,11 @@ test('atlas page renders merged PDB rows with source detail links in the side pa
 
   assert.match(html, /Rows 1-1 of 1/);
   assert.equal((html.match(/data-annojoin-case-row="PDB:10FZ"/g) || []).length, 1);
-  assert.match(html, /1 PDB entries \(2 source cases\)/);
+  assert.match(html, /1 PDBs \(2 source cases\)/);
   assert.match(html, /2 source cases/);
   assert.match(html, /Source cases/);
-  assert.match(html, /href="#annojoin-case\?caseId=10FZ&amp;caseKey=RMDB2PDB%3A10FZ"/);
-  assert.match(html, /href="https:\/\/pages\.example\.test\/rasp\/family-d\/current\/cases\/RASP2PDB%3A10FZ\/index\.html"/);
+  assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10FZ\/index\.html"/);
+  assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A10FZ\/index\.html"/);
   assert.doesNotMatch(html, /href="#annojoin-case\?caseId=10FZ" class="download-outline-btn">Open detail page/);
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
@@ -432,14 +442,12 @@ test('atlas page upgrades completed RMDB source-case links to V3 static detail p
     selectedField: 'moleculeName'
   });
 
-  assert.match(html, /href="https:\/\/pages\.example\.test\/rmdb\/current\/cases\/RMDB2PDB%3A10ZT\/index\.html"/);
-  assert.match(html, /href="#annojoin-case\?caseId=10ZT&amp;caseKey=RASP2PDB%3A10ZT"/);
+  assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10ZT\/index\.html"/);
+  assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A10ZT\/index\.html"/);
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
 
-test('atlas page routes duplicate RASP family cases to the selector page', () => {
-  const originalOrigin = LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl;
-  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = 'https://pages.example.test';
+test('atlas page routes duplicate RASP family cases to its own static detail page (no selector)', () => {
   const state = buildAtlasSearchState({
     cases: [
       { atlasCaseKey: 'RMDB2PDB:8EWB', caseId: '8EWB', pdbId: '8EWB', assetFamily: 'RMDB2PDB', profileCount: 1 },
@@ -474,9 +482,10 @@ test('atlas page routes duplicate RASP family cases to the selector page', () =>
     selectedField: 'moleculeName'
   });
 
-  assert.match(html, /href="https:\/\/pages\.example\.test\/selector\/rasp\/RASP2PDB%3A8EWB\/index\.html"/);
-  assert.doesNotMatch(html, /href="#annojoin-case\?caseId=8EWB&amp;caseKey=RASP2PDB%3A8EWB"/);
-  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
+  // No selector page: each universe links straight to its own static detail tree.
+  assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A8EWB\/index\.html"/);
+  assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A8EWB\/index\.html"/);
+  assert.doesNotMatch(html, /selector/);
 });
 
 test('confidence panel never surfaces the legacy ANNOCONFIDENCE coverage_topology pointer string', () => {
@@ -653,6 +662,7 @@ test('atlas page suppresses molecule name inside a group whose label already sho
         case_id: '20AA',
         case_uid: 'RMDB2PDB|20AA',
         pdb_id: '20AA',
+        chainPlacements: [{ classLabel: '5S ribosomal RNA', nameLabel: '5S ribosomal RNA' }],
         parent_class_label: '5S ribosomal RNA',
         child_class_label: '5S ribosomal RNA',
         biological_molecule_name: '5S ribosomal RNA',
@@ -664,6 +674,7 @@ test('atlas page suppresses molecule name inside a group whose label already sho
         case_id: '20AB',
         case_uid: 'RMDB2PDB|20AB',
         pdb_id: '20AB',
+        chainPlacements: [{ classLabel: '5S ribosomal RNA', nameLabel: '5S ribosomal RNA' }],
         parent_class_label: '5S ribosomal RNA',
         child_class_label: '5S ribosomal RNA',
         biological_molecule_name: '5S ribosomal RNA',
@@ -698,6 +709,7 @@ test('atlas page keeps second-level child folding when a parent has multiple chi
         case_id: '10ZV',
         case_uid: 'RMDB2PDB|10ZV',
         pdb_id: '10ZV',
+        chainPlacements: [{ classLabel: 'Ribosome', nameLabel: '23S rRNA' }],
         child_class_label: '23S rRNA',
         biological_molecule_name: '23S ribosomal RNA',
         search_text: '10ZV 23S ribosomal RNA'
@@ -707,6 +719,7 @@ test('atlas page keeps second-level child folding when a parent has multiple chi
         case_id: '10ZX',
         case_uid: 'RMDB2PDB|10ZX',
         pdb_id: '10ZX',
+        chainPlacements: [{ classLabel: 'Ribosome', nameLabel: '23S rRNA' }],
         child_class_label: '23S rRNA',
         biological_molecule_name: '23S ribosomal RNA',
         search_text: '10ZX 23S ribosomal RNA'
@@ -802,7 +815,7 @@ test('atlas side panel renders field-specific explanations', () => {
   const moleculeHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'moleculeName', routeName: 'sequence' });
   assert.match(moleculeHtml, /Index row detail/);
   assert.match(moleculeHtml, /Molecule name/);
-  assert.match(moleculeHtml, /href="https:\/\/pages\.example\.test\/rmdb\/current\/cases\/RMDB2PDB%3A10ZT\/index\.html"/);
+  assert.match(moleculeHtml, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10ZT\/index\.html"/);
 
   const confidenceHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'confidenceDisplayLabel' });
   assert.match(confidenceHtml, /Confidence classification/);
@@ -861,6 +874,26 @@ test('atlas page can render as the sequence route entry', () => {
   assert.match(html, /href="#sequence"/);
   assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=pdbId"/);
   assert.doesNotMatch(html, /href="#annojoin-atlas\?caseId=10ZT"/);
+});
+
+test('atlas field links preserve the active filter and page so clicking does not reset the table', () => {
+  const state = buildAtlasSearchState(fixtures, { query: '10ZT' });
+  const html = renderAnnojointAtlasPage({ state, routeName: 'entry', page: 1 });
+
+  // a filtered field click must retain q=10ZT alongside the field/case selection
+  assert.match(html, /href="#entry\?q=10ZT&amp;caseId=10ZT&amp;field=pdbId"/);
+  assert.match(html, /href="#entry\?q=10ZT&amp;caseId=10ZT&amp;field=moleculeName"/);
+  // and must NOT drop the query (the bug: #entry?caseId=10ZT&field=pdbId)
+  assert.doesNotMatch(html, /href="#entry\?caseId=10ZT&amp;field=pdbId"/);
+});
+
+test('atlas field links carry a non-default page through the field click', () => {
+  // query '10Z' matches both fixtures; pageSize 1 leaves one case on page 2
+  const state = buildAtlasSearchState(fixtures, { query: '10Z' });
+  const html = renderAnnojointAtlasPage({ state, routeName: 'entry', page: 2, pageSize: 1 });
+
+  // the active query and page must both survive the field click (caseId varies by sort)
+  assert.match(html, /href="#entry\?q=10Z&amp;page=2&amp;caseId=10Z[A-Z]&amp;field=pdbId"/);
 });
 
 test('atlas page omits visual/detail panes from the master table page', () => {
@@ -977,4 +1010,26 @@ test('buildAtlasSearchState drops dead caseHierarchy and exposes totalPlacementC
   assert.equal('caseHierarchy' in state, false);
   assert.equal('sourceCaseHierarchy' in state, false);
   assert.equal(state.totalPlacementCount, 1);
+});
+
+test('real pipeline groups by chain placement; search disables grouping', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [
+      { pdb_id: '4V99', chainPlacements: [
+        { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+        { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+      ] },
+      { pdb_id: '1EHZ', chainPlacements: [{ classLabel: 'tRNA', nameLabel: 'tRNA-Phe' }] }
+    ]
+  });
+  const sorted = sortAnnojointCases(state.cases);
+  const page = paginateAnnojointRows(sorted, { page: 1, pageSize: 50 });
+  const groups = buildAnnojointTableGroups(page.rows);
+  const parentLabels = groups.map((p) => p.label).sort();
+  assert.deepEqual(parentLabels, ['rRNA', 'tRNA']);
+  const tRNA = groups.find((p) => p.label === 'tRNA');
+  const tRNApdbs = tRNA.children.flatMap((c) => c.rows.map((r) => r.pdbId)).sort();
+  assert.ok(tRNApdbs.includes('4V99'));
+  const filtered = searchAnnojointRows(sorted, '4V99');
+  assert.equal(filtered.length, 1);
 });

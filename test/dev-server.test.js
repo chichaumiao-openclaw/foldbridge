@@ -35,3 +35,17 @@ test('dev server exposes public assets at site root', () => {
   );
   assert.equal(resolveStaticRequestPath('/../package.json', { root }), null);
 });
+
+test('dev server maps rasp-v3 and rmdb-v3 prefixes to the public tree', () => {
+  const root = path.resolve('.');
+  const publicRootPrefixes = ['annojoin-smoke', 'annojoin-ef', 'rasp-v3', 'rmdb-v3'];
+
+  assert.equal(
+    resolveStaticRequestPath('/rasp-v3/cases/RASP2PDB%3A10FZ/index.html', { root, publicRootPrefixes }),
+    path.join(root, 'public/rasp-v3/cases/RASP2PDB:10FZ/index.html')
+  );
+  assert.equal(
+    resolveStaticRequestPath('/rmdb-v3/cases/RMDB2PDB%3A10ZT/index.html', { root, publicRootPrefixes }),
+    path.join(root, 'public/rmdb-v3/cases/RMDB2PDB:10ZT/index.html')
+  );
+});

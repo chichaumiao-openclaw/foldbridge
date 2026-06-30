@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody, renderHomeProbingCarousel } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -30,6 +30,7 @@ import { downloadRowsAsCsv } from './modules.js';
 import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
 import { createProbingArticleStore } from './probingArticleStore.js';
+import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
 import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
 import {
   buildAtlasSearchState
@@ -73,6 +74,7 @@ let sequenceSearchQuery = '';
 const pdbCaseStore = createCaseStore();
 const annojoinAtlasStore = createAnnojointAtlasStore();
 const probingArticleStore = createProbingArticleStore();
+const homeScrollStoryStore = createHomeScrollStoryStore();
 let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
 const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
 let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
@@ -80,8 +82,11 @@ let annojoinDetailRouteIndexState = null; // null=未加载, 'loading', 'error',
 const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'error' | generated case asset
 const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
+let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
+let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
+let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let pdbCaseConfidenceFilter = 'all';
 let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
 let homeDashboardFilters = {
@@ -1463,6 +1468,16 @@ function homePage() {
     loadProbingArticleIndex();
   }
 
+  if (homeScrollStoryState === null) {
+    loadHomeScrollStory();
+  }
+  let scrollStoryHtml = '';
+  if (homeScrollStoryState && typeof homeScrollStoryState === 'object') {
+    const visitIndex = homeScrollVisitIndex;
+    const featured = pickFeaturedCase(homeScrollStoryState.cases || [], visitIndex);
+    scrollStoryHtml = renderHomeScrollStory(featured, { assetBase: homeScrollStoryStore.assetBase });
+  }
+
   const featuredNames = homeBundleSites.map((site, index) => {
     const activeClass = site.href ? '' : 'active';
     if (site.href) {
@@ -1483,6 +1498,7 @@ function homePage() {
     <section class="bundle-home-shell">
       ${bundleHeader}
       ${renderHomeHero()}
+      ${scrollStoryHtml}
       ${renderHomeProbingCarousel(articles)}
       ${renderHomeModuleCards()}
     </section>
@@ -1768,12 +1784,12 @@ function renderProbingArticleLoadingPage(slug, headerHtml, isError) {
   return `<main class="page-detail page-probing-article">
     ${headerHtml}
     <section class="card bundle-wide-card technology-detail-hero">
-      <a class="technology-back-link" href="#detail">← 返回探针技术总览</a>
+      <a class="technology-back-link" href="#detail">← Back to probing methods overview</a>
       <div class="technology-detail-header">
         <div>
           <p class="technology-kicker">probing article</p>
           <h1>${title}</h1>
-          <p class="technology-intro">${isError ? '文章资产加载失败，请稍后重试。' : '正在加载文章…'}</p>
+          <p class="technology-intro">${isError ? 'Failed to load article assets. Please try again later.' : 'Loading article…'}</p>
         </div>
       </div>
     </section>
@@ -1927,6 +1943,41 @@ async function loadProbingArticleIndex() {
   if (route === 'detail' || route === 'probing' || route === 'home') render({ preserveScroll: true });
 }
 
+// 访问计数：每次成功加载招牌 story 自增（localStorage），用于 pickFeaturedCase 轮换。
+// 隐私模式 localStorage 抛错 → 退回 0，绝不报错（规格 §8 降级）。
+function readHomeScrollVisitIndex() {
+  try {
+    const raw = globalThis.localStorage?.getItem('fb.hss.visitIndex');
+    const n = Number.parseInt(raw, 10);
+    return Number.isFinite(n) ? n : 0;
+  } catch (_err) {
+    return 0;
+  }
+}
+
+function bumpHomeScrollVisitIndex() {
+  try {
+    const next = readHomeScrollVisitIndex() + 1;
+    globalThis.localStorage?.setItem('fb.hss.visitIndex', String(next));
+  } catch (_err) {
+    /* 隐私模式：忽略 */
+  }
+}
+
+async function loadHomeScrollStory() {
+  if (homeScrollStoryState === 'loading') return;
+  homeScrollStoryState = 'loading';
+  homeScrollVisitIndex = readHomeScrollVisitIndex();
+  try {
+    homeScrollStoryState = await homeScrollStoryStore.loadStory();
+    bumpHomeScrollVisitIndex();
+  } catch (err) {
+    console.error('[main] 加载主页招牌叙事失败', err);
+    homeScrollStoryState = 'error';
+  }
+  if (route === 'home') render({ preserveScroll: true });
+}
+
 async function loadProbingArticleDetail(slug) {
   if (!slug || probingArticleDetailState.get(slug) === 'loading') return;
   probingArticleDetailState.set(slug, 'loading');
@@ -2066,6 +2117,7 @@ function annojoinAtlasPage() {
   const selectedCaseId = params.get('caseId') || '';
   const selectedCaseKey = params.get('caseKey') || '';
   const selectedField = params.get('field') || '';
+  const headerHtml = renderBundleHeader();
   if (!annojoinAtlasIndexState || annojoinAtlasIndexState === 'loading') {
     if (annojoinAtlasIndexState !== 'loading') loadAnnojointAtlasIndex();
     return renderAnnojointAtlasPage({
@@ -2079,7 +2131,8 @@ function annojoinAtlasPage() {
       selectedCaseId,
       selectedCaseKey,
       selectedField,
-      statusMessage: { tone: 'loading', text: 'Loading the master table…' }
+      statusMessage: { tone: 'loading', text: 'Loading the master table…' },
+      headerHtml
     });
   }
   if (annojoinAtlasIndexState === 'error') {
@@ -2094,7 +2147,8 @@ function annojoinAtlasPage() {
       selectedCaseId,
       selectedCaseKey,
       selectedField,
-      statusMessage: { tone: 'error', text: 'The master table could not be loaded. Refresh to try again.' }
+      statusMessage: { tone: 'error', text: 'The master table could not be loaded. Refresh to try again.' },
+      headerHtml
     });
   }
 
@@ -2109,7 +2163,8 @@ function annojoinAtlasPage() {
     pageSize,
     selectedCaseId,
     selectedCaseKey,
-    selectedField
+    selectedField,
+    headerHtml
   });
 }
 
@@ -3236,6 +3291,7 @@ function render(options = {}) {
   initAnimatedStats();
   initHomeDashboardFilters();
   initHomeProbingCarousel();
+  initHomeScrollStory();
   initPdbCasePage();
   initSearchPage();
 
@@ -3437,6 +3493,36 @@ function initHomeProbingCarousel() {
   });
 
   restart();
+}
+
+function initHomeScrollStory() {
+  // 幂等：每次 render 都会重跑，先 disconnect 旧 observer 再决定是否重建，
+  // 否则同一 home 会话内反复 render 会叠加多个 observer（同轮播 setInterval 坑）。
+  if (homeScrollStoryObserver) {
+    homeScrollStoryObserver.disconnect();
+    homeScrollStoryObserver = null;
+  }
+  const story = document.querySelector('.home-scroll-story');
+  if (!story) return; // 非 home / placeholder 壳：清理后返回
+  const scenes = Array.from(story.querySelectorAll('.hss-scene'));
+  const layers = Array.from(story.querySelectorAll('.hss-layer'));
+  if (scenes.length === 0 || layers.length === 0) return;
+  if (typeof IntersectionObserver !== 'function') return; // 不支持 → CSS 静态堆叠降级（任务 7）
+
+  story.classList.add('hss-js'); // observer 确实接上后才启用滚动渐隐；无 JS/无 observer → 场景全可读（spec §8）
+
+  const activate = (idx) => {
+    scenes.forEach((s) => s.classList.toggle('is-active', Number(s.dataset.scene) === idx));
+    layers.forEach((l) => l.classList.toggle('is-active', Number(l.dataset.stage) === idx));
+  };
+
+  homeScrollStoryObserver = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) activate(Number(e.target.dataset.scene));
+    });
+  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+
+  scenes.forEach((s) => homeScrollStoryObserver.observe(s));
 }
 
 function initHomeDashboardFilters() {

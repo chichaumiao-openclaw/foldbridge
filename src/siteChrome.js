@@ -187,3 +187,122 @@ export function renderHomeProbingCarousel(articles = []) {
       </div>
     </section>`;
 }
+
+// 反应性色标（单一权威）：0 冷绿 #174B3A → .5 金 #E6C260 → 1 暖橙 #E8743E。
+// 1D 实时着色与 2D/3D 离线快照共用同一组锚点（见 home-scroll-story/README.md）。
+const HSS_COLOR_STOPS = [[23, 75, 58], [230, 194, 96], [232, 116, 62]];
+// 无反应性数据的残基中性灰（spec §3：禁色标外推，与 2D/3D 渲染器一致）。
+const HSS_NEUTRAL = '#E9EDEA';
+
+export function reactivityColor(norm) {
+  const t = Math.max(0, Math.min(1, Number(norm) || 0));
+  const [a, b, c] = HSS_COLOR_STOPS;
+  let lo, hi, f;
+  if (t < 0.5) { lo = a; hi = b; f = t / 0.5; }
+  else { lo = b; hi = c; f = (t - 0.5) / 0.5; }
+  const mix = lo.map((v, i) => Math.round(v + (hi[i] - v) * f));
+  return `rgb(${mix[0]}, ${mix[1]}, ${mix[2]})`;
+}
+
+// 单格着色：每残基一个格。无反应性数据 → 中性灰（数据诚实，spec §3）。
+// null/undefined/非有限 视为缺失；Number(null)===0 是有限值，须显式判 null。
+function alignmentCellHtml(base, datum, ceiling) {
+  const raw = Number(datum);
+  if (datum == null || !Number.isFinite(raw)) {
+    return `<span class="hss-cell hss-cell-nodata" style="background:${HSS_NEUTRAL}">${base}</span>`;
+  }
+  const norm = Math.min(1, raw / ceiling);
+  return `<span class="hss-cell" style="background:${reactivityColor(norm)}">${base}</span>`;
+}
+
+// 单根信号柱：柱高 = 归一化反应性，颜色同色标。无数据 → 中性灰矮桩（数据诚实，spec §3）。
+const HSS_BAR_TRACK_PX = 40;
+function alignmentBarHtml(datum, ceiling) {
+  const raw = Number(datum);
+  if (datum == null || !Number.isFinite(raw)) {
+    return `<div class="hss-bar hss-bar-nodata" style="height:3px;background:${HSS_NEUTRAL}"></div>`;
+  }
+  const norm = Math.min(1, raw / ceiling);
+  const h = Math.max(3, Math.round(norm * HSS_BAR_TRACK_PX));
+  return `<div class="hss-bar" style="height:${h}px;background:${reactivityColor(norm)}"></div>`;
+}
+
+// 1D alignment 态：每个残基一列（信号柱 / 连接竖线 / PDB 链格 垂直堆叠）。
+// 顶行是 per-base 反应性柱状图（量级），底行是结构链着色格；连线锁定在同一残基
+// 柱与格之间——换行时整列一起换，对齐永不错位。柱与格共用同一色标。
+// 无 DOM / 无 window。色标与缺数据中性灰保持单一权威。
+export function renderReactivityAlignment(caseData = {}) {
+  const seq = Array.isArray(caseData.sequence) ? caseData.sequence : [];
+  const react = Array.isArray(caseData.reactivity) ? caseData.reactivity : [];
+  const ceiling = Number(caseData.norm_ceiling) || 1;
+  const pdbId = caseData.pdb_id || '';
+  const chain = caseData.chain || '';
+  const pdbLabel = `PDB ${pdbId} · chain ${chain}`.replace(/\s+$/,'').replace(/·\s*chain\s*$/,'· chain');
+  const columns = seq.map((base, i) => {
+    const bar = alignmentBarHtml(react[i], ceiling);
+    const cell = alignmentCellHtml(base, react[i], ceiling);
+    return `<div class="hss-aln-col"><div class="hss-bar-track">${bar}</div><span class="hss-match-tick">|</span>${cell}</div>`;
+  }).join('');
+  return `<div class="hss-alignment" role="img" aria-label="Per-base probing reactivity (bars) aligned to the PDB chain residues">
+    <div class="hss-aln-key">
+      <span class="hss-aln-label">Probing signal (reactivity)</span>
+      <span class="hss-aln-label hss-aln-label-pdb">${pdbLabel}</span>
+    </div>
+    <div class="hss-aln-columns">${columns}</div>
+  </div>`;
+}
+
+// 确定性按访问次序选主角案例。空/非数组 → null；visitIndex 非有限数 → 0。
+export function pickFeaturedCase(cases, visitIndex) {
+  if (!Array.isArray(cases) || cases.length === 0) return null;
+  const idx = Number.isFinite(Number(visitIndex)) ? Math.abs(Math.trunc(Number(visitIndex))) : 0;
+  return cases[idx % cases.length];
+}
+
+// 招牌滚动叙事区。左侧三态层 + 右侧三场景 + 图例。无 DOM/无 window/无定时器。
+// 资产基址由调用方注入（与 probing 轮播一致），渲染层只拼 src。
+export function renderHomeScrollStory(caseData, opts = {}) {
+  const base = String(opts.assetBase || '.').replace(/\/$/, '');
+  if (!caseData || !Array.isArray(caseData.scenes) || caseData.scenes.length === 0) {
+    return `<section class="home-scroll-story hss-placeholder" aria-hidden="true"></section>`;
+  }
+  const meta = `${caseData.molecule_label || ''} · PDB ${caseData.pdb_id || ''} · ${caseData.confidence_label || ''}`;
+  const layer0 = `<div class="hss-layer is-active" data-stage="0"><div class="hss-tag">1 · Alignment</div>${renderReactivityAlignment(caseData)}</div>`;
+  const layer1 = caseData.svg_2d
+    ? `<div class="hss-layer" data-stage="1"><div class="hss-tag">2 · Secondary structure</div><img class="hss-snapshot" src="${base}/${caseData.svg_2d}" alt="${caseData.pdb_id || ''} secondary structure, reactivity-colored" loading="lazy"></div>`
+    : `<div class="hss-layer" data-stage="1"><div class="hss-tag">2 · Secondary structure</div><div class="hss-missing">2D snapshot unavailable</div></div>`;
+  const layer2 = caseData.png_3d
+    ? `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><img class="hss-snapshot" src="${base}/${caseData.png_3d}" alt="${caseData.pdb_id || ''} tertiary structure, reactivity-colored" loading="lazy"></div>`
+    : `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><div class="hss-missing">3D snapshot unavailable</div></div>`;
+  const scenes = caseData.scenes.map((s, i) => {
+    const chip = s.chip ? `\n      <span class="hss-chip">${s.chip}</span>` : '';
+    return `
+    <div class="hss-scene${i === 0 ? ' is-active' : ''}" data-scene="${i}">
+      <div class="hss-scene-num">${s.n || ''}</div>
+      <h3 class="hss-scene-title">${s.title || ''}</h3>
+      <p class="hss-scene-body">${s.body || ''}</p>${chip}
+    </div>`;
+  }).join('');
+  const legend = `<div class="hss-legend"><span>low</span><span class="hss-legend-bar"></span><span>high reactivity</span></div>`;
+  const records = HOME_METRICS.structureLinkedRecords.toLocaleString('en-US');
+  const kicker = `A FoldBridge story · ${caseData.molecule_label || ''} (PDB ${caseData.pdb_id || ''})`;
+  const intro = `<header class="hss-intro">
+      <p class="hss-kicker">${kicker}</p>
+      <h1 class="hss-headline">Follow one RNA from<br><span class="hss-headline-grad">probing signal to 3D fold</span></h1>
+      <p class="hss-lede">The same reactivity colors travel with every nucleotide — from the raw alignment, into the secondary structure, and onto the deposited tertiary structure. Scroll to watch it transform.</p>
+      <p class="hss-scrollcue">↓ Scroll</p>
+    </header>`;
+  const closing = `<footer class="hss-closing">
+      <h2>Every record in FoldBridge tells this story</h2>
+      <p>${records} structure-linked records, each with calibrated confidence.</p>
+      <button type="button" class="hss-cta" data-route="entry">Browse the Entry table &rarr;</button>
+    </footer>`;
+  return `<section class="home-scroll-story" aria-label="From probing signal to 3D fold">
+    ${intro}
+    <div class="hss-grid">
+      <div class="hss-sticky"><div class="hss-card"><div class="hss-meta">${meta}</div>${layer0}${layer1}${layer2}${legend}</div></div>
+      <div class="hss-scenes">${scenes}</div>
+    </div>
+    ${closing}
+  </section>`;
+}

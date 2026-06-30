@@ -1,0 +1,74 @@
+{
+  "generated_at": "2026-06-30T00:33:03.607Z",
+  "input_annojoin_root": "/Users/joseperezmartinez/docs/rmdb2pdb/task_packages/fec_lss_rc3_release_20260623/local_stage/annojoin_three_table_json_20260625/view_roots/combined",
+  "output_root": "/Users/joseperezmartinez/docs/foldbridge/.worktrees/annojoin-atlas-grouping/src/assets/generated/annojoin-atlas",
+  "view_id": "annojoin-atlas",
+  "view_asset_families": [],
+  "entry_root": "ANNOJOIN",
+  "annotation_root": "ANNOCONFIDENCE",
+  "browser_loads_annoconfidence_big_tables": false,
+  "case_count": 3401,
+  "facet_count": 18,
+  "preset_count": 6,
+  "download_count": 10,
+  "visual_preview_case_limit": 4070,
+  "visual_preview_rows_per_case": 48,
+  "visual_preview_residue_rows": 0,
+  "visual_preview_lss_rows": 0,
+  "rmdb_confidence_root": "/Volumes/tianyi/foldbridgeAssessert/confidence注册表/RMDB_ABC_LSS",
+  "rmdb_confidence_rows": 0,
+  "rmdb_calibrated_rows": 218638,
+  "rasp_family_d_confidence_root": "/Volumes/tianyi/foldbridgeAssessert/confidence注册表/RASP_D_LSS",
+  "rasp_family_d_calibrated_rows": 10229,
+  "pdb_chain_identity_path": "/Volumes/tianyi/tmp/PDB/04_pdb_metadata/pdb_rna_entity_chain_declared_identity.tsv",
+  "pdb_chain_identity_rows": 27803,
+  "pdb_chain_identity_pdbs": 9995,
+  "structure_route_unique_paths": 1126,
+  "structure_serving_mode": "api_on_demand",
+  "detail_compression": {
+    "enabled": true,
+    "preferred_codec": "br",
+    "fallback_codec": "gzip",
+    "raw_json_fallback": true,
+    "asset_count": 1,
+    "raw_bytes": 1935739,
+    "brotli_bytes": 48205,
+    "gzip_bytes": 116688,
+    "sample_assets": [
+      {
+        "path": "detail-route-index.json",
+        "raw_bytes": 1935739,
+        "brotli_bytes": 48205,
+        "gzip_bytes": 116688
+      }
+    ],
+    "largest_raw_assets": [
+      {
+        "path": "detail-route-index.json",
+        "raw_bytes": 1935739,
+        "brotli_bytes": 48205,
+        "gzip_bytes": 116688
+      }
+    ]
+  },
+  "assets": [
+    {
+      "path": "index.json",
+      "size_bytes": 10169623
+    },
+    {
+      "path": "detail-route-index.json",
+      "size_bytes": 1935739,
+      "compression": {
+        "preferred_codec": "br",
+        "fallback_codec": "gzip",
+        "raw_json_fallback": true,
+        "brotli_path": "detail-route-index.json.br",
+        "brotli_size_bytes": 48205,
+        "gzip_path": "detail-route-index.json.gz",
+        "gzip_size_bytes": 116688
+      }
+    }
+  ],
+  "rasp_not_active_rows_removed": 669
+}

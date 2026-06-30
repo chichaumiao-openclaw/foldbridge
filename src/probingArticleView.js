@@ -44,7 +44,7 @@ export function renderProbingArticleIndex(index, headerHtml = '') {
   const familySections = families.map((fam) => {
     const cards = fam.articles.map((a) => {
       const meta = [];
-      if (a.figure_count) meta.push(`${a.figure_count} 图`);
+      if (a.figure_count) meta.push(`${a.figure_count} figures`);
       if (a.rep_pmid) meta.push(`PMID ${escapeHtml(a.rep_pmid)}`);
       return `
         <a class="probing-article-card" href="#detail?tech=${encodeURIComponent(a.slug)}">
@@ -76,20 +76,20 @@ export function renderProbingArticleIndex(index, headerHtml = '') {
     <section class="card bundle-wide-card technology-hero-card">
       <div class="technology-hero-copy">
         <p class="technology-kicker">probing articles</p>
-        <h1>RNA 探针技术科普</h1>
-        <p class="technology-intro">这里收录了 ${articleCount} 篇 RNA 结构探针方法的科普长文。每篇都从“信号不是配对真值”这条边界出发，逐张原文配图讲清楚该方法到底测了什么化学事件，以及它在 FoldBridge 的 raw / 可视化 / confidence 三层里应该怎么被解释。</p>
-        <p class="technology-intro technology-intro-secondary">先按机制家族浏览，再点开任意方法进入完整阅读页。</p>
+        <h1>RNA probing methods explained</h1>
+        <p class="technology-intro">This collection gathers ${articleCount} in-depth explainers on RNA structure probing methods. Each one starts from the boundary that "signal is not pairing ground truth", and walks through the original figures to make clear what chemical event the method actually measures, and how it should be interpreted across FoldBridge's three layers: raw, visualization, and confidence.</p>
+        <p class="technology-intro technology-intro-secondary">Browse by mechanism family first, then open any method to enter its full reading page.</p>
       </div>
       <aside class="technology-summary-panel">
         <article class="technology-summary-card">
           <p>articles</p>
           <strong>${articleCount}</strong>
-          <span>篇逐图讲解的探针科普长文</span>
+          <span>in-depth probing explainers, walked through figure by figure</span>
         </article>
         <article class="technology-summary-card">
           <p>families</p>
           <strong>${families.length}</strong>
-          <span>个机制家族分组</span>
+          <span>mechanism family groups</span>
         </article>
       </aside>
     </section>
@@ -145,10 +145,10 @@ export function renderProbingArticlePage(detail, index, headerHtml = '') {
   }
 
   const meta = [];
-  if (detail.date) meta.push(`<div><dt>日期</dt><dd>${escapeHtml(detail.date)}</dd></div>`);
-  if (familyTitle) meta.push(`<div><dt>机制家族</dt><dd>${escapeHtml(familyTitle)}</dd></div>`);
-  if (detail.figure_count) meta.push(`<div><dt>原文配图</dt><dd>${detail.figure_count} 张</dd></div>`);
-  if (detail.rep_doi) meta.push(`<div><dt>主要来源</dt><dd>DOI ${escapeHtml(detail.rep_doi)}</dd></div>`);
+  if (detail.date) meta.push(`<div><dt>Date</dt><dd>${escapeHtml(detail.date)}</dd></div>`);
+  if (familyTitle) meta.push(`<div><dt>Mechanism family</dt><dd>${escapeHtml(familyTitle)}</dd></div>`);
+  if (detail.figure_count) meta.push(`<div><dt>Original figures</dt><dd>${detail.figure_count}</dd></div>`);
+  if (detail.rep_doi) meta.push(`<div><dt>Primary source</dt><dd>DOI ${escapeHtml(detail.rep_doi)}</dd></div>`);
 
   const body = (detail.blocks || []).map((b) => renderBlock(b, assetBase)).join('\n');
 
@@ -159,16 +159,16 @@ export function renderProbingArticlePage(detail, index, headerHtml = '') {
     const prev = idx > 0 ? siblings[idx - 1] : null;
     const next = idx < siblings.length - 1 ? siblings[idx + 1] : null;
     siblingNav = `
-      <nav class="article-sibling-nav" aria-label="同家族文章导航">
-        ${prev ? `<a class="article-sibling-link prev" href="#detail?tech=${encodeURIComponent(prev.slug)}"><span>上一篇</span><strong>${escapeHtml(prev.title)}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
-        ${next ? `<a class="article-sibling-link next" href="#detail?tech=${encodeURIComponent(next.slug)}"><span>下一篇</span><strong>${escapeHtml(next.title)}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
+      <nav class="article-sibling-nav" aria-label="Articles in the same family">
+        ${prev ? `<a class="article-sibling-link prev" href="#detail?tech=${encodeURIComponent(prev.slug)}"><span>Previous</span><strong>${escapeHtml(prev.title)}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
+        ${next ? `<a class="article-sibling-link next" href="#detail?tech=${encodeURIComponent(next.slug)}"><span>Next</span><strong>${escapeHtml(next.title)}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
       </nav>`;
   }
 
   return `<main class="page-detail page-probing-article">
     ${headerHtml}
     <section class="card bundle-wide-card technology-detail-hero">
-      <a class="technology-back-link" href="#detail">← 返回探针技术总览</a>
+      <a class="technology-back-link" href="#detail">← Back to probing methods overview</a>
       <div class="technology-detail-header">
         <div>
           <p class="technology-kicker">${escapeHtml(familyTitle || 'probing article')}</p>
