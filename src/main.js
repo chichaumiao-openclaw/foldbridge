@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex, renderProbingTechTable, renderProbingGlossary } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -90,6 +90,18 @@ let siteStatsState = null; // null=未加载, 'loading', 'error', 或 stats.json
 let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
 let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
+let probeTechRegistryState = null; // null=未加载, 'loading', 'error', 或 probe-technology-registry.json
+// 探针术语速查表（站点内联策展，与 About 概念呼应但无硬依赖）。
+const PROBING_GLOSSARY_TERMS = [
+  { term: 'WC-face', definition: 'The Watson-Crick edge of a base, where canonical pairing hydrogen bonds form; base-specific probes read its accessibility.' },
+  { term: 'SHAPE', definition: 'Selective 2′-hydroxyl acylation analyzed by primer extension; reports local backbone flexibility rather than pairing directly.' },
+  { term: 'SASA', definition: 'Solvent-accessible surface area of a residue, computed from 3D structure; the geometric reference for hydroxyl-radical / footprinting methods.' },
+  { term: 'paired_state', definition: 'Whether a nucleotide is base-paired or unpaired in the reference structure used to score a probing signal.' },
+  { term: 'reactivity', definition: 'The per-nucleotide probing signal magnitude — a chemical readout, not a direct measurement of structure.' },
+  { term: 'tier', definition: 'The confidence label assigned to a structure-linked claim (e.g. strong / moderate / weak), gated by signal–structure agreement and calibration.' },
+  { term: 'measurement family', definition: 'Grouping (A–F) by the physical quantity a method measures; a descriptor of mechanism, not a quality ranking.' },
+  { term: 'threshold basis', definition: 'How a method\u2019s confidence cut-points are anchored: literature-SUPPORTED, literature-INFORMED, or operating-value PENDING calibration.' }
+];
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let pdbCaseConfidenceFilter = 'all';
@@ -1770,12 +1782,18 @@ function detailPage() {
     // index 已加载但无此 slug → 回退到旧占位方法页（保留 legacy 方法目录）
     const method = technologyMethods.find((item) => item.slug === slug);
     if (method) return renderTechnologyMethodPage(method);
-    return renderProbingArticleIndex(probingArticleIndexState, header);
+    if (probeTechRegistryState !== 'loading' && probeTechRegistryState !== 'error') {
+      loadProbeTechRegistry();
+    }
+    return renderProbingArticleIndex(probingArticleIndexState, header, buildProbingHubSections());
   }
 
   // 无 slug：总览页。优先真实文章索引；未加载则后台拉取并显示原 technology 总览作为占位。
   if (hasIndex) {
-    return renderProbingArticleIndex(probingArticleIndexState, header);
+    if (probeTechRegistryState !== 'loading' && probeTechRegistryState !== 'error') {
+      loadProbeTechRegistry();
+    }
+    return renderProbingArticleIndex(probingArticleIndexState, header, buildProbingHubSections());
   }
   if (probingArticleIndexState !== 'loading' && probingArticleIndexState !== 'error') {
     loadProbingArticleIndex();
@@ -1973,6 +1991,38 @@ async function loadSiteStats() {
     siteStatsState = 'error';
   }
   if (route === 'stats') render({ preserveScroll: true });
+}
+
+// 探针技术 registry（静态资产，无构建依赖）：轻量 fetch+缓存，懒加载，带 re-render guard。
+async function loadProbeTechRegistry() {
+  if (probeTechRegistryState === 'loading') return;
+  if (probeTechRegistryState && typeof probeTechRegistryState === 'object') return;
+  probeTechRegistryState = 'loading';
+  try {
+    const res = await fetch('./src/assets/data/probe-technology-registry.json');
+    if (!res || !res.ok) throw new Error(`status ${res ? res.status : 'no-response'}`);
+    probeTechRegistryState = await res.json();
+  } catch (err) {
+    console.error('[main] 加载探针技术 registry 失败', err);
+    probeTechRegistryState = 'error';
+  }
+  if (route === 'detail' || route === 'probing') render({ preserveScroll: true });
+}
+
+// 组装探针 hub 三块（家族索引 + 技术对照表 + 术语表），注入文章总览页。
+// registry 未就绪时仍渲染可用的家族索引 + 术语表（降级，不阻塞）。
+function buildProbingHubSections() {
+  const families = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
+    ? probingArticleIndexState.families
+    : [];
+  const registry = (probeTechRegistryState && typeof probeTechRegistryState === 'object')
+    ? probeTechRegistryState
+    : { technologies: [] };
+  return [
+    renderProbingFamilyIndex(families),
+    renderProbingTechTable(registry),
+    renderProbingGlossary(PROBING_GLOSSARY_TERMS)
+  ].join('\n');
 }
 
 // 访问计数：每次成功加载招牌 story 自增（localStorage），用于 pickFeaturedCase 轮换。
