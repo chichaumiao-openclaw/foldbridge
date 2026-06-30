@@ -3,15 +3,36 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { deriveStats } from '../scripts/build-site-stats.mjs';
 import { filterCasesToPublishedAllowlist, parsePublishedCaseKeyAllowlist } from '../scripts/lib/annojoin-atlas-published-allowlist.mjs';
+import { renderStatsPage } from '../src/siteChrome.js';
 
 const index = JSON.parse(fs.readFileSync(new URL('../src/assets/generated/annojoin-atlas/index.json', import.meta.url), 'utf8'));
 const tsv = fs.readFileSync(new URL('../scripts/data/annojoin-atlas-published-case-keys.tsv', import.meta.url), 'utf8');
+const committedStats = JSON.parse(fs.readFileSync(new URL('../src/assets/generated/site-stats/stats.json', import.meta.url), 'utf8'));
 
 test('derived pdb_total matches allowlist AND ground-truth 2386', () => {
   const stats = deriveStats({ index, allowlistTsv: tsv });
   const allow = parsePublishedCaseKeyAllowlist(tsv);
   assert.equal(stats.pdb_total, filterCasesToPublishedAllowlist(index.displayCases, allow).kept.length);
   assert.equal(stats.pdb_total, 2386);
+});
+
+test('source_cases is visible-caliber (allowlist-derived), never the raw 3401', () => {
+  const stats = deriveStats({ index, allowlistTsv: tsv });
+  const allow = parsePublishedCaseKeyAllowlist(tsv);
+  const kept = filterCasesToPublishedAllowlist(index.displayCases, allow).kept;
+  const visibleSum = kept.reduce((sum, c) => sum + (Number(c.sourceCaseCount) || 0), 0);
+  // Locked to the SAME allowlist-filtered set as pdb_total, not a hand-written constant.
+  assert.equal(stats.source_cases, visibleSum);
+  assert.equal(stats.source_cases, 2386);
+  // §2.2 red line: the pre-filter raw 3401 must never be the surfaced source_cases.
+  assert.notEqual(stats.source_cases, 3401);
+  assert.notEqual(stats.source_cases, index.totalSourceCaseCount);
+});
+
+test('renderStatsPage never leaks the raw 3401 to user-facing output', () => {
+  const html = renderStatsPage(committedStats);
+  assert.ok(!html.includes('3401'), 'rendered stats must not contain 3401');
+  assert.ok(!html.includes('3,401'), 'rendered stats must not contain 3,401');
 });
 
 test('stats schema has required fields', () => {

@@ -80,11 +80,12 @@ function deriveFamilyDSasa(raspDRows = []) {
 export function deriveStats({ index = {}, allowlistTsv = '', calibration = null } = {}) {
   const displayCases = Array.isArray(index.displayCases) ? index.displayCases : [];
   const allow = parsePublishedCaseKeyAllowlist(allowlistTsv);
-  const pdbTotal = filterCasesToPublishedAllowlist(displayCases, allow).kept.length;
+  // 单一可见口径：pdb_total 与 source_cases 都从同一份白名单过滤后的 kept 集派生，
+  // 绝不直接对外用 totalSourceCaseCount/totalCaseCount（= 过滤前的 3401 原始数，规格 §2.2 红线）。
+  const kept = filterCasesToPublishedAllowlist(displayCases, allow).kept;
+  const pdbTotal = kept.length;
   const totalRaw = Number.isFinite(index.totalCaseCount) ? index.totalCaseCount : displayCases.length;
-  const sourceCases = Number.isFinite(index.totalSourceCaseCount)
-    ? index.totalSourceCaseCount
-    : totalRaw;
+  const sourceCases = kept.reduce((sum, c) => sum + (Number(c.sourceCaseCount) || 0), 0);
 
   const hasCalibration = !!(calibration
     && (Array.isArray(calibration.rmdbAbcRows) && calibration.rmdbAbcRows.length));
@@ -114,7 +115,8 @@ export function deriveStats({ index = {}, allowlistTsv = '', calibration = null 
     },
     provenance: {
       pdb_total: 'annojoin-atlas/index.json displayCases ∩ published allowlist (scripts/data/annojoin-atlas-published-case-keys.tsv)',
-      source_cases: 'annojoin-atlas/index.json totalSourceCaseCount',
+      source_cases: 'visible-caliber sum of sourceCaseCount over published-allowlist-filtered displayCases (NOT totalSourceCaseCount)',
+      total_raw: `internal metadata only — pre-filter raw displayCase count (${totalRaw}); never rendered as a user-facing number`,
       tier: hasCalibration
         ? `RMDB ABC LSS calibrated tiers, ${tierSource}`
         : `RMDB ABC LSS calibrated tiers, ${RUN_RECORD_LABEL}`,

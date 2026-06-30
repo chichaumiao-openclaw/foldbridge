@@ -1,7 +1,7 @@
 {
   "pdb_total": 2386,
   "total_raw": 3401,
-  "source_cases": 3401,
+  "source_cases": 2386,
   "families": 6,
   "technologies": 34,
   "articles": 27,
@@ -24,7 +24,8 @@
   },
   "provenance": {
     "pdb_total": "annojoin-atlas/index.json displayCases ∩ published allowlist (scripts/data/annojoin-atlas-published-case-keys.tsv)",
-    "source_cases": "annojoin-atlas/index.json totalSourceCaseCount",
+    "source_cases": "visible-caliber sum of sourceCaseCount over published-allowlist-filtered displayCases (NOT totalSourceCaseCount)",
+    "total_raw": "internal metadata only — pre-filter raw displayCase count (3401); never rendered as a user-facing number",
     "tier": "RMDB ABC LSS calibrated tiers, calibration-table 2026-06-27",
     "tier_source": "calibration-table 2026-06-27",
     "family_d_sasa": "RASP Family D SASA reference status, calibration-table 2026-06-27",
