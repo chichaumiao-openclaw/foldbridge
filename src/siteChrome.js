@@ -310,6 +310,99 @@ export function renderHomeScrollStory(caseData, opts = {}) {
 
 // === ABOUT PAGE (W-A 在此追加 renderAboutPage) ===
 
+// About / 方法学页纯渲染。入参 content（about-content.json 解析对象）→ HTML 字符串。
+// content 为空（未加载 / 加载失败）时降级为最小壳，含 <h1>About</h1>，绝不产出 undefined。
+// 所有字段缺失用空串兜底；about-content.json 是入 git 的静态可信数据，无需 escape。
+const aboutText = (v) => (v == null ? '' : String(v));
+
+function renderAboutCards(section) {
+  const items = (section.items || []).map((item) => `
+        <article class="card about-source-card">
+          <h3>${aboutText(item.name)}</h3>
+          <p>${aboutText(item.body)}</p>
+        </article>`).join('');
+  return `<div class="about-card-grid">${items}
+      </div>`;
+}
+
+function renderAboutPipeline(section) {
+  const steps = Array.isArray(section.steps) ? section.steps : [];
+  const nodeW = 150;
+  const gap = 44;
+  const h = 64;
+  const stepW = nodeW + gap;
+  const width = steps.length > 0 ? steps.length * stepW - gap : nodeW;
+  const cy = h / 2;
+  const parts = steps.map((step, i) => {
+    const x = i * stepW;
+    const rect = `<rect class="about-pipe-node" x="${x}" y="8" rx="12" ry="12" width="${nodeW}" height="${h - 16}"></rect>`;
+    const label = `<text class="about-pipe-label" x="${x + nodeW / 2}" y="${cy}" text-anchor="middle" dominant-baseline="middle">${aboutText(step)}</text>`;
+    const arrow = i < steps.length - 1
+      ? `<line class="about-pipe-arrow" x1="${x + nodeW}" y1="${cy}" x2="${x + nodeW + gap}" y2="${cy}" marker-end="url(#about-arrow)"></line>`
+      : '';
+    return `${rect}${label}${arrow}`;
+  }).join('');
+  return `<div class="about-pipeline-figure">
+        <svg viewBox="0 0 ${width} ${h}" role="img" aria-label="ANNOJOIN pipeline" class="about-pipeline-svg" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="about-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z"></path>
+            </marker>
+          </defs>
+          ${parts}
+        </svg>
+        ${section.body ? `<p class="about-pipeline-note">${aboutText(section.body)}</p>` : ''}
+      </div>`;
+}
+
+function renderAboutProse(section) {
+  return `<p class="about-prose">${aboutText(section.body)}</p>`;
+}
+
+function renderAboutTable(section) {
+  const rows = (section.items || []).map((item) => `
+        <dt>${aboutText(item.term)}</dt>
+        <dd>${aboutText(item.body)}</dd>`).join('');
+  return `<dl class="about-terms">${rows}
+      </dl>`;
+}
+
+function renderAboutSection(section) {
+  let inner = '';
+  switch (section.kind) {
+    case 'cards': inner = renderAboutCards(section); break;
+    case 'pipeline': inner = renderAboutPipeline(section); break;
+    case 'table': inner = renderAboutTable(section); break;
+    case 'prose':
+    default: inner = renderAboutProse(section); break;
+  }
+  const id = section.id ? ` id="about-${aboutText(section.id)}"` : '';
+  return `<section class="card bundle-wide-card about-section"${id}>
+      <h2>${aboutText(section.title)}</h2>
+      ${inner}
+    </section>`;
+}
+
+export function renderAboutPage(content) {
+  if (!content || typeof content !== 'object') {
+    return `<section class="card bundle-wide-card about-section">
+      <h1>About</h1>
+      <p>About content is unavailable right now.</p>
+    </section>`;
+  }
+  const hero = content.hero || {};
+  const sections = Array.isArray(content.sections) ? content.sections : [];
+  const heroHtml = `<section class="about-hero">
+      ${hero.kicker ? `<p class="about-hero-kicker">${aboutText(hero.kicker)}</p>` : ''}
+      <h1>${aboutText(hero.title) || 'About'}</h1>
+      ${hero.summary ? `<p class="about-hero-summary">${aboutText(hero.summary)}</p>` : ''}
+      ${hero.detail ? `<p class="about-hero-detail">${aboutText(hero.detail)}</p>` : ''}
+    </section>`;
+  const sectionsHtml = sections.map(renderAboutSection).join('\n    ');
+  return `${heroHtml}
+    ${sectionsHtml}`;
+}
+
 // === STATS PAGE (W-B 在此追加 renderStatsPage) ===
 
 // === PROBING HUB (W-C 在此追加 renderProbingFamilyIndex/TechTable/Glossary) ===
