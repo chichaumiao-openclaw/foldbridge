@@ -16,7 +16,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // These tests lock that drift down.
 const SOURCE_OF_TRUTH = path.resolve(here, '../public/annojoin-smoke/5gag/workbench.js');
 const RASP_PUBLISHED = path.resolve(here, '../public/rasp-v3/__rasp_v3_site__/workbench.js');
-const RMDB_PUBLISHED = path.resolve(here, '../public/rmdb-v3/__family_d_site__/workbench.js');
+const RMDB_PUBLISHED = path.resolve(here, '../public/rmdb-v3/__rmdb_v3_site__/workbench.js');
 
 const raspJs = fs.readFileSync(RASP_PUBLISHED, 'utf8');
 const rmdbJs = fs.readFileSync(RMDB_PUBLISHED, 'utf8');

@@ -17,7 +17,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 //   - leave an already-absolute URL (e.g. the 5gag smoke demo) untouched
 const RENDERERS = {
   'rasp-v3': path.resolve(here, '../public/rasp-v3/__rasp_v3_site__/workbench.js'),
-  'rmdb-v3': path.resolve(here, '../public/rmdb-v3/__family_d_site__/workbench.js'),
+  'rmdb-v3': path.resolve(here, '../public/rmdb-v3/__rmdb_v3_site__/workbench.js'),
   '5gag': path.resolve(here, '../public/annojoin-smoke/5gag/workbench.js'),
 };
 

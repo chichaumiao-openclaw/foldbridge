@@ -93,6 +93,24 @@ function resolveAssetUrl(href, baseUrl = window.location.href) {
   return new URL(href, new URL(baseUrl, window.location.href)).href;
 }
 
+// Case pages no longer bundle a verbatim RCSB mmCIF mirror (structure.cif.gz);
+// that pushed the static artifact past the 1 GB GitHub Pages cap. When the
+// linked-view coverage points at the removed local mirror, resolve the source
+// structure to RCSB's gzipped-text download instead, keyed by the PDB id
+// (coverage.caseId). The ".gz" suffix is preserved so the existing
+// fetch -> DecompressionStream -> text-crop -> reactivity-coloring pipeline is
+// byte-for-byte unchanged. Already-absolute hrefs (e.g. the 5gag smoke demo)
+// pass through untouched.
+function resolveStructureSourceHref(href, caseId) {
+  const original = String(href || "");
+  if (/^https?:\/\//i.test(original)) return original;
+  if (!/structure\.cif(\.gz)?$/i.test(original)) return original;
+  const pdbId = String(caseId || "").trim().toUpperCase();
+  if (!pdbId) return original;
+  const gz = /\.gz$/i.test(original) ? ".gz" : "";
+  return `https://files.rcsb.org/download/${pdbId}.cif${gz}`;
+}
+
 function percentile(values, q) {
   const clean = values.filter((value) => Number.isFinite(value)).sort((a, b) => a - b);
   if (!clean.length) return 0;
@@ -452,9 +470,13 @@ function positionFromResidueKey(residueKey) {
   return Number.isFinite(position) ? position : null;
 }
 
-function assayStateForBase(base) {
-  const normalizedBase = String(base || "N").toUpperCase();
-  return normalizedBase === "A" || normalizedBase === "C" ? "applicable" : "not_applicable";
+function familyTargetsBase(family, base) {
+  const normalizedFamily = String(family || "").toUpperCase();
+  if (normalizedFamily === "A") {
+    const normalizedBase = String(base || "N").toUpperCase();
+    return normalizedBase === "A" || normalizedBase === "C" ? "applicable" : "not_applicable";
+  }
+  return "applicable";
 }
 
 function pairPartnersForPosition(position, strand = activeStrand()) {
@@ -597,7 +619,7 @@ function getResidueDetails(residueKey) {
     color: value.color || "#ffffff",
     joinStatus: join.status,
     joinKey,
-    assayState: assayStateForBase(profileBase),
+    assayState: familyTargetsBase(lssContext?.family || "", profileBase),
     pdbResidue: pdbLabel,
     coordinateStatus,
     coordinateMeaning: coordinateObserved ? "resolved_atom_site_coordinate" : "sequence_only_no_atom_site_coordinate",
@@ -744,7 +766,8 @@ async function loadStructureSourceForMolstar() {
   }
   const range = alignmentCropRange(coverage);
   const structureCoverageUrl = state.structureCoverageUrl || linkedViewUrls.structureCoverage;
-  const resolvedSourceUrl = resolveAssetUrl(coverage.sourceStructure.href, structureCoverageUrl);
+  const sourceHref = resolveStructureSourceHref(coverage.sourceStructure.href, coverage.caseId);
+  const resolvedSourceUrl = resolveAssetUrl(sourceHref, structureCoverageUrl);
   return {
     chainKey: coverage.activeChainKey,
     mode: "source-structure",
@@ -931,7 +954,7 @@ async function prepareClientAlignmentCroppedCif(sourceCif) {
   };
 }
 
-function colorForMolstarDmsReactivity(row, residueKey, selectedKey = state.selectedResidueKey) {
+function colorForMolstarReactivity(row, residueKey, selectedKey = state.selectedResidueKey) {
   if (residueKey && residueKey === selectedKey) return RESIDUE_STATE_COLORS.selected.molstarRgb;
   return hexToRgb(row?.color || "#ffffff");
 }
@@ -951,12 +974,12 @@ function buildMolstarTargetDisplayPayload(profileId = activeProfileId(), selecte
       struct_asym_id: locator.label_asym_id || locator.auth_asym_id || residue.labelAsymId,
       start_residue_number: locator.label_seq_id || locator.auth_seq_id || residue.labelSeqId || position,
       end_residue_number: locator.label_seq_id || locator.auth_seq_id || residue.labelSeqId || position,
-      color: colorForMolstarDmsReactivity(row, residueKey, selectedKey),
+      color: colorForMolstarReactivity(row, residueKey, selectedKey),
       profile_id: profileId,
       residue_key: residueKey,
       chain_key: residue.chainKey,
       dms_fill: row?.color || "#ffffff",
-      colorSource: residueKey === selectedKey ? "SELECTED" : "DMS_REACTIVITY_FILL",
+      colorSource: residueKey === selectedKey ? "SELECTED" : "REACTIVITY_FILL",
       visual_state: visualStateForResidue(residueKey, selectedKey),
     }];
   });
@@ -967,7 +990,7 @@ function updateMolstarTargetDisplayDataset(payload, selectedKey = state.selected
   const residue52 = payload.find((item) => item.residue_key === selectedKey) || payload[0] || null;
   el.molstarHost.dataset.targetDisplayMode = "alignment_cropped_target_chain";
   el.molstarHost.dataset.targetDisplayResidues = String(payload.length);
-  el.molstarHost.dataset.targetDisplayColorSource = "DMS_REACTIVITY_FILL";
+  el.molstarHost.dataset.targetDisplayColorSource = "REACTIVITY_FILL";
   el.molstarHost.dataset.targetDisplayContext = "alignment-cropped target chain";
   el.molstarHost.dataset.targetDisplaySelected = selectedKey || "";
   el.molstarHost.dataset.targetDisplayPreview52 = JSON.stringify(residue52 ? {
@@ -1063,8 +1086,8 @@ function trackHoverText(trackKind, details) {
     pdb_polymer_alignment: `PDB polymer alignment ${details.position}: profile ${details.profileBase} -> PDB ${details.pdbBase} (${details.sequenceMatch})`,
     structure_state: `Structure state ${details.position}: ${details.structureState}`,
     pdb_residue: `3D coords ${details.position}: ${details.coordinateStatus}`,
-    dms_targetability: `DMS targetability ${details.position}: ${details.assayState}`,
-    profile_value: `DMS reactivity ${details.position}: raw=${details.raw === null ? "missing" : details.raw.toFixed(6)} norm=${details.norm.toFixed(3)}`,
+    dms_targetability: `targetability ${details.position}: ${details.assayState}`,
+    profile_value: `reactivity ${details.position}: raw=${details.raw === null ? "missing" : details.raw.toFixed(6)} norm=${details.norm.toFixed(3)}`,
     bridge_membership: `DBN bridge ${details.position}: ${details.bridgeMembership}`,
     observed_mask: `3D coordinates ${details.position}: ${details.coordinateStatus}`,
     fec_lss_confidence: `FEC/LSS ${details.position}: ${details.fecLssConfidence}`,
@@ -1224,6 +1247,7 @@ function renderTrackRail() {
   const strand = activeStrand();
   const normalized = state.lastRender?.normalized;
   if (!strand || !normalized) return;
+  const activeFamily = lssContextForProfile(activeProfileId())?.family || "";
   state.viewport = clampViewport(state.viewport.start, state.viewport.end, strand.sequence.length);
   const { start, end } = state.viewport;
   const positions = Array.from({ length: end - start + 1 }, (_, idx) => start + idx);
@@ -1240,8 +1264,8 @@ function renderTrackRail() {
     ["PDB polymer alignment", 84],
     ["Structure state", 116],
     ["3D coords", 148],
-    ["DMS targetability", 180],
-    ["DMS reactivity", 212],
+    ["targetability", 180],
+    ["reactivity", 212],
     ["DBN bridge", 244],
     ["3D coordinates", 276],
     ["FEC/LSS", 308],
@@ -1352,7 +1376,7 @@ function renderTrackRail() {
       svg.appendChild(pdbTick);
     }
 
-    const targetable = assayStateForBase(profileBase) === "applicable";
+    const targetable = familyTargetsBase(activeFamily, profileBase) === "applicable";
     const targetability = createSvgNode(svg, "rect", {
       x: x - cellW / 2,
       y: 172,
@@ -1722,7 +1746,7 @@ async function initMolstarViewer() {
     const coverage = state.structureCoverage?.coverage;
     const sequenceSummary = materializedSequenceAlignment();
     el.molstarMeta.textContent = coverage
-      ? `${croppedCif.chainKey} | ${croppedCif.mode} | target chain alignment crop from ${croppedCif.alignmentRange.label}; auth_asym_id=${croppedCif.authAsymId} label_asym_id=${croppedCif.labelAsymId}; ${croppedCif.croppedAtomSiteRows} atom_site rows kept; displayed with DMS reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel()}.`
+      ? `${croppedCif.chainKey} | ${croppedCif.mode} | target chain alignment crop from ${croppedCif.alignmentRange.label}; auth_asym_id=${croppedCif.authAsymId} label_asym_id=${croppedCif.labelAsymId}; ${croppedCif.croppedAtomSiteRows} atom_site rows kept; displayed with reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel()}.`
       : `${croppedCif.chainKey} | ${croppedCif.mode} | auth_asym_id=${croppedCif.authAsymId} label_asym_id=${croppedCif.labelAsymId}.`;
     await loadPdbeMolstarAssets();
     const croppedViewer = new window.PDBeMolstarPlugin();
@@ -1771,7 +1795,7 @@ async function renderProfile(index) {
   const coverage = state.structureCoverage?.coverage;
   const sequenceSummary = materializedSequenceAlignment();
   el.molstarMeta.textContent = coverage
-    ? `${activeChainKey()} | profile ${profile.profile_id} | target chain alignment crop displayed with DMS reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel(profile.profile_id)}.`
+    ? `${activeChainKey()} | profile ${profile.profile_id} | target chain alignment crop displayed with reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel(profile.profile_id)}.`
     : `${activeChainKey()} | profile ${profile.profile_id} | ${activeResidues().length} residues in active profile.`;
   el.stats.innerHTML = [
     metric("update ms", elapsed.toFixed(2)),
@@ -1780,7 +1804,7 @@ async function renderProfile(index) {
     metric("atom_site obs", coverage?.profileResidues ? `${coverage.resolvedResidues}/${coverage.profileResidues}` : "n/a"),
     metric("LSS status", lssContext?.lssStatus || "not materialized"),
     metric("LSS evaluable", lssContext ? `${lssContext.pairedEvaluable} paired / ${lssContext.unpairedEvaluable} unpaired` : "not materialized"),
-    metric("DMS loop recall", formatDmsLoopRecall(dmsLoopRecall)),
+    metric("loop recall", formatDmsLoopRecall(dmsLoopRecall)),
     metric("mapped bases", normalized.mappedCount),
     metric("white bases", normalized.whiteCount),
     metric("positive bases", normalized.positiveCount),
@@ -1796,6 +1820,97 @@ function profileIndexForId(profileId) {
   const normalized = String(profileId || "").trim();
   if (!normalized) return -1;
   return state.profiles.findIndex((profile) => profile.profile_id === normalized);
+}
+
+const PROFILE_FAMILY_ORDER = ["A", "B", "C", "D", "E", "F"];
+
+// Build the profile <select> markup grouped by Family. Only profiles with a
+// non-empty lssContext family are shown, sorted by PROFILE_FAMILY_ORDER (unknown
+// families last). Each <option> keeps its original state.profiles index so the
+// underlying profile_id<->row mapping stays intact. If no profile carries a
+// family, fall back to a flat list of all profiles to avoid an empty dropdown.
+function buildProfileSelectMarkup(profiles) {
+  const list = Array.isArray(profiles) ? profiles : [];
+  const withFamily = [];
+  list.forEach((profile, idx) => {
+    const family = lssContextForProfile(profile.profile_id)?.family;
+    if (family) withFamily.push({ profile, idx, family: String(family).toUpperCase() });
+  });
+  if (!withFamily.length) {
+    return list
+      .map((profile, idx) => `<option value="${idx}">${escapeHtml(`${profile.pair_id} | ${profile.profile_id}`)}</option>`)
+      .join("");
+  }
+  const families = Array.from(new Set(withFamily.map((entry) => entry.family)));
+  families.sort((a, b) => {
+    const ai = PROFILE_FAMILY_ORDER.indexOf(a);
+    const bi = PROFILE_FAMILY_ORDER.indexOf(b);
+    const ar = ai === -1 ? PROFILE_FAMILY_ORDER.length : ai;
+    const br = bi === -1 ? PROFILE_FAMILY_ORDER.length : bi;
+    if (ar !== br) return ar - br;
+    return a.localeCompare(b);
+  });
+  return families
+    .map((family) => {
+      const options = withFamily
+        .filter((entry) => entry.family === family)
+        .map((entry) => `<option value="${entry.idx}">${escapeHtml(`${entry.profile.pair_id} | ${entry.profile.profile_id}`)}</option>`)
+        .join("");
+      return `<optgroup label="${escapeHtml(`Family ${family}`)}">${options}</optgroup>`;
+    })
+    .join("");
+}
+
+// Choose the default profile by reactivity signal richness rather than the raw
+// first profile: some cases (e.g. 1GTN) list a sparse profile first, so the 3D
+// view opens almost entirely white. Pure helper takes per-profile positive-value
+// counts and returns the richest index; ties resolve to the lowest index so the
+// pick stays stable, and an empty/absent set falls back to 0.
+function pickRichestProfileIndex(positiveCounts) {
+  if (!Array.isArray(positiveCounts) || !positiveCounts.length) return 0;
+  let best = 0;
+  let bestCount = -1;
+  for (let idx = 0; idx < positiveCounts.length; idx += 1) {
+    const count = Number(positiveCounts[idx]) || 0;
+    if (count > bestCount) {
+      bestCount = count;
+      best = idx;
+    }
+  }
+  return best;
+}
+
+async function richestProfileIndex() {
+  const profiles = state.profiles || [];
+  if (profiles.length <= 1) return 0;
+  // Narrow the candidate set to profiles that carry an lssContext family (the
+  // ones visible in the grouped dropdown). Map the richest pick back to its
+  // original state.profiles index. If no profile has a family, fall back to the
+  // full-list logic so init never stalls on an empty candidate set.
+  const familyCandidates = [];
+  profiles.forEach((profile, idx) => {
+    if (lssContextForProfile(profile.profile_id)?.family) familyCandidates.push({ profile, idx });
+  });
+  const candidates = familyCandidates.length
+    ? familyCandidates
+    : profiles.map((profile, idx) => ({ profile, idx }));
+  if (candidates.length === 1) return candidates[0].idx;
+  const positiveCounts = [];
+  for (const { profile } of candidates) {
+    let positives = 0;
+    try {
+      const shard = await loadShard(profile.shard_id);
+      const values = profileValues(profile, shard);
+      for (let idx = 0; idx < values.length; idx += 1) {
+        const value = values[idx];
+        if (Number.isFinite(value) && value > 0) positives += 1;
+      }
+    } catch (_error) {
+      positives = 0; // unreadable shard contributes no signal; never blocks init
+    }
+    positiveCounts.push(positives);
+  }
+  return candidates[pickRichestProfileIndex(positiveCounts)].idx;
 }
 
 function initialProfileIdFromLocation() {
@@ -1904,13 +2019,11 @@ async function init() {
   state.profiles = profileIndex.profiles;
   const strand = activeStrand() || caseData.strands[0];
   state.viewport = { start: 1, end: Math.min(strand.sequence.length, TRACK_DEFAULT_SPAN) };
-  el.select.innerHTML = state.profiles.map((profile, idx) => {
-    const label = `${profile.pair_id} | ${profile.profile_id}`;
-    return `<option value="${idx}">${label}</option>`;
-  }).join("");
+  el.select.innerHTML = buildProfileSelectMarkup(state.profiles);
   el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
-  const initialProfileId = state.requestedProfileId || initialProfileIdFromLocation();
-  const initialIndex = Math.max(0, profileIndexForId(initialProfileId));
+  const requestedProfileId = state.requestedProfileId || initialProfileIdFromLocation();
+  const requestedIndex = profileIndexForId(requestedProfileId);
+  const initialIndex = requestedIndex >= 0 ? requestedIndex : await richestProfileIndex();
   await renderProfile(initialIndex);
   initMolstarViewer();
 }
