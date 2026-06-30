@@ -1,3 +1,7 @@
+import { LOCAL_PAGES_PUBLISHED_CASE_KEYS } from './assets/generated/published_case_keys.js';
+
+const PUBLISHED_CASE_KEYS = new Set(LOCAL_PAGES_PUBLISHED_CASE_KEYS || []);
+
 function encodeCaseKey(caseKey = '') {
   // Case directories on disk are named with a literal percent-encoded colon
   // (e.g. `RASP2PDB%3A10FZ`). A static file server decodes the URL once, so the
@@ -34,6 +38,7 @@ export function resolveLocalPagesBridgeDetailHref(input = '') {
     : normalizeCaseKey(input);
   const dir = universeDir(normalizedCaseKey);
   if (!dir) return '';
+  if (!PUBLISHED_CASE_KEYS.has(normalizedCaseKey)) return '';
   return `public/${dir}/cases/${encodeCaseKey(normalizedCaseKey)}/index.html`;
 }
 

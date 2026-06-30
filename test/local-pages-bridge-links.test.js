@@ -37,3 +37,12 @@ test('hasLocalPagesBridgeDetailPage true for rasp/rmdb', () => {
   assert.equal(hasLocalPagesBridgeDetailPage('RASP2PDB:10FZ'), true);
   assert.equal(hasLocalPagesBridgeDetailPage('RMDB2PDB:10ZT'), true);
 });
+
+// Regression: a case row may exist in the atlas index without a published
+// detail page on disk (e.g. RMDB2PDB:3Q3Z). The bridge must NOT hand back a
+// well-formed href to a page that 404s; it returns '' so the caller falls back
+// to the SPA hash route. Only keys in the published-case set resolve.
+test('unpublished case key returns empty so the caller can fall back', () => {
+  assert.equal(resolveLocalPagesBridgeDetailHref('RMDB2PDB:3Q3Z'), '');
+  assert.equal(hasLocalPagesBridgeDetailPage('RMDB2PDB:3Q3Z'), false);
+});
