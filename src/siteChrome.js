@@ -313,3 +313,119 @@ export function renderHomeScrollStory(caseData, opts = {}) {
 // === STATS PAGE (W-B 在此追加 renderStatsPage) ===
 
 // === PROBING HUB (W-C 在此追加 renderProbingFamilyIndex/TechTable/Glossary) ===
+
+function escapeProbingHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
+}
+
+// 机制家族索引：6 个家族卡片，每张链回 #detail 总览的对应家族锚点。
+export function renderProbingFamilyIndex(families) {
+  const list = Array.isArray(families) ? families : [];
+  if (!list.length) {
+    return `<section class="card bundle-wide-card probing-family-index probing-family-index--empty">
+      <p class="probing-hub-empty">Mechanism families are not available yet.</p>
+    </section>`;
+  }
+  const cards = list.map((fam) => {
+    const id = escapeProbingHtml(fam.id);
+    const count = Array.isArray(fam.articles) ? fam.articles.length : 0;
+    return `<a class="probing-family-card" href="#detail?family=${encodeURIComponent(fam.id || '')}" data-probing-family-link="${id}">
+        <h3 class="probing-family-card-title">${escapeProbingHtml(fam.title)}</h3>
+        <p class="probing-family-card-summary">${escapeProbingHtml(fam.summary)}</p>
+        <span class="probing-family-card-count">${count} ${count === 1 ? 'article' : 'articles'}</span>
+      </a>`;
+  }).join('');
+  return `<section class="card bundle-wide-card probing-family-index" aria-label="Probing mechanism families">
+      <div class="probing-hub-heading">
+        <p class="technology-kicker">browse by mechanism</p>
+        <h2>Six mechanism families</h2>
+        <p>Each family groups methods by the chemical event they read out. Open a family to jump into its explainers.</p>
+      </div>
+      <div class="probing-family-grid">${cards}</div>
+    </section>`;
+}
+
+// 34 行技术对照表：可按列排序（data-sort），无 JS 时仍可读（默认 registry 顺序）。
+const PROBING_FAMILY_MEANING = {
+  A: 'WC-face base-specific',
+  B: 'SHAPE flexibility-proxy',
+  C: 'enzymatic (REVERSED)',
+  D: 'SASA dual-ref',
+  E: 'contact-map',
+  F: 'pair-set F1'
+};
+
+export function renderProbingTechTable(registry) {
+  const rows = (registry && Array.isArray(registry.technologies)) ? registry.technologies : [];
+  if (!rows.length) {
+    return `<section class="card bundle-wide-card probing-tech-table probing-tech-table--empty">
+      <p class="probing-hub-empty">The probe technology registry is not available yet.</p>
+    </section>`;
+  }
+  const body = rows.map((row) => {
+    const tech = escapeProbingHtml(row.technology);
+    const fam = escapeProbingHtml(row.family);
+    const famMeaning = escapeProbingHtml(PROBING_FAMILY_MEANING[row.family] || '');
+    const bases = escapeProbingHtml(row.targetable_bases);
+    const basis = escapeProbingHtml(row.threshold_basis);
+    const basisClass = `probing-basis-badge probing-basis-badge--${basis.toLowerCase()}`;
+    const link = row.article_slug
+      ? `<a class="probing-tech-article-link" href="#detail?tech=${encodeURIComponent(row.article_slug)}">Read explainer</a>`
+      : '<span class="probing-tech-article-none">—</span>';
+    return `<tr data-tech-row>
+        <td data-col="technology"><span class="probing-tech-name">${tech}</span></td>
+        <td data-col="family"><span class="probing-family-tag" title="${famMeaning}">${fam}</span> <span class="probing-family-meaning">${famMeaning}</span></td>
+        <td data-col="bases">${bases}</td>
+        <td data-col="basis"><span class="${basisClass}">${basis}</span></td>
+        <td data-col="article">${link}</td>
+      </tr>`;
+  }).join('');
+  return `<section class="card bundle-wide-card probing-tech-table" aria-label="Probe technology comparison">
+      <div class="probing-hub-heading">
+        <p class="technology-kicker">technology registry</p>
+        <h2>34 RNA probing technologies at a glance</h2>
+        <p class="probing-tech-caption">In this table, <strong>family</strong> labels the physical quantity each method measures (A–F) — it is <strong>not a quality ranking</strong>. The threshold basis flags how each method's confidence cut-points are anchored.</p>
+      </div>
+      <div class="probing-tech-table-scroll">
+        <table class="probing-tech-grid">
+          <thead>
+            <tr>
+              <th scope="col" data-sort="technology">Technology</th>
+              <th scope="col" data-sort="family">Family</th>
+              <th scope="col" data-sort="bases">Targetable bases</th>
+              <th scope="col" data-sort="basis">Threshold basis</th>
+              <th scope="col" data-sort="article">Explainer</th>
+            </tr>
+          </thead>
+          <tbody>${body}</tbody>
+        </table>
+      </div>
+    </section>`;
+}
+
+// 快速术语表：~6-10 条简短定义。
+export function renderProbingGlossary(terms) {
+  const list = Array.isArray(terms) ? terms : [];
+  if (!list.length) {
+    return `<section class="card bundle-wide-card probing-glossary probing-glossary--empty">
+      <p class="probing-hub-empty">Glossary terms are not available yet.</p>
+    </section>`;
+  }
+  const items = list.map((entry) => `<div class="probing-glossary-term">
+        <dt>${escapeProbingHtml(entry.term)}</dt>
+        <dd>${escapeProbingHtml(entry.definition)}</dd>
+      </div>`).join('');
+  return `<section class="card bundle-wide-card probing-glossary" aria-label="Probing quick-reference glossary">
+      <div class="probing-hub-heading">
+        <p class="technology-kicker">quick reference</p>
+        <h2>Probing glossary</h2>
+        <p>Short definitions for the terms used across the probing pages and confidence labels.</p>
+      </div>
+      <dl class="probing-glossary-list">${items}</dl>
+    </section>`;
+}
