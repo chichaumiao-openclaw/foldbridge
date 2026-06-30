@@ -119,7 +119,10 @@ export async function runAnnojointAtlasSmoke({ assetRoot, sampleSize = 20 } = {}
   if ((index.facets || []).length < 12) failures.push({ caseId: '', message: 'facet count below 12' });
   if ((index.presets || []).length < 6) failures.push({ caseId: '', message: 'preset count below 6' });
   if (!(index.downloads || []).length) failures.push({ caseId: '', message: 'download manifest missing' });
-  if (!Array.isArray(index.caseHierarchy) || !index.caseHierarchy.length) failures.push({ caseId: '', message: 'case hierarchy missing' });
+  const hasPlacements = Array.isArray(sampleSource)
+    && sampleSource.length
+    && sampleSource.every((row) => Array.isArray(row.chainPlacements) && row.chainPlacements.length);
+  if (!hasPlacements) failures.push({ caseId: '', message: 'chainPlacements missing on displayCases' });
   if (sampled.length < sampleSize) failures.push({ caseId: '', message: `sampled ${sampled.length}, expected ${sampleSize}` });
 
   for (const row of sampled) {
