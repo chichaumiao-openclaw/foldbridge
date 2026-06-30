@@ -1,0 +1,18 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8Z71",
+  "biologicalMoleculeName": "8Z71",
+  "caseId": "8Z71",
+  "caseKey": "RASP2PDB:8Z71",
+  "chains": [
+    "2",
+    "A",
+    "B",
+    "C",
+    "s",
+    "t"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "8Z71",
+  "profileCount": 179
+}

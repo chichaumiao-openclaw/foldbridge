@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9ASQ",
+  "biologicalMoleculeName": "9ASQ",
+  "caseId": "9ASQ",
+  "caseKey": "RASP2PDB:9ASQ",
+  "chains": [
+    "E"
+  ],
+  "confidenceDisplayLabel": "C UNDERPOWERED",
+  "pdbId": "9ASQ",
+  "profileCount": 6
+}

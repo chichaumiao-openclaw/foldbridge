@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8URX",
+  "biologicalMoleculeName": "8URX",
+  "caseId": "8URX",
+  "caseKey": "RASP2PDB:8URX",
+  "chains": [
+    "7",
+    "D",
+    "a",
+    "d"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "8URX",
+  "profileCount": 37
+}
