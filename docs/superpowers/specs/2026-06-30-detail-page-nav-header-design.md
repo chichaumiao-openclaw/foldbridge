@@ -76,19 +76,23 @@ Each universe bundle gets a new self-contained script:
 
 `site-nav.js` is an IIFE that, on load:
 1. Resolves its **own script URL**, then derives the **portal root** from it. The script
-   is served at `<deployRoot>/public/{rasp-v3,rmdb-v3}/__<bundle>__/site-nav.js`, so the
-   portal root is four directory levels up (`__bundle__` → `rasp-v3` → `public` → `dist`
-   = `<deployRoot>`). Resolving from the script's own URL keeps links correct regardless
-   of the deploy base path.
+   is served at `<deployRoot>/public/{rasp-v3,rmdb-v3}/__<bundle>__/site-nav.js`, so
+   `new URL('../../../', scriptSrc)` (three `../` from the script's directory:
+   `__bundle__/` → `rasp-v3/` → `public/` → `dist/`) resolves to the deploy root.
+   Resolving from the script's own URL keeps links correct regardless of the deploy base
+   path.
    - **Critical:** `document.currentScript` is `null` inside a *dynamically injected*
      external script (case-page path, entry point 1). So `site-nav.js` must NOT rely on
-     `document.currentScript`. Instead it reads its own URL from a marker the loader
-     passes in, with fallbacks in this order: (a) a `data-fb-root` attribute / query
-     param set by the loader (entry point 1), (b) `document.currentScript?.src` (valid on
-     the list-page static-tag path, entry point 2), (c) the last `<script>` whose `src`
-     ends with `site-nav.js` found via `document.querySelectorAll`. This makes both entry
-     points work.
-   Links are **relative** (user-approved), e.g. `<root>/#home`.
+     `document.currentScript` alone. It resolves its own script src in this fallback
+     order: (a) the **`data-fb-script-src`** attribute on the injected `<script>` (set by
+     the loader, entry point 1) — its value is the resolved absolute URL of `site-nav.js`
+     itself; (b) `document.currentScript?.src` (valid on the list-page static-tag path,
+     entry point 2); (c) the last `<script>` whose `src` ends with `site-nav.js`, found
+     via `document.querySelectorAll` (catch-all that works even under dynamic injection).
+     From that script src, the portal root is `new URL('../../../', scriptSrc)`
+     (`__bundle__/` → `rasp-v3/` → `public/` → `dist/` = deploy root). This makes both
+     entry points work.
+   Links are **relative** (user-approved), e.g. `<root>#home`.
 2. Builds a `<header class="fb-detail-nav">` containing a brand block
    (`FB` mark + `FoldBridge` wordmark) and the 5 nav links as `<a href>` anchors
    pointing at `<root>/#home`, `<root>/#entry`, `<root>/#probing`, `<root>/#search`,
@@ -107,9 +111,10 @@ bootstrap throw fires). The loader:
 - reads its OWN script URL via `document.currentScript.src` — valid here, because
   `case-shell.js` is a static parse-time classic script (not dynamically injected);
 - resolves the sibling `site-nav.js` URL from that (same bundle directory);
-- creates a `<script>` element pointing at `site-nav.js`, and passes the resolved bundle
-  URL forward via a `data-fb-script-src` attribute (so `site-nav.js` can self-locate
-  without `document.currentScript`, per Design step 1a);
+- creates a `<script>` element pointing at `site-nav.js`, and sets a
+  **`data-fb-script-src`** attribute on it whose value is that same resolved absolute
+  `site-nav.js` URL (so `site-nav.js` can self-locate via fallback (a) without relying on
+  `document.currentScript`, per Design step 1);
 - appends it to `<head>`/`<body>`.
 
 This one edit reaches every case page in the bundle without touching any per-case HTML.
