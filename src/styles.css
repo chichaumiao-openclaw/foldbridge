@@ -6325,5 +6325,58 @@ body[data-mode="dark"] .mode-toggle:hover {
 /* === ABOUT PAGE === */
 
 /* === STATS PAGE === */
+.stats-page { display: flex; flex-direction: column; gap: 1.75rem; }
+.stats-head h1 { margin: 0 0 0.4rem; }
+.stats-lede { margin: 0; max-width: 60ch; color: var(--textMuted); }
+.stats-metric-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.9rem;
+}
+.stats-metric {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--panel-card-border, var(--border));
+  border-radius: 12px;
+  background: var(--panel-card-bg, var(--surface));
+}
+.stats-metric-value { font-size: 1.8rem; font-weight: 700; color: var(--primary); line-height: 1.1; }
+.stats-metric-label { font-size: 0.85rem; font-weight: 600; color: var(--textPrimary); }
+.stats-metric-note { font-size: 0.75rem; color: var(--textMuted); }
+.stats-section { display: flex; flex-direction: column; gap: 0.7rem; }
+.stats-section h2 { margin: 0; font-size: 1.15rem; color: var(--primary); }
+.stats-section-lede { margin: 0; max-width: 64ch; color: var(--textMuted); font-size: 0.92rem; }
+.stats-footnote { margin: 0; font-size: 0.74rem; color: var(--textMuted); font-style: italic; }
+.stats-empty { margin: 0; color: var(--textMuted); }
+.stats-tier-chart { width: 100%; max-width: 560px; height: auto; }
+.stats-tier-label { font-size: 11px; font-weight: 600; fill: var(--textPrimary); }
+.stats-tier-value { font-size: 11px; fill: var(--textMuted); }
+.stats-sasa { display: flex; flex-direction: column; gap: 0.6rem; max-width: 460px; }
+.stats-sasa-bar {
+  display: flex;
+  width: 100%;
+  height: 30px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+}
+.stats-sasa-seg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+.stats-sasa-present { background: var(--accent); }
+.stats-sasa-fallback { background: var(--border); }
+.stats-sasa-seg-label { font-size: 0.74rem; font-weight: 700; color: var(--surface); }
+.stats-sasa-legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; font-size: 0.82rem; }
+.stats-sasa-legend li { display: flex; align-items: center; gap: 0.4rem; }
+.stats-swatch { width: 14px; height: 14px; border-radius: 4px; display: inline-block; }
+.stats-swatch-present { background: var(--accent); }
+.stats-swatch-fallback { background: var(--border); }
+.stats-threshold-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.92rem; }
+.stats-threshold-list strong { color: var(--primary); }
 
 /* === PROBING HUB === */

@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -31,7 +31,7 @@ import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
 import { createProbingArticleStore } from './probingArticleStore.js';
 import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
-import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
+import { createSiteStatsStore } from './siteStatsStore.js';import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
 import {
   buildAtlasSearchState
 } from './annojoinAtlasData.js';
@@ -74,6 +74,7 @@ const pdbCaseStore = createCaseStore();
 const annojoinAtlasStore = createAnnojointAtlasStore();
 const probingArticleStore = createProbingArticleStore();
 const homeScrollStoryStore = createHomeScrollStoryStore();
+const siteStatsStore = createSiteStatsStore();
 let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
 const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
 let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
@@ -81,6 +82,7 @@ let annojoinDetailRouteIndexState = null; // null=未加载, 'loading', 'error',
 const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'error' | generated case asset
 const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
+let siteStatsState = null; // null=未加载, 'loading', 'error', 或 stats.json
 let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
 let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
@@ -1942,6 +1944,19 @@ async function loadProbingArticleIndex() {
   if (route === 'detail' || route === 'probing' || route === 'home') render({ preserveScroll: true });
 }
 
+async function loadSiteStats() {
+  if (siteStatsState === 'loading') return;
+  siteStatsState = 'loading';
+  try {
+    const stats = await siteStatsStore.loadStats();
+    siteStatsState = stats || 'error';
+  } catch (err) {
+    console.error('[main] 加载站点统计失败', err);
+    siteStatsState = 'error';
+  }
+  if (route === 'stats') render({ preserveScroll: true });
+}
+
 // 访问计数：每次成功加载招牌 story 自增（localStorage），用于 pickFeaturedCase 轮换。
 // 隐私模式 localStorage 抛错 → 退回 0，绝不报错（规格 §8 降级）。
 function readHomeScrollVisitIndex() {
@@ -2404,7 +2419,12 @@ function aboutPage() {
 }
 
 function statsPage() {
-  return `<main class="page-detail">${renderBundleHeader()}<section class="card bundle-wide-card"><h1>Statistics</h1><p>Loading…</p></section></main>`;
+  // 已加载则喂 stats，否则空壳占位 + 触发懒加载（与 probing 路由同款）。
+  const stats = (siteStatsState && typeof siteStatsState === 'object') ? siteStatsState : null;
+  if (siteStatsState === null) {
+    loadSiteStats();
+  }
+  return `<main class="page-detail">${renderBundleHeader()}${renderStatsPage(stats)}</main>`;
 }
 
 // ANNOJOIN 置信度科普页：解释主表 Confidence distribution 列里 A/B/C/D 族、
