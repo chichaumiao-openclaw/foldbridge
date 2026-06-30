@@ -4914,7 +4914,7 @@ body[data-mode="dark"] .mode-toggle:hover {
 
 .bundle-site-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
   width: min(100% - 40px, 1280px);
   margin: 0 auto;
@@ -4923,8 +4923,8 @@ body[data-mode="dark"] .mode-toggle:hover {
 .bundle-site-card {
   display: grid;
   gap: 20px;
-  min-height: 430px;
-  padding: 22px;
+  min-height: 240px;
+  padding: 28px;
   border-radius: 30px;
   border: 1px solid rgba(126, 197, 219, 0.25);
   background: rgba(255, 255, 255, 0.95);
@@ -5060,12 +5060,6 @@ body[data-mode="dark"] .mode-toggle:hover {
 .bundle-site-link:hover {
   background: rgba(17, 106, 124, 0.18);
   color: #104f5d;
-}
-
-@media (max-width: 1400px) {
-  .bundle-site-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 1100px) {
