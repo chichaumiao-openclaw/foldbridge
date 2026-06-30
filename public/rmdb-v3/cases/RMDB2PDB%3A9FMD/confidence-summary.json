@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:9FMD",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 9,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:9FMD:confidence:A:top_x_279::data-general/data-general/P90LIB_DMS_0000.rdat#1517",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 5
+  },
+  "generatedAt": "2026-06-28T21:26:31.631273Z",
+  "materializedEvidenceCount": 9,
+  "pdbId": "9FMD",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 9
+  },
+  "totalEvidenceCount": 9
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9L5T",
+  "biologicalMoleculeName": "9L5T",
+  "caseId": "9L5T",
+  "caseKey": "RASP2PDB:9L5T",
+  "chains": [
+    "2",
+    "6"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "9L5T",
+  "profileCount": 172
+}

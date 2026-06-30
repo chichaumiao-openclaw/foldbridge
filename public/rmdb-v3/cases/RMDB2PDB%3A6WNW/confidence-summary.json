@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:6WNW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 105,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:6WNW:confidence:A:top_x_279::data-general/data-general/P50LIB_DMS_0000.rdat#381",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 52,
+    "B": 53
+  },
+  "generatedAt": "2026-06-28T21:12:52.193227Z",
+  "materializedEvidenceCount": 105,
+  "pdbId": "6WNW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 105
+  },
+  "totalEvidenceCount": 105
+}

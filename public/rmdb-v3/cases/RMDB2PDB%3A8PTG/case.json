@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8PTG",
+  "biologicalMoleculeName": "8PTG",
+  "caseId": "8PTG",
+  "caseKey": "RMDB2PDB:8PTG",
+  "chains": [
+    "R"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8PTG",
+  "profileCount": 3
+}

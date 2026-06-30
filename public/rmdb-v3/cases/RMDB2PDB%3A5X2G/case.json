@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5X2G",
+  "biologicalMoleculeName": "5X2G",
+  "caseId": "5X2G",
+  "caseKey": "RMDB2PDB:5X2G",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "5X2G",
+  "profileCount": 4
+}

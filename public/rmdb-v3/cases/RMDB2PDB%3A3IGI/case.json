@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3IGI",
+  "biologicalMoleculeName": "3IGI",
+  "caseId": "3IGI",
+  "caseKey": "RMDB2PDB:3IGI",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "3IGI",
+  "profileCount": 16
+}

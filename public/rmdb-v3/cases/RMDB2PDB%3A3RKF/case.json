@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3RKF",
+  "biologicalMoleculeName": "3RKF",
+  "caseId": "3RKF",
+  "caseKey": "RMDB2PDB:3RKF",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "3RKF",
+  "profileCount": 2
+}

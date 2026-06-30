@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:1IVS",
+  "biologicalMoleculeName": "1IVS",
+  "caseId": "1IVS",
+  "caseKey": "RMDB2PDB:1IVS",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "1IVS",
+  "profileCount": 2
+}

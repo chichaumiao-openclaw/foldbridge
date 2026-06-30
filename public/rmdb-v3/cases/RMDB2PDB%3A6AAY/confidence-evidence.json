@@ -1,0 +1,34 @@
+{
+  "atlasCaseKey": "RMDB2PDB:6AAY",
+  "generatedAt": "2026-06-28T21:05:42.173120Z",
+  "pdbId": "6AAY",
+  "rows": [
+    {
+      "aucDirectional": null,
+      "aucEffectSizeZ": null,
+      "aucEmpiricalPValue": null,
+      "bridgeStatus": "bridge_missing",
+      "chain": "B",
+      "conflictFraction": null,
+      "directionalMetricKind": "auc_unpaired_vs_paired",
+      "directionalMetricLabel": "AUC unpaired vs paired",
+      "evidenceId": "annojoin:RMDB2PDB:6AAY:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#4234",
+      "family": "A",
+      "lssTierCalibrated": "LSS_UNDERPOWERED",
+      "lssTierUncalibrated": "LSS_UNDERPOWERED",
+      "nEvaluable": 0,
+      "pairId": "",
+      "pairSegmentId": "",
+      "partnerInsideFraction": null,
+      "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#4234",
+      "recallPath": "",
+      "sasaReferenceStatus": "",
+      "selectedByDefault": true,
+      "signalDirection": "unpaired_positive",
+      "technology": "DMS",
+      "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#4234"
+    }
+  ],
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized"
+}

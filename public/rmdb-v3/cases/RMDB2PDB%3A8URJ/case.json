@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8URJ",
+  "biologicalMoleculeName": "8URJ",
+  "caseId": "8URJ",
+  "caseKey": "RMDB2PDB:8URJ",
+  "chains": [
+    "G"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8URJ",
+  "profileCount": 35
+}

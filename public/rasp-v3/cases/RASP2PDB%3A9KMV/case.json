@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9KMV",
+  "biologicalMoleculeName": "9KMV",
+  "caseId": "9KMV",
+  "caseKey": "RASP2PDB:9KMV",
+  "chains": [
+    "2"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "9KMV",
+  "profileCount": 92
+}

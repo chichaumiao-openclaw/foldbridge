@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8TJX",
+  "biologicalMoleculeName": "8TJX",
+  "caseId": "8TJX",
+  "caseKey": "RMDB2PDB:8TJX",
+  "chains": [
+    "N"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8TJX",
+  "profileCount": 17
+}

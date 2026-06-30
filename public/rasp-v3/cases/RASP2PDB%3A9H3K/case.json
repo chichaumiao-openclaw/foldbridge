@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9H3K",
+  "biologicalMoleculeName": "9H3K",
+  "caseId": "9H3K",
+  "caseKey": "RASP2PDB:9H3K",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "9H3K",
+  "profileCount": 27
+}

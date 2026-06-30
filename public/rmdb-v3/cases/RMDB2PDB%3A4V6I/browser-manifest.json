@@ -1,0 +1,24 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "DC": {
+      "case2dPath": "chains/DC/case-2d-structure.json.gz",
+      "chainId": "DC",
+      "chainRoot": "chains/DC",
+      "linkedViewBundlePath": "chains/DC/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/DC/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/DC/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "DC",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:4V6I:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#7760": "DC",
+    "annojoin:RMDB2PDB:4V6I:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#7760": "DC"
+  }
+}

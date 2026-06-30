@@ -1,0 +1,18 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9QLQ",
+  "biologicalMoleculeName": "9QLQ",
+  "caseId": "9QLQ",
+  "caseKey": "RASP2PDB:9QLQ",
+  "chains": [
+    "CM",
+    "CP",
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "9QLQ",
+  "profileCount": 270
+}

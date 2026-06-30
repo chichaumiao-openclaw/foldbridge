@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6NEQ",
+  "biologicalMoleculeName": "6NEQ",
+  "caseId": "6NEQ",
+  "caseKey": "RMDB2PDB:6NEQ",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "6NEQ",
+  "profileCount": 26
+}

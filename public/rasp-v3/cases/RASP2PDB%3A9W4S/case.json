@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9W4S",
+  "biologicalMoleculeName": "9W4S",
+  "caseId": "9W4S",
+  "caseKey": "RASP2PDB:9W4S",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "9W4S",
+  "profileCount": 7
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2RKJ",
+  "biologicalMoleculeName": "2RKJ",
+  "caseId": "2RKJ",
+  "caseKey": "RMDB2PDB:2RKJ",
+  "chains": [
+    "O"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "2RKJ",
+  "profileCount": 24
+}

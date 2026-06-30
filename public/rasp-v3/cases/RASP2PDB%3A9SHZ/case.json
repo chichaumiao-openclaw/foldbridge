@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9SHZ",
+  "biologicalMoleculeName": "9SHZ",
+  "caseId": "9SHZ",
+  "caseKey": "RASP2PDB:9SHZ",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "9SHZ",
+  "profileCount": 47
+}

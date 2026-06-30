@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8IBZ",
+  "biologicalMoleculeName": "8IBZ",
+  "caseId": "8IBZ",
+  "caseKey": "RMDB2PDB:8IBZ",
+  "chains": [
+    "E"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8IBZ",
+  "profileCount": 6
+}

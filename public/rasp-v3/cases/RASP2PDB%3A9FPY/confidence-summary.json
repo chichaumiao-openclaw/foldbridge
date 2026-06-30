@@ -1,0 +1,27 @@
+{
+  "atlasCaseKey": "RASP2PDB:9FPY",
+  "availableFamilies": [
+    "A",
+    "B",
+    "C"
+  ],
+  "bridgeMissingCount": 11,
+  "defaultEvidenceId": "annojoin:RASP2PDB:9FPY:confidence:B:rasp_bw_0c774a52a757",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1,
+    "B": 6,
+    "C": 4
+  },
+  "generatedAt": "2026-06-29T15:58:57.427095Z",
+  "materializedEvidenceCount": 11,
+  "pdbId": "9FPY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 3,
+    "LSS_NOT_SUPPORTED": 6,
+    "LSS_UNDERPOWERED": 2
+  },
+  "totalEvidenceCount": 11
+}

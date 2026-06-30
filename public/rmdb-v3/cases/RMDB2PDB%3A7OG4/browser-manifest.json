@@ -1,0 +1,32 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "AA": {
+      "case2dPath": "chains/AA/case-2d-structure.json.gz",
+      "chainId": "AA",
+      "chainRoot": "chains/AA",
+      "linkedViewBundlePath": "chains/AA/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/AA/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/AA/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "AA",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:7OG4:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#17001": "AA",
+    "annojoin:RMDB2PDB:7OG4:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#17002": "AA",
+    "annojoin:RMDB2PDB:7OG4:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#17003": "AA",
+    "annojoin:RMDB2PDB:7OG4:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#17004": "AA",
+    "annojoin:RMDB2PDB:7OG4:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#17005": "AA",
+    "annojoin:RMDB2PDB:7OG4:confidence:B:top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#17001": "AA",
+    "annojoin:RMDB2PDB:7OG4:confidence:B:top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#17002": "AA",
+    "annojoin:RMDB2PDB:7OG4:confidence:B:top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#17003": "AA",
+    "annojoin:RMDB2PDB:7OG4:confidence:B:top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#17004": "AA",
+    "annojoin:RMDB2PDB:7OG4:confidence:B:top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#17005": "AA"
+  }
+}

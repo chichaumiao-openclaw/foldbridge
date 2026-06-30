@@ -22,6 +22,10 @@ import {
 } from './lib/annojoin-atlas-compression.mjs';
 import { resolveVisualPreviewCaseIds } from './lib/annojoin-atlas-build-options.mjs';
 import { buildAnnojointStructureUrl, normalizeStructureRoutePath } from './lib/annojoin-atlas-structure.mjs';
+import {
+  parsePublishedCaseKeyAllowlist,
+  filterCasesToPublishedAllowlist
+} from './lib/annojoin-atlas-published-allowlist.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -43,6 +47,12 @@ const PDB_CHAIN_IDENTITY_PATH = process.env.FOLDBRIDGE_PDB_CHAIN_IDENTITY
   || '/Volumes/tianyi/tmp/PDB/04_pdb_metadata/pdb_rna_entity_chain_declared_identity.tsv';
 const PDB_GOVERNED_MAP_PATH = process.env.FOLDBRIDGE_PDB_GOVERNED_MAP
   || '/Volumes/tianyi/tmp/PDB/biological_layer/parent_child_pdb_map.tsv';
+// 已发布详情页 allowlist（atlas_case_key 一列）。总表只保留有发布页资产的 case，
+// 避免点进 404。缺省指向 checked-in TSV（由 build-annojoin-atlas-published-allowlist.mjs 生成）。
+// 设为空串可关闭过滤（开发构建保留全量表）。
+const PUBLISHED_ALLOWLIST_PATH = process.env.FOLDBRIDGE_ANNOJOIN_PUBLISHED_ALLOWLIST === undefined
+  ? path.resolve(__dirname, 'data/annojoin-atlas-published-case-keys.tsv')
+  : process.env.FOLDBRIDGE_ANNOJOIN_PUBLISHED_ALLOWLIST;
 const VISUAL_PREVIEW_ROWS_PER_CASE = Number(process.env.FOLDBRIDGE_ANNOJOIN_VISUAL_ROWS_PER_CASE || 48);
 const DETAIL_ASSET_WRITE_CONCURRENCY = Math.max(
   1,
@@ -493,6 +503,20 @@ async function main() {
   const raspNotActiveRemoved = tables.cases.filter(isRaspNotActive).length;
   tables.cases = tables.cases.filter((row) => !isRaspNotActive(row));
   manifest.rasp_not_active_rows_removed = raspNotActiveRemoved;
+  manifest.case_count = tables.cases.length;
+
+  // 已发布详情页 allowlist 过滤：丢掉没有发布页资产的 case 行，避免总表点进 404。
+  // allowlist 缺省/为空时（未配置或开发构建）保留全量表。
+  let publishedAllowlist = new Set();
+  if (PUBLISHED_ALLOWLIST_PATH && existsSync(PUBLISHED_ALLOWLIST_PATH)) {
+    publishedAllowlist = parsePublishedCaseKeyAllowlist(await readFile(PUBLISHED_ALLOWLIST_PATH, 'utf8'));
+  }
+  const allowlistResult = filterCasesToPublishedAllowlist(tables.cases, publishedAllowlist);
+  tables.cases = allowlistResult.kept;
+  manifest.published_allowlist_path = PUBLISHED_ALLOWLIST_PATH || '';
+  manifest.published_allowlist_applied = allowlistResult.applied;
+  manifest.published_allowlist_size = publishedAllowlist.size;
+  manifest.published_allowlist_rows_removed = allowlistResult.removedCount;
   manifest.case_count = tables.cases.length;
 
   const index = buildAtlasIndexAsset({

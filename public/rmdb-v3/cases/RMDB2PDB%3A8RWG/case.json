@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8RWG",
+  "biologicalMoleculeName": "8RWG",
+  "caseId": "8RWG",
+  "caseKey": "RMDB2PDB:8RWG",
+  "chains": [
+    "A",
+    "B",
+    "C"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "8RWG",
+  "profileCount": 150
+}

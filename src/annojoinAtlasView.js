@@ -39,11 +39,24 @@ function detailPageHref(detail = {}) {
   return atlasHref('annojoin-case', caseId && atlasCaseKey ? { caseId, caseKey: atlasCaseKey } : { caseId });
 }
 
-function panelHref(routeName = 'annojoin-atlas', row = {}, field = '') {
+// 字段点击链接必须保留当前表格的过滤/分页状态，否则点击会把已过滤的表重置为全量。
+function buildPreservedParams(filters = {}, page = 1) {
+  const preserved = {};
+  if (filters.query) preserved.q = filters.query;
+  if (Number(page) > 1) preserved.page = String(page);
+  if (filters.rnaFamily) preserved.rnaFamily = filters.rnaFamily;
+  if (filters.probeType) preserved.probeType = filters.probeType;
+  if (filters.pdbId) preserved.pdbId = filters.pdbId;
+  if (filters.motif) preserved.motif = filters.motif;
+  if (filters.structureClass) preserved.structureClass = filters.structureClass;
+  return preserved;
+}
+
+function panelHref(routeName = 'annojoin-atlas', row = {}, field = '', preserved = {}) {
   const caseId = rowCaseId(row);
   const caseKey = rowCaseKey(row);
-  if (row.assetFamily || caseKey.includes(':')) return atlasHref(routeName, { caseKey, field });
-  return atlasHref(routeName, { caseId, field });
+  if (row.assetFamily || caseKey.includes(':')) return atlasHref(routeName, { ...preserved, caseKey, field });
+  return atlasHref(routeName, { ...preserved, caseId, field });
 }
 
 function currentFilterExportHref(filters = {}, format = 'csv') {
@@ -71,8 +84,8 @@ function profileValue(row = {}) {
   return `${count} ${count === 1 ? 'profile' : 'profiles'}`;
 }
 
-function fieldLink(row = {}, routeName = 'annojoin-atlas', field = '', label = '') {
-  return `<a class="annojoin-field-link" href="${escapeHtml(panelHref(routeName, row, field))}">${label}</a>`;
+function fieldLink(row = {}, routeName = 'annojoin-atlas', field = '', label = '', preserved = {}) {
+  return `<a class="annojoin-field-link" href="${escapeHtml(panelHref(routeName, row, field, preserved))}">${label}</a>`;
 }
 
 // confidence 复合标签分段呈现且不截断；完整原文保留在 title，便于追溯与对比。
@@ -105,14 +118,14 @@ function moleculeCellLabel(row = {}, groupLabels = []) {
   return sourceValue(name, row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource);
 }
 
-function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabels = []) {
+function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabels = [], preserved = {}) {
   const caseId = rowCaseId(row);
   const values = {
-    pdbId: fieldLink(row, routeName, 'pdbId', escapeHtml(row.pdbId || caseId)),
-    moleculeName: fieldLink(row, routeName, 'moleculeName', moleculeCellLabel(row, groupLabels)),
-    confidenceDisplayLabel: fieldLink(row, routeName, 'confidenceDisplayLabel', renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution)),
-    profileCount: fieldLink(row, routeName, 'profileCount', `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`),
-    chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated'))
+    pdbId: fieldLink(row, routeName, 'pdbId', escapeHtml(row.pdbId || caseId), preserved),
+    moleculeName: fieldLink(row, routeName, 'moleculeName', moleculeCellLabel(row, groupLabels), preserved),
+    confidenceDisplayLabel: fieldLink(row, routeName, 'confidenceDisplayLabel', renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution), preserved),
+    profileCount: fieldLink(row, routeName, 'profileCount', `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`, preserved),
+    chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated'), preserved)
   };
   return values[columnId] ?? escapeHtml(row[columnId] || '');
 }
@@ -135,17 +148,17 @@ function renderPagination(pagination) {
   </section>`;
 }
 
-function renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass = '', groupLabels = [] }) {
+function renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass = '', groupLabels = [], preserved = {} }) {
   const caseKey = rowCaseKey(row);
   return `<tr class="annojoin-case-row${rowClass ? ` ${rowClass}` : ''}" data-annojoin-case-row="${escapeHtml(caseKey)}">
       <td><input type="checkbox" class="annojoin-case-select" data-annojoin-case-id="${escapeHtml(caseKey)}" ${selectedCaseIds.has(caseKey) ? 'checked' : ''} /></td>
-      ${visibleColumns.map((column) => `<td>${columnValue(row, column.id, routeName, groupLabels)}</td>`).join('')}
+      ${visibleColumns.map((column) => `<td>${columnValue(row, column.id, routeName, groupLabels, preserved)}</td>`).join('')}
     </tr>`;
 }
 
-function renderFlatRows({ rows, visibleColumns, selectedCaseIds, routeName }) {
+function renderFlatRows({ rows, visibleColumns, selectedCaseIds, routeName, preserved = {} }) {
   if (!rows.length) return '';
-  return rows.map((row) => renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName })).join('');
+  return rows.map((row) => renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, preserved })).join('');
 }
 
 function renderTableBody({
@@ -155,13 +168,14 @@ function renderTableBody({
   expandedGroupIds,
   uncappedGroupIds,
   routeName,
+  preserved = {},
   groupRowLimit = DEFAULT_GROUP_ROW_LIMIT
 }) {
   if (!groups.length) {
     return `<tr><td colspan="${visibleColumns.length + 1}">No ANNOJOIN cases match the current filters.</td></tr>`;
   }
   const rows = [];
-  const renderRow = (row, rowClass = '', groupLabels = []) => renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass, groupLabels });
+  const renderRow = (row, rowClass = '', groupLabels = []) => renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass, groupLabels, preserved });
   const renderExpandedRows = (caseRows = [], groupToggleId, groupLabels = []) => {
     const isUncapped = uncappedGroupIds.has(groupToggleId);
     const visibleRows = isUncapped ? caseRows : caseRows.slice(0, groupRowLimit);
@@ -455,7 +469,8 @@ export function renderAnnojointAtlasPage({
   selectedCaseId = '',
   selectedCaseKey = '',
   selectedField = '',
-  statusMessage = null
+  statusMessage = null,
+  headerHtml = ''
 } = {}) {
   const atlasState = state || { cases: [], source: {}, totalCaseCount: 0, filters: {} };
   const selected = selectedCaseIds instanceof Set ? selectedCaseIds : new Set(selectedCaseIds || []);
@@ -465,6 +480,7 @@ export function renderAnnojointAtlasPage({
   const sortedRows = sortAnnojointCases(atlasState.cases);
   const query = atlasState.filters?.query || '';
   const searchActive = isAnnojointSearchActive(query);
+  const preserved = buildPreservedParams(atlasState.filters || {}, page);
   const baseRows = searchActive ? searchAnnojointRows(sortedRows, query) : sortedRows;
   const pagination = paginateAnnojointRows(baseRows, { page, pageSize });
   const groups = searchActive ? [] : buildAnnojointTableGroups(pagination.rows);
@@ -488,10 +504,10 @@ export function renderAnnojointAtlasPage({
     : '';
 
   const tableBody = searchActive
-    ? (emptySearchRow || renderFlatRows({ rows: pagination.rows, visibleColumns, selectedCaseIds: selected, routeName }))
+    ? (emptySearchRow || renderFlatRows({ rows: pagination.rows, visibleColumns, selectedCaseIds: selected, routeName, preserved }))
     : (statusMessage && !atlasState.cases.length
       ? `<tr class="annojoin-status-row"><td colspan="${visibleColumns.length + 1}">${escapeHtml(statusMessage.text || '')}</td></tr>`
-      : renderTableBody({ groups, visibleColumns, selectedCaseIds: selected, expandedGroupIds: expanded, uncappedGroupIds: uncapped, routeName }));
+      : renderTableBody({ groups, visibleColumns, selectedCaseIds: selected, expandedGroupIds: expanded, uncappedGroupIds: uncapped, routeName, preserved }));
 
   const statusBanner = statusMessage
     ? `<section class="annojoin-table-status" role="status" data-status-tone="${escapeHtml(statusMessage.tone || 'info')}">
@@ -500,12 +516,14 @@ export function renderAnnojointAtlasPage({
     : '';
 
   const displayCount = atlasState.totalCaseCount || atlasState.cases.length;
+  const placementCount = atlasState.totalPlacementCount || 0;
   const sourceCount = atlasState.totalSourceCaseCount;
   const metaCountText = searchActive
     ? `Showing ${escapeHtml(baseRows.length)} of ${escapeHtml(displayCount)} entries matching "${escapeHtml(query)}"`
-    : `${escapeHtml(displayCount)} PDB entries${sourceCount && sourceCount !== displayCount ? ` (${escapeHtml(sourceCount)} source cases)` : ''}`;
+    : `${escapeHtml(displayCount)} PDBs${placementCount ? ` · ${escapeHtml(placementCount)} entries` : ''}${sourceCount && sourceCount !== displayCount ? ` (${escapeHtml(sourceCount)} source cases)` : ''}`;
 
   return `<main class="page-annojoin-atlas page-annojoin-master-table">
+    ${headerHtml}
     <section class="annojoin-table-heading">
       <p class="technology-kicker">ANNOJOIN</p>
       <h1>ANNOJOIN master table</h1>

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9GUU",
+  "biologicalMoleculeName": "9GUU",
+  "caseId": "9GUU",
+  "caseKey": "RASP2PDB:9GUU",
+  "chains": [
+    "A",
+    "W"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "9GUU",
+  "profileCount": 36
+}

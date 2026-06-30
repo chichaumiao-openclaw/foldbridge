@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7NSI",
+  "biologicalMoleculeName": "7NSI",
+  "caseId": "7NSI",
+  "caseKey": "RMDB2PDB:7NSI",
+  "chains": [
+    "AV"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "7NSI",
+  "profileCount": 3
+}

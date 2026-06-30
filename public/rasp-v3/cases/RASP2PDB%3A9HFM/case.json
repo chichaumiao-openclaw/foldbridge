@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9HFM",
+  "biologicalMoleculeName": "9HFM",
+  "caseId": "9HFM",
+  "caseKey": "RASP2PDB:9HFM",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "9HFM",
+  "profileCount": 75
+}

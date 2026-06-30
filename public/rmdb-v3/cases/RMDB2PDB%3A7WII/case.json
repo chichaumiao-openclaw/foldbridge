@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7WII",
+  "biologicalMoleculeName": "7WII",
+  "caseId": "7WII",
+  "caseKey": "RMDB2PDB:7WII",
+  "chains": [
+    "V"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "7WII",
+  "profileCount": 1
+}
