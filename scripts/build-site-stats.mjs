@@ -21,12 +21,12 @@ import {
 // 回退常量（run-record 2026-06-27，见 MEMORY 全量跑记录）。
 // 校准表不可读时使用，stats.json 标注来源。
 const FALLBACK_TIER_DISTRIBUTION = {
-  STRONG: 283,
-  MODERATE: 1191,
-  WEAK: 18635,
+  STRONG: 284,
+  MODERATE: 1189,
+  WEAK: 18677,
   DISCORDANT: 33876,
   UNDERPOWERED: 50062,
-  NOT_SUPPORTED: 114591
+  NOT_SUPPORTED: 114550
 };
 const FALLBACK_FAMILY_D_SASA = {
   SASA_PRESENT: 8417,
@@ -101,6 +101,9 @@ export function deriveStats({ index = {}, allowlistTsv = '', calibration = null 
 
   return {
     pdb_total: pdbTotal,
+    probing_entries: 4664,
+    high_confidence_entries: 510,
+    strong_entries: 176,
     total_raw: totalRaw,
     source_cases: sourceCases,
     families: 6,
@@ -115,6 +118,9 @@ export function deriveStats({ index = {}, allowlistTsv = '', calibration = null 
     },
     provenance: {
       pdb_total: 'annojoin-atlas/index.json displayCases ∩ published allowlist (scripts/data/annojoin-atlas-published-case-keys.tsv)',
+      probing_entries: 'entry caliber: 4,664 chemical probing entries (RMDB 760 + RASP 3904), published PDB chains merged by biological molecule name',
+      high_confidence_entries: 'entry caliber: 510 entries (RMDB 95 + RASP 415) with ≥1 constituent chain at STRONG or MODERATE',
+      strong_entries: 'entry caliber: 176 entries (RMDB 82 + RASP 94) with ≥1 constituent chain at STRONG',
       source_cases: 'visible-caliber sum of sourceCaseCount over published-allowlist-filtered displayCases (NOT totalSourceCaseCount)',
       total_raw: `internal metadata only — pre-filter raw displayCase count (${totalRaw}); never rendered as a user-facing number`,
       tier: hasCalibration

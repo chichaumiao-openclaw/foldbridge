@@ -37,9 +37,12 @@ test('renderStatsPage never leaks the raw 3401 to user-facing output', () => {
 
 test('stats schema has required fields', () => {
   const stats = deriveStats({ index, allowlistTsv: tsv });
-  for (const k of ['pdb_total', 'tier_distribution', 'families', 'technologies', 'provenance']) {
+  for (const k of ['pdb_total', 'probing_entries', 'high_confidence_entries', 'strong_entries', 'tier_distribution', 'families', 'technologies', 'provenance']) {
     assert.ok(k in stats, `missing ${k}`);
   }
+  assert.equal(stats.probing_entries, 4664);
+  assert.equal(stats.high_confidence_entries, 510);
+  assert.equal(stats.strong_entries, 176);
 });
 
 test('tier_distribution falls back to run-record constants when no calibration provided', () => {
