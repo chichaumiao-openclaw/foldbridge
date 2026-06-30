@@ -100,9 +100,9 @@ test('carousel renders one slide per article', () => {
 
 test('each slide links to its detail route', () => {
   const html = renderHomeProbingCarousel(SAMPLE_ARTICLES);
-  assert.match(html, /href="#detail\/dms"/);
-  assert.match(html, /href="#detail\/shape-map"/);
-  assert.match(html, /href="#detail\/pars"/);
+  assert.match(html, /href="#detail\?tech=dms"/);
+  assert.match(html, /href="#detail\?tech=shape-map"/);
+  assert.match(html, /href="#detail\?tech=pars"/);
 });
 
 test('each slide uses the per-slug asset path for its figure', () => {

@@ -162,7 +162,7 @@ export function renderHomeProbingCarousel(articles = []) {
       : `<div class="home-probing-slide-img home-probing-slide-noimg" aria-hidden="true"></div>`;
     // 注意属性顺序：data-carousel-slide 在 class 之前，以匹配 active-slide 测试正则
     // （/data-carousel-slide="0"[^>]*class="[^"]*active/，[^>]* 不跨越 '>'）。
-    return `<a data-carousel-slide="${i}" class="home-probing-slide${activeClass}" href="#detail/${a.slug}">
+    return `<a data-carousel-slide="${i}" class="home-probing-slide${activeClass}" href="#detail?tech=${encodeURIComponent(a.slug)}">
         ${img}
         <div class="home-probing-slide-copy">
           <span class="home-probing-slide-family">${a.family_title || ''}</span>
