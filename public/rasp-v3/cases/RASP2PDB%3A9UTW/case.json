@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9UTW",
+  "biologicalMoleculeName": "9UTW",
+  "caseId": "9UTW",
+  "caseKey": "RASP2PDB:9UTW",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "9UTW",
+  "profileCount": 29
+}

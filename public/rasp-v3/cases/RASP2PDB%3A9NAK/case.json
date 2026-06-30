@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9NAK",
+  "biologicalMoleculeName": "9NAK",
+  "caseId": "9NAK",
+  "caseKey": "RASP2PDB:9NAK",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "9NAK",
+  "profileCount": 7
+}
