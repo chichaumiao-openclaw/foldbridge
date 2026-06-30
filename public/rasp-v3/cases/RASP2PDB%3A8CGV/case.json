@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8CGV",
+  "biologicalMoleculeName": "8CGV",
+  "caseId": "8CGV",
+  "caseKey": "RASP2PDB:8CGV",
+  "chains": [
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "D MODERATE",
+  "pdbId": "8CGV",
+  "profileCount": 32
+}

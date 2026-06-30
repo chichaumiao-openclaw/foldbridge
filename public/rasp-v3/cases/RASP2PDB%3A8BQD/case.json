@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8BQD",
+  "biologicalMoleculeName": "8BQD",
+  "caseId": "8BQD",
+  "caseKey": "RASP2PDB:8BQD",
+  "chains": [
+    "2",
+    "BQ",
+    "BR",
+    "BS"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "8BQD",
+  "profileCount": 161
+}

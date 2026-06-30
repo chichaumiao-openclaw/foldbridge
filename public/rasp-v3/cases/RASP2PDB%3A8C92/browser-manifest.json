@@ -1,0 +1,53 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "A": {
+      "case2dPath": "chains/A/case-2d-structure.json.gz",
+      "chainId": "A",
+      "chainRoot": "chains/A",
+      "linkedViewBundlePath": "chains/A/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_2343aafbe79c": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_2fa595b11d5e": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_48eb97e2d852": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_5859f1cec40f": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_7c4725121ef4": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_ababe03077b9": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_ae4c2c08c4fa": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_b2e348d2e64e": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_c99a0a52d2ff": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_cd2a8623e064": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_e773afe95fb5": "A",
+    "annojoin:RASP2PDB:8C92:confidence:A:rasp_bw_e8fe53f69987": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_19f61c8831e6": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_2dfc610b9222": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_41d5fc3e132e": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_44ce22938077": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_54672b09ffb6": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_67eae2dec69b": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_7ef9fcd16b87": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_8350f4cfca6c": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_93c9e587b21e": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_b2c3510421f9": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_c0576cdfc964": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_eeb83ff7bd0e": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_faf0c4af5eba": "A",
+    "annojoin:RASP2PDB:8C92:confidence:B:rasp_bw_fd8e9996c052": "A",
+    "annojoin:RASP2PDB:8C92:confidence:D:rasp_bw_10c682ff1c66": "A",
+    "annojoin:RASP2PDB:8C92:confidence:D:rasp_bw_13bf8094c5c2": "A",
+    "annojoin:RASP2PDB:8C92:confidence:D:rasp_bw_7c9a09370ba1": "A",
+    "annojoin:RASP2PDB:8C92:confidence:D:rasp_bw_b0948a261e15": "A",
+    "annojoin:RASP2PDB:8C92:confidence:D:rasp_bw_c5489e5ab90f": "A"
+  }
+}

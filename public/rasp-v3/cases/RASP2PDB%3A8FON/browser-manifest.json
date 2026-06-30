@@ -1,0 +1,35 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "QV": {
+      "case2dPath": "chains/QV/case-2d-structure.json.gz",
+      "chainId": "QV",
+      "chainRoot": "chains/QV",
+      "linkedViewBundlePath": "chains/QV/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/QV/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/QV/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "QV",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:8FON:confidence:A:rasp_bw_5859f1cec40f": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:A:rasp_bw_5b735e024e00": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:A:rasp_bw_84b4b445428c": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:A:rasp_bw_ae4c2c08c4fa": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:A:rasp_bw_e3ae9c475b0d": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:A:rasp_bw_e773afe95fb5": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:B:rasp_bw_56cad68cf646": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:B:rasp_bw_698c1ec66e71": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:B:rasp_bw_df1758a40dd4": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:D:rasp_bw_10c682ff1c66": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:D:rasp_bw_13bf8094c5c2": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:D:rasp_bw_7c9a09370ba1": "QV",
+    "annojoin:RASP2PDB:8FON:confidence:D:rasp_bw_c5489e5ab90f": "QV"
+  }
+}

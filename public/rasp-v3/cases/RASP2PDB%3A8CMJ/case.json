@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8CMJ",
+  "biologicalMoleculeName": "8CMJ",
+  "caseId": "8CMJ",
+  "caseKey": "RASP2PDB:8CMJ",
+  "chains": [
+    "AA",
+    "BB",
+    "CC",
+    "c"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "8CMJ",
+  "profileCount": 177
+}

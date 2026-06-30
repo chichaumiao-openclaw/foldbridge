@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8FOM",
+  "biologicalMoleculeName": "8FOM",
+  "caseId": "8FOM",
+  "caseKey": "RASP2PDB:8FOM",
+  "chains": [
+    "QV"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "8FOM",
+  "profileCount": 13
+}
