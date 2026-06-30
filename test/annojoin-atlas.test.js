@@ -5,7 +5,7 @@ import {
   buildAtlasSearchState,
   createAtlasCaseDetail
 } from '../src/annojoinAtlasData.js';
-import { renderAnnojointAtlasPage } from '../src/annojoinAtlasView.js';
+import { renderAnnojointAtlasPage, renderLssEvidenceContent, hydrateLssEvidence } from '../src/annojoinAtlasView.js';
 import { buildAtlasIndexAsset, slimAtlasIndexForWrite } from '../scripts/lib/annojoin-atlas-corpus.mjs';
 import {
   sortAnnojointCases,
@@ -1032,4 +1032,107 @@ test('real pipeline groups by chain placement; search disables grouping', () => 
   assert.ok(tRNApdbs.includes('4V99'));
   const filtered = searchAnnojointRows(sorted, '4V99');
   assert.equal(filtered.length, 1);
+});
+
+const MOCK_EVIDENCE = {
+  schemaVersion: 'annojoin-confidence.v1',
+  atlasCaseKey: 'RASP2PDB:5EEW',
+  status: 'materialized',
+  rows: [
+    {
+      evidenceId: 'annojoin:RASP2PDB:5EEW:confidence:rasp_bw_internal',
+      family: 'B',
+      technology: 'tNet-MaPseq',
+      chain: 'W',
+      profileKey: 'rasp_bw_internal',
+      membershipProfileId: 'rasp_bw_internal',
+      pairId: 'PAIR-INTERNAL',
+      pairSegmentId: 'SEG-INTERNAL',
+      trackRouteId: 'annojoin:internal:track',
+      bridgeStatus: 'bridge_missing',
+      bridgeSelectionReason: 'unique_membership_profile_match',
+      lssTierCalibrated: 'LSS_STRONG',
+      lssTierUncalibrated: 'LSS_INTERNAL_UNCALIBRATED',
+      aucDirectional: 0.78,
+      aucEmpiricalPValue: 0.001,
+      aucEffectSizeZ: 7.56,
+      directionalMetricLabel: 'Contact pair AUC',
+      nEvaluable: 75,
+      calibrationNote: 'internal_calibration_note',
+      rankedSetEligible: true,
+      selectedByDefault: true
+    }
+  ]
+};
+
+test('renderLssEvidenceContent renders only external-friendly fields', () => {
+  const html = renderLssEvidenceContent(MOCK_EVIDENCE);
+  // external-friendly values present
+  assert.match(html, /tNet-MaPseq/);
+  assert.match(html, /LSS_STRONG/);
+  assert.match(html, /Contact pair AUC/);
+  assert.match(html, /0\.78/);
+  assert.match(html, /0\.001/);
+  assert.match(html, /7\.56/);
+  assert.match(html, /Evaluable units/);
+  assert.match(html, /75/);
+  // internal-facing fields must never appear
+  assert.doesNotMatch(html, /rasp_bw_internal/);
+  assert.doesNotMatch(html, /PAIR-INTERNAL/);
+  assert.doesNotMatch(html, /SEG-INTERNAL/);
+  assert.doesNotMatch(html, /bridge_missing/);
+  assert.doesNotMatch(html, /unique_membership_profile_match/);
+  assert.doesNotMatch(html, /internal_calibration_note/);
+  assert.doesNotMatch(html, /LSS_INTERNAL_UNCALIBRATED/);
+  assert.doesNotMatch(html, /annojoin:internal:track/);
+  assert.doesNotMatch(html, /evidenceId/);
+});
+
+test('renderLssEvidenceContent degrades gracefully for empty or unmaterialized evidence', () => {
+  assert.match(renderLssEvidenceContent({ status: 'materialized', rows: [] }), /No per-profile LSS evidence/);
+  assert.match(renderLssEvidenceContent({ status: 'not_materialized', rows: [] }), /No per-profile LSS evidence/);
+  assert.match(renderLssEvidenceContent(null), /No per-profile LSS evidence/);
+});
+
+test('confidence panel emits an LSS evidence slot only when hasLssAnnotation is true', () => {
+  const makeState = (hasLss) => buildAtlasSearchState({
+    cases: [{ atlasCaseKey: 'RASP2PDB:5EEW', caseId: '5EEW', pdbId: '5EEW', assetFamily: 'RASP2PDB', confidenceDisplayLabel: 'B', profileCount: 1, chains: ['W'], hasLssAnnotation: hasLss }],
+    displayCases: [{ atlasCaseKey: 'RASP2PDB:5EEW', caseId: '5EEW', pdbId: '5EEW', assetFamily: 'RASP2PDB', confidenceDisplayLabel: 'B', profileCount: 1, chains: ['W'], hasLssAnnotation: hasLss, sourceCaseCount: 1, sourceCaseKeys: ['RASP2PDB:5EEW'], sourceFamilies: ['RASP2PDB'] }],
+    totalSourceCaseCount: 1, totalCaseCount: 1, facets: []
+  }, {});
+  const withLss = renderAnnojointAtlasPage({ state: makeState(true), routeName: 'sequence', selectedCaseKey: 'RASP2PDB:5EEW', selectedField: 'confidenceDisplayLabel' });
+  assert.match(withLss, /data-lss-evidence-slot="RASP2PDB:5EEW"/);
+  const withoutLss = renderAnnojointAtlasPage({ state: makeState(false), routeName: 'sequence', selectedCaseKey: 'RASP2PDB:5EEW', selectedField: 'confidenceDisplayLabel' });
+  assert.doesNotMatch(withoutLss, /data-lss-evidence-slot/);
+});
+
+function makeFakeRoot(caseKey) {
+  const slot = { _key: caseKey, innerHTML: '', getAttribute: () => caseKey };
+  return {
+    innerHTML: '',
+    querySelectorAll: (sel) => (sel === '[data-lss-evidence-slot]' ? [slot] : []),
+    _slot: slot
+  };
+}
+
+test('hydrateLssEvidence fills the slot with filtered evidence', async () => {
+  const root = makeFakeRoot('RASP2PDB:5EEW');
+  const store = { loadAssetPath: async () => MOCK_EVIDENCE };
+  await hydrateLssEvidence({ store, root, caseKey: 'RASP2PDB:5EEW', getCurrentCaseKey: () => 'RASP2PDB:5EEW' });
+  assert.match(root._slot.innerHTML, /tNet-MaPseq/);
+  assert.doesNotMatch(root._slot.innerHTML, /rasp_bw_internal/);
+});
+
+test('hydrateLssEvidence falls back without throwing when fetch fails', async () => {
+  const root = makeFakeRoot('RASP2PDB:5EEW');
+  const store = { loadAssetPath: async () => { throw new Error('404'); } };
+  await hydrateLssEvidence({ store, root, caseKey: 'RASP2PDB:5EEW', getCurrentCaseKey: () => 'RASP2PDB:5EEW' });
+  assert.match(root._slot.innerHTML, /No per-profile LSS evidence/);
+});
+
+test('hydrateLssEvidence discards stale responses when the sidebar moved on', async () => {
+  const root = makeFakeRoot('RASP2PDB:5EEW');
+  const store = { loadAssetPath: async () => MOCK_EVIDENCE };
+  await hydrateLssEvidence({ store, root, caseKey: 'RASP2PDB:5EEW', getCurrentCaseKey: () => 'RASP2PDB:OTHER' });
+  assert.equal(root._slot.innerHTML, '');
 });
