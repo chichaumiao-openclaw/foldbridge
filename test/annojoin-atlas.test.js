@@ -396,7 +396,7 @@ test('atlas page renders merged PDB rows with source detail links in the side pa
 
   assert.match(html, /Rows 1-1 of 1/);
   assert.equal((html.match(/data-annojoin-case-row="PDB:10FZ"/g) || []).length, 1);
-  assert.match(html, /1 PDB entries \(2 source cases\)/);
+  assert.match(html, /1 PDBs \(2 source cases\)/);
   assert.match(html, /2 source cases/);
   assert.match(html, /Source cases/);
   assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10FZ\/index\.html"/);
