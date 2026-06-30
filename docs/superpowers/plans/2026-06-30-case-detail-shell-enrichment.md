@@ -245,7 +245,7 @@ if (typeof module !== "undefined" && module.exports) {
 - [ ] **步骤 4：运行测试验证通过**
 
 运行：`node --test test/case-shell-enrichment.test.cjs`
-预期：PASS（9 个测试全绿）。
+预期：PASS（8 个测试全绿）。
 
 - [ ] **步骤 5：Commit**
 
