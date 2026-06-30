@@ -866,8 +866,15 @@ function filterMmcifAtomSiteLoop(cifText, { atomSiteFilter, range }) {
       authAsym: atomSiteColumnIndex(headers, "auth_asym_id"),
       labelSeq: atomSiteColumnIndex(headers, "label_seq_id"),
       authSeq: atomSiteColumnIndex(headers, "auth_seq_id"),
+      model: atomSiteColumnIndex(headers, "pdbx_PDB_model_num"),
     };
 
+    // Multi-model ensembles (e.g. NMR PDBs) repeat every residue once per model.
+    // Keep only the first model so per-residue label_seq_id addressing stays unique;
+    // otherwise the cropped CIF carries N overlapping copies per residue and the
+    // Mol* per-residue reactivity coloring cannot resolve a single target. This is a
+    // no-op for single-model structures (every row already shares one model number).
+    let selectedModel = null;
     let rowIdx = headerEnd;
     while (rowIdx < lines.length) {
       const trimmed = lines[rowIdx].trim();
@@ -887,8 +894,16 @@ function filterMmcifAtomSiteLoop(cifText, { atomSiteFilter, range }) {
 
       const tokens = splitCifTokens(lines[rowIdx]);
       if (tokens.length >= headers.length && atomSiteRowMatchesAlignmentCrop(tokens, columns, atomSiteFilter, range)) {
-        out.push(lines[rowIdx]);
-        keptAtomRows += 1;
+        const modelNum = columns.model >= 0 ? cifToken(tokens, columns.model) : "";
+        if (columns.model >= 0 && selectedModel === null) {
+          selectedModel = modelNum;
+        }
+        if (columns.model < 0 || modelNum === selectedModel) {
+          out.push(lines[rowIdx]);
+          keptAtomRows += 1;
+        } else {
+          droppedAtomRows += 1;
+        }
       } else {
         droppedAtomRows += 1;
       }
