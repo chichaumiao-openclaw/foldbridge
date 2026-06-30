@@ -1,0 +1,29 @@
+{
+  "atlasCaseKey": "RASP2PDB:9GHE",
+  "availableFamilies": [
+    "A",
+    "B",
+    "D"
+  ],
+  "bridgeMissingCount": 81,
+  "defaultEvidenceId": "annojoin:RASP2PDB:9GHE:confidence:D:rasp_bw_b0948a261e15",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 39,
+    "B": 28,
+    "D": 14
+  },
+  "generatedAt": "2026-06-29T15:58:57.427095Z",
+  "materializedEvidenceCount": 81,
+  "pdbId": "9GHE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 12,
+    "LSS_MODERATE": 1,
+    "LSS_NOT_SUPPORTED": 49,
+    "LSS_UNDERPOWERED": 16,
+    "LSS_WEAK": 3
+  },
+  "totalEvidenceCount": 81
+}

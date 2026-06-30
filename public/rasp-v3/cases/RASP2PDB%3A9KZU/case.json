@@ -1,0 +1,18 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9KZU",
+  "biologicalMoleculeName": "9KZU",
+  "caseId": "9KZU",
+  "caseKey": "RASP2PDB:9KZU",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "S2",
+    "zy",
+    "zz"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "9KZU",
+  "profileCount": 256
+}

@@ -1,0 +1,32 @@
+{
+  "atlasCaseKey": "RASP2PDB:9ESI",
+  "availableFamilies": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "bridgeMissingCount": 255,
+  "defaultEvidenceId": "annojoin:RASP2PDB:9ESI:confidence:D:rasp_bw_c20063bcaef2",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 72,
+    "B": 156,
+    "C": 21,
+    "D": 6
+  },
+  "generatedAt": "2026-06-29T17:02:02.077004Z",
+  "materializedEvidenceCount": 255,
+  "pdbId": "9ESI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 48,
+    "LSS_MODERATE": 1,
+    "LSS_NOT_SUPPORTED": 54,
+    "LSS_STRONG": 1,
+    "LSS_UNDERPOWERED": 139,
+    "LSS_WEAK": 12
+  },
+  "totalEvidenceCount": 255
+}

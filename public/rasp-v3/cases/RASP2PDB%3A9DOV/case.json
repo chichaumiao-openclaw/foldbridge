@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9DOV",
+  "biologicalMoleculeName": "9DOV",
+  "caseId": "9DOV",
+  "caseKey": "RASP2PDB:9DOV",
+  "chains": [
+    "A1",
+    "A3",
+    "A4",
+    "B5"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "9DOV",
+  "profileCount": 161
+}
