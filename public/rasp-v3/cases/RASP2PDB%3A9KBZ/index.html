@@ -18,23 +18,14 @@
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="layout">
-      <section class="viewer">
-        <div class="panel">
-          <h2>Chain</h2>
-          <div class="mini">current chain: <span id="chainStatus">D</span></div>
-        </div>
-        <iframe
-          id="chainFrame"
-          class="viewer-frame"
-          src="chains/D/index.html?profileId=rasp_bw_b07afd4bd8c5"
-          loading="lazy"
-          title="9KBZ chain page"
-        ></iframe>
-      </section>
+    <section class="panel">
+      <h2>Chains</h2>
+      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
+      <div class="chain-list" data-default-chain-id="D"><a class="chain-btn is-active" href="chains/D/index.html?profileId=rasp_bw_b07afd4bd8c5" data-chain-id="D">
+  <strong>D</strong>
+  <span class="mini">chains/D/index.html</span>
+</a></div>
     </section>
   </main>
-  <script id="family-case-bootstrap" type="application/json">{"caseId": "9KBZ", "caseKey": "RASP2PDB:9KBZ", "defaultChainId": "D", "defaultEvidenceId": "annojoin:RASP2PDB:9KBZ:confidence:B:rasp_bw_b07afd4bd8c5", "chainPageById": {"D": "chains/D/index.html"}, "evidenceChainMap": {"annojoin:RASP2PDB:9KBZ:confidence:B:rasp_bw_b07afd4bd8c5": "D"}, "evidenceRows": [{"aucDirectional": 0.52439, "aucEffectSizeZ": 0.207558, "aucEmpiricalPValue": 0.424575, "bridgeStatus": "bridge_missing", "chain": "D", "conflictFraction": 0.268293, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:9KBZ:confidence:B:rasp_bw_b07afd4bd8c5", "family": "B", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 46, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.0, "profileKey": "rasp_bw_b07afd4bd8c5", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "Nuc-SHAPE-Structure-Seq", "trackProfileId": "rasp_bw_b07afd4bd8c5"}]}</script>
-  <script src="../../__rasp_v3_site__/case-shell.js"></script>
 </body>
 </html>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>3IVN case page</title>
-  <link rel="stylesheet" href="../../__family_d_site__/case-shell.css">
+  <link rel="stylesheet" href="../../__rmdb_v3_site__/case-shell.css">
 </head>
 <body>
   <main class="shell">
@@ -12,27 +12,20 @@
       <h1>3IVN</h1>
       <p>RMDB2PDB:3IVN</p>
       <div class="meta">
+        <span class="chip">source RMDB2PDB</span>
+        <span class="chip">families A,B</span>
         <span class="chip">default chain B</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="layout">
-      <section class="viewer">
-        <div class="panel">
-          <h2>Chain</h2>
-          <div class="mini">current chain: <span id="chainStatus">B</span></div>
-        </div>
-        <iframe
-          id="chainFrame"
-          class="viewer-frame"
-          src="chains/B/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#3544"
-          loading="lazy"
-          title="3IVN chain page"
-        ></iframe>
-      </section>
+    <section class="panel">
+      <h2>Chains</h2>
+      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
+      <div class="chain-list" data-default-chain-id="B"><a class="chain-btn is-active" href="chains/B/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#3544" data-chain-id="B">
+  <strong>B</strong>
+  <span class="mini">chains/B/index.html</span>
+</a></div>
     </section>
   </main>
-  <script id="family-case-bootstrap" type="application/json">{"caseId": "3IVN", "caseKey": "RMDB2PDB:3IVN", "defaultChainId": "B", "defaultEvidenceId": "annojoin:RMDB2PDB:3IVN:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#3544", "chainPageById": {"B": "chains/B/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:3IVN:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#3544": "B", "annojoin:RMDB2PDB:3IVN:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#3544": "B"}, "evidenceRows": [{"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "B", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:3IVN:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#3544", "family": "B", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 8, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#3544", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#3544"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "B", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:3IVN:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#3544", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 4, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#3544", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#3544"}]}</script>
-  <script src="../../__family_d_site__/case-shell.js"></script>
 </body>
 </html>

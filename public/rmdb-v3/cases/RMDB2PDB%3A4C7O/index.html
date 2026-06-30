@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>4C7O case page</title>
-  <link rel="stylesheet" href="../../__family_d_site__/case-shell.css">
+  <link rel="stylesheet" href="../../__rmdb_v3_site__/case-shell.css">
 </head>
 <body>
   <main class="shell">
@@ -12,27 +12,20 @@
       <h1>4C7O</h1>
       <p>RMDB2PDB:4C7O</p>
       <div class="meta">
+        <span class="chip">source RMDB2PDB</span>
+        <span class="chip">families A</span>
         <span class="chip">default chain E</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="layout">
-      <section class="viewer">
-        <div class="panel">
-          <h2>Chain</h2>
-          <div class="mini">current chain: <span id="chainStatus">E</span></div>
-        </div>
-        <iframe
-          id="chainFrame"
-          class="viewer-frame"
-          src="chains/E/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7453"
-          loading="lazy"
-          title="4C7O chain page"
-        ></iframe>
-      </section>
+    <section class="panel">
+      <h2>Chains</h2>
+      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
+      <div class="chain-list" data-default-chain-id="E"><a class="chain-btn is-active" href="chains/E/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7453" data-chain-id="E">
+  <strong>E</strong>
+  <span class="mini">chains/E/index.html</span>
+</a></div>
     </section>
   </main>
-  <script id="family-case-bootstrap" type="application/json">{"caseId": "4C7O", "caseKey": "RMDB2PDB:4C7O", "defaultChainId": "E", "defaultEvidenceId": "annojoin:RMDB2PDB:4C7O:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7453", "chainPageById": {"E": "chains/E/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:4C7O:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7453": "E"}, "evidenceRows": [{"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "E", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:4C7O:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7453", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 0, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7453", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7453"}]}</script>
-  <script src="../../__family_d_site__/case-shell.js"></script>
 </body>
 </html>

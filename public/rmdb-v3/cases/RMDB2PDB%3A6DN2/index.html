@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>6DN2 case page</title>
-  <link rel="stylesheet" href="../../__family_d_site__/case-shell.css">
+  <link rel="stylesheet" href="../../__rmdb_v3_site__/case-shell.css">
 </head>
 <body>
   <main class="shell">
@@ -12,27 +12,20 @@
       <h1>6DN2</h1>
       <p>RMDB2PDB:6DN2</p>
       <div class="meta">
+        <span class="chip">source RMDB2PDB</span>
+        <span class="chip">families A,B</span>
         <span class="chip">default chain X</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="layout">
-      <section class="viewer">
-        <div class="panel">
-          <h2>Chain</h2>
-          <div class="mini">current chain: <span id="chainStatus">X</span></div>
-        </div>
-        <iframe
-          id="chainFrame"
-          class="viewer-frame"
-          src="chains/X/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#11701"
-          loading="lazy"
-          title="6DN2 chain page"
-        ></iframe>
-      </section>
+    <section class="panel">
+      <h2>Chains</h2>
+      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
+      <div class="chain-list" data-default-chain-id="X"><a class="chain-btn is-active" href="chains/X/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#11701" data-chain-id="X">
+  <strong>X</strong>
+  <span class="mini">chains/X/index.html</span>
+</a></div>
     </section>
   </main>
-  <script id="family-case-bootstrap" type="application/json">{"caseId": "6DN2", "caseKey": "RMDB2PDB:6DN2", "defaultChainId": "X", "defaultEvidenceId": "annojoin:RMDB2PDB:6DN2:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#11701", "chainPageById": {"X": "chains/X/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:6DN2:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#11701": "X", "annojoin:RMDB2PDB:6DN2:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#11701": "X"}, "evidenceRows": [{"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "X", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:6DN2:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#11701", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 0, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#11701", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#11701"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "X", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:6DN2:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#11701", "family": "B", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 0, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#11701", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#11701"}]}</script>
-  <script src="../../__family_d_site__/case-shell.js"></script>
 </body>
 </html>
