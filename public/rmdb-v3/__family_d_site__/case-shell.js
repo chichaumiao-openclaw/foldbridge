@@ -62,6 +62,115 @@ if (typeof document !== "undefined") {
     syncUi();
   }
 
+  function el(tag, className, text) {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined && text !== null) node.textContent = text;
+    return node;
+  }
+
+  function renderEnrichment(bootstrap) {
+    const rows = bootstrap.evidenceRows;
+    if (!rows || rows.length === 0) return;
+
+    const best = pickBestEvidence(rows, bootstrap.defaultEvidenceId);
+
+    // Hero tier badge inserted after the subtitle <p>.
+    const hero = document.querySelector(".hero");
+    if (hero && best) {
+      const bd = tierDisplay(best.lssTierCalibrated);
+      const badge = el("span", `fb-tier-badge tone-${bd.tone}`, `${best.family} · ${bd.label}`);
+      const subtitle = hero.querySelector("p");
+      if (subtitle) subtitle.insertAdjacentElement("afterend", badge);
+      else hero.appendChild(badge);
+    }
+
+    // In-place .meta replacement with derived chips.
+    const metaNode = document.querySelector(".hero .meta");
+    if (metaNode) {
+      metaNode.replaceChildren();
+      metaNode.appendChild(el("span", "chip", `chains ${distinctChains(rows)}`));
+      metaNode.appendChild(el("span", "chip", `profiles ${rows.length}`));
+      const fams = Object.keys(familyCounts(rows)).sort().join("·");
+      metaNode.appendChild(el("span", "chip", `families ${fams}`));
+    }
+
+    // ENRICHMENT_SCOREBOARD
+    const scoreboard = el("section", "fb-scoreboard");
+    scoreboard.appendChild(el("h2", null, "Confidence scoreboard"));
+
+    const famCounts = familyCounts(rows);
+    const famRow = el("div", "fb-fam-row");
+    for (const f of Object.keys(famCounts).sort()) {
+      famRow.appendChild(el("span", "fb-fam", `${f} · ${familyLabel(f)} ×${famCounts[f]}`));
+    }
+    scoreboard.appendChild(famRow);
+
+    const tCounts = tierCounts(rows);
+    const tierRow = el("div", "fb-tier-row");
+    for (const token of Object.keys(tCounts)) {
+      const td = tierDisplay(token);
+      tierRow.appendChild(el("span", `fb-tpill tone-${td.tone}`, `${td.label} ${tCounts[token]}`));
+    }
+    scoreboard.appendChild(tierRow);
+
+    if (best) {
+      const bd = tierDisplay(best.lssTierCalibrated);
+      const bestBox = el("div", "fb-best");
+      const metricLabel = best.directionalMetricLabel || "metric";
+      bestBox.appendChild(el("div", null,
+        `${best.technology} — ${metricLabel} ${fmtMetric(best.aucDirectional)} · p ${fmtP(best.aucEmpiricalPValue)} · n ${best.nEvaluable} · ${bd.label}`));
+      if (bd.meaning) bestBox.appendChild(el("div", null, bd.meaning));
+      scoreboard.appendChild(bestBox);
+    }
+
+    // ENRICHMENT_TABLE
+    const details = el("details", "fb-evtable");
+    details.appendChild(el("summary", null, `Show all ${rows.length} evidence rows`));
+    const table = el("table");
+    const thead = el("thead");
+    const headRow = el("tr");
+    for (const h of ["Family", "Technology", "Tier", "Metric", "p", "n", "Profile"]) {
+      headRow.appendChild(el("th", null, h));
+    }
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    const tbody = el("tbody");
+    for (const row of rows) {
+      const tr = el("tr");
+      tr.dataset.evidenceId = row.evidenceId;
+      tr.appendChild(el("td", null, row.family));
+      tr.appendChild(el("td", null, row.technology));
+      const tierTd = el("td");
+      const rd = tierDisplay(row.lssTierCalibrated);
+      tierTd.appendChild(el("span", `fb-tpill tone-${rd.tone}`, rd.label));
+      tr.appendChild(tierTd);
+      tr.appendChild(el("td", null, fmtMetric(row.aucDirectional)));
+      tr.appendChild(el("td", null, fmtP(row.aucEmpiricalPValue)));
+      tr.appendChild(el("td", null, String(row.nEvaluable)));
+      tr.appendChild(el("td", null, row.profileKey || row.trackProfileId || ""));
+      tr.addEventListener("click", () => loadEvidence(row.evidenceId));
+      tbody.appendChild(tr);
+    }
+    table.appendChild(tbody);
+    details.appendChild(table);
+
+    // Mount before the .layout section.
+    const wrapper = el("div", "fb-enrichment");
+    wrapper.appendChild(scoreboard);
+    wrapper.appendChild(details);
+    const layout = document.querySelector(".layout");
+    if (layout && layout.parentNode) layout.parentNode.insertBefore(wrapper, layout);
+  }
+
+  function refreshEvidenceHighlight(selectedId) {
+    const trs = document.querySelectorAll(".fb-evtable tr[data-evidence-id]");
+    for (const tr of trs) {
+      tr.classList.toggle("is-active", tr.dataset.evidenceId === selectedId);
+    }
+  }
+
   function syncUi() {
     for (const button of chainButtons) {
       button.classList.toggle("is-active", button.dataset.chainId === state.activeChainId);
@@ -92,6 +201,7 @@ if (typeof document !== "undefined") {
       state.selectedEvidenceId = fallback?.evidenceId || state.selectedEvidenceId;
     }
   }
+  renderEnrichment(bootstrap);
   syncUi();
 }
 
