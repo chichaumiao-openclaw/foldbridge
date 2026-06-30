@@ -2117,6 +2117,7 @@ function annojoinAtlasPage() {
   const selectedCaseId = params.get('caseId') || '';
   const selectedCaseKey = params.get('caseKey') || '';
   const selectedField = params.get('field') || '';
+  const headerHtml = renderBundleHeader();
   if (!annojoinAtlasIndexState || annojoinAtlasIndexState === 'loading') {
     if (annojoinAtlasIndexState !== 'loading') loadAnnojointAtlasIndex();
     return renderAnnojointAtlasPage({
@@ -2130,7 +2131,8 @@ function annojoinAtlasPage() {
       selectedCaseId,
       selectedCaseKey,
       selectedField,
-      statusMessage: { tone: 'loading', text: 'Loading the master table…' }
+      statusMessage: { tone: 'loading', text: 'Loading the master table…' },
+      headerHtml
     });
   }
   if (annojoinAtlasIndexState === 'error') {
@@ -2145,7 +2147,8 @@ function annojoinAtlasPage() {
       selectedCaseId,
       selectedCaseKey,
       selectedField,
-      statusMessage: { tone: 'error', text: 'The master table could not be loaded. Refresh to try again.' }
+      statusMessage: { tone: 'error', text: 'The master table could not be loaded. Refresh to try again.' },
+      headerHtml
     });
   }
 
@@ -2160,7 +2163,8 @@ function annojoinAtlasPage() {
     pageSize,
     selectedCaseId,
     selectedCaseKey,
-    selectedField
+    selectedField,
+    headerHtml
   });
 }
 

@@ -455,7 +455,8 @@ export function renderAnnojointAtlasPage({
   selectedCaseId = '',
   selectedCaseKey = '',
   selectedField = '',
-  statusMessage = null
+  statusMessage = null,
+  headerHtml = ''
 } = {}) {
   const atlasState = state || { cases: [], source: {}, totalCaseCount: 0, filters: {} };
   const selected = selectedCaseIds instanceof Set ? selectedCaseIds : new Set(selectedCaseIds || []);
@@ -507,6 +508,7 @@ export function renderAnnojointAtlasPage({
     : `${escapeHtml(displayCount)} PDBs${placementCount ? ` · ${escapeHtml(placementCount)} entries` : ''}${sourceCount && sourceCount !== displayCount ? ` (${escapeHtml(sourceCount)} source cases)` : ''}`;
 
   return `<main class="page-annojoin-atlas page-annojoin-master-table">
+    ${headerHtml}
     <section class="annojoin-table-heading">
       <p class="technology-kicker">ANNOJOIN</p>
       <h1>ANNOJOIN master table</h1>
