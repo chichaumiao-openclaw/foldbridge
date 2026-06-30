@@ -22,6 +22,15 @@
 
 选择理由：方案 A 最接近现有品牌色（`--primary #174B3A`），降温清新又不丢识别度。
 
+### 2.1 `--textMuted` 第四字色 token 的裁决
+
+`design-tokens.css:21` 现有 `--textMuted: #7B8A82`，被 styles.css 9 处 `color: var(--textMuted)` 消费（行 494/752/1403/1751/1915/2016/2444/2552/6266）。它经 `var()` 实际产出**第四种字色**，与「最多三种」目标冲突。
+
+**裁决：`--textMuted` 折叠进 `--textSecondary`。** textMuted 当前是「更弱化的次要文字」，语义上属于「次要」角色。做法：
+
+- **不再单独定义 `--textMuted` 的值**——在 `design-tokens.css` 把 `--textMuted` 别名为 `--textSecondary`：`--textMuted: var(--textSecondary);`。这样 9 处 `var(--textMuted)` 引用无需逐个改动即自动收敛到次要色，深色模式也随 `--textSecondary` 重定义一起生效。
+- 保留 `--textMuted` 这个名字（仅改其值为别名）是为了避免改动 9 个消费点，降低 diff 面积与回归风险。最终全站字色仍只有三个**取值**（textPrimary / textSecondary / textAccent）。
+
 ## 3. 架构策略：收敛到 token，而非逐个改 hex
 
 核心思路是把 70 个硬编码字色**映射**到上述三个语义 token 之一，并把深色模式从「45 处逐选择器覆盖」改为「在 `body[data-mode="dark"]` 重定义 3 个 token」——一处定义，全站生效。
@@ -32,6 +41,7 @@
 :root {
   --textPrimary:   #13241B;   /* 改：墨绿近黑（原 #14221C） */
   --textSecondary: #5C6F65;   /* 改：灰绿（原 #5D6C64） */
+  --textMuted:     var(--textSecondary);  /* 改：别名折叠进次要（原 #7B8A82） */
   --textAccent:    #1F8A5B;   /* 新增：字色专用翠绿强调 */
 }
 ```
@@ -59,16 +69,18 @@ body[data-mode="dark"] {
 
 ### 4.1 → `--textPrimary`（正文，墨绿近黑）
 当深色字、标题、强调正文用的颜色：
-- 绿色系深色：`#173224 #173349 #143041 #14221c #10281f #21463d #30463a`
-- 蓝灰深色：`#163041 #132331 #102333 #213647 #20384a #2b3a45`
+- 深色正文（绿/蓝灰深相）：`#173224 #173349 #143041 #14221c #10281f #21463d #30463a`
+- 蓝灰深色：`#163041 #132331 #102333 #213647 #20384a #2b3a45 #183344`
 - 金黄最深（原当深色正文）：`#4f3800 #5f4305 #57462a #5b4b31`
 - 纯黑：`#000000`
+- 深色模式正文反白：`#edf4ef`（行 874/4764，深色模式下标题/nav/metric strong 反白，走深色 `--textPrimary #EAF3ED`）
 
 ### 4.2 → `--textSecondary`（次要，灰绿）
 弱化 / 元数据 / 次要说明用的中等明度色：
 - 灰绿/蓝灰中明度：`#536678 #344a45 #466173 #5d6f7f #5c6f80 #596b7b #617485 #6a7a89 #4d6575 #4c6678 #4b6678 #516979 #3a4a55`
 - 中性灰：`#b5b5bf #b8c8bf #5f7467 #5c6f63 #61746b`
 - 金黄中明度（原当次要文字）：`#8e6a16 #9a6f11 #8a6513 #8a5a07 #7f5c0e #7c5b13 #c18a18`
+- tooltip 浅灰字：`#d7dbe0`（行 3187，深色 tooltip 背景上的次要文字）
 
 ### 4.3 → `--textAccent`（状态/链接，翠绿）
 品牌强调 / 链接 / 状态高亮 / 激活色：
@@ -98,6 +110,7 @@ body[data-mode="dark"] {
 
 - `npm test`（基线 250 pass / 4 pre-existing fail，与本任务无关，需确认数量不增）
 - `npm run build:static` 重建 dist
+- 构建后 grep 确认 `--textMuted` 不再持有独立 hex 值、仅为 `var(--textSecondary)` 别名（验证「最多三种取值」目标达成）
 - 浏览器肉眼核对浅色 + 深色两模式：正文/次要/状态三层级清晰；金色确实退场；ACGU 碱基色与反白文字完好；链接/状态强调可辨识。
 
 ## 8. 本次范围外
