@@ -1,11 +1,8 @@
 export function bindAnnojointAtlasTable({
   root = document,
   selectedCaseIds,
-  pageRows = [],
   rows = [],
   setQuery,
-  setPage,
-  setPageSize,
   exportSelectedRows,
   selectRows,
   clearSelection,
@@ -48,26 +45,12 @@ export function bindAnnojointAtlasTable({
     button.addEventListener('click', () => removeFilter?.('q'));
   });
 
-  root.querySelectorAll?.('[data-annojoin-page]').forEach((button) => {
-    button.addEventListener('click', () => setPage?.(button.getAttribute('data-annojoin-page')));
-  });
-
-  const pageSizeSelect = root.getElementById?.('annojoin-page-size');
-  if (pageSizeSelect) {
-    pageSizeSelect.addEventListener('change', () => setPageSize?.(Number(pageSizeSelect.value) || 50));
-  }
-
   const exportSelectedBtn = root.getElementById?.('export-selected-annojoin-cases');
   if (exportSelectedBtn) {
     exportSelectedBtn.addEventListener('click', () => {
       const selectedRows = rows.filter((row) => selectedCaseIds?.has(rowCaseKey(row)));
       exportSelectedRows?.(selectedRows);
     });
-  }
-
-  const selectVisibleBtn = root.getElementById?.('select-visible-annojoin-cases');
-  if (selectVisibleBtn) {
-    selectVisibleBtn.addEventListener('click', () => selectRows?.(pageRows));
   }
 
   const selectAllBtn = root.getElementById?.('select-all-annojoin-cases');

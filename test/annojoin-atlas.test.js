@@ -741,7 +741,7 @@ test('atlas page keeps second-level child folding when a parent has multiple chi
   assert.doesNotMatch(childExpandedHtml, /data-annojoin-case-row="10ZV"/);
 });
 
-test('atlas page defaults foldable groups to collapsed and visually marks expanded groups', () => {
+test('atlas page renders expanded groups when group ids are provided', () => {
   const state = buildAtlasSearchState({
     ...fixtures,
     cases: [
@@ -755,9 +755,10 @@ test('atlas page defaults foldable groups to collapsed and visually marks expand
       }
     ]
   }, {});
-  const collapsedHtml = renderAnnojointAtlasPage({ state });
-  assert.match(collapsedHtml, /data-annojoin-group-state="collapsed"/);
-  assert.doesNotMatch(collapsedHtml, /data-annojoin-case-row="10ZT"/);
+  // 改版：默认全展开。view 仍按 expandedGroupIds 渲染；main.js 初始化为全集。
+  const expandedHtml0 = renderAnnojointAtlasPage({ state, expandedGroupIds: new Set(['parent:Ribosome']) });
+  assert.match(expandedHtml0, /data-annojoin-group-state="expanded"/);
+  assert.match(expandedHtml0, /data-annojoin-case-row="10ZT"/);
 
   const expandedHtml = renderAnnojointAtlasPage({
     state,
