@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6WYV",
+  "biologicalMoleculeName": "6WYV",
+  "caseId": "6WYV",
+  "caseKey": "RASP2PDB:6WYV",
+  "chains": [
+    "I",
+    "J"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "6WYV",
+  "profileCount": 31
+}

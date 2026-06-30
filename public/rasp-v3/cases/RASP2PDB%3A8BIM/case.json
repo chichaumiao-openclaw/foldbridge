@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8BIM",
+  "biologicalMoleculeName": "8BIM",
+  "caseId": "8BIM",
+  "caseKey": "RASP2PDB:8BIM",
+  "chains": [
+    "0",
+    "1",
+    "2",
+    "4"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8BIM",
+  "profileCount": 41
+}

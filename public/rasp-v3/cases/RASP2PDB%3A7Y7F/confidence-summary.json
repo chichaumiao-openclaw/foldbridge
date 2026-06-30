@@ -1,0 +1,31 @@
+{
+  "atlasCaseKey": "RASP2PDB:7Y7F",
+  "availableFamilies": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "bridgeMissingCount": 93,
+  "defaultEvidenceId": "annojoin:RASP2PDB:7Y7F:confidence:B:rasp_bw_66116403e58c",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 37,
+    "B": 37,
+    "C": 5,
+    "D": 14
+  },
+  "generatedAt": "2026-06-29T17:04:49.383245Z",
+  "materializedEvidenceCount": 93,
+  "pdbId": "7Y7F",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 10,
+    "LSS_MODERATE": 1,
+    "LSS_NOT_SUPPORTED": 59,
+    "LSS_UNDERPOWERED": 19,
+    "LSS_WEAK": 4
+  },
+  "totalEvidenceCount": 93
+}

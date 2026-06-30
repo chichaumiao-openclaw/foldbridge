@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7OYA",
+  "biologicalMoleculeName": "7OYA",
+  "caseId": "7OYA",
+  "caseKey": "RASP2PDB:7OYA",
+  "chains": [
+    "22",
+    "51",
+    "71",
+    "81"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "7OYA",
+  "profileCount": 145
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8UVS",
+  "biologicalMoleculeName": "8UVS",
+  "caseId": "8UVS",
+  "caseKey": "RASP2PDB:8UVS",
+  "chains": [
+    "1w",
+    "1x"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "8UVS",
+  "profileCount": 16
+}

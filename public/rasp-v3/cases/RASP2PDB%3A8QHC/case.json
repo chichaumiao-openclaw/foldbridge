@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8QHC",
+  "biologicalMoleculeName": "8QHC",
+  "caseId": "8QHC",
+  "caseKey": "RASP2PDB:8QHC",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "8QHC",
+  "profileCount": 13
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8ZGY",
+  "biologicalMoleculeName": "8ZGY",
+  "caseId": "8ZGY",
+  "caseKey": "RASP2PDB:8ZGY",
+  "chains": [
+    "LA",
+    "LB",
+    "LC",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "8ZGY",
+  "profileCount": 161
+}

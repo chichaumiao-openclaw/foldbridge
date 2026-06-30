@@ -1,0 +1,18 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8YDF",
+  "biologicalMoleculeName": "8YDF",
+  "caseId": "8YDF",
+  "caseKey": "RASP2PDB:8YDF",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8YDF",
+  "profileCount": 102
+}

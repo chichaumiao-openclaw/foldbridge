@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5ZEP",
+  "biologicalMoleculeName": "5ZEP",
+  "caseId": "5ZEP",
+  "caseKey": "RASP2PDB:5ZEP",
+  "chains": [
+    "w"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "5ZEP",
+  "profileCount": 11
+}

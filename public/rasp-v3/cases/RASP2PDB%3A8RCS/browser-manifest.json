@@ -1,0 +1,60 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "71": {
+      "case2dPath": "chains/71/case-2d-structure.json.gz",
+      "chainId": "71",
+      "chainRoot": "chains/71",
+      "linkedViewBundlePath": "chains/71/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/71/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/71/varna-template.svg.gz"
+    },
+    "82": {
+      "case2dPath": "chains/82/case-2d-structure.json.gz",
+      "chainId": "82",
+      "chainRoot": "chains/82",
+      "linkedViewBundlePath": "chains/82/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/82/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/82/varna-template.svg.gz"
+    },
+    "A1": {
+      "case2dPath": "chains/A1/case-2d-structure.json.gz",
+      "chainId": "A1",
+      "chainRoot": "chains/A1",
+      "linkedViewBundlePath": "chains/A1/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A1/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A1/varna-template.svg.gz"
+    },
+    "W": {
+      "case2dPath": "chains/W/case-2d-structure.json.gz",
+      "chainId": "W",
+      "chainRoot": "chains/W",
+      "linkedViewBundlePath": "chains/W/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/W/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/W/varna-template.svg.gz"
+    },
+    "Y": {
+      "case2dPath": "chains/Y/case-2d-structure.json.gz",
+      "chainId": "Y",
+      "chainRoot": "chains/Y",
+      "linkedViewBundlePath": "chains/Y/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/Y/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/Y/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A1",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:8RCS:confidence:D:rasp_bw_082542dfadef": "82",
+    "annojoin:RASP2PDB:8RCS:confidence:D:rasp_bw_10c682ff1c66": "Y",
+    "annojoin:RASP2PDB:8RCS:confidence:D:rasp_bw_13bf8094c5c2": "W",
+    "annojoin:RASP2PDB:8RCS:confidence:D:rasp_bw_7c9a09370ba1": "Y",
+    "annojoin:RASP2PDB:8RCS:confidence:D:rasp_bw_b0948a261e15": "71",
+    "annojoin:RASP2PDB:8RCS:confidence:D:rasp_bw_c5489e5ab90f": "W"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9TEX",
+  "biologicalMoleculeName": "9TEX",
+  "caseId": "9TEX",
+  "caseKey": "RASP2PDB:9TEX",
+  "chains": [
+    "A",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "9TEX",
+  "profileCount": 41
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7AZO",
+  "biologicalMoleculeName": "7AZO",
+  "caseId": "7AZO",
+  "caseKey": "RASP2PDB:7AZO",
+  "chains": [
+    "ASIA"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "7AZO",
+  "profileCount": 13
+}

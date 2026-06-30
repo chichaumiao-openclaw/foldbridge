@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8ZH3",
+  "biologicalMoleculeName": "8ZH3",
+  "caseId": "8ZH3",
+  "caseKey": "RASP2PDB:8ZH3",
+  "chains": [
+    "LA",
+    "LB",
+    "LC",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "8ZH3",
+  "profileCount": 161
+}

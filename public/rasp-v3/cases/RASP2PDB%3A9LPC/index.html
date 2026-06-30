@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>9LPC case page</title>
+  <link rel="stylesheet" href="../../__rasp_v3_site__/case-shell.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>9LPC</h1>
+      <p>RASP2PDB:9LPC</p>
+      <div class="meta">
+        <span class="chip">source RASP2PDB</span>
+        <span class="chip">families D</span>
+        <span class="chip">default chain C</span>
+        <span class="chip">chains 1</span>
+      </div>
+    </section>
+    <section class="layout">
+      <aside class="panel">
+        <h2>Chains</h2>
+        <div class="chain-list"><button class="chain-btn is-active" type="button" data-chain-id="C">
+  <strong>C</strong>
+  <span class="mini">chains/C/index.html</span>
+</button></div>
+      </aside>
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">C</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/C/index.html?profileId=rasp_bw_c5489e5ab90f"
+          loading="lazy"
+          title="9LPC chain page"
+        ></iframe>
+      </section>
+    </section>
+  </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "9LPC", "caseKey": "RASP2PDB:9LPC", "defaultChainId": "C", "defaultEvidenceId": "annojoin:RASP2PDB:9LPC:confidence:D:rasp_bw_c5489e5ab90f", "chainPageById": {"C": "chains/C/index.html"}, "evidenceChainMap": {"annojoin:RASP2PDB:9LPC:confidence:D:rasp_bw_13bf8094c5c2": "C", "annojoin:RASP2PDB:9LPC:confidence:D:rasp_bw_c5489e5ab90f": "C"}, "evidenceRows": [{"aucDirectional": -0.079397, "aucEffectSizeZ": -0.544799, "aucEmpiricalPValue": 0.695305, "bridgeStatus": "bridge_missing", "chain": "C", "conflictFraction": null, "directionalMetricKind": "spearman_rho", "directionalMetricLabel": "Spearman rho", "evidenceId": "annojoin:RASP2PDB:9LPC:confidence:D:rasp_bw_c5489e5ab90f", "family": "D", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 51, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "rasp_bw_c5489e5ab90f", "recallPath": "spearman_primary", "sasaReferenceStatus": "SASA_PRESENT", "selectedByDefault": true, "signalDirection": "", "technology": "Lead-seq", "trackProfileId": "rasp_bw_c5489e5ab90f"}, {"aucDirectional": 0.088057, "aucEffectSizeZ": 0.484856, "aucEmpiricalPValue": 0.328671, "bridgeStatus": "bridge_missing", "chain": "C", "conflictFraction": null, "directionalMetricKind": "spearman_rho", "directionalMetricLabel": "Spearman rho", "evidenceId": "annojoin:RASP2PDB:9LPC:confidence:D:rasp_bw_13bf8094c5c2", "family": "D", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 36, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "rasp_bw_13bf8094c5c2", "recallPath": "spearman_primary", "sasaReferenceStatus": "SASA_PRESENT", "selectedByDefault": false, "signalDirection": "", "technology": "Lead-seq", "trackProfileId": "rasp_bw_13bf8094c5c2"}]}</script>
+  <script src="../../__rasp_v3_site__/case-shell.js"></script>
+</body>
+</html>

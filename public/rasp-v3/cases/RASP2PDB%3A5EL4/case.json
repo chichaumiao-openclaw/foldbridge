@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5EL4",
+  "biologicalMoleculeName": "5EL4",
+  "caseId": "5EL4",
+  "caseKey": "RASP2PDB:5EL4",
+  "chains": [
+    "1K",
+    "2K"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "5EL4",
+  "profileCount": 16
+}

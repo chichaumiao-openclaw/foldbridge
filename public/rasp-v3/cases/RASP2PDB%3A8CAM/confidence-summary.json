@@ -1,0 +1,28 @@
+{
+  "atlasCaseKey": "RASP2PDB:8CAM",
+  "availableFamilies": [
+    "A",
+    "B",
+    "D"
+  ],
+  "bridgeMissingCount": 39,
+  "defaultEvidenceId": "annojoin:RASP2PDB:8CAM:confidence:D:rasp_bw_082542dfadef",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 15,
+    "B": 14,
+    "D": 10
+  },
+  "generatedAt": "2026-06-29T17:04:51.733331Z",
+  "materializedEvidenceCount": 39,
+  "pdbId": "8CAM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 1,
+    "LSS_MODERATE": 2,
+    "LSS_NOT_SUPPORTED": 33,
+    "LSS_UNDERPOWERED": 3
+  },
+  "totalEvidenceCount": 39
+}

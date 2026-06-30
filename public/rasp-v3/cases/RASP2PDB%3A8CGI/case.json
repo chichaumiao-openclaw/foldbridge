@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8CGI",
+  "biologicalMoleculeName": "8CGI",
+  "caseId": "8CGI",
+  "caseKey": "RASP2PDB:8CGI",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "8CGI",
+  "profileCount": 31
+}

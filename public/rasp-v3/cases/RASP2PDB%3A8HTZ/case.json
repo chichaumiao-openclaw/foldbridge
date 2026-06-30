@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8HTZ",
+  "biologicalMoleculeName": "8HTZ",
+  "caseId": "8HTZ",
+  "caseKey": "RASP2PDB:8HTZ",
+  "chains": [
+    "A",
+    "V",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8HTZ",
+  "profileCount": 36
+}

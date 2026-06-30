@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8EMM",
+  "biologicalMoleculeName": "8EMM",
+  "caseId": "8EMM",
+  "caseKey": "RASP2PDB:8EMM",
+  "chains": [
+    "A",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "D MODERATE",
+  "pdbId": "8EMM",
+  "profileCount": 33
+}

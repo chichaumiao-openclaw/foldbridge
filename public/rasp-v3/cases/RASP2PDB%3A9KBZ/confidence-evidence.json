@@ -1,0 +1,34 @@
+{
+  "atlasCaseKey": "RASP2PDB:9KBZ",
+  "generatedAt": "2026-06-29T17:03:51.658416Z",
+  "pdbId": "9KBZ",
+  "rows": [
+    {
+      "aucDirectional": 0.52439,
+      "aucEffectSizeZ": 0.207558,
+      "aucEmpiricalPValue": 0.424575,
+      "bridgeStatus": "bridge_missing",
+      "chain": "D",
+      "conflictFraction": 0.268293,
+      "directionalMetricKind": "auc_unpaired_vs_paired",
+      "directionalMetricLabel": "AUC unpaired vs paired",
+      "evidenceId": "annojoin:RASP2PDB:9KBZ:confidence:B:rasp_bw_b07afd4bd8c5",
+      "family": "B",
+      "lssTierCalibrated": "LSS_NOT_SUPPORTED",
+      "lssTierUncalibrated": "LSS_NOT_SUPPORTED",
+      "nEvaluable": 46,
+      "pairId": "",
+      "pairSegmentId": "",
+      "partnerInsideFraction": 0.0,
+      "profileKey": "rasp_bw_b07afd4bd8c5",
+      "recallPath": "",
+      "sasaReferenceStatus": "",
+      "selectedByDefault": true,
+      "signalDirection": "unpaired_positive",
+      "technology": "Nuc-SHAPE-Structure-Seq",
+      "trackProfileId": "rasp_bw_b07afd4bd8c5"
+    }
+  ],
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized"
+}

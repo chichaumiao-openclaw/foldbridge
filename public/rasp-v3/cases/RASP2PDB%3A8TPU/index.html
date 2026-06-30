@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>8TPU case page</title>
+  <link rel="stylesheet" href="../../__rasp_v3_site__/case-shell.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>8TPU</h1>
+      <p>RASP2PDB:8TPU</p>
+      <div class="meta">
+        <span class="chip">source RASP2PDB</span>
+        <span class="chip">families A,B,C</span>
+        <span class="chip">default chain AA</span>
+        <span class="chip">chains 1</span>
+      </div>
+    </section>
+    <section class="layout">
+      <aside class="panel">
+        <h2>Chains</h2>
+        <div class="chain-list"><button class="chain-btn is-active" type="button" data-chain-id="AA">
+  <strong>AA</strong>
+  <span class="mini">chains/AA/index.html</span>
+</button></div>
+      </aside>
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">AA</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/AA/index.html?profileId=rasp_bw_f19b2878af92"
+          loading="lazy"
+          title="8TPU chain page"
+        ></iframe>
+      </section>
+    </section>
+  </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "8TPU", "caseKey": "RASP2PDB:8TPU", "defaultChainId": "AA", "defaultEvidenceId": "annojoin:RASP2PDB:8TPU:confidence:B:rasp_bw_f19b2878af92", "chainPageById": {"AA": "chains/AA/index.html"}, "evidenceChainMap": {"annojoin:RASP2PDB:8TPU:confidence:A:rasp_bw_93deaa819d97": "AA", "annojoin:RASP2PDB:8TPU:confidence:B:rasp_bw_0ac5e94788d5": "AA", "annojoin:RASP2PDB:8TPU:confidence:B:rasp_bw_66116403e58c": "AA", "annojoin:RASP2PDB:8TPU:confidence:B:rasp_bw_f19b2878af92": "AA", "annojoin:RASP2PDB:8TPU:confidence:C:rasp_bw_c8eb2a9bae27": "AA", "annojoin:RASP2PDB:8TPU:confidence:C:rasp_bw_df45dbde575d": "AA"}, "evidenceRows": [{"aucDirectional": 0.652882, "aucEffectSizeZ": 1.905455, "aucEmpiricalPValue": 0.035964, "bridgeStatus": "bridge_missing", "chain": "AA", "conflictFraction": 0.263158, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:8TPU:confidence:B:rasp_bw_f19b2878af92", "family": "B", "lssTierCalibrated": "LSS_MODERATE", "lssTierUncalibrated": "LSS_MODERATE_CANDIDATE", "nEvaluable": 61, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.736842, "profileKey": "rasp_bw_f19b2878af92", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "tNet-MaPseq", "trackProfileId": "rasp_bw_f19b2878af92"}, {"aucDirectional": 0.733333, "aucEffectSizeZ": 1.486743, "aucEmpiricalPValue": 0.078921, "bridgeStatus": "bridge_missing", "chain": "AA", "conflictFraction": 0.0, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:8TPU:confidence:A:rasp_bw_93deaa819d97", "family": "A", "lssTierCalibrated": "LSS_WEAK", "lssTierUncalibrated": "LSS_MODERATE_CANDIDATE", "nEvaluable": 16, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.0, "profileKey": "rasp_bw_93deaa819d97", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "DIM-2P-seq", "trackProfileId": "rasp_bw_93deaa819d97"}, {"aucDirectional": 0.426667, "aucEffectSizeZ": -0.863213, "aucEmpiricalPValue": 0.796204, "bridgeStatus": "bridge_missing", "chain": "AA", "conflictFraction": 0.311111, "directionalMetricKind": "auc_paired_vs_unpaired", "directionalMetricLabel": "AUC paired vs unpaired", "evidenceId": "annojoin:RASP2PDB:8TPU:confidence:C:rasp_bw_df45dbde575d", "family": "C", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 65, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.8, "profileKey": "rasp_bw_df45dbde575d", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "paired_positive", "technology": "tNet-RNase-seq", "trackProfileId": "rasp_bw_df45dbde575d"}, {"aucDirectional": 0.494118, "aucEffectSizeZ": -0.044473, "aucEmpiricalPValue": 0.531469, "bridgeStatus": "bridge_missing", "chain": "AA", "conflictFraction": 0.176471, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:8TPU:confidence:B:rasp_bw_66116403e58c", "family": "B", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 57, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.588235, "profileKey": "rasp_bw_66116403e58c", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "tNet-MaPseq", "trackProfileId": "rasp_bw_66116403e58c"}, {"aucDirectional": 0.482353, "aucEffectSizeZ": -0.14748, "aucEmpiricalPValue": 0.552448, "bridgeStatus": "bridge_missing", "chain": "AA", "conflictFraction": 0.294118, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:8TPU:confidence:B:rasp_bw_0ac5e94788d5", "family": "B", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 57, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.588235, "profileKey": "rasp_bw_0ac5e94788d5", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "tNet-MaPseq", "trackProfileId": "rasp_bw_0ac5e94788d5"}, {"aucDirectional": 0.474908, "aucEffectSizeZ": -0.290226, "aucEmpiricalPValue": 0.602398, "bridgeStatus": "bridge_missing", "chain": "AA", "conflictFraction": 0.255814, "directionalMetricKind": "auc_paired_vs_unpaired", "directionalMetricLabel": "AUC paired vs unpaired", "evidenceId": "annojoin:RASP2PDB:8TPU:confidence:C:rasp_bw_c8eb2a9bae27", "family": "C", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 62, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.736842, "profileKey": "rasp_bw_c8eb2a9bae27", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "paired_positive", "technology": "tNet-RNase-seq", "trackProfileId": "rasp_bw_c8eb2a9bae27"}]}</script>
+  <script src="../../__rasp_v3_site__/case-shell.js"></script>
+</body>
+</html>

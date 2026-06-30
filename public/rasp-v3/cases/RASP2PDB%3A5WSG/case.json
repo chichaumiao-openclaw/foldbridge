@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5WSG",
+  "biologicalMoleculeName": "5WSG",
+  "caseId": "5WSG",
+  "caseKey": "RASP2PDB:5WSG",
+  "chains": [
+    "D",
+    "E",
+    "L"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "5WSG",
+  "profileCount": 117
+}

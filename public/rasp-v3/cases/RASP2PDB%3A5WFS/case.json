@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5WFS",
+  "biologicalMoleculeName": "5WFS",
+  "caseId": "5WFS",
+  "caseKey": "RASP2PDB:5WFS",
+  "chains": [
+    "A",
+    "a",
+    "v",
+    "y"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "5WFS",
+  "profileCount": 37
+}

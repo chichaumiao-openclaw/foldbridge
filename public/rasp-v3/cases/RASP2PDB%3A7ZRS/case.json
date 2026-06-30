@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7ZRS",
+  "biologicalMoleculeName": "7ZRS",
+  "caseId": "7ZRS",
+  "caseKey": "RASP2PDB:7ZRS",
+  "chains": [
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "7ZRS",
+  "profileCount": 174
+}
