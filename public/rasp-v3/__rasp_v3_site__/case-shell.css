@@ -131,3 +131,71 @@ a { color: inherit; }
 @media (max-width: 960px) {
   .layout { grid-template-columns: 1fr; }
 }
+
+/* Shared site nav header (self-contained literal values: the two detail bundles have
+   disjoint :root token sets, so this block must not rely on var(--...)). */
+.fb-detail-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 12px 24px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(20, 34, 28, 0.10);
+  box-shadow: 0 1px 0 rgba(20, 34, 28, 0.04);
+  font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+}
+.fb-detail-nav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: #14221C;
+  font-weight: 600;
+}
+.fb-detail-nav-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 9px;
+  background: #2F8F6B;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.fb-detail-nav-word {
+  font-size: 16px;
+}
+.fb-detail-nav-links {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.fb-detail-nav-link {
+  text-decoration: none;
+  color: #5D6C64;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 7px 12px;
+  border-radius: 999px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+.fb-detail-nav-link:hover {
+  background: #E4EFE8;
+  color: #14221C;
+}
+@media (max-width: 640px) {
+  .fb-detail-nav {
+    padding: 10px 16px;
+  }
+  .fb-detail-nav-link {
+    padding: 6px 9px;
+    font-size: 13px;
+  }
+}
+
