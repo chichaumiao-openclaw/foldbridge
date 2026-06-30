@@ -876,6 +876,26 @@ test('atlas page can render as the sequence route entry', () => {
   assert.doesNotMatch(html, /href="#annojoin-atlas\?caseId=10ZT"/);
 });
 
+test('atlas field links preserve the active filter and page so clicking does not reset the table', () => {
+  const state = buildAtlasSearchState(fixtures, { query: '10ZT' });
+  const html = renderAnnojointAtlasPage({ state, routeName: 'entry', page: 1 });
+
+  // a filtered field click must retain q=10ZT alongside the field/case selection
+  assert.match(html, /href="#entry\?q=10ZT&amp;caseId=10ZT&amp;field=pdbId"/);
+  assert.match(html, /href="#entry\?q=10ZT&amp;caseId=10ZT&amp;field=moleculeName"/);
+  // and must NOT drop the query (the bug: #entry?caseId=10ZT&field=pdbId)
+  assert.doesNotMatch(html, /href="#entry\?caseId=10ZT&amp;field=pdbId"/);
+});
+
+test('atlas field links carry a non-default page through the field click', () => {
+  // query '10Z' matches both fixtures; pageSize 1 leaves one case on page 2
+  const state = buildAtlasSearchState(fixtures, { query: '10Z' });
+  const html = renderAnnojointAtlasPage({ state, routeName: 'entry', page: 2, pageSize: 1 });
+
+  // the active query and page must both survive the field click (caseId varies by sort)
+  assert.match(html, /href="#entry\?q=10Z&amp;page=2&amp;caseId=10Z[A-Z]&amp;field=pdbId"/);
+});
+
 test('atlas page omits visual/detail panes from the master table page', () => {
   const state = buildAtlasSearchState(fixtures, {});
   const detail = createAtlasCaseDetail(fixtures, '10ZT');
