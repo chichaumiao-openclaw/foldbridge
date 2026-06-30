@@ -74,6 +74,7 @@ if (typeof document !== "undefined") {
     if (!rows || rows.length === 0) return;
 
     const best = pickBestEvidence(rows, bootstrap.defaultEvidenceId);
+    const famCounts = familyCounts(rows);
 
     // Hero tier badge inserted after the subtitle <p>.
     const hero = document.querySelector(".hero");
@@ -91,7 +92,7 @@ if (typeof document !== "undefined") {
       metaNode.replaceChildren();
       metaNode.appendChild(el("span", "chip", `chains ${distinctChains(rows)}`));
       metaNode.appendChild(el("span", "chip", `profiles ${rows.length}`));
-      const fams = Object.keys(familyCounts(rows)).sort().join("·");
+      const fams = Object.keys(famCounts).sort().join("·");
       metaNode.appendChild(el("span", "chip", `families ${fams}`));
     }
 
@@ -99,7 +100,6 @@ if (typeof document !== "undefined") {
     const scoreboard = el("section", "fb-scoreboard");
     scoreboard.appendChild(el("h2", null, "Confidence scoreboard"));
 
-    const famCounts = familyCounts(rows);
     const famRow = el("div", "fb-fam-row");
     for (const f of Object.keys(famCounts).sort()) {
       famRow.appendChild(el("span", "fb-fam", `${f} · ${familyLabel(f)} ×${famCounts[f]}`));
@@ -108,7 +108,15 @@ if (typeof document !== "undefined") {
 
     const tCounts = tierCounts(rows);
     const tierRow = el("div", "fb-tier-row");
-    for (const token of Object.keys(tCounts)) {
+    const tierTokens = Object.keys(tCounts).sort((a, b) => {
+      const ia = TIER_ORDER.indexOf(a);
+      const ib = TIER_ORDER.indexOf(b);
+      const ra = ia === -1 ? TIER_ORDER.length : ia;
+      const rb = ib === -1 ? TIER_ORDER.length : ib;
+      if (ra !== rb) return ra - rb;
+      return a < b ? -1 : a > b ? 1 : 0;
+    });
+    for (const token of tierTokens) {
       const td = tierDisplay(token);
       tierRow.appendChild(el("span", `fb-tpill tone-${td.tone}`, `${td.label} ${tCounts[token]}`));
     }
@@ -119,7 +127,7 @@ if (typeof document !== "undefined") {
       const bestBox = el("div", "fb-best");
       const metricLabel = best.directionalMetricLabel || "metric";
       bestBox.appendChild(el("div", null,
-        `${best.technology} — ${metricLabel} ${fmtMetric(best.aucDirectional)} · p ${fmtP(best.aucEmpiricalPValue)} · n ${best.nEvaluable} · ${bd.label}`));
+        `${best.technology} — ${metricLabel} ${fmtMetric(best.aucDirectional)} · p ${fmtP(best.aucEmpiricalPValue)} · n ${fmtCount(best.nEvaluable)} · ${bd.label}`));
       if (bd.meaning) bestBox.appendChild(el("div", null, bd.meaning));
       scoreboard.appendChild(bestBox);
     }
@@ -148,7 +156,7 @@ if (typeof document !== "undefined") {
       tr.appendChild(tierTd);
       tr.appendChild(el("td", null, fmtMetric(row.aucDirectional)));
       tr.appendChild(el("td", null, fmtP(row.aucEmpiricalPValue)));
-      tr.appendChild(el("td", null, String(row.nEvaluable)));
+      tr.appendChild(el("td", null, fmtCount(row.nEvaluable)));
       tr.appendChild(el("td", null, row.profileKey || row.trackProfileId || ""));
       tr.addEventListener("click", () => loadEvidence(row.evidenceId));
       tbody.appendChild(tr);
@@ -231,6 +239,15 @@ const TIER_DISPLAY = {
     meaning: "Too few evaluable residues (or too few paired/unpaired) to judge." },
 };
 
+const TIER_ORDER = [
+  "LSS_STRONG_CALIBRATED",
+  "LSS_MODERATE_CANDIDATE",
+  "LSS_WEAK",
+  "LSS_DISCORDANT",
+  "LSS_NOT_SUPPORTED",
+  "LSS_UNDERPOWERED",
+];
+
 function familyCounts(rows) {
   const out = {};
   for (const r of rows) { const f = r.family || ""; out[f] = (out[f] || 0) + 1; }
@@ -275,6 +292,11 @@ function fmtFraction(value) {
   return Number(value).toFixed(2);
 }
 
+function fmtCount(value) {
+  if (value === null || value === undefined || Number.isNaN(value)) return "—";
+  return String(value);
+}
+
 function pickBestEvidence(rows, defaultEvidenceId) {
   if (!rows || rows.length === 0) return null;
   const byId = rows.find((r) => r.evidenceId === defaultEvidenceId);
@@ -287,6 +309,6 @@ function pickBestEvidence(rows, defaultEvidenceId) {
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     familyCounts, tierCounts, distinctChains, familyLabel, tierDisplay,
-    fmtMetric, fmtP, fmtFraction, pickBestEvidence,
+    fmtMetric, fmtP, fmtFraction, fmtCount, pickBestEvidence,
   };
 }
