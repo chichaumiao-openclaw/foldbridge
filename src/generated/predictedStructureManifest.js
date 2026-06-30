@@ -72,6 +72,7 @@ export const rnaComposerPredictedStructureIds = [
   "RMDB_RNAPZ9_1M7_0001",
   "RMDB_SAMRSW_1M7_0001",
   "RMDB_TPPSC_1M7_0005",
+  "RMDB_TRNAPH_1M7_0000",
   "RMDB_TRP4P6_DMS_0014",
   "RMDB_TRP4P6_HRF_0003"
 ];

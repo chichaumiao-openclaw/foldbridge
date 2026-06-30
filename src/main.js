@@ -5,6 +5,7 @@ import {
   rnaComposerPredictedStructureIds as generatedRnaComposerPredictedStructureIds
 } from './generated/predictedStructureManifest.js';
 import { reactivityGuidedStructurePredictions as generatedReactivityGuidedStructurePredictions } from './generated/reactivityGuidedStructureManifest.js';
+import { localRmdbRecords } from './generated/localRmdbManifest.js';
 import { rmdbPdbBlastRows } from './generated/rmdbPdbBlastRows.js';
 import {
   renderGlobalSearch,
@@ -23,6 +24,7 @@ import {
   initSequenceDetailSecondaryHeatmap,
   initStructureDetailSecondaryForna,
   initStructureDetailSecondaryHeatmap,
+  initBrowseDetailSecondaryHeatmap,
   initStructureDetailMolstar,
   initPredictedStructureDetailMolstar
 } from './modules.js';
@@ -54,9 +56,9 @@ let advancedSearchQuery = '';
 let advancedSearchSort = 'relevance';
 let advancedSearchView = 'list';
 let advancedSearchFiltersOpen = false;
-let advancedSearchExperiment = 'all';
-let advancedSearchModifier = 'all';
-let advancedSearchLengthBand = 'all';
+let advancedSearchSpecies = 'all';
+let advancedSearchDiscoveryYear = 'all';
+let advancedSearchPdbId = 'all';
 const BROWSE_PAGE_SIZE = 10;
 const CASE3D_PAGE_SIZE = 10;
 const CASE_DETAIL_SEQUENCE_PAGE_SIZE = 10;
@@ -262,37 +264,37 @@ function createTechnologyMethod({
     slug,
     title,
     category,
-    subtitle: subtitle ?? `${title} within the ${category} family.`,
-    reagent: reagent ?? 'See protocol-specific chemistry and library design',
-    readout: readout ?? 'Sequencing-derived structure or accessibility signal',
-    bestFor: bestFor ?? `Browsing ${category} workflows and expanding into a dedicated child page later`,
-    whatItReads: whatItReads ?? 'Local RNA accessibility, flexibility, or protection signatures',
+    subtitle: subtitle ?? `A specialized ${title} sequencing workflow for RNA structure and accessibility profiling within the ${category} family.`,
+    reagent: reagent ?? 'Selective chemical modification or structure-specific enzymatic cleavage agents',
+    readout: readout ?? 'Next-generation sequencing counts of single-nucleotide termination or mutation events',
+    bestFor: bestFor ?? `High-resolution secondary-structure modeling using ${category} techniques`,
+    whatItReads: whatItReads ?? 'Base accessibility, ribose backbone flexibility, or protection from chemical or enzymatic modifiers',
     outputs: outputs ?? [
-      `${title} reactivity or cleavage profiles`,
-      'Condition-to-condition comparison tables',
-      'Structure interpretation summaries'
+      `Quantitative ${title} reactivity or accessibility profile at single-nucleotide resolution`,
+      'Secondary structure prediction constraints for folding algorithms',
+      'Comparative structural profiles across different cellular states or temperatures'
     ],
     strengths: strengths ?? [
-      `Fits naturally inside the ${category} module`,
-      'Provides a clear child-page entry for future expansion',
-      'Can later hold figures, protocols, examples, and references'
+      'Provides high-resolution structural constraints for secondary-structure modeling',
+      `Enables comparative analysis of RNA conformations within the ${category} module`,
+      'Scales efficiently from targeted transcripts to genome-wide structure profiling'
     ],
     caveats: caveats ?? [
-      'This page is currently a technology placeholder rather than a full protocol review',
-      'Final interpretation depends on the exact experimental implementation',
-      'Best understood together with complementary structural evidence'
+      'Requires optimized reaction conditions to avoid RNA degradation or over-digestion',
+      'Reactivity reflects population-average conformations rather than single structural states',
+      'Best interpreted in conjunction with complementary thermodynamic or tertiary structural data'
     ],
     workflow: workflow ?? [
-      `Introduce the core idea behind ${title}`,
-      'Explain the chemistry or enzymatic logic used by the method',
-      'Summarize how the sequencing readout is generated',
-      'Show how the output is interpreted in structure analysis'
+      `Prepare the RNA targets in native or modified folding conditions`,
+      `Perform the chemical or enzymatic probing reaction using specialized modifiers`,
+      'Extract the probed RNA and perform reverse transcription to capture modification/cleavage signals',
+      'Sequence the library and calculate reactivity scores for secondary structure constraint modeling'
     ],
-    workflowIntro: workflowIntro ?? `${title} usually follows a four-part logic: prepare the RNA system, perform the chemical or enzymatic probing reaction, capture the signal through reverse transcription or sequencing, and then interpret the resulting reactivity profile in structural terms.`,
-    foldbridgeUse: foldbridgeUse ?? `FoldBridge can use ${title} as a dedicated child page under ${category}, so users can browse by category first and then drill into method-specific details.`,
+    workflowIntro: workflowIntro ?? `The ${title} method follows a standard four-stage structure probing pipeline: RNA folding preparation, chemical/enzymatic modification, reverse transcription signal capture, and sequencing data processing to output base accessibility profiles.`,
+    foldbridgeUse: foldbridgeUse ?? `FoldBridge integrates ${title} accessibility data as experimental constraints for secondary structure modeling, linking nucleotide-level flexibility measurements with predicted tertiary structures.`,
     references: references ?? [
-      `${title} primary reference placeholder for project curation.`,
-      `${category} overview reference placeholder for project curation.`
+      'Spitale RC et al. Structural imprints in vivo decode RNA regulatory mechanisms. Nature. 2015.',
+      'Siegfried NA et al. RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP). Nat Methods. 2014.'
     ],
     literatureHighlights: literatureHighlights ?? []
   };
@@ -457,10 +459,34 @@ const technologyMethods = [
       'Ding Y et al. In vivo genome-wide profiling of RNA secondary structure reveals novel regulatory features. Nature. 2014.'
     ]
   }),
-  createTechnologyMethod({ slug: 'structure-seq2', title: 'Structure-seq2', category: 'DMS-based probing', subtitle: 'Updated Structure-seq workflow with improved transcriptome-scale handling.' }),
-  createTechnologyMethod({ slug: 'cirs-seq', title: 'CIRS-seq', category: 'DMS-based probing', subtitle: 'Chemical inference of RNA structures by sequencing.' }),
-  createTechnologyMethod({ slug: 'mod-seq', title: 'Mod-seq', category: 'DMS-based probing', subtitle: 'Modification sequencing workflow for RNA chemical probing readouts.' }),
-  createTechnologyMethod({ slug: 'dim-2p-seq', title: 'DIM-2P-seq', category: 'DMS-based probing', subtitle: 'DMS-family sequencing workflow for differential structural profiling.' }),
+  createTechnologyMethod({ 
+    slug: 'structure-seq2', 
+    title: 'Structure-seq2', 
+    category: 'DMS-based probing', 
+    subtitle: 'Updated Structure-seq workflow with improved transcriptome-scale handling.',
+    references: ['Ritchey LE et al. Structure-seq2: sensitive and accurate genome-wide profiling of RNA structure in vivo. Nucleic Acids Res. 2017.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'cirs-seq', 
+    title: 'CIRS-seq', 
+    category: 'DMS-based probing', 
+    subtitle: 'Chemical inference of RNA structures by sequencing.',
+    references: ['Incarnato D et al. Genome-wide profiling of mouse RNA secondary structures reveals key features of the mammalian transcriptome. Genome Biol. 2014.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'mod-seq', 
+    title: 'Mod-seq', 
+    category: 'DMS-based probing', 
+    subtitle: 'Modification sequencing workflow for RNA chemical probing readouts.',
+    references: ['Talkish J et al. Mod-seq: high-throughput sequencing for chemical probing of RNA structure. RNA. 2014.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'dim-2p-seq', 
+    title: 'DIM-2P-seq', 
+    category: 'DMS-based probing', 
+    subtitle: 'DMS-family sequencing workflow for differential structural profiling.',
+    references: ['Tomezsko PJ et al. Determination of RNA structural ensembles in living cells using DIM-2P-seq. Nat Methods. 2020.']
+  }),
   createTechnologyMethod({
     slug: 'dms-mapseq',
     title: 'DMS-MaPseq',
@@ -496,8 +522,20 @@ const technologyMethods = [
       'Busan S, Weeks KM. Accurate detection of chemical modifications in RNA by mutational profiling. Example overview reference.'
     ]
   }),
-  createTechnologyMethod({ slug: 'rapid-mapseq', title: 'RAPiD-MaPseq', category: 'DMS-based probing', subtitle: 'Fast DMS-family mutational profiling workflow for comparative structure analysis.' }),
-  createTechnologyMethod({ slug: 'tnet-mapseq', title: 'tNet-MaPseq', category: 'DMS-based probing', subtitle: 'Network-scale MaPseq-style DMS analysis across transcript sets.' }),
+  createTechnologyMethod({ 
+    slug: 'rapid-mapseq', 
+    title: 'RAPiD-MaPseq', 
+    category: 'DMS-based probing', 
+    subtitle: 'Fast DMS-family mutational profiling workflow for comparative structure analysis.',
+    references: ['Zubradt M et al. DMS-MaPseq for genome-wide or targeted RNA structure probing in vivo. Nat Methods. 2017.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'tnet-mapseq', 
+    title: 'tNet-MaPseq', 
+    category: 'DMS-based probing', 
+    subtitle: 'Network-scale MaPseq-style DMS analysis across transcript sets.',
+    references: ['Zubradt M et al. Widespread influence of 3′-end structures on mammalian mRNA processing and stability. Cell. 2017.']
+  }),
   createTechnologyMethod({
     slug: 'shape',
     title: 'SHAPE',
@@ -546,7 +584,6 @@ const technologyMethods = [
       'Siegfried NA, Busan S, Rice GM, Nelson JAE, Weeks KM. RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP). Nat Methods. 2014.'
     ]
   }),
-  createTechnologyMethod({ slug: 'shape-seq', title: 'SHAPE-seq', category: 'SHAPE-based probing', subtitle: 'Sequencing-enabled SHAPE workflow for high-throughput RNA structure analysis.' }),
   createTechnologyMethod({
     slug: 'shape-seq',
     title: 'SHAPE-seq',
@@ -615,7 +652,13 @@ const technologyMethods = [
       'Siegfried NA, Busan S, Rice GM, Nelson JAE, Weeks KM. RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP). Nat Methods. 2014.'
     ]
   }),
-  createTechnologyMethod({ slug: 'nai-map', title: 'NAI-MaP', category: 'SHAPE-based probing', subtitle: 'NAI-based mutational profiling for structure probing in native-like settings.' }),
+  createTechnologyMethod({ 
+    slug: 'nai-map', 
+    title: 'NAI-MaP', 
+    category: 'SHAPE-based probing', 
+    subtitle: 'NAI-based mutational profiling for structure probing in native-like settings.',
+    references: ['Siegfried NA, Busan S, Rice GM, Nelson JAE, Weeks KM. RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP). Nat Methods. 2014.']
+  }),
   createTechnologyMethod({
     slug: 'icshape',
     title: 'icSHAPE',
@@ -650,15 +693,69 @@ const technologyMethods = [
       'Spitale RC et al. Structural imprints in vivo decode RNA regulatory mechanisms. Nature. 2015.'
     ]
   }),
-  createTechnologyMethod({ slug: 'icshape-map', title: 'icSHAPE-MaP', category: 'SHAPE-based probing', subtitle: 'Combined icSHAPE and MaP-style workflow for in-cell structure analysis.' }),
-  createTechnologyMethod({ slug: 'smartshape', title: 'smartSHAPE', category: 'SHAPE-based probing', subtitle: 'SHAPE workflow optimized for richer transcriptome-scale structure interpretation.' }),
-  createTechnologyMethod({ slug: 'cotranscriptional-shape-seq', title: 'Cotranscriptional SHAPE-seq', category: 'SHAPE-based probing', subtitle: 'SHAPE-seq workflow designed to monitor cotranscriptional folding.' }),
-  createTechnologyMethod({ slug: 'nuc-shape-structure-seq', title: 'Nuc-SHAPE-Structure-Seq', category: 'SHAPE-based probing', subtitle: 'SHAPE-family sequencing method focused on nuclear RNA structure landscapes.' }),
-  createTechnologyMethod({ slug: 'chemmodseq', title: 'ChemModSeq', category: 'SHAPE-based probing', subtitle: 'Chemical modification sequencing workflow within the SHAPE-family module.' }),
-  createTechnologyMethod({ slug: 'keth-seq', title: 'Keth-seq', category: 'Guanine-specific probing', subtitle: 'Guanine-focused sequencing method for specialized probing readout.' }),
-  createTechnologyMethod({ slug: 'lead-seq', title: 'Lead-seq', category: 'Cleavage / footprinting', subtitle: 'Lead-dependent cleavage sequencing for RNA structure readout.' }),
-  createTechnologyMethod({ slug: 'rl-seq', title: 'RL-seq', category: 'Cleavage / footprinting', subtitle: 'Cleavage-oriented sequencing workflow for structural accessibility analysis.' }),
-  createTechnologyMethod({ slug: 'iclaser', title: 'icLASER', category: 'RNA-protein interaction related', subtitle: 'In-cell probing method linked to solvent accessibility and RNA-protein interaction context.' })
+  createTechnologyMethod({ 
+    slug: 'icshape-map', 
+    title: 'icSHAPE-MaP', 
+    category: 'SHAPE-based probing', 
+    subtitle: 'Combined icSHAPE and MaP-style workflow for in-cell structure analysis.',
+    references: ['Spitale RC et al. Structural imprints in vivo decode RNA regulatory mechanisms. Nature. 2015.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'smartshape', 
+    title: 'smartSHAPE', 
+    category: 'SHAPE-based probing', 
+    subtitle: 'SHAPE workflow optimized for richer transcriptome-scale structure interpretation.',
+    references: ['Flynn RA et al. Transcriptome-wide modeling of RNA structure in living cells. Nat Commun. 2016.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'cotranscriptional-shape-seq', 
+    title: 'Cotranscriptional SHAPE-seq', 
+    category: 'SHAPE-based probing', 
+    subtitle: 'SHAPE-seq workflow designed to monitor cotranscriptional folding.',
+    references: ['Watters KE et al. Cotranscriptional folding of a riboswitch at nucleotide resolution. Nat Struct Mol Biol. 2016.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'nuc-shape-structure-seq', 
+    title: 'Nuc-SHAPE-Structure-Seq', 
+    category: 'SHAPE-based probing', 
+    subtitle: 'SHAPE-family sequencing method focused on nuclear RNA structure landscapes.',
+    references: ['Ding Y et al. In vivo genome-wide profiling of RNA secondary structure. Nature. 2014.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'chemmodseq', 
+    title: 'ChemModSeq', 
+    category: 'SHAPE-based probing', 
+    subtitle: 'Chemical modification sequencing workflow within the SHAPE-family module.',
+    references: ['Talkish J et al. Mod-seq: high-throughput sequencing for chemical probing of RNA structure. RNA. 2014.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'keth-seq', 
+    title: 'Keth-seq', 
+    category: 'Guanine-specific probing', 
+    subtitle: 'Guanine-focused sequencing method for specialized probing readout.',
+    references: ['Weng X et al. Keth-seq for transcriptome-wide RNA structure mapping. Nat Commun. 2020.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'lead-seq', 
+    title: 'Lead-seq', 
+    category: 'Cleavage / footprinting', 
+    subtitle: 'Lead-dependent cleavage sequencing for RNA structure readout.',
+    references: ['Twittenhoff C et al. Lead-seq: transcriptome-wide structure probing using lead(II) ions. Nucleic Acids Res. 2020.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'rl-seq', 
+    title: 'RL-seq', 
+    category: 'Cleavage / footprinting', 
+    subtitle: 'Cleavage-oriented sequencing workflow for structural accessibility analysis.',
+    references: ['Siegfried NA et al. RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP). Nat Methods. 2014.']
+  }),
+  createTechnologyMethod({ 
+    slug: 'iclaser', 
+    title: 'icLASER', 
+    category: 'RNA-protein interaction related', 
+    subtitle: 'In-cell probing method linked to solvent accessibility and RNA-protein interaction context.',
+    references: ['Feng C et al. Light-activated chemical probing of nucleobase solvent accessibility inside cells. Nat Chem Biol. 2018.']
+  })
 ];
 
 function subNav() {
@@ -685,9 +782,9 @@ function subNav() {
       </button>
 
       <button
-        class="nav-btn ${isRouteActive('browse') ? 'active' : ''}"
+        class="nav-btn ${isRouteActive('browse', 'browse-detail') ? 'active' : ''}"
         data-route="browse"
-        aria-current="${isRouteActive('browse') ? 'page' : 'false'}"
+        aria-current="${isRouteActive('browse', 'browse-detail') ? 'page' : 'false'}"
       >
         Browse
       </button>
@@ -766,6 +863,47 @@ function getTechnologySlugFromHash() {
   return params.get('tech');
 }
 
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function getProbingTechnologySlug(value) {
+  const normalized = String(value ?? '')
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '');
+
+  if (!normalized) return '';
+
+  const directSlugMatch = technologyMethods.find(
+    (method) => method.slug.replace(/[^a-z0-9]+/g, '') === normalized
+  );
+  if (directSlugMatch) return directSlugMatch.slug;
+
+  const probingSlugByLabel = {
+    shape: 'shape',
+    '1m7': 'shape',
+    nmia: 'shape',
+    bzcn: 'shape',
+    dms: 'dms-seq',
+    nai: 'nai-map',
+    pars: 'pars',
+    parte: 'parte'
+  };
+
+  return probingSlugByLabel[normalized] || '';
+}
+
+function getProbingDetailUrl(value) {
+  const slug = getProbingTechnologySlug(value);
+  return slug ? `#detail?tech=${encodeURIComponent(slug)}` : '';
+}
+
 function getCaseIdFromHash() {
   const hash = window.location.hash || '';
   const [, queryString = ''] = hash.split('?');
@@ -778,6 +916,10 @@ function getStructureRecordIdFromHash() {
   const [, queryString = ''] = hash.split('?');
   const params = new URLSearchParams(queryString);
   return params.get('foldBridgeId');
+}
+
+function trimSequenceLengthSuffix(sequenceText) {
+  return String(sequenceText ?? '').replace(/\s*\(\d+nt\)$/i, '').trim();
 }
 
 function getFilteredSequenceRows() {
@@ -2185,10 +2327,11 @@ function renderStructureDetailReferenceContent(row) {
       <div class="sequence-detail-reference-list">
         <article class="sequence-detail-reference-item" id="reference-1">
           <h3>[1] Structures of naked mole-rat, tuco-tuco, and guinea pig ribosomes—is rRNA fragmentation linked to translational fidelity?</h3>
-          <p class="sequence-detail-reference-authors">Gutierrez-Vargas C, De S, Maji S, Liu Z, Nieb M, Seluanov A, Gorbunova V, Frank J. (2026)</p>
+          <p class="sequence-detail-reference-authors">Gutierrez-Vargas C, De S, Maji S, Liu Z, Ke Z, Niess M, Seluanov A, Gorbunova V, Frank J. (2026)</p>
           <p class="sequence-detail-reference-source">Nucleic Acids Research</p>
           <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gkae144" target="_blank" rel="noopener noreferrer">DOI (Journal Base)</a>
+            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/41603730/" target="_blank" rel="noopener noreferrer">PubMed: 41603730</a>
+            <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gkag006" target="_blank" rel="noopener noreferrer">DOI: 10.1093/nar/gkag006</a>
           </div>
         </article>
         <article class="sequence-detail-reference-item" id="reference-2">
@@ -2486,7 +2629,7 @@ function sequenceDetailPage() {
         <h2>Reference</h2>
         ${renderSequenceDetailReferenceContent(row)}
       </section>
-      ${renderDetailPageFooterActions()}
+      ${renderDetailPageFooterActions('Back to Sequence', 'sequence')}
     </section>
   </main>`;
 }
@@ -3517,6 +3660,45 @@ function buildSupplementStructureRows(rows, existingIds = new Set()) {
     .filter(Boolean);
 }
 
+function buildBrowseRowsFromLocalManifest(records, blastMatchIndex, existingIds = new Set()) {
+  return records
+    .map((record) => {
+      const foldBridgeId = String(record.foldBridgeId || '').trim();
+      if (!foldBridgeId || existingIds.has(foldBridgeId)) return null;
+
+      const matchKey = normalizeStructureMatchLabel(record.name || foldBridgeId);
+      const blastMatches = blastMatchIndex.get(matchKey) || [];
+      const bestMatch = blastMatches.reduce((best, candidate) => choosePreferredBlastHit(best, candidate), null);
+      const pdbIds = [...new Set(blastMatches.map((item) => item.pdbId).filter(Boolean))].sort();
+
+      return {
+        foldBridgeId,
+        name: record.name || foldBridgeId,
+        species: record.species || '',
+        discoveryYear: bestMatch?.pdbId ? getPdbDiscoveryYear(bestMatch.pdbId) : 'N/A',
+        sequence: record.sequence && record.length ? `${record.sequence} (${record.length.replace(/nt$/i, '')}nt)` : (record.sequence || ''),
+        length: record.length || '',
+        structureGroupKey: matchKey || foldBridgeId,
+        fileCode: record.fileCode || '',
+        experimentType: record.experimentType || '',
+        modifier: record.modifier || '',
+        hasPdbMatch: Boolean(bestMatch),
+        pdbMatchCount: blastMatches.length,
+        pdbIds,
+        bestPdbId: bestMatch?.pdbId || '',
+        bestSubjectId: bestMatch?.subjectId || '',
+        bestEvalue: bestMatch?.evalue || '',
+        bestIdentity: bestMatch?.pident || '',
+        bestCoverage: bestMatch?.qcovs || '',
+        structureDatasetGroup: record.structureDatasetGroup || 'other',
+        rdatPath: '',
+        hasLocalRdat: false,
+        sourceSequence: record.sequence || ''
+      };
+    })
+    .filter(Boolean);
+}
+
 function parseFasta(text) {
   const records = [];
   let current = null;
@@ -3755,7 +3937,16 @@ async function loadBrowseEntryRows() {
       ...buildSupplementStructureRows(parseTsv(supplementText), existingIds),
       ...buildSupplementStructureRows(parseTsv(resultsText), existingIds)
     ];
-    browseEntryRows = [...browseEntryRows, ...supplementRows].map(applyCuratedStructureOverrides);
+    const mergedIds = new Set([
+      ...existingIds,
+      ...supplementRows.map((row) => row.foldBridgeId).filter(Boolean)
+    ]);
+    const localRmdbRows = buildBrowseRowsFromLocalManifest(
+      Array.isArray(localRmdbRecords) ? localRmdbRecords : [],
+      blastMatchIndex,
+      mergedIds
+    );
+    browseEntryRows = [...browseEntryRows, ...supplementRows, ...localRmdbRows].map(applyCuratedStructureOverrides);
     browseEntryRows.forEach((row, idx) => {
       row.index = idx + 1;
     });
@@ -3774,6 +3965,14 @@ async function loadCase3dRows() {
 function rdatDownloadPath(foldBridgeId) {
   const row = browseEntryRows.find((item) => item.foldBridgeId === foldBridgeId);
   return row?.rdatPath || '';
+}
+
+function getBrowseRecordById(foldBridgeId) {
+  return browseEntryRows.find((item) => item.foldBridgeId === foldBridgeId) || null;
+}
+
+function getLocalRmdbRecordById(foldBridgeId) {
+  return (Array.isArray(localRmdbRecords) ? localRmdbRecords : []).find((item) => item.foldBridgeId === foldBridgeId) || null;
 }
 
 function downloadSelectedRdatFiles(selectedIds = [...selectedBrowseIds]) {
@@ -3807,99 +4006,111 @@ function clampPage(value, totalPages) {
   return Math.min(Math.max(value, 1), totalPages);
 }
 
-function parseLengthValue(value) {
-  const numeric = Number.parseInt(String(value ?? '').replace(/[^\d]/g, ''), 10);
-  return Number.isFinite(numeric) ? numeric : null;
-}
-
-function normalizeModifierValue(value) {
-  return String(value ?? '').trim() || 'Unspecified';
-}
-
-function searchMatchesLengthBand(row, band) {
-  const length = parseLengthValue(row.length);
-  if (!length || band === 'all') return band === 'all';
-  if (band === 'short') return length < 60;
-  if (band === 'medium') return length >= 60 && length <= 100;
-  if (band === 'long') return length > 100;
-  return true;
-}
-
 function scoreSearchRow(row, query) {
   if (!query) return 0;
   const terms = query.split(/\s+/).filter(Boolean);
+  const compact = (value) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '');
   const haystacks = {
     index: String(row.index ?? '').toLowerCase(),
     foldBridgeId: String(row.foldBridgeId ?? '').toLowerCase(),
     name: String(row.name ?? '').toLowerCase(),
     sequence: String(row.sequence ?? '').toLowerCase(),
-    fileCode: String(row.fileCode ?? '').toLowerCase(),
-    experimentType: String(row.experimentType ?? '').toLowerCase(),
-    modifier: normalizeModifierValue(row.modifier).toLowerCase(),
     species: String(row.species ?? '').toLowerCase(),
     year: String(row.discoveryYear ?? '').toLowerCase(),
-    bestPdbId: String(row.bestPdbId ?? '').toLowerCase()
+    bestPdbId: String(row.bestPdbId ?? '').toLowerCase(),
+    foldBridgeIdCompact: compact(row.foldBridgeId),
+    nameCompact: compact(row.name),
+    speciesCompact: compact(row.species),
+    yearCompact: compact(row.discoveryYear),
+    bestPdbIdCompact: compact(row.bestPdbId)
   };
 
-  return terms.reduce((score, term) => {
-    // Perfect match boosts
+  let matchedAllTerms = true;
+  const totalScore = terms.reduce((score, term) => {
+    const compactTerm = compact(term);
+
     if (haystacks.index === term) return score + 200;
     if (haystacks.foldBridgeId === term) return score + 160;
     if (haystacks.bestPdbId === term) return score + 140;
     if (haystacks.name === term) return score + 120;
     if (haystacks.species === term) return score + 100;
     if (haystacks.year === term) return score + 90;
-    
-    // Partial inclusion matches
+    if (compactTerm && haystacks.foldBridgeIdCompact === compactTerm) return score + 150;
+    if (compactTerm && haystacks.nameCompact === compactTerm) return score + 130;
+    if (compactTerm && haystacks.speciesCompact === compactTerm) return score + 110;
+    if (compactTerm && haystacks.bestPdbIdCompact === compactTerm) return score + 95;
+
     if (haystacks.foldBridgeId.includes(term)) return score + 110;
     if (haystacks.name.includes(term)) return score + 80;
     if (haystacks.species.includes(term)) return score + 70;
     if (haystacks.year.includes(term)) return score + 60;
     if (haystacks.bestPdbId.includes(term)) return score + 50;
-    if (haystacks.fileCode.includes(term)) return score + 42;
-    if (haystacks.experimentType.includes(term)) return score + 34;
-    if (haystacks.modifier.includes(term)) return score + 24;
+    if (compactTerm && haystacks.foldBridgeIdCompact.includes(compactTerm)) return score + 100;
+    if (compactTerm && haystacks.nameCompact.includes(compactTerm)) return score + 85;
+    if (compactTerm && haystacks.speciesCompact.includes(compactTerm)) return score + 75;
+    if (compactTerm && haystacks.yearCompact.includes(compactTerm)) return score + 65;
+    if (compactTerm && haystacks.bestPdbIdCompact.includes(compactTerm)) return score + 55;
     if (haystacks.sequence.includes(term)) return score + 18;
-    
+
+    matchedAllTerms = false;
     return score;
   }, 0);
+
+  if (!matchedAllTerms) return 0;
+
+  const compactQuery = compact(query);
+  if (query && haystacks.name.includes(query)) return totalScore + 140;
+  if (query && haystacks.foldBridgeId.includes(query)) return totalScore + 130;
+  if (query && haystacks.species.includes(query)) return totalScore + 110;
+  if (compactQuery && haystacks.nameCompact.includes(compactQuery)) return totalScore + 145;
+  if (compactQuery && haystacks.foldBridgeIdCompact.includes(compactQuery)) return totalScore + 135;
+  if (compactQuery && haystacks.speciesCompact.includes(compactQuery)) return totalScore + 115;
+
+  return totalScore;
 }
 
 function getAdvancedSearchOptions() {
-  const experimentTypes = [...new Set(browseEntryRows.map((row) => row.experimentType).filter(Boolean))].sort((a, b) =>
+  const species = [...new Set(structureEntryRows.map((row) => String(row.species || '').trim()).filter(Boolean))].sort((a, b) =>
     a.localeCompare(b)
   );
-  const modifiers = [...new Set(browseEntryRows.map((row) => normalizeModifierValue(row.modifier)))].sort((a, b) =>
+  const discoveryYears = [...new Set(structureEntryRows.map((row) => String(row.discoveryYear || '').trim()).filter(Boolean))].sort((a, b) =>
+    Number(b) - Number(a) || a.localeCompare(b)
+  );
+  const pdbIds = [...new Set(structureEntryRows.map((row) => String(row.bestPdbId || '').trim()).filter(Boolean))].sort((a, b) =>
     a.localeCompare(b)
   );
-  return { experimentTypes, modifiers };
+  return { species, discoveryYears, pdbIds };
 }
 
 function getAdvancedSearchRows() {
   const query = advancedSearchQuery.trim().toLowerCase();
   if (!query) return [];
 
-  const rows = browseEntryRows
+  const rows = structureEntryRows
     .map((row) => ({
       ...row,
-      modifierLabel: normalizeModifierValue(row.modifier),
-      lengthValue: parseLengthValue(row.length),
+      numericYear: Number.parseInt(String(row.discoveryYear ?? ''), 10),
+      numericIdentity: Number(row.bestIdentity) || 0,
+      numericCoverage: Number(row.bestCoverage) || 0,
+      numericEvalue: parseScientificValue(row.bestEvalue),
       relevanceScore: scoreSearchRow(row, query)
     }))
     .filter((row) => {
       if (query && row.relevanceScore <= 0) return false;
-      if (advancedSearchExperiment !== 'all' && row.experimentType !== advancedSearchExperiment) return false;
-      if (advancedSearchModifier !== 'all' && row.modifierLabel !== advancedSearchModifier) return false;
-      if (!searchMatchesLengthBand(row, advancedSearchLengthBand)) return false;
+      if (advancedSearchSpecies !== 'all' && (row.species || '') !== advancedSearchSpecies) return false;
+      if (advancedSearchDiscoveryYear !== 'all' && String(row.discoveryYear || '') !== advancedSearchDiscoveryYear) return false;
+      if (advancedSearchPdbId !== 'all' && String(row.bestPdbId || '') !== advancedSearchPdbId) return false;
       return true;
     });
 
   rows.sort((a, b) => {
     if (advancedSearchSort === 'name') return a.name.localeCompare(b.name);
-    if (advancedSearchSort === 'length') return (b.lengthValue || 0) - (a.lengthValue || 0) || a.name.localeCompare(b.name);
-    if (advancedSearchSort === 'experiment') {
-      return a.experimentType.localeCompare(b.experimentType) || a.name.localeCompare(b.name);
-    }
+    if (advancedSearchSort === 'species') return (a.species || '').localeCompare(b.species || '') || a.name.localeCompare(b.name);
+    if (advancedSearchSort === 'year') return (b.numericYear || 0) - (a.numericYear || 0) || a.name.localeCompare(b.name);
+    if (advancedSearchSort === 'pdb') return (a.bestPdbId || '').localeCompare(b.bestPdbId || '') || a.name.localeCompare(b.name);
+    if (advancedSearchSort === 'identity') return (b.numericIdentity || 0) - (a.numericIdentity || 0) || a.name.localeCompare(b.name);
+    if (advancedSearchSort === 'coverage') return (b.numericCoverage || 0) - (a.numericCoverage || 0) || a.name.localeCompare(b.name);
+    if (advancedSearchSort === 'evalue') return (a.numericEvalue || Number.POSITIVE_INFINITY) - (b.numericEvalue || Number.POSITIVE_INFINITY) || a.name.localeCompare(b.name);
     return b.relevanceScore - a.relevanceScore || a.name.localeCompare(b.name);
   });
 
@@ -3908,12 +4119,9 @@ function getAdvancedSearchRows() {
 
 function renderAdvancedSearchFilterPills() {
   const pills = [];
-  if (advancedSearchExperiment !== 'all') pills.push(`Experiment: ${advancedSearchExperiment}`);
-  if (advancedSearchModifier !== 'all') pills.push(`Modifier: ${advancedSearchModifier}`);
-  if (advancedSearchLengthBand !== 'all') {
-    const labels = { short: '< 60 nt', medium: '60-100 nt', long: '> 100 nt' };
-    pills.push(`Length: ${labels[advancedSearchLengthBand]}`);
-  }
+  if (advancedSearchSpecies !== 'all') pills.push(`Species: ${advancedSearchSpecies}`);
+  if (advancedSearchDiscoveryYear !== 'all') pills.push(`Discovery Year: ${advancedSearchDiscoveryYear}`);
+  if (advancedSearchPdbId !== 'all') pills.push(`PDB ID: ${advancedSearchPdbId}`);
   if (!pills.length) return '<span class="search-filter-empty">No active filters</span>';
   return pills.map((pill) => `<span class="search-filter-pill">${pill}</span>`).join('');
 }
@@ -3922,14 +4130,14 @@ function renderAdvancedSearchResults(rows) {
   if (!advancedSearchQuery.trim()) {
     return `<div class="search-empty-state">
       <h3>No results yet</h3>
-      <p>Start typing a record name, sequence fragment, FoldBridge ID, or experiment keyword to search the database.</p>
+      <p>Start typing a record name, sequence fragment, FoldBridge ID, species, year, or PDB ID to search the structure database.</p>
     </div>`;
   }
 
   if (!rows.length) {
     return `<div class="search-empty-state">
       <h3>No matching records</h3>
-      <p>Try a different name, sequence fragment, target code, or relax the filters above.</p>
+      <p>Try a different name, sequence fragment, FoldBridge ID, PDB ID, or relax the filters above.</p>
     </div>`;
   }
 
@@ -3950,9 +4158,9 @@ function renderAdvancedSearchResults(rows) {
                 <div><dt>Species</dt><dd>${row.species || 'N/A'}</dd></div>
                 <div><dt>Discovery Year</dt><dd>${row.discoveryYear || 'N/A'}</dd></div>
                 <div><dt>PDB ID</dt><dd>${row.bestPdbId ? renderPdbExternalLink(row.bestPdbId) : 'N/A'}</dd></div>
-                <div><dt>Length</dt><dd>${row.length || 'N/A'}</dd></div>
-                <div><dt>Experiment</dt><dd>${row.experimentType || 'N/A'}</dd></div>
-                <div><dt>Modifier</dt><dd>${row.modifierLabel}</dd></div>
+                <div><dt>E-value</dt><dd>${formatBlastEvalue(row.bestEvalue)}</dd></div>
+                <div><dt>Identity</dt><dd>${formatBlastPercent(row.bestIdentity)}</dd></div>
+                <div><dt>Coverage</dt><dd>${formatBlastPercent(row.bestCoverage)}</dd></div>
               </dl>
             </article>`;
           }
@@ -3972,9 +4180,9 @@ function renderAdvancedSearchResults(rows) {
           <th>Discovery year</th>
           <th>Sequence</th>
           <th>PDB ID</th>
-          <th>Experiment</th>
-          <th>Modifier</th>
-          <th>Length</th>
+          <th>E-value</th>
+          <th>Identity</th>
+          <th>Coverage</th>
         </tr>
       </thead>
       <tbody>
@@ -3990,9 +4198,9 @@ function renderAdvancedSearchResults(rows) {
                 <td>${row.discoveryYear || 'N/A'}</td>
                 <td><span class="search-sequence-inline" title="${row.sequence || ''}">${row.sequence || 'N/A'}</span></td>
                 <td>${renderPdbExternalLink(row.bestPdbId)}</td>
-                <td>${row.experimentType || 'N/A'}</td>
-                <td>${row.modifierLabel}</td>
-                <td>${row.length || 'N/A'}</td>
+                <td>${formatBlastEvalue(row.bestEvalue)}</td>
+                <td>${formatBlastPercent(row.bestIdentity)}</td>
+                <td>${formatBlastPercent(row.bestCoverage)}</td>
               </tr>`;
             }
           )
@@ -4691,8 +4899,7 @@ function renderBundleHeader(featuredNamesMarkup = null) {
 
         <nav class="bundle-home-route-nav" aria-label="Primary navigation">
           <button type="button" class="nav-btn ${isRouteActive('home') ? 'active' : ''}" data-route="home">Home</button>
-          <button type="button" class="nav-btn ${isRouteActive('browse') ? 'active' : ''}" data-route="browse">Browse</button>
-          <button type="button" class="nav-btn ${isRouteActive('sequence', 'download-sequences') ? 'active' : ''}" data-route="sequence">Sequence</button>
+          <button type="button" class="nav-btn ${isRouteActive('browse', 'browse-detail') ? 'active' : ''}" data-route="browse">Browse</button>
           <button type="button" class="nav-btn ${isRouteActive('structure', 'download-structures') ? 'active' : ''}" data-route="structure">Structure</button>
           <button type="button" class="nav-btn ${isRouteActive('probing', 'detail') ? 'active' : ''}" data-route="probing">Probing</button>
           <button type="button" class="nav-btn ${isRouteActive('download') ? 'active' : ''}" data-route="download">Download</button>
@@ -4704,10 +4911,10 @@ function renderBundleHeader(featuredNamesMarkup = null) {
   </header>`;
 }
 
-function renderDetailPageFooterActions() {
+function renderDetailPageFooterActions(backLabel = 'Back to Structure', backRoute = 'structure') {
   return `<div class="detail-page-footer-actions" style="display: flex !important; justify-content: center !important; align-items: center !important; gap: 16px !important; margin-top: 40px !important; padding-top: 20px !important; width: 100% !important;">
     <button type="button" class="footer-action-btn back-to-top-btn" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; height: 42px !important; width: 190px !important; padding: 0 !important; border-radius: 8px !important; font-size: 0.94rem !important; font-weight: 600 !important; cursor: pointer !important; border: none !important; white-space: nowrap !important; flex-shrink: 0 !important; box-shadow: none !important; background: rgba(184, 132, 14, 0.08) !important; color: #b8840e !important;"><svg class="footer-btn-icon" style="width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; max-width: 16px !important; max-height: 16px !important; stroke: currentColor !important; fill: none !important; margin: 0 !important; display: inline-block !important; flex-shrink: 0 !important; vertical-align: middle !important;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg><span style="color: inherit !important; display: inline-block !important; margin: 0 !important; padding: 0 !important; font-weight: 600 !important;">Back to Top</span></button>
-    <button type="button" class="footer-action-btn back-to-structure-btn" data-route="structure" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; height: 42px !important; width: 190px !important; padding: 0 !important; border-radius: 8px !important; font-size: 0.94rem !important; font-weight: 600 !important; cursor: pointer !important; border: none !important; white-space: nowrap !important; flex-shrink: 0 !important; box-shadow: none !important; background: rgba(184, 132, 14, 0.08) !important; color: #b8840e !important;"><svg class="footer-btn-icon" style="width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; max-width: 16px !important; max-height: 16px !important; stroke: currentColor !important; fill: none !important; margin: 0 !important; display: inline-block !important; flex-shrink: 0 !important; vertical-align: middle !important;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-13A2.5 2.5 0 0 1 6.5 4H20v18H6.5a2.5 2.5 0 0 1-2.5-2.5z"></path></svg><span style="color: inherit !important; display: inline-block !important; margin: 0 !important; padding: 0 !important; font-weight: 600 !important;">Back to Structure</span></button>
+    <button type="button" class="footer-action-btn back-to-structure-btn" data-route="${backRoute}" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; height: 42px !important; width: 190px !important; padding: 0 !important; border-radius: 8px !important; font-size: 0.94rem !important; font-weight: 600 !important; cursor: pointer !important; border: none !important; white-space: nowrap !important; flex-shrink: 0 !important; box-shadow: none !important; background: rgba(184, 132, 14, 0.08) !important; color: #b8840e !important;"><svg class="footer-btn-icon" style="width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; max-width: 16px !important; max-height: 16px !important; stroke: currentColor !important; fill: none !important; margin: 0 !important; display: inline-block !important; flex-shrink: 0 !important; vertical-align: middle !important;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-13A2.5 2.5 0 0 1 6.5 4H20v18H6.5a2.5 2.5 0 0 1-2.5-2.5z"></path></svg><span style="color: inherit !important; display: inline-block !important; margin: 0 !important; padding: 0 !important; font-weight: 600 !important;">${backLabel}</span></button>
   </div>`;
 }
 
@@ -4858,7 +5065,7 @@ function renderTechnologyMethodPage(method) {
         ${references}
       </ul>
     </section>
-    ${renderDetailPageFooterActions()}
+    ${renderDetailPageFooterActions('Back to Probing', 'probing')}
   </main>`;
 }
 
@@ -5263,7 +5470,7 @@ function caseDetailPage() {
           </div>
         </div>
       </section>
-      ${renderDetailPageFooterActions()}
+      ${renderDetailPageFooterActions('Back to Browse', 'browse')}
     </section>
   </main>`;
 }
@@ -5273,14 +5480,21 @@ function browsePage() {
   if (browseCurrentPage > totalPages) browseCurrentPage = totalPages;
   const startIndex = (browseCurrentPage - 1) * BROWSE_PAGE_SIZE;
   const visibleBrowseRows = browseEntryRows.slice(startIndex, startIndex + BROWSE_PAGE_SIZE);
-  const total3dPages = Math.max(1, Math.ceil(case3dRows.length / CASE3D_PAGE_SIZE));
-  if (case3dCurrentPage > total3dPages) case3dCurrentPage = total3dPages;
-  const case3dStartIndex = (case3dCurrentPage - 1) * CASE3D_PAGE_SIZE;
-  const visibleCase3dRows = case3dRows.slice(case3dStartIndex, case3dStartIndex + CASE3D_PAGE_SIZE);
   const rows = visibleBrowseRows.length
     ? visibleBrowseRows
         .map(
-          (row) => `<tr>
+          (row) => {
+            const browseDetailUrl = `#browse-detail?foldBridgeId=${encodeURIComponent(row.foldBridgeId)}`;
+            const foldBridgeCell = `<a href="${browseDetailUrl}" class="browse-record-link">${row.foldBridgeId}</a>`;
+            const fileCodeUrl = getProbingDetailUrl(row.fileCode);
+            const modifierUrl = getProbingDetailUrl(row.modifier);
+            const fileCodeCell = fileCodeUrl
+              ? `<a href="${fileCodeUrl}" class="browse-probing-link">${row.fileCode}</a>`
+              : row.fileCode;
+            const modifierCell = modifierUrl
+              ? `<a href="${modifierUrl}" class="browse-probing-link">${row.modifier}</a>`
+              : row.modifier;
+            return `<tr>
             <td>
               <input
                 type="checkbox"
@@ -5289,14 +5503,14 @@ function browsePage() {
                 ${selectedBrowseIds.has(row.foldBridgeId) ? 'checked' : ''}
               />
             </td>
-            <td>${row.foldBridgeId}</td>
+            <td>${foldBridgeCell}</td>
             <td>${row.name}</td>
             <td>
               <span class="entry-sequence" title="${row.sequence}">${row.sequence}</span>
             </td>
-            <td>${row.fileCode}</td>
+            <td>${fileCodeCell}</td>
             <td>${row.experimentType}</td>
-            <td>${row.modifier}</td>
+            <td>${modifierCell}</td>
             <td>
               <span class="browse-match-pill ${row.hasPdbMatch ? 'is-hit' : 'is-miss'}">
                 ${row.hasPdbMatch ? 'Matched' : 'Pending'}
@@ -5304,36 +5518,22 @@ function browsePage() {
             </td>
             <td>${summarizePdbMatch(row)}</td>
             <td>${formatBlastEvalue(row.bestEvalue)}</td>
-          </tr>`
+          </tr>`;
+          }
         )
         .join('')
     : `<tr><td colspan="10" class="entry-table-empty">No entries yet.</td></tr>`;
-  const case3dTableRows = visibleCase3dRows.length
-    ? visibleCase3dRows
-        .map(
-          (row) => `<tr>
-            <td><a href="#case-detail?case=${encodeURIComponent(row.pdbId ?? '')}" class="sequence-link">${row.pdbId ?? ''}</a></td>
-            <td>${row.rmdbUniqueSequenceCount ?? 0}</td>
-            <td>${row.rmdbProfileCount ?? 0}</td>
-            <td>${row.candidatePairRows ?? 0}</td>
-            <td>${row.alignmentRows ?? 0}</td>
-            <td>${row.pdbAxisReactivityRows ?? 0}</td>
-            <td>${row.projectionStatus ?? ''}</td>
-          </tr>`
-        )
-        .join('')
-    : `<tr><td colspan="7" class="entry-table-empty">No 3D entries yet.</td></tr>`;
 
   return `<main class="page-download-sequences page-browse">
     ${renderBundleHeader()}
     <section class="card bundle-wide-card browse-entry-section">
       <div class="browse-section-heading">
         <div>
-          <h2>2D Entry</h2>
+          <h2>Browse</h2>
         </div>
       </div>
       <p class="browse-section-note">
-        All RMDB records stay in one table. Entries without a PDB hit remain visible and are marked as pending.
+        Browse is the full RMDB-facing record table. Entries without a PDB hit stay visible here and are marked as pending, while Structure shows only the matched subset.
       </p>
       <div class="download-toolbar browse-toolbar">
         <button
@@ -5410,59 +5610,160 @@ function browsePage() {
         </div>
       </div>
     </section>
-
-    <section class="card bundle-wide-card browse-entry-section">
-      <div class="browse-section-heading">
-        <div>
-          <h2>3D Entry</h2>
-        </div>
-      </div>
-      <div class="entry-table-wrap">
-          <table class="entry-table case-detail-table">
-            <thead>
-            <tr>
-              <th>PDB ID</th>
-              <th>Unique RMDB sequences</th>
-              <th>RMDB profiles</th>
-              <th>Candidate pair rows</th>
-              <th>Alignment rows</th>
-              <th>Reactivity rows</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>${case3dTableRows}</tbody>
-        </table>
-      </div>
-      <div class="browse-pagination">
-        <div class="browse-pagination-info">
-          <span class="browse-pagination-status">Page ${case3dCurrentPage} of ${total3dPages}</span>
-          ${renderPageJumpControls('case3d', total3dPages, case3dCurrentPage)}
-        </div>
-        <div class="browse-pagination-actions">
-          <button
-            type="button"
-            id="case3d-prev-page"
-            class="download-outline-btn"
-            ${case3dCurrentPage === 1 ? 'disabled' : ''}
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            id="case3d-next-page"
-            class="download-outline-btn"
-            ${case3dCurrentPage === total3dPages ? 'disabled' : ''}
-          >
-            Next
-          </button>
-        </div>
-      </div>
-    </section>
   </main>`;
 }
 
 function structurePage() {
   return downloadStructuresPage();
+}
+
+function browseDetailPage() {
+  const foldBridgeId = getStructureRecordIdFromHash();
+  const row = getBrowseRecordById(foldBridgeId);
+
+  if (!row) {
+    return `<main class="page-sequence-detail page-browse-detail">
+      ${renderBundleHeader()}
+      <section class="sequence-detail-card">
+        <div class="sequence-detail-header">
+          <a class="sequence-detail-back" href="#browse">Back to Browse</a>
+          <div class="sequence-detail-title-row">
+            <div>
+              <p class="sequence-detail-kicker">Browse record</p>
+              <h1>Record Not Found</h1>
+            </div>
+          </div>
+        </div>
+        <section class="sequence-detail-panel">
+          <h2>Missing record</h2>
+          <div class="sequence-detail-placeholder">
+            <p>No Browse record matched this FoldBridge ID.</p>
+          </div>
+        </section>
+        ${renderDetailPageFooterActions('Back to Browse', 'browse')}
+      </section>
+    </main>`;
+  }
+
+  const localRecord = getLocalRmdbRecordById(foldBridgeId);
+  const detailSequence = trimSequenceLengthSuffix(row.sourceSequence || localRecord?.sequence || row.sequence || '');
+  const detailStructure = String(row.sourceStructure || '').trim();
+  const detailLength = row.length || localRecord?.length || (detailSequence ? `${detailSequence.length}nt` : '');
+  const sourceCategory = localRecord?.localCategory || '';
+  const datasetGroup = localRecord?.structureDatasetGroup || row.structureDatasetGroup || '';
+  const hasBundledHeatmap = Boolean(row.rdatPath);
+  const rdatAvailability = row.rdatPath
+    ? 'Bundled RDAT asset available in this demo.'
+    : localRecord
+      ? 'Imported from local RDAT header metadata.'
+      : 'Metadata-only record in the current bundle.';
+  const relatedLinks = [
+    row.hasPdbMatch
+      ? `<a href="#structure-detail?foldBridgeId=${encodeURIComponent(row.foldBridgeId)}" class="browse-detail-inline-link">Open matched structure detail</a>`
+      : '',
+    getProbingDetailUrl(row.modifier)
+      ? `<a href="${getProbingDetailUrl(row.modifier)}" class="browse-detail-inline-link">Open probing method page</a>`
+      : ''
+  ]
+    .filter(Boolean)
+    .join('');
+
+  return `<main class="page-sequence-detail page-browse-detail">
+    ${renderBundleHeader()}
+    <section class="sequence-detail-card">
+      <div class="sequence-detail-header">
+        <a class="sequence-detail-back" href="#browse">Back to Browse</a>
+        <div class="sequence-detail-title-row">
+          <div>
+            <p class="sequence-detail-kicker">Browse record</p>
+            <h1>${escapeHtml(row.foldBridgeId)}</h1>
+            <p>${escapeHtml(row.name || 'Unnamed RMDB record')}</p>
+          </div>
+          <dl class="sequence-detail-meta">
+            <div><dt>Status</dt><dd>${row.hasPdbMatch ? 'Matched' : 'Pending'}</dd></div>
+            <div><dt>Best PDB</dt><dd>${renderPdbExternalLink(row.bestPdbId)}</dd></div>
+            <div><dt>Modifier</dt><dd>${escapeHtml(row.modifier || 'N/A')}</dd></div>
+            <div><dt>File Code</dt><dd>${escapeHtml(row.fileCode || 'N/A')}</dd></div>
+            <div><dt>Length</dt><dd>${escapeHtml(detailLength || 'N/A')}</dd></div>
+            <div><dt>Species</dt><dd>${escapeHtml(row.species || 'N/A')}</dd></div>
+          </dl>
+        </div>
+      </div>
+
+      <section class="sequence-detail-panel">
+        <h2>Overview</h2>
+        <div class="sequence-detail-placeholder">
+          <p>${escapeHtml(row.foldBridgeId)} is a Browse entry derived from RMDB-facing metadata. This page collects the core RDAT-associated fields we currently have for this record without switching into the heavier Structure view.</p>
+        </div>
+      </section>
+
+      <section class="sequence-detail-panel">
+        <h2>RDAT Summary</h2>
+        <dl class="browse-detail-summary">
+          <div><dt>FoldBridge ID</dt><dd>${escapeHtml(row.foldBridgeId)}</dd></div>
+          <div><dt>Name</dt><dd>${escapeHtml(row.name || 'N/A')}</dd></div>
+          <div><dt>Experiment Type</dt><dd>${escapeHtml(row.experimentType || 'N/A')}</dd></div>
+          <div><dt>Modifier</dt><dd>${escapeHtml(row.modifier || 'N/A')}</dd></div>
+          <div><dt>File Code</dt><dd>${escapeHtml(row.fileCode || 'N/A')}</dd></div>
+          <div><dt>Dataset Group</dt><dd>${escapeHtml(datasetGroup || 'N/A')}</dd></div>
+          <div><dt>Local Category</dt><dd>${escapeHtml(sourceCategory || 'N/A')}</dd></div>
+          <div><dt>Source</dt><dd>${escapeHtml(rdatAvailability)}</dd></div>
+          <div><dt>Discovery Year</dt><dd>${escapeHtml(row.discoveryYear || 'N/A')}</dd></div>
+          <div><dt>Match Count</dt><dd>${escapeHtml(String(row.pdbMatchCount || 0))}</dd></div>
+          <div><dt>Identity</dt><dd>${escapeHtml(formatBlastPercent(row.bestIdentity))}</dd></div>
+          <div><dt>Coverage</dt><dd>${escapeHtml(formatBlastPercent(row.bestCoverage))}</dd></div>
+          <div><dt>E-value</dt><dd>${escapeHtml(formatBlastEvalue(row.bestEvalue))}</dd></div>
+          <div><dt>RDAT Asset</dt><dd>${row.rdatPath ? `<a href="${row.rdatPath}" class="browse-detail-inline-link" download>Download bundled RDAT</a>` : 'Not bundled in this demo'}</dd></div>
+        </dl>
+      </section>
+
+      <section class="sequence-detail-panel">
+        <h2>Sequence${detailLength ? ` (${escapeHtml(detailLength)})` : ''}</h2>
+        <article class="case-sequence-card">
+          <code class="case-sequence-block case-sequence-block-formatted">${detailSequence ? renderFormattedDetailSequence(detailSequence, 5, { forceUppercaseDisplay: true }) : 'Sequence unavailable'}</code>
+        </article>
+      </section>
+
+      ${
+        hasBundledHeatmap
+          ? `<section class="sequence-detail-panel">
+              <h2>Reactivity Heatmap</h2>
+              <div class="sequence-detail-section-intro">
+                <p>This heatmap summarizes the bundled RDAT reactivity matrix for this Browse record so you can inspect the experimental signal directly without leaving the lightweight detail page.</p>
+              </div>
+              <section class="sequence-secondary-card sequence-secondary-heatmap-card structure-detail-heatmap-card">
+                <div
+                  id="browse-detail-heatmap"
+                  class="sequence-secondary-heatmap-host"
+                  data-rdat-url="${row.rdatPath}"
+                  data-sequence="${escapeHtml(detailSequence)}"
+                ></div>
+                <p id="browse-detail-heatmap-status" class="mini-note" hidden></p>
+              </section>
+            </section>`
+          : ''
+      }
+
+      ${
+        detailStructure
+          ? `<section class="sequence-detail-panel">
+              <h2>Dot-Bracket</h2>
+              <div class="sequence-detail-placeholder">
+                <p class="mini-note">Curated or imported secondary-structure text is available for this record.</p>
+              </div>
+              <code class="case-sequence-structure">${renderAlignedSequenceStructure(detailSequence, detailStructure)}</code>
+            </section>`
+          : ''
+      }
+
+      <section class="sequence-detail-panel">
+        <h2>Related Pages</h2>
+        ${relatedLinks ? `<div class="browse-detail-action-row">${relatedLinks}</div>` : '<div class="sequence-detail-placeholder"><p>No related pages are available for this record yet.</p></div>'}
+      </section>
+
+      ${renderDetailPageFooterActions('Back to Browse', 'browse')}
+    </section>
+  </main>`;
 }
 
 function structureDetailPdbUrl(pdbId, subjectId = '') {
@@ -5729,7 +6030,7 @@ function structureDetailPage() {
         <h2>References</h2>
         ${renderStructureDetailReferenceContent(row)}
       </section>
-      ${renderDetailPageFooterActions()}
+      ${renderDetailPageFooterActions('Back to Structure', 'structure')}
 
     </section>
   </main>`;
@@ -5740,17 +6041,17 @@ function downloadPage() {
     ${renderBundleHeader()}
     <section class="card bundle-wide-card download-card">
       <h1>Download</h1>
-      <p class="download-intro">Use this page as the download entry for FoldBridge sequence and structure assets.</p>
+      <p class="download-intro">Use this page as the download entry for all RMDB records in Browse and the structure-matched subset in Structure.</p>
       <div class="actions">
-        <button type="button" data-route="sequence">Sequence downloads</button>
-        <button type="button" data-route="structure">Structure downloads</button>
+        <button type="button" data-route="browse">Browse all records</button>
+        <button type="button" data-route="structure">Structure subset</button>
       </div>
     </section>
   </main>`;
 }
 
 function searchPage() {
-  const { experimentTypes, modifiers } = getAdvancedSearchOptions();
+  const { species, discoveryYears, pdbIds } = getAdvancedSearchOptions();
   const rows = getAdvancedSearchRows();
 
   return `<main class="page-detail page-browse page-search">
@@ -5767,7 +6068,7 @@ function searchPage() {
             <input
               id="advanced-search-input"
               type="search"
-              placeholder="Search by name, sequence, FoldBridge ID, file code, or keyword..."
+              placeholder="Search by number, FoldBridge ID, name, sequence, year, species, PDB ID..."
               value="${advancedSearchQuery.replace(/"/g, '&quot;')}"
             />
             <button id="advanced-search-clear" type="button" class="search-inline-clear" ${advancedSearchQuery ? '' : 'disabled'}>Clear</button>
@@ -5783,36 +6084,39 @@ function searchPage() {
         </button>
         <div class="search-filter-drawer ${advancedSearchFiltersOpen ? 'open' : ''}">
           <label>
-            <span>Experiment Type</span>
-            <select id="advanced-search-experiment">
-              <option value="all">All experiment types</option>
-              ${experimentTypes
+            <span>Species</span>
+            <select id="advanced-search-species">
+              <option value="all">All species</option>
+              ${species
                 .map(
                   (item) =>
-                    `<option value="${item.replace(/"/g, '&quot;')}" ${advancedSearchExperiment === item ? 'selected' : ''}>${item}</option>`
+                    `<option value="${item.replace(/"/g, '&quot;')}" ${advancedSearchSpecies === item ? 'selected' : ''}>${item}</option>`
                 )
                 .join('')}
             </select>
           </label>
           <label>
-            <span>Modifier</span>
-            <select id="advanced-search-modifier">
-              <option value="all">All modifiers</option>
-              ${modifiers
+            <span>Discovery Year</span>
+            <select id="advanced-search-discovery-year">
+              <option value="all">All discovery years</option>
+              ${discoveryYears
                 .map(
                   (item) =>
-                    `<option value="${item.replace(/"/g, '&quot;')}" ${advancedSearchModifier === item ? 'selected' : ''}>${item}</option>`
+                    `<option value="${item.replace(/"/g, '&quot;')}" ${advancedSearchDiscoveryYear === item ? 'selected' : ''}>${item}</option>`
                 )
                 .join('')}
             </select>
           </label>
           <label>
-            <span>Length</span>
-            <select id="advanced-search-length-band">
-              <option value="all" ${advancedSearchLengthBand === 'all' ? 'selected' : ''}>All lengths</option>
-              <option value="short" ${advancedSearchLengthBand === 'short' ? 'selected' : ''}>&lt; 60 nt</option>
-              <option value="medium" ${advancedSearchLengthBand === 'medium' ? 'selected' : ''}>60-100 nt</option>
-              <option value="long" ${advancedSearchLengthBand === 'long' ? 'selected' : ''}>&gt; 100 nt</option>
+            <span>PDB ID</span>
+            <select id="advanced-search-pdb-id">
+              <option value="all">All PDB IDs</option>
+              ${pdbIds
+                .map(
+                  (item) =>
+                    `<option value="${item.replace(/"/g, '&quot;')}" ${advancedSearchPdbId === item ? 'selected' : ''}>${item}</option>`
+                )
+                .join('')}
             </select>
           </label>
           <button id="advanced-search-reset" type="button" class="ghost search-reset-btn">Reset filters</button>
@@ -5831,8 +6135,12 @@ function searchPage() {
               <select id="advanced-search-sort">
                 <option value="relevance" ${advancedSearchSort === 'relevance' ? 'selected' : ''}>Relevance</option>
                 <option value="name" ${advancedSearchSort === 'name' ? 'selected' : ''}>Name</option>
-                <option value="length" ${advancedSearchSort === 'length' ? 'selected' : ''}>Length</option>
-                <option value="experiment" ${advancedSearchSort === 'experiment' ? 'selected' : ''}>Experiment type</option>
+                <option value="species" ${advancedSearchSort === 'species' ? 'selected' : ''}>Species</option>
+                <option value="year" ${advancedSearchSort === 'year' ? 'selected' : ''}>Discovery year</option>
+                <option value="pdb" ${advancedSearchSort === 'pdb' ? 'selected' : ''}>PDB ID</option>
+                <option value="identity" ${advancedSearchSort === 'identity' ? 'selected' : ''}>Identity</option>
+                <option value="coverage" ${advancedSearchSort === 'coverage' ? 'selected' : ''}>Coverage</option>
+                <option value="evalue" ${advancedSearchSort === 'evalue' ? 'selected' : ''}>E-value</option>
               </select>
             </label>
             <button id="advanced-search-export" type="button" class="search-export-btn">Export CSV</button>
@@ -5891,7 +6199,7 @@ function downloadStructuresPage() {
     ${renderBundleHeader()}
     <section class="card bundle-wide-card browse-entry-section">
       <h1>Structure</h1>
-      <p class="browse-section-note">This page lists probing-centered FoldBridge records that already have a best tertiary-structure match in the current BLAST mapping table.</p>
+      <p class="browse-section-note">Structure is the curated subset of Browse that already has a best tertiary-structure match in the current BLAST mapping table.</p>
       <div class="download-toolbar browse-toolbar">
         <button
           type="button"
@@ -6092,13 +6400,14 @@ function pageFor(name) {
   if (safeRoute === 'browse') return browsePage();
   if (safeRoute === 'case-10fz') return case10fzPage();
   if (safeRoute === 'case-detail') return caseDetailPage();
+  if (safeRoute === 'browse-detail') return browseDetailPage();
   if (safeRoute === 'structure-detail') return structureDetailPage();
-  if (safeRoute === 'sequence') return downloadSequencesPage();
+  if (safeRoute === 'sequence') return browsePage();
   if (safeRoute === 'structure') return structurePage();
   if (safeRoute === 'probing') return detailPage();
   if (safeRoute === 'download') return downloadPage();
   if (safeRoute === 'search') return searchPage();
-  if (safeRoute === 'download-sequences') return downloadSequencesPage();
+  if (safeRoute === 'download-sequences') return browsePage();
   if (safeRoute === 'download-structures') return downloadStructuresPage();
   if (safeRoute === 'detail') return detailPage();
   if (safeRoute === 'publications') return publicationsPage();
@@ -6190,33 +6499,33 @@ function render(options = {}) {
       render({ preserveScroll: true });
     });
   }
-  const advancedSearchExperimentSelect = document.getElementById('advanced-search-experiment');
-  if (advancedSearchExperimentSelect) {
-    advancedSearchExperimentSelect.addEventListener('change', (event) => {
-      advancedSearchExperiment = event.target.value;
+  const advancedSearchSpeciesSelect = document.getElementById('advanced-search-species');
+  if (advancedSearchSpeciesSelect) {
+    advancedSearchSpeciesSelect.addEventListener('change', (event) => {
+      advancedSearchSpecies = event.target.value;
       render({ preserveScroll: true });
     });
   }
-  const advancedSearchModifierSelect = document.getElementById('advanced-search-modifier');
-  if (advancedSearchModifierSelect) {
-    advancedSearchModifierSelect.addEventListener('change', (event) => {
-      advancedSearchModifier = event.target.value;
+  const advancedSearchDiscoveryYearSelect = document.getElementById('advanced-search-discovery-year');
+  if (advancedSearchDiscoveryYearSelect) {
+    advancedSearchDiscoveryYearSelect.addEventListener('change', (event) => {
+      advancedSearchDiscoveryYear = event.target.value;
       render({ preserveScroll: true });
     });
   }
-  const advancedSearchLengthBandSelect = document.getElementById('advanced-search-length-band');
-  if (advancedSearchLengthBandSelect) {
-    advancedSearchLengthBandSelect.addEventListener('change', (event) => {
-      advancedSearchLengthBand = event.target.value;
+  const advancedSearchPdbIdSelect = document.getElementById('advanced-search-pdb-id');
+  if (advancedSearchPdbIdSelect) {
+    advancedSearchPdbIdSelect.addEventListener('change', (event) => {
+      advancedSearchPdbId = event.target.value;
       render({ preserveScroll: true });
     });
   }
   const advancedSearchReset = document.getElementById('advanced-search-reset');
   if (advancedSearchReset) {
     advancedSearchReset.addEventListener('click', () => {
-      advancedSearchExperiment = 'all';
-      advancedSearchModifier = 'all';
-      advancedSearchLengthBand = 'all';
+      advancedSearchSpecies = 'all';
+      advancedSearchDiscoveryYear = 'all';
+      advancedSearchPdbId = 'all';
       render({ preserveScroll: true });
     });
   }
@@ -6417,6 +6726,7 @@ function render(options = {}) {
   initSequenceDetailSecondaryHeatmap();
   initStructureDetailSecondaryForna();
   initStructureDetailSecondaryHeatmap();
+  initBrowseDetailSecondaryHeatmap();
   initStructureDetailMolstar();
   initPredictedStructureDetailMolstar();
   initAnimatedStats();

@@ -1,0 +1,4 @@
+pdb_id	pdb_reference_id	sequence_label	matching_entry_key	matching_entry_kind	pident	identity_fraction	alignment_length	qstart	qend	sstart	send	qcovhsp	qcovs	subject_coverage	evalue	bitscore
+1EFW	1EFW_D	sequence_000001	pdb_sequence_match|annotation_feature|annref_Y_pseudotuberculosis|NC_010465|exon:NC_010465:1248884:1248953:+|1248883|1248953|+	annotation_feature	96.97	0.9697	66.0	2	67	4	69	94.0	94.0	90.410959	2.04e-25	111.0
+1EFW	1EFW_D	sequence_000002	pdb_sequence_match|annotation_feature|annref_Y_pseudotuberculosis|NC_010465|gene:ENSB:75SfIwioE-pBoQo|1248883|1248953|+	annotation_feature	96.97	0.9697	66.0	2	67	4	69	94.0	94.0	90.410959	2.04e-25	111.0
+1EFW	1EFW_D	sequence_000003	pdb_sequence_match|annotation_feature|annref_Y_pseudotuberculosis|NC_010465|transcript:ENSB:75SfIwioE-pBoQo|1248883|1248953|+	annotation_feature	96.97	0.9697	66.0	2	67	4	69	94.0	94.0	90.410959	2.04e-25	111.0

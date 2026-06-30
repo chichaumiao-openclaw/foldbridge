@@ -1,0 +1,6 @@
+>sequence_000001|pdb_sequence_match|annotation_feature|annref_Y_pseudotuberculosis|NC_010465|exon:NC_010465:1248884:1248953:+|1248883|1248953|+ pdb_id=1EFW pdb_reference_id=1EFW_D
+UGCGGUAGUUCAGUCGGUUAGAAUACCGGCCUGUCACGCCGGGGGUCGCGGGUUCGAGUCCCGUCCGCAC
+>sequence_000002|pdb_sequence_match|annotation_feature|annref_Y_pseudotuberculosis|NC_010465|gene:ENSB:75SfIwioE-pBoQo|1248883|1248953|+ pdb_id=1EFW pdb_reference_id=1EFW_D
+UGCGGUAGUUCAGUCGGUUAGAAUACCGGCCUGUCACGCCGGGGGUCGCGGGUUCGAGUCCCGUCCGCAC
+>sequence_000003|pdb_sequence_match|annotation_feature|annref_Y_pseudotuberculosis|NC_010465|transcript:ENSB:75SfIwioE-pBoQo|1248883|1248953|+ pdb_id=1EFW pdb_reference_id=1EFW_D
+UGCGGUAGUUCAGUCGGUUAGAAUACCGGCCUGUCACGCCGGGGGUCGCGGGUUCGAGUCCCGUCCGCAC

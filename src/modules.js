@@ -1684,6 +1684,18 @@ export async function initStructureDetailSecondaryHeatmap() {
   await renderRdatHeatmap(host, status, rdatUrl, targetSequence);
 }
 
+export async function initBrowseDetailSecondaryHeatmap() {
+  const host = document.getElementById('browse-detail-heatmap');
+  const status = document.getElementById('browse-detail-heatmap-status');
+  if (!host || !status) return;
+
+  const rdatUrl = host.dataset.rdatUrl;
+  const targetSequence = host.dataset.sequence || '';
+  if (!rdatUrl) return;
+
+  await renderRdatHeatmap(host, status, rdatUrl, targetSequence);
+}
+
 export function downloadRowsAsCsv(rows, filename = 'sequences.csv') {
   if (!rows || !rows.length) return;
 

@@ -1,5 +1,7 @@
+import { createReadStream } from 'node:fs';
 import { cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import readline from 'node:readline';
 import { generateFallbackPdb } from './generate_fallback_pdb.mjs';
 
 const root = process.cwd();
@@ -8,6 +10,7 @@ const generatedSrcDir = path.join(root, 'src', 'generated');
 const predictedStructuresDir = path.join(root, 'src', 'assets', 'predicted-structures');
 const rmdbPuzzleDir = path.join(root, 'src', 'assets', 'data', 'rmdb-puzzle');
 const structureResultsPath = path.join(rmdbPuzzleDir, 'structure_page_results.tsv');
+const localRmdbRoot = '/Users/hulinyan/Desktop/RMDB';
 
 await rm(dist, { recursive: true, force: true });
 await mkdir(generatedSrcDir, { recursive: true });
@@ -16,6 +19,123 @@ await cp(path.join(root, 'index.html'), path.join(dist, 'index.html'));
 
 function normalizeRnaSequence(value) {
   return String(value || '').replace(/\s+/g, '').toUpperCase().replace(/T/g, 'U');
+}
+
+function inferStructureDatasetGroupFromFolder(folderName) {
+  const text = String(folderName || '').toLowerCase();
+  if (text.includes('puzzle')) return 'puzzle';
+  if (text.includes('general')) return 'general';
+  if (text.includes('riboswitch')) return 'riboswitches';
+  if (text.includes('rna-structure')) return 'rna-structure';
+  if (text.includes('eterna') || text.includes('enterna')) return 'eterna';
+  return 'other';
+}
+
+function splitNameAndSpecies(rawName) {
+  const raw = String(rawName || '').trim();
+  if (!raw) return { name: '', species: '' };
+  const parts = raw.split(',').map((part) => part.trim()).filter(Boolean);
+  if (parts.length < 2) return { name: raw, species: '' };
+  return {
+    name: parts[0],
+    species: parts.slice(1).join(', ')
+  };
+}
+
+async function collectLocalRdatFiles(rootDir) {
+  const categoryEntries = await readdir(rootDir, { withFileTypes: true });
+  const files = [];
+
+  for (const categoryEntry of categoryEntries) {
+    if (!categoryEntry.isDirectory()) continue;
+    const categoryDir = path.join(rootDir, categoryEntry.name);
+    const childEntries = await readdir(categoryDir, { withFileTypes: true });
+    for (const childEntry of childEntries) {
+      if (!childEntry.isFile() || !childEntry.name.toLowerCase().endsWith('.rdat')) continue;
+      files.push({
+        absolutePath: path.join(categoryDir, childEntry.name),
+        categoryFolder: categoryEntry.name,
+        fileName: childEntry.name
+      });
+    }
+  }
+
+  return files;
+}
+
+function parseLocalRdatMetadataFromLines(lines, fileName, categoryFolder) {
+  let name = '';
+  let sequence = '';
+  let experimentType = '';
+  let modifier = '';
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    if (line.startsWith('NAME')) {
+      name = line.replace(/^NAME\s+/, '').trim();
+      continue;
+    }
+    if (line.startsWith('SEQUENCE')) {
+      sequence = normalizeRnaSequence(line.replace(/^SEQUENCE\s+/, ''));
+      continue;
+    }
+    if (line.startsWith('ANNOTATION')) {
+      const experimentMatch = line.match(/experimentType:([^\t ]+)/i);
+      if (experimentMatch && !experimentType) experimentType = experimentMatch[1].trim();
+      const modifierMatch = line.match(/modifier:([^\t ]+)/i);
+      if (modifierMatch && !modifier) modifier = modifierMatch[1].trim();
+      continue;
+    }
+    if (line.startsWith('ANNOTATION_DATA:') && !modifier) {
+      const modifierMatch = line.match(/modifier:([^\t ]+)/i);
+      if (modifierMatch && !/^none|nomod$/i.test(modifierMatch[1].trim())) {
+        modifier = modifierMatch[1].trim();
+      }
+    }
+  }
+
+  const stem = fileName.replace(/\.rdat$/i, '');
+  const { name: parsedName, species } = splitNameAndSpecies(name);
+  const displayName = parsedName || name || stem;
+
+  return {
+    foldBridgeId: `RMDB_${stem}`,
+    name: displayName,
+    species,
+    sequence,
+    length: sequence ? `${sequence.length}nt` : '',
+    fileCode: stem.split('_').slice(1).join('_') || '',
+    experimentType,
+    modifier,
+    structureDatasetGroup: inferStructureDatasetGroupFromFolder(categoryFolder),
+    localCategory: categoryFolder
+  };
+}
+
+async function readLocalRdatHeaderLines(filePath, limit = 120) {
+  const lines = [];
+  const stream = createReadStream(filePath, { encoding: 'utf8' });
+  const reader = readline.createInterface({
+    input: stream,
+    crlfDelay: Infinity
+  });
+
+  try {
+    for await (const line of reader) {
+      lines.push(line);
+      if (lines.length >= limit) {
+        reader.close();
+        stream.destroy();
+        break;
+      }
+    }
+  } finally {
+    reader.close();
+    stream.destroy();
+  }
+
+  return lines;
 }
 
 function parseStructureResultsRows(text) {
@@ -226,6 +346,29 @@ generatedReactivityGuidedPredictions.sort((a, b) => a[0].localeCompare(b[0]));
 await writeFile(
   path.join(generatedSrcDir, 'reactivityGuidedStructureManifest.js'),
   `export const reactivityGuidedStructurePredictions = ${JSON.stringify(generatedReactivityGuidedPredictions, null, 2)};\n`
+);
+
+let generatedLocalRmdbRecords = [];
+try {
+  const localRdatFiles = await collectLocalRdatFiles(localRmdbRoot);
+  const records = [];
+  for (const file of localRdatFiles) {
+    try {
+      const headerLines = await readLocalRdatHeaderLines(file.absolutePath);
+      const parsed = parseLocalRdatMetadataFromLines(headerLines, file.fileName, file.categoryFolder);
+      if (parsed) records.push(parsed);
+    } catch {
+      // skip unreadable local RDAT files
+    }
+  }
+  generatedLocalRmdbRecords = records.sort((a, b) => String(a.foldBridgeId).localeCompare(String(b.foldBridgeId)));
+} catch {
+  generatedLocalRmdbRecords = [];
+}
+
+await writeFile(
+  path.join(generatedSrcDir, 'localRmdbManifest.js'),
+  `export const localRmdbRecords = ${JSON.stringify(generatedLocalRmdbRecords, null, 2)};\n`
 );
 
 const caseBundleRootName = 'rmdb_pdb_sequence_cases_rasp_params_besthit_20260610';

@@ -12,6 +12,7 @@ const ALLOWED_ROUTES = new Set([
   'publications',
   'help',
   'sequence-detail',
+  'browse-detail',
   'structure-detail',
   'case-10fz',
   'case-detail'

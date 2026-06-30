@@ -99,6 +99,19 @@
     "completedAt": "2026-06-26T08:20:15Z"
   },
   {
+    "representativeId": "RMDB_TRNAPH_1M7_0000",
+    "members": [
+      "RMDB_TRNAPH_1M7_0000"
+    ],
+    "sequenceLength": 77,
+    "taskId": "d70f2748-8c49-4ff9-9ad3-8ee8f234ef02",
+    "resultHref": "/Home/GetResult?resId=f84adb40-468c-49bf-a5cc-436383255d82&name=TRNAPH_1M7_0000.pdb",
+    "savedFiles": [
+      "src/assets/predicted-structures/TRNAPH_1M7_0000.rnacomposer.pdb"
+    ],
+    "completedAt": "2026-06-30T02:18:45Z"
+  },
+  {
     "representativeId": "RMDB_TRP4P6_DMS_0014",
     "members": [
       "RMDB_TRP4P6_DMS_0014"

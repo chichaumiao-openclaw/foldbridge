@@ -18,6 +18,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TARGETS_PATH = ROOT / "scripts" / "targets.json"
+RDAT_DIR = ROOT / "src" / "assets" / "data" / "rmdb-puzzle"
+REACTIVITY_GUIDED_MANIFEST_PATH = ROOT / "src" / "generated" / "reactivityGuidedStructureManifest.js"
 OUTPUT_DIR = ROOT / "src" / "assets" / "predicted-structures"
 MANIFEST_PATH = OUTPUT_DIR / "rnacomposer-manifest.json"
 BASE_URL = "https://rnacomposer.cs.put.poznan.pl"
@@ -39,6 +41,7 @@ TASK_ID_RE = re.compile(r'name="taskId"\s+id="taskId"\s+value="([^"]+)"')
 RESULT_HREF_RE = re.compile(r'href="(/Home/GetResult\?[^"]+)"')
 TASK_DESCRIPTION_RE = re.compile(r"[^A-Za-z0-9_.-]+")
 VALIDATION_ERROR_RE = re.compile(r"<td>([^<]+)</td>")
+JS_EXPORT_PREFIX = "export const reactivityGuidedStructurePredictions = "
 
 
 @dataclass
@@ -48,6 +51,35 @@ class TargetGroup:
     sequence: str
     structure: str
     members: list[str]
+
+
+def parse_rdat_sequence(record_id: str) -> str:
+    path = RDAT_DIR / f"{record_id.replace('RMDB_', '', 1)}.rdat"
+    sequence = ""
+    for raw_line in path.read_text(encoding="utf-8", errors="ignore").splitlines():
+        line = raw_line.strip()
+        if line.startswith("SEQUENCE"):
+            sequence = "".join(line.replace("SEQUENCE", "", 1).split()).upper().replace("T", "U")
+            break
+    if not sequence:
+        raise ValueError(f"Could not find SEQUENCE in {path.relative_to(ROOT)}")
+    return sequence
+
+
+def load_reactivity_guided_structures() -> dict[str, str]:
+    raw_text = REACTIVITY_GUIDED_MANIFEST_PATH.read_text(encoding="utf-8").strip()
+    if not raw_text.startswith(JS_EXPORT_PREFIX) or not raw_text.endswith(";"):
+        raise ValueError(
+            f"Unexpected format in {REACTIVITY_GUIDED_MANIFEST_PATH.relative_to(ROOT)}"
+        )
+    payload = raw_text[len(JS_EXPORT_PREFIX) : -1]
+    parsed = json.loads(payload)
+    result: dict[str, str] = {}
+    for record_id, metadata in parsed:
+        structure = str((metadata or {}).get("structure", "")).strip()
+        if structure:
+            result[str(record_id)] = structure
+    return result
 
 
 def parse_args() -> argparse.Namespace:
@@ -107,6 +139,7 @@ def build_task_description(record_id: str) -> str:
 
 def load_groups(selected_ids: set[str]) -> list[TargetGroup]:
     targets = json.loads(TARGETS_PATH.read_text(encoding="utf-8"))
+    reactivity_guided_structures = load_reactivity_guided_structures()
     grouped: dict[tuple[str, str], list[dict[str, str]]] = {}
     for target in targets:
         key = (target["sequence"], target["structure"])
@@ -125,6 +158,21 @@ def load_groups(selected_ids: set[str]) -> list[TargetGroup]:
                 sequence=representative["sequence"].upper().replace("T", "U"),
                 structure=representative["structure"].strip(),
                 members=members,
+            )
+        )
+
+    for record_id in sorted(selected_ids - {member for group in groups for member in group.members}):
+        structure = reactivity_guided_structures.get(record_id)
+        if not structure:
+            continue
+        sequence = parse_rdat_sequence(record_id)
+        groups.append(
+            TargetGroup(
+                representative_id=record_id,
+                filename_stub=record_id.replace("RMDB_", "", 1),
+                sequence=sequence,
+                structure=structure,
+                members=[record_id],
             )
         )
 
