@@ -784,9 +784,9 @@ test('atlas page caps large expanded singleton-child parent groups inside the cu
     expandedGroupIds: new Set(['parent:Ribosome'])
   });
 
-  assert.equal((html.match(/class="annojoin-case-row is-in-expanded-group"/g) || []).length, 25);
+  assert.equal((html.match(/class="annojoin-case-row is-in-expanded-group"/g) || []).length, 5);
   assert.match(html, /data-annojoin-group-page-toggle="parent:Ribosome"/);
-  assert.match(html, /Showing 25 of 30 cases in this group/);
+  assert.match(html, /Showing 5 of 30 cases in this group/);
 });
 
 test('atlas page does not render folding rows for singleton classes', () => {

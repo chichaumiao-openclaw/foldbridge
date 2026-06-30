@@ -11,7 +11,7 @@ import {
 } from './annojoinAtlasTableModel.js';
 import { resolveLocalPagesBridgeDetailHref } from './localPagesBridgeLinks.js';
 
-const DEFAULT_GROUP_ROW_LIMIT = 25;
+const DEFAULT_GROUP_ROW_LIMIT = 5;
 
 function escapeHtml(value) {
   return String(value ?? '')
