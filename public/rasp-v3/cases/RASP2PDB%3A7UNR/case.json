@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7UNR",
+  "biologicalMoleculeName": "7UNR",
+  "caseId": "7UNR",
+  "caseKey": "RASP2PDB:7UNR",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "v"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "7UNR",
+  "profileCount": 31
+}

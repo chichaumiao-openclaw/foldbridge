@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7UQZ",
+  "biologicalMoleculeName": "7UQZ",
+  "caseId": "7UQZ",
+  "caseKey": "RASP2PDB:7UQZ",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "6"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "7UQZ",
+  "profileCount": 112
+}

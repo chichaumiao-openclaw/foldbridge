@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8BHP",
+  "biologicalMoleculeName": "8BHP",
+  "caseId": "8BHP",
+  "caseKey": "RASP2PDB:8BHP",
+  "chains": [
+    "0",
+    "1",
+    "2",
+    "4"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8BHP",
+  "profileCount": 41
+}

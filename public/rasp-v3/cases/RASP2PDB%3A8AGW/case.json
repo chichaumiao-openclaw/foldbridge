@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8AGW",
+  "biologicalMoleculeName": "8AGW",
+  "caseId": "8AGW",
+  "caseKey": "RASP2PDB:8AGW",
+  "chains": [
+    "f",
+    "h",
+    "i",
+    "x"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "8AGW",
+  "profileCount": 143
+}

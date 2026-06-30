@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7ZUX",
+  "biologicalMoleculeName": "7ZUX",
+  "caseId": "7ZUX",
+  "caseKey": "RASP2PDB:7ZUX",
+  "chains": [
+    "2",
+    "3",
+    "4",
+    "5",
+    "7"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "7ZUX",
+  "profileCount": 191
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7WTZ",
+  "biologicalMoleculeName": "7WTZ",
+  "caseId": "7WTZ",
+  "caseKey": "RASP2PDB:7WTZ",
+  "chains": [
+    "2"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "7WTZ",
+  "profileCount": 92
+}
