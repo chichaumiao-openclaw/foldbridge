@@ -839,13 +839,21 @@ test('atlas side panel renders field-specific explanations', () => {
 
   const profilesHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'profileCount' });
   assert.match(profilesHtml, /Profile hits/);
-  assert.match(profilesHtml, /RDAT trace/);
+  // Profile definition is now explained for both RMDB and RASP sources.
+  assert.match(profilesHtml, /A profile is a single source chemical-probing signal record/);
+  // Per-source hit counts replace the RMDB-only framing.
+  assert.match(profilesHtml, /Hits by source/);
+  assert.match(profilesHtml, /<dt>RMDB<\/dt>/);
+  assert.match(profilesHtml, /<dt>RASP<\/dt>/);
+  // The RMDB RDAT trace only renders when trace rows exist for the case.
+  assert.match(profilesHtml, /RMDB RDAT trace/);
   assert.match(profilesHtml, /OK7ALIB_2A3_0000\.rdat/);
   assert.match(profilesHtml, /line 5914/);
   assert.match(profilesHtml, /class="annojoin-profile-trace-list"/);
   assert.match(profilesHtml, /5914/);
   assert.doesNotMatch(profilesHtml, /rmdbv3_exact_alpha/);
-  assert.match(profilesHtml, /RASP hit details are not present in the current index asset/);
+  // The old dismissive "RASP hit details are not present" note is gone.
+  assert.doesNotMatch(profilesHtml, /RASP hit details are not present in the current index asset/);
 
   const chainsHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'chains' });
   assert.match(chainsHtml, /Chain definitions/);

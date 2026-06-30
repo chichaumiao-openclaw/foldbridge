@@ -423,17 +423,50 @@ function renderPdbPanel(row) {
   </aside>`;
 }
 
+function profileHitsByFamily(row = {}) {
+  const entries = sourceCaseEntries(row);
+  const counts = { RMDB2PDB: 0, RASP2PDB: 0 };
+  if (entries.length) {
+    for (const entry of entries) {
+      const family = String(entry.assetFamily || '').trim();
+      if (family in counts) counts[family] += Number(entry.profileCount) || 0;
+    }
+  } else {
+    // Single-source rows that did not materialize sourceCaseAssetPaths fall
+    // back to the row's own family + total profile count.
+    const family = String(row.assetFamily || '').trim();
+    if (family in counts) counts[family] = Number(row.profileCount) || 0;
+  }
+  return counts;
+}
+
+function profileFamilyBreakdownRows(row = {}) {
+  const counts = profileHitsByFamily(row);
+  const lines = [
+    { label: 'RMDB', count: counts.RMDB2PDB },
+    { label: 'RASP', count: counts.RASP2PDB }
+  ];
+  return lines
+    .map(({ label, count }) => {
+      const noun = count === 1 ? 'profile' : 'profiles';
+      return `<dt>${escapeHtml(label)}</dt><dd>${escapeHtml(`${count} ${noun} hit`)}</dd>`;
+    })
+    .join('');
+}
+
 function renderProfilesPanel(row) {
   const entries = sourceCaseEntries(row);
+  const traceRows = row.profileTracePreview || [];
   return `<aside class="annojoin-detail-sidebar" aria-label="ANNOJOIN profile hits">
     <p class="technology-kicker">Profile hits</p>
     <h2>${escapeHtml(profileValue(row))}</h2>
-    <p>Profiles are source signal records linked to this case. They are membership evidence, not representative best profiles.</p>
+    <p>A profile is a single source chemical-probing signal record (one RMDB RDAT measurement or one RASP probing profile) that maps onto this PDB structure. Profiles are membership evidence — every hit linked to the case — not a representative best profile.</p>
+    <h3>Hits by source</h3>
+    <dl class="annojoin-profile-family-counts">
+      ${profileFamilyBreakdownRows(row)}
+    </dl>
     ${entries.length > 1 ? renderSourceCaseLinks(row) : ''}
-    <h3>RDAT trace</h3>
-    ${renderProfileTraceRows(row.profileTracePreview || [])}
-    <h3>RASP profiles</h3>
-    <p class="mini-note">RASP hit details are not present in the current index asset. A later join should provide species, genome, feature, and coordinate fields.</p>
+    ${traceRows.length ? `<h3>RMDB RDAT trace</h3>${renderProfileTraceRows(traceRows)}` : ''}
   </aside>`;
 }
 
