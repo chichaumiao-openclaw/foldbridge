@@ -1,0 +1,48 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "N": {
+      "case2dPath": "chains/N/case-2d-structure.json.gz",
+      "chainId": "N",
+      "chainRoot": "chains/N",
+      "linkedViewBundlePath": "chains/N/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/N/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/N/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "N",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_0b1fc3b5e0c6": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_0f64901d1383": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_0f6f231d0e9b": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_152ed119bf07": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_1a3e49d1e902": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_28a0c1f04967": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_2c172383517f": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_3610b2034b37": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_3b0c9d30310a": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_4b265b70f780": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_5198203283b4": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_5ff4024d6be1": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_62aa8e4d1c8c": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_66010bd718ae": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_71381089bfc3": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_71410e749533": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_7a0e18f78104": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_872c55d665d0": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_92462ed6f9fc": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_d789dea39565": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_dc91c5aef862": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_e0ec087f430e": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_e76338b31d37": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:A:rasp_bw_e7d09dc1df8e": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:C:rasp_bw_19b166b9b73e": "N",
+    "annojoin:RASP2PDB:3IZY:confidence:C:rasp_bw_abf8cf85ba82": "N"
+  }
+}

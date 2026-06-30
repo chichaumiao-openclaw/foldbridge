@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1FIR",
+  "biologicalMoleculeName": "1FIR",
+  "caseId": "1FIR",
+  "caseKey": "RASP2PDB:1FIR",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "1FIR",
+  "profileCount": 18
+}

@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7QIZ",
+  "biologicalMoleculeName": "7QIZ",
+  "caseId": "7QIZ",
+  "caseKey": "RMDB2PDB:7QIZ",
+  "chains": [
+    "2",
+    "5",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "7QIZ",
+  "profileCount": 46
+}

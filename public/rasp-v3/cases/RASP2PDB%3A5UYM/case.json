@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5UYM",
+  "biologicalMoleculeName": "5UYM",
+  "caseId": "5UYM",
+  "caseKey": "RASP2PDB:5UYM",
+  "chains": [
+    "01",
+    "A",
+    "W",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "5UYM",
+  "profileCount": 39
+}

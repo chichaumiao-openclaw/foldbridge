@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7QGU",
+  "biologicalMoleculeName": "7QGU",
+  "caseId": "7QGU",
+  "caseKey": "RASP2PDB:7QGU",
+  "chains": [
+    "A",
+    "W",
+    "z"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "7QGU",
+  "profileCount": 12
+}

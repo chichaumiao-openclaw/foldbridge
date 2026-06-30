@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:4PLX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:4PLX:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#14034",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1,
+    "B": 6
+  },
+  "generatedAt": "2026-06-28T21:05:42.173120Z",
+  "materializedEvidenceCount": 7,
+  "pdbId": "4PLX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 7
+  },
+  "totalEvidenceCount": 7
+}

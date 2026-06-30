@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9BSL",
+  "biologicalMoleculeName": "9BSL",
+  "caseId": "9BSL",
+  "caseKey": "RASP2PDB:9BSL",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "9BSL",
+  "profileCount": 7
+}

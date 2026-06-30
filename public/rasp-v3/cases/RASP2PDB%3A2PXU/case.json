@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:2PXU",
+  "biologicalMoleculeName": "2PXU",
+  "caseId": "2PXU",
+  "caseKey": "RASP2PDB:2PXU",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "2PXU",
+  "profileCount": 26
+}

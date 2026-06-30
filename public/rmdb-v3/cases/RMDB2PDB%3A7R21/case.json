@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7R21",
+  "biologicalMoleculeName": "7R21",
+  "caseId": "7R21",
+  "caseKey": "RMDB2PDB:7R21",
+  "chains": [
+    "R"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "7R21",
+  "profileCount": 1
+}

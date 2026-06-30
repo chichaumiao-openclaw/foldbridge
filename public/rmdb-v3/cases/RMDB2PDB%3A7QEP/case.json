@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7QEP",
+  "biologicalMoleculeName": "7QEP",
+  "caseId": "7QEP",
+  "caseKey": "RMDB2PDB:7QEP",
+  "chains": [
+    "1",
+    "2",
+    "3"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "7QEP",
+  "profileCount": 82
+}

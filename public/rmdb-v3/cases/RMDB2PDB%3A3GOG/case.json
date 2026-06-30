@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3GOG",
+  "biologicalMoleculeName": "3GOG",
+  "caseId": "3GOG",
+  "caseKey": "RMDB2PDB:3GOG",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3GOG",
+  "profileCount": 2
+}

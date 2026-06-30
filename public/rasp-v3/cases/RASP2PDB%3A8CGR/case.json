@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8CGR",
+  "biologicalMoleculeName": "8CGR",
+  "caseId": "8CGR",
+  "caseKey": "RASP2PDB:8CGR",
+  "chains": [
+    "A",
+    "a"
+  ],
+  "confidenceDisplayLabel": "D MODERATE_CANDIDATE",
+  "pdbId": "8CGR",
+  "profileCount": 32
+}

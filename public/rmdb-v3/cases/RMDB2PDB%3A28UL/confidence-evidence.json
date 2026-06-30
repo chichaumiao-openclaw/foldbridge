@@ -1,0 +1,34 @@
+{
+  "atlasCaseKey": "RMDB2PDB:28UL",
+  "generatedAt": "2026-06-28T21:12:52.193227Z",
+  "pdbId": "28UL",
+  "rows": [
+    {
+      "aucDirectional": 0.42358,
+      "aucEffectSizeZ": -1.153539,
+      "aucEmpiricalPValue": 0.875125,
+      "bridgeStatus": "bridge_missing",
+      "chain": "A",
+      "conflictFraction": 0.294118,
+      "directionalMetricKind": "auc_unpaired_vs_paired",
+      "directionalMetricLabel": "AUC unpaired vs paired",
+      "evidenceId": "annojoin:RMDB2PDB:28UL:confidence:B:top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921",
+      "family": "B",
+      "lssTierCalibrated": "LSS_DISCORDANT",
+      "lssTierUncalibrated": "LSS_DISCORDANT",
+      "nEvaluable": 90,
+      "pairId": "",
+      "pairSegmentId": "",
+      "partnerInsideFraction": 0.490196,
+      "profileKey": "top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921",
+      "recallPath": "",
+      "sasaReferenceStatus": "",
+      "selectedByDefault": true,
+      "signalDirection": "unpaired_positive",
+      "technology": "1M7",
+      "trackProfileId": "top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921"
+    }
+  ],
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized"
+}

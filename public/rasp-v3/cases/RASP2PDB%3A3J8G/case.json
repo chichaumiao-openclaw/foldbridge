@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3J8G",
+  "biologicalMoleculeName": "3J8G",
+  "caseId": "3J8G",
+  "caseKey": "RASP2PDB:3J8G",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "D WEAK",
+  "pdbId": "3J8G",
+  "profileCount": 25
+}

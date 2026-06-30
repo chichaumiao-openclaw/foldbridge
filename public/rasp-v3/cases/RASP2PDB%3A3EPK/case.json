@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3EPK",
+  "biologicalMoleculeName": "3EPK",
+  "caseId": "3EPK",
+  "caseKey": "RASP2PDB:3EPK",
+  "chains": [
+    "E"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "3EPK",
+  "profileCount": 10
+}

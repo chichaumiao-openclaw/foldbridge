@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4V49",
+  "biologicalMoleculeName": "4V49",
+  "caseId": "4V49",
+  "caseKey": "RASP2PDB:4V49",
+  "chains": [
+    "AV"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "4V49",
+  "profileCount": 26
+}

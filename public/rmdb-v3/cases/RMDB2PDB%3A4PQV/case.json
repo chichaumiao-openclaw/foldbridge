@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4PQV",
+  "biologicalMoleculeName": "4PQV",
+  "caseId": "4PQV",
+  "caseKey": "RMDB2PDB:4PQV",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4PQV",
+  "profileCount": 2
+}

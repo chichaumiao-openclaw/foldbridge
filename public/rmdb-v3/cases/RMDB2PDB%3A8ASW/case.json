@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8ASW",
+  "biologicalMoleculeName": "8ASW",
+  "caseId": "8ASW",
+  "caseKey": "RMDB2PDB:8ASW",
+  "chains": [
+    "X"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8ASW",
+  "profileCount": 2
+}

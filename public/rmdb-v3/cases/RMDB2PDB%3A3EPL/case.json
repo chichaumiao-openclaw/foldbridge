@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3EPL",
+  "biologicalMoleculeName": "3EPL",
+  "caseId": "3EPL",
+  "caseKey": "RMDB2PDB:3EPL",
+  "chains": [
+    "F"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3EPL",
+  "profileCount": 3
+}

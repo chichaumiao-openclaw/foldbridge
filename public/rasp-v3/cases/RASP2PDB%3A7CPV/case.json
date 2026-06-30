@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7CPV",
+  "biologicalMoleculeName": "7CPV",
+  "caseId": "7CPV",
+  "caseKey": "RASP2PDB:7CPV",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "S2",
+    "S6"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "7CPV",
+  "profileCount": 188
+}

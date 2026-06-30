@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:11EH",
+  "biologicalMoleculeName": "11EH",
+  "caseId": "11EH",
+  "caseKey": "RMDB2PDB:11EH",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "11EH",
+  "profileCount": 1
+}

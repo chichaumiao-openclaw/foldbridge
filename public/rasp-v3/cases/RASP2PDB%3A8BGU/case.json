@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8BGU",
+  "biologicalMoleculeName": "8BGU",
+  "caseId": "8BGU",
+  "caseKey": "RASP2PDB:8BGU",
+  "chains": [
+    "3"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "8BGU",
+  "profileCount": 30
+}

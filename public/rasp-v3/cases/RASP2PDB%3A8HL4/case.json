@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8HL4",
+  "biologicalMoleculeName": "8HL4",
+  "caseId": "8HL4",
+  "caseKey": "RASP2PDB:8HL4",
+  "chains": [
+    "APTN"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "8HL4",
+  "profileCount": 13
+}

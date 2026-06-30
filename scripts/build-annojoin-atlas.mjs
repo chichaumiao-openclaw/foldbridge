@@ -497,6 +497,7 @@ async function main() {
 
   const index = buildAtlasIndexAsset({
     ...tables,
+    chainIdentityIndex,
     generatedAt,
     source: {
       viewId: VIEW_ID,

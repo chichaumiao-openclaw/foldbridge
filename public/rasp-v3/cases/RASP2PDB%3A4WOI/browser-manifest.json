@@ -1,0 +1,84 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "AA": {
+      "case2dPath": "chains/AA/case-2d-structure.json.gz",
+      "chainId": "AA",
+      "chainRoot": "chains/AA",
+      "linkedViewBundlePath": "chains/AA/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/AA/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/AA/varna-template.svg.gz"
+    },
+    "AX": {
+      "case2dPath": "chains/AX/case-2d-structure.json.gz",
+      "chainId": "AX",
+      "chainRoot": "chains/AX",
+      "linkedViewBundlePath": "chains/AX/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/AX/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/AX/varna-template.svg.gz"
+    },
+    "BA": {
+      "case2dPath": "chains/BA/case-2d-structure.json.gz",
+      "chainId": "BA",
+      "chainRoot": "chains/BA",
+      "linkedViewBundlePath": "chains/BA/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/BA/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/BA/varna-template.svg.gz"
+    },
+    "BB": {
+      "case2dPath": "chains/BB/case-2d-structure.json.gz",
+      "chainId": "BB",
+      "chainRoot": "chains/BB",
+      "linkedViewBundlePath": "chains/BB/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/BB/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/BB/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "AA",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_2343aafbe79c": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_2f43b8b7fc56": "AX",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_2fa595b11d5e": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_44126d3b1836": "AX",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_48eb97e2d852": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_5859f1cec40f": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_62cbd20a75b4": "AX",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_7c4725121ef4": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_8c2cf6279bed": "AX",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_ababe03077b9": "BB",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_ae4c2c08c4fa": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_b2e348d2e64e": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_c99a0a52d2ff": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_cd2a8623e064": "BB",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_cf21fa922000": "AX",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_e773afe95fb5": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_e8fe53f69987": "BB",
+    "annojoin:RASP2PDB:4WOI:confidence:A:rasp_bw_f3ffb4493573": "AA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_19f61c8831e6": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_2dfc610b9222": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_41d5fc3e132e": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_44ce22938077": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_54672b09ffb6": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_67eae2dec69b": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_7ef9fcd16b87": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_8350f4cfca6c": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_93c9e587b21e": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_b2c3510421f9": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_c0576cdfc964": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_eeb83ff7bd0e": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_faf0c4af5eba": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:B:rasp_bw_fd8e9996c052": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:D:rasp_bw_082542dfadef": "BB",
+    "annojoin:RASP2PDB:4WOI:confidence:D:rasp_bw_10c682ff1c66": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:D:rasp_bw_13bf8094c5c2": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:D:rasp_bw_7c9a09370ba1": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:D:rasp_bw_b0948a261e15": "BA",
+    "annojoin:RASP2PDB:4WOI:confidence:D:rasp_bw_c5489e5ab90f": "BA"
+  }
+}

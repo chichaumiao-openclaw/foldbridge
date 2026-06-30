@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6ZME",
+  "biologicalMoleculeName": "6ZME",
+  "caseId": "6ZME",
+  "caseKey": "RASP2PDB:6ZME",
+  "chains": [
+    "CC",
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "6ZME",
+  "profileCount": 271
+}

@@ -1,0 +1,50 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "N": {
+      "case2dPath": "chains/N/case-2d-structure.json.gz",
+      "chainId": "N",
+      "chainRoot": "chains/N",
+      "linkedViewBundlePath": "chains/N/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/N/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/N/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "N",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#1267": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#1268": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#1269": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#1270": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#1271": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#1306": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#1307": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#1308": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#1309": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#1310": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PKBLNG_DMS_0000.rdat#10": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PKBLNG_DMS_0000.rdat#9": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-rna-structures/data-rna-structures/SHPKNT_DMS_0000.rdat#35": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:A:top_x_279::data-rna-structures/data-rna-structures/SHPKNT_DMS_0000.rdat#36": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#1267": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#1268": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#1269": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#1270": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#1271": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#1306": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#1307": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#1308": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#1309": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#1310": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PKBLNG_2A3_0000.rdat#10": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PKBLNG_2A3_0000.rdat#9": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-rna-structures/data-rna-structures/SHPKNT_2A3_0000.rdat#35": "N",
+    "annojoin:RMDB2PDB:7XD6:confidence:B:top_x_279::data-rna-structures/data-rna-structures/SHPKNT_2A3_0000.rdat#36": "N"
+  }
+}

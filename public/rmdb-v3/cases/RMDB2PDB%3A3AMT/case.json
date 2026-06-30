@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3AMT",
+  "biologicalMoleculeName": "3AMT",
+  "caseId": "3AMT",
+  "caseKey": "RMDB2PDB:3AMT",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3AMT",
+  "profileCount": 2
+}

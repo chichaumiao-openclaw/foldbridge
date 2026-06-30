@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5FLX",
+  "biologicalMoleculeName": "5FLX",
+  "caseId": "5FLX",
+  "caseKey": "RMDB2PDB:5FLX",
+  "chains": [
+    "z"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "5FLX",
+  "profileCount": 76
+}

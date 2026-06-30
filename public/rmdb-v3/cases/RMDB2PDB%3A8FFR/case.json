@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8FFR",
+  "biologicalMoleculeName": "8FFR",
+  "caseId": "8FFR",
+  "caseKey": "RMDB2PDB:8FFR",
+  "chains": [
+    "W",
+    "X"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8FFR",
+  "profileCount": 5
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9G8O",
+  "biologicalMoleculeName": "9G8O",
+  "caseId": "9G8O",
+  "caseKey": "RASP2PDB:9G8O",
+  "chains": [
+    "S2",
+    "X"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "9G8O",
+  "profileCount": 92
+}

@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6XGF",
+  "biologicalMoleculeName": "6XGF",
+  "caseId": "6XGF",
+  "caseKey": "RASP2PDB:6XGF",
+  "chains": [
+    "D",
+    "a",
+    "d"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "6XGF",
+  "profileCount": 33
+}

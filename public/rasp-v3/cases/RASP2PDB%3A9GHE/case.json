@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9GHE",
+  "biologicalMoleculeName": "9GHE",
+  "caseId": "9GHE",
+  "caseKey": "RASP2PDB:9GHE",
+  "chains": [
+    "A",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "D MODERATE",
+  "pdbId": "9GHE",
+  "profileCount": 41
+}

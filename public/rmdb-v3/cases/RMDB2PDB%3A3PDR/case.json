@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3PDR",
+  "biologicalMoleculeName": "3PDR",
+  "caseId": "3PDR",
+  "caseKey": "RMDB2PDB:3PDR",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "3PDR",
+  "profileCount": 6
+}

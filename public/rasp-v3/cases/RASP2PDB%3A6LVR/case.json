@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6LVR",
+  "biologicalMoleculeName": "6LVR",
+  "caseId": "6LVR",
+  "caseKey": "RASP2PDB:6LVR",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "6LVR",
+  "profileCount": 26
+}

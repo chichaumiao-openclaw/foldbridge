@@ -1,0 +1,38 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "1": {
+      "case2dPath": "chains/1/case-2d-structure.json.gz",
+      "chainId": "1",
+      "chainRoot": "chains/1",
+      "linkedViewBundlePath": "chains/1/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/1/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/1/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "1",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:8VV4:confidence:A:top_x_279::data-rna-structures/data-rna-structures/M2PK90_DMS_0000.rdat#49597": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:A:top_x_279::data-rna-structures/data-rna-structures/M2PK90_DMS_0000.rdat#51872": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:A:top_x_279::data-rna-structures/data-rna-structures/M2PK90_DMS_0000.rdat#60972": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:A:top_x_279::data-rna-structures/data-rna-structures/M2PK90_DMS_0000.rdat#68707": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:A:top_x_279::data-rna-structures/data-rna-structures/M2PK90_DMS_0000.rdat#72893": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:A:top_x_279::data-rna-structures/data-rna-structures/M2PK90_DMS_0000.rdat#74258": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:A:top_x_279::data-rna-structures/data-rna-structures/M2PK90_DMS_0000.rdat#76351": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:A:top_x_279::data-rna-structures/data-rna-structures/M2PK90_DMS_0000.rdat#79263": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:B:top_x_279::data-rna-structures/data-rna-structures/M2PK90_2A3_0000.rdat#49597": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:B:top_x_279::data-rna-structures/data-rna-structures/M2PK90_2A3_0000.rdat#51872": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:B:top_x_279::data-rna-structures/data-rna-structures/M2PK90_2A3_0000.rdat#60972": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:B:top_x_279::data-rna-structures/data-rna-structures/M2PK90_2A3_0000.rdat#68707": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:B:top_x_279::data-rna-structures/data-rna-structures/M2PK90_2A3_0000.rdat#72893": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:B:top_x_279::data-rna-structures/data-rna-structures/M2PK90_2A3_0000.rdat#74258": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:B:top_x_279::data-rna-structures/data-rna-structures/M2PK90_2A3_0000.rdat#76351": "1",
+    "annojoin:RMDB2PDB:8VV4:confidence:B:top_x_279::data-rna-structures/data-rna-structures/M2PK90_2A3_0000.rdat#79263": "1"
+  }
+}

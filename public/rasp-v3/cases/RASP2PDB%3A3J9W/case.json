@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3J9W",
+  "biologicalMoleculeName": "3J9W",
+  "caseId": "3J9W",
+  "caseKey": "RASP2PDB:3J9W",
+  "chains": [
+    "AA",
+    "AX",
+    "BA"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "3J9W",
+  "profileCount": 12
+}

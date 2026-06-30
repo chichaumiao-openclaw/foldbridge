@@ -1,0 +1,18 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9S3C",
+  "biologicalMoleculeName": "9S3C",
+  "caseId": "9S3C",
+  "caseKey": "RASP2PDB:9S3C",
+  "chains": [
+    "CM",
+    "CP",
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "9S3C",
+  "profileCount": 269
+}

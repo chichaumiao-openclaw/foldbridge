@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8Z1P",
+  "biologicalMoleculeName": "8Z1P",
+  "caseId": "8Z1P",
+  "caseKey": "RASP2PDB:8Z1P",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8Z1P",
+  "profileCount": 1
+}

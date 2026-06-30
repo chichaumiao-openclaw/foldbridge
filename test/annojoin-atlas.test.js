@@ -294,6 +294,23 @@ test('atlas search state preserves the canonical moleculeDisplayName for groupin
   assert.equal((html.match(/annojoin-molecule-same-as-group/g) || []).length, 2);
 });
 
+test('normalizeCase passes through chainPlacements', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [{
+      pdb_id: '4V99',
+      chainPlacements: [
+        { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+        { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+      ]
+    }]
+  });
+  const c = state.cases.find((row) => row.pdbId === '4V99');
+  assert.deepEqual(c.chainPlacements, [
+    { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+    { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+  ]);
+});
+
 test('atlas search state prefers PDB-level display cases while preserving source case counts', () => {
   const state = buildAtlasSearchState({
     cases: [
@@ -372,8 +389,8 @@ test('atlas page renders merged PDB rows with source detail links in the side pa
   assert.match(html, /1 PDB entries \(2 source cases\)/);
   assert.match(html, /2 source cases/);
   assert.match(html, /Source cases/);
-  assert.match(html, /href="#annojoin-case\?caseId=10FZ&amp;caseKey=RMDB2PDB%3A10FZ"/);
-  assert.match(html, /href="https:\/\/pages\.example\.test\/rasp\/family-d\/current\/cases\/RASP2PDB%3A10FZ\/index\.html"/);
+  assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10FZ\/index\.html"/);
+  assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A10FZ\/index\.html"/);
   assert.doesNotMatch(html, /href="#annojoin-case\?caseId=10FZ" class="download-outline-btn">Open detail page/);
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
@@ -415,14 +432,12 @@ test('atlas page upgrades completed RMDB source-case links to V3 static detail p
     selectedField: 'moleculeName'
   });
 
-  assert.match(html, /href="https:\/\/pages\.example\.test\/rmdb\/current\/cases\/RMDB2PDB%3A10ZT\/index\.html"/);
-  assert.match(html, /href="#annojoin-case\?caseId=10ZT&amp;caseKey=RASP2PDB%3A10ZT"/);
+  assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10ZT\/index\.html"/);
+  assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A10ZT\/index\.html"/);
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
 
-test('atlas page routes duplicate RASP family cases to the selector page', () => {
-  const originalOrigin = LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl;
-  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = 'https://pages.example.test';
+test('atlas page routes duplicate RASP family cases to its own static detail page (no selector)', () => {
   const state = buildAtlasSearchState({
     cases: [
       { atlasCaseKey: 'RMDB2PDB:8EWB', caseId: '8EWB', pdbId: '8EWB', assetFamily: 'RMDB2PDB', profileCount: 1 },
@@ -457,9 +472,10 @@ test('atlas page routes duplicate RASP family cases to the selector page', () =>
     selectedField: 'moleculeName'
   });
 
-  assert.match(html, /href="https:\/\/pages\.example\.test\/selector\/rasp\/RASP2PDB%3A8EWB\/index\.html"/);
-  assert.doesNotMatch(html, /href="#annojoin-case\?caseId=8EWB&amp;caseKey=RASP2PDB%3A8EWB"/);
-  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
+  // No selector page: each universe links straight to its own static detail tree.
+  assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A8EWB\/index\.html"/);
+  assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A8EWB\/index\.html"/);
+  assert.doesNotMatch(html, /selector/);
 });
 
 test('confidence panel never surfaces the legacy ANNOCONFIDENCE coverage_topology pointer string', () => {
@@ -785,7 +801,7 @@ test('atlas side panel renders field-specific explanations', () => {
   const moleculeHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'moleculeName', routeName: 'sequence' });
   assert.match(moleculeHtml, /Index row detail/);
   assert.match(moleculeHtml, /Molecule name/);
-  assert.match(moleculeHtml, /href="https:\/\/pages\.example\.test\/rmdb\/current\/cases\/RMDB2PDB%3A10ZT\/index\.html"/);
+  assert.match(moleculeHtml, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10ZT\/index\.html"/);
 
   const confidenceHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'confidenceDisplayLabel' });
   assert.match(confidenceHtml, /Confidence classification/);
@@ -950,4 +966,14 @@ test('a slimmed index still resolves merged and single detail-page links', () =>
   for (const entry of merged.sourceCaseAssetPaths) {
     assert.ok(entry.caseAssetPath && entry.caseAssetPath.length > 0);
   }
+});
+
+test('buildAtlasSearchState drops dead caseHierarchy and exposes totalPlacementCount', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [{ pdb_id: '1ABC', chainPlacements: [{ classLabel: 'tRNA', nameLabel: 'tRNA-Phe' }] }],
+    totalPlacementCount: 1
+  });
+  assert.equal('caseHierarchy' in state, false);
+  assert.equal('sourceCaseHierarchy' in state, false);
+  assert.equal(state.totalPlacementCount, 1);
 });

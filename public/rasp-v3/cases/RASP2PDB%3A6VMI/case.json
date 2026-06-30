@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6VMI",
+  "biologicalMoleculeName": "6VMI",
+  "caseId": "6VMI",
+  "caseKey": "RASP2PDB:6VMI",
+  "chains": [
+    "A",
+    "AA",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "6VMI",
+  "profileCount": 125
+}

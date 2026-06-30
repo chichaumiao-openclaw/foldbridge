@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8PTX",
+  "biologicalMoleculeName": "8PTX",
+  "caseId": "8PTX",
+  "caseKey": "RASP2PDB:8PTX",
+  "chains": [
+    "X"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8PTX",
+  "profileCount": 11
+}

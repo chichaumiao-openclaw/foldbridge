@@ -1,0 +1,34 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "B": {
+      "case2dPath": "chains/B/case-2d-structure.json.gz",
+      "chainId": "B",
+      "chainRoot": "chains/B",
+      "linkedViewBundlePath": "chains/B/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/B/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/B/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "B",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:9X6B:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PKBLNG_DMS_0000.rdat#12": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PKBLNG_DMS_0000.rdat#13": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PKBLNG_DMS_0000.rdat#14": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:A:top_x_279::data-rna-structures/data-rna-structures/SHPKNT_DMS_0000.rdat#38": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:A:top_x_279::data-rna-structures/data-rna-structures/SHPKNT_DMS_0000.rdat#39": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:A:top_x_279::data-rna-structures/data-rna-structures/SHPKNT_DMS_0000.rdat#40": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PKBLNG_2A3_0000.rdat#12": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PKBLNG_2A3_0000.rdat#13": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PKBLNG_2A3_0000.rdat#14": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:B:top_x_279::data-rna-structures/data-rna-structures/SHPKNT_2A3_0000.rdat#38": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:B:top_x_279::data-rna-structures/data-rna-structures/SHPKNT_2A3_0000.rdat#39": "B",
+    "annojoin:RMDB2PDB:9X6B:confidence:B:top_x_279::data-rna-structures/data-rna-structures/SHPKNT_2A3_0000.rdat#40": "B"
+  }
+}

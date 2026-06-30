@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6OFX",
+  "biologicalMoleculeName": "6OFX",
+  "caseId": "6OFX",
+  "caseKey": "RASP2PDB:6OFX",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "6OFX",
+  "profileCount": 39
+}

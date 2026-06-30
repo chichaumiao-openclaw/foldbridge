@@ -1,0 +1,31 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "E": {
+      "case2dPath": "chains/E/case-2d-structure.json.gz",
+      "chainId": "E",
+      "chainRoot": "chains/E",
+      "linkedViewBundlePath": "chains/E/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/E/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/E/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "E",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:5M73:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0001.rdat#62977": "E",
+    "annojoin:RMDB2PDB:5M73:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#20092": "E",
+    "annojoin:RMDB2PDB:5M73:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#22250": "E",
+    "annojoin:RMDB2PDB:5M73:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#22253": "E",
+    "annojoin:RMDB2PDB:5M73:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#22254": "E",
+    "annojoin:RMDB2PDB:5M73:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0001.rdat#62977": "E",
+    "annojoin:RMDB2PDB:5M73:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#20092": "E",
+    "annojoin:RMDB2PDB:5M73:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#22250": "E",
+    "annojoin:RMDB2PDB:5M73:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#22253": "E"
+  }
+}

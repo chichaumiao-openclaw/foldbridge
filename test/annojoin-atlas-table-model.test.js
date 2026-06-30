@@ -5,6 +5,7 @@ import {
   annojoinExportRow,
   buildAnnojointTableGroups,
   familyBadgeDescriptor,
+  groupSlug,
   isAnnojointSearchActive,
   moleculeName,
   paginateAnnojointRows,
@@ -26,7 +27,8 @@ const rows = [
     assayFamilies: ['rmdb_chemical_probing'],
     chains: ['A'],
     sourceDatabases: ['RMDB', 'PDB'],
-    conflictCandidateCount: 2
+    conflictCandidateCount: 2,
+    chainPlacements: [{ classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' }]
   },
   {
     caseId: '10ZU',
@@ -40,7 +42,8 @@ const rows = [
     assayFamilies: ['rmdb_chemical_probing'],
     chains: [],
     sourceDatabases: ['RMDB', 'PDB'],
-    conflictCandidateCount: 0
+    conflictCandidateCount: 0,
+    chainPlacements: [{ classLabel: 'designed_RNA', nameLabel: 'MPNN-fixbb designed RNA molecule' }]
   },
   {
     caseId: '10ZV',
@@ -50,7 +53,8 @@ const rows = [
     biologicalMoleculeName: '23S ribosomal RNA',
     pdbMoleculeName: '50S ribosomal subunit RNA',
     confidenceDisplayLabel: 'A_HIGH_SUPPORT (1)',
-    profileCount: 1
+    profileCount: 1,
+    chainPlacements: [{ classLabel: 'rRNA', nameLabel: '23S ribosomal RNA' }]
   }
 ];
 
@@ -69,18 +73,47 @@ test('table model defines the five fixed master-table columns', () => {
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => 'defaultVisible' in column), false);
 });
 
+test('sortAnnojointCases orders by primary placement (class then name)', () => {
+  const cases = [
+    { pdbId: '1', chainPlacements: [{ classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }] },
+    { pdbId: '2', chainPlacements: [{ classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' }] }
+  ];
+  const sorted = sortAnnojointCases(cases);
+  assert.deepEqual(sorted.map((c) => c.pdbId), ['2', '1']); // rRNA < tRNA wins over pdbId 1<2
+});
+
 test('groups cases into parent and child buckets with parentless fallback', () => {
   const groups = buildAnnojointTableGroups(sortAnnojointCases(rows));
-
   assert.equal(groups.length, 2);
-  assert.equal(groups[0].label, 'MPNN-fixbb designed RNA molecule');
+  assert.equal(groups[0].label, 'designed_RNA');
   assert.equal(groups[0].count, 1);
   assert.equal(groups[0].children[0].label, 'MPNN-fixbb designed RNA molecule');
-  assert.equal(groups[1].label, 'Ribosome');
-  assert.deepEqual(groups[1].children.map((child) => [child.label, child.count]), [
-    ['16S rRNA', 1],
-    ['23S rRNA', 1]
+  assert.equal(groups[1].label, 'rRNA');
+  assert.deepEqual(groups[1].children.map((c) => [c.label, c.count]), [
+    ['16S ribosomal RNA', 1],
+    ['23S ribosomal RNA', 1]
   ]);
+});
+
+test('buildAnnojointTableGroups fans a multi-identity case into multiple branches', () => {
+  const groups = buildAnnojointTableGroups([{
+    pdbId: '4V99',
+    chainPlacements: [
+      { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+      { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+    ]
+  }]);
+  const labels = groups.map((p) => p.label).sort();
+  assert.deepEqual(labels, ['rRNA', 'tRNA']);
+  const rRNA = groups.find((p) => p.label === 'rRNA');
+  assert.equal(rRNA.children[0].label, '16S ribosomal RNA');
+  assert.equal(rRNA.children[0].rows[0].pdbId, '4V99');
+  assert.equal(rRNA.children[0].id, `${groupSlug('rRNA')}::${groupSlug('16S ribosomal RNA')}`);
+});
+
+test('buildAnnojointTableGroups defends empty chainPlacements as Unclassified RNA', () => {
+  const groups = buildAnnojointTableGroups([{ pdbId: '9ZZZ', chainPlacements: [] }]);
+  assert.equal(groups[0].label, 'Unclassified RNA');
 });
 
 test('paginates rows with clamped page numbers', () => {
@@ -95,8 +128,8 @@ test('exports case-level display fields without choosing a best profile', () => 
   assert.deepEqual(annojoinExportRow(rows[0]), {
     case_id: '10ZT',
     pdb_id: '10ZT',
-    parent_class_label: 'Ribosome',
-    child_class_label: '16S rRNA',
+    chain_class_labels: 'rRNA',
+    chain_name_labels: '16S ribosomal RNA',
     biological_molecule_name: '16S ribosomal RNA',
     pdb_molecule_name: '30S ribosomal subunit RNA',
     confidence_display_label: 'B_CONTEXT_STRATIFIED (1)',
@@ -123,8 +156,8 @@ test('exports merged display row lineage back to source cases', () => {
   }), {
     case_id: '10FZ',
     pdb_id: '10FZ',
-    parent_class_label: undefined,
-    child_class_label: undefined,
+    chain_class_labels: '',
+    chain_name_labels: '',
     biological_molecule_name: 'Short author molecule',
     pdb_molecule_name: 'Short author molecule',
     confidence_display_label: 'RMDB: B; RASP: not active',
@@ -136,6 +169,19 @@ test('exports merged display row lineage back to source cases', () => {
     source_families: 'RMDB2PDB;RASP2PDB',
     source_case_keys: 'RMDB2PDB:10FZ;RASP2PDB:10FZ'
   });
+});
+
+test('annojoinExportRow emits chain placement label columns', () => {
+  const out = annojoinExportRow({
+    pdbId: '4V99',
+    chainPlacements: [
+      { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+      { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+    ]
+  });
+  assert.equal(out.chain_class_labels, 'rRNA;tRNA');
+  assert.equal(out.chain_name_labels, '16S ribosomal RNA;tRNA-Lys');
+  assert.equal('parent_class_label' in out, false);
 });
 
 test('scoreAnnojointMatch ranks PDB exact over prefix over molecule substring over PDB substring', () => {

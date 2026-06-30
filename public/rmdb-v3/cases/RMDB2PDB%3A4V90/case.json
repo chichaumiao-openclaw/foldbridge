@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4V90",
+  "biologicalMoleculeName": "4V90",
+  "caseId": "4V90",
+  "caseKey": "RMDB2PDB:4V90",
+  "chains": [
+    "AV"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "4V90",
+  "profileCount": 2
+}

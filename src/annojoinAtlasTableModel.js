@@ -32,9 +32,7 @@ export function moleculeName(row = {}) {
 }
 
 export function parentGroupLabel(row = {}) {
-  return cleanLabel(row.parentClassLabel)
-    || cleanLabel(row.childClassLabel)
-    || cleanLabel(row.moleculeDisplayName)
+  return cleanLabel(row.moleculeDisplayName)
     || cleanLabel(row.biologicalMoleculeName)
     || cleanLabel(row.pdbMoleculeName)
     || rowCaseId(row)
@@ -42,18 +40,25 @@ export function parentGroupLabel(row = {}) {
 }
 
 export function childGroupLabel(row = {}) {
-  return cleanLabel(row.childClassLabel)
+  return cleanLabel(row.moleculeDisplayName)
     || cleanLabel(row.moleculeDisplayName)
     || cleanLabel(row.biologicalMoleculeName)
     || cleanLabel(row.pdbMoleculeName)
     || parentGroupLabel(row);
 }
 
+export function primaryPlacement(row = {}) {
+  const placements = Array.isArray(row.chainPlacements) ? row.chainPlacements : [];
+  return placements[0] || { classLabel: '', nameLabel: '' };
+}
+
 export function sortAnnojointCases(cases = []) {
   return [...cases].sort((a, b) => {
+    const pa = primaryPlacement(a);
+    const pb = primaryPlacement(b);
     const values = [
-      parentGroupLabel(a).localeCompare(parentGroupLabel(b)),
-      childGroupLabel(a).localeCompare(childGroupLabel(b)),
+      String(pa.classLabel).localeCompare(String(pb.classLabel)),
+      String(pa.nameLabel).localeCompare(String(pb.nameLabel)),
       String(a.pdbId || a.caseId || '').localeCompare(String(b.pdbId || b.caseId || '')),
       rowCaseKey(a).localeCompare(rowCaseKey(b))
     ];
@@ -61,24 +66,32 @@ export function sortAnnojointCases(cases = []) {
   });
 }
 
+function placementsFor(row = {}) {
+  const placements = Array.isArray(row.chainPlacements) ? row.chainPlacements : [];
+  if (!placements.length) return [{ classLabel: 'Unclassified RNA', nameLabel: moleculeName(row) }];
+  return placements;
+}
+
 export function buildAnnojointTableGroups(cases = []) {
   const parentMap = new Map();
   for (const row of cases) {
-    const parentLabel = parentGroupLabel(row);
-    const childLabel = childGroupLabel(row);
-    const parentId = groupSlug(parentLabel);
-    const childId = `${parentId}::${groupSlug(childLabel)}`;
-    if (!parentMap.has(parentId)) {
-      parentMap.set(parentId, { id: parentId, label: parentLabel, count: 0, children: new Map() });
+    for (const placement of placementsFor(row)) {
+      const parentLabel = String(placement.classLabel || 'Unclassified RNA');
+      const childLabel = String(placement.nameLabel || parentLabel);
+      const parentId = groupSlug(parentLabel);
+      const childId = `${parentId}::${groupSlug(childLabel)}`;
+      if (!parentMap.has(parentId)) {
+        parentMap.set(parentId, { id: parentId, label: parentLabel, count: 0, children: new Map() });
+      }
+      const parent = parentMap.get(parentId);
+      if (!parent.children.has(childId)) {
+        parent.children.set(childId, { id: childId, parentId, label: childLabel, count: 0, rows: [] });
+      }
+      const child = parent.children.get(childId);
+      child.rows.push(row);
+      child.count += 1;
+      parent.count += 1;
     }
-    const parent = parentMap.get(parentId);
-    if (!parent.children.has(childId)) {
-      parent.children.set(childId, { id: childId, parentId, label: childLabel, count: 0, rows: [] });
-    }
-    const child = parent.children.get(childId);
-    child.rows.push(row);
-    child.count += 1;
-    parent.count += 1;
   }
   return [...parentMap.values()].map((parent) => ({
     ...parent,
@@ -153,8 +166,8 @@ export function annojoinExportRow(row = {}) {
   const out = {
     case_id: row.caseId,
     pdb_id: row.pdbId,
-    parent_class_label: row.parentClassLabel,
-    child_class_label: row.childClassLabel,
+    chain_class_labels: (row.chainPlacements || []).map((p) => p.classLabel).join(';'),
+    chain_name_labels: (row.chainPlacements || []).map((p) => p.nameLabel).join(';'),
     biological_molecule_name: row.biologicalMoleculeName,
     pdb_molecule_name: row.pdbMoleculeName,
     confidence_display_label: row.confidenceDisplayLabel,

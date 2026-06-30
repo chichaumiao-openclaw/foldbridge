@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5YYN",
+  "biologicalMoleculeName": "5YYN",
+  "caseId": "5YYN",
+  "caseKey": "RMDB2PDB:5YYN",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "5YYN",
+  "profileCount": 2
+}

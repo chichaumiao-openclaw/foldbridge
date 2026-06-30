@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8CAZ",
+  "biologicalMoleculeName": "8CAZ",
+  "caseId": "8CAZ",
+  "caseKey": "RASP2PDB:8CAZ",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A MODERATE",
+  "pdbId": "8CAZ",
+  "profileCount": 31
+}

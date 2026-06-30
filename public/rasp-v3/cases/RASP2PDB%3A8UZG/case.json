@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8UZG",
+  "biologicalMoleculeName": "8UZG",
+  "caseId": "8UZG",
+  "caseKey": "RASP2PDB:8UZG",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5"
+  ],
+  "confidenceDisplayLabel": "D WEAK",
+  "pdbId": "8UZG",
+  "profileCount": 33
+}

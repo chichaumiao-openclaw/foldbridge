@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:8Y7E",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 15,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:8Y7E:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0003.rdat#39228",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8,
+    "B": 7
+  },
+  "generatedAt": "2026-06-28T21:05:42.173120Z",
+  "materializedEvidenceCount": 15,
+  "pdbId": "8Y7E",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 15
+  },
+  "totalEvidenceCount": 15
+}

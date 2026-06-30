@@ -1,0 +1,70 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "1": {
+      "case2dPath": "chains/1/case-2d-structure.json.gz",
+      "chainId": "1",
+      "chainRoot": "chains/1",
+      "linkedViewBundlePath": "chains/1/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/1/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/1/varna-template.svg.gz"
+    },
+    "2": {
+      "case2dPath": "chains/2/case-2d-structure.json.gz",
+      "chainId": "2",
+      "chainRoot": "chains/2",
+      "linkedViewBundlePath": "chains/2/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/2/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/2/varna-template.svg.gz"
+    },
+    "3": {
+      "case2dPath": "chains/3/case-2d-structure.json.gz",
+      "chainId": "3",
+      "chainRoot": "chains/3",
+      "linkedViewBundlePath": "chains/3/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/3/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/3/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "2",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_2343aafbe79c": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_2fa595b11d5e": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_48eb97e2d852": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_5859f1cec40f": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_7c4725121ef4": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_ababe03077b9": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_ae4c2c08c4fa": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_b2e348d2e64e": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_c99a0a52d2ff": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_cd2a8623e064": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_e773afe95fb5": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_e8fe53f69987": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:A:rasp_bw_f3ffb4493573": "1",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_19f61c8831e6": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_2dfc610b9222": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_41d5fc3e132e": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_44ce22938077": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_54672b09ffb6": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_67eae2dec69b": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_7ef9fcd16b87": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_8350f4cfca6c": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_93c9e587b21e": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_b2c3510421f9": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_c0576cdfc964": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_eeb83ff7bd0e": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_faf0c4af5eba": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:B:rasp_bw_fd8e9996c052": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:D:rasp_bw_10c682ff1c66": "3",
+    "annojoin:RASP2PDB:6VWL:confidence:D:rasp_bw_13bf8094c5c2": "3",
+    "annojoin:RASP2PDB:6VWL:confidence:D:rasp_bw_7c9a09370ba1": "3",
+    "annojoin:RASP2PDB:6VWL:confidence:D:rasp_bw_b0948a261e15": "2",
+    "annojoin:RASP2PDB:6VWL:confidence:D:rasp_bw_c5489e5ab90f": "3"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9ESI",
+  "biologicalMoleculeName": "9ESI",
+  "caseId": "9ESI",
+  "caseKey": "RASP2PDB:9ESI",
+  "chains": [
+    "2",
+    "6"
+  ],
+  "confidenceDisplayLabel": "D STRONG",
+  "pdbId": "9ESI",
+  "profileCount": 173
+}

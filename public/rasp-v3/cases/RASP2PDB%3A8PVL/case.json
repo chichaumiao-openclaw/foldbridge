@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8PVL",
+  "biologicalMoleculeName": "8PVL",
+  "caseId": "8PVL",
+  "caseKey": "RASP2PDB:8PVL",
+  "chains": [
+    "C1",
+    "C2"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "8PVL",
+  "profileCount": 75
+}

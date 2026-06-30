@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3J46",
+  "biologicalMoleculeName": "3J46",
+  "caseId": "3J46",
+  "caseKey": "RASP2PDB:3J46",
+  "chains": [
+    "p"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "3J46",
+  "profileCount": 8
+}

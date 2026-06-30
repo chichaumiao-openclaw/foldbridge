@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9J9H",
+  "biologicalMoleculeName": "9J9H",
+  "caseId": "9J9H",
+  "caseKey": "RMDB2PDB:9J9H",
+  "chains": [
+    "A",
+    "AQ",
+    "B",
+    "j"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "9J9H",
+  "profileCount": 72
+}

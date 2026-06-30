@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5XWP",
+  "biologicalMoleculeName": "5XWP",
+  "caseId": "5XWP",
+  "caseKey": "RMDB2PDB:5XWP",
+  "chains": [
+    "E"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "5XWP",
+  "profileCount": 2
+}

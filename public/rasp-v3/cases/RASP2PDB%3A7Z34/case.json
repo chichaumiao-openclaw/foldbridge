@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7Z34",
+  "biologicalMoleculeName": "7Z34",
+  "caseId": "7Z34",
+  "caseKey": "RASP2PDB:7Z34",
+  "chains": [
+    "1",
+    "2",
+    "3"
+  ],
+  "confidenceDisplayLabel": "C UNDERPOWERED",
+  "pdbId": "7Z34",
+  "profileCount": 134
+}

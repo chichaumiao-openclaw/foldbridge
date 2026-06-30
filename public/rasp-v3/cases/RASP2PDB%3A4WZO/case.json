@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4WZO",
+  "biologicalMoleculeName": "4WZO",
+  "caseId": "4WZO",
+  "caseKey": "RASP2PDB:4WZO",
+  "chains": [
+    "3K"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "4WZO",
+  "profileCount": 13
+}

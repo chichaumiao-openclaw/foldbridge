@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6TQO",
+  "biologicalMoleculeName": "6TQO",
+  "caseId": "6TQO",
+  "caseKey": "RASP2PDB:6TQO",
+  "chains": [
+    "R"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "6TQO",
+  "profileCount": 2
+}

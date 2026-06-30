@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8VTU",
+  "biologicalMoleculeName": "8VTU",
+  "caseId": "8VTU",
+  "caseKey": "RASP2PDB:8VTU",
+  "chains": [
+    "1w",
+    "1x"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "8VTU",
+  "profileCount": 16
+}

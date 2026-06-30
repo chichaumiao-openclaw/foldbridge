@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2DXI",
+  "biologicalMoleculeName": "2DXI",
+  "caseId": "2DXI",
+  "caseKey": "RMDB2PDB:2DXI",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "2DXI",
+  "profileCount": 2
+}

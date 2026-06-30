@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9N2C",
+  "biologicalMoleculeName": "9N2C",
+  "caseId": "9N2C",
+  "caseKey": "RMDB2PDB:9N2C",
+  "chains": [
+    "5"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "9N2C",
+  "profileCount": 230
+}
