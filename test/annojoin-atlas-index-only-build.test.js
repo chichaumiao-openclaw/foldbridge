@@ -66,7 +66,12 @@ function runBuild(annojoinRoot, outRoot, extraArgs = []) {
       // A non-existent path degrades to no-calibration deterministically, which
       // is what these fixtures assume.
       FOLDBRIDGE_RMDB_ABC_LSS_ROOT: path.join(annojoinRoot, '__missing_rmdb_lss__'),
-      FOLDBRIDGE_RASP_D_LSS_ROOT: path.join(annojoinRoot, '__missing_rasp_lss__')
+      FOLDBRIDGE_RASP_D_LSS_ROOT: path.join(annojoinRoot, '__missing_rasp_lss__'),
+      // Point the published-page allowlist at a non-existent path so the
+      // production allowlist (checked-in 2386 real case keys) does not filter
+      // these synthetic fixture rows down to zero. A missing path degrades to
+      // an empty allowlist, which is a deterministic no-op (applied=false).
+      FOLDBRIDGE_ANNOJOIN_PUBLISHED_ALLOWLIST: path.join(annojoinRoot, '__missing_allowlist__.tsv')
     },
     encoding: 'utf8'
   });
