@@ -460,8 +460,13 @@ function renderChainsPanel(row) {
   const chains = Array.isArray(row.chains) ? row.chains.filter(Boolean) : [];
   const count = chains.length;
   const countLabel = `${count} ${count === 1 ? 'chain' : 'chains'} listed`;
+  const pdb = encodeURIComponent(String(row.pdbId || rowCaseId(row)).toUpperCase());
+  const rcsbHref = `https://www.rcsb.org/sequence/${pdb}`;
   const body = count
-    ? `<ol class="annojoin-chain-list">${chains.map((chain) => `<li>${escapeHtml(chain)}</li>`).join('')}</ol>`
+    ? chains.map((chain) => `<details class="annojoin-chain-seq">
+        <summary>${escapeHtml(chain)}</summary>
+        <a class="download-outline-btn" href="${escapeHtml(rcsbHref)}" target="_blank" rel="noopener noreferrer">View sequence on RCSB →</a>
+      </details>`).join('')
     : '<p class="mini-note">No PDB chain identifiers are annotated for this case in the current index asset.</p>';
   return `<aside class="annojoin-detail-sidebar" aria-label="ANNOJOIN chain definitions">
     <p class="technology-kicker">Chain definitions</p>
@@ -470,7 +475,7 @@ function renderChainsPanel(row) {
     <div class="annojoin-chain-scroll" role="region" aria-label="PDB chain identifiers" tabindex="0">
       ${body}
     </div>
-    <p class="mini-note">Per-chain residue sequences are not present in the current index asset; chain identifiers map to the deposited PDB entry.</p>
+    <p class="mini-note">Residue sequences open on RCSB (entry-level).</p>
   </aside>`;
 }
 

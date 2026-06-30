@@ -845,9 +845,13 @@ test('atlas side panel renders field-specific explanations', () => {
   const chainsHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'chains' });
   assert.match(chainsHtml, /Chain definitions/);
   assert.match(chainsHtml, /class="annojoin-chain-scroll"/);
-  assert.match(chainsHtml, /class="annojoin-chain-list"/);
-  // chain identifiers are listed rather than hidden behind a "not present" message
-  assert.doesNotMatch(chainsHtml, /Chain sequences are not present in the current index asset/);
+  assert.match(chainsHtml, /<details class="annojoin-chain-seq"/);
+  assert.match(chainsHtml, /href="https:\/\/www\.rcsb\.org\/sequence\/10ZT"/);
+  assert.match(chainsHtml, /target="_blank"/);
+  assert.match(chainsHtml, /rel="noopener noreferrer"/);
+  assert.match(chainsHtml, /View sequence on RCSB/);
+  // 删除 "not present" 注脚（断言真实删除文案）
+  assert.doesNotMatch(chainsHtml, /Per-chain residue sequences are not present/);
 
   const conflictsHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'conflictCandidateCount' });
   assert.match(conflictsHtml, /Conflict candidates/);
