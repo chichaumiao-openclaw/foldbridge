@@ -846,12 +846,11 @@ test('atlas side panel renders field-specific explanations', () => {
   assert.match(profilesHtml, /Hits by source/);
   assert.match(profilesHtml, /<dt>RMDB<\/dt>/);
   assert.match(profilesHtml, /<dt>RASP<\/dt>/);
-  // The RMDB RDAT trace only renders when trace rows exist for the case.
-  assert.match(profilesHtml, /RMDB RDAT trace/);
-  assert.match(profilesHtml, /OK7ALIB_2A3_0000\.rdat/);
-  assert.match(profilesHtml, /line 5914/);
-  assert.match(profilesHtml, /class="annojoin-profile-trace-list"/);
-  assert.match(profilesHtml, /5914/);
+  // Neither an RMDB RDAT trace nor any RASP trace section is rendered anymore.
+  assert.doesNotMatch(profilesHtml, /RMDB RDAT trace/);
+  assert.doesNotMatch(profilesHtml, /RASP trace/);
+  assert.doesNotMatch(profilesHtml, /annojoin-profile-trace-list/);
+  assert.doesNotMatch(profilesHtml, /OK7ALIB_2A3_0000\.rdat/);
   assert.doesNotMatch(profilesHtml, /rmdbv3_exact_alpha/);
   // The old dismissive "RASP hit details are not present" note is gone.
   assert.doesNotMatch(profilesHtml, /RASP hit details are not present in the current index asset/);
