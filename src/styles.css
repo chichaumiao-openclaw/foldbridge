@@ -6323,6 +6323,118 @@ body[data-mode="dark"] .mode-toggle:hover {
 }
 
 /* === ABOUT PAGE === */
+.about-hero {
+  margin: 0 0 28px;
+  padding: 28px 32px;
+  border-radius: var(--radiusCard);
+  background: var(--primarySoft);
+  border: 1px solid rgba(47, 143, 107, 0.18);
+}
+.about-hero-kicker {
+  margin: 0 0 8px;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  font-weight: 600;
+}
+.about-hero h1 {
+  margin: 0 0 12px;
+  color: var(--primary);
+  font-family: var(--fontFamily);
+}
+.about-hero-summary {
+  margin: 0 0 10px;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--primary);
+}
+.about-hero-detail {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.82;
+}
+.about-section {
+  margin: 0 0 22px;
+}
+.about-section h2 {
+  margin: 0 0 16px;
+  color: var(--primary);
+  font-family: var(--fontFamily);
+}
+.about-prose {
+  margin: 0;
+  line-height: 1.7;
+}
+.about-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 18px;
+}
+.about-source-card {
+  padding: 18px 20px;
+  border-radius: var(--radiusCard);
+  background: var(--panel-card-bg);
+  border: var(--panel-card-border);
+  box-shadow: var(--panel-card-shadow);
+}
+.about-source-card h3 {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-family: var(--fontFamily);
+}
+.about-source-card p {
+  margin: 0;
+  line-height: 1.6;
+}
+.about-pipeline-figure {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.about-pipeline-svg {
+  width: 100%;
+  height: auto;
+  max-width: 100%;
+}
+.about-pipe-node {
+  fill: var(--primarySoft);
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+.about-pipe-label {
+  fill: var(--primary);
+  font-family: var(--fontFamily);
+  font-size: 13px;
+  font-weight: 600;
+}
+.about-pipe-arrow {
+  stroke: var(--accent);
+  stroke-width: 2;
+}
+.about-pipeline-svg marker path {
+  fill: var(--accent);
+}
+.about-pipeline-note {
+  margin: 0;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+.about-terms {
+  margin: 0;
+}
+.about-terms dt {
+  font-weight: 600;
+  color: var(--accent);
+  margin-top: 14px;
+}
+.about-terms dt:first-child {
+  margin-top: 0;
+}
+.about-terms dd {
+  margin: 4px 0 0;
+  line-height: 1.6;
+}
 
 /* === STATS PAGE === */
 

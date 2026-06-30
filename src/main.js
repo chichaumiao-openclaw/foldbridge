@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpBody, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -30,6 +30,7 @@ import { downloadRowsAsCsv } from './modules.js';
 import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
 import { createProbingArticleStore } from './probingArticleStore.js';
+import { createAboutContentStore } from './aboutContentStore.js';
 import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
 import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
 import {
@@ -74,6 +75,9 @@ const pdbCaseStore = createCaseStore();
 const annojoinAtlasStore = createAnnojointAtlasStore();
 const probingArticleStore = createProbingArticleStore();
 const homeScrollStoryStore = createHomeScrollStoryStore();
+// About 页策展内容（about-content.json 在 ./src/assets/data/ 下，store 自带 'assets/data/' 后缀）。
+const aboutContentStore = createAboutContentStore({ assetBase: './src/' });
+let aboutContentState = null; // null=未加载, 'loading', 或 about-content.json 对象
 let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
 const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
 let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
@@ -1942,6 +1946,20 @@ async function loadProbingArticleIndex() {
   if (route === 'detail' || route === 'probing' || route === 'home') render({ preserveScroll: true });
 }
 
+async function loadAboutContent() {
+  if (aboutContentState === 'loading') return;
+  aboutContentState = 'loading';
+  try {
+    // loadContent 失败时返回 null（store 不抛）；null 视为终态 'error'，
+    // 避免 aboutPage() 因 peek() 仍 miss 而无限重试 fetch+render（与 probing 同款 'error' 终态）。
+    aboutContentState = (await aboutContentStore.loadContent()) || 'error';
+  } catch (err) {
+    console.error('[main] 加载 About 内容失败', err);
+    aboutContentState = 'error';
+  }
+  if (route === 'about' || route === 'help') render({ preserveScroll: true });
+}
+
 // 访问计数：每次成功加载招牌 story 自增（localStorage），用于 pickFeaturedCase 轮换。
 // 隐私模式 localStorage 抛错 → 退回 0，绝不报错（规格 §8 降级）。
 function readHomeScrollVisitIndex() {
@@ -2392,15 +2410,11 @@ function publicationsPage() {
   </main>`;
 }
 
-function helpPage() {
-  return `<main class="page-help">
-    ${renderBundleHeader()}
-    ${renderHelpBody()}
-  </main>`;
-}
-
 function aboutPage() {
-  return `<main class="page-detail">${renderBundleHeader()}<section class="card bundle-wide-card"><h1>About</h1><p>Loading…</p></section></main>`;
+  const cached = aboutContentStore.peek();
+  // 仅在未缓存且加载未在进行/未终态失败时触发，避免失败后无限重试循环。
+  if (!cached && aboutContentState !== 'loading' && aboutContentState !== 'error') loadAboutContent();
+  return `<main class="page-detail">${renderBundleHeader()}${renderAboutPage(cached)}</main>`;
 }
 
 function statsPage() {
