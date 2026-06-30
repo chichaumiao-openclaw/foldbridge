@@ -73,6 +73,14 @@ gates.
 - Home: project overview, bundled RNA database links, and visualization modules.
 - Browse: search, facets, and result tables.
 - Sequence / Structure / Probing: FoldBridge demo records and downloadable assets.
+  Probing is a science hub: mechanism-family index, a 34-technology comparison
+  table (family / targetable bases / threshold basis), a glossary, plus the
+  carousel and in-depth article collection.
+- About: methodology page covering data sources (RMDB / RASP / PDB), the ANNOJOIN
+  build pipeline, the A–F confidence families, threshold-honesty notes, key terms,
+  and how to cite (the former Help content is merged here).
+- Stats: global overview with real, build-derived numbers and inline SVG charts
+  (structure-linked records, source cases, confidence-tier distribution, and more).
 - Search: Pagefind-backed full-site search with type/tag filters and saved queries.
 - ANNOJOIN Atlas: ANNOCONFIDENCE / ANNOJOIN search, 1D/2D/3D evidence previews,
   mapped residue tables, confidence presets, conflicts, and current-filter
