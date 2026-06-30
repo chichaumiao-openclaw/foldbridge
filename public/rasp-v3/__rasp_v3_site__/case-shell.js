@@ -1,3 +1,97 @@
+// --- Pure enrichment helpers (DOM-free; safe to load under node for testing) ---
+
+const FAMILY_LABELS = {
+  A: "WC-face base-specific",
+  B: "SHAPE flexibility",
+  C: "enzymatic",
+  D: "SASA solvent access",
+  E: "contact-map",
+  F: "pair-set",
+};
+
+const TIER_DISPLAY = {
+  LSS_STRONG_CALIBRATED: { label: "STRONG", tone: "strong",
+    meaning: "Directional signal clears the bar and passes all secondary gates (self-containment, conflict, size) under permutation." },
+  LSS_MODERATE_CANDIDATE: { label: "MODERATE", tone: "moderate",
+    meaning: "Directional signal is supported but calibration is pending, so it is held below STRONG." },
+  LSS_WEAK: { label: "WEAK", tone: "weak",
+    meaning: "Directional signal clears the bar but a secondary gate (self-containment / conflict / size) does not — directional but not yet self-contained." },
+  LSS_NOT_SUPPORTED: { label: "NOT SUPPORTED", tone: "not-supported",
+    meaning: "Signal does not clear the bar / is not better than chance under permutation." },
+  LSS_DISCORDANT: { label: "DISCORDANT", tone: "discordant",
+    meaning: "Signal runs counter to the structure (negative / conflicting), not merely absent." },
+  LSS_UNDERPOWERED: { label: "UNDERPOWERED", tone: "underpowered",
+    meaning: "Too few evaluable residues (or too few paired/unpaired) to judge." },
+};
+
+const TIER_ORDER = [
+  "LSS_STRONG_CALIBRATED",
+  "LSS_MODERATE_CANDIDATE",
+  "LSS_WEAK",
+  "LSS_DISCORDANT",
+  "LSS_NOT_SUPPORTED",
+  "LSS_UNDERPOWERED",
+];
+
+function familyCounts(rows) {
+  const out = {};
+  for (const r of rows) { const f = r.family || ""; out[f] = (out[f] || 0) + 1; }
+  return out;
+}
+
+function tierCounts(rows) {
+  const out = {};
+  for (const r of rows) {
+    const t = r.lssTierCalibrated || "";
+    out[t] = (out[t] || 0) + 1;
+  }
+  return out;
+}
+
+function distinctChains(rows) {
+  return new Set(rows.map((r) => r.chain).filter(Boolean)).size;
+}
+
+function familyLabel(family) {
+  return FAMILY_LABELS[family] || String(family);
+}
+
+function tierDisplay(token) {
+  if (TIER_DISPLAY[token]) return TIER_DISPLAY[token];
+  const bare = String(token || "").replace(/^LSS_/, "").replace(/_/g, " ");
+  return { label: bare, tone: "not-supported", meaning: "" };
+}
+
+function fmtMetric(value) {
+  if (value === null || value === undefined || Number.isNaN(value)) return "—";
+  return Number(value).toFixed(2);
+}
+
+function fmtP(value) {
+  if (value === null || value === undefined || Number.isNaN(value)) return "—";
+  return Number(value).toFixed(3);
+}
+
+function fmtFraction(value) {
+  if (value === null || value === undefined || Number.isNaN(value)) return "—";
+  return Number(value).toFixed(2);
+}
+
+function fmtCount(value) {
+  if (value === null || value === undefined || Number.isNaN(value)) return "—";
+  return String(value);
+}
+
+function pickBestEvidence(rows, defaultEvidenceId) {
+  if (!rows || rows.length === 0) return null;
+  const byId = rows.find((r) => r.evidenceId === defaultEvidenceId);
+  if (byId) return byId;
+  const flagged = rows.find((r) => r.selectedByDefault === true);
+  if (flagged) return flagged;
+  return rows[0];
+}
+
+// DOM bootstrap (browser only). Pure helpers above are referenced here.
 if (typeof document !== "undefined") {
   // Inject the shared site nav header. Runs before the bootstrap parse below so the nav
   // appears even if the case bootstrap is missing. case-shell.js is a static parse-time
@@ -68,7 +162,7 @@ if (typeof document !== "undefined") {
     if (text !== undefined && text !== null) node.textContent = text;
     return node;
   }
-
+  // GUARD_PLACEHOLDER_2
   function renderEnrichment(bootstrap) {
     const rows = bootstrap.evidenceRows;
     if (!rows || rows.length === 0) return;
@@ -211,99 +305,6 @@ if (typeof document !== "undefined") {
   }
   renderEnrichment(bootstrap);
   syncUi();
-}
-
-// --- Pure enrichment helpers (DOM-free; safe to load under node for testing) ---
-
-const FAMILY_LABELS = {
-  A: "WC-face base-specific",
-  B: "SHAPE flexibility",
-  C: "enzymatic",
-  D: "SASA solvent access",
-  E: "contact-map",
-  F: "pair-set",
-};
-
-const TIER_DISPLAY = {
-  LSS_STRONG_CALIBRATED: { label: "STRONG", tone: "strong",
-    meaning: "Directional signal clears the bar and passes all secondary gates (self-containment, conflict, size) under permutation." },
-  LSS_MODERATE_CANDIDATE: { label: "MODERATE", tone: "moderate",
-    meaning: "Directional signal is supported but calibration is pending, so it is held below STRONG." },
-  LSS_WEAK: { label: "WEAK", tone: "weak",
-    meaning: "Directional signal clears the bar but a secondary gate (self-containment / conflict / size) does not — directional but not yet self-contained." },
-  LSS_NOT_SUPPORTED: { label: "NOT SUPPORTED", tone: "not-supported",
-    meaning: "Signal does not clear the bar / is not better than chance under permutation." },
-  LSS_DISCORDANT: { label: "DISCORDANT", tone: "discordant",
-    meaning: "Signal runs counter to the structure (negative / conflicting), not merely absent." },
-  LSS_UNDERPOWERED: { label: "UNDERPOWERED", tone: "underpowered",
-    meaning: "Too few evaluable residues (or too few paired/unpaired) to judge." },
-};
-
-const TIER_ORDER = [
-  "LSS_STRONG_CALIBRATED",
-  "LSS_MODERATE_CANDIDATE",
-  "LSS_WEAK",
-  "LSS_DISCORDANT",
-  "LSS_NOT_SUPPORTED",
-  "LSS_UNDERPOWERED",
-];
-
-function familyCounts(rows) {
-  const out = {};
-  for (const r of rows) { const f = r.family || ""; out[f] = (out[f] || 0) + 1; }
-  return out;
-}
-
-function tierCounts(rows) {
-  const out = {};
-  for (const r of rows) {
-    const t = r.lssTierCalibrated || "";
-    out[t] = (out[t] || 0) + 1;
-  }
-  return out;
-}
-
-function distinctChains(rows) {
-  return new Set(rows.map((r) => r.chain).filter(Boolean)).size;
-}
-
-function familyLabel(family) {
-  return FAMILY_LABELS[family] || String(family);
-}
-
-function tierDisplay(token) {
-  if (TIER_DISPLAY[token]) return TIER_DISPLAY[token];
-  const bare = String(token || "").replace(/^LSS_/, "").replace(/_/g, " ");
-  return { label: bare, tone: "not-supported", meaning: "" };
-}
-
-function fmtMetric(value) {
-  if (value === null || value === undefined || Number.isNaN(value)) return "—";
-  return Number(value).toFixed(2);
-}
-
-function fmtP(value) {
-  if (value === null || value === undefined || Number.isNaN(value)) return "—";
-  return Number(value).toFixed(3);
-}
-
-function fmtFraction(value) {
-  if (value === null || value === undefined || Number.isNaN(value)) return "—";
-  return Number(value).toFixed(2);
-}
-
-function fmtCount(value) {
-  if (value === null || value === undefined || Number.isNaN(value)) return "—";
-  return String(value);
-}
-
-function pickBestEvidence(rows, defaultEvidenceId) {
-  if (!rows || rows.length === 0) return null;
-  const byId = rows.find((r) => r.evidenceId === defaultEvidenceId);
-  if (byId) return byId;
-  const flagged = rows.find((r) => r.selectedByDefault === true);
-  if (flagged) return flagged;
-  return rows[0];
 }
 
 if (typeof module !== "undefined" && module.exports) {
