@@ -40,11 +40,28 @@ Out of scope:
 - **List pages have zero `<script>`** — they load only `case-shell.css`. Therefore JS
   injected through `case-shell.js` does NOT reach the list pages. They need a direct
   `<script>` tag.
-- `case-shell.css` `:root` tokens available for styling the nav:
-  `--surface #ffffff`, `--textPrimary #14221C`, `--textSecondary #5D6C64`,
-  `--accent #2F8F6B`, `--primarySoft #E4EFE8`, `--radiusCard 22px`, `--line`,
-  `--card-shadow`, `--fontFamily`. This is enough to render the nav natively without
-  importing portal CSS (the portal's `src/styles.css` is not deployed under `public/`).
+- **The two bundles have DISJOINT `:root` token sets** — the nav CSS cannot reference
+  one shared set of token names:
+  - rasp `__rasp_v3_site__/case-shell.css:1-13`: `--surface #ffffff`,
+    `--textPrimary #14221C`, `--textSecondary #5D6C64`, `--accent #2F8F6B` (green),
+    `--primarySoft #E4EFE8`, `--radiusCard 22px`, `--line`, `--card-shadow`,
+    `--fontFamily`.
+  - rmdb `__family_d_site__/case-shell.css:1-9`: `--bg #f6f7fb`, `--panel #ffffff`,
+    `--line #d9dee8`, `--text #1c2430`, `--muted #66758a`, `--accent #1759c7` (blue),
+    `--accent-soft #e8f0ff`.
+  - Overlap is only `--line` and `--accent`, and `--accent` differs in VALUE (green vs
+    blue). So a nav block keyed on rasp token names renders unstyled on rmdb. The nav
+    block must use **self-contained literal CSS values** (not `var(--surface)` etc.), so
+    one identical block works in both bundles. (The portal's `src/styles.css` is not
+    deployed under `public/`, so we cannot import it either way.)
+- **Deploy layout** (`scripts/build.mjs`, `scripts/build-pages.mjs`): build copies the
+  portal `index.html` to `dist/index.html` and `public/` to `dist/public/`; Pages wraps
+  `dist/` as `_site/dist/`. So the portal is served at `/dist/` (NOT the domain root),
+  and a bundle script is served at `/dist/public/{rasp-v3,rmdb-v3}/__<bundle>__/`. From a
+  bundle script, the portal root is **four** directory levels up
+  (`__bundle__` → `rasp-v3` → `public` → `dist`). Because we compute the root from the
+  script's own URL rather than hardcoding it, the exact base path does not need to be
+  assumed — but the path rationale must include the `public/` segment.
 - Portal nav reference (`src/siteChrome.js:5-11`): 5 items —
   `Home` (`#home`), `Entry` (`#entry`), `Probing` (`#probing`), `Search` (`#search`),
   `Help` (`#help`). Routes are validated by `src/router.js` (`ALLOWED_ROUTES`).
@@ -58,11 +75,20 @@ Each universe bundle gets a new self-contained script:
 `public/rmdb-v3/__family_d_site__/site-nav.js`
 
 `site-nav.js` is an IIFE that, on load:
-1. Resolves the **portal root** relative to its own URL (`document.currentScript.src`).
-   The script lives at `<deployRoot>/{rasp-v3,rmdb-v3}/__<bundle>__/site-nav.js`, so the
-   portal root is three directory levels up from the script. Computing from the script's
-   own URL makes the links correct whether the site is served from the domain root or a
-   sub-path. Links are therefore **relative** (user-approved), e.g. `<root>/#home`.
+1. Resolves its **own script URL**, then derives the **portal root** from it. The script
+   is served at `<deployRoot>/public/{rasp-v3,rmdb-v3}/__<bundle>__/site-nav.js`, so the
+   portal root is four directory levels up (`__bundle__` → `rasp-v3` → `public` → `dist`
+   = `<deployRoot>`). Resolving from the script's own URL keeps links correct regardless
+   of the deploy base path.
+   - **Critical:** `document.currentScript` is `null` inside a *dynamically injected*
+     external script (case-page path, entry point 1). So `site-nav.js` must NOT rely on
+     `document.currentScript`. Instead it reads its own URL from a marker the loader
+     passes in, with fallbacks in this order: (a) a `data-fb-root` attribute / query
+     param set by the loader (entry point 1), (b) `document.currentScript?.src` (valid on
+     the list-page static-tag path, entry point 2), (c) the last `<script>` whose `src`
+     ends with `site-nav.js` found via `document.querySelectorAll`. This makes both entry
+     points work.
+   Links are **relative** (user-approved), e.g. `<root>/#home`.
 2. Builds a `<header class="fb-detail-nav">` containing a brand block
    (`FB` mark + `FoldBridge` wordmark) and the 5 nav links as `<a href>` anchors
    pointing at `<root>/#home`, `<root>/#entry`, `<root>/#probing`, `<root>/#search`,
@@ -75,15 +101,20 @@ The link list and root computation live only in `site-nav.js` — single source 
 
 ### Entry point 1 — case pages (1671+ files, never hand-edited)
 
-`case-shell.js` gains a small loader at the **top** of the file that dynamically appends
-`site-nav.js` from the same bundle directory. It resolves `site-nav.js` relative to
-`case-shell.js`'s own script URL (the existing `<script src=".../case-shell.js">` tag),
-so no path assumptions. This one edit reaches every case page in the bundle without
-touching any per-case HTML.
+`case-shell.js` gains a small loader at the **very top** of the file (physically before
+the existing line-1 `getElementById("family-case-bootstrap")`, so it runs even if the
+bootstrap throw fires). The loader:
+- reads its OWN script URL via `document.currentScript.src` — valid here, because
+  `case-shell.js` is a static parse-time classic script (not dynamically injected);
+- resolves the sibling `site-nav.js` URL from that (same bundle directory);
+- creates a `<script>` element pointing at `site-nav.js`, and passes the resolved bundle
+  URL forward via a `data-fb-script-src` attribute (so `site-nav.js` can self-locate
+  without `document.currentScript`, per Design step 1a);
+- appends it to `<head>`/`<body>`.
 
-The loader must not interfere with `case-shell.js`'s existing bootstrap logic (it throws
-if `family-case-bootstrap` is missing). The nav loader runs independently and tolerates
-the existing flow.
+This one edit reaches every case page in the bundle without touching any per-case HTML.
+The nav loader runs independently of `case-shell.js`'s bootstrap; it does not read the
+bootstrap JSON and does not throw.
 
 ### Entry point 2 — list pages (2 files)
 
@@ -94,10 +125,12 @@ Add a single `<script src="./__rasp_v3_site__/site-nav.js"></script>` (resp.
 ### Styling
 
 Add `.fb-detail-nav` rules to `case-shell.css` (loaded by BOTH case pages and list
-pages — the single CSS lever that reaches everything). The nav replicates the portal
-header's visual language using the existing `:root` tokens: surface background, accent
-color for links, card radius/shadow, brand mark styling. Responsive: stack/condense on
-narrow viewports. Both bundles' `case-shell.css` get the same block.
+pages — the single CSS lever that reaches everything). Because the two bundles have
+**disjoint `:root` token sets** (see baseline facts), the nav block uses **self-contained
+literal CSS values** rather than `var(--…)` references, so one identical block renders
+correctly in both rasp and rmdb. The block replicates the portal header's visual language
+(light surface, accent-colored links, subtle border/shadow, brand mark). Responsive:
+stack/condense on narrow viewports. Both bundles' `case-shell.css` get the same block.
 
 ### Files touched
 
