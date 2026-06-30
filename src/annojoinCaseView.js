@@ -31,14 +31,6 @@ function workbenchBaseHref(caseAsset) {
   return '';
 }
 
-function workbenchHref(caseAsset, evidence) {
-  const baseHref = workbenchBaseHref(caseAsset);
-  if (!baseHref) return '';
-  const profileId = text(evidence?.trackProfileId);
-  if (!profileId) return baseHref;
-  return `${baseHref}?profileId=${encodeURIComponent(profileId)}`;
-}
-
 function renderMetric(label, value) {
   return `<article class="annojoin-case-metric">
     <span>${escapeHtml(label)}</span>
@@ -102,7 +94,6 @@ function renderFocusGrid(evidence) {
     <div><dt>Technology</dt><dd>${escapeHtml(evidence.technology || 'n/a')}</dd></div>
     <div><dt>Track profile</dt><dd>${escapeHtml(evidence.trackProfileId || 'n/a')}</dd></div>
     <div><dt>Pair ID</dt><dd>${escapeHtml(evidence.pairId || 'n/a')}</dd></div>
-    <div><dt>Pair segment</dt><dd>${escapeHtml(evidence.pairSegmentId || 'n/a')}</dd></div>
     <div><dt>AUC directional</dt><dd>${escapeHtml(formatNumber(evidence.aucDirectional))}</dd></div>
     <div><dt>Empirical p</dt><dd>${escapeHtml(formatNumber(evidence.aucEmpiricalPValue, 6))}</dd></div>
     <div><dt>Conflict fraction</dt><dd>${escapeHtml(formatNumber(evidence.conflictFraction))}</dd></div>
@@ -196,11 +187,13 @@ export function renderAnnojointCasePage({
   caseKey,
   confidenceBundle = null,
   confidenceStatus = 'idle',
+  headerHtml = '',
 } = {}) {
   const selectedCaseId = caseAsset?.case?.caseId || caseId || '10ZT';
   const selectedCaseKey = caseAsset?.case?.atlasCaseKey || caseKey || selectedCaseId;
   if (!caseAsset) {
     return `<main class="page-annojoin-case">
+      ${headerHtml}
       <section class="annojoin-case-hero">
         <p class="technology-kicker">ANNOJOIN case</p>
         <h1>${escapeHtml(selectedCaseId)}</h1>
@@ -211,7 +204,6 @@ export function renderAnnojointCasePage({
 
   const summary = confidenceBundle?.summary || {};
   const evidence = defaultEvidence(confidenceBundle);
-  const workbenchSrc = workbenchHref(caseAsset, evidence);
   const bootstrap = confidenceBundle ? {
     caseKey: selectedCaseKey,
     summary: confidenceBundle.summary,
@@ -220,21 +212,14 @@ export function renderAnnojointCasePage({
     defaultEvidenceId: summary.defaultEvidenceId || evidence?.evidenceId || '',
     workbenchBaseHref: workbenchBaseHref(caseAsset),
   } : null;
-  const confidenceLead = confidenceBundle
-    ? (summary.status === 'materialized'
-      ? `${summary.materializedEvidenceCount}/${summary.totalEvidenceCount} calibrated evidence rows are route-bridge ready in this build.`
-      : 'The RMDB calibrated confidence sidecar is not materialized in the current build.')
-    : (confidenceStatus === 'loading'
-      ? 'Loading RMDB calibrated confidence sidecar...'
-      : 'RMDB calibrated confidence sidecar unavailable.');
 
   const chainIdentityPanel = renderChainIdentityPanel(caseAsset.case?.chainIdentities);
 
   return `<main class="page-annojoin-case">
+    ${headerHtml}
     <section class="annojoin-case-hero">
       <p class="technology-kicker">ANNOJOIN case detail</p>
       <h1>${escapeHtml(caseAsset.case?.biologicalMoleculeName || selectedCaseId)}</h1>
-      <p class="pdb-case-lede">${escapeHtml(confidenceLead)}</p>
       <div class="annojoin-case-hero-meta">
         ${renderMetric('Atlas case', selectedCaseKey)}
         ${renderMetric('PDB', caseAsset.case?.pdbId || selectedCaseId)}
@@ -267,26 +252,6 @@ export function renderAnnojointCasePage({
           </div>
           <p class="annojoin-case-copy">The selector is flattened across the case. Default focus is the strongest calibrated evidence row after sorting by tier, AUC, empirical p-value, and evaluable size. Route bridging stays explicit: profile membership first, then pair-level 1D/2D/3D routes.</p>
           <div class="annojoin-case-chip-row">${renderTierChips(summary)}</div>
-        </section>
-
-        <section class="annojoin-case-panel">
-          <div class="annojoin-case-panel-head">
-            <p class="technology-kicker">linked workbench</p>
-            <h2>1D / 2D / 3D workbench</h2>
-            <span>Reusing the verified 5GAG linked-view smoke core</span>
-          </div>
-          ${workbenchSrc
-            ? `<iframe
-                id="annojoin-case-workbench-frame"
-                class="annojoin-case-workbench-frame"
-                title="ANNOJOIN linked workbench"
-                src="${escapeHtml(workbenchSrc)}"
-                loading="lazy"
-              ></iframe>`
-            : `<div class="annojoin-workbench-empty">
-                <strong>Workbench not materialized for this case</strong>
-                <p>The formal shell is live, but only the 5GAG linked-view workbench is currently wired as an embedded template.</p>
-              </div>`}
         </section>
 
         <section class="annojoin-case-panel">

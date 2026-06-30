@@ -2,8 +2,9 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { renderAnnojointCasePage } from '../src/annojoinCaseView.js';
 
-test('annojoin case page renders confidence-first shell with embedded 5GAG workbench', () => {
+test('annojoin case page renders confidence-first shell with the homepage header', () => {
   const html = renderAnnojointCasePage({
+    headerHtml: '<header class="bundle-home-header"></header>',
     caseAsset: {
       case: {
         caseId: '5GAG',
@@ -75,8 +76,15 @@ test('annojoin case page renders confidence-first shell with embedded 5GAG workb
   assert.match(html, /confidence-first/);
   assert.match(html, /annojoin-family-filter/);
   assert.match(html, /annojoin-evidence-row is-selected/);
-  assert.match(html, /annojoin-smoke\/5gag\/index\.html\?profileId=/);
+  assert.match(html, /bundle-home-header/);
   assert.match(html, /id="annojoin-case-bootstrap"/);
+  // The unfinished linked-workbench panel must be gone before launch.
+  assert.doesNotMatch(html, /1D \/ 2D \/ 3D workbench/);
+  assert.doesNotMatch(html, /annojoin-case-workbench-frame/);
+  // The unfinished "route-bridge ready" lede must be gone.
+  assert.doesNotMatch(html, /calibrated evidence rows are route-bridge ready/);
+  // The unfinished "Pair segment" focus row must be gone.
+  assert.doesNotMatch(html, /Pair segment/);
 });
 
 test('annojoin case page stays honest when calibrated confidence sidecars are absent', () => {
@@ -101,8 +109,8 @@ test('annojoin case page stays honest when calibrated confidence sidecars are ab
   });
 
   assert.match(html, /Confidence sidecar unavailable/);
-  assert.match(html, /The RMDB calibrated confidence sidecar is not materialized in the current build/);
-  assert.match(html, /Workbench not materialized for this case/);
+  assert.doesNotMatch(html, /is not materialized in the current build/);
+  assert.doesNotMatch(html, /Workbench not materialized for this case/);
 });
 
 test('annojoin case page partitions per-chain RNA identities into verified and declared groups', () => {
