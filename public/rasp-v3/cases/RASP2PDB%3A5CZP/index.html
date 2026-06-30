@@ -18,14 +18,23 @@
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="QV"><a class="chain-btn is-active" href="chains/QV/index.html?profileId=rasp_bw_05a244faeabc" data-chain-id="QV">
-  <strong>QV</strong>
-  <span class="mini">chains/QV/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">QV</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/QV/index.html?profileId=rasp_bw_05a244faeabc"
+          loading="lazy"
+          title="5CZP chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "5CZP", "caseKey": "RASP2PDB:5CZP", "defaultChainId": "QV", "defaultEvidenceId": "annojoin:RASP2PDB:5CZP:confidence:A:rasp_bw_05a244faeabc", "chainPageById": {"QV": "chains/QV/index.html"}, "evidenceChainMap": {"annojoin:RASP2PDB:5CZP:confidence:A:rasp_bw_05a244faeabc": "QV", "annojoin:RASP2PDB:5CZP:confidence:A:rasp_bw_5b29cb269940": "QV", "annojoin:RASP2PDB:5CZP:confidence:A:rasp_bw_f9579812c67b": "QV"}, "evidenceRows": [{"aucDirectional": 0.333333, "aucEffectSizeZ": -1.147383, "aucEmpiricalPValue": 0.887113, "bridgeStatus": "bridge_missing", "chain": "QV", "conflictFraction": 0.333333, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:5CZP:confidence:A:rasp_bw_05a244faeabc", "family": "A", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 19, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.0, "profileKey": "rasp_bw_05a244faeabc", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "DMS-seq", "trackProfileId": "rasp_bw_05a244faeabc"}, {"aucDirectional": 0.27381, "aucEffectSizeZ": -1.585967, "aucEmpiricalPValue": 0.946054, "bridgeStatus": "bridge_missing", "chain": "QV", "conflictFraction": 0.333333, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:5CZP:confidence:A:rasp_bw_f9579812c67b", "family": "A", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 19, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.0, "profileKey": "rasp_bw_f9579812c67b", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "DMS-seq", "trackProfileId": "rasp_bw_f9579812c67b"}, {"aucDirectional": 0.27381, "aucEffectSizeZ": -1.601201, "aucEmpiricalPValue": 0.95005, "bridgeStatus": "bridge_missing", "chain": "QV", "conflictFraction": 0.333333, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:5CZP:confidence:A:rasp_bw_5b29cb269940", "family": "A", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 19, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.0, "profileKey": "rasp_bw_5b29cb269940", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "DMS-seq", "trackProfileId": "rasp_bw_5b29cb269940"}]}</script>
+  <script src="../../__rasp_v3_site__/case-shell.js"></script>
 </body>
 </html>
