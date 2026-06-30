@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6ZTN",
+  "biologicalMoleculeName": "6ZTN",
+  "caseId": "6ZTN",
+  "caseKey": "RASP2PDB:6ZTN",
+  "chains": [
+    "AA",
+    "AW",
+    "AX",
+    "BA",
+    "BB"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "6ZTN",
+  "profileCount": 38
+}

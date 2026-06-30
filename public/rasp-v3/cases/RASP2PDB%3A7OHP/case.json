@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7OHP",
+  "biologicalMoleculeName": "7OHP",
+  "caseId": "7OHP",
+  "caseKey": "RASP2PDB:7OHP",
+  "chains": [
+    "1",
+    "2",
+    "6"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "7OHP",
+  "profileCount": 83
+}

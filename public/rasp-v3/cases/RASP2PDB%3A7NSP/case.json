@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7NSP",
+  "biologicalMoleculeName": "7NSP",
+  "caseId": "7NSP",
+  "caseKey": "RASP2PDB:7NSP",
+  "chains": [
+    "8",
+    "A",
+    "B",
+    "a",
+    "v"
+  ],
+  "confidenceDisplayLabel": "D MODERATE",
+  "pdbId": "7NSP",
+  "profileCount": 43
+}

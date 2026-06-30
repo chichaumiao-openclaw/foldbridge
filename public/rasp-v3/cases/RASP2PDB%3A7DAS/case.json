@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7DAS",
+  "biologicalMoleculeName": "7DAS",
+  "caseId": "7DAS",
+  "caseKey": "RASP2PDB:7DAS",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "7DAS",
+  "profileCount": 45
+}

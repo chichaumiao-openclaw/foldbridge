@@ -1,0 +1,30 @@
+{
+  "atlasCaseKey": "RASP2PDB:7MQ9",
+  "availableFamilies": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "bridgeMissingCount": 280,
+  "defaultEvidenceId": "annojoin:RASP2PDB:7MQ9:confidence:A:rasp_bw_93deaa819d97",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 70,
+    "B": 178,
+    "C": 24,
+    "D": 8
+  },
+  "generatedAt": "2026-06-29T16:52:22.264755Z",
+  "materializedEvidenceCount": 280,
+  "pdbId": "7MQ9",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 26,
+    "LSS_NOT_SUPPORTED": 43,
+    "LSS_UNDERPOWERED": 196,
+    "LSS_WEAK": 15
+  },
+  "totalEvidenceCount": 280
+}
