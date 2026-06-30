@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:2K4C",
+  "biologicalMoleculeName": "2K4C",
+  "caseId": "2K4C",
+  "caseKey": "RASP2PDB:2K4C",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "2K4C",
+  "profileCount": 16
+}

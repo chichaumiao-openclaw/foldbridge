@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1QU2",
+  "biologicalMoleculeName": "1QU2",
+  "caseId": "1QU2",
+  "caseKey": "RASP2PDB:1QU2",
+  "chains": [
+    "T"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "1QU2",
+  "profileCount": 7
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9BDN",
+  "biologicalMoleculeName": "9BDN",
+  "caseId": "9BDN",
+  "caseKey": "RMDB2PDB:9BDN",
+  "chains": [
+    "TIRN"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "9BDN",
+  "profileCount": 4
+}

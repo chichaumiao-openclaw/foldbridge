@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2OM7",
+  "biologicalMoleculeName": "2OM7",
+  "caseId": "2OM7",
+  "caseKey": "RMDB2PDB:2OM7",
+  "chains": [
+    "I"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "2OM7",
+  "profileCount": 6
+}

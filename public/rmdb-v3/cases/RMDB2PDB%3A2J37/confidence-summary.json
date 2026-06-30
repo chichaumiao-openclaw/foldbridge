@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:2J37",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 16,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:2J37:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#6483",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8,
+    "B": 8
+  },
+  "generatedAt": "2026-06-28T21:26:31.631273Z",
+  "materializedEvidenceCount": 16,
+  "pdbId": "2J37",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 16
+  },
+  "totalEvidenceCount": 16
+}

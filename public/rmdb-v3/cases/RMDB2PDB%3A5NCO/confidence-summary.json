@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:5NCO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 114,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:5NCO:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#10627",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 57,
+    "B": 57
+  },
+  "generatedAt": "2026-06-28T21:05:42.173120Z",
+  "materializedEvidenceCount": 114,
+  "pdbId": "5NCO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 114
+  },
+  "totalEvidenceCount": 114
+}

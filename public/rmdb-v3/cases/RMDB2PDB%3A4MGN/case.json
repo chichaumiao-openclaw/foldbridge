@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4MGN",
+  "biologicalMoleculeName": "4MGN",
+  "caseId": "4MGN",
+  "caseKey": "RMDB2PDB:4MGN",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "4MGN",
+  "profileCount": 2
+}

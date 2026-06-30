@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3JCJ",
+  "biologicalMoleculeName": "3JCJ",
+  "caseId": "3JCJ",
+  "caseKey": "RASP2PDB:3JCJ",
+  "chains": [
+    "A",
+    "g",
+    "v"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "3JCJ",
+  "profileCount": 37
+}

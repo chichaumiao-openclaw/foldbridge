@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5OIK",
+  "biologicalMoleculeName": "5OIK",
+  "caseId": "5OIK",
+  "caseKey": "RMDB2PDB:5OIK",
+  "chains": [
+    "P"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "5OIK",
+  "profileCount": 2
+}

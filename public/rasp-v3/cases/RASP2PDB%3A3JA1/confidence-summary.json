@@ -1,0 +1,28 @@
+{
+  "atlasCaseKey": "RASP2PDB:3JA1",
+  "availableFamilies": [
+    "A",
+    "B",
+    "D"
+  ],
+  "bridgeMissingCount": 63,
+  "defaultEvidenceId": "annojoin:RASP2PDB:3JA1:confidence:B:rasp_bw_8350f4cfca6c",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 30,
+    "B": 28,
+    "D": 5
+  },
+  "generatedAt": "2026-06-29T17:03:51.658416Z",
+  "materializedEvidenceCount": 63,
+  "pdbId": "3JA1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 6,
+    "LSS_NOT_SUPPORTED": 40,
+    "LSS_UNDERPOWERED": 14,
+    "LSS_WEAK": 3
+  },
+  "totalEvidenceCount": 63
+}

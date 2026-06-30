@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9KGH",
+  "biologicalMoleculeName": "9KGH",
+  "caseId": "9KGH",
+  "caseKey": "RMDB2PDB:9KGH",
+  "chains": [
+    "U"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "9KGH",
+  "profileCount": 4
+}

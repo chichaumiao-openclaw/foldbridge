@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:6FRK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 100,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:6FRK:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#14418",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 50,
+    "B": 50
+  },
+  "generatedAt": "2026-06-28T21:12:52.193227Z",
+  "materializedEvidenceCount": 100,
+  "pdbId": "6FRK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 100
+  },
+  "totalEvidenceCount": 100
+}

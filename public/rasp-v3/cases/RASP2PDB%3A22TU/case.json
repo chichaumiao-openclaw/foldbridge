@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:22TU",
+  "biologicalMoleculeName": "22TU",
+  "caseId": "22TU",
+  "caseKey": "RASP2PDB:22TU",
+  "chains": [
+    "B4",
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "22TU",
+  "profileCount": 231
+}

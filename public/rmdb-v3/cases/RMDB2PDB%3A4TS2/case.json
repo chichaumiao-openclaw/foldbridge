@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4TS2",
+  "biologicalMoleculeName": "4TS2",
+  "caseId": "4TS2",
+  "caseKey": "RMDB2PDB:4TS2",
+  "chains": [
+    "X"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4TS2",
+  "profileCount": 2
+}

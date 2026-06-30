@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:10FZ",
+  "biologicalMoleculeName": "10FZ",
+  "caseId": "10FZ",
+  "caseKey": "RASP2PDB:10FZ",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "10FZ",
+  "profileCount": 31
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7PIB",
+  "biologicalMoleculeName": "7PIB",
+  "caseId": "7PIB",
+  "caseKey": "RMDB2PDB:7PIB",
+  "chains": [
+    "8"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "7PIB",
+  "profileCount": 2
+}

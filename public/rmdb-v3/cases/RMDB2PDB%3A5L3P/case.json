@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5L3P",
+  "biologicalMoleculeName": "5L3P",
+  "caseId": "5L3P",
+  "caseKey": "RMDB2PDB:5L3P",
+  "chains": [
+    "y"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "5L3P",
+  "profileCount": 2
+}

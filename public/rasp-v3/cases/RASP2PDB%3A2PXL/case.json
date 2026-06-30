@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:2PXL",
+  "biologicalMoleculeName": "2PXL",
+  "caseId": "2PXL",
+  "caseKey": "RASP2PDB:2PXL",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "2PXL",
+  "profileCount": 26
+}

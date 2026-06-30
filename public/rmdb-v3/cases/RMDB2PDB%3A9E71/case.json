@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9E71",
+  "biologicalMoleculeName": "9E71",
+  "caseId": "9E71",
+  "caseKey": "RMDB2PDB:9E71",
+  "chains": [
+    "1",
+    "4"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "9E71",
+  "profileCount": 113
+}

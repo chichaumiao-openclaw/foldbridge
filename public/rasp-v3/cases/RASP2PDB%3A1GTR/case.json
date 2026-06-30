@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1GTR",
+  "biologicalMoleculeName": "1GTR",
+  "caseId": "1GTR",
+  "caseKey": "RASP2PDB:1GTR",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "1GTR",
+  "profileCount": 2
+}

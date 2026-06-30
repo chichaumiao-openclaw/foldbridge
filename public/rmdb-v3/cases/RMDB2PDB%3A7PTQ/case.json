@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7PTQ",
+  "biologicalMoleculeName": "7PTQ",
+  "caseId": "7PTQ",
+  "caseKey": "RMDB2PDB:7PTQ",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "7PTQ",
+  "profileCount": 14
+}

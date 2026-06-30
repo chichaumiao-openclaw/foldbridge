@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7ENI",
+  "biologicalMoleculeName": "7ENI",
+  "caseId": "7ENI",
+  "caseKey": "RMDB2PDB:7ENI",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "7ENI",
+  "profileCount": 2
+}

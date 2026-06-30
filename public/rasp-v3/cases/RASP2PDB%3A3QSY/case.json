@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3QSY",
+  "biologicalMoleculeName": "3QSY",
+  "caseId": "3QSY",
+  "caseKey": "RASP2PDB:3QSY",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "3QSY",
+  "profileCount": 11
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8CTI",
+  "biologicalMoleculeName": "8CTI",
+  "caseId": "8CTI",
+  "caseKey": "RMDB2PDB:8CTI",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8CTI",
+  "profileCount": 2
+}

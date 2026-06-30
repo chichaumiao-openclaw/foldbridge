@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7A5P",
+  "biologicalMoleculeName": "7A5P",
+  "caseId": "7A5P",
+  "caseKey": "RMDB2PDB:7A5P",
+  "chains": [
+    "2",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "7A5P",
+  "profileCount": 28
+}

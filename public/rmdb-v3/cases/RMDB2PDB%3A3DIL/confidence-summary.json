@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:3DIL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:3DIL:confidence:B:top_x_279::data-rna-structures/data-rna-structures/POS240_2A3_0000.rdat#1384",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-06-28T21:26:31.631273Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "3DIL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 4
+  },
+  "totalEvidenceCount": 4
+}

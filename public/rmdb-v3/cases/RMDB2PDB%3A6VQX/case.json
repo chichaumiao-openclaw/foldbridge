@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6VQX",
+  "biologicalMoleculeName": "6VQX",
+  "caseId": "6VQX",
+  "caseKey": "RMDB2PDB:6VQX",
+  "chains": [
+    "K"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "6VQX",
+  "profileCount": 1
+}

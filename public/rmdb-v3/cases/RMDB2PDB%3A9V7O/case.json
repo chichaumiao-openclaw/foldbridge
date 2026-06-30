@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9V7O",
+  "biologicalMoleculeName": "9V7O",
+  "caseId": "9V7O",
+  "caseKey": "RMDB2PDB:9V7O",
+  "chains": [
+    "E"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "9V7O",
+  "profileCount": 8
+}

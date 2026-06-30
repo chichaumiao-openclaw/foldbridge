@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4GCW",
+  "biologicalMoleculeName": "4GCW",
+  "caseId": "4GCW",
+  "caseKey": "RMDB2PDB:4GCW",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4GCW",
+  "profileCount": 2
+}

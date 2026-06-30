@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5LYV",
+  "biologicalMoleculeName": "5LYV",
+  "caseId": "5LYV",
+  "caseKey": "RMDB2PDB:5LYV",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "5LYV",
+  "profileCount": 3
+}

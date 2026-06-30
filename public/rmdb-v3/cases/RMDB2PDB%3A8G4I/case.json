@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8G4I",
+  "biologicalMoleculeName": "8G4I",
+  "caseId": "8G4I",
+  "caseKey": "RMDB2PDB:8G4I",
+  "chains": [
+    "2"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "8G4I",
+  "profileCount": 66
+}

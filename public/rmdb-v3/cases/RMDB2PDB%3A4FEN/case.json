@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:4FEN",
+  "biologicalMoleculeName": "4FEN",
+  "caseId": "4FEN",
+  "caseKey": "RMDB2PDB:4FEN",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "4FEN",
+  "profileCount": 2
+}

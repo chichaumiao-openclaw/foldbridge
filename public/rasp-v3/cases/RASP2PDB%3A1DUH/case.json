@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1DUH",
+  "biologicalMoleculeName": "1DUH",
+  "caseId": "1DUH",
+  "caseKey": "RASP2PDB:1DUH",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "1DUH",
+  "profileCount": 26
+}

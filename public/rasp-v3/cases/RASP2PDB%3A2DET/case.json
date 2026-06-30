@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:2DET",
+  "biologicalMoleculeName": "2DET",
+  "caseId": "2DET",
+  "caseKey": "RASP2PDB:2DET",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "2DET",
+  "profileCount": 8
+}

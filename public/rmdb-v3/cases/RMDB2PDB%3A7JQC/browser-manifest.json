@@ -1,0 +1,26 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "i": {
+      "case2dPath": "chains/i/case-2d-structure.json.gz",
+      "chainId": "i",
+      "chainRoot": "chains/i",
+      "linkedViewBundlePath": "chains/i/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/i/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/i/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "i",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:7JQC:confidence:A:top_x_279::data-rna-structures/data-rna-structures/POS240_DMS_0000.rdat#1072": "i",
+    "annojoin:RMDB2PDB:7JQC:confidence:A:top_x_279::data-rna-structures/data-rna-structures/POS240_DMS_0000.rdat#1245": "i",
+    "annojoin:RMDB2PDB:7JQC:confidence:B:top_x_279::data-rna-structures/data-rna-structures/POS240_2A3_0000.rdat#1072": "i",
+    "annojoin:RMDB2PDB:7JQC:confidence:B:top_x_279::data-rna-structures/data-rna-structures/POS240_2A3_0000.rdat#1245": "i"
+  }
+}

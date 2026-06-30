@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9LCR",
+  "biologicalMoleculeName": "9LCR",
+  "caseId": "9LCR",
+  "caseKey": "RMDB2PDB:9LCR",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "9LCR",
+  "profileCount": 12
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:1FFZ",
+  "biologicalMoleculeName": "1FFZ",
+  "caseId": "1FFZ",
+  "caseKey": "RMDB2PDB:1FFZ",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "1FFZ",
+  "profileCount": 12
+}
