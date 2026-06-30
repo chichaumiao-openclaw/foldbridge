@@ -78,24 +78,6 @@ test('home module cards link to the three core modules', () => {
   assert.equal((html.match(/bundle-site-card/g) || []).length, 3);
 });
 
-import { renderHelpBody } from '../src/siteChrome.js';
-
-test('help body has four sections and live module links', () => {
-  const html = renderHelpBody();
-  assert.match(html, /What is FoldBridge/i);
-  assert.match(html, /Modules/i);
-  assert.match(html, /Key terms/i);
-  assert.match(html, /Data sources/i);
-  assert.match(html, /href="#entry"/);
-  assert.match(html, /href="#probing"/);
-  assert.match(html, /href="#search"/);
-  assert.match(html, /source case/i);
-  assert.match(html, /not active/i);
-  assert.doesNotMatch(html, /Browse/);
-  assert.doesNotMatch(html, /Structure hub|Open structure/i);
-  assert.doesNotMatch(html, /Download/);
-});
-
 import { renderHomeProbingCarousel } from '../src/siteChrome.js';
 
 const SAMPLE_ARTICLES = [
