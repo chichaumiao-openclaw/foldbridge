@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5LMU",
+  "biologicalMoleculeName": "5LMU",
+  "caseId": "5LMU",
+  "caseKey": "RASP2PDB:5LMU",
+  "chains": [
+    "Z"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "5LMU",
+  "profileCount": 3
+}

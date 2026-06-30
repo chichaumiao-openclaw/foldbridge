@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5JUS",
+  "biologicalMoleculeName": "5JUS",
+  "caseId": "5JUS",
+  "caseKey": "RASP2PDB:5JUS",
+  "chains": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "5JUS",
+  "profileCount": 91
+}

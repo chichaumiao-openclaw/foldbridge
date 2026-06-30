@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5GAP",
+  "biologicalMoleculeName": "5GAP",
+  "caseId": "5GAP",
+  "caseKey": "RASP2PDB:5GAP",
+  "chains": [
+    "U",
+    "V",
+    "W"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "5GAP",
+  "profileCount": 53
+}

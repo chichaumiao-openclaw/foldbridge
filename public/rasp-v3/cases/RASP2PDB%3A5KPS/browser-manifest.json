@@ -1,0 +1,77 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "27": {
+      "case2dPath": "chains/27/case-2d-structure.json.gz",
+      "chainId": "27",
+      "chainRoot": "chains/27",
+      "linkedViewBundlePath": "chains/27/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/27/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/27/varna-template.svg.gz"
+    },
+    "31": {
+      "case2dPath": "chains/31/case-2d-structure.json.gz",
+      "chainId": "31",
+      "chainRoot": "chains/31",
+      "linkedViewBundlePath": "chains/31/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/31/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/31/varna-template.svg.gz"
+    },
+    "32": {
+      "case2dPath": "chains/32/case-2d-structure.json.gz",
+      "chainId": "32",
+      "chainRoot": "chains/32",
+      "linkedViewBundlePath": "chains/32/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/32/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/32/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "27",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_05a244faeabc": "31",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_2343aafbe79c": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_2f43b8b7fc56": "32",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_2fa595b11d5e": "32",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_44126d3b1836": "32",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_48eb97e2d852": "32",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_5859f1cec40f": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_5b29cb269940": "31",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_62cbd20a75b4": "32",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_7c4725121ef4": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_8c2cf6279bed": "32",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_ababe03077b9": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_ae4c2c08c4fa": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_b2e348d2e64e": "32",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_c99a0a52d2ff": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_cd2a8623e064": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_cf21fa922000": "32",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_e773afe95fb5": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_e8fe53f69987": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_f3ffb4493573": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:A:rasp_bw_f9579812c67b": "31",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_19f61c8831e6": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_2dfc610b9222": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_41d5fc3e132e": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_44ce22938077": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_54672b09ffb6": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_67eae2dec69b": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_7ef9fcd16b87": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_8350f4cfca6c": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_93c9e587b21e": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_b2c3510421f9": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_c0576cdfc964": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_eeb83ff7bd0e": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_faf0c4af5eba": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:B:rasp_bw_fd8e9996c052": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:D:rasp_bw_10c682ff1c66": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:D:rasp_bw_13bf8094c5c2": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:D:rasp_bw_7c9a09370ba1": "27",
+    "annojoin:RASP2PDB:5KPS:confidence:D:rasp_bw_c5489e5ab90f": "27"
+  }
+}

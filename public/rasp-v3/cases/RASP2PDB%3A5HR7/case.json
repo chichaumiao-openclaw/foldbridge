@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5HR7",
+  "biologicalMoleculeName": "5HR7",
+  "caseId": "5HR7",
+  "caseKey": "RASP2PDB:5HR7",
+  "chains": [
+    "C"
+  ],
+  "confidenceDisplayLabel": "A MODERATE",
+  "pdbId": "5HR7",
+  "profileCount": 8
+}

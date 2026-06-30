@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5H5U",
+  "biologicalMoleculeName": "5H5U",
+  "caseId": "5H5U",
+  "caseKey": "RASP2PDB:5H5U",
+  "chains": [
+    "A",
+    "B",
+    "h"
+  ],
+  "confidenceDisplayLabel": "D WEAK",
+  "pdbId": "5H5U",
+  "profileCount": 22
+}

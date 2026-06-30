@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5ZWO",
+  "biologicalMoleculeName": "5ZWO",
+  "caseId": "5ZWO",
+  "caseKey": "RASP2PDB:5ZWO",
+  "chains": [
+    "B",
+    "F",
+    "H",
+    "I"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "5ZWO",
+  "profileCount": 117
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5NWY",
+  "biologicalMoleculeName": "5NWY",
+  "caseId": "5NWY",
+  "caseKey": "RASP2PDB:5NWY",
+  "chains": [
+    "0",
+    "M",
+    "N",
+    "O"
+  ],
+  "confidenceDisplayLabel": "D MODERATE",
+  "pdbId": "5NWY",
+  "profileCount": 33
+}

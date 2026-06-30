@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5Z3G",
+  "biologicalMoleculeName": "5Z3G",
+  "caseId": "5Z3G",
+  "caseKey": "RASP2PDB:5Z3G",
+  "chains": [
+    "A",
+    "B",
+    "C"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "5Z3G",
+  "profileCount": 38
+}

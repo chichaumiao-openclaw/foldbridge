@@ -1,0 +1,37 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "A": {
+      "case2dPath": "chains/A/case-2d-structure.json.gz",
+      "chainId": "A",
+      "chainRoot": "chains/A",
+      "linkedViewBundlePath": "chains/A/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A/varna-template.svg.gz"
+    },
+    "U": {
+      "case2dPath": "chains/U/case-2d-structure.json.gz",
+      "chainId": "U",
+      "chainRoot": "chains/U",
+      "linkedViewBundlePath": "chains/U/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/U/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/U/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:5NJT:confidence:B:rasp_bw_22d1e0ca8ae4": "U",
+    "annojoin:RASP2PDB:5NJT:confidence:B:rasp_bw_6a383199d20e": "U",
+    "annojoin:RASP2PDB:5NJT:confidence:B:rasp_bw_70b79d7c1e9d": "U",
+    "annojoin:RASP2PDB:5NJT:confidence:B:rasp_bw_78ea31d594b8": "U",
+    "annojoin:RASP2PDB:5NJT:confidence:B:rasp_bw_baad01b1ba83": "U",
+    "annojoin:RASP2PDB:5NJT:confidence:B:rasp_bw_f1145990c306": "U",
+    "annojoin:RASP2PDB:5NJT:confidence:B:rasp_bw_f6a01f96cda2": "U"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5GAO",
+  "biologicalMoleculeName": "5GAO",
+  "caseId": "5GAO",
+  "caseKey": "RASP2PDB:5GAO",
+  "chains": [
+    "V"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "5GAO",
+  "profileCount": 25
+}

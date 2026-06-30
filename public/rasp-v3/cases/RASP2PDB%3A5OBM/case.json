@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5OBM",
+  "biologicalMoleculeName": "5OBM",
+  "caseId": "5OBM",
+  "caseKey": "RASP2PDB:5OBM",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "5OBM",
+  "profileCount": 95
+}
