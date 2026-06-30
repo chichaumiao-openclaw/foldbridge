@@ -1,0 +1,57 @@
+{
+  "schema_version": "about.v1",
+  "hero": {
+    "kicker": "About FoldBridge",
+    "title": "把 RNA 化学探针数据关联到已解析的三级结构",
+    "summary": "FoldBridge 将 RMDB / RASP 的探针反应性派生序列对齐到 PDB 链，物化为可溯源的结构关联记录，并按测量物理量分族评估置信度。",
+    "detail": "本页说明数据来源、建库流水线、置信度方法与阈值的诚实边界。缺少引用元数据的字段一律留空，不编造。"
+  },
+  "sections": [
+    {
+      "id": "data-sources",
+      "title": "三源数据",
+      "kind": "cards",
+      "items": [
+        { "name": "RMDB", "body": "RNA Mapping Database：社区沉淀的化学探针反应性原始数据。" },
+        { "name": "RASP", "body": "RNA 结构探针公共宇宙：跨技术的反应性派生序列与命中。" },
+        { "name": "PDB", "body": "已实验解析的三级结构，提供 SASA / 配对态等结构真值。" }
+      ]
+    },
+    {
+      "id": "pipeline",
+      "title": "ANNOJOIN 建库流水线",
+      "kind": "pipeline",
+      "steps": ["probing data", "sequence match", "PDB entry", "confidence scoring", "structure-linked record"],
+      "body": "探针派生序列对齐到 PDB 链，物化为结构关联记录；同一 PDB 的 RMDB / RASP 源会被汇总为一条展示行，但保留指回各自源 case 的链接。"
+    },
+    {
+      "id": "confidence",
+      "title": "置信度方法（A–F 测量家族）",
+      "kind": "prose",
+      "body": "family 表示被测量的物理量（A=WC-face 碱基特异 / B=SHAPE 柔性代理 / C=酶切反向 / D=SASA 双参考 / E=接触图 / F=配对集 F1），不是质量排名——A 并不比 D「更好」，只是指向分子的仪器不同。强度全部由 tier（STRONG / MODERATE / WEAK / DISCORDANT / UNDERPOWERED / NOT_SUPPORTED）表达，且 tier 必须经过对随机置换的检验才被授予。"
+    },
+    {
+      "id": "thresholds",
+      "title": "阈值诚实声明",
+      "kind": "prose",
+      "body": "A/B/C 的 0.70/0.65/0.55 是 RC3 运行值（非论文发布阈值）；只有 RL-Seq 的 Spearman 0.50/0.40/0.30 来自文献设定。threshold_basis 三档：1 SUPPORTED / 10 INFORMED / 23 PENDING（共 34 技术）。"
+    },
+    {
+      "id": "cite",
+      "title": "如何引用与数据来源",
+      "kind": "prose",
+      "body": "数据来源 RMDB / RASP / PDB；结构关联经 ANNOJOIN 主表物化。引用方式待定，当前资产未提供引用元数据处一律留空，不编造 DOI。"
+    },
+    {
+      "id": "terms",
+      "title": "关键术语",
+      "kind": "table",
+      "items": [
+        { "term": "source case vs display row", "body": "原始 case 按 PDB 合并为一条展示行；同一 PDB 的 RMDB / RASP 源被汇总，但保留各自的源链接。" },
+        { "term": "RMDB vs RASP", "body": "两个上游探针数据源。RASP 当前为 positive_confidence_active_now=false，显示为 not active——不要读作已激活的正向置信度。" },
+        { "term": "Confidence A/B/C", "body": "case 级别的分布汇总，不是 best-profile 单值评分；C 是探索性提示，应再对照 route 资产复核。" },
+        { "term": "Conflicts", "body": "标记探针信号与结构真值方向不一致、需要复核的注释 / 证据冲突候选。" }
+      ]
+    }
+  ]
+}

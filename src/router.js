@@ -5,6 +5,8 @@ const ALLOWED_ROUTES = new Set([
   'sequence',
   'structure',
   'probing',
+  'about',
+  'stats',
   'download',
   'search',
   'download-sequences',

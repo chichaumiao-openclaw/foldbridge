@@ -37,7 +37,7 @@ function familyAccent(id) {
 
 // ---- 总览页 ----
 
-export function renderProbingArticleIndex(index, headerHtml = '') {
+export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsHtml = '') {
   const families = (index && index.families) || [];
   const articleCount = (index && index.article_count) || 0;
 
@@ -93,6 +93,7 @@ export function renderProbingArticleIndex(index, headerHtml = '') {
         </article>
       </aside>
     </section>
+    ${extraSectionsHtml || ''}
     ${familySections}
   </main>`;
 }
