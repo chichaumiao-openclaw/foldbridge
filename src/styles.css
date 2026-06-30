@@ -6266,16 +6266,19 @@ body[data-mode="dark"] .mode-toggle:hover {
 .hss-snapshot { max-width: 100%; max-height: 100%; object-fit: contain; }
 .hss-missing { color: var(--textMuted); font-size: 13px; }
 
-/* 3-row alignment */
-.hss-alignment { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 380px; }
-.hss-aln-row { display: flex; flex-direction: column; gap: 5px; }
+/* per-residue column alignment: query cell / connector / PDB cell stacked,
+   so the connector stays locked between the two cells of the same residue and
+   whole columns wrap together (connectors never drift out of alignment). */
+.hss-alignment { display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 380px; }
+.hss-aln-key { display: flex; flex-direction: column; gap: 2px; }
 .hss-aln-label { font-size: 10px; color: var(--textSecondary); }
-.hss-aln-cells { display: flex; gap: 3px; flex-wrap: wrap; }
+.hss-aln-label-pdb::before { content: "→ "; color: var(--accent); }
+.hss-aln-columns { display: flex; flex-wrap: wrap; gap: 3px; }
+.hss-aln-col { display: flex; flex-direction: column; align-items: center; gap: 2px; }
 .hss-cell { width: 21px; height: 26px; border-radius: 5px; display: flex; align-items: center;
   justify-content: center; font-size: 11px; font-weight: 700; color: #fff;
   font-family: ui-monospace, monospace; }
-.hss-matchline { display: flex; gap: 3px; }
-.hss-match-tick { width: 21px; text-align: center; font-size: 9px; color: var(--accent); }
+.hss-match-tick { height: 10px; line-height: 10px; text-align: center; font-size: 9px; color: var(--accent); }
 
 /* legend */
 .hss-legend { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);

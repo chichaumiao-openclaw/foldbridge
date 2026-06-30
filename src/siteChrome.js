@@ -204,21 +204,20 @@ export function reactivityColor(norm) {
   return `rgb(${mix[0]}, ${mix[1]}, ${mix[2]})`;
 }
 
-// 单行带色格：每残基一个格。无反应性数据 → 中性灰（数据诚实，spec §3）。
+// 单格着色：每残基一个格。无反应性数据 → 中性灰（数据诚实，spec §3）。
 // null/undefined/非有限 视为缺失；Number(null)===0 是有限值，须显式判 null。
-function renderAlignmentCells(seq, react, ceiling) {
-  return seq.map((base, i) => {
-    const datum = react[i];
-    const raw = Number(datum);
-    if (datum == null || !Number.isFinite(raw)) {
-      return `<span class="hss-cell hss-cell-nodata" style="background:${HSS_NEUTRAL}">${base}</span>`;
-    }
-    const norm = Math.min(1, raw / ceiling);
-    return `<span class="hss-cell" style="background:${reactivityColor(norm)}">${base}</span>`;
-  }).join('');
+function alignmentCellHtml(base, datum, ceiling) {
+  const raw = Number(datum);
+  if (datum == null || !Number.isFinite(raw)) {
+    return `<span class="hss-cell hss-cell-nodata" style="background:${HSS_NEUTRAL}">${base}</span>`;
+  }
+  const norm = Math.min(1, raw / ceiling);
+  return `<span class="hss-cell" style="background:${reactivityColor(norm)}">${base}</span>`;
 }
 
-// 1D alignment 态：3 行（探针查询 / 匹配竖线 / PDB 链），上下两行共用同一着色。
+// 1D alignment 态：每个残基一列（探针查询格 / 连接竖线 / PDB 链格 垂直堆叠），
+// 上下两格共用同一着色（spec：同一反应性颜色随每个核苷酸贯穿三态）。
+// 连线结构上锁定在同一残基两格之间——换行时整列一起换，对齐线永不错位。
 // 无 DOM / 无 window。色标与缺数据中性灰保持单一权威。
 export function renderReactivityAlignment(caseData = {}) {
   const seq = Array.isArray(caseData.sequence) ? caseData.sequence : [];
@@ -226,13 +225,17 @@ export function renderReactivityAlignment(caseData = {}) {
   const ceiling = Number(caseData.norm_ceiling) || 1;
   const pdbId = caseData.pdb_id || '';
   const chain = caseData.chain || '';
-  const cells = renderAlignmentCells(seq, react, ceiling);
-  const ticks = seq.map(() => `<span class="hss-match-tick">|</span>`).join('');
   const pdbLabel = `PDB ${pdbId} · chain ${chain}`.replace(/\s+$/,'').replace(/·\s*chain\s*$/,'· chain');
+  const columns = seq.map((base, i) => {
+    const cell = alignmentCellHtml(base, react[i], ceiling);
+    return `<div class="hss-aln-col">${cell}<span class="hss-match-tick">|</span>${cell}</div>`;
+  }).join('');
   return `<div class="hss-alignment" role="img" aria-label="Per-residue reactivity, probing query aligned to PDB chain">
-    <div class="hss-aln-row"><span class="hss-aln-label">Probing query (reactivity)</span><div class="hss-aln-cells">${cells}</div></div>
-    <div class="hss-aln-row"><div class="hss-matchline">${ticks}</div></div>
-    <div class="hss-aln-row"><span class="hss-aln-label">${pdbLabel}</span><div class="hss-aln-cells">${cells}</div></div>
+    <div class="hss-aln-key">
+      <span class="hss-aln-label">Probing query (reactivity)</span>
+      <span class="hss-aln-label hss-aln-label-pdb">${pdbLabel}</span>
+    </div>
+    <div class="hss-aln-columns">${columns}</div>
   </div>`;
 }
 
@@ -274,7 +277,7 @@ export function renderHomeScrollStory(caseData, opts = {}) {
       <p class="hss-kicker">${kicker}</p>
       <h1 class="hss-headline">Follow one RNA from<br><span class="hss-headline-grad">probing signal to 3D fold</span></h1>
       <p class="hss-lede">The same reactivity colors travel with every nucleotide — from the raw alignment, into the secondary structure, and onto the deposited tertiary structure. Scroll to watch it transform.</p>
-      <p class="hss-scrollcue">↓ 向下滚动</p>
+      <p class="hss-scrollcue">↓ Scroll</p>
     </header>`;
   const closing = `<footer class="hss-closing">
       <h2>Every record in FoldBridge tells this story</h2>
