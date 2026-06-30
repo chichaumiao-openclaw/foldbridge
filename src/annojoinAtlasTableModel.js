@@ -1,8 +1,8 @@
 const MISSING_LABELS = new Set(['', '未注释', 'not annotated', 'missing source']);
 
 export const ANNOJOIN_TABLE_COLUMNS = [
-  { id: 'pdbId', label: 'PDB' },
   { id: 'moleculeName', label: 'Molecule name' },
+  { id: 'pdbId', label: 'PDB' },
   { id: 'confidenceDisplayLabel', label: 'Confidence distribution' },
   { id: 'profileCount', label: 'Profiles' },
   { id: 'chains', label: 'Chains' }

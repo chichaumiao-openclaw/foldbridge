@@ -41,7 +41,6 @@ import {
   annojoinExportRow,
   buildAnnojointTableGroups,
   isAnnojointSearchActive,
-  paginateAnnojointRows,
   rowCaseId,
   rowCaseKey,
   searchAnnojointRows,
@@ -66,7 +65,7 @@ let selectedSequenceIds = new Set();
 let selectedAnnojointCaseIds = new Set();
 let expandedAnnojointGroupIds = new Set();
 let uncappedAnnojointGroupIds = new Set();
-let annojoinPageSize = 50;
+let annojoinGroupsDefaultedExpanded = false;
 let sequenceSearchQuery = '';
 // RMDB→PDB case 资产懒加载层与浏览器侧渲染缓存。
 // store 命中内存缓存避免重复 fetch；下面三类 state 缓存“已加载”结果，
@@ -2112,8 +2111,6 @@ function annojoinAtlasPage() {
   const params = parsed.params;
   const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
   const filters = getAnnojointAtlasFilters(params);
-  const page = Number(params.get('page')) || 1;
-  const pageSize = Number(params.get('pageSize')) || annojoinPageSize;
   const selectedCaseId = params.get('caseId') || '';
   const selectedCaseKey = params.get('caseKey') || '';
   const selectedField = params.get('field') || '';
@@ -2126,8 +2123,6 @@ function annojoinAtlasPage() {
       selectedCaseIds: selectedAnnojointCaseIds,
       expandedGroupIds: expandedAnnojointGroupIds,
       uncappedGroupIds: uncappedAnnojointGroupIds,
-      page,
-      pageSize,
       selectedCaseId,
       selectedCaseKey,
       selectedField,
@@ -2142,8 +2137,6 @@ function annojoinAtlasPage() {
       selectedCaseIds: selectedAnnojointCaseIds,
       expandedGroupIds: expandedAnnojointGroupIds,
       uncappedGroupIds: uncappedAnnojointGroupIds,
-      page,
-      pageSize,
       selectedCaseId,
       selectedCaseKey,
       selectedField,
@@ -2153,14 +2146,16 @@ function annojoinAtlasPage() {
   }
 
   const state = buildAtlasSearchState(annojoinAtlasIndexState, filters);
+  if (!annojoinGroupsDefaultedExpanded) {
+    expandedAnnojointGroupIds = new Set(allAnnojointAtlasGroupIds());
+    annojoinGroupsDefaultedExpanded = true;
+  }
   return renderAnnojointAtlasPage({
     state,
     routeName,
     selectedCaseIds: selectedAnnojointCaseIds,
     expandedGroupIds: expandedAnnojointGroupIds,
     uncappedGroupIds: uncappedAnnojointGroupIds,
-    page,
-    pageSize,
     selectedCaseId,
     selectedCaseKey,
     selectedField,
@@ -2189,14 +2184,11 @@ function currentAnnojointAtlasState() {
   const parsed = parseHashRoute(window.location.hash);
   const params = parsed.params;
   const filters = getAnnojointAtlasFilters(params);
-  const pageSize = Number(params.get('pageSize')) || annojoinPageSize;
-  const page = Number(params.get('page')) || 1;
   const sortedRows = sortAnnojointCases(buildAtlasSearchState(currentAnnojointAtlasTables(), filters).cases);
   const rows = isAnnojointSearchActive(filters.query)
     ? searchAnnojointRows(sortedRows, filters.query)
     : sortedRows;
-  const pagination = paginateAnnojointRows(rows, { page, pageSize });
-  return { rows, pageRows: pagination.rows, pagination };
+  return { rows };
 }
 
 function getAnnojointCaseIdFromHash() {
@@ -2277,32 +2269,6 @@ function clearAnnojointAtlasFilters() {
 
 function setAnnojointAtlasQuery(query) {
   setAnnojointAtlasFilter('q', query, { replace: true });
-}
-
-function setAnnojointAtlasPage(value) {
-  const parsed = parseHashRoute(window.location.hash);
-  const params = parsed.params;
-  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
-  const current = currentAnnojointAtlasState().pagination;
-  let nextPage = Number(value) || current.page;
-  if (value === 'prev') nextPage = current.page - 1;
-  if (value === 'next') nextPage = current.page + 1;
-  nextPage = Math.min(Math.max(1, nextPage), current.pageCount);
-  if (nextPage > 1) params.set('page', String(nextPage));
-  else params.delete('page');
-  const next = params.toString();
-  window.location.hash = next ? `${routeName}?${next}` : routeName;
-}
-
-function setAnnojointAtlasPageSize(value) {
-  annojoinPageSize = Number(value) || 50;
-  const parsed = parseHashRoute(window.location.hash);
-  const params = parsed.params;
-  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
-  params.set('pageSize', String(annojoinPageSize));
-  params.delete('page');
-  const next = params.toString();
-  window.location.hash = next ? `${routeName}?${next}` : routeName;
 }
 
 function toggleAnnojointAtlasGroup(groupId) {
@@ -3204,11 +3170,8 @@ function render(options = {}) {
     bindAnnojointAtlasTable({
       root: document,
       selectedCaseIds: selectedAnnojointCaseIds,
-      pageRows: annojoinState.pageRows,
       rows: annojoinState.rows,
       setQuery: setAnnojointAtlasQuery,
-      setPage: setAnnojointAtlasPage,
-      setPageSize: setAnnojointAtlasPageSize,
       exportSelectedRows: (selectedRows) => {
         downloadRowsAsCsv(selectedRows.map(annojoinExportRow), 'annojoin-selected-cases.csv');
       },

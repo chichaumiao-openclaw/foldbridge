@@ -61,7 +61,7 @@ const rows = [
 test('table model defines the five fixed master-table columns', () => {
   assert.deepEqual(
     ANNOJOIN_TABLE_COLUMNS.map((column) => column.id),
-    ['pdbId', 'moleculeName', 'confidenceDisplayLabel', 'profileCount', 'chains']
+    ['moleculeName', 'pdbId', 'confidenceDisplayLabel', 'profileCount', 'chains']
   );
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'conflictCandidateCount'), false);
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'biologicalMoleculeName'), false);

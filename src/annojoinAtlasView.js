@@ -3,7 +3,6 @@ import {
   buildAnnojointTableGroups,
   isAnnojointSearchActive,
   moleculeName,
-  paginateAnnojointRows,
   rowCaseId,
   rowCaseKey,
   searchAnnojointRows,
@@ -11,7 +10,7 @@ import {
 } from './annojoinAtlasTableModel.js';
 import { resolveLocalPagesBridgeDetailHref } from './localPagesBridgeLinks.js';
 
-const DEFAULT_GROUP_ROW_LIMIT = 25;
+const DEFAULT_GROUP_ROW_LIMIT = 5;
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -103,49 +102,16 @@ function renderConfidenceSegments(label = '') {
   return `<span class="annojoin-confidence" title="${escapeHtml(full)}">${segs || `<span class="annojoin-confidence-seg">${escapeHtml(full)}</span>`}</span>`;
 }
 
-function sameGroupLabel(value = '', groupLabels = []) {
-  const a = String(value ?? '').trim().toLowerCase();
-  if (!a) return false;
-  return (Array.isArray(groupLabels) ? groupLabels : [groupLabels])
-    .some((label) => a === String(label ?? '').trim().toLowerCase());
-}
-
-function moleculeCellLabel(row = {}, groupLabels = []) {
-  const name = moleculeName(row);
-  if (sameGroupLabel(name, groupLabels)) {
-    return `<span class="annojoin-molecule-same-as-group" title="${escapeHtml(name)}">—</span>`;
-  }
-  return sourceValue(name, row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource);
-}
-
 function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabels = [], preserved = {}) {
   const caseId = rowCaseId(row);
   const values = {
     pdbId: fieldLink(row, routeName, 'pdbId', escapeHtml(row.pdbId || caseId), preserved),
-    moleculeName: fieldLink(row, routeName, 'moleculeName', moleculeCellLabel(row, groupLabels), preserved),
+    moleculeName: fieldLink(row, routeName, 'moleculeName', sourceValue(moleculeName(row), row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource), preserved),
     confidenceDisplayLabel: fieldLink(row, routeName, 'confidenceDisplayLabel', renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution), preserved),
     profileCount: fieldLink(row, routeName, 'profileCount', `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`, preserved),
     chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated'), preserved)
   };
   return values[columnId] ?? escapeHtml(row[columnId] || '');
-}
-
-function renderPagination(pagination) {
-  const prevDisabled = pagination.page <= 1 ? 'disabled' : '';
-  const nextDisabled = pagination.page >= pagination.pageCount ? 'disabled' : '';
-  return `<section class="annojoin-pagination" aria-label="ANNOJOIN pagination">
-    <div>
-      <button type="button" class="download-outline-btn" data-annojoin-page="prev" ${prevDisabled}>Previous</button>
-      <button type="button" class="download-outline-btn" data-annojoin-page="next" ${nextDisabled}>Next</button>
-    </div>
-    <span>Page ${escapeHtml(pagination.page)} / ${escapeHtml(pagination.pageCount)}</span>
-    <span>Rows ${escapeHtml(pagination.start)}-${escapeHtml(pagination.end)} of ${escapeHtml(pagination.total)}</span>
-    <label>Rows per page
-      <select id="annojoin-page-size">
-        ${[25, 50, 100, 250].map((size) => `<option value="${size}" ${Number(pagination.pageSize) === size ? 'selected' : ''}>${size}</option>`).join('')}
-      </select>
-    </label>
-  </section>`;
 }
 
 function renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass = '', groupLabels = [], preserved = {} }) {
@@ -475,8 +441,13 @@ function renderChainsPanel(row) {
   const chains = Array.isArray(row.chains) ? row.chains.filter(Boolean) : [];
   const count = chains.length;
   const countLabel = `${count} ${count === 1 ? 'chain' : 'chains'} listed`;
+  const pdb = encodeURIComponent(String(row.pdbId || rowCaseId(row)).toUpperCase());
+  const rcsbHref = `https://www.rcsb.org/sequence/${pdb}`;
   const body = count
-    ? `<ol class="annojoin-chain-list">${chains.map((chain) => `<li>${escapeHtml(chain)}</li>`).join('')}</ol>`
+    ? chains.map((chain) => `<details class="annojoin-chain-seq">
+        <summary>${escapeHtml(chain)}</summary>
+        <a class="download-outline-btn" href="${escapeHtml(rcsbHref)}" target="_blank" rel="noopener noreferrer">View sequence on RCSB →</a>
+      </details>`).join('')
     : '<p class="mini-note">No PDB chain identifiers are annotated for this case in the current index asset.</p>';
   return `<aside class="annojoin-detail-sidebar" aria-label="ANNOJOIN chain definitions">
     <p class="technology-kicker">Chain definitions</p>
@@ -485,7 +456,7 @@ function renderChainsPanel(row) {
     <div class="annojoin-chain-scroll" role="region" aria-label="PDB chain identifiers" tabindex="0">
       ${body}
     </div>
-    <p class="mini-note">Per-chain residue sequences are not present in the current index asset; chain identifiers map to the deposited PDB entry.</p>
+    <p class="mini-note">Residue sequences open on RCSB (entry-level).</p>
   </aside>`;
 }
 
@@ -534,7 +505,6 @@ export function renderAnnojointAtlasPage({
   state,
   routeName = 'annojoin-atlas',
   selectedCaseIds = new Set(),
-  collapsedGroupIds = new Set(),
   expandedGroupIds,
   uncappedGroupIds = new Set(),
   page = 1,
@@ -555,21 +525,20 @@ export function renderAnnojointAtlasPage({
   const searchActive = isAnnojointSearchActive(query);
   const preserved = buildPreservedParams(atlasState.filters || {}, page);
   const baseRows = searchActive ? searchAnnojointRows(sortedRows, query) : sortedRows;
-  const pagination = paginateAnnojointRows(baseRows, { page, pageSize });
-  const groups = searchActive ? [] : buildAnnojointTableGroups(pagination.rows);
+  const groups = searchActive ? [] : buildAnnojointTableGroups(baseRows);
   const detailKey = String(selectedCaseKey || selectedCaseId || '').toUpperCase();
   const detailRow = detailKey
     ? sortedRows.find((row) => rowCaseKey(row).toUpperCase() === detailKey || rowCaseId(row).toUpperCase() === detailKey)
     : null;
 
-  const searchModeNote = searchActive && pagination.rows.length
+  const searchModeNote = searchActive && baseRows.length
     ? `<section class="annojoin-search-mode-banner" role="status">
       <p class="annojoin-search-mode-note">Search results — grouping is paused. Clear the filter to return to grouped browsing.</p>
       <button type="button" class="download-outline-btn" data-annojoin-clear-search>Clear search</button>
     </section>`
     : '';
 
-  const emptySearchRow = searchActive && !pagination.rows.length
+  const emptySearchRow = searchActive && !baseRows.length
     ? `<tr class="annojoin-empty-search-row"><td colspan="${visibleColumns.length + 1}">
       <p>No entries match "${escapeHtml(query)}". Check the PDB ID, or try a molecule name.</p>
       <button type="button" class="download-outline-btn" data-annojoin-clear-search>Clear search</button>
@@ -577,7 +546,7 @@ export function renderAnnojointAtlasPage({
     : '';
 
   const tableBody = searchActive
-    ? (emptySearchRow || renderFlatRows({ rows: pagination.rows, visibleColumns, selectedCaseIds: selected, routeName, preserved }))
+    ? (emptySearchRow || renderFlatRows({ rows: baseRows, visibleColumns, selectedCaseIds: selected, routeName, preserved }))
     : (statusMessage && !atlasState.cases.length
       ? `<tr class="annojoin-status-row"><td colspan="${visibleColumns.length + 1}">${escapeHtml(statusMessage.text || '')}</td></tr>`
       : renderTableBody({ groups, visibleColumns, selectedCaseIds: selected, expandedGroupIds: expanded, uncappedGroupIds: uncapped, routeName, preserved }));
@@ -607,7 +576,6 @@ export function renderAnnojointAtlasPage({
       <input type="search" id="annojoin-search-input" placeholder="Filter this table by PDB ID or molecule name" value="${escapeHtml(atlasState.filters?.query || '')}" />
       <button id="export-selected-annojoin-cases" type="button" class="download-outline-btn" ${selected.size ? '' : 'disabled'}>Export Selected (${escapeHtml(selected.size)})</button>
       <a class="download-outline-btn" href="${escapeHtml(currentFilterExportHref(atlasState.filters, 'csv'))}">Export All Results</a>
-      <button id="select-visible-annojoin-cases" type="button" class="download-outline-btn">Select Current Page</button>
       <button id="select-all-annojoin-cases" type="button" class="download-outline-btn">Select All Results</button>
       <button id="clear-selected-annojoin-cases" type="button" class="download-outline-btn" ${selected.size ? '' : 'disabled'}>Clear Selection</button>
       <button id="expand-all-annojoin-groups" type="button" class="download-outline-btn">Expand All</button>
@@ -618,7 +586,6 @@ export function renderAnnojointAtlasPage({
     ${renderActiveConditionChips(atlasState.filters, query)}
     ${searchModeNote}
     ${statusBanner}
-    ${renderPagination(pagination)}
 
     <section class="annojoin-table-meta">
       <span>${metaCountText}</span>

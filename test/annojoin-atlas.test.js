@@ -300,8 +300,9 @@ test('atlas search state preserves the canonical moleculeDisplayName for groupin
   });
   // Problem 2: 4V85 folds into the "16S ribosomal RNA" parent group.
   assert.match(html, /data-annojoin-case-row="RASP2PDB:4V85"/);
-  // Problem 1: both rows render "—" (molecule name equals the group label).
-  assert.equal((html.match(/annojoin-molecule-same-as-group/g) || []).length, 2);
+  // 改版：Molecule 单元格恒显完整名，不再用 "—" 抑制。
+  assert.doesNotMatch(html, /annojoin-molecule-same-as-group/);
+  assert.ok((html.match(/>16S ribosomal RNA</g) || []).length >= 2);
 });
 
 test('normalizeCase passes through chainPlacements', () => {
@@ -394,7 +395,6 @@ test('atlas page renders merged PDB rows with source detail links in the side pa
     selectedField: 'moleculeName'
   });
 
-  assert.match(html, /Rows 1-1 of 1/);
   assert.equal((html.match(/data-annojoin-case-row="PDB:10FZ"/g) || []).length, 1);
   assert.match(html, /1 PDBs \(2 source cases\)/);
   assert.match(html, /2 source cases/);
@@ -585,11 +585,10 @@ test('atlas page renders only the compact master table surface', () => {
   assert.match(html, /ANNOJOIN master table/);
   assert.match(html, /Export Selected \(1\)/);
   assert.match(html, /Export All Results/);
-  assert.match(html, /Select Current Page/);
   assert.match(html, /Select All Results/);
   assert.match(html, /Clear Selection/);
-  assert.match(html, /Page 1 \/ 2/);
-  assert.match(html, /Rows 1-1 of 2/);
+  assert.doesNotMatch(html, /class="annojoin-pagination"/);
+  assert.doesNotMatch(html, /id="annojoin-page-size"/);
   assert.doesNotMatch(html, /annojoin-column-picker/);
   assert.match(html, /Expand All/);
   assert.match(html, /Collapse All/);
@@ -653,7 +652,7 @@ test('atlas page expands singleton-child parent groups with one click', () => {
   assert.match(html, /class="annojoin-case-row is-in-expanded-group"/);
 });
 
-test('atlas page suppresses molecule name inside a group whose label already shows it', () => {
+test('atlas page always shows the full molecule name inside a group', () => {
   const state = buildAtlasSearchState({
     ...fixtures,
     cases: [
@@ -688,8 +687,8 @@ test('atlas page suppresses molecule name inside a group whose label already sho
     expandedGroupIds: new Set(['parent:5S-ribosomal-RNA'])
   });
 
-  assert.match(html, /class="annojoin-molecule-same-as-group"/);
-  assert.doesNotMatch(html, /annojoin-field-link[^>]*>\s*<span[^>]*>5S ribosomal RNA<\/span>/);
+  assert.doesNotMatch(html, /class="annojoin-molecule-same-as-group"/);
+  assert.match(html, /annojoin-field-link[^>]*>\s*<span[^>]*>5S ribosomal RNA<\/span>/);
 });
 
 test('atlas page keeps second-level child folding when a parent has multiple child classes', () => {
@@ -742,7 +741,7 @@ test('atlas page keeps second-level child folding when a parent has multiple chi
   assert.doesNotMatch(childExpandedHtml, /data-annojoin-case-row="10ZV"/);
 });
 
-test('atlas page defaults foldable groups to collapsed and visually marks expanded groups', () => {
+test('atlas page renders expanded groups when group ids are provided', () => {
   const state = buildAtlasSearchState({
     ...fixtures,
     cases: [
@@ -756,9 +755,10 @@ test('atlas page defaults foldable groups to collapsed and visually marks expand
       }
     ]
   }, {});
-  const collapsedHtml = renderAnnojointAtlasPage({ state });
-  assert.match(collapsedHtml, /data-annojoin-group-state="collapsed"/);
-  assert.doesNotMatch(collapsedHtml, /data-annojoin-case-row="10ZT"/);
+  // 改版：默认全展开。view 仍按 expandedGroupIds 渲染；main.js 初始化为全集。
+  const expandedHtml0 = renderAnnojointAtlasPage({ state, expandedGroupIds: new Set(['parent:Ribosome']) });
+  assert.match(expandedHtml0, /data-annojoin-group-state="expanded"/);
+  assert.match(expandedHtml0, /data-annojoin-case-row="10ZT"/);
 
   const expandedHtml = renderAnnojointAtlasPage({
     state,
@@ -783,9 +783,9 @@ test('atlas page caps large expanded singleton-child parent groups inside the cu
     expandedGroupIds: new Set(['parent:Ribosome'])
   });
 
-  assert.equal((html.match(/class="annojoin-case-row is-in-expanded-group"/g) || []).length, 25);
+  assert.equal((html.match(/class="annojoin-case-row is-in-expanded-group"/g) || []).length, 5);
   assert.match(html, /data-annojoin-group-page-toggle="parent:Ribosome"/);
-  assert.match(html, /Showing 25 of 30 cases in this group/);
+  assert.match(html, /Showing 5 of 30 cases in this group/);
 });
 
 test('atlas page does not render folding rows for singleton classes', () => {
@@ -844,9 +844,13 @@ test('atlas side panel renders field-specific explanations', () => {
   const chainsHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'chains' });
   assert.match(chainsHtml, /Chain definitions/);
   assert.match(chainsHtml, /class="annojoin-chain-scroll"/);
-  assert.match(chainsHtml, /class="annojoin-chain-list"/);
-  // chain identifiers are listed rather than hidden behind a "not present" message
-  assert.doesNotMatch(chainsHtml, /Chain sequences are not present in the current index asset/);
+  assert.match(chainsHtml, /<details class="annojoin-chain-seq"/);
+  assert.match(chainsHtml, /href="https:\/\/www\.rcsb\.org\/sequence\/10ZT"/);
+  assert.match(chainsHtml, /target="_blank"/);
+  assert.match(chainsHtml, /rel="noopener noreferrer"/);
+  assert.match(chainsHtml, /View sequence on RCSB/);
+  // 删除 "not present" 注脚（断言真实删除文案）
+  assert.doesNotMatch(chainsHtml, /Per-chain residue sequences are not present/);
 
   const conflictsHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'conflictCandidateCount' });
   assert.match(conflictsHtml, /Conflict candidates/);
@@ -1135,4 +1139,13 @@ test('hydrateLssEvidence discards stale responses when the sidebar moved on', as
   const store = { loadAssetPath: async () => MOCK_EVIDENCE };
   await hydrateLssEvidence({ store, root, caseKey: 'RASP2PDB:5EEW', getCurrentCaseKey: () => 'RASP2PDB:OTHER' });
   assert.equal(root._slot.innerHTML, '');
+});
+
+test('atlas table puts Molecule name column before PDB column', () => {
+  const state = buildAtlasSearchState(fixtures, {});
+  const html = renderAnnojointAtlasPage({ state });
+  const molIdx = html.indexOf('<th>Molecule name</th>');
+  const pdbIdx = html.indexOf('<th>PDB</th>');
+  assert.ok(molIdx > -1 && pdbIdx > -1, 'both headers present');
+  assert.ok(molIdx < pdbIdx, 'Molecule name header comes before PDB header');
 });
