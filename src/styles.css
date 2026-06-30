@@ -5886,8 +5886,15 @@ body[data-mode="dark"] .mode-toggle:hover {
 
 .site-search-card,
 .site-search-results-card,
-.site-search-filter-card {
+.site-search-filter-card,
+.site-search-layout {
   width: min(1180px, calc(100vw - 32px));
+}
+
+.site-search-card,
+.site-search-layout {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .site-search-header,
