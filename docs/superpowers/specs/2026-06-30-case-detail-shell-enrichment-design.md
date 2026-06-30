@@ -44,10 +44,16 @@ Out of scope:
 
 ## Verified baseline facts
 
-- **Both universes' `case-shell.js` are byte-identical** (83 lines each). Plain top-level
-  classic script (not a module), runs at parse time, shared by every case page in the
-  bundle. The top IIFE injects `site-nav.js`; the rest parses `family-case-bootstrap` and
-  drives the iframe.
+- **Both universes' `case-shell.js` are byte-identical** (82 lines each; `diff` empty).
+  Plain top-level classic script (not a module), runs at parse time, shared by every case
+  page in the bundle. The top IIFE injects `site-nav.js`; the rest parses
+  `family-case-bootstrap` and drives the iframe. The current evidence/chain logic is:
+  `state = {activeChainId, selectedEvidenceId}`; `evidenceById`, `defaultEvidenceForChain`;
+  `updateFrame()` computes the active evidence from `state` and sets BOTH `frame.src` AND
+  `chainStatus.textContent`; chain-button clicks reset `state` and call `syncUi()`
+  (which toggles `.is-active` on chain buttons then calls `updateFrame()`); a
+  reconciliation block (current lines 71–81) fixes up `state.selectedEvidenceId` so it
+  belongs to `state.activeChainId` before the final `syncUi()`.
 - **The bootstrap JSON inlines everything needed.** Keys: `caseId`, `caseKey`,
   `defaultChainId`, `defaultEvidenceId`, `chainPageById` (chainId→relative chain-page
   href), `evidenceChainMap` (evidenceId→chainId), and `evidenceRows` (array). Each
@@ -69,6 +75,12 @@ Out of scope:
   (`.panel` with `#chainStatus` + `<iframe id="chainFrame">`). `case-shell.css` is loaded
   in `<head>` and already styles `.hero`, `.chip`, `.meta`, `.panel`, `.layout`,
   `.viewer-frame`, plus the already-landed `.fb-detail-nav` block.
+- **The hero `.meta` chips are STATIC per-case markup, baked into each `index.html`.** E.g.
+  RASP `10FZ` already has `source RASP2PDB / families A,B,D / default chain A / chains 1`;
+  RMDB `10ZT` has `default chain A / chains 1`. Per-case HTML is out of scope to edit, so
+  the JS must **replace the contents of the existing `.meta` node in place** (clear it,
+  then append the computed chips) rather than append a second row — otherwise families /
+  chains render twice. This is the only mutation of pre-existing hero DOM.
 - **The two bundles have disjoint `:root` token NAMES** (rasp: `--surface`/`--textPrimary`
   /`--textSecondary`/`--primarySoft`; rmdb: `--panel`/`--text`/`--muted`/`--accent-soft`).
   Values currently coincide (warm cream + green accent `#2F8F6B`), but a style block keyed
@@ -86,19 +98,37 @@ the action "load this evidence's profile into the viewer." Today `updateFrame()`
 
 ```
 function loadEvidence(evidenceId) {
-  // resolve evidence → chain → profileId, then drive the viewer.
-  // TODAY: set the iframe's src (current behavior, byte-equivalent outcome).
-  // FUTURE (user, other side): when the iframe is replaced/removed, ONLY this
-  // function body and the viewer container DOM change — the hero, scoreboard,
-  // and evidence table never reference the iframe.
+  // 1. set state.selectedEvidenceId = evidenceId
+  // 2. if the evidence belongs to a different chain (evidenceChainMap[id] !==
+  //    state.activeChainId), set state.activeChainId to that chain too
+  // 3. call syncUi() — which toggles chain-button .is-active, then drives the viewer
+  //    and refreshes the evidence-table highlight (see below).
 }
 ```
 
+This is the existing `updateFrame()` flow, re-pivoted around an explicit evidence id
+instead of being recomputed only from chain state. Concretely, the refactor:
+
+- **Preserves** `state`, `evidenceById`, `defaultEvidenceForChain`, and the
+  reconciliation block (current lines 71–81) verbatim.
+- **Keeps `updateFrame()` as the viewer-driving body** (it still sets `frame.src` +
+  `chainStatus.textContent` from `state`). `updateFrame()` is the one place that names the
+  iframe — it is the future swap point (today: iframe src; future: whatever replaces the
+  iframe). `loadEvidence` is the public entry the table calls; it mutates `state` then
+  calls `syncUi()`, which calls `updateFrame()`.
+- **Extends `syncUi()`** to also refresh the evidence-table active-row highlight from
+  `state.selectedEvidenceId`, so BOTH a table-row click AND a chain-button click keep the
+  table highlight, chain buttons, and viewer in sync (closes the one-directional gap).
+- **Chain-button handlers stay as-is** (they reset `state` to that chain's default
+  evidence and call `syncUi()`); because `syncUi()` now also repaints the table highlight,
+  no extra wiring is needed on the chain buttons.
+
 Contract: **the enrichment UI (hero / scoreboard / table) never touches the iframe or any
 viewer internal.** It only computes from `evidenceRows` and, on a row click, calls
-`loadEvidence(evidenceId)`. This makes shell-beautification and iframe-removal fully
-independent work streams — the seam is pre-cut. This is why the work can ship now without
-waiting on the iframe decision.
+`loadEvidence(evidenceId)`. The single function that references the iframe is
+`updateFrame()`. This makes shell-beautification and iframe-removal fully independent work
+streams — the seam is pre-cut. This is why the work can ship now without waiting on the
+iframe decision.
 
 ### Rendering (in `case-shell.js`, after bootstrap parse)
 
@@ -106,30 +136,54 @@ A single `renderEnrichment(bootstrap)` builds DOM (no innerHTML of untrusted dat
 case/evidence strings are inserted via `textContent` / escaped) and inserts it between the
 hero and the existing `.layout`. It is a **pure function of `evidenceRows`**:
 
-1. **Hero augmentation** — keep `<h1>` + subtitle; add a tier badge derived from the
-   default/best evidence row (`family · <tier label>`, e.g. `A · WEAK`), and a metadata
-   chip row: chains, profiles (= row count), families (distinct `family`), evidence rows.
-   (For RMDB single-row cases this degrades to one family, one tier — still correct.)
+1. **Hero augmentation** — keep `<h1>` + subtitle. Add a tier badge (rendered into the
+   `.hero`, after the subtitle) derived from the default/best evidence row
+   (`family · <tier label>`, e.g. `A · WEAK`). Then **replace the contents of the existing
+   `.meta` node in place** (clear, then append) with computed chips: chains (distinct
+   `chain` count), profiles/evidence (= `evidenceRows.length` — one chip, not two), and
+   families (distinct `family`, joined). Replacing in place avoids duplicating the static
+   chips already in the per-case HTML (see baseline facts). For RMDB single-row cases this
+   degrades to one family / one tier — still correct.
 2. **Confidence scoreboard** card:
    - **Family badges**: for each distinct `family`, a labeled count (e.g.
      `A · WC-face base-specific ×13`). Family→human label is a small fixed lookup
      (A=WC-face base-specific, B=SHAPE flexibility, C=enzymatic, D=SASA solvent access,
      E=contact-map, F=pair-set); unknown families fall back to the bare letter.
    - **Tier-count pills** (user-approved option B): one pill per distinct
-     `lssTierCalibrated`, with a count (e.g. `DISCORDANT 8`, `NOT SUPPORTED 22`,
-     `WEAK 1`). Tier→display name/colour is a fixed lookup; unknown tiers fall back to the
-     raw token.
-   - **Best-evidence summary**: the default evidence row (`selectedByDefault` /
-     `defaultEvidenceId`), shown with its technology, directional metric (using
+     `lssTierCalibrated`, with a count. The tier display lookup is the fixed table below;
+     unknown tokens fall back to the raw token stripped of the `LSS_` prefix, with the
+     neutral `not-supported` colour treatment.
+   - **Best-evidence summary**: the default evidence row (resolved per "Best/default
+     selection" below), shown with its technology, directional metric (using
      `directionalMetricLabel` so AUC vs Spearman is labeled correctly), empirical p,
-     `nEvaluable`, and tier — plus a one-line plain-language tier meaning.
-3. **Expandable evidence table** — a `<details>` (collapsed by default; user can later
-   flip to open) listing all rows: Family, Technology, Tier, directional metric value, p,
-   n, profile. Each row is clickable; clicking calls `loadEvidence(row.evidenceId)` and
-   marks the row selected. The currently-active evidence row is highlighted.
+     `nEvaluable`, and tier — plus the one-line tier meaning from the lookup table below.
+3. **Expandable evidence table** — a `<details>` (collapsed by default; user may later flip
+   to open) listing all rows: Family, Technology, Tier, directional metric value, p, n,
+   profile. Each row is clickable; clicking calls `loadEvidence(row.evidenceId)`. The row
+   matching `state.selectedEvidenceId` gets the active highlight; the highlight is repainted
+   by `syncUi()` so it stays correct on both row clicks and chain-button clicks.
 
-If `evidenceRows` is empty or missing, `renderEnrichment` renders nothing and the page
-falls back to today's behavior (defensive, but not expected for materialized pages).
+### Tier display lookup (fixed table)
+
+Keyed on the raw `lssTierCalibrated` token. `label` is shown on the pill / badge;
+`meaning` is the one-line plain-language sentence used in the best-evidence summary;
+`tone` selects the CSS colour class.
+
+| token | label | tone | meaning |
+|---|---|---|---|
+| `LSS_STRONG_CALIBRATED` | STRONG | strong | Directional signal clears the bar and passes all secondary gates (self-containment, conflict, size) under permutation. |
+| `LSS_MODERATE_CANDIDATE` | MODERATE | moderate | Directional signal is supported but calibration is pending, so it is held below STRONG. |
+| `LSS_WEAK` | WEAK | weak | Directional signal clears the bar but a secondary gate (self-containment / conflict / size) does not — directional but not yet self-contained. |
+| `LSS_NOT_SUPPORTED` | NOT SUPPORTED | not-supported | Signal does not clear the bar / is not better than chance under permutation. |
+| `LSS_DISCORDANT` | DISCORDANT | discordant | Signal runs counter to the structure (negative / conflicting), not merely absent. |
+| `LSS_UNDERPOWERED` | UNDERPOWERED | underpowered | Too few evaluable residues (or too few paired/unpaired) to judge. |
+
+Unknown token → label = token with `LSS_` prefix removed and `_`→space; tone =
+`not-supported`; meaning = empty (omit the meaning line).
+
+If `evidenceRows` is empty or missing, `renderEnrichment` renders nothing (leaves the
+static hero/`.meta` untouched) and the page falls back to today's behavior (defensive, not
+expected for materialized pages).
 
 ### Numeric / display rules
 
@@ -146,10 +200,12 @@ falls back to today's behavior (defensive, but not expected for materialized pag
 
 Add one self-contained enrichment block (literal values, no `var(--…)`, per baseline
 facts) styling: the tier badge, metadata chips, scoreboard card, family badges, tier
-pills (with per-tier colour), best-evidence box, and the expandable table. Mirror the
-warm-cream + green-accent portal language already used by `.hero` / `.fb-detail-nav`.
-Responsive: chips/pills wrap; table stays horizontally scrollable on narrow viewports.
-Both bundles get the **same** block (byte-identical).
+pills, best-evidence box, and the expandable table. Tier pills/badges carry one CSS class
+per `tone` from the tier lookup table (`strong`, `moderate`, `weak`, `not-supported`,
+`discordant`, `underpowered`) with a distinct colour each. Mirror the warm-cream +
+green-accent portal language already used by `.hero` / `.fb-detail-nav`. Responsive:
+chips/pills wrap; table stays horizontally scrollable on narrow viewports. Both bundles
+get the **same** block (byte-identical).
 
 ### Files touched (4)
 
@@ -180,10 +236,15 @@ change).
 
 - `node --check` on both modified `case-shell.js`.
 - Open a dense RASP case (`RASP2PDB%3A10FZ`, 31 rows / families A·B·D) and a single-row
-  RMDB case; confirm: hero tier badge + chips correct, scoreboard family badges + tier
-  pills counts match `evidenceRows`, best-evidence summary matches the default row,
-  expandable table lists every row, row click drives the viewer (iframe src updates) and
-  highlights the active row, no console errors.
+  RMDB case; confirm: hero tier badge + chips correct, the static per-case `.meta` chips
+  are **replaced not duplicated** (families / chains appear once), scoreboard family badges
+  + tier pills counts match `evidenceRows`, best-evidence summary matches the resolved
+  default row, expandable table lists every row, row click drives the viewer (iframe src
+  updates) and highlights the active row, no console errors.
 - Confirm null `conflictFraction` / Spearman rows render `—` / signed values, not `NaN`.
+- If a multi-chain case is available, confirm clicking an evidence row whose chain differs
+  from the active chain switches `state.activeChainId`, repaints the chain-button
+  `.is-active`, and keeps the table highlight in sync (the cross-chain reconciliation path
+  the single-chain verification cases cannot exercise).
 - Confirm the enrichment renders identically in both bundles (shared block) and degrades
-  gracefully on a hypothetical empty `evidenceRows`.
+  gracefully on a hypothetical empty `evidenceRows` (static hero/`.meta` left untouched).
