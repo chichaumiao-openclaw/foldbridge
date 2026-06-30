@@ -215,9 +215,21 @@ function alignmentCellHtml(base, datum, ceiling) {
   return `<span class="hss-cell" style="background:${reactivityColor(norm)}">${base}</span>`;
 }
 
-// 1D alignment 态：每个残基一列（探针查询格 / 连接竖线 / PDB 链格 垂直堆叠），
-// 上下两格共用同一着色（spec：同一反应性颜色随每个核苷酸贯穿三态）。
-// 连线结构上锁定在同一残基两格之间——换行时整列一起换，对齐线永不错位。
+// 单根信号柱：柱高 = 归一化反应性，颜色同色标。无数据 → 中性灰矮桩（数据诚实，spec §3）。
+const HSS_BAR_TRACK_PX = 40;
+function alignmentBarHtml(datum, ceiling) {
+  const raw = Number(datum);
+  if (datum == null || !Number.isFinite(raw)) {
+    return `<div class="hss-bar hss-bar-nodata" style="height:3px;background:${HSS_NEUTRAL}"></div>`;
+  }
+  const norm = Math.min(1, raw / ceiling);
+  const h = Math.max(3, Math.round(norm * HSS_BAR_TRACK_PX));
+  return `<div class="hss-bar" style="height:${h}px;background:${reactivityColor(norm)}"></div>`;
+}
+
+// 1D alignment 态：每个残基一列（信号柱 / 连接竖线 / PDB 链格 垂直堆叠）。
+// 顶行是 per-base 反应性柱状图（量级），底行是结构链着色格；连线锁定在同一残基
+// 柱与格之间——换行时整列一起换，对齐永不错位。柱与格共用同一色标。
 // 无 DOM / 无 window。色标与缺数据中性灰保持单一权威。
 export function renderReactivityAlignment(caseData = {}) {
   const seq = Array.isArray(caseData.sequence) ? caseData.sequence : [];
@@ -227,12 +239,13 @@ export function renderReactivityAlignment(caseData = {}) {
   const chain = caseData.chain || '';
   const pdbLabel = `PDB ${pdbId} · chain ${chain}`.replace(/\s+$/,'').replace(/·\s*chain\s*$/,'· chain');
   const columns = seq.map((base, i) => {
+    const bar = alignmentBarHtml(react[i], ceiling);
     const cell = alignmentCellHtml(base, react[i], ceiling);
-    return `<div class="hss-aln-col">${cell}<span class="hss-match-tick">|</span>${cell}</div>`;
+    return `<div class="hss-aln-col"><div class="hss-bar-track">${bar}</div><span class="hss-match-tick">|</span>${cell}</div>`;
   }).join('');
-  return `<div class="hss-alignment" role="img" aria-label="Per-residue reactivity, probing query aligned to PDB chain">
+  return `<div class="hss-alignment" role="img" aria-label="Per-base probing reactivity (bars) aligned to the PDB chain residues">
     <div class="hss-aln-key">
-      <span class="hss-aln-label">Probing query (reactivity)</span>
+      <span class="hss-aln-label">Probing signal (reactivity)</span>
       <span class="hss-aln-label hss-aln-label-pdb">${pdbLabel}</span>
     </div>
     <div class="hss-aln-columns">${columns}</div>
