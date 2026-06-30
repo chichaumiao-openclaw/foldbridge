@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6OXA",
+  "biologicalMoleculeName": "6OXA",
+  "caseId": "6OXA",
+  "caseKey": "RASP2PDB:6OXA",
+  "chains": [
+    "QV"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "6OXA",
+  "profileCount": 14
+}

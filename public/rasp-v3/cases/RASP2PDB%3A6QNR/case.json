@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6QNR",
+  "biologicalMoleculeName": "6QNR",
+  "caseId": "6QNR",
+  "caseKey": "RASP2PDB:6QNR",
+  "chains": [
+    "1K"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "6QNR",
+  "profileCount": 13
+}

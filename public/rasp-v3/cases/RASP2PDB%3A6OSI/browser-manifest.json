@@ -1,0 +1,27 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "QV": {
+      "case2dPath": "chains/QV/case-2d-structure.json.gz",
+      "chainId": "QV",
+      "chainRoot": "chains/QV",
+      "linkedViewBundlePath": "chains/QV/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/QV/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/QV/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "QV",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:6OSI:confidence:A:rasp_bw_2343aafbe79c": "QV",
+    "annojoin:RASP2PDB:6OSI:confidence:A:rasp_bw_50470bf10580": "QV",
+    "annojoin:RASP2PDB:6OSI:confidence:A:rasp_bw_7c4725121ef4": "QV",
+    "annojoin:RASP2PDB:6OSI:confidence:A:rasp_bw_b5a7b3a78db6": "QV",
+    "annojoin:RASP2PDB:6OSI:confidence:A:rasp_bw_c99a0a52d2ff": "QV"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6WUA",
+  "biologicalMoleculeName": "6WUA",
+  "caseId": "6WUA",
+  "caseKey": "RASP2PDB:6WUA",
+  "chains": [
+    "a"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "6WUA",
+  "profileCount": 7
+}

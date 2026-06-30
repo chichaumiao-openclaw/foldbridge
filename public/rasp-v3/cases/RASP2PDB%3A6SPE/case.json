@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6SPE",
+  "biologicalMoleculeName": "6SPE",
+  "caseId": "6SPE",
+  "caseKey": "RASP2PDB:6SPE",
+  "chains": [
+    "a"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "6SPE",
+  "profileCount": 6
+}
