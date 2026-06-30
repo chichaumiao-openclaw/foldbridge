@@ -975,10 +975,18 @@ function buildMolstarTargetDisplayPayload(profileId = activeProfileId(), selecte
     const locator = locus?.locator || {};
     if (!position || locus?.coordinateStatus !== "resolved") return [];
     const row = normalized.byPosition.get(position);
+    // pdbe-molstar matches start/end_residue_number numerically; the JSON locator
+    // carries label_seq_id/auth_seq_id as strings, so coerce to a Number here.
+    // A string ("5") never matches the model's numeric residue id, which left the
+    // whole chain falling through to nonSelectedColor (no reactivity coloring) and
+    // made viewer.visual.focus() target a non-existent residue ("zoom to nothing").
+    const residueNumber = Number(
+      locator.label_seq_id ?? locator.auth_seq_id ?? residue.labelSeqId ?? position,
+    );
     return [{
       struct_asym_id: locator.label_asym_id || locator.auth_asym_id || residue.labelAsymId,
-      start_residue_number: locator.label_seq_id || locator.auth_seq_id || residue.labelSeqId || position,
-      end_residue_number: locator.label_seq_id || locator.auth_seq_id || residue.labelSeqId || position,
+      start_residue_number: residueNumber,
+      end_residue_number: residueNumber,
       color: colorForMolstarReactivity(row, residueKey, selectedKey),
       profile_id: profileId,
       residue_key: residueKey,
@@ -1270,7 +1278,7 @@ function renderTrackRail() {
   const { start, end } = state.viewport;
   const positions = Array.from({ length: end - start + 1 }, (_, idx) => start + idx);
   const width = 1120;
-  const height = 386;
+  const height = 354;
   const left = 112;
   const right = 18;
   const usable = width - left - right;
@@ -1286,8 +1294,7 @@ function renderTrackRail() {
     ["reactivity", 212],
     ["DBN bridge", 244],
     ["3D coordinates", 276],
-    ["FEC/LSS", 308],
-    ["Interactions", 340],
+    ["Interactions", 308],
   ];
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
@@ -1431,26 +1438,12 @@ function renderTrackRail() {
     wireTrackMark(obs, residueKey, "observed_mask", handleObservedTrackEvent);
     svg.appendChild(obs);
 
-    const confRect = createSvgNode(svg, "rect", {
-      x: x - cellW / 2,
-      y: 300,
-      width: cellW,
-      height: 16,
-      fill: "#f8f2dc",
-      stroke: "#cab779",
-      "stroke-width": 0.5,
-      rx: 1,
-      "data-confidence-state": state.confidenceSummary?.fec?.status || "not_materialized_in_smoke",
-    });
-    wireTrackMark(confRect, residueKey, "fec_lss_confidence", handleConfidenceTrackEvent);
-    svg.appendChild(confRect);
-
     if (interactionEndpoints.length) {
-      const dot = createSvgNode(svg, "circle", { cx: x, cy: 340, r: 4.2, fill: "#1f78b4", stroke: "#0f3f60", "stroke-width": 0.6 });
+      const dot = createSvgNode(svg, "circle", { cx: x, cy: 308, r: 4.2, fill: "#1f78b4", stroke: "#0f3f60", "stroke-width": 0.6 });
       wireTrackMark(dot, residueKey, "interaction_endpoint_occupancy", handleInteractionTrackEvent);
       svg.appendChild(dot);
     } else {
-      const dot = createSvgNode(svg, "circle", { cx: x, cy: 340, r: 2.2, fill: "#ffffff", stroke: "#aab5bf", "stroke-width": 0.8 });
+      const dot = createSvgNode(svg, "circle", { cx: x, cy: 308, r: 2.2, fill: "#ffffff", stroke: "#aab5bf", "stroke-width": 0.8 });
       wireTrackMark(dot, residueKey, "interaction_endpoint_occupancy", handleInteractionTrackEvent);
       svg.appendChild(dot);
     }
@@ -1776,7 +1769,23 @@ async function initMolstarViewer() {
       bgColor: { r: 255, g: 255, b: 255 },
     });
     el.molstarStatus.textContent = `Mol* instance loaded: target crop ${croppedCif.chainKey}.`;
-    window.setTimeout(() => applyMolstarTargetDisplay(state.selectedResidueKey), 700);
+    // Mol* parses the cropped cif + builds representations asynchronously; on large
+    // structures (or slow RCSB fetches) this finishes well after a fixed delay, so the
+    // old 700ms timer fired select() before the model existed and the reactivity
+    // coloring silently failed (left the default Mol* cartoon color). Color on
+    // loadComplete instead; keep a generous timer only as a fallback.
+    let targetDisplayApplied = false;
+    const applyTargetDisplayOnce = () => {
+      if (targetDisplayApplied) return;
+      targetDisplayApplied = true;
+      applyMolstarTargetDisplay(state.selectedResidueKey);
+    };
+    if (croppedViewer.events?.loadComplete?.subscribe) {
+      croppedViewer.events.loadComplete.subscribe((ok) => {
+        if (ok) applyTargetDisplayOnce();
+      });
+    }
+    window.setTimeout(applyTargetDisplayOnce, 4000);
   } catch (error) {
     el.molstarStatus.textContent = "Mol* runtime unavailable; structure views were not rendered.";
     el.molstarHost.innerHTML = `<pre>${escapeHtml(sourceStructureUrl)}\n${escapeHtml(error.message || error)}</pre>`;
