@@ -3756,6 +3756,9 @@ async function loadBrowseEntryRows() {
       ...buildSupplementStructureRows(parseTsv(resultsText), existingIds)
     ];
     browseEntryRows = [...browseEntryRows, ...supplementRows].map(applyCuratedStructureOverrides);
+    browseEntryRows.forEach((row, idx) => {
+      row.index = idx + 1;
+    });
     structureEntryRows = buildStructureEntryRows(browseEntryRows);
   } catch (error) {
     console.error(error);
@@ -3826,22 +3829,38 @@ function scoreSearchRow(row, query) {
   if (!query) return 0;
   const terms = query.split(/\s+/).filter(Boolean);
   const haystacks = {
+    index: String(row.index ?? '').toLowerCase(),
     foldBridgeId: String(row.foldBridgeId ?? '').toLowerCase(),
     name: String(row.name ?? '').toLowerCase(),
     sequence: String(row.sequence ?? '').toLowerCase(),
     fileCode: String(row.fileCode ?? '').toLowerCase(),
     experimentType: String(row.experimentType ?? '').toLowerCase(),
-    modifier: normalizeModifierValue(row.modifier).toLowerCase()
+    modifier: normalizeModifierValue(row.modifier).toLowerCase(),
+    species: String(row.species ?? '').toLowerCase(),
+    year: String(row.discoveryYear ?? '').toLowerCase(),
+    bestPdbId: String(row.bestPdbId ?? '').toLowerCase()
   };
 
   return terms.reduce((score, term) => {
+    // Perfect match boosts
+    if (haystacks.index === term) return score + 200;
     if (haystacks.foldBridgeId === term) return score + 160;
+    if (haystacks.bestPdbId === term) return score + 140;
+    if (haystacks.name === term) return score + 120;
+    if (haystacks.species === term) return score + 100;
+    if (haystacks.year === term) return score + 90;
+    
+    // Partial inclusion matches
     if (haystacks.foldBridgeId.includes(term)) return score + 110;
     if (haystacks.name.includes(term)) return score + 80;
+    if (haystacks.species.includes(term)) return score + 70;
+    if (haystacks.year.includes(term)) return score + 60;
+    if (haystacks.bestPdbId.includes(term)) return score + 50;
     if (haystacks.fileCode.includes(term)) return score + 42;
     if (haystacks.experimentType.includes(term)) return score + 34;
     if (haystacks.modifier.includes(term)) return score + 24;
     if (haystacks.sequence.includes(term)) return score + 18;
+    
     return score;
   }, 0);
 }
@@ -3918,50 +3937,64 @@ function renderAdvancedSearchResults(rows) {
     return `<div class="search-card-grid">
       ${rows
         .map(
-          (row) => `<article class="search-result-card">
-            <div class="search-result-card-top">
-              <span class="search-record-id">${row.foldBridgeId}</span>
-              <span class="search-record-code">${row.fileCode || 'N/A'}</span>
-            </div>
-            <h3>${row.name || 'Untitled record'}</h3>
-            <p class="search-result-sequence">${row.sequence || 'Sequence unavailable'}</p>
-            <dl class="search-result-meta">
-              <div><dt>Length</dt><dd>${row.length || 'N/A'}</dd></div>
-              <div><dt>Experiment</dt><dd>${row.experimentType || 'N/A'}</dd></div>
-              <div><dt>Modifier</dt><dd>${row.modifierLabel}</dd></div>
-            </dl>
-          </article>`
+          (row) => {
+            const detailUrl = `#structure-detail?foldBridgeId=${encodeURIComponent(row.foldBridgeId)}`;
+            return `<article class="search-result-card">
+              <div class="search-result-card-top">
+                <span class="search-record-id"><a href="${detailUrl}" class="sequence-link">${row.foldBridgeId}</a></span>
+                <span class="search-record-code">No. ${row.index}</span>
+              </div>
+              <h3>${row.name || 'Untitled record'}</h3>
+              <p class="search-result-sequence" title="${row.sequence || ''}">${row.sequence || 'Sequence unavailable'}</p>
+              <dl class="search-result-meta">
+                <div><dt>Species</dt><dd>${row.species || 'N/A'}</dd></div>
+                <div><dt>Discovery Year</dt><dd>${row.discoveryYear || 'N/A'}</dd></div>
+                <div><dt>PDB ID</dt><dd>${row.bestPdbId ? renderPdbExternalLink(row.bestPdbId) : 'N/A'}</dd></div>
+                <div><dt>Length</dt><dd>${row.length || 'N/A'}</dd></div>
+                <div><dt>Experiment</dt><dd>${row.experimentType || 'N/A'}</dd></div>
+                <div><dt>Modifier</dt><dd>${row.modifierLabel}</dd></div>
+              </dl>
+            </article>`;
+          }
         )
         .join('')}
     </div>`;
   }
 
   return `<div class="search-table-wrap">
-    <table class="search-results-table">
+    <table class="search-results-table case-detail-table">
       <thead>
         <tr>
+          <th>No.</th>
           <th>FoldBridge ID</th>
           <th>Name</th>
+          <th>Species</th>
+          <th>Discovery year</th>
+          <th>Sequence</th>
+          <th>PDB ID</th>
           <th>Experiment</th>
           <th>Modifier</th>
           <th>Length</th>
-          <th>Sequence</th>
         </tr>
       </thead>
       <tbody>
         ${rows
           .map(
-            (row) => `<tr>
-              <td><span class="search-record-id">${row.foldBridgeId}</span></td>
-              <td>
-                <strong>${row.name || 'Untitled record'}</strong>
-                <div class="search-table-subline">Code: ${row.fileCode || 'N/A'}</div>
-              </td>
-              <td>${row.experimentType || 'N/A'}</td>
-              <td>${row.modifierLabel}</td>
-              <td>${row.length || 'N/A'}</td>
-              <td><span class="search-sequence-inline">${row.sequence || 'Sequence unavailable'}</span></td>
-            </tr>`
+            (row) => {
+              const detailUrl = `#structure-detail?foldBridgeId=${encodeURIComponent(row.foldBridgeId)}`;
+              return `<tr>
+                <td class="structure-index-cell">${row.index}</td>
+                <td><a href="${detailUrl}" class="sequence-link">${row.foldBridgeId}</a></td>
+                <td><strong>${row.name || 'Untitled record'}</strong></td>
+                <td>${row.species || 'N/A'}</td>
+                <td>${row.discoveryYear || 'N/A'}</td>
+                <td><span class="search-sequence-inline" title="${row.sequence || ''}">${row.sequence || 'N/A'}</span></td>
+                <td>${renderPdbExternalLink(row.bestPdbId)}</td>
+                <td>${row.experimentType || 'N/A'}</td>
+                <td>${row.modifierLabel}</td>
+                <td>${row.length || 'N/A'}</td>
+              </tr>`;
+            }
           )
           .join('')}
       </tbody>

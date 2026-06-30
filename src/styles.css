@@ -6450,4 +6450,29 @@ body[data-mode="dark"] .browse-pagination-btn:disabled {
   border-color: rgba(227, 191, 92, 0.06) !important;
 }
 
+/* Advanced Search Results Link Styles (Yellow, no underline) */
+.search-record-id a.sequence-link,
+.search-results-table .sequence-link {
+  color: #b8840e !important;
+  text-decoration: none !important;
+  font-weight: 600 !important;
+  transition: color 0.2s ease !important;
+}
+
+.search-record-id a.sequence-link:hover,
+.search-results-table .sequence-link:hover {
+  color: #d3a43c !important;
+  text-decoration: none !important;
+}
+
+body[data-mode="dark"] .search-record-id a.sequence-link,
+body[data-mode="dark"] .search-results-table .sequence-link {
+  color: #d3a43c !important;
+}
+
+body[data-mode="dark"] .search-record-id a.sequence-link:hover,
+body[data-mode="dark"] .search-results-table .sequence-link:hover {
+  color: #e2c070 !important;
+}
+
 
