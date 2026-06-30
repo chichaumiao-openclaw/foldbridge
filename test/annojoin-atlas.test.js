@@ -810,7 +810,8 @@ test('atlas page renders an index-row detail sidebar without loading detail pane
 
   assert.match(html, /class="annojoin-detail-sidebar/);
   assert.match(html, /Click a table field/);
-  assert.match(html, /Molecule, confidence, PDB, profiles, and chains each open a focused explanation here/);
+  assert.match(html, /Confidence, PDB, profiles, and chains each open a focused explanation here/);
+  assert.match(html, /Click a molecule name to open its detail page/);
   assert.doesNotMatch(html, /Index row detail/);
 });
 
@@ -839,13 +840,21 @@ test('atlas side panel renders field-specific explanations', () => {
 
   const profilesHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'profileCount' });
   assert.match(profilesHtml, /Profile hits/);
-  assert.match(profilesHtml, /RDAT trace/);
+  // Profile definition is now explained for both RMDB and RASP sources.
+  assert.match(profilesHtml, /A profile is a single source chemical-probing signal record/);
+  // Per-source hit counts replace the RMDB-only framing.
+  assert.match(profilesHtml, /Hits by source/);
+  assert.match(profilesHtml, /<dt>RMDB<\/dt>/);
+  assert.match(profilesHtml, /<dt>RASP<\/dt>/);
+  // The RMDB RDAT trace only renders when trace rows exist for the case.
+  assert.match(profilesHtml, /RMDB RDAT trace/);
   assert.match(profilesHtml, /OK7ALIB_2A3_0000\.rdat/);
   assert.match(profilesHtml, /line 5914/);
   assert.match(profilesHtml, /class="annojoin-profile-trace-list"/);
   assert.match(profilesHtml, /5914/);
   assert.doesNotMatch(profilesHtml, /rmdbv3_exact_alpha/);
-  assert.match(profilesHtml, /RASP hit details are not present in the current index asset/);
+  // The old dismissive "RASP hit details are not present" note is gone.
+  assert.doesNotMatch(profilesHtml, /RASP hit details are not present in the current index asset/);
 
   const chainsHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'chains' });
   assert.match(chainsHtml, /Chain definitions/);
@@ -868,7 +877,9 @@ test('atlas table field links target the side panel', () => {
   const state = buildAtlasSearchState(fixtures, {});
   const html = renderAnnojointAtlasPage({ state, routeName: 'sequence' });
 
-  assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=moleculeName"/);
+  // Molecule name jumps straight to the detail page, NOT the side panel.
+  assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10ZT\/index\.html"/);
+  assert.doesNotMatch(html, /href="#sequence\?caseId=10ZT&amp;field=moleculeName"/);
   assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=confidenceDisplayLabel"/);
   assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=profileCount"/);
   assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=chains"/);
@@ -892,7 +903,9 @@ test('atlas field links preserve the active filter and page so clicking does not
 
   // a filtered field click must retain q=10ZT alongside the field/case selection
   assert.match(html, /href="#entry\?q=10ZT&amp;caseId=10ZT&amp;field=pdbId"/);
-  assert.match(html, /href="#entry\?q=10ZT&amp;caseId=10ZT&amp;field=moleculeName"/);
+  assert.match(html, /href="#entry\?q=10ZT&amp;caseId=10ZT&amp;field=confidenceDisplayLabel"/);
+  // Molecule name now jumps to the detail page, not a panel field click.
+  assert.doesNotMatch(html, /field=moleculeName/);
   // and must NOT drop the query (the bug: #entry?caseId=10ZT&field=pdbId)
   assert.doesNotMatch(html, /href="#entry\?caseId=10ZT&amp;field=pdbId"/);
 });
