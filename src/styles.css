@@ -179,7 +179,8 @@ main.page-download,
 main.page-download-sequences,
 main.page-publications,
 main.page-sequence-detail,
-main.page-help {
+main.page-help,
+main.page-annojoin-atlas {
   padding-top: 0;
 }
 
@@ -201,7 +202,7 @@ main.page-sequence-detail {
 }
 
 .annojoin-table-heading {
-  padding: 12px 0 2px;
+  padding: 0 0 2px;
 }
 
 .annojoin-table-heading h1 {
