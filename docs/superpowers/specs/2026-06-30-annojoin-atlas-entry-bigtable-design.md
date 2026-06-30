@@ -60,20 +60,20 @@ ANNOJOIN Atlas 总表（entry 页）当前是**翻页 + 默认折叠**的两层�
 ### 改动 1 — 去翻页，大表
 
 - 管线去掉 `paginateAnnojointRows` 步骤；`buildAnnojointTableGroups` 直接吃全部 `baseRows`（搜索态仍走 `searchAnnojointRows`，非搜索态吃 `sortedRows` 全量）。
+- **重接所有 `pagination.rows` 消费点到 `baseRows`**（不止分组）：`searchModeNote`（view L476 `pagination.rows.length`）、`emptySearchRow`（view L483 `pagination.rows.length`）、`renderFlatRows` 输入（view L491 `rows: pagination.rows`）三处都改读 `baseRows`。
 - 移除 `renderPagination(pagination)`（view L120-136 定义 + L531 调用）。
 - `renderAnnojointAtlasPage` 签名移除 `page`/`pageSize`（或保留为忽略以减小 diff，最终态去掉）。
 - controller 解绑 `[data-annojoin-page]`、`#annojoin-page-size`（`bindAnnojointAtlasTable`）。
 - `main.js` 删 `setAnnojointAtlasPage` / `setAnnojointAtlasPageSize` / `annojoinPageSize` 状态及其 bind 接线。
 - 表格容器靠 CSS 滚动（`annojoin-master-table-wrap` 横向 + 页面纵向）。
+- **"Select Current Page" 按钮**（`#select-visible-annojoin-cases`，view L520）：去翻页后 `pageRows === rows`，它与 "Select All Results" 重复。**决策：移除该按钮**（含 controller L68-71 接线 + test L588 断言）。`currentAnnojointAtlasState()`（main.js L2133-2145）返回的 `{rows, pageRows, pagination}` 形状中 `pageRows`/`pagination` 不再有消费者，一并清理（最终态只保留 `rows`）。
 
 ### 改动 2 — 默认全展开（保留分组骨架）
 
 - 保留 class→name 两层分组表头渲染（`renderTableBody` L151-222 不动结构）。
-- 翻转 `expandedGroupIds` 语义：默认全展开。两种等价实现，取 diff 更小者：
-  - (a) render 处把"在集合内=展开"反转为"不在集合内=展开"（空集 = 全展开）；或
-  - (b) 初始化 `expandedAnnojointGroupIds = new Set(allAnnojointAtlasGroupIds())`。
-- "Expand All / Collapse All" 按钮（view L523-524）语义随之对齐。
-- 倾向 (b)：语义直观、与现有 expand-all 接线一致；但 (b) 要在每次 cases 变更后重算全集。审查时定。
+- **锁定实现 = 方案 (b)**：初始化 `expandedAnnojointGroupIds = new Set(allAnnojointAtlasGroupIds())`，每次 `atlasState.cases` 变更后重算全集并补入。**不**采用"反转 render 语义"（in-set=collapsed）的方案——render 逻辑 `view.js:186/:207` 是 `expandedGroupIds.has(toggleId) => 展开`，多个测试传显式集合表达"展开此组"（test L298-299 `new Set(['parent:rRNA'])`、L688、L765、L783）。若反转语义，这些集合会变成"折叠该组"，与测试意图完全相反，破坏全套测试。**必须保持"in-set = 展开"不变**，只改默认填充为全集。
+- 顺带清理 `renderAnnojointAtlasPage` 当前未使用的 `collapsedGroupIds` 形参（view L450，曾为反转方案预留，本轮不需要）。
+- "Expand All / Collapse All" 按钮（view L523-524）语义随之对齐（默认进页即"全展开"态）。
 
 ### 改动 3 — 列互换
 
@@ -100,6 +100,7 @@ ANNOJOIN Atlas 总表（entry 页）当前是**翻页 + 默认折叠**的两层�
     - `<summary>` = `escapeHtml(chainId)`（不含 `N nt`，长度不在 index 行）。
     - 展开体 = `<a href="https://www.rcsb.org/sequence/{PDB}" target="_blank" rel="noopener noreferrer">View sequence on RCSB →</a>`，`{PDB}` = `encodeURIComponent(String(row.pdbId).toUpperCase())`。
   - 无链时保留现有 mini-note。
+  - **DOM 结构变更**：保留外层 `<aside>` + `annojoin-chain-scroll` 滚动容器（view L398，多链时仍需滚动）；**移除 `<ol class="annojoin-chain-list">`**，改为容器内直接铺 N 个 `<details class="annojoin-chain-seq">`。
   - **删除** L401 "Per-chain residue sequences are not present..." 注脚；可替换为说明序列在 RCSB 的简短提示（如 "Residue sequences open on RCSB (entry-level)."）。
 - 默认折叠（`<details>` 不带 `open`）。`countLabel`/外层 `<aside>` 结构保留。
 - URL 安全：`pdbId` 经 `encodeURIComponent` + 大写；`escapeHtml` 用于 summary 文本。无序列嵌入，无 XSS 面扩大。
@@ -109,14 +110,15 @@ ANNOJOIN Atlas 总表（entry 页）当前是**翻页 + 默认折叠**的两层�
 需更新的现有断言：
 - `atlas page renders only the compact master table surface`（L581-607）：断言 `/Page 1 \/ 2/`、`/Rows 1-1 of 2/` → 删除（无翻页）。
 - `atlas search state preserves the canonical moleculeDisplayName...`（L265-305）：2× `annojoin-molecule-same-as-group` `—`（L304）→ 改断言完整名。
-- `atlas page suppresses molecule name inside a group...`（L656-693）：`/class="annojoin-molecule-same-as-group"/`（L691）→ 反转为"恒显完整名、无 `—`"。
+- `atlas page suppresses molecule name inside a group...`（L656-693）：**两个**断言都要翻转——L691 `/class="annojoin-molecule-same-as-group"/`（改为断言不再出现 `—`），以及 **L692** `doesNotMatch(/annojoin-field-link[^>]*>\s*<span[^>]*>5S ribosomal RNA<\/span>/)`（改动 4 后单元格恒为 `<a class="annojoin-field-link"><span>5S ribosomal RNA</span></a>`，此 `doesNotMatch` 会失败 → 改为 `match`）。测试名/意图需一并改写为"恒显完整名"。
 - `atlas page defaults foldable groups to collapsed...`（L745-770）：`data-annojoin-group-state="collapsed"` + `10ZT` 默认不显示 → 反转为默认展开、`10ZT` 默认可见。
-- `atlas page caps large expanded ... groups`（L772-789）：25 行 + `/Showing 25 of 30/` → 5 行 + `/Showing 5 of 30/`。
+- `atlas page caps large expanded ... groups`（L772-789）：25 行（L786）+ `/Showing 25 of 30/`（L788）→ 5 行 + `/Showing 5 of 30/`。
 - 合并行翻页 meta（L397 `/Rows 1-1 of 1/` 等）→ 调整或删除。
+- `atlas side panel renders field-specific explanations`（L811-854）：改动 6 重写 `renderChainsPanel` 后——L846 `/class="annojoin-chain-scroll"/` 仍通过（容器保留）；**L847** `/class="annojoin-chain-list"/` 会失败（`<ol>` 被移除）→ 改为断言 `<details class="annojoin-chain-seq">`。L849 现有 `doesNotMatch(/Chain sequences are not present.../)` 打的是**不存在的字符串**（真实文案是 "Per-chain residue sequences are not present"），是空操作；新断言要对准真实删除文案 `doesNotMatch(/Per-chain residue sequences are not present/)`。
 
 新增断言：
-- Chains 面板每链一个 `<details>`，含 `https://www.rcsb.org/sequence/<PDB>` 链接、`target="_blank"`、`rel="noopener noreferrer"`。
-- Chains 面板不再含 "not present" 注脚。
+- Chains 面板每链一个 `<details class="annojoin-chain-seq">`，含 `https://www.rcsb.org/sequence/<PDB>` 链接、`target="_blank"`、`rel="noopener noreferrer"`。
+- Chains 面板不再含真实删除文案：`doesNotMatch(/Per-chain residue sequences are not present/)`。
 - 大表：无 `renderPagination` 产物；全部分组默认 `expanded`。
 
 验证：`node --test`（纯渲染函数，无 jsdom）。
