@@ -51,7 +51,7 @@ h2 {
 }
 .controls {
   display: grid;
-  grid-template-columns: minmax(280px, 1fr) minmax(260px, auto);
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   align-items: end;
   margin-top: 14px;
@@ -181,6 +181,11 @@ button:focus-visible {
 }
 .track-panel {
   margin-top: 12px;
+}
+.track-viewport-controls {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 .track-viewport {
   height: 408px;
