@@ -29,7 +29,9 @@
 ### 2.2 数字口径一致性（红线）
 - 站点对外展示的"PDB / 结构关联记录"总数，必须等于用户在 **Entry 表实际能浏览到的可见口径**（应用与 Entry 表相同的"屏蔽无数据 case"过滤后的计数；当前实测 = **2386**）。
 - build 期 `index.json` 顶层 `displayCases`/`totalCaseCount` = **3401**，这是过滤前的原始数；**不得**直接对外展示 3401。
-- 统计页所有数字一律**构建期从同一份 atlas 数据派生计算，禁止手写常量**。实现期必须复刻 Entry 表的可见性过滤逻辑（见 §6.3），并验证派生总数 == Entry 表显示数。
+- **单一来源原则**：把 Entry 表的可见性过滤逻辑抽成一个**共享纯函数**（如 `src/lib/entryVisibility.js` 的 `isEntryVisible(caseRow)` / `filterVisibleCases(cases)`），浏览器 Entry 表与 build 脚本（§4.2）都 import 同一份，使可见计数单一来源、永不漂移。统计页数字一律由该函数在构建期从同一份 atlas 数据派生计算，**默认禁止手写常量**。
+- **唯一受控例外**：仅当过滤逻辑确实无法移植到 build 期（依赖运行时浏览器状态）时，允许 stats.json 写一个来自**带日期验证运行**的常量，并标注 `source: "manual verify <date>"`；此例外必须在 stats.json 与本规格中显式记录，不得隐式硬编码。除此之外不得手写。
+- 测试用的 ground-truth 锚点值（如 `=== 2386`）是被批准的唯一测试常量（见 §7）。
 
 ### 2.3 视觉一致性（红线）
 新页面必须与现有页面同一视觉语言：
@@ -44,6 +46,8 @@
 
 ### 3.2 数据源
 新建策展数据 `src/assets/data/about-content.json`（章节化结构），内容来自有据可查的真实方法学（A–F 置信度家族、ANNOJOIN 流水线、34 项探针技术注册表、阈值文献依据）。**纯静态、入 git、无构建期生成**（与运行数据无关，避免引入 build 依赖）。
+
+`body` 字段格式：**纯文本**（plain text），渲染时用 `textContent` 语义安全插入（或在拼 HTML 字符串时转义），不接受 HTML 标记。需要结构化排版（列表、流程图）的章节用 `kind` + `items`/结构字段表达，不在 `body` 里塞 HTML。
 
 JSON 结构（草案）：
 ```json
@@ -81,10 +85,13 @@ JSON 结构（草案）：
 
 ### 4.2 数据源（构建期派生，禁止手写）
 新建构建脚本 `scripts/build-site-stats.mjs`，读取已有真实资产，产出 `src/assets/generated/site-stats/stats.json`（入 git）。输入：
-- `src/assets/generated/annojoin-atlas/index.json`（PDB 计数、家族分布、来源占比）。
-- 校准表（若本机可读）：tier 分布数字。**若校准表不可读，则从已知的运行沉淀常量回退并在 JSON 标注 `source: "run-record <date>"`**（不在浏览器里假装是 live 数据）。
+- `src/assets/generated/annojoin-atlas/index.json`（PDB 计数、家族分布、来源占比）。PDB 总数经 §2.2 的共享 `filterVisibleCases` 派生（= 2386 口径）。
+- 校准表（若本机可读）：tier 分布数字。已知运行沉淀来源（实现期任务 0 §6.3 核实路径可读性）：
+  - RMDB ABC 校准：`<RMDB_ABC_LSS>/cal/abc_lss_calibrated.tsv`（约 218638 行）。
+  - RASP Family D 校准：`<RASP_D_LSS>/cal/def_lss_calibrated.tsv`（约 10229 行）。
+  - **校准表不可读时的回退常量**（来自 2026-06-27 运行沉淀，stats.json 标注 `source: "run-record 2026-06-27"`）：RMDB ABC tier 分布 STRONG 283 / MODERATE 1191 / WEAK 18635 / DISCORDANT 33876 / UNDERPOWERED 50062 / NOT_SUPPORTED 114591（共 218638）；Family D SASA 覆盖 SASA_PRESENT 8417 (82.3%) / PAIRING_PROXY_FALLBACK 1812 (17.7%)（共 10229）。这些是被批准的、带日期标注的回退常量，非随意硬编码。
 - `src/assets/generated/probing-articles/index.json`（27 篇 / 6 家族）。
-- 探针技术注册表（见 §5.2 拷入的精简 JSON）→ 34 技术计数 + threshold_basis 三档。
+- 探针技术注册表（见 §5.2 拷入的精简 JSON）→ 34 技术计数 + threshold_basis 三档（1/10/23）。
 
 ### 4.3 关键派生：PDB 总数必须 = Entry 表可见口径（§2.2 铁律）
 build 脚本对 `index.json` 的 `displayCases` 应用**与 Entry 表运行时相同的可见性过滤**（屏蔽无数据/未物化 case），得到对外展示的 PDB 总数。实现期任务必须：
@@ -97,6 +104,7 @@ build 脚本对 `index.json` 的 `displayCases` 应用**与 Entry 表运行时�
 - 置信度 tier 分布柱状图（复用 confidence 文章已有的纯 SVG 柱状模式，log 或线性轴据数据定）。
 - Family D SASA 覆盖饼图/donut（SASA_PRESENT vs PAIRING_PROXY_FALLBACK）。
 - RMDB vs RASP 来源占比 + 家族（A/B/C/D...）分布条。
+- **增量交付优先级**（速度优先，允许分批落地不阻塞 merge）：**核心必发** = 数字卡 + tier 分布柱状图（最具体量冲击力）；**增量可后补** = SASA donut + 来源占比条（W-B 可先发核心再补，缺图位显示"数据未物化"占位）。
 - 每张图**必须有数据来源脚注**（"as of run <date>, source <path>"），不伪造 live。
 
 ### 4.5 渲染
@@ -161,12 +169,13 @@ build 脚本对 `index.json` 的 `displayCases` 应用**与 Entry 表运行时�
 
 ## 7. 测试策略
 - 每个 `render*` 纯函数：`node --test`，断言关键内容出现（标题、数字、表格行数、SVG 存在）、空数据降级返回壳。沿用 `test/site-chrome.test.js` 风格（`assert.match`/`doesNotMatch`）。
-- `build-site-stats.mjs`：测产出 schema + **派生 PDB 总数 == Entry 表可见口径**的断言（§2.2 铁律的回归锁）。
+- `build-site-stats.mjs`：测产出 schema + **派生 PDB 总数 == Entry 表可见口径**的断言。该断言同时锁定两端：(a) build 派生值 == 浏览器 `filterVisibleCases` 产出（共享函数自洽）；(b) build 派生值 == 已知 ground-truth 观测锚点（`=== 2386`，§2.2 批准的唯一测试常量，作为对现实的硬锚）。两者同时成立才算通过，避免共享函数"自己锁自己"。
 - store：注入 fetch 测加载/缓存/失败降级（镜像现有 store 测试）。
 - 全量 `npm test` 保持绿；新增测试不破坏既有基线。
 
 ## 8. 验收标准
 - 三个模块上线后，导航出现 Stats/About，Probing 升级为科普中心。
+- 旧 `#help` 路由已移除/重定向到 `#about`，无悬空死路由（导航不再有独立 Help）。
 - 统计页 PDB 总数显示 = Entry 表（2386），无 3401 泄漏。
 - 新页面视觉与主站一致（token 驱动、暖金底+绿强调、Avenir Next）。
 - 所有展示数字可溯源，无编造；缺失项显式标注。
