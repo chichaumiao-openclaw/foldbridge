@@ -1205,7 +1205,7 @@ function downloadSequencesPage() {
 
 
 
-const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case', 'annojoin-confidence'];
+const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'about', 'stats', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case', 'annojoin-confidence'];
 let route = routeFromHash(window.location.hash);
 let theme = 'ribocentre';
 let mode = localStorage.getItem('foldbridge-mode') === 'dark' ? 'dark' : 'light';
@@ -2399,6 +2399,14 @@ function helpPage() {
   </main>`;
 }
 
+function aboutPage() {
+  return `<main class="page-detail">${renderBundleHeader()}<section class="card bundle-wide-card"><h1>About</h1><p>Loading…</p></section></main>`;
+}
+
+function statsPage() {
+  return `<main class="page-detail">${renderBundleHeader()}<section class="card bundle-wide-card"><h1>Statistics</h1><p>Loading…</p></section></main>`;
+}
+
 // ANNOJOIN 置信度科普页：解释主表 Confidence distribution 列里 A/B/C/D 族、
 // LSS 召回层级（STRONG/MODERATE/WEAK/...）、以及 RASP "not active" 的含义。
 function annojoinConfidencePage() {
@@ -2904,7 +2912,8 @@ function pageFor(name) {
   if (safeRoute === 'download-structures') return downloadStructuresPage();
   if (safeRoute === 'detail') return detailPage();
   if (safeRoute === 'publications') return publicationsPage();
-  if (safeRoute === 'help') return helpPage();
+  if (safeRoute === 'help' || safeRoute === 'about') return aboutPage();
+  if (safeRoute === 'stats') return statsPage();
   if (safeRoute === 'sequence-detail') return sequenceDetailPage();
   return homePage();
 }

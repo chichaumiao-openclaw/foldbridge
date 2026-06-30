@@ -6,8 +6,9 @@ const PRIMARY_NAV_ITEMS = [
   { route: 'home', label: 'Home', activeRoutes: ['home'] },
   { route: 'entry', label: 'Entry', activeRoutes: ['entry', 'sequence', 'download-sequences'] },
   { route: 'probing', label: 'Probing', activeRoutes: ['probing', 'detail'] },
-  { route: 'search', label: 'Search', activeRoutes: ['search'] },
-  { route: 'help', label: 'Help', activeRoutes: ['help'] }
+  { route: 'stats', label: 'Stats', activeRoutes: ['stats'] },
+  { route: 'about', label: 'About', activeRoutes: ['about', 'help'] },
+  { route: 'search', label: 'Search', activeRoutes: ['search'] }
 ];
 
 export function renderPrimaryNav(activeRoute = 'home') {
@@ -306,3 +307,9 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     ${closing}
   </section>`;
 }
+
+// === ABOUT PAGE (W-A 在此追加 renderAboutPage) ===
+
+// === STATS PAGE (W-B 在此追加 renderStatsPage) ===
+
+// === PROBING HUB (W-C 在此追加 renderProbingFamilyIndex/TechTable/Glossary) ===
