@@ -36,7 +36,7 @@ header {
 }
 h1 {
   margin: 0;
-  font-size: 20px;
+  font-size: 15px;
   line-height: 1.25;
   letter-spacing: 0;
 }
@@ -54,11 +54,14 @@ h2 {
 }
 .controls {
   display: grid;
-  grid-template-columns: minmax(280px, 1fr) minmax(260px, auto);
+  grid-template-columns: minmax(280px, 1fr);
   gap: 12px;
   align-items: end;
   margin-top: 14px;
   min-width: 0;
+}
+.track-viewport-controls {
+  padding: 10px 11px 0;
 }
 label {
   display: grid;

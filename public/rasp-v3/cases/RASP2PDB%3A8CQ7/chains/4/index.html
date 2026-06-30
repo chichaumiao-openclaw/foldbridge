@@ -11,7 +11,6 @@
     <header>
       <div>
         <h1>8CQ7 chain 4</h1>
-        <div class="sub">1D residue tracks, 2D chain layout, 3D chain locus bridge, and residue inspector.</div>
       </div>
       <div class="sub" id="assetStatus">loading assets...</div>
     </header>
@@ -27,8 +26,16 @@
           <b>Profile</b><span id="profileId">loading</span>
         </div>
       </div>
-      <label>
-        Viewport
+    </section>
+
+    <section class="stats" id="stats"></section>
+
+    <section class="panel track-panel">
+      <div class="panel-head">
+        <h2>1D residue tracks</h2>
+        <span id="trackStatus">viewport pending</span>
+      </div>
+      <div class="track-viewport-controls">
         <div class="viewport-controls">
           <button id="zoom-out" type="button" title="Zoom out" aria-label="Zoom out">-</button>
           <button id="zoom-in" type="button" title="Zoom in" aria-label="Zoom in">+</button>
@@ -38,15 +45,6 @@
           <span class="viewport-status" id="viewportStatus">pending</span>
         </div>
         <input id="viewport-slider" class="viewport-slider" type="range" min="1" max="1" value="1" step="1" aria-label="Scroll 1D viewport along the sequence">
-      </label>
-    </section>
-
-    <section class="stats" id="stats"></section>
-
-    <section class="panel track-panel">
-      <div class="panel-head">
-        <h2>1D residue tracks</h2>
-        <span id="trackStatus">viewport pending</span>
       </div>
       <section class="track-viewport" id="track-viewport" aria-label="1D linked residue tracks"></section>
     </section>
@@ -84,16 +82,8 @@
               <div class="molstar-label">Target chain alignment crop</div>
               <div id="molstar-host" class="molstar-host" data-molstar-host></div>
             </div>
-            <div class="molstar-view">
-              <div class="molstar-label molstar-label-row">
-                <span>Full CIF reference</span>
-                <button id="full-roi-toggle" class="roi-toggle" type="button" aria-pressed="false">Color ROI</button>
-              </div>
-              <div id="molstar-full-host" class="molstar-host" data-molstar-host="full-cif"></div>
-            </div>
           </div>
           <div id="molstarMeta" class="molstar-meta"></div>
-          <div id="molstarFullMeta" class="molstar-meta"></div>
         </section>
       </section>
     </section>
@@ -106,13 +96,6 @@
       <section class="linked-inspector" id="linked-inspector"></section>
     </section>
 
-    <details class="debug-panel">
-      <summary>Debug and performance details</summary>
-      <div class="debug-actions">
-        <button id="benchmarkButton" type="button">Run profile benchmark</button>
-      </div>
-      <pre id="log"></pre>
-    </details>
   </main>
   <div class="tip" id="tip"></div>
   <script>window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ = {"caseId": "8CQ7", "chainId": "4", "caseUrl": "./case-2d-structure.json.gz", "profileIndexUrl": "./profiles/profile-index.json.gz", "varnaTemplateUrl": "./varna-template.svg.gz", "sourceStructureUrl": "../../structure.cif.gz", "linkedViewBundleUrl": "./linked-view/linked-view.json.gz"};</script>
