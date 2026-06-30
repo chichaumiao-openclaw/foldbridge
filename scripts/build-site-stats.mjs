@@ -5,8 +5,9 @@
 // 本脚本对 annojoin-atlas/index.json 的 displayCases 套白名单得到 pdb_total==2386，
 // 同时保留 total_raw（index.totalCaseCount）供脚注；页面只展示 2386，不展示 3401。
 //
-// tier 分布：若提供校准表行（calibration），按真实行派生并标注
-// `calibration-table <date>`；否则回退到 run-record 2026-06-27 常量并标注。
+// 全部统计口径 = entry（已发布白名单过滤后的 kept 集），不再用全量跑的 segment 级常量。
+// LSS tier 分布、SASA 探针覆盖、RNA 生物学分类都从 kept 的 per-entry 字段真实派生，
+// 与页面其它 entry 口径数字一致。
 //
 // 纯 ESM：deriveStats 为纯函数（可被测试 import 而不触发写文件）；
 // CLI 执行体用 import.meta.url 守卫包裹。
@@ -18,66 +19,88 @@ import {
   parsePublishedCaseKeyAllowlist
 } from './lib/annojoin-atlas-published-allowlist.mjs';
 
-// 回退常量（run-record 2026-06-27，见 MEMORY 全量跑记录）。
-// 校准表不可读时使用，stats.json 标注来源。
-const FALLBACK_TIER_DISTRIBUTION = {
-  STRONG: 284,
-  MODERATE: 1189,
-  WEAK: 18677,
-  DISCORDANT: 33876,
-  UNDERPOWERED: 50062,
-  NOT_SUPPORTED: 114550
-};
-const FALLBACK_FAMILY_D_SASA = {
-  SASA_PRESENT: 8417,
-  PAIRING_PROXY_FALLBACK: 1812
-};
-const RUN_RECORD_LABEL = 'run-record 2026-06-27';
-
-// 计数表骨架：保证页面始终拿到全部 6 个 tier 键（缺失=0），SVG 不会出现 undefined。
+// LSS 召回层级键（强→弱）。保证页面始终拿到全部 6 个键（缺失=0），SVG 不出现 undefined。
 const TIER_KEYS = ['STRONG', 'MODERATE', 'WEAK', 'DISCORDANT', 'UNDERPOWERED', 'NOT_SUPPORTED'];
 
-// 校准表 lss_tier_calibrated 值（LSS_ 前缀）→ 页面 tier 键。
-// LSS_MODERATE_CANDIDATE 归并入 MODERATE（未校准上限的候选也是 moderate 级展示）。
-function tierKeyFromCalibrated(raw = '') {
-  const v = String(raw || '').trim().toUpperCase().replace(/^LSS_/, '');
-  if (v === 'MODERATE_CANDIDATE') return 'MODERATE';
-  if (TIER_KEYS.includes(v)) return v;
-  return null;
-}
+// Family D（溶剂可及性）探针技术 —— 这些 assay 走 SASA 参考主路径。
+// 见 MEMORY：RL-Seq/Lead-seq/icLASER/HRF = SASA-based footprinting。
+const SASA_PROBE_TECHS = ['RL-Seq', 'Lead-seq', 'icLASER', 'HRF'];
+
+// structureClass / rnaFamily 噪声值（未注释占位、UUID、pending 分组）→ 生物学统计中剔除。
+const BIO_NOISE = /^pending|^urs|^pdbmol_|^pdbreg_|未注释/i;
 
 function emptyTierCounts() {
   return TIER_KEYS.reduce((acc, k) => { acc[k] = 0; return acc; }, {});
 }
 
-function deriveTierDistribution(rmdbAbcRows = []) {
+// entry 口径 LSS tier 分布：从每个 entry 的 confidenceDisplayLabel 解析代表层级
+// （如 "A WEAK"/"B STRONG"/"D MODERATE"）。只有携带 LSS 校准的 entry（RASP 线）命中；
+// RMDB 线用 FEC claim-ceiling 标签（无 tier 词），不计入 tier 图。
+function deriveEntryTierDistribution(kept = []) {
   const counts = emptyTierCounts();
-  for (const row of rmdbAbcRows) {
-    const key = tierKeyFromCalibrated(row.lss_tier_calibrated);
-    if (key) counts[key] += 1;
+  let calibratedEntries = 0;
+  for (const c of kept) {
+    const label = String(c.confidenceDisplayLabel || '').toUpperCase();
+    for (const k of TIER_KEYS) {
+      if (label.includes(k)) { counts[k] += 1; calibratedEntries += 1; break; }
+    }
   }
-  return counts;
+  return { counts, calibratedEntries };
 }
 
-function deriveFamilyDSasa(raspDRows = []) {
-  const counts = { SASA_PRESENT: 0, PAIRING_PROXY_FALLBACK: 0 };
-  for (const row of raspDRows) {
-    const v = String(row.sasa_reference_status || '').trim().toUpperCase();
-    if (v in counts) counts[v] += 1;
+// SASA 探针覆盖（替代旧 Family D SASA segment 面板）：统计有多少 entry 用到
+// SASA-based footprinting 技术，并按技术细分。entry 的 assayFamilies 列携带技术名。
+function deriveSasaProbeCoverage(kept = []) {
+  const technologies = {};
+  let entries = 0;
+  for (const c of kept) {
+    const assays = Array.isArray(c.assayFamilies) ? c.assayFamilies : [];
+    let hit = false;
+    for (const t of SASA_PROBE_TECHS) {
+      if (assays.includes(t)) { technologies[t] = (technologies[t] || 0) + 1; hit = true; }
+    }
+    if (hit) entries += 1;
   }
-  return counts;
+  return { entries, technologies };
+}
+
+// RNA 生物学口径：结构类型分布（tRNA/rRNA/riboswitch…）、细分 family 数、探针技术种类数。
+// 全部从 kept 的 per-entry 注释字段派生，噪声/未注释值剔除。
+function deriveRnaBiology(kept = []) {
+  const structureClasses = {};
+  const families = new Set();
+  const technologies = new Set();
+  let classifiedEntries = 0;
+  for (const c of kept) {
+    const sc = c.structureClass;
+    if (sc && !BIO_NOISE.test(sc)) {
+      structureClasses[sc] = (structureClasses[sc] || 0) + 1;
+      classifiedEntries += 1;
+    }
+    const fam = c.rnaFamily;
+    if (fam && !BIO_NOISE.test(fam) && fam !== 'gRNAde designed RNA molecule') {
+      families.add(fam);
+    }
+    for (const a of (Array.isArray(c.assayFamilies) ? c.assayFamilies : [])) {
+      if (a && a !== 'None' && a !== 'rmdb_chemical_probing') technologies.add(a);
+    }
+  }
+  return {
+    structure_classes: structureClasses,
+    classified_entries: classifiedEntries,
+    distinct_families: families.size,
+    probe_technologies_present: technologies.size
+  };
 }
 
 /**
- * 纯函数：从 atlas index + 已发布白名单（+ 可选校准行）派生站点统计。
+ * 纯函数：从 atlas index + 已发布白名单派生站点统计（全部 entry 口径）。
  * @param {object} args
  * @param {object} args.index annojoin-atlas/index.json 对象（含 displayCases / totalCaseCount）
  * @param {string} args.allowlistTsv 已发布 case-key 白名单 TSV 文本
- * @param {object} [args.calibration] 校准行（可选）：
- *   { rmdbAbcRows:[{lss_tier_calibrated}], raspDRows:[{sasa_reference_status}], source }
  * @returns {object} stats 对象（写入 stats.json）
  */
-export function deriveStats({ index = {}, allowlistTsv = '', calibration = null } = {}) {
+export function deriveStats({ index = {}, allowlistTsv = '' } = {}) {
   const displayCases = Array.isArray(index.displayCases) ? index.displayCases : [];
   const allow = parsePublishedCaseKeyAllowlist(allowlistTsv);
   // 单一可见口径：pdb_total 与 source_cases 都从同一份白名单过滤后的 kept 集派生，
@@ -87,17 +110,9 @@ export function deriveStats({ index = {}, allowlistTsv = '', calibration = null 
   const totalRaw = Number.isFinite(index.totalCaseCount) ? index.totalCaseCount : displayCases.length;
   const sourceCases = kept.reduce((sum, c) => sum + (Number(c.sourceCaseCount) || 0), 0);
 
-  const hasCalibration = !!(calibration
-    && (Array.isArray(calibration.rmdbAbcRows) && calibration.rmdbAbcRows.length));
-  const tierDistribution = hasCalibration
-    ? deriveTierDistribution(calibration.rmdbAbcRows)
-    : { ...FALLBACK_TIER_DISTRIBUTION };
-  const familyDSasa = hasCalibration && Array.isArray(calibration.raspDRows) && calibration.raspDRows.length
-    ? deriveFamilyDSasa(calibration.raspDRows)
-    : { ...FALLBACK_FAMILY_D_SASA };
-  const tierSource = hasCalibration
-    ? (calibration.source || 'calibration-table')
-    : RUN_RECORD_LABEL;
+  const { counts: tierDistribution, calibratedEntries } = deriveEntryTierDistribution(kept);
+  const sasaProbeCoverage = deriveSasaProbeCoverage(kept);
+  const rnaBiology = deriveRnaBiology(kept);
 
   return {
     pdb_total: pdbTotal,
@@ -109,8 +124,10 @@ export function deriveStats({ index = {}, allowlistTsv = '', calibration = null 
     families: 6,
     technologies: 34,
     articles: 27,
+    lss_calibrated_entries: calibratedEntries,
     tier_distribution: tierDistribution,
-    family_d_sasa: familyDSasa,
+    sasa_probe_coverage: sasaProbeCoverage,
+    rna_biology: rnaBiology,
     technology_threshold_basis: {
       LITERATURE_SUPPORTED: 1,
       LITERATURE_INFORMED: 10,
@@ -123,13 +140,11 @@ export function deriveStats({ index = {}, allowlistTsv = '', calibration = null 
       strong_entries: 'entry caliber: 176 entries (RMDB 82 + RASP 94) with ≥1 constituent chain at STRONG',
       source_cases: 'visible-caliber sum of sourceCaseCount over published-allowlist-filtered displayCases (NOT totalSourceCaseCount)',
       total_raw: `internal metadata only — pre-filter raw displayCase count (${totalRaw}); never rendered as a user-facing number`,
-      tier: hasCalibration
-        ? `RMDB ABC LSS calibrated tiers, ${tierSource}`
-        : `RMDB ABC LSS calibrated tiers, ${RUN_RECORD_LABEL}`,
-      tier_source: tierSource,
-      family_d_sasa: hasCalibration
-        ? `RASP Family D SASA reference status, ${tierSource}`
-        : `RASP Family D SASA reference status, ${RUN_RECORD_LABEL}`,
+      tier: 'entry caliber: per-entry LSS recall tier parsed from confidenceDisplayLabel over published RASP entries',
+      tier_source: 'published-entry confidenceDisplayLabel',
+      lss_calibrated_entries: 'published entries carrying an LSS calibrated recall tier (RASP line); RMDB-line entries use FEC claim-ceiling labels and are not tiered here',
+      sasa_probe_coverage: 'entry caliber: published entries whose assayFamilies include a SASA-based footprinting probe (RL-Seq / Lead-seq / icLASER / HRF)',
+      rna_biology: 'entry caliber: structureClass / rnaFamily / assayFamilies over published entries (PDB Rfam annotation; pending/unannotated values excluded)',
       technologies: 'probe_confidence_method_registry.tsv (34 RNA probe technologies)',
       families: 'probing-articles/index.json family_count + A–F measurement families',
       articles: 'probing-articles/index.json article_count'
@@ -151,47 +166,20 @@ function readTextOrEmpty(p) {
   }
 }
 
-// 读取一张校准 TSV 为对象数组（按表头）。不可读 → null。
-function readCalibrationTsv(p) {
-  let text;
-  try {
-    text = fs.readFileSync(p, 'utf8');
-  } catch {
-    return null;
-  }
-  const lines = text.split(/\r?\n/).filter((l) => l.length);
-  if (lines.length < 2) return [];
-  const header = lines[0].split('\t');
-  return lines.slice(1).map((line) => {
-    const cells = line.split('\t');
-    const row = {};
-    header.forEach((h, i) => { row[h] = cells[i] ?? ''; });
-    return row;
-  });
-}
-
 if (import.meta.url === `file://${process.argv[1]}`) {
   const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
   const indexPath = path.join(root, 'src/assets/generated/annojoin-atlas/index.json');
   const allowlistPath = path.join(root, 'scripts/data/annojoin-atlas-published-case-keys.tsv');
-  const rmdbCalPath = '/Volumes/tianyi/foldbridgeAssessert/confidence注册表/RMDB_ABC_LSS/cal/abc_lss_calibrated.tsv';
-  const raspCalPath = '/Volumes/tianyi/foldbridgeAssessert/confidence注册表/RASP_D_LSS/cal/def_lss_calibrated.tsv';
 
   const index = readJson(indexPath);
   const allowlistTsv = readTextOrEmpty(allowlistPath);
 
-  const rmdbAbcRows = readCalibrationTsv(rmdbCalPath);
-  const raspDRows = readCalibrationTsv(raspCalPath);
-  const calibration = (rmdbAbcRows && rmdbAbcRows.length)
-    ? { rmdbAbcRows, raspDRows: raspDRows || [], source: 'calibration-table 2026-06-27' }
-    : null;
-
-  const stats = deriveStats({ index, allowlistTsv, calibration });
+  const stats = deriveStats({ index, allowlistTsv });
 
   const outDir = path.join(root, 'src/assets/generated/site-stats');
   fs.mkdirSync(outDir, { recursive: true });
   const outPath = path.join(outDir, 'stats.json');
   fs.writeFileSync(outPath, `${JSON.stringify(stats, null, 2)}\n`, 'utf8');
   process.stdout.write(`[build-site-stats] wrote ${outPath}\n`);
-  process.stdout.write(`[build-site-stats] pdb_total=${stats.pdb_total} tier_source=${stats.provenance.tier_source}\n`);
+  process.stdout.write(`[build-site-stats] pdb_total=${stats.pdb_total} lss_calibrated_entries=${stats.lss_calibrated_entries}\n`);
 }

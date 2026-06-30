@@ -420,27 +420,56 @@ function renderStatsTierChart(tierDistribution = {}) {
     </svg>`;
 }
 
-// Family D SASA 参考状态分布（小型双段条）。数据缺失 → 占位。
-function renderStatsSasaPanel(familyDSasa) {
-  if (!familyDSasa || typeof familyDSasa !== 'object') {
-    return `<p class="stats-empty">SASA reference distribution not materialized.</p>`;
+// Family D SASA panel 已退役（其 SASA-present/fallback 是全量跑 segment 级口径，
+// 无法在 entry 口径派生）。改用 renderStatsSasaCoverage：从已发布 entry 的
+// assayFamilies 统计 SASA-based footprinting 探针（RL-Seq/Lead-seq/icLASER/HRF）覆盖。
+function renderStatsSasaCoverage(coverage) {
+  if (!coverage || typeof coverage !== 'object') {
+    return `<p class="stats-empty">SASA-based probing coverage not available.</p>`;
   }
-  const present = Number(familyDSasa.SASA_PRESENT) || 0;
-  const fallback = Number(familyDSasa.PAIRING_PROXY_FALLBACK) || 0;
-  const total = present + fallback;
-  if (!total) return `<p class="stats-empty">SASA reference distribution not materialized.</p>`;
-  const presentPct = ((present / total) * 100).toFixed(1);
-  const fallbackPct = ((fallback / total) * 100).toFixed(1);
-  return `<div class="stats-sasa">
-      <div class="stats-sasa-bar" role="img" aria-label="Family D SASA reference: ${presentPct}% present, ${fallbackPct}% pairing-proxy fallback">
-        <span class="stats-sasa-seg stats-sasa-present" style="flex:${present}"><span class="stats-sasa-seg-label">${presentPct}%</span></span>
-        <span class="stats-sasa-seg stats-sasa-fallback" style="flex:${fallback}"><span class="stats-sasa-seg-label">${fallbackPct}%</span></span>
-      </div>
-      <ul class="stats-sasa-legend">
-        <li><span class="stats-swatch stats-swatch-present"></span>SASA present · ${statsNumber(present)}</li>
-        <li><span class="stats-swatch stats-swatch-fallback"></span>Pairing-proxy fallback · ${statsNumber(fallback)}</li>
-      </ul>
-    </div>`;
+  const techs = coverage.technologies && typeof coverage.technologies === 'object' ? coverage.technologies : {};
+  const rows = Object.entries(techs)
+    .map(([name, count]) => ({ name, count: Number(count) || 0 }))
+    .sort((a, b) => b.count - a.count);
+  if (!rows.length) return `<p class="stats-empty">SASA-based probing coverage not available.</p>`;
+  const maxCount = rows.reduce((m, r) => Math.max(m, r.count), 0) || 1;
+  const bars = rows.map((r) => {
+    const pct = Math.max(2, Math.round((r.count / maxCount) * 100));
+    return `<li class="stats-coverage-row">
+        <span class="stats-coverage-label">${r.name}</span>
+        <span class="stats-coverage-track"><span class="stats-coverage-fill" style="width:${pct}%"></span></span>
+        <span class="stats-coverage-value">${statsNumber(r.count)}</span>
+      </li>`;
+  }).join('\n      ');
+  return `<ul class="stats-coverage-list" role="img" aria-label="SASA-based probing coverage across ${statsNumber(coverage.entries)} entries">
+      ${bars}
+    </ul>`;
+}
+
+// RNA 结构类型分布（生物学口径）：横向比例条，按 entry 数排序。
+function renderStatsRnaClassChart(structureClasses) {
+  if (!structureClasses || typeof structureClasses !== 'object') {
+    return `<p class="stats-empty">RNA structural classification not available.</p>`;
+  }
+  const rows = Object.entries(structureClasses)
+    .map(([name, count]) => ({ name, count: Number(count) || 0 }))
+    .filter((r) => r.count > 0)
+    .sort((a, b) => b.count - a.count);
+  if (!rows.length) return `<p class="stats-empty">RNA structural classification not available.</p>`;
+  const total = rows.reduce((sum, r) => sum + r.count, 0);
+  const maxCount = rows.reduce((m, r) => Math.max(m, r.count), 0) || 1;
+  const bars = rows.map((r) => {
+    const width = Math.max(2, Math.round((r.count / maxCount) * 100));
+    const pct = total ? `${((r.count / total) * 100).toFixed(1)}%` : '0%';
+    return `<li class="stats-coverage-row">
+        <span class="stats-coverage-label">${r.name}</span>
+        <span class="stats-coverage-track"><span class="stats-coverage-fill" style="width:${width}%"><span class="stats-coverage-seg-title">${pct}</span></span></span>
+        <span class="stats-coverage-value">${statsNumber(r.count)}</span>
+      </li>`;
+  }).join('\n      ');
+  return `<ul class="stats-coverage-list" role="img" aria-label="RNA structural class distribution across ${statsNumber(total)} classified entries">
+      ${bars}
+    </ul>`;
 }
 
 // 单张数字卡。
@@ -466,6 +495,10 @@ export function renderStatsPage(stats) {
   const tier = stats.tier_distribution || {};
   const tierTotal = STATS_TIER_ORDER.reduce((sum, t) => sum + (Number(tier[t.key]) || 0), 0);
   const tb = stats.technology_threshold_basis || {};
+  const bio = stats.rna_biology || {};
+  const sasa = stats.sasa_probe_coverage || {};
+  const rnaClassCount = bio.structure_classes && typeof bio.structure_classes === 'object'
+    ? Object.keys(bio.structure_classes).length : 0;
 
   return `<section class="card bundle-wide-card stats-page" data-pdb-total="${Number(stats.pdb_total) || 0}">
       <header class="stats-head">
@@ -489,18 +522,27 @@ export function renderStatsPage(stats) {
 
       <div class="stats-section">
         <h2>LSS calibrated recall tiers</h2>
-        <p class="stats-section-lede">Each segment — one <code>(profile, pdb_id, chain)</code> group — earns a calibrated recall
-          tier after a permutation test. Distribution across ${statsNumber(tierTotal)} RMDB ABC segments:</p>
+        <p class="stats-section-lede">Each published entry that carries a localized-signal-support (LSS) calibration earns a recall
+          tier after a permutation test. Distribution across ${statsNumber(stats.lss_calibrated_entries ?? tierTotal)} calibrated entries:</p>
         ${renderStatsTierChart(tier)}
-        <p class="stats-footnote">Source: ${prov.tier || `RMDB ABC LSS calibrated tiers, ${tierSource}`}.</p>
+        <p class="stats-footnote">Source: ${prov.tier || 'per-entry LSS recall tier from confidenceDisplayLabel'}.</p>
       </div>
 
       <div class="stats-section">
-        <h2>Family D SASA reference</h2>
-        <p class="stats-section-lede">For solvent-accessibility (Family D) segments, how often the deposited structure supplied a
-          real SASA reference versus falling back to a pairing proxy:</p>
-        ${renderStatsSasaPanel(stats.family_d_sasa)}
-        <p class="stats-footnote">Source: ${prov.family_d_sasa || `RASP Family D SASA reference status, ${tierSource}`}.</p>
+        <h2>RNA biology</h2>
+        <p class="stats-section-lede">What kinds of RNA the published entries cover. ${statsNumber(bio.classified_entries)} entries carry a
+          structural classification across ${statsNumber(rnaClassCount)} RNA classes; ${statsNumber(bio.distinct_families)} distinct RNA families
+          and ${statsNumber(bio.probe_technologies_present)} probe technologies appear in total.</p>
+        ${renderStatsRnaClassChart(bio.structure_classes)}
+        <p class="stats-footnote">Source: ${prov.rna_biology || 'PDB Rfam annotation over published entries (pending/unannotated excluded)'}.</p>
+      </div>
+
+      <div class="stats-section">
+        <h2>SASA-based probing coverage</h2>
+        <p class="stats-section-lede">Solvent-accessibility footprinting probes (Family D) report on backbone exposure.
+          ${statsNumber(sasa.entries)} published entries were measured with a SASA-based technology, by probe:</p>
+        ${renderStatsSasaCoverage(sasa)}
+        <p class="stats-footnote">Source: ${prov.sasa_probe_coverage || 'published-entry assayFamilies (RL-Seq / Lead-seq / icLASER / HRF)'}.</p>
       </div>
 
       <div class="stats-section">
