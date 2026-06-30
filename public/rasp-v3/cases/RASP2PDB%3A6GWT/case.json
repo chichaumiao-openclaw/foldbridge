@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6GWT",
+  "biologicalMoleculeName": "6GWT",
+  "caseId": "6GWT",
+  "caseKey": "RASP2PDB:6GWT",
+  "chains": [
+    "B",
+    "a",
+    "x"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "6GWT",
+  "profileCount": 39
+}

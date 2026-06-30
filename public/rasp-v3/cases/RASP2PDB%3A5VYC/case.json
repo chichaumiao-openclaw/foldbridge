@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5VYC",
+  "biologicalMoleculeName": "5VYC",
+  "caseId": "5VYC",
+  "caseKey": "RASP2PDB:5VYC",
+  "chains": [
+    "i1"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "5VYC",
+  "profileCount": 92
+}

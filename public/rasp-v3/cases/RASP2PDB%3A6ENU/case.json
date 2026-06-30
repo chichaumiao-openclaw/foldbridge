@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6ENU",
+  "biologicalMoleculeName": "6ENU",
+  "caseId": "6ENU",
+  "caseKey": "RASP2PDB:6ENU",
+  "chains": [
+    "B",
+    "a",
+    "x"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "6ENU",
+  "profileCount": 33
+}

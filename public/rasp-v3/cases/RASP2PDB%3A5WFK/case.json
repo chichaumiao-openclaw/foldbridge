@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5WFK",
+  "biologicalMoleculeName": "5WFK",
+  "caseId": "5WFK",
+  "caseKey": "RASP2PDB:5WFK",
+  "chains": [
+    "A",
+    "a",
+    "v",
+    "y"
+  ],
+  "confidenceDisplayLabel": "D WEAK",
+  "pdbId": "5WFK",
+  "profileCount": 37
+}
