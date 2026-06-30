@@ -228,7 +228,8 @@ if (typeof document !== "undefined") {
 
     // ENRICHMENT_TABLE
     const details = el("details", "fb-evtable");
-    details.appendChild(el("summary", null, `Show all ${rows.length} evidence rows`));
+    details.appendChild(el("summary", null,
+      `Show all ${rows.length} evidence ${rows.length === 1 ? "row" : "rows"}`));
     const table = el("table");
     const thead = el("thead");
     const headRow = el("tr");

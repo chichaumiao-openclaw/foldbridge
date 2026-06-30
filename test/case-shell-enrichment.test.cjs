@@ -16,7 +16,7 @@ loadShell(sandbox.module, sandbox.exports, undefined);
 
 const {
   familyCounts, tierCounts, distinctChains, familyLabel, tierDisplay,
-  fmtMetric, fmtP, fmtFraction, pickBestEvidence,
+  fmtMetric, fmtP, fmtFraction, fmtCount, pickBestEvidence,
 } = sandbox.module.exports;
 
 const ROWS = [
@@ -72,6 +72,13 @@ test("fmtMetric 2dp signed for spearman, fmtP 3dp, fmtFraction handles null", ()
   assert.strictEqual(fmtP(0.005994), "0.006");
   assert.strictEqual(fmtFraction(null), "—");
   assert.strictEqual(fmtFraction(0.230769), "0.23");
+});
+
+test("fmtCount stringifies counts and renders missing as em dash", () => {
+  assert.strictEqual(fmtCount(699), "699");
+  assert.strictEqual(fmtCount(0), "0");
+  assert.strictEqual(fmtCount(null), "—");
+  assert.strictEqual(fmtCount(undefined), "—");
 });
 
 test("pickBestEvidence: defaultEvidenceId > selectedByDefault > first", () => {
