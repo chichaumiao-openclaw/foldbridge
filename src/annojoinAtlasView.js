@@ -104,9 +104,16 @@ function renderConfidenceSegments(label = '') {
 
 function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabels = [], preserved = {}) {
   const caseId = rowCaseId(row);
+  const moleculeHref = detailPageHref({
+    caseId,
+    atlasCaseKey: rowCaseKey(row),
+    assetFamily: row.assetFamily,
+    caseUid: row.caseUid,
+    pdbId: row.pdbId || caseId
+  });
   const values = {
     pdbId: fieldLink(row, routeName, 'pdbId', escapeHtml(row.pdbId || caseId), preserved),
-    moleculeName: fieldLink(row, routeName, 'moleculeName', sourceValue(moleculeName(row), row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource), preserved),
+    moleculeName: `<a class="annojoin-field-link annojoin-molecule-detail-link" href="${escapeHtml(moleculeHref)}">${sourceValue(moleculeName(row), row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource)}</a>`,
     confidenceDisplayLabel: fieldLink(row, routeName, 'confidenceDisplayLabel', renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution), preserved),
     profileCount: fieldLink(row, routeName, 'profileCount', `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`, preserved),
     chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated'), preserved)
@@ -273,7 +280,7 @@ function renderEmptySidebar() {
   return `<aside class="annojoin-detail-sidebar annojoin-detail-sidebar-empty" aria-label="ANNOJOIN field explanation">
     <p class="technology-kicker">Field inspector</p>
     <h2>Click a table field</h2>
-    <p>Molecule, confidence, PDB, profiles, and chains each open a focused explanation here.</p>
+    <p>Confidence, PDB, profiles, and chains each open a focused explanation here. Click a molecule name to open its detail page.</p>
   </aside>`;
 }
 
