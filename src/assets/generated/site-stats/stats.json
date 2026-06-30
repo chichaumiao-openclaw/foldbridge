@@ -8,17 +8,41 @@
   "families": 6,
   "technologies": 34,
   "articles": 27,
+  "lss_calibrated_entries": 1671,
   "tier_distribution": {
-    "STRONG": 284,
-    "MODERATE": 1189,
-    "WEAK": 18677,
-    "DISCORDANT": 33876,
-    "UNDERPOWERED": 50062,
-    "NOT_SUPPORTED": 114550
+    "STRONG": 91,
+    "MODERATE": 280,
+    "WEAK": 847,
+    "DISCORDANT": 340,
+    "UNDERPOWERED": 56,
+    "NOT_SUPPORTED": 57
   },
-  "family_d_sasa": {
-    "SASA_PRESENT": 8417,
-    "PAIRING_PROXY_FALLBACK": 1812
+  "sasa_probe_coverage": {
+    "entries": 1247,
+    "technologies": {
+      "Lead-seq": 729,
+      "RL-Seq": 478,
+      "icLASER": 518
+    }
+  },
+  "rna_biology": {
+    "structure_classes": {
+      "designed_RNA": 4,
+      "rRNA": 89,
+      "ribozyme": 25,
+      "tRNA": 129,
+      "other_RNA": 70,
+      "mRNA": 6,
+      "SRP_RNA": 9,
+      "viral_genomic_RNA": 40,
+      "riboswitch": 44,
+      "aptamer": 9,
+      "synthetic_RNA": 3,
+      "snRNA": 13
+    },
+    "classified_entries": 441,
+    "distinct_families": 339,
+    "probe_technologies_present": 24
   },
   "technology_threshold_basis": {
     "LITERATURE_SUPPORTED": 1,
@@ -32,9 +56,11 @@
     "strong_entries": "entry caliber: 176 entries (RMDB 82 + RASP 94) with ≥1 constituent chain at STRONG",
     "source_cases": "visible-caliber sum of sourceCaseCount over published-allowlist-filtered displayCases (NOT totalSourceCaseCount)",
     "total_raw": "internal metadata only — pre-filter raw displayCase count (3401); never rendered as a user-facing number",
-    "tier": "RMDB ABC LSS calibrated tiers, calibration-table 2026-06-27",
-    "tier_source": "calibration-table 2026-06-27",
-    "family_d_sasa": "RASP Family D SASA reference status, calibration-table 2026-06-27",
+    "tier": "entry caliber: per-entry LSS recall tier parsed from confidenceDisplayLabel over published RASP entries",
+    "tier_source": "published-entry confidenceDisplayLabel",
+    "lss_calibrated_entries": "published entries carrying an LSS calibrated recall tier (RASP line); RMDB-line entries use FEC claim-ceiling labels and are not tiered here",
+    "sasa_probe_coverage": "entry caliber: published entries whose assayFamilies include a SASA-based footprinting probe (RL-Seq / Lead-seq / icLASER / HRF)",
+    "rna_biology": "entry caliber: structureClass / rnaFamily / assayFamilies over published entries (PDB Rfam annotation; pending/unannotated values excluded)",
     "technologies": "probe_confidence_method_registry.tsv (34 RNA probe technologies)",
     "families": "probing-articles/index.json family_count + A–F measurement families",
     "articles": "probing-articles/index.json article_count"
