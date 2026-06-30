@@ -39,7 +39,7 @@ const state = {
   profiles: [],
   shards: new Map(),
   lastRender: null,
-  activeView: "varna",
+  varnaZoom: 1,
   viewport: { start: 1, end: 113 },
   selectedResidueKey: null,
   hoveredResidueKey: null,
@@ -47,6 +47,7 @@ const state = {
   molstarFullViewer: null,
   molstarCroppedUrl: null,
   molstarBridgeInstalled: false,
+  fullRoiColored: false,
   requestedProfileId: "",
 };
 
@@ -63,12 +64,15 @@ const el = {
   panLeft: document.querySelector("#pan-left"),
   panRight: document.querySelector("#pan-right"),
   resetView: document.querySelector("#reset-view"),
+  viewportSlider: document.querySelector("#viewport-slider"),
   varnaViewer: document.querySelector("#varnaViewer"),
   varnaViewport: document.querySelector("#varnaViewport"),
-  linearViewer: document.querySelector("#linearViewer"),
+  varnaZoomIn: document.querySelector("#varna-zoom-in"),
+  varnaZoomOut: document.querySelector("#varna-zoom-out"),
+  varnaZoomReset: document.querySelector("#varna-zoom-reset"),
+  varnaZoomStatus: document.querySelector("#varna-zoom-status"),
   profilePair: document.querySelector("#profilePair"),
   profileId: document.querySelector("#profileId"),
-  tabs: [...document.querySelectorAll(".tab")],
   caption: document.querySelector("#viewCaption"),
   inspector: document.querySelector("#linked-inspector"),
   inspectorStatus: document.querySelector("#inspectorStatus"),
@@ -78,6 +82,7 @@ const el = {
   molstarSelectionStatus: document.querySelector("#molstar-selection-status"),
   molstarMeta: document.querySelector("#molstarMeta"),
   molstarFullMeta: document.querySelector("#molstarFullMeta"),
+  fullRoiToggle: document.querySelector("#full-roi-toggle"),
   log: document.querySelector("#log"),
   tip: document.querySelector("#tip"),
 };
@@ -133,6 +138,14 @@ const RESIDUE_STATE_COLORS = Object.freeze({
   unaligned: { fill: "#e5e7eb", stroke: "#6b7280", molstarRgb: { r: 107, g: 114, b: 128 } },
 });
 const MOLSTAR_CONTEXT_COLOR = Object.freeze({ r: 229, g: 231, b: 235 });
+// 1D track rail geometry. The rail SVG keeps a fixed pixel width; instead of
+// squeezing the whole sequence into it we render a fixed-density window and let
+// the control bar slide along the sequence. ~10px per residue keeps base letters
+// legible (about 99 residues on the default rail).
+const TRACK_RAIL_USABLE_WIDTH = 990;
+const TRACK_TARGET_CELL_WIDTH = 10;
+const TRACK_DEFAULT_SPAN = Math.round(TRACK_RAIL_USABLE_WIDTH / TRACK_TARGET_CELL_WIDTH);
+
 
 function coordinateDisplayStatus(pdbResidue) {
   return pdbResidue?.coordinateStatus === "resolved"
@@ -447,8 +460,9 @@ function positionFromResidueKey(residueKey) {
 }
 
 function familyTargetsBase(family, base) {
-  const normalizedBase = String(base || "N").toUpperCase();
-  if (String(family || "").toUpperCase() === "A") {
+  const normalizedFamily = String(family || "").toUpperCase();
+  if (normalizedFamily === "A") {
+    const normalizedBase = String(base || "N").toUpperCase();
     return normalizedBase === "A" || normalizedBase === "C" ? "applicable" : "not_applicable";
   }
   return "applicable";
@@ -640,7 +654,44 @@ function applyLinkedHover(residueKey, origin = "preview") {
   setDomState("hovered", residueKey);
   if (origin === "3d") {
     renderInspector(residueKey || state.selectedResidueKey);
+  } else {
+    // 1D/2D hover -> light up the matching residue in the 3D viewer with Mol*'s
+    // native hover highlight. 3D-originated hovers are already highlighted by
+    // Mol* itself, so skip them to avoid a feedback loop.
+    applyMolstarHoverHighlight(residueKey);
   }
+}
+
+// Trigger Mol*'s native hover-style highlight on the target-chain crop. The
+// effective target is the hovered residue when present, otherwise the selected
+// residue, so the border persists on the selection after the mouse leaves.
+// Hover never moves the camera (focus stays a click affordance).
+function applyMolstarHoverHighlight(_residueKey) {
+  const viewer = state.molstarViewer;
+  if (!viewer?.visual) return;
+  const targetKey = state.hoveredResidueKey || state.selectedResidueKey;
+  if (!targetKey) {
+    if (typeof viewer.visual.clearHighlight === "function") {
+      viewer.visual.clearHighlight();
+    }
+    return;
+  }
+  if (typeof viewer.visual.highlight !== "function" || !state.lastRender) return;
+  const item = buildMolstarTargetDisplayPayload(activeProfileId(), state.selectedResidueKey)
+    .find((entry) => entry.residue_key === targetKey);
+  if (!item) {
+    if (typeof viewer.visual.clearHighlight === "function") {
+      viewer.visual.clearHighlight();
+    }
+    return;
+  }
+  viewer.visual.highlight({
+    data: [{
+      struct_asym_id: item.struct_asym_id,
+      start_residue_number: item.start_residue_number,
+      end_residue_number: item.end_residue_number,
+    }],
+  });
 }
 
 function applyMolstarHover(residueKey, event = null) {
@@ -949,6 +1000,9 @@ function applyMolstarTargetDisplay(residueKey = state.selectedResidueKey, attemp
       // alignment-cropped target chain: dim non-selected target atoms without labeling them unaligned.
       nonSelectedColor: MOLSTAR_CONTEXT_COLOR,
     });
+    focusMolstarOnSelection(viewer, payload, residueKey);
+    // Keep the Full CIF reference ROI in sync when the toggle is on.
+    applyFullRoiColoring();
   } catch (_error) {
     if (attempt < 8) {
       window.setTimeout(() => applyMolstarTargetDisplay(residueKey, attempt + 1), 250);
@@ -957,6 +1011,57 @@ function applyMolstarTargetDisplay(residueKey = state.selectedResidueKey, attemp
     }
   }
 }
+
+// Re-aim the camera at the active residue so a 1D/2D selection does not leave the
+// viewer parked on a previously clicked 3D residue. Clearing the selection resets
+// the camera to the full cropped chain.
+function focusMolstarOnSelection(viewer, payload, residueKey) {
+  if (!residueKey) {
+    if (typeof viewer.visual?.reset === "function") {
+      viewer.visual.reset({ camera: true });
+    }
+    return;
+  }
+  if (typeof viewer.visual?.focus !== "function") return;
+  const selectedItem = payload.find((item) => item.residue_key === residueKey);
+  if (!selectedItem) return;
+  viewer.visual.focus([{
+    struct_asym_id: selectedItem.struct_asym_id,
+    start_residue_number: selectedItem.start_residue_number,
+    end_residue_number: selectedItem.end_residue_number,
+  }]);
+}
+
+// Full CIF reference ROI coloring. When the toggle is on, paint the ROI residues
+// with the detail-page reactivity colors via select({data}) WITHOUT nonSelectedColor,
+// so the rest of the structure keeps Mol*'s original/native coloring. When off,
+// clearSelection() restores native colors everywhere. Safe to call repeatedly; it
+// re-reads the active profile/selection so the ROI stays in sync.
+function applyFullRoiColoring(attempt = 0) {
+  const viewer = state.molstarFullViewer;
+  if (!viewer?.visual) return;
+  if (!state.fullRoiColored) {
+    if (typeof viewer.visual.clearSelection === "function") {
+      try { viewer.visual.clearSelection(); } catch (_error) { /* viewer not ready */ }
+    }
+    return;
+  }
+  if (typeof viewer.visual.select !== "function" || !state.lastRender) {
+    if (attempt < 8) {
+      window.setTimeout(() => applyFullRoiColoring(attempt + 1), 250);
+    }
+    return;
+  }
+  const payload = buildMolstarTargetDisplayPayload(activeProfileId(), state.selectedResidueKey);
+  try {
+    viewer.visual.select({ data: payload });
+  } catch (_error) {
+    if (attempt < 8) {
+      window.setTimeout(() => applyFullRoiColoring(attempt + 1), 250);
+    }
+  }
+}
+
 
 function buildMolstarSelectionPayload(profileId = activeProfileId(), selectedKey = state.selectedResidueKey) {
   return buildMolstarTargetDisplayPayload(profileId, selectedKey);
@@ -974,15 +1079,20 @@ function applyLinkedSelection(residueKey = state.selectedResidueKey, origin = "p
     el.molstarSelectionStatus.textContent = residueKey ? `selection: ${residueKey}` : "selection: none";
   }
   if (origin !== "3d") applyMolstarSelection(residueKey);
+  // Keep the native Mol* highlight on the freshly selected residue so the border
+  // stays after the mouse leaves the 1D/2D mark.
+  applyMolstarHoverHighlight(residueKey);
 }
 
 function selectResidue(residueKey, origin = "preview") {
-  applyLinkedSelection(residueKey, origin);
+  // Toggle: clicking the already-selected residue clears the selection.
+  const nextKey = residueKey && residueKey === state.selectedResidueKey ? null : residueKey;
+  applyLinkedSelection(nextKey, origin);
   el.log.textContent = JSON.stringify({
-    selected_residue_key: residueKey,
+    selected_residue_key: nextKey,
     origin,
     active_profile_id: activeProfileId(),
-    molstar_selection_preview: buildMolstarSelectionPayload(activeProfileId(), residueKey).find((item) => item.visual_state === "selected") || null,
+    molstar_selection_preview: buildMolstarSelectionPayload(activeProfileId(), nextKey).find((item) => item.visual_state === "selected") || null,
   }, null, 2);
 }
 
@@ -1062,11 +1172,59 @@ function clampViewport(start, end, length) {
   return { start: nextStart, end: nextStart + span - 1 };
 }
 
+// Find the window (TRACK_DEFAULT_SPAN wide) whose summed reactivity (norm) is
+// the densest, so the first screen of a large sequence lands on the most
+// information-rich stretch. Falls back to position 1 when there is no signal.
+function densestReactivityWindow(length, normalized) {
+  const span = Math.min(length, TRACK_DEFAULT_SPAN);
+  if (span >= length || !normalized?.byPosition) {
+    return { start: 1, end: length };
+  }
+  const weights = new Array(length + 1).fill(0);
+  for (let pos = 1; pos <= length; pos += 1) {
+    const row = normalized.byPosition.get(pos);
+    const norm = row?.norm;
+    weights[pos] = Number.isFinite(norm) && norm > 0 ? norm : 0;
+  }
+  let windowSum = 0;
+  for (let pos = 1; pos <= span; pos += 1) windowSum += weights[pos];
+  let bestSum = windowSum;
+  let bestStart = 1;
+  for (let start = 2; start + span - 1 <= length; start += 1) {
+    windowSum += weights[start + span - 1] - weights[start - 1];
+    if (windowSum > bestSum) {
+      bestSum = windowSum;
+      bestStart = start;
+    }
+  }
+  return { start: bestStart, end: bestStart + span - 1 };
+}
+
+// Default first-screen viewport for a freshly rendered profile: the densest
+// reactivity window at the fixed display density.
+function defaultViewport(length, normalized) {
+  if (length <= TRACK_DEFAULT_SPAN) return { start: 1, end: length };
+  return densestReactivityWindow(length, normalized);
+}
+
 function setViewport(start, end) {
   const strand = activeStrand();
   if (!strand) return;
   state.viewport = clampViewport(start, end, strand.sequence.length);
   renderTrackRail();
+}
+
+// Reflect the current window onto the control-bar slider. The slider scrolls the
+// window start across the sequence; its range collapses (disabled) when the whole
+// sequence already fits.
+function syncViewportSlider(start, end, length) {
+  if (!el.viewportSlider) return;
+  const span = end - start + 1;
+  const maxStart = Math.max(1, length - span + 1);
+  el.viewportSlider.min = "1";
+  el.viewportSlider.max = String(maxStart);
+  el.viewportSlider.value = String(Math.min(start, maxStart));
+  el.viewportSlider.disabled = maxStart <= 1;
 }
 
 function zoomTrack(direction) {
@@ -1298,6 +1456,8 @@ function renderTrackRail() {
   }
   el.track.replaceChildren(svg);
   el.viewportStatus.textContent = `${start}-${end} / ${strand.sequence.length}`;
+  syncViewportSlider(start, end, strand.sequence.length);
+  recolorVarnaViewportLink();
   const coverage = state.structureCoverage?.coverage;
   const sequenceSummary = materializedSequenceAlignment();
   el.trackStatus.textContent = coverage
@@ -1394,6 +1554,26 @@ function wireVarnaEvents() {
   });
 }
 
+// Link the 2D VARNA layout to the 1D viewport: residues inside the current 1D
+// window stay at full opacity; residues outside are dimmed so the 2D first screen
+// emphasizes the same stretch the reader sees in the 1D rail. When the whole
+// sequence fits the window, nothing is dimmed.
+function recolorVarnaViewportLink() {
+  const svg = el.varnaViewport?.querySelector("svg");
+  if (!svg) return;
+  const strand = activeStrand();
+  if (!strand) return;
+  const { start, end } = state.viewport;
+  const full = start <= 1 && end >= strand.sequence.length;
+  svg.querySelectorAll("[data-position]").forEach((node) => {
+    const pos = Number(node.getAttribute("data-position"));
+    if (!Number.isFinite(pos)) return;
+    const inside = full || (pos >= start && pos <= end);
+    if (node.classList.contains("varna-hit")) return;
+    node.style.opacity = inside ? "" : "0.18";
+  });
+}
+
 function fitVarnaSvg() {
   const svg = el.varnaViewport.querySelector("svg");
   if (!svg) return null;
@@ -1402,60 +1582,37 @@ function fitVarnaSvg() {
   const aspect = width > 0 && height > 0 ? width / height : 1270 / 355;
   el.varnaViewport.style.setProperty("--varna-aspect", String(aspect));
   svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  applyVarnaZoom();
   return { width, height, aspect };
 }
 
-function drawLinearSvg(strand, normalized, profile) {
-  const sequence = strand.sequence;
-  const pairs = strandPairs(strand);
-  const n = sequence.length;
-  const spacing = 13;
-  const left = 60;
-  const baseline = 268;
-  const radius = 5;
-  const width = left * 2 + spacing * (n - 1);
-  const height = 420;
-  const parts = [
-    `<svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg" role="img">`,
-    `<style>text{font-family:Arial,Helvetica,sans-serif}.base{font-size:8px;text-anchor:middle;dominant-baseline:central}.tick{font-size:9px;text-anchor:middle;fill:#58616b}.meta{font-size:12px;fill:#333}</style>`,
-    `<rect width="100%" height="100%" fill="#ffffff"/>`,
-    `<text x="20" y="26" class="meta">${config.caseId || state.caseData?.case_id || "case"} ${profile.pair_id} ${profile.profile_id}</text>`,
-  ];
-  for (const [i, j] of pairs) {
-    const x1 = left + (i - 1) * spacing;
-    const x2 = left + (j - 1) * spacing;
-    const mid = (x1 + x2) / 2;
-    const arcHeight = Math.min(180, Math.max(18, Math.abs(x2 - x1) * 0.36));
-    parts.push(`<path d="M${x1},${baseline} Q${mid},${baseline - arcHeight} ${x2},${baseline}" fill="none" stroke="#8a8f98" stroke-width="1" opacity="0.65"/>`);
+const VARNA_ZOOM_MIN = 1;
+const VARNA_ZOOM_MAX = 6;
+const VARNA_ZOOM_STEP = 1.4;
+
+// Scale the inner VARNA SVG. The viewport stays a fixed box with overflow auto so
+// zoom lets the reader inspect dense regions and pan via scroll.
+function applyVarnaZoom() {
+  const svg = el.varnaViewport?.querySelector("svg");
+  const zoom = state.varnaZoom;
+  if (svg) {
+    svg.style.width = `${zoom * 100}%`;
+    svg.style.height = `${zoom * 100}%`;
   }
-  parts.push(`<line x1="${left}" y1="${baseline}" x2="${left + (n - 1) * spacing}" y2="${baseline}" stroke="#c8ccd2"/>`);
-  for (let pos = 1; pos <= n; pos += 1) {
-    const x = left + (pos - 1) * spacing;
-    const base = sequence[pos - 1];
-    const colorRow = normalized.byPosition.get(pos);
-    const fill = colorRow?.color ?? "#ffffff";
-    const raw = colorRow?.raw ?? "";
-    const norm = colorRow?.norm ?? "";
-    parts.push(`<g><title>${pos} ${base} raw=${raw} norm=${norm}</title><circle class="residue-mark" data-residue-key="${residueKeyForPosition(pos)}" data-position="${pos}" cx="${x}" cy="${baseline}" r="${radius}" fill="${fill}" stroke="#30343b" stroke-width="0.6"/><text x="${x}" y="${baseline + 15}" class="base">${base}</text></g>`);
-    if (pos === 1 || pos % 10 === 0 || pos === n) {
-      parts.push(`<text x="${x}" y="${baseline + 34}" class="tick">${pos}</text>`);
-    }
+  if (el.varnaZoomStatus) {
+    el.varnaZoomStatus.textContent = `${Math.round(zoom * 100)}%`;
   }
-  parts.push(`</svg>`);
-  return parts.join("");
+  if (el.varnaZoomOut) el.varnaZoomOut.disabled = zoom <= VARNA_ZOOM_MIN + 1e-6;
+  if (el.varnaZoomIn) el.varnaZoomIn.disabled = zoom >= VARNA_ZOOM_MAX - 1e-6;
 }
 
-function wireLinearDebugEvents() {
-  el.linearViewer.querySelectorAll("circle[data-position]").forEach((circle) => {
-    const residueKey = circle.getAttribute("data-residue-key");
-    circle.addEventListener("mousemove", (event) => {
-      const details = getResidueDetails(residueKey);
-      applyLinkedHover(residueKey, "linear");
-      showTip(event, `linear ${details?.position || ""} ${details?.base || ""}`);
-    });
-    circle.addEventListener("click", () => selectResidue(residueKey, "linear"));
-    circle.addEventListener("mouseleave", hideTip);
-  });
+function setVarnaZoom(next) {
+  state.varnaZoom = Math.min(VARNA_ZOOM_MAX, Math.max(VARNA_ZOOM_MIN, next));
+  applyVarnaZoom();
+}
+
+function zoomVarna(direction) {
+  setVarnaZoom(direction > 0 ? state.varnaZoom * VARNA_ZOOM_STEP : state.varnaZoom / VARNA_ZOOM_STEP);
 }
 
 function metric(label, value) {
@@ -1650,17 +1807,16 @@ async function renderProfile(index) {
   const lssContext = lssContextForProfile(profile.profile_id);
   const rawAlignmentCoverage = rawAlignmentCoverageForProfile(profile);
   const varnaSvg = recolorVarnaSvg(state.varnaTemplate, strand, normalized, profile);
-  const linearSvg = drawLinearSvg(strand, normalized, profile);
   el.varnaViewport.innerHTML = varnaSvg;
+  state.varnaZoom = 1;
   const varnaFit = fitVarnaSvg();
   wireVarnaEvents();
-  el.linearViewer.innerHTML = linearSvg;
-  wireLinearDebugEvents();
   const elapsed = performance.now() - started;
   state.lastRender = { profile, normalized, shard, elapsed, dmsLoopRecall };
   state.requestedProfileId = profile.profile_id || "";
   el.select.value = String(index);
-  state.viewport = clampViewport(state.viewport.start, state.viewport.end, strand.sequence.length);
+  const initialView = defaultViewport(strand.sequence.length, normalized);
+  state.viewport = clampViewport(initialView.start, initialView.end, strand.sequence.length);
   el.profilePair.textContent = profile.pair_id;
   el.profileId.textContent = profile.profile_id;
   el.profilePair.title = profile.pair_id;
@@ -1719,41 +1875,49 @@ async function renderProfile(index) {
   }, null, 2);
 }
 
-const PROFILE_FAMILY_ORDER = ["A", "B", "C", "D", "E", "F"];
-
-// Build the profile <select> markup grouped by Family. Only profiles whose
-// lssContext carries a non-empty family are shown, grouped under <optgroup>
-// in A..F order. <option value> keeps the original full-index so profile_id↔row
-// mapping and shard loading stay intact. If no profile carries a family the
-// dropdown degrades to a flat listing of every profile (avoids an empty/locked
-// select).
-function buildProfileSelectMarkup(profiles) {
-  const all = Array.isArray(profiles) ? profiles : [];
-  const withFamily = all
-    .map((profile, idx) => ({ profile, idx, family: String(lssContextForProfile(profile.profile_id)?.family || "").toUpperCase() }))
-    .filter((entry) => entry.family);
-  if (!withFamily.length) {
-    return all.map((profile, idx) => `<option value="${idx}">${escapeHtml(`${profile.pair_id} | ${profile.profile_id}`)}</option>`).join("");
-  }
-  const groups = new Map();
-  for (const entry of withFamily) {
-    if (!groups.has(entry.family)) groups.set(entry.family, []);
-    groups.get(entry.family).push(entry);
-  }
-  const orderedFamilies = [
-    ...PROFILE_FAMILY_ORDER.filter((family) => groups.has(family)),
-    ...[...groups.keys()].filter((family) => !PROFILE_FAMILY_ORDER.includes(family)).sort(),
-  ];
-  return orderedFamilies.map((family) => {
-    const options = groups.get(family).map((entry) => `<option value="${entry.idx}">${escapeHtml(`${entry.profile.pair_id} | ${entry.profile.profile_id}`)}</option>`).join("");
-    return `<optgroup label="Family ${escapeHtml(family)}">${options}</optgroup>`;
-  }).join("");
-}
-
 function profileIndexForId(profileId) {
   const normalized = String(profileId || "").trim();
   if (!normalized) return -1;
   return state.profiles.findIndex((profile) => profile.profile_id === normalized);
+}
+
+const PROFILE_FAMILY_ORDER = ["A", "B", "C", "D", "E", "F"];
+
+// Build the profile <select> markup grouped by Family. Only profiles with a
+// non-empty lssContext family are shown, sorted by PROFILE_FAMILY_ORDER (unknown
+// families last). Each <option> keeps its original state.profiles index so the
+// underlying profile_id<->row mapping stays intact. If no profile carries a
+// family, fall back to a flat list of all profiles to avoid an empty dropdown.
+function buildProfileSelectMarkup(profiles) {
+  const list = Array.isArray(profiles) ? profiles : [];
+  const withFamily = [];
+  list.forEach((profile, idx) => {
+    const family = lssContextForProfile(profile.profile_id)?.family;
+    if (family) withFamily.push({ profile, idx, family: String(family).toUpperCase() });
+  });
+  if (!withFamily.length) {
+    return list
+      .map((profile, idx) => `<option value="${idx}">${escapeHtml(`${profile.pair_id} | ${profile.profile_id}`)}</option>`)
+      .join("");
+  }
+  const families = Array.from(new Set(withFamily.map((entry) => entry.family)));
+  families.sort((a, b) => {
+    const ai = PROFILE_FAMILY_ORDER.indexOf(a);
+    const bi = PROFILE_FAMILY_ORDER.indexOf(b);
+    const ar = ai === -1 ? PROFILE_FAMILY_ORDER.length : ai;
+    const br = bi === -1 ? PROFILE_FAMILY_ORDER.length : bi;
+    if (ar !== br) return ar - br;
+    return a.localeCompare(b);
+  });
+  return families
+    .map((family) => {
+      const options = withFamily
+        .filter((entry) => entry.family === family)
+        .map((entry) => `<option value="${entry.idx}">${escapeHtml(`${entry.profile.pair_id} | ${entry.profile.profile_id}`)}</option>`)
+        .join("");
+      return `<optgroup label="${escapeHtml(`Family ${family}`)}">${options}</optgroup>`;
+    })
+    .join("");
 }
 
 // Choose the default profile by reactivity signal richness rather than the raw
@@ -1778,15 +1942,20 @@ function pickRichestProfileIndex(positiveCounts) {
 async function richestProfileIndex() {
   const profiles = state.profiles || [];
   if (profiles.length <= 1) return 0;
-  const anyFamily = profiles.some((profile) => String(lssContextForProfile(profile.profile_id)?.family || "").trim());
+  // Narrow the candidate set to profiles that carry an lssContext family (the
+  // ones visible in the grouped dropdown). Map the richest pick back to its
+  // original state.profiles index. If no profile has a family, fall back to the
+  // full-list logic so init never stalls on an empty candidate set.
+  const familyCandidates = [];
+  profiles.forEach((profile, idx) => {
+    if (lssContextForProfile(profile.profile_id)?.family) familyCandidates.push({ profile, idx });
+  });
+  const candidates = familyCandidates.length
+    ? familyCandidates
+    : profiles.map((profile, idx) => ({ profile, idx }));
+  if (candidates.length === 1) return candidates[0].idx;
   const positiveCounts = [];
-  for (const profile of profiles) {
-    // Narrow the default pick to dropdown-visible (family-bearing) profiles when
-    // any exist; family-less profiles get -1 so they never win the richest pick.
-    if (anyFamily && !String(lssContextForProfile(profile.profile_id)?.family || "").trim()) {
-      positiveCounts.push(-1);
-      continue;
-    }
+  for (const { profile } of candidates) {
     let positives = 0;
     try {
       const shard = await loadShard(profile.shard_id);
@@ -1800,7 +1969,7 @@ async function richestProfileIndex() {
     }
     positiveCounts.push(positives);
   }
-  return pickRichestProfileIndex(positiveCounts);
+  return candidates[pickRichestProfileIndex(positiveCounts)].idx;
 }
 
 function initialProfileIdFromLocation() {
@@ -1839,7 +2008,7 @@ async function benchmarkAll() {
     const values = profileValues(profile, shard);
     const strand = state.caseData.strands.find((item) => item.strand_id === (profile.render_strand_id || state.caseData.default_render_strand_id));
     const normalized = normalizeProfile(profile, values);
-    svgBytes += recolorVarnaSvg(state.varnaTemplate, strand, normalized, profile).length + drawLinearSvg(strand, normalized, profile).length;
+    svgBytes += recolorVarnaSvg(state.varnaTemplate, strand, normalized, profile).length;
   }
   const elapsed = performance.now() - started;
   el.log.textContent = JSON.stringify({
@@ -1851,17 +2020,7 @@ async function benchmarkAll() {
 }
 
 function updateView() {
-  const varnaActive = state.activeView === "varna";
-  el.varnaViewer.hidden = !varnaActive;
-  el.linearViewer.hidden = varnaActive;
-  for (const tab of el.tabs) {
-    const active = tab.dataset.view === state.activeView;
-    tab.classList.toggle("active", active);
-    tab.setAttribute("aria-selected", active ? "true" : "false");
-  }
-  el.caption.textContent = varnaActive
-    ? "VARNA layout with active profile coloring."
-    : "Linear residue order with profile coloring.";
+  el.caption.textContent = "VARNA layout with active profile coloring.";
 }
 
 async function init() {
@@ -1938,7 +2097,7 @@ async function init() {
   state.varnaTemplate = varnaTemplate;
   state.profiles = profileIndex.profiles;
   const strand = activeStrand() || caseData.strands[0];
-  state.viewport = { start: 1, end: strand.sequence.length };
+  state.viewport = { start: 1, end: Math.min(strand.sequence.length, TRACK_DEFAULT_SPAN) };
   el.select.innerHTML = buildProfileSelectMarkup(state.profiles);
   el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
   const requestedProfileId = state.requestedProfileId || initialProfileIdFromLocation();
@@ -1954,14 +2113,30 @@ el.zoomIn.addEventListener("click", () => zoomTrack(1));
 el.zoomOut.addEventListener("click", () => zoomTrack(-1));
 el.panLeft.addEventListener("click", () => panTrack(-1));
 el.panRight.addEventListener("click", () => panTrack(1));
+if (el.viewportSlider) {
+  el.viewportSlider.addEventListener("input", () => {
+    const span = state.viewport.end - state.viewport.start + 1;
+    const nextStart = Number(el.viewportSlider.value);
+    if (!Number.isFinite(nextStart)) return;
+    setViewport(nextStart, nextStart + span - 1);
+  });
+}
 el.resetView.addEventListener("click", () => {
   const strand = activeStrand();
-  if (strand) setViewport(1, strand.sequence.length);
+  if (!strand) return;
+  const view = defaultViewport(strand.sequence.length, state.lastRender?.normalized);
+  setViewport(view.start, view.end);
 });
-for (const tab of el.tabs) {
-  tab.addEventListener("click", () => {
-    state.activeView = tab.dataset.view;
-    updateView();
+if (el.varnaZoomIn) el.varnaZoomIn.addEventListener("click", () => zoomVarna(1));
+if (el.varnaZoomOut) el.varnaZoomOut.addEventListener("click", () => zoomVarna(-1));
+if (el.varnaZoomReset) el.varnaZoomReset.addEventListener("click", () => setVarnaZoom(1));
+
+if (el.fullRoiToggle) {
+  el.fullRoiToggle.addEventListener("click", () => {
+    state.fullRoiColored = !state.fullRoiColored;
+    el.fullRoiToggle.setAttribute("aria-pressed", state.fullRoiColored ? "true" : "false");
+    el.fullRoiToggle.textContent = state.fullRoiColored ? "Original colors" : "Color ROI";
+    applyFullRoiColoring();
   });
 }
 
