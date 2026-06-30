@@ -1477,7 +1477,44 @@ function recolorVarnaSvg(template, strand, normalized, profile) {
   svg.setAttribute("data-layout-source", "VARNA");
   svg.setAttribute("role", "img");
   svg.setAttribute("aria-label", "VARNA secondary structure");
-  svg.setAttribute("viewBox", svg.getAttribute("viewBox") || "0 0 1270 355");
+  if (!svg.getAttribute("viewBox")) {
+    // VARNA templates ship width/height="100%" but no viewBox, so the old
+    // hardcoded "0 0 1270 355" fallback clipped large molecules (real content
+    // can extend to ~2390x2557) and forced a wrong 3.58 aspect. Derive the
+    // viewBox from the actual content bounding box instead, padding by 10px;
+    // fall back to the legacy box only when no numeric coordinates are found.
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    const num = (node, name) => {
+      const v = parseFloat(node.getAttribute(name));
+      return Number.isFinite(v) ? v : null;
+    };
+    svg.querySelectorAll("*").forEach((node) => {
+      const xs = [];
+      const ys = [];
+      for (const name of ["x", "x1", "x2", "cx"]) {
+        const v = num(node, name);
+        if (v !== null) xs.push(v);
+      }
+      for (const name of ["y", "y1", "y2", "cy"]) {
+        const v = num(node, name);
+        if (v !== null) ys.push(v);
+      }
+      const x0 = num(node, "x");
+      const y0 = num(node, "y");
+      const w = num(node, "width");
+      const h = num(node, "height");
+      if (x0 !== null && w !== null) xs.push(x0 + w);
+      if (y0 !== null && h !== null) ys.push(y0 + h);
+      for (const v of xs) { if (v < minX) minX = v; if (v > maxX) maxX = v; }
+      for (const v of ys) { if (v < minY) minY = v; if (v > maxY) maxY = v; }
+    });
+    if (Number.isFinite(minX) && Number.isFinite(minY) && maxX > minX && maxY > minY) {
+      const pad = 10;
+      svg.setAttribute("viewBox", `${minX - pad} ${minY - pad} ${(maxX - minX) + pad * 2} ${(maxY - minY) + pad * 2}`);
+    } else {
+      svg.setAttribute("viewBox", "0 0 1270 355");
+    }
+  }
   const fillCircles = [...svg.querySelectorAll('circle[stroke="none"][r="5.0"]')];
   const baseTexts = [...svg.querySelectorAll('text[font-family="Verdana"][font-size="7.5"]')];
   if (fillCircles.length !== strand.sequence.length) {
@@ -1851,22 +1888,26 @@ function profileIndexForId(profileId) {
 
 const PROFILE_FAMILY_ORDER = ["A", "B", "C", "D", "E", "F"];
 
-// Build the profile <select> markup grouped by Family. Only profiles with a
-// non-empty lssContext family are shown, sorted by PROFILE_FAMILY_ORDER (unknown
-// families last). Each <option> keeps its original state.profiles index so the
-// underlying profile_id<->row mapping stays intact. If no profile carries a
-// family, fall back to a flat list of all profiles to avoid an empty dropdown.
+// Build the profile <select> markup grouped by Family. Profiles with a non-empty
+// lssContext family are grouped first, sorted by PROFILE_FAMILY_ORDER; profiles
+// without a family follow under an "Unassigned family" group so every loaded
+// profile stays selectable. Each <option> keeps its original state.profiles index
+// so the underlying profile_id<->row mapping stays intact. If no profile carries a
+// family, fall back to a flat list of all profiles.
 function buildProfileSelectMarkup(profiles) {
   const list = Array.isArray(profiles) ? profiles : [];
   const withFamily = [];
+  const withoutFamily = [];
   list.forEach((profile, idx) => {
     const family = lssContextForProfile(profile.profile_id)?.family;
     if (family) withFamily.push({ profile, idx, family: String(family).toUpperCase() });
+    else withoutFamily.push({ profile, idx });
   });
+  const optionFor = (entry) =>
+    `<option value="${entry.idx}">${escapeHtml(`${entry.profile.pair_id} | ${entry.profile.profile_id}`)}</option>`;
+  // No family signal anywhere: keep the original flat list of every profile.
   if (!withFamily.length) {
-    return list
-      .map((profile, idx) => `<option value="${idx}">${escapeHtml(`${profile.pair_id} | ${profile.profile_id}`)}</option>`)
-      .join("");
+    return list.map((profile, idx) => optionFor({ profile, idx })).join("");
   }
   const families = Array.from(new Set(withFamily.map((entry) => entry.family)));
   families.sort((a, b) => {
@@ -1877,15 +1918,23 @@ function buildProfileSelectMarkup(profiles) {
     if (ar !== br) return ar - br;
     return a.localeCompare(b);
   });
-  return families
+  const familyGroups = families
     .map((family) => {
       const options = withFamily
         .filter((entry) => entry.family === family)
-        .map((entry) => `<option value="${entry.idx}">${escapeHtml(`${entry.profile.pair_id} | ${entry.profile.profile_id}`)}</option>`)
+        .map(optionFor)
         .join("");
       return `<optgroup label="${escapeHtml(`Family ${family}`)}">${options}</optgroup>`;
     })
     .join("");
+  // Family-less profiles still belong in the dropdown: hiding them dropped the
+  // option count well below the loaded profile count (e.g. 2L1V loads 52 but
+  // only 2 carry a family). Surface them under a catch-all group so every
+  // profile stays selectable while the family grouping above is preserved.
+  const otherGroup = withoutFamily.length
+    ? `<optgroup label="Unassigned family">${withoutFamily.map(optionFor).join("")}</optgroup>`
+    : "";
+  return `${familyGroups}${otherGroup}`;
 }
 
 // Choose the default profile by reactivity signal richness rather than the raw
