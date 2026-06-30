@@ -1721,6 +1721,46 @@ function profileIndexForId(profileId) {
   return state.profiles.findIndex((profile) => profile.profile_id === normalized);
 }
 
+// Choose the default profile by reactivity signal richness rather than the raw
+// first profile: some cases (e.g. 1GTN) list a sparse profile first, so the 3D
+// view opens almost entirely white. Pure helper takes per-profile positive-value
+// counts and returns the richest index; ties resolve to the lowest index so the
+// pick stays stable, and an empty/absent set falls back to 0.
+function pickRichestProfileIndex(positiveCounts) {
+  if (!Array.isArray(positiveCounts) || !positiveCounts.length) return 0;
+  let best = 0;
+  let bestCount = -1;
+  for (let idx = 0; idx < positiveCounts.length; idx += 1) {
+    const count = Number(positiveCounts[idx]) || 0;
+    if (count > bestCount) {
+      bestCount = count;
+      best = idx;
+    }
+  }
+  return best;
+}
+
+async function richestProfileIndex() {
+  const profiles = state.profiles || [];
+  if (profiles.length <= 1) return 0;
+  const positiveCounts = [];
+  for (const profile of profiles) {
+    let positives = 0;
+    try {
+      const shard = await loadShard(profile.shard_id);
+      const values = profileValues(profile, shard);
+      for (let idx = 0; idx < values.length; idx += 1) {
+        const value = values[idx];
+        if (Number.isFinite(value) && value > 0) positives += 1;
+      }
+    } catch (_error) {
+      positives = 0; // unreadable shard contributes no signal; never blocks init
+    }
+    positiveCounts.push(positives);
+  }
+  return pickRichestProfileIndex(positiveCounts);
+}
+
 function initialProfileIdFromLocation() {
   const params = new URLSearchParams(window.location.search || "");
   return String(params.get("profileId") || "").trim();
@@ -1862,8 +1902,9 @@ async function init() {
     return `<option value="${idx}">${label}</option>`;
   }).join("");
   el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
-  const initialProfileId = state.requestedProfileId || initialProfileIdFromLocation();
-  const initialIndex = Math.max(0, profileIndexForId(initialProfileId));
+  const requestedProfileId = state.requestedProfileId || initialProfileIdFromLocation();
+  const requestedIndex = profileIndexForId(requestedProfileId);
+  const initialIndex = requestedIndex >= 0 ? requestedIndex : await richestProfileIndex();
   await renderProfile(initialIndex);
   initMolstarViewer();
 }
