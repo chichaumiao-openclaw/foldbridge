@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8HSP",
+  "biologicalMoleculeName": "8HSP",
+  "caseId": "8HSP",
+  "caseKey": "RASP2PDB:8HSP",
+  "chains": [
+    "A",
+    "V",
+    "X",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8HSP",
+  "profileCount": 40
+}

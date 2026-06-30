@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8QEQ",
+  "biologicalMoleculeName": "8QEQ",
+  "caseId": "8QEQ",
+  "caseKey": "RASP2PDB:8QEQ",
+  "chains": [
+    "R"
+  ],
+  "confidenceDisplayLabel": "C UNDERPOWERED",
+  "pdbId": "8QEQ",
+  "profileCount": 4
+}

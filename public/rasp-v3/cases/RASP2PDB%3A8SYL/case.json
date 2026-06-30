@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8SYL",
+  "biologicalMoleculeName": "8SYL",
+  "caseId": "8SYL",
+  "caseKey": "RASP2PDB:8SYL",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "w",
+    "x"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "8SYL",
+  "profileCount": 40
+}

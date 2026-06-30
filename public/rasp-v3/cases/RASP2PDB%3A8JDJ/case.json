@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8JDJ",
+  "biologicalMoleculeName": "8JDJ",
+  "caseId": "8JDJ",
+  "caseKey": "RASP2PDB:8JDJ",
+  "chains": [
+    "B",
+    "D",
+    "E",
+    "F",
+    "w"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "8JDJ",
+  "profileCount": 238
+}

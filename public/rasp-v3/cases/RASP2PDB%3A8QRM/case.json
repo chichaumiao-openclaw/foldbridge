@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8QRM",
+  "biologicalMoleculeName": "8QRM",
+  "caseId": "8QRM",
+  "caseKey": "RASP2PDB:8QRM",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "8QRM",
+  "profileCount": 75
+}

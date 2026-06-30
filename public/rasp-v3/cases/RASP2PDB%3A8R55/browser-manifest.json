@@ -1,0 +1,24 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "U": {
+      "case2dPath": "chains/U/case-2d-structure.json.gz",
+      "chainId": "U",
+      "chainRoot": "chains/U",
+      "linkedViewBundlePath": "chains/U/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/U/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/U/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "U",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:8R55:confidence:D:rasp_bw_10c682ff1c66": "U",
+    "annojoin:RASP2PDB:8R55:confidence:D:rasp_bw_7c9a09370ba1": "U"
+  }
+}

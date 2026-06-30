@@ -1,0 +1,50 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "A": {
+      "case2dPath": "chains/A/case-2d-structure.json.gz",
+      "chainId": "A",
+      "chainRoot": "chains/A",
+      "linkedViewBundlePath": "chains/A/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A/varna-template.svg.gz"
+    },
+    "U": {
+      "case2dPath": "chains/U/case-2d-structure.json.gz",
+      "chainId": "U",
+      "chainRoot": "chains/U",
+      "linkedViewBundlePath": "chains/U/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/U/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/U/varna-template.svg.gz"
+    },
+    "X": {
+      "case2dPath": "chains/X/case-2d-structure.json.gz",
+      "chainId": "X",
+      "chainRoot": "chains/X",
+      "linkedViewBundlePath": "chains/X/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/X/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/X/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:8QPP:confidence:A:rasp_bw_5859f1cec40f": "U",
+    "annojoin:RASP2PDB:8QPP:confidence:A:rasp_bw_ae4c2c08c4fa": "U",
+    "annojoin:RASP2PDB:8QPP:confidence:A:rasp_bw_e773afe95fb5": "U",
+    "annojoin:RASP2PDB:8QPP:confidence:B:rasp_bw_22d1e0ca8ae4": "X",
+    "annojoin:RASP2PDB:8QPP:confidence:B:rasp_bw_6a383199d20e": "X",
+    "annojoin:RASP2PDB:8QPP:confidence:B:rasp_bw_70b79d7c1e9d": "X",
+    "annojoin:RASP2PDB:8QPP:confidence:B:rasp_bw_78ea31d594b8": "X",
+    "annojoin:RASP2PDB:8QPP:confidence:B:rasp_bw_baad01b1ba83": "X",
+    "annojoin:RASP2PDB:8QPP:confidence:B:rasp_bw_f1145990c306": "X",
+    "annojoin:RASP2PDB:8QPP:confidence:B:rasp_bw_f6a01f96cda2": "X",
+    "annojoin:RASP2PDB:8QPP:confidence:D:rasp_bw_10c682ff1c66": "U",
+    "annojoin:RASP2PDB:8QPP:confidence:D:rasp_bw_7c9a09370ba1": "U"
+  }
+}
