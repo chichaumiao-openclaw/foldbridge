@@ -500,10 +500,11 @@ export function renderAnnojointAtlasPage({
     : '';
 
   const displayCount = atlasState.totalCaseCount || atlasState.cases.length;
+  const placementCount = atlasState.totalPlacementCount || 0;
   const sourceCount = atlasState.totalSourceCaseCount;
   const metaCountText = searchActive
     ? `Showing ${escapeHtml(baseRows.length)} of ${escapeHtml(displayCount)} entries matching "${escapeHtml(query)}"`
-    : `${escapeHtml(displayCount)} PDB entries${sourceCount && sourceCount !== displayCount ? ` (${escapeHtml(sourceCount)} source cases)` : ''}`;
+    : `${escapeHtml(displayCount)} PDBs${placementCount ? ` · ${escapeHtml(placementCount)} entries` : ''}${sourceCount && sourceCount !== displayCount ? ` (${escapeHtml(sourceCount)} source cases)` : ''}`;
 
   return `<main class="page-annojoin-atlas page-annojoin-master-table">
     <section class="annojoin-table-heading">
