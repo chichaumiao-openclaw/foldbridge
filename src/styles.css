@@ -506,11 +506,6 @@ main.page-sequence-detail {
   border-top: none;
 }
 
-/* Molecule cell de-duplication: dash when it repeats the group label */
-.annojoin-molecule-same-as-group {
-  color: var(--textMuted);
-}
-
 /* Confidence segments */
 .annojoin-confidence-seg {
   display: inline-block;
@@ -692,20 +687,6 @@ button[data-annojoin-clear-all]:hover {
   border: 1px solid var(--border);
   border-radius: 6px;
   background: var(--surfaceAlt);
-}
-
-.annojoin-chain-list {
-  margin: 0;
-  padding-left: 22px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
-  gap: 2px 12px;
-  color: var(--textPrimary);
-  font-variant-numeric: tabular-nums;
-}
-
-.annojoin-chain-list li {
-  word-break: break-all;
 }
 
 .annojoin-confidence-explainer-link {
