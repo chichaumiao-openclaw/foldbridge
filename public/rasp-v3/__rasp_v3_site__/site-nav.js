@@ -53,17 +53,32 @@
   var header = document.createElement("header");
   header.className = "fb-detail-nav";
 
+  // Centered inner container so the brand/nav line up with the case-shell content
+  // (the shells use max-width: 1400px), matching the portal header rhythm.
+  var inner = document.createElement("div");
+  inner.className = "fb-detail-nav-inner";
+
   var brand = document.createElement("a");
   brand.className = "fb-detail-nav-brand";
   brand.href = portalRoot + "#home";
+
   var mark = document.createElement("span");
   mark.className = "fb-detail-nav-mark";
   mark.textContent = "FB";
+
+  var brandCopy = document.createElement("span");
+  brandCopy.className = "fb-detail-nav-brand-copy";
+  var kicker = document.createElement("span");
+  kicker.className = "fb-detail-nav-kicker";
+  kicker.textContent = "FoldBridge axis";
   var word = document.createElement("span");
   word.className = "fb-detail-nav-word";
   word.textContent = "FoldBridge";
+  brandCopy.appendChild(kicker);
+  brandCopy.appendChild(word);
+
   brand.appendChild(mark);
-  brand.appendChild(word);
+  brand.appendChild(brandCopy);
 
   var nav = document.createElement("nav");
   nav.className = "fb-detail-nav-links";
@@ -72,8 +87,9 @@
     nav.appendChild(link(item.route, item.label));
   });
 
-  header.appendChild(brand);
-  header.appendChild(nav);
+  inner.appendChild(brand);
+  inner.appendChild(nav);
+  header.appendChild(inner);
 
   if (document.body) {
     document.body.insertBefore(header, document.body.firstChild);

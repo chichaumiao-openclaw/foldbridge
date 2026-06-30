@@ -1,19 +1,23 @@
 :root {
   color-scheme: light;
-  --bg: #f6f7fb;
+  /* Warm cream + green-accent palette, aligned with the portal home page
+     (src/design-tokens.css + src/styles.css body). Token names kept stable;
+     only values retuned so the detail pages share the portal's tone/accent. */
+  --bg: radial-gradient(ellipse at 18% 8%, rgba(255, 223, 120, 0.26), transparent 34%), radial-gradient(ellipse at 84% 14%, rgba(255, 239, 189, 0.24), transparent 32%), linear-gradient(115deg, rgba(255, 255, 255, 0.48) 0%, rgba(255, 255, 255, 0) 42%), linear-gradient(180deg, #fff4cf 0%, #fff8df 30%, #fffbf0 64%, #fffdf7 100%);
   --panel: #ffffff;
-  --line: #d9dee8;
-  --text: #1c2430;
-  --muted: #66758a;
-  --accent: #1759c7;
-  --accent-soft: #e8f0ff;
+  --line: rgba(227, 191, 92, 0.24);
+  --text: #14221C;
+  --muted: #5D6C64;
+  --accent: #2F8F6B;
+  --accent-soft: #E4EFE8;
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: "SF Pro Text", "Helvetica Neue", Arial, sans-serif;
+  font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   color: var(--text);
-  background: linear-gradient(180deg, #f7f8fc 0%, #eef2f7 100%);
+  background: var(--bg);
+  background-attachment: fixed;
 }
 a { color: inherit; }
 .shell {
@@ -128,70 +132,100 @@ a { color: inherit; }
   .layout { grid-template-columns: 1fr; }
 }
 
-/* Shared site nav header (self-contained literal values: the two detail bundles have
-   disjoint :root token sets, so this block must not rely on var(--...)). */
+/* Shared site nav header — mirrors the portal home header identity (gold "FB" mark,
+   uppercase gold kicker, Avenir Next wordmark, gold pill route links). Self-contained
+   literal values: the two detail bundles have disjoint :root token sets, so this block
+   must not rely on var(--...). Values track src/styles.css .bundle-home-* rules. */
 .fb-detail-nav {
+  width: 100%;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(227, 191, 92, 0.30);
+  box-shadow: 0 1px 0 rgba(20, 34, 28, 0.03);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-family: "Avenir Next", "Helvetica Neue", Arial, sans-serif;
+}
+.fb-detail-nav-inner {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
-  padding: 12px 24px;
-  background: #ffffff;
-  border-bottom: 1px solid rgba(20, 34, 28, 0.10);
-  box-shadow: 0 1px 0 rgba(20, 34, 28, 0.04);
-  font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  gap: 16px 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  box-sizing: border-box;
 }
 .fb-detail-nav-brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
-  color: #14221C;
-  font-weight: 600;
 }
 .fb-detail-nav-mark {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  background: #2F8F6B;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 44px;
+  border-radius: 999px;
   color: #ffffff;
-  font-size: 13px;
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  background: linear-gradient(145deg, #e4b84d 0%, #f3cf6f 52%, #f8e29d 100%);
+  box-shadow: 0 12px 24px rgba(228, 184, 77, 0.22);
+}
+.fb-detail-nav-brand-copy {
+  display: grid;
+  gap: 2px;
+  line-height: 1.1;
+}
+.fb-detail-nav-kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.66rem;
   font-weight: 700;
-  letter-spacing: 0.5px;
+  color: #d4a21f;
 }
 .fb-detail-nav-word {
-  font-size: 16px;
+  font-size: 1.32rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #102333;
 }
 .fb-detail-nav-links {
   display: inline-flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 6px;
 }
 .fb-detail-nav-link {
   text-decoration: none;
-  color: #5D6C64;
-  font-size: 14px;
-  font-weight: 500;
-  padding: 7px 12px;
+  color: #143041;
+  font-size: 1.02rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  padding: 9px 14px;
+  border: 1px solid transparent;
   border-radius: 999px;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 .fb-detail-nav-link:hover {
-  background: #E4EFE8;
-  color: #14221C;
+  background: #fff2bf;
+  border-color: rgba(227, 191, 92, 0.42);
+  color: #8e6a16;
 }
 @media (max-width: 640px) {
-  .fb-detail-nav {
-    padding: 10px 16px;
+  .fb-detail-nav-inner {
+    padding: 12px 16px;
+    gap: 12px 16px;
+  }
+  .fb-detail-nav-word {
+    font-size: 1.15rem;
   }
   .fb-detail-nav-link {
-    padding: 6px 9px;
-    font-size: 13px;
+    padding: 7px 11px;
+    font-size: 0.95rem;
   }
 }
 

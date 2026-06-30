@@ -4,8 +4,11 @@
   --muted: #5b6670;
   --line: #d8dee5;
   --panel: #f7f9fb;
-  --accent: #1565c0;
-  --accent-strong: #004f9e;
+  /* Branding accent aligned to the portal green (src/design-tokens.css
+     --accent/--primary). --hover/--selected stay functional residue-picking
+     signals (blue hover, red selected) and must not track the brand accent. */
+  --accent: #2F8F6B;
+  --accent-strong: #174B3A;
   --selected: #9b1c1c;
   --hover: #005fcc;
 }
