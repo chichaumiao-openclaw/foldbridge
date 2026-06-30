@@ -373,4 +373,142 @@ export function renderAboutPage(content) {
 
 // === STATS PAGE (W-B 在此追加 renderStatsPage) ===
 
+// 千分位格式化（纯展示）。非有限值 → '—'，绝不输出 undefined/NaN。
+function statsNumber(value) {
+  const n = Number(value);
+  if (!Number.isFinite(n)) return '—';
+  return n.toLocaleString('en-US');
+}
+
+// LSS 召回层级展示顺序 + 色（强→弱），色用 design token。
+const STATS_TIER_ORDER = [
+  { key: 'STRONG', label: 'STRONG', fill: 'var(--accent)' },
+  { key: 'MODERATE', label: 'MODERATE', fill: 'var(--primary)' },
+  { key: 'WEAK', label: 'WEAK', fill: 'var(--accentSoft)' },
+  { key: 'DISCORDANT', label: 'DISCORDANT', fill: 'var(--warning, #C9772E)' },
+  { key: 'UNDERPOWERED', label: 'UNDERPOWERED', fill: 'var(--textMuted)' },
+  { key: 'NOT_SUPPORTED', label: 'NOT_SUPPORTED', fill: 'var(--border)' }
+];
+
+// LSS tier 分布横向柱状图（内联 SVG，无图表库）。每行 = 一个 tier 标签 + 比例条 + 计数。
+function renderStatsTierChart(tierDistribution = {}) {
+  const rows = STATS_TIER_ORDER.map((t) => ({ ...t, count: Number(tierDistribution[t.key]) || 0 }));
+  const total = rows.reduce((sum, r) => sum + r.count, 0);
+  const maxCount = rows.reduce((m, r) => Math.max(m, r.count), 0) || 1;
+  const rowH = 30;
+  const gap = 10;
+  const labelW = 132;
+  const barMaxW = 300;
+  const valueW = 84;
+  const width = labelW + barMaxW + valueW;
+  const height = rows.length * (rowH + gap);
+  const bars = rows.map((r, i) => {
+    const y = i * (rowH + gap);
+    const w = Math.max(2, Math.round((r.count / maxCount) * barMaxW));
+    const pct = total ? `${((r.count / total) * 100).toFixed(1)}%` : '0%';
+    return `<g transform="translate(0,${y})">
+        <text x="${labelW - 8}" y="${rowH / 2 + 4}" text-anchor="end" class="stats-tier-label">${r.label}</text>
+        <rect x="${labelW}" y="2" width="${w}" height="${rowH - 4}" rx="4" fill="${r.fill}"><title>${r.label}: ${statsNumber(r.count)} segments (${pct})</title></rect>
+        <text x="${labelW + w + 8}" y="${rowH / 2 + 4}" class="stats-tier-value">${statsNumber(r.count)}</text>
+      </g>`;
+  }).join('\n      ');
+  return `<svg class="stats-tier-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="LSS calibrated recall tier distribution across ${statsNumber(total)} segments">
+      ${bars}
+    </svg>`;
+}
+
+// Family D SASA 参考状态分布（小型双段条）。数据缺失 → 占位。
+function renderStatsSasaPanel(familyDSasa) {
+  if (!familyDSasa || typeof familyDSasa !== 'object') {
+    return `<p class="stats-empty">SASA reference distribution not materialized.</p>`;
+  }
+  const present = Number(familyDSasa.SASA_PRESENT) || 0;
+  const fallback = Number(familyDSasa.PAIRING_PROXY_FALLBACK) || 0;
+  const total = present + fallback;
+  if (!total) return `<p class="stats-empty">SASA reference distribution not materialized.</p>`;
+  const presentPct = ((present / total) * 100).toFixed(1);
+  const fallbackPct = ((fallback / total) * 100).toFixed(1);
+  return `<div class="stats-sasa">
+      <div class="stats-sasa-bar" role="img" aria-label="Family D SASA reference: ${presentPct}% present, ${fallbackPct}% pairing-proxy fallback">
+        <span class="stats-sasa-seg stats-sasa-present" style="flex:${present}"><span class="stats-sasa-seg-label">${presentPct}%</span></span>
+        <span class="stats-sasa-seg stats-sasa-fallback" style="flex:${fallback}"><span class="stats-sasa-seg-label">${fallbackPct}%</span></span>
+      </div>
+      <ul class="stats-sasa-legend">
+        <li><span class="stats-swatch stats-swatch-present"></span>SASA present · ${statsNumber(present)}</li>
+        <li><span class="stats-swatch stats-swatch-fallback"></span>Pairing-proxy fallback · ${statsNumber(fallback)}</li>
+      </ul>
+    </div>`;
+}
+
+// 单张数字卡。
+function statsMetricCard(value, label, note = '') {
+  return `<div class="stats-metric">
+      <span class="stats-metric-value">${statsNumber(value)}</span>
+      <span class="stats-metric-label">${label}</span>
+      ${note ? `<span class="stats-metric-note">${note}</span>` : ''}
+    </div>`;
+}
+
+// Stats 总览页纯渲染。stats 缺失（null/undefined）→ 最小壳（含 <h1>Statistics</h1>），
+// 绝不输出 undefined。stats 是构建产物（build-site-stats.mjs），可信插值。
+export function renderStatsPage(stats) {
+  if (!stats || typeof stats !== 'object') {
+    return `<section class="card bundle-wide-card stats-page">
+      <h1>Statistics</h1>
+      <p class="stats-empty">Statistics are still loading. If this persists, the stats asset may not be built yet.</p>
+    </section>`;
+  }
+  const prov = stats.provenance || {};
+  const tierSource = prov.tier_source || prov.tier || 'run-record';
+  const tier = stats.tier_distribution || {};
+  const tierTotal = STATS_TIER_ORDER.reduce((sum, t) => sum + (Number(tier[t.key]) || 0), 0);
+  const tb = stats.technology_threshold_basis || {};
+
+  return `<section class="card bundle-wide-card stats-page" data-pdb-total="${Number(stats.pdb_total) || 0}">
+      <header class="stats-head">
+        <h1>Statistics</h1>
+        <p class="stats-lede">A build-time snapshot of what FoldBridge links: published structure entries, the chemical-probing
+          technologies behind them, and how the per-segment confidence calibration distributes across recall tiers.</p>
+      </header>
+
+      <div class="stats-metric-grid">
+        ${statsMetricCard(stats.pdb_total, 'Published PDB entries', 'with detail pages')}
+        ${statsMetricCard(stats.source_cases, 'Source cases')}
+        ${statsMetricCard(stats.technologies, 'Probe technologies')}
+        ${statsMetricCard(stats.families, 'Measurement families', 'A–F')}
+        ${statsMetricCard(stats.articles, 'Probing articles')}
+      </div>
+      <p class="stats-footnote">Published PDB count is the build-time allowlist: only entries with generated detail-page assets
+        are counted. Source: ${prov.pdb_total || 'published allowlist'}.</p>
+
+      <div class="stats-section">
+        <h2>LSS calibrated recall tiers</h2>
+        <p class="stats-section-lede">Each segment — one <code>(profile, pdb_id, chain)</code> group — earns a calibrated recall
+          tier after a permutation test. Distribution across ${statsNumber(tierTotal)} RMDB ABC segments:</p>
+        ${renderStatsTierChart(tier)}
+        <p class="stats-footnote">Source: ${prov.tier || `RMDB ABC LSS calibrated tiers, ${tierSource}`}.</p>
+      </div>
+
+      <div class="stats-section">
+        <h2>Family D SASA reference</h2>
+        <p class="stats-section-lede">For solvent-accessibility (Family D) segments, how often the deposited structure supplied a
+          real SASA reference versus falling back to a pairing proxy:</p>
+        ${renderStatsSasaPanel(stats.family_d_sasa)}
+        <p class="stats-footnote">Source: ${prov.family_d_sasa || `RASP Family D SASA reference status, ${tierSource}`}.</p>
+      </div>
+
+      <div class="stats-section">
+        <h2>Technology threshold basis</h2>
+        <p class="stats-section-lede">Honesty on thresholds: only a minority of the ${statsNumber(stats.technologies)} probe
+          technologies have literature-published cut-points; most use operating values pending calibration.</p>
+        <ul class="stats-threshold-list">
+          <li><strong>${statsNumber(tb.LITERATURE_SUPPORTED)}</strong> literature-supported</li>
+          <li><strong>${statsNumber(tb.LITERATURE_INFORMED)}</strong> literature-informed</li>
+          <li><strong>${statsNumber(tb.OPERATING_VALUE_PENDING_CALIBRATION)}</strong> operating value pending calibration</li>
+        </ul>
+        <p class="stats-footnote">Source: ${prov.technologies || 'probe technology registry'}.</p>
+      </div>
+    </section>`;
+}
+
 // === PROBING HUB (W-C 在此追加 renderProbingFamilyIndex/TechTable/Glossary) ===

@@ -1,0 +1,36 @@
+{
+  "pdb_total": 2386,
+  "total_raw": 3401,
+  "source_cases": 2386,
+  "families": 6,
+  "technologies": 34,
+  "articles": 27,
+  "tier_distribution": {
+    "STRONG": 284,
+    "MODERATE": 1189,
+    "WEAK": 18677,
+    "DISCORDANT": 33876,
+    "UNDERPOWERED": 50062,
+    "NOT_SUPPORTED": 114550
+  },
+  "family_d_sasa": {
+    "SASA_PRESENT": 8417,
+    "PAIRING_PROXY_FALLBACK": 1812
+  },
+  "technology_threshold_basis": {
+    "LITERATURE_SUPPORTED": 1,
+    "LITERATURE_INFORMED": 10,
+    "OPERATING_VALUE_PENDING_CALIBRATION": 23
+  },
+  "provenance": {
+    "pdb_total": "annojoin-atlas/index.json displayCases ∩ published allowlist (scripts/data/annojoin-atlas-published-case-keys.tsv)",
+    "source_cases": "visible-caliber sum of sourceCaseCount over published-allowlist-filtered displayCases (NOT totalSourceCaseCount)",
+    "total_raw": "internal metadata only — pre-filter raw displayCase count (3401); never rendered as a user-facing number",
+    "tier": "RMDB ABC LSS calibrated tiers, calibration-table 2026-06-27",
+    "tier_source": "calibration-table 2026-06-27",
+    "family_d_sasa": "RASP Family D SASA reference status, calibration-table 2026-06-27",
+    "technologies": "probe_confidence_method_registry.tsv (34 RNA probe technologies)",
+    "families": "probing-articles/index.json family_count + A–F measurement families",
+    "articles": "probing-articles/index.json article_count"
+  }
+}
