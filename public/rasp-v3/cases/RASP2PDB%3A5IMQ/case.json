@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5IMQ",
+  "biologicalMoleculeName": "5IMQ",
+  "caseId": "5IMQ",
+  "caseKey": "RASP2PDB:5IMQ",
+  "chains": [
+    "4",
+    "5"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "5IMQ",
+  "profileCount": 16
+}

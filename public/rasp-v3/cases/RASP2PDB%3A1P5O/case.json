@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1P5O",
+  "biologicalMoleculeName": "1P5O",
+  "caseId": "1P5O",
+  "caseKey": "RASP2PDB:1P5O",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1P5O",
+  "profileCount": 2
+}

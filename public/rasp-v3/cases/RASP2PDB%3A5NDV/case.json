@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5NDV",
+  "biologicalMoleculeName": "5NDV",
+  "caseId": "5NDV",
+  "caseKey": "RASP2PDB:5NDV",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "confidenceDisplayLabel": "C MODERATE",
+  "pdbId": "5NDV",
+  "profileCount": 95
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4IFD",
+  "biologicalMoleculeName": "4IFD",
+  "caseId": "4IFD",
+  "caseKey": "RASP2PDB:4IFD",
+  "chains": [
+    "R"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "4IFD",
+  "profileCount": 1
+}

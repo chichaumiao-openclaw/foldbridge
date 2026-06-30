@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5GAF",
+  "biologicalMoleculeName": "5GAF",
+  "caseId": "5GAF",
+  "caseKey": "RASP2PDB:5GAF",
+  "chains": [
+    "1",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B DISCORDANT",
+  "pdbId": "5GAF",
+  "profileCount": 27
+}

@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5GMK",
+  "biologicalMoleculeName": "5GMK",
+  "caseId": "5GMK",
+  "caseKey": "RASP2PDB:5GMK",
+  "chains": [
+    "D",
+    "E",
+    "L"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "5GMK",
+  "profileCount": 117
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:2TRA",
+  "biologicalMoleculeName": "2TRA",
+  "caseId": "2TRA",
+  "caseKey": "RASP2PDB:2TRA",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "2TRA",
+  "profileCount": 33
+}

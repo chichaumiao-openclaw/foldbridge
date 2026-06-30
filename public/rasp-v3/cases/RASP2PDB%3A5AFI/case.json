@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5AFI",
+  "biologicalMoleculeName": "5AFI",
+  "caseId": "5AFI",
+  "caseKey": "RASP2PDB:5AFI",
+  "chains": [
+    "a",
+    "v",
+    "y"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "5AFI",
+  "profileCount": 36
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:4YPB",
+  "biologicalMoleculeName": "4YPB",
+  "caseId": "4YPB",
+  "caseKey": "RASP2PDB:4YPB",
+  "chains": [
+    "QV"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "4YPB",
+  "profileCount": 3
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1O0C",
+  "biologicalMoleculeName": "1O0C",
+  "caseId": "1O0C",
+  "caseKey": "RASP2PDB:1O0C",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "1O0C",
+  "profileCount": 2
+}

@@ -1,0 +1,40 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "N": {
+      "case2dPath": "chains/N/case-2d-structure.json.gz",
+      "chainId": "N",
+      "chainRoot": "chains/N",
+      "linkedViewBundlePath": "chains/N/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/N/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/N/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "N",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:5CCX:confidence:A:rasp_bw_22484fdd523e": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:B:rasp_bw_0ac5e94788d5": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:B:rasp_bw_0c774a52a757": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:B:rasp_bw_22e4e9ad287f": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:B:rasp_bw_49311a4f5dd2": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:B:rasp_bw_5c4d7e90dfb5": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:B:rasp_bw_93b59d01ad5d": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:B:rasp_bw_b3bd67bfbe31": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:B:rasp_bw_b458e77f0bd6": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:B:rasp_bw_f19b2878af92": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:C:rasp_bw_0a2f0f893bac": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:C:rasp_bw_1bce4cb9b4c1": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:C:rasp_bw_391957bc990d": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:C:rasp_bw_adb74bd90821": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:C:rasp_bw_c8eb2a9bae27": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:C:rasp_bw_ccc48c8d34b3": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:C:rasp_bw_df45dbde575d": "N",
+    "annojoin:RASP2PDB:5CCX:confidence:C:rasp_bw_eee90e60acaa": "N"
+  }
+}

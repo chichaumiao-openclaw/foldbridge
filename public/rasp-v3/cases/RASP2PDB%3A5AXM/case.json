@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5AXM",
+  "biologicalMoleculeName": "5AXM",
+  "caseId": "5AXM",
+  "caseKey": "RASP2PDB:5AXM",
+  "chains": [
+    "P"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "5AXM",
+  "profileCount": 25
+}

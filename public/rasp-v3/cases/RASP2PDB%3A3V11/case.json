@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3V11",
+  "biologicalMoleculeName": "3V11",
+  "caseId": "3V11",
+  "caseKey": "RASP2PDB:3V11",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "3V11",
+  "profileCount": 11
+}

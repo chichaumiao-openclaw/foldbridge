@@ -1,0 +1,35 @@
+{
+  "browserEntry": "annojoin-smoke/5gag/index.html",
+  "chains": {
+    "1K": {
+      "case2dPath": "chains/1K/case-2d-structure.json.gz",
+      "chainId": "1K",
+      "chainRoot": "chains/1K",
+      "linkedViewBundlePath": "chains/1K/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/1K/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/1K/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "1K",
+  "evidenceChainMap": {
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_2343aafbe79c": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_2f43b8b7fc56": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_2fa595b11d5e": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_44126d3b1836": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_48eb97e2d852": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_62cbd20a75b4": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_7c4725121ef4": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_8c2cf6279bed": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_b2e348d2e64e": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_c99a0a52d2ff": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:A:rasp_bw_cf21fa922000": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:D:rasp_bw_10c682ff1c66": "1K",
+    "annojoin:RASP2PDB:4WSD:confidence:D:rasp_bw_7c9a09370ba1": "1K"
+  }
+}
