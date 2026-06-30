@@ -103,26 +103,11 @@ function renderConfidenceSegments(label = '') {
   return `<span class="annojoin-confidence" title="${escapeHtml(full)}">${segs || `<span class="annojoin-confidence-seg">${escapeHtml(full)}</span>`}</span>`;
 }
 
-function sameGroupLabel(value = '', groupLabels = []) {
-  const a = String(value ?? '').trim().toLowerCase();
-  if (!a) return false;
-  return (Array.isArray(groupLabels) ? groupLabels : [groupLabels])
-    .some((label) => a === String(label ?? '').trim().toLowerCase());
-}
-
-function moleculeCellLabel(row = {}, groupLabels = []) {
-  const name = moleculeName(row);
-  if (sameGroupLabel(name, groupLabels)) {
-    return `<span class="annojoin-molecule-same-as-group" title="${escapeHtml(name)}">—</span>`;
-  }
-  return sourceValue(name, row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource);
-}
-
 function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabels = [], preserved = {}) {
   const caseId = rowCaseId(row);
   const values = {
     pdbId: fieldLink(row, routeName, 'pdbId', escapeHtml(row.pdbId || caseId), preserved),
-    moleculeName: fieldLink(row, routeName, 'moleculeName', moleculeCellLabel(row, groupLabels), preserved),
+    moleculeName: fieldLink(row, routeName, 'moleculeName', sourceValue(moleculeName(row), row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource), preserved),
     confidenceDisplayLabel: fieldLink(row, routeName, 'confidenceDisplayLabel', renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution), preserved),
     profileCount: fieldLink(row, routeName, 'profileCount', `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`, preserved),
     chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated'), preserved)

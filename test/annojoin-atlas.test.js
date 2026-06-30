@@ -300,8 +300,9 @@ test('atlas search state preserves the canonical moleculeDisplayName for groupin
   });
   // Problem 2: 4V85 folds into the "16S ribosomal RNA" parent group.
   assert.match(html, /data-annojoin-case-row="RASP2PDB:4V85"/);
-  // Problem 1: both rows render "—" (molecule name equals the group label).
-  assert.equal((html.match(/annojoin-molecule-same-as-group/g) || []).length, 2);
+  // 改版：Molecule 单元格恒显完整名，不再用 "—" 抑制。
+  assert.doesNotMatch(html, /annojoin-molecule-same-as-group/);
+  assert.ok((html.match(/>16S ribosomal RNA</g) || []).length >= 2);
 });
 
 test('normalizeCase passes through chainPlacements', () => {
@@ -653,7 +654,7 @@ test('atlas page expands singleton-child parent groups with one click', () => {
   assert.match(html, /class="annojoin-case-row is-in-expanded-group"/);
 });
 
-test('atlas page suppresses molecule name inside a group whose label already shows it', () => {
+test('atlas page always shows the full molecule name inside a group', () => {
   const state = buildAtlasSearchState({
     ...fixtures,
     cases: [
@@ -688,8 +689,8 @@ test('atlas page suppresses molecule name inside a group whose label already sho
     expandedGroupIds: new Set(['parent:5S-ribosomal-RNA'])
   });
 
-  assert.match(html, /class="annojoin-molecule-same-as-group"/);
-  assert.doesNotMatch(html, /annojoin-field-link[^>]*>\s*<span[^>]*>5S ribosomal RNA<\/span>/);
+  assert.doesNotMatch(html, /class="annojoin-molecule-same-as-group"/);
+  assert.match(html, /annojoin-field-link[^>]*>\s*<span[^>]*>5S ribosomal RNA<\/span>/);
 });
 
 test('atlas page keeps second-level child folding when a parent has multiple child classes', () => {
