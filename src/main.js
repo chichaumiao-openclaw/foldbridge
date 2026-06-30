@@ -1950,10 +1950,12 @@ async function loadAboutContent() {
   if (aboutContentState === 'loading') return;
   aboutContentState = 'loading';
   try {
-    aboutContentState = await aboutContentStore.loadContent();
+    // loadContent 失败时返回 null（store 不抛）；null 视为终态 'error'，
+    // 避免 aboutPage() 因 peek() 仍 miss 而无限重试 fetch+render（与 probing 同款 'error' 终态）。
+    aboutContentState = (await aboutContentStore.loadContent()) || 'error';
   } catch (err) {
     console.error('[main] 加载 About 内容失败', err);
-    aboutContentState = null;
+    aboutContentState = 'error';
   }
   if (route === 'about' || route === 'help') render({ preserveScroll: true });
 }
@@ -2410,7 +2412,8 @@ function publicationsPage() {
 
 function aboutPage() {
   const cached = aboutContentStore.peek();
-  if (!cached) loadAboutContent();
+  // 仅在未缓存且加载未在进行/未终态失败时触发，避免失败后无限重试循环。
+  if (!cached && aboutContentState !== 'loading' && aboutContentState !== 'error') loadAboutContent();
   return `<main class="page-detail">${renderBundleHeader()}${renderAboutPage(cached)}</main>`;
 }
 
