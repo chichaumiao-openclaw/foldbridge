@@ -674,11 +674,14 @@ function applyLinkedHover(residueKey, origin = "preview") {
 // Hover never moves the camera (focus stays a click affordance).
 function applyMolstarHoverHighlight(_residueKey) {
   const viewer = state.molstarViewer;
-  if (!viewer?.visual) return;
+  // viewer.visual.highlight/clearHighlight deref this.plugin asynchronously; skip
+  // until the underlying plugin is initialized to avoid unhandled rejections.
+  if (!viewer?.plugin || !viewer?.visual) return;
   const targetKey = state.hoveredResidueKey || state.selectedResidueKey;
   if (!targetKey) {
     if (typeof viewer.visual.clearHighlight === "function") {
-      viewer.visual.clearHighlight();
+      const r = viewer.visual.clearHighlight();
+      if (r && typeof r.catch === "function") r.catch(() => {});
     }
     return;
   }
@@ -687,17 +690,19 @@ function applyMolstarHoverHighlight(_residueKey) {
     .find((entry) => entry.residue_key === targetKey);
   if (!item) {
     if (typeof viewer.visual.clearHighlight === "function") {
-      viewer.visual.clearHighlight();
+      const r = viewer.visual.clearHighlight();
+      if (r && typeof r.catch === "function") r.catch(() => {});
     }
     return;
   }
-  viewer.visual.highlight({
+  const highlightResult = viewer.visual.highlight({
     data: [{
       struct_asym_id: item.struct_asym_id,
       start_residue_number: item.start_residue_number,
       end_residue_number: item.end_residue_number,
     }],
   });
+  if (highlightResult && typeof highlightResult.catch === "function") highlightResult.catch(() => {});
 }
 
 function applyMolstarHover(residueKey, event = null) {
@@ -1010,18 +1015,26 @@ function applyMolstarTargetDisplay(residueKey = state.selectedResidueKey, attemp
   const payload = buildMolstarTargetDisplayPayload(activeProfileId(), residueKey);
   updateMolstarTargetDisplayDataset(payload, residueKey);
   const viewer = state.molstarViewer;
-  if (!viewer?.visual?.select || !state.lastRender) {
+  // pdbe-molstar exposes viewer.visual.* on the prototype before the underlying
+  // Mol* plugin finishes initializing. Calling them while viewer.plugin is still
+  // undefined throws asynchronously ("can't access property 'commands'/'managers',
+  // this.plugin is undefined") and escapes this try/catch as an unhandled rejection.
+  // Wait for viewer.plugin to exist before issuing any visual command.
+  if (!viewer?.plugin || !viewer?.visual?.select || !state.lastRender) {
     if (attempt < 8) {
       window.setTimeout(() => applyMolstarTargetDisplay(residueKey, attempt + 1), 250);
     }
     return;
   }
   try {
-    viewer.visual.select({
+    const selectResult = viewer.visual.select({
       data: payload,
       // alignment-cropped target chain: dim non-selected target atoms without labeling them unaligned.
       nonSelectedColor: MOLSTAR_CONTEXT_COLOR,
     });
+    // visual.select is async; swallow a late rejection (e.g. plugin torn down
+    // mid-call) so it never surfaces as an uncaught promise rejection.
+    if (selectResult && typeof selectResult.catch === "function") selectResult.catch(() => {});
     focusMolstarOnSelection(viewer, payload, residueKey);
   } catch (_error) {
     if (attempt < 8) {
@@ -1036,20 +1049,25 @@ function applyMolstarTargetDisplay(residueKey = state.selectedResidueKey, attemp
 // viewer parked on a previously clicked 3D residue. Clearing the selection resets
 // the camera to the full cropped chain.
 function focusMolstarOnSelection(viewer, payload, residueKey) {
+  // Guard against the same uninitialized-plugin race as applyMolstarTargetDisplay:
+  // viewer.visual.reset/focus dereference this.plugin asynchronously.
+  if (!viewer?.plugin) return;
   if (!residueKey) {
     if (typeof viewer.visual?.reset === "function") {
-      viewer.visual.reset({ camera: true });
+      const resetResult = viewer.visual.reset({ camera: true });
+      if (resetResult && typeof resetResult.catch === "function") resetResult.catch(() => {});
     }
     return;
   }
   if (typeof viewer.visual?.focus !== "function") return;
   const selectedItem = payload.find((item) => item.residue_key === residueKey);
   if (!selectedItem) return;
-  viewer.visual.focus([{
+  const focusResult = viewer.visual.focus([{
     struct_asym_id: selectedItem.struct_asym_id,
     start_residue_number: selectedItem.start_residue_number,
     end_residue_number: selectedItem.end_residue_number,
   }]);
+  if (focusResult && typeof focusResult.catch === "function") focusResult.catch(() => {});
 }
 
 function buildMolstarSelectionPayload(profileId = activeProfileId(), selectedKey = state.selectedResidueKey) {
