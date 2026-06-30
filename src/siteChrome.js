@@ -475,14 +475,17 @@ export function renderStatsPage(stats) {
       </header>
 
       <div class="stats-metric-grid">
-        ${statsMetricCard(stats.pdb_total, 'Published PDB entries', 'with detail pages')}
-        ${statsMetricCard(stats.source_cases, 'Source cases')}
+        ${statsMetricCard(stats.probing_entries, 'Chemical probing entries', 'PDB chains merged by molecule')}
+        ${statsMetricCard(stats.pdb_total, 'Published PDB structures', 'with detail pages')}
+        ${statsMetricCard(stats.high_confidence_entries, 'High-confidence entries', '≥1 chain STRONG or MODERATE')}
         ${statsMetricCard(stats.technologies, 'Probe technologies')}
         ${statsMetricCard(stats.families, 'Measurement families', 'A–F')}
         ${statsMetricCard(stats.articles, 'Probing articles')}
       </div>
-      <p class="stats-footnote">Published PDB count is the build-time allowlist: only entries with generated detail-page assets
-        are counted. Source: ${prov.pdb_total || 'published allowlist'}.</p>
+      <p class="stats-footnote">An entry is a set of published PDB chains that share the same biological molecule name within one structure
+        (${statsNumber(stats.probing_entries)} entries across ${statsNumber(stats.pdb_total)} structures); ${statsNumber(stats.strong_entries)} of the
+        high-confidence entries reach STRONG. Published PDB count is the build-time allowlist: only structures with generated detail-page
+        assets are counted. Source: ${prov.pdb_total || 'published allowlist'}.</p>
 
       <div class="stats-section">
         <h2>LSS calibrated recall tiers</h2>
