@@ -1,0 +1,7763 @@
+{
+  "cases": [
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A10ZU",
+      "caseKey": "RMDB2PDB:10ZU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "10ZU"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1A60",
+      "caseKey": "RMDB2PDB:1A60",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1A60"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1H1K",
+      "caseKey": "RMDB2PDB:1H1K",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1H1K"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1J1U",
+      "caseKey": "RMDB2PDB:1J1U",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1J1U"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1J2B",
+      "caseKey": "RMDB2PDB:1J2B",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1J2B"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1RY1",
+      "caseKey": "RMDB2PDB:1RY1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1RY1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1VC5",
+      "caseKey": "RMDB2PDB:1VC5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1VC5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2CZJ",
+      "caseKey": "RMDB2PDB:2CZJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2CZJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2IY5",
+      "caseKey": "RMDB2PDB:2IY5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2IY5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2K95",
+      "caseKey": "RMDB2PDB:2K95",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2K95"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2MXL",
+      "caseKey": "RMDB2PDB:2MXL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2MXL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2N1Q",
+      "caseKey": "RMDB2PDB:2N1Q",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2N1Q"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2NOQ",
+      "caseKey": "RMDB2PDB:2NOQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2NOQ"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2TPK",
+      "caseKey": "RMDB2PDB:2TPK",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2TPK"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3A2K",
+      "caseKey": "RMDB2PDB:3A2K",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3A2K"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3AM1",
+      "caseKey": "RMDB2PDB:3AM1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3AM1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3GOG",
+      "caseKey": "RMDB2PDB:3GOG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3GOG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3J5Y",
+      "caseKey": "RMDB2PDB:3J5Y",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3J5Y"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3MOJ",
+      "caseKey": "RMDB2PDB:3MOJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3MOJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3NKB",
+      "caseKey": "RMDB2PDB:3NKB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3NKB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3PDR",
+      "caseKey": "RMDB2PDB:3PDR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3PDR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3RW6",
+      "caseKey": "RMDB2PDB:3RW6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3RW6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3W3S",
+      "caseKey": "RMDB2PDB:3W3S",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3W3S"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4FEN",
+      "caseKey": "RMDB2PDB:4FEN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4FEN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4JF2",
+      "caseKey": "RMDB2PDB:4JF2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4JF2"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4JYZ",
+      "caseKey": "RMDB2PDB:4JYZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4JYZ"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4K27",
+      "caseKey": "RMDB2PDB:4K27",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4K27"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4N0T",
+      "caseKey": "RMDB2PDB:4N0T",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4N0T"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4O26",
+      "caseKey": "RMDB2PDB:4O26",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4O26"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4PKD",
+      "caseKey": "RMDB2PDB:4PKD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4PKD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4PLX",
+      "caseKey": "RMDB2PDB:4PLX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4PLX"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4QYZ",
+      "caseKey": "RMDB2PDB:4QYZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4QYZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4RMO",
+      "caseKey": "RMDB2PDB:4RMO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4RMO"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4RZD",
+      "caseKey": "RMDB2PDB:4RZD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4RZD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4TS2",
+      "caseKey": "RMDB2PDB:4TS2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4TS2"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4TZZ",
+      "caseKey": "RMDB2PDB:4TZZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4TZZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4UE5",
+      "caseKey": "RMDB2PDB:4UE5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4UE5"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V2S",
+      "caseKey": "RMDB2PDB:4V2S",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V2S"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V4X",
+      "caseKey": "RMDB2PDB:4V4X",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V4X"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V7M",
+      "caseKey": "RMDB2PDB:4V7M",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V7M"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V8Q",
+      "caseKey": "RMDB2PDB:4V8Q",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V8Q"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V90",
+      "caseKey": "RMDB2PDB:4V90",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V90"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4WFL",
+      "caseKey": "RMDB2PDB:4WFL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4WFL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4WFM",
+      "caseKey": "RMDB2PDB:4WFM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4WFM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4WJ3",
+      "caseKey": "RMDB2PDB:4WJ3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4WJ3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5AJ4",
+      "caseKey": "RMDB2PDB:5AJ4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5AJ4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5DCV",
+      "caseKey": "RMDB2PDB:5DCV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5DCV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5FLX",
+      "caseKey": "RMDB2PDB:5FLX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5FLX"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5KH8",
+      "caseKey": "RMDB2PDB:5KH8",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5KH8"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5KPY",
+      "caseKey": "RMDB2PDB:5KPY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5KPY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5ML7",
+      "caseKey": "RMDB2PDB:5ML7",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5ML7"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5MYJ",
+      "caseKey": "RMDB2PDB:5MYJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5MYJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5NCO",
+      "caseKey": "RMDB2PDB:5NCO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5NCO"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5TC1",
+      "caseKey": "RMDB2PDB:5TC1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5TC1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5TPY",
+      "caseKey": "RMDB2PDB:5TPY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5TPY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5V3I",
+      "caseKey": "RMDB2PDB:5V3I",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5V3I"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5W4K",
+      "caseKey": "RMDB2PDB:5W4K",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5W4K"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5X8P",
+      "caseKey": "RMDB2PDB:5X8P",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5X8P"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5Y36",
+      "caseKey": "RMDB2PDB:5Y36",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5Y36"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6AAY",
+      "caseKey": "RMDB2PDB:6AAY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6AAY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6AH3",
+      "caseKey": "RMDB2PDB:6AH3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6AH3"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6B14",
+      "caseKey": "RMDB2PDB:6B14",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6B14"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6CB3",
+      "caseKey": "RMDB2PDB:6CB3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6CB3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6CU1",
+      "caseKey": "RMDB2PDB:6CU1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6CU1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6DLR",
+      "caseKey": "RMDB2PDB:6DLR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6DLR"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6DTD",
+      "caseKey": "RMDB2PDB:6DTD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6DTD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6DVK",
+      "caseKey": "RMDB2PDB:6DVK",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6DVK"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6E9F",
+      "caseKey": "RMDB2PDB:6E9F",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6E9F"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6JDV",
+      "caseKey": "RMDB2PDB:6JDV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6JDV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6LNB",
+      "caseKey": "RMDB2PDB:6LNB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6LNB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6ME0",
+      "caseKey": "RMDB2PDB:6ME0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6ME0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6MJ0",
+      "caseKey": "RMDB2PDB:6MJ0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6MJ0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6MWN",
+      "caseKey": "RMDB2PDB:6MWN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6MWN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6N2V",
+      "caseKey": "RMDB2PDB:6N2V",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6N2V"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6PMO",
+      "caseKey": "RMDB2PDB:6PMO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6PMO"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6QN3",
+      "caseKey": "RMDB2PDB:6QN3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6QN3"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6R47",
+      "caseKey": "RMDB2PDB:6R47",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6R47"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6RJA",
+      "caseKey": "RMDB2PDB:6RJA",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6RJA"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6SY6",
+      "caseKey": "RMDB2PDB:6SY6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6SY6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6TQN",
+      "caseKey": "RMDB2PDB:6TQN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6TQN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6U8K",
+      "caseKey": "RMDB2PDB:6U8K",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6U8K"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6UFH",
+      "caseKey": "RMDB2PDB:6UFH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6UFH"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6URO",
+      "caseKey": "RMDB2PDB:6URO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6URO"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6V5C",
+      "caseKey": "RMDB2PDB:6V5C",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6V5C"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6VRC",
+      "caseKey": "RMDB2PDB:6VRC",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6VRC"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6W2T",
+      "caseKey": "RMDB2PDB:6W2T",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6W2T"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WJS",
+      "caseKey": "RMDB2PDB:6WJS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WJS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WLQ",
+      "caseKey": "RMDB2PDB:6WLQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WLQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WLU",
+      "caseKey": "RMDB2PDB:6WLU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WLU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WW6",
+      "caseKey": "RMDB2PDB:6WW6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WW6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WZS",
+      "caseKey": "RMDB2PDB:6WZS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WZS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6XIQ",
+      "caseKey": "RMDB2PDB:6XIQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6XIQ"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6XKN",
+      "caseKey": "RMDB2PDB:6XKN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6XKN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6ZMO",
+      "caseKey": "RMDB2PDB:6ZMO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6ZMO"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6ZQD",
+      "caseKey": "RMDB2PDB:6ZQD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6ZQD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7AOR",
+      "caseKey": "RMDB2PDB:7AOR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7AOR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7AZY",
+      "caseKey": "RMDB2PDB:7AZY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7AZY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7D0F",
+      "caseKey": "RMDB2PDB:7D0F",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7D0F"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7EU9",
+      "caseKey": "RMDB2PDB:7EU9",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7EU9"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7JJU",
+      "caseKey": "RMDB2PDB:7JJU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7JJU"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7KHA",
+      "caseKey": "RMDB2PDB:7KHA",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7KHA"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7L0Z",
+      "caseKey": "RMDB2PDB:7L0Z",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7L0Z"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7LJ3",
+      "caseKey": "RMDB2PDB:7LJ3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7LJ3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7MRL",
+      "caseKey": "RMDB2PDB:7MRL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7MRL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7O7Z",
+      "caseKey": "RMDB2PDB:7O7Z",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7O7Z"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7OG4",
+      "caseKey": "RMDB2PDB:7OG4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7OG4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7ONU",
+      "caseKey": "RMDB2PDB:7ONU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7ONU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7PIB",
+      "caseKey": "RMDB2PDB:7PIB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7PIB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7PTQ",
+      "caseKey": "RMDB2PDB:7PTQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7PTQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QIY",
+      "caseKey": "RMDB2PDB:7QIY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QIY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QQR",
+      "caseKey": "RMDB2PDB:7QQR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QQR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QWQ",
+      "caseKey": "RMDB2PDB:7QWQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QWQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7TTU",
+      "caseKey": "RMDB2PDB:7TTU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7TTU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7U0Y",
+      "caseKey": "RMDB2PDB:7U0Y",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7U0Y"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7UZ0",
+      "caseKey": "RMDB2PDB:7UZ0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7UZ0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7V08",
+      "caseKey": "RMDB2PDB:7V08",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7V08"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7WJU",
+      "caseKey": "RMDB2PDB:7WJU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7WJU"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7WKP",
+      "caseKey": "RMDB2PDB:7WKP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7WKP"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7XG1",
+      "caseKey": "RMDB2PDB:7XG1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7XG1"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7XLT",
+      "caseKey": "RMDB2PDB:7XLT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7XLT"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7YNC",
+      "caseKey": "RMDB2PDB:7YNC",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7YNC"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7ZPJ",
+      "caseKey": "RMDB2PDB:7ZPJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7ZPJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8ASW",
+      "caseKey": "RMDB2PDB:8ASW",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8ASW"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8BVM",
+      "caseKey": "RMDB2PDB:8BVM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8BVM"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8DFS",
+      "caseKey": "RMDB2PDB:8DFS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8DFS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8EUG",
+      "caseKey": "RMDB2PDB:8EUG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8EUG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8FF4",
+      "caseKey": "RMDB2PDB:8FF4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8FF4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8G8Z",
+      "caseKey": "RMDB2PDB:8G8Z",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8G8Z"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8G9Z",
+      "caseKey": "RMDB2PDB:8G9Z",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8G9Z"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8GNA",
+      "caseKey": "RMDB2PDB:8GNA",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8GNA"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8H1J",
+      "caseKey": "RMDB2PDB:8H1J",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8H1J"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8IBZ",
+      "caseKey": "RMDB2PDB:8IBZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8IBZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8OO0",
+      "caseKey": "RMDB2PDB:8OO0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8OO0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8P8W",
+      "caseKey": "RMDB2PDB:8P8W",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8P8W"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8PV4",
+      "caseKey": "RMDB2PDB:8PV4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8PV4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8Q87",
+      "caseKey": "RMDB2PDB:8Q87",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8Q87"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8QO2",
+      "caseKey": "RMDB2PDB:8QO2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8QO2"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8QO4",
+      "caseKey": "RMDB2PDB:8QO4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8QO4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8RR3",
+      "caseKey": "RMDB2PDB:8RR3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8RR3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8T2T",
+      "caseKey": "RMDB2PDB:8T2T",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8T2T"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8TJV",
+      "caseKey": "RMDB2PDB:8TJV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8TJV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8UYE",
+      "caseKey": "RMDB2PDB:8UYE",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8UYE"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8V87",
+      "caseKey": "RMDB2PDB:8V87",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8V87"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8Y7E",
+      "caseKey": "RMDB2PDB:8Y7E",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8Y7E"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9BDN",
+      "caseKey": "RMDB2PDB:9BDN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9BDN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ELY",
+      "caseKey": "RMDB2PDB:9ELY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ELY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ENB",
+      "caseKey": "RMDB2PDB:9ENB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ENB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ENE",
+      "caseKey": "RMDB2PDB:9ENE",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ENE"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9G25",
+      "caseKey": "RMDB2PDB:9G25",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9G25"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9G7C",
+      "caseKey": "RMDB2PDB:9G7C",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9G7C"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9GGR",
+      "caseKey": "RMDB2PDB:9GGR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9GGR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9H90",
+      "caseKey": "RMDB2PDB:9H90",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9H90"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9HM5",
+      "caseKey": "RMDB2PDB:9HM5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9HM5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9HN7",
+      "caseKey": "RMDB2PDB:9HN7",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9HN7"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9HWG",
+      "caseKey": "RMDB2PDB:9HWG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9HWG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9IMK",
+      "caseKey": "RMDB2PDB:9IMK",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9IMK"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9J4O",
+      "caseKey": "RMDB2PDB:9J4O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9J4O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9J5O",
+      "caseKey": "RMDB2PDB:9J5O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9J5O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9J6Y",
+      "caseKey": "RMDB2PDB:9J6Y",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9J6Y"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9K1Q",
+      "caseKey": "RMDB2PDB:9K1Q",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9K1Q"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9K9J",
+      "caseKey": "RMDB2PDB:9K9J",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9K9J"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9L5R",
+      "caseKey": "RMDB2PDB:9L5R",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9L5R"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9MB7",
+      "caseKey": "RMDB2PDB:9MB7",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9MB7"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9MK3",
+      "caseKey": "RMDB2PDB:9MK3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9MK3"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9MKT",
+      "caseKey": "RMDB2PDB:9MKT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9MKT"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9N6T",
+      "caseKey": "RMDB2PDB:9N6T",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9N6T"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9NH6",
+      "caseKey": "RMDB2PDB:9NH6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9NH6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9OWM",
+      "caseKey": "RMDB2PDB:9OWM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9OWM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9R3A",
+      "caseKey": "RMDB2PDB:9R3A",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9R3A"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9RUC",
+      "caseKey": "RMDB2PDB:9RUC",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9RUC"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9RWA",
+      "caseKey": "RMDB2PDB:9RWA",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9RWA"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9RWB",
+      "caseKey": "RMDB2PDB:9RWB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9RWB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9SFB",
+      "caseKey": "RMDB2PDB:9SFB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9SFB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9SS6",
+      "caseKey": "RMDB2PDB:9SS6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9SS6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9UZL",
+      "caseKey": "RMDB2PDB:9UZL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9UZL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9Y4G",
+      "caseKey": "RMDB2PDB:9Y4G",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9Y4G"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ZC6",
+      "caseKey": "RMDB2PDB:9ZC6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ZC6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ZC8",
+      "caseKey": "RMDB2PDB:9ZC8",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ZC8"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ZNF",
+      "caseKey": "RMDB2PDB:9ZNF",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ZNF"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A10ZT",
+      "caseKey": "RMDB2PDB:10ZT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "10ZT"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A11AG",
+      "caseKey": "RMDB2PDB:11AG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "11AG"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1C9S",
+      "caseKey": "RMDB2PDB:1C9S",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1C9S"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1FFZ",
+      "caseKey": "RMDB2PDB:1FFZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1FFZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1IVS",
+      "caseKey": "RMDB2PDB:1IVS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1IVS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1U63",
+      "caseKey": "RMDB2PDB:1U63",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1U63"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1U9S",
+      "caseKey": "RMDB2PDB:1U9S",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1U9S"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2DU4",
+      "caseKey": "RMDB2PDB:2DU4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2DU4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2DXI",
+      "caseKey": "RMDB2PDB:2DXI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2DXI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2EEV",
+      "caseKey": "RMDB2PDB:2EEV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2EEV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2J37",
+      "caseKey": "RMDB2PDB:2J37",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2J37"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2K96",
+      "caseKey": "RMDB2PDB:2K96",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2K96"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2L3J",
+      "caseKey": "RMDB2PDB:2L3J",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2L3J"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2L94",
+      "caseKey": "RMDB2PDB:2L94",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2L94"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2LC8",
+      "caseKey": "RMDB2PDB:2LC8",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2LC8"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2M8K",
+      "caseKey": "RMDB2PDB:2M8K",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2M8K"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2MIY",
+      "caseKey": "RMDB2PDB:2MIY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2MIY"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2N4L",
+      "caseKey": "RMDB2PDB:2N4L",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2N4L"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2QUS",
+      "caseKey": "RMDB2PDB:2QUS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2QUS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2RKJ",
+      "caseKey": "RMDB2PDB:2RKJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2RKJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2XD0",
+      "caseKey": "RMDB2PDB:2XD0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2XD0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2XXA",
+      "caseKey": "RMDB2PDB:2XXA",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2XXA"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2ZNI",
+      "caseKey": "RMDB2PDB:2ZNI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2ZNI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2ZZM",
+      "caseKey": "RMDB2PDB:2ZZM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2ZZM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3B4C",
+      "caseKey": "RMDB2PDB:3B4C",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3B4C"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3DIL",
+      "caseKey": "RMDB2PDB:3DIL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3DIL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3HAY",
+      "caseKey": "RMDB2PDB:3HAY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3HAY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3I56",
+      "caseKey": "RMDB2PDB:3I56",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3I56"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3ICQ",
+      "caseKey": "RMDB2PDB:3ICQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3ICQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3JCS",
+      "caseKey": "RMDB2PDB:3JCS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3JCS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3KFU",
+      "caseKey": "RMDB2PDB:3KFU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3KFU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3LA5",
+      "caseKey": "RMDB2PDB:3LA5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3LA5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3NDB",
+      "caseKey": "RMDB2PDB:3NDB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3NDB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3Q1R",
+      "caseKey": "RMDB2PDB:3Q1R",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3Q1R"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3RG5",
+      "caseKey": "RMDB2PDB:3RG5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3RG5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3RKF",
+      "caseKey": "RMDB2PDB:3RKF",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3RKF"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3WQY",
+      "caseKey": "RMDB2PDB:3WQY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3WQY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4BTS",
+      "caseKey": "RMDB2PDB:4BTS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4BTS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4C4Q",
+      "caseKey": "RMDB2PDB:4C4Q",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4C4Q"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4C7O",
+      "caseKey": "RMDB2PDB:4C7O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4C7O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4FRG",
+      "caseKey": "RMDB2PDB:4FRG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4FRG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4FRN",
+      "caseKey": "RMDB2PDB:4FRN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4FRN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4LX6",
+      "caseKey": "RMDB2PDB:4LX6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4LX6"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4M4O",
+      "caseKey": "RMDB2PDB:4M4O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4M4O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4P5J",
+      "caseKey": "RMDB2PDB:4P5J",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4P5J"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4Q9R",
+      "caseKey": "RMDB2PDB:4Q9R",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4Q9R"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4U7U",
+      "caseKey": "RMDB2PDB:4U7U",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4U7U"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4UYK",
+      "caseKey": "RMDB2PDB:4UYK",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4UYK"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V4W",
+      "caseKey": "RMDB2PDB:4V4W",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V4W"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V6I",
+      "caseKey": "RMDB2PDB:4V6I",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V6I"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V8A",
+      "caseKey": "RMDB2PDB:4V8A",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V8A"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4X4U",
+      "caseKey": "RMDB2PDB:4X4U",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4X4U"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4XCO",
+      "caseKey": "RMDB2PDB:4XCO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4XCO"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4XEJ",
+      "caseKey": "RMDB2PDB:4XEJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4XEJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4YYE",
+      "caseKey": "RMDB2PDB:4YYE",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4YYE"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4ZNP",
+      "caseKey": "RMDB2PDB:4ZNP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4ZNP"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4ZT0",
+      "caseKey": "RMDB2PDB:4ZT0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4ZT0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5AH5",
+      "caseKey": "RMDB2PDB:5AH5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5AH5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5BTM",
+      "caseKey": "RMDB2PDB:5BTM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5BTM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5DDR",
+      "caseKey": "RMDB2PDB:5DDR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5DDR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5FQ5",
+      "caseKey": "RMDB2PDB:5FQ5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5FQ5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5JC9",
+      "caseKey": "RMDB2PDB:5JC9",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5JC9"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5JPQ",
+      "caseKey": "RMDB2PDB:5JPQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5JPQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5L3P",
+      "caseKey": "RMDB2PDB:5L3P",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5L3P"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5M0H",
+      "caseKey": "RMDB2PDB:5M0H",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5M0H"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5U3G",
+      "caseKey": "RMDB2PDB:5U3G",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5U3G"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5UNE",
+      "caseKey": "RMDB2PDB:5UNE",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5UNE"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5WTI",
+      "caseKey": "RMDB2PDB:5WTI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5WTI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5XXU",
+      "caseKey": "RMDB2PDB:5XXU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5XXU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6BG9",
+      "caseKey": "RMDB2PDB:6BG9",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6BG9"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6CK5",
+      "caseKey": "RMDB2PDB:6CK5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6CK5"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6D3P",
+      "caseKey": "RMDB2PDB:6D3P",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6D3P"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6D8L",
+      "caseKey": "RMDB2PDB:6D8L",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6D8L"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6D8O",
+      "caseKey": "RMDB2PDB:6D8O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6D8O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6IFO",
+      "caseKey": "RMDB2PDB:6IFO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6IFO"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6IV6",
+      "caseKey": "RMDB2PDB:6IV6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6IV6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6IV8",
+      "caseKey": "RMDB2PDB:6IV8",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6IV8"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6PQ7",
+      "caseKey": "RMDB2PDB:6PQ7",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6PQ7"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6QKL",
+      "caseKey": "RMDB2PDB:6QKL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6QKL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6QYZ",
+      "caseKey": "RMDB2PDB:6QYZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6QYZ"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6TFE",
+      "caseKey": "RMDB2PDB:6TFE",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6TFE"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6U79",
+      "caseKey": "RMDB2PDB:6U79",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6U79"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6UEY",
+      "caseKey": "RMDB2PDB:6UEY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6UEY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6VMY",
+      "caseKey": "RMDB2PDB:6VMY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6VMY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WB1",
+      "caseKey": "RMDB2PDB:6WB1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WB1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6X5N",
+      "caseKey": "RMDB2PDB:6X5N",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6X5N"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6Z1P",
+      "caseKey": "RMDB2PDB:6Z1P",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6Z1P"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7D4I",
+      "caseKey": "RMDB2PDB:7D4I",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7D4I"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7D8O",
+      "caseKey": "RMDB2PDB:7D8O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7D8O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7DMQ",
+      "caseKey": "RMDB2PDB:7DMQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7DMQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7ELD",
+      "caseKey": "RMDB2PDB:7ELD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7ELD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7ENI",
+      "caseKey": "RMDB2PDB:7ENI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7ENI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7JQC",
+      "caseKey": "RMDB2PDB:7JQC",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7JQC"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7JRS",
+      "caseKey": "RMDB2PDB:7JRS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7JRS"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7JRT",
+      "caseKey": "RMDB2PDB:7JRT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7JRT"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7K16",
+      "caseKey": "RMDB2PDB:7K16",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7K16"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7KGA",
+      "caseKey": "RMDB2PDB:7KGA",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7KGA"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7KVU",
+      "caseKey": "RMDB2PDB:7KVU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7KVU"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7MLX",
+      "caseKey": "RMDB2PDB:7MLX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7MLX"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7OBQ",
+      "caseKey": "RMDB2PDB:7OBQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7OBQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7PMQ",
+      "caseKey": "RMDB2PDB:7PMQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7PMQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7PNV",
+      "caseKey": "RMDB2PDB:7PNV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7PNV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QDU",
+      "caseKey": "RMDB2PDB:7QDU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QDU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QGH",
+      "caseKey": "RMDB2PDB:7QGH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QGH"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QR5",
+      "caseKey": "RMDB2PDB:7QR5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QR5"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7R21",
+      "caseKey": "RMDB2PDB:7R21",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7R21"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7SCQ",
+      "caseKey": "RMDB2PDB:7SCQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7SCQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7SLP",
+      "caseKey": "RMDB2PDB:7SLP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7SLP"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7U2J",
+      "caseKey": "RMDB2PDB:7U2J",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7U2J"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7UZY",
+      "caseKey": "RMDB2PDB:7UZY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7UZY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7V9E",
+      "caseKey": "RMDB2PDB:7V9E",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7V9E"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7WII",
+      "caseKey": "RMDB2PDB:7WII",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7WII"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7XFZ",
+      "caseKey": "RMDB2PDB:7XFZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7XFZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7XG4",
+      "caseKey": "RMDB2PDB:7XG4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7XG4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7XUI",
+      "caseKey": "RMDB2PDB:7XUI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7XUI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7XW2",
+      "caseKey": "RMDB2PDB:7XW2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7XW2"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7Y85",
+      "caseKey": "RMDB2PDB:7Y85",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7Y85"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7YHS",
+      "caseKey": "RMDB2PDB:7YHS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7YHS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7YOJ",
+      "caseKey": "RMDB2PDB:7YOJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7YOJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7YR7",
+      "caseKey": "RMDB2PDB:7YR7",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7YR7"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7Z3N",
+      "caseKey": "RMDB2PDB:7Z3N",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7Z3N"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7ZRZ",
+      "caseKey": "RMDB2PDB:7ZRZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7ZRZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8AC0",
+      "caseKey": "RMDB2PDB:8AC0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8AC0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8AW3",
+      "caseKey": "RMDB2PDB:8AW3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8AW3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8BTR",
+      "caseKey": "RMDB2PDB:8BTR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8BTR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8D4A",
+      "caseKey": "RMDB2PDB:8D4A",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8D4A"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8D8L",
+      "caseKey": "RMDB2PDB:8D8L",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8D8L"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8D97",
+      "caseKey": "RMDB2PDB:8D97",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8D97"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8DFV",
+      "caseKey": "RMDB2PDB:8DFV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8DFV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8E79",
+      "caseKey": "RMDB2PDB:8E79",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8E79"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8FLI",
+      "caseKey": "RMDB2PDB:8FLI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8FLI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8FR8",
+      "caseKey": "RMDB2PDB:8FR8",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8FR8"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8GKH",
+      "caseKey": "RMDB2PDB:8GKH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8GKH"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8GXB",
+      "caseKey": "RMDB2PDB:8GXB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8GXB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8HL3",
+      "caseKey": "RMDB2PDB:8HL3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8HL3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8HMY",
+      "caseKey": "RMDB2PDB:8HMY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8HMY"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8I7N",
+      "caseKey": "RMDB2PDB:8I7N",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8I7N"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8IDF",
+      "caseKey": "RMDB2PDB:8IDF",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8IDF"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8K0R",
+      "caseKey": "RMDB2PDB:8K0R",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8K0R"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8K23",
+      "caseKey": "RMDB2PDB:8K23",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8K23"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8OIN",
+      "caseKey": "RMDB2PDB:8OIN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8OIN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8OP2",
+      "caseKey": "RMDB2PDB:8OP2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8OP2"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8OZ0",
+      "caseKey": "RMDB2PDB:8OZ0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8OZ0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8RM5",
+      "caseKey": "RMDB2PDB:8RM5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8RM5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8S95",
+      "caseKey": "RMDB2PDB:8S95",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8S95"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8SA5",
+      "caseKey": "RMDB2PDB:8SA5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8SA5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8TJX",
+      "caseKey": "RMDB2PDB:8TJX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8TJX"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8UYL",
+      "caseKey": "RMDB2PDB:8UYL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8UYL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8UYS",
+      "caseKey": "RMDB2PDB:8UYS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8UYS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8V1H",
+      "caseKey": "RMDB2PDB:8V1H",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8V1H"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8WND",
+      "caseKey": "RMDB2PDB:8WND",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8WND"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ASP",
+      "caseKey": "RMDB2PDB:9ASP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ASP"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9D85",
+      "caseKey": "RMDB2PDB:9D85",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9D85"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9DRT",
+      "caseKey": "RMDB2PDB:9DRT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9DRT"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9E0N",
+      "caseKey": "RMDB2PDB:9E0N",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9E0N"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9FMD",
+      "caseKey": "RMDB2PDB:9FMD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9FMD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9FQ6",
+      "caseKey": "RMDB2PDB:9FQ6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9FQ6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9G30",
+      "caseKey": "RMDB2PDB:9G30",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9G30"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9G8M",
+      "caseKey": "RMDB2PDB:9G8M",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9G8M"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9GO0",
+      "caseKey": "RMDB2PDB:9GO0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9GO0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9HCH",
+      "caseKey": "RMDB2PDB:9HCH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9HCH"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9I78",
+      "caseKey": "RMDB2PDB:9I78",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9I78"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9J4N",
+      "caseKey": "RMDB2PDB:9J4N",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9J4N"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9J9H",
+      "caseKey": "RMDB2PDB:9J9H",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9J9H"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9KGG",
+      "caseKey": "RMDB2PDB:9KGG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9KGG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9KGH",
+      "caseKey": "RMDB2PDB:9KGH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9KGH"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9N9J",
+      "caseKey": "RMDB2PDB:9N9J",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9N9J"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9OJM",
+      "caseKey": "RMDB2PDB:9OJM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9OJM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9OWN",
+      "caseKey": "RMDB2PDB:9OWN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9OWN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9OWQ",
+      "caseKey": "RMDB2PDB:9OWQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9OWQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9OZZ",
+      "caseKey": "RMDB2PDB:9OZZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9OZZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9Q87",
+      "caseKey": "RMDB2PDB:9Q87",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9Q87"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9QEH",
+      "caseKey": "RMDB2PDB:9QEH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9QEH"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9QRP",
+      "caseKey": "RMDB2PDB:9QRP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9QRP"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9QU7",
+      "caseKey": "RMDB2PDB:9QU7",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9QU7"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9RW1",
+      "caseKey": "RMDB2PDB:9RW1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9RW1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9SLG",
+      "caseKey": "RMDB2PDB:9SLG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9SLG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9YLU",
+      "caseKey": "RMDB2PDB:9YLU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9YLU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ZIY",
+      "caseKey": "RMDB2PDB:9ZIY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ZIY"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A11EH",
+      "caseKey": "RMDB2PDB:11EH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "11EH"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A11FV",
+      "caseKey": "RMDB2PDB:11FV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "11FV"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1E95",
+      "caseKey": "RMDB2PDB:1E95",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1E95"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1GRZ",
+      "caseKey": "RMDB2PDB:1GRZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1GRZ"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1GTN",
+      "caseKey": "RMDB2PDB:1GTN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1GTN"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1KUQ",
+      "caseKey": "RMDB2PDB:1KUQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1KUQ"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1MZP",
+      "caseKey": "RMDB2PDB:1MZP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1MZP"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1P6V",
+      "caseKey": "RMDB2PDB:1P6V",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1P6V"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1QF6",
+      "caseKey": "RMDB2PDB:1QF6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1QF6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1UN6",
+      "caseKey": "RMDB2PDB:1UN6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1UN6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1Y27",
+      "caseKey": "RMDB2PDB:1Y27",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1Y27"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2D6F",
+      "caseKey": "RMDB2PDB:2D6F",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2D6F"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2DR2",
+      "caseKey": "RMDB2PDB:2DR2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2DR2"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2HW8",
+      "caseKey": "RMDB2PDB:2HW8",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2HW8"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2IHX",
+      "caseKey": "RMDB2PDB:2IHX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2IHX"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2KRL",
+      "caseKey": "RMDB2PDB:2KRL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2KRL"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2MS0",
+      "caseKey": "RMDB2PDB:2MS0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2MS0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2OIU",
+      "caseKey": "RMDB2PDB:2OIU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2OIU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2OM7",
+      "caseKey": "RMDB2PDB:2OM7",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2OM7"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2R8S",
+      "caseKey": "RMDB2PDB:2R8S",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2R8S"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2VPL",
+      "caseKey": "RMDB2PDB:2VPL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2VPL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3CC7",
+      "caseKey": "RMDB2PDB:3CC7",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3CC7"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3CCU",
+      "caseKey": "RMDB2PDB:3CCU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3CCU"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3EGZ",
+      "caseKey": "RMDB2PDB:3EGZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3EGZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3EPL",
+      "caseKey": "RMDB2PDB:3EPL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3EPL"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3IAB",
+      "caseKey": "RMDB2PDB:3IAB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3IAB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3IGI",
+      "caseKey": "RMDB2PDB:3IGI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3IGI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3IVN",
+      "caseKey": "RMDB2PDB:3IVN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3IVN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3IZ4",
+      "caseKey": "RMDB2PDB:3IZ4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3IZ4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3JBV",
+      "caseKey": "RMDB2PDB:3JBV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3JBV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3KTW",
+      "caseKey": "RMDB2PDB:3KTW",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3KTW"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3LQX",
+      "caseKey": "RMDB2PDB:3LQX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3LQX"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3LWV",
+      "caseKey": "RMDB2PDB:3LWV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3LWV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3P22",
+      "caseKey": "RMDB2PDB:3P22",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3P22"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3R4F",
+      "caseKey": "RMDB2PDB:3R4F",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3R4F"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3SUX",
+      "caseKey": "RMDB2PDB:3SUX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3SUX"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3ZP8",
+      "caseKey": "RMDB2PDB:3ZP8",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3ZP8"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4CXG",
+      "caseKey": "RMDB2PDB:4CXG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4CXG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4ERL",
+      "caseKey": "RMDB2PDB:4ERL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4ERL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4JI4",
+      "caseKey": "RMDB2PDB:4JI4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4JI4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4PJO",
+      "caseKey": "RMDB2PDB:4PJO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4PJO"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4PMI",
+      "caseKey": "RMDB2PDB:4PMI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4PMI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4R4V",
+      "caseKey": "RMDB2PDB:4R4V",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4R4V"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V6U",
+      "caseKey": "RMDB2PDB:4V6U",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V6U"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V8N",
+      "caseKey": "RMDB2PDB:4V8N",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V8N"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4WZJ",
+      "caseKey": "RMDB2PDB:4WZJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4WZJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4YVI",
+      "caseKey": "RMDB2PDB:4YVI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4YVI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5AXN",
+      "caseKey": "RMDB2PDB:5AXN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5AXN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5B2Q",
+      "caseKey": "RMDB2PDB:5B2Q",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5B2Q"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5H9F",
+      "caseKey": "RMDB2PDB:5H9F",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5H9F"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5J88",
+      "caseKey": "RMDB2PDB:5J88",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5J88"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5JVG",
+      "caseKey": "RMDB2PDB:5JVG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5JVG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5KK5",
+      "caseKey": "RMDB2PDB:5KK5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5KK5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5M73",
+      "caseKey": "RMDB2PDB:5M73",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5M73"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5NG6",
+      "caseKey": "RMDB2PDB:5NG6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5NG6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5NPM",
+      "caseKey": "RMDB2PDB:5NPM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5NPM"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5O7H",
+      "caseKey": "RMDB2PDB:5O7H",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5O7H"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5WLH",
+      "caseKey": "RMDB2PDB:5WLH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5WLH"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5X2G",
+      "caseKey": "RMDB2PDB:5X2G",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5X2G"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5XYI",
+      "caseKey": "RMDB2PDB:5XYI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5XYI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5YYN",
+      "caseKey": "RMDB2PDB:5YYN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5YYN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5ZEY",
+      "caseKey": "RMDB2PDB:5ZEY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5ZEY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6CIH",
+      "caseKey": "RMDB2PDB:6CIH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6CIH"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6D12",
+      "caseKey": "RMDB2PDB:6D12",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6D12"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6DB9",
+      "caseKey": "RMDB2PDB:6DB9",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6DB9"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6E8T",
+      "caseKey": "RMDB2PDB:6E8T",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6E8T"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6JOO",
+      "caseKey": "RMDB2PDB:6JOO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6JOO"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6JQ6",
+      "caseKey": "RMDB2PDB:6JQ6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6JQ6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6LXD",
+      "caseKey": "RMDB2PDB:6LXD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6LXD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6M0X",
+      "caseKey": "RMDB2PDB:6M0X",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6M0X"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6NUD",
+      "caseKey": "RMDB2PDB:6NUD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6NUD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6P19",
+      "caseKey": "RMDB2PDB:6P19",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6P19"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6P5N",
+      "caseKey": "RMDB2PDB:6P5N",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6P5N"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6RM3",
+      "caseKey": "RMDB2PDB:6RM3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6RM3"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6SY4",
+      "caseKey": "RMDB2PDB:6SY4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6SY4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6TMF",
+      "caseKey": "RMDB2PDB:6TMF",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6TMF"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6UP0",
+      "caseKey": "RMDB2PDB:6UP0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6UP0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6VAR",
+      "caseKey": "RMDB2PDB:6VAR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6VAR"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6W3M",
+      "caseKey": "RMDB2PDB:6W3M",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6W3M"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WQQ",
+      "caseKey": "RMDB2PDB:6WQQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WQQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6XAS",
+      "caseKey": "RMDB2PDB:6XAS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6XAS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6XJQ",
+      "caseKey": "RMDB2PDB:6XJQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6XJQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6XMF",
+      "caseKey": "RMDB2PDB:6XMF",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6XMF"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6YSI",
+      "caseKey": "RMDB2PDB:6YSI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6YSI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6ZU5",
+      "caseKey": "RMDB2PDB:6ZU5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6ZU5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7A0R",
+      "caseKey": "RMDB2PDB:7A0R",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7A0R"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7A5K",
+      "caseKey": "RMDB2PDB:7A5K",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7A5K"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7A5P",
+      "caseKey": "RMDB2PDB:7A5P",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7A5P"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7AIH",
+      "caseKey": "RMDB2PDB:7AIH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7AIH"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7BL5",
+      "caseKey": "RMDB2PDB:7BL5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7BL5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7C7A",
+      "caseKey": "RMDB2PDB:7C7A",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7C7A"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7C7L",
+      "caseKey": "RMDB2PDB:7C7L",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7C7L"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7D82",
+      "caseKey": "RMDB2PDB:7D82",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7D82"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7D8C",
+      "caseKey": "RMDB2PDB:7D8C",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7D8C"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7DA7",
+      "caseKey": "RMDB2PDB:7DA7",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7DA7"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7JRR",
+      "caseKey": "RMDB2PDB:7JRR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7JRR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7LHD",
+      "caseKey": "RMDB2PDB:7LHD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7LHD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7LJY",
+      "caseKey": "RMDB2PDB:7LJY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7LJY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7LYF",
+      "caseKey": "RMDB2PDB:7LYF",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7LYF"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7MKY",
+      "caseKey": "RMDB2PDB:7MKY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7MKY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7NHL",
+      "caseKey": "RMDB2PDB:7NHL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7NHL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7NSI",
+      "caseKey": "RMDB2PDB:7NSI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7NSI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QIX",
+      "caseKey": "RMDB2PDB:7QIX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QIX"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QQ3",
+      "caseKey": "RMDB2PDB:7QQ3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QQ3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QR3",
+      "caseKey": "RMDB2PDB:7QR3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QR3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7S0S",
+      "caseKey": "RMDB2PDB:7S0S",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7S0S"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7SLQ",
+      "caseKey": "RMDB2PDB:7SLQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7SLQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7TZS",
+      "caseKey": "RMDB2PDB:7TZS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7TZS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7U5E",
+      "caseKey": "RMDB2PDB:7U5E",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7U5E"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7UO0",
+      "caseKey": "RMDB2PDB:7UO0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7UO0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7UO1",
+      "caseKey": "RMDB2PDB:7UO1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7UO1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7UQ6",
+      "caseKey": "RMDB2PDB:7UQ6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7UQ6"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7VG2",
+      "caseKey": "RMDB2PDB:7VG2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7VG2"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7VTN",
+      "caseKey": "RMDB2PDB:7VTN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7VTN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7VW3",
+      "caseKey": "RMDB2PDB:7VW3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7VW3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7VYX",
+      "caseKey": "RMDB2PDB:7VYX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7VYX"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7WAZ",
+      "caseKey": "RMDB2PDB:7WAZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7WAZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7WB1",
+      "caseKey": "RMDB2PDB:7WB1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7WB1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7WM4",
+      "caseKey": "RMDB2PDB:7WM4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7WM4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7XD6",
+      "caseKey": "RMDB2PDB:7XD6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7XD6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7XHT",
+      "caseKey": "RMDB2PDB:7XHT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7XHT"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7Y83",
+      "caseKey": "RMDB2PDB:7Y83",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7Y83"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8A57",
+      "caseKey": "RMDB2PDB:8A57",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8A57"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8ABZ",
+      "caseKey": "RMDB2PDB:8ABZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8ABZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8B0J",
+      "caseKey": "RMDB2PDB:8B0J",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8B0J"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8BTZ",
+      "caseKey": "RMDB2PDB:8BTZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8BTZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8CBL",
+      "caseKey": "RMDB2PDB:8CBL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8CBL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8CBO",
+      "caseKey": "RMDB2PDB:8CBO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8CBO"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8CTI",
+      "caseKey": "RMDB2PDB:8CTI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8CTI"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8CTL",
+      "caseKey": "RMDB2PDB:8CTL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8CTL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8DC2",
+      "caseKey": "RMDB2PDB:8DC2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8DC2"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8DMB",
+      "caseKey": "RMDB2PDB:8DMB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8DMB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8DP3",
+      "caseKey": "RMDB2PDB:8DP3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8DP3"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8DVU",
+      "caseKey": "RMDB2PDB:8DVU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8DVU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8EG0",
+      "caseKey": "RMDB2PDB:8EG0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8EG0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8F4O",
+      "caseKey": "RMDB2PDB:8F4O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8F4O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8FCS",
+      "caseKey": "RMDB2PDB:8FCS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8FCS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8FFR",
+      "caseKey": "RMDB2PDB:8FFR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8FFR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8FMW",
+      "caseKey": "RMDB2PDB:8FMW",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8FMW"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8FZR",
+      "caseKey": "RMDB2PDB:8FZR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8FZR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8G1I",
+      "caseKey": "RMDB2PDB:8G1I",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8G1I"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8G4I",
+      "caseKey": "RMDB2PDB:8G4I",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8G4I"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8H2H",
+      "caseKey": "RMDB2PDB:8H2H",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8H2H"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8J12",
+      "caseKey": "RMDB2PDB:8J12",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8J12"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8JOZ",
+      "caseKey": "RMDB2PDB:8JOZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8JOZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8JSG",
+      "caseKey": "RMDB2PDB:8JSG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8JSG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8P60",
+      "caseKey": "RMDB2PDB:8P60",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8P60"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8P8V",
+      "caseKey": "RMDB2PDB:8P8V",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8P8V"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8QO5",
+      "caseKey": "RMDB2PDB:8QO5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8QO5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8R6F",
+      "caseKey": "RMDB2PDB:8R6F",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8R6F"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8S8I",
+      "caseKey": "RMDB2PDB:8S8I",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8S8I"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8SP9",
+      "caseKey": "RMDB2PDB:8SP9",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8SP9"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8TOZ",
+      "caseKey": "RMDB2PDB:8TOZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8TOZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8URJ",
+      "caseKey": "RMDB2PDB:8URJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8URJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8VV4",
+      "caseKey": "RMDB2PDB:8VV4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8VV4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8WQ4",
+      "caseKey": "RMDB2PDB:8WQ4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8WQ4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8Y2O",
+      "caseKey": "RMDB2PDB:8Y2O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8Y2O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8ZYD",
+      "caseKey": "RMDB2PDB:8ZYD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8ZYD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9A9V",
+      "caseKey": "RMDB2PDB:9A9V",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9A9V"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9DCF",
+      "caseKey": "RMDB2PDB:9DCF",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9DCF"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9DPB",
+      "caseKey": "RMDB2PDB:9DPB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9DPB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9E71",
+      "caseKey": "RMDB2PDB:9E71",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9E71"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9FBV",
+      "caseKey": "RMDB2PDB:9FBV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9FBV"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9G8P",
+      "caseKey": "RMDB2PDB:9G8P",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9G8P"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9GUT",
+      "caseKey": "RMDB2PDB:9GUT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9GUT"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9HLZ",
+      "caseKey": "RMDB2PDB:9HLZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9HLZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9I2E",
+      "caseKey": "RMDB2PDB:9I2E",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9I2E"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9I3L",
+      "caseKey": "RMDB2PDB:9I3L",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9I3L"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9LOV",
+      "caseKey": "RMDB2PDB:9LOV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9LOV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9MCW",
+      "caseKey": "RMDB2PDB:9MCW",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9MCW"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9P4I",
+      "caseKey": "RMDB2PDB:9P4I",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9P4I"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9QEG",
+      "caseKey": "RMDB2PDB:9QEG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9QEG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9QT5",
+      "caseKey": "RMDB2PDB:9QT5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9QT5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9R3D",
+      "caseKey": "RMDB2PDB:9R3D",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9R3D"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9SAR",
+      "caseKey": "RMDB2PDB:9SAR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9SAR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9SWN",
+      "caseKey": "RMDB2PDB:9SWN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9SWN"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9U48",
+      "caseKey": "RMDB2PDB:9U48",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9U48"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9X6B",
+      "caseKey": "RMDB2PDB:9X6B",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9X6B"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ZIU",
+      "caseKey": "RMDB2PDB:9ZIU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ZIU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A11BQ",
+      "caseKey": "RMDB2PDB:11BQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "11BQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1GID",
+      "caseKey": "RMDB2PDB:1GID",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1GID"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1H4Q",
+      "caseKey": "RMDB2PDB:1H4Q",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1H4Q"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1KXK",
+      "caseKey": "RMDB2PDB:1KXK",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1KXK"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1NBS",
+      "caseKey": "RMDB2PDB:1NBS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1NBS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1S03",
+      "caseKey": "RMDB2PDB:1S03",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1S03"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A1X8W",
+      "caseKey": "RMDB2PDB:1X8W",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "1X8W"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A28UL",
+      "caseKey": "RMDB2PDB:28UL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "28UL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2CSX",
+      "caseKey": "RMDB2PDB:2CSX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2CSX"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2IL9",
+      "caseKey": "RMDB2PDB:2IL9",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2IL9"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2KE6",
+      "caseKey": "RMDB2PDB:2KE6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2KE6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2L1V",
+      "caseKey": "RMDB2PDB:2L1V",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2L1V"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2M58",
+      "caseKey": "RMDB2PDB:2M58",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2M58"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2MF1",
+      "caseKey": "RMDB2PDB:2MF1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2MF1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2WWB",
+      "caseKey": "RMDB2PDB:2WWB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2WWB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2XDB",
+      "caseKey": "RMDB2PDB:2XDB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2XDB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A2XKV",
+      "caseKey": "RMDB2PDB:2XKV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "2XKV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3AMT",
+      "caseKey": "RMDB2PDB:3AMT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3AMT"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3CUL",
+      "caseKey": "RMDB2PDB:3CUL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3CUL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3D2V",
+      "caseKey": "RMDB2PDB:3D2V",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3D2V"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3DHS",
+      "caseKey": "RMDB2PDB:3DHS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3DHS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3GOT",
+      "caseKey": "RMDB2PDB:3GOT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3GOT"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3IVK",
+      "caseKey": "RMDB2PDB:3IVK",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3IVK"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3K0J",
+      "caseKey": "RMDB2PDB:3K0J",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3K0J"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3OXM",
+      "caseKey": "RMDB2PDB:3OXM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3OXM"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3SD3",
+      "caseKey": "RMDB2PDB:3SD3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3SD3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A3TUP",
+      "caseKey": "RMDB2PDB:3TUP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "3TUP"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4ENC",
+      "caseKey": "RMDB2PDB:4ENC",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4ENC"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4GCW",
+      "caseKey": "RMDB2PDB:4GCW",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4GCW"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4JRC",
+      "caseKey": "RMDB2PDB:4JRC",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4JRC"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4MGN",
+      "caseKey": "RMDB2PDB:4MGN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4MGN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4P8Z",
+      "caseKey": "RMDB2PDB:4P8Z",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4P8Z"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4PQV",
+      "caseKey": "RMDB2PDB:4PQV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4PQV"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4PR6",
+      "caseKey": "RMDB2PDB:4PR6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4PR6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4PRF",
+      "caseKey": "RMDB2PDB:4PRF",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4PRF"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4RDX",
+      "caseKey": "RMDB2PDB:4RDX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4RDX"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4RUM",
+      "caseKey": "RMDB2PDB:4RUM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4RUM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4UYJ",
+      "caseKey": "RMDB2PDB:4UYJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4UYJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V42",
+      "caseKey": "RMDB2PDB:4V42",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V42"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4V4J",
+      "caseKey": "RMDB2PDB:4V4J",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4V4J"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A4X0B",
+      "caseKey": "RMDB2PDB:4X0B",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "4X0B"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5AKA",
+      "caseKey": "RMDB2PDB:5AKA",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5AKA"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5AOX",
+      "caseKey": "RMDB2PDB:5AOX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5AOX"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5CD1",
+      "caseKey": "RMDB2PDB:5CD1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5CD1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5D5L",
+      "caseKey": "RMDB2PDB:5D5L",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5D5L"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5DAR",
+      "caseKey": "RMDB2PDB:5DAR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5DAR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5DDO",
+      "caseKey": "RMDB2PDB:5DDO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5DDO"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5DH7",
+      "caseKey": "RMDB2PDB:5DH7",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5DH7"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5EF3",
+      "caseKey": "RMDB2PDB:5EF3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5EF3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5HC9",
+      "caseKey": "RMDB2PDB:5HC9",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5HC9"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5LYV",
+      "caseKey": "RMDB2PDB:5LYV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5LYV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5O69",
+      "caseKey": "RMDB2PDB:5O69",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5O69"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5OIK",
+      "caseKey": "RMDB2PDB:5OIK",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5OIK"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5OQL",
+      "caseKey": "RMDB2PDB:5OQL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5OQL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5VSU",
+      "caseKey": "RMDB2PDB:5VSU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5VSU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5VT0",
+      "caseKey": "RMDB2PDB:5VT0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5VT0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5VW1",
+      "caseKey": "RMDB2PDB:5VW1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5VW1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5VZL",
+      "caseKey": "RMDB2PDB:5VZL",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5VZL"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5WE4",
+      "caseKey": "RMDB2PDB:5WE4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5WE4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5WWT",
+      "caseKey": "RMDB2PDB:5WWT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5WWT"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5X6B",
+      "caseKey": "RMDB2PDB:5X6B",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5X6B"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5XLP",
+      "caseKey": "RMDB2PDB:5XLP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5XLP"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5XTM",
+      "caseKey": "RMDB2PDB:5XTM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5XTM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5XWP",
+      "caseKey": "RMDB2PDB:5XWP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5XWP"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A5ZTM",
+      "caseKey": "RMDB2PDB:5ZTM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "5ZTM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6AHU",
+      "caseKey": "RMDB2PDB:6AHU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6AHU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6C27",
+      "caseKey": "RMDB2PDB:6C27",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6C27"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6C66",
+      "caseKey": "RMDB2PDB:6C66",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6C66"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6D90",
+      "caseKey": "RMDB2PDB:6D90",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6D90"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6DN2",
+      "caseKey": "RMDB2PDB:6DN2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6DN2"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6E81",
+      "caseKey": "RMDB2PDB:6E81",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6E81"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6FRK",
+      "caseKey": "RMDB2PDB:6FRK",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6FRK"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6FZ0",
+      "caseKey": "RMDB2PDB:6FZ0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6FZ0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6JXM",
+      "caseKey": "RMDB2PDB:6JXM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6JXM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6K0B",
+      "caseKey": "RMDB2PDB:6K0B",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6K0B"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6NEQ",
+      "caseKey": "RMDB2PDB:6NEQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6NEQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6OL3",
+      "caseKey": "RMDB2PDB:6OL3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6OL3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6POM",
+      "caseKey": "RMDB2PDB:6POM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6POM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6SH8",
+      "caseKey": "RMDB2PDB:6SH8",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6SH8"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6TPQ",
+      "caseKey": "RMDB2PDB:6TPQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6TPQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6UFG",
+      "caseKey": "RMDB2PDB:6UFG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6UFG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6UFM",
+      "caseKey": "RMDB2PDB:6UFM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6UFM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6VBW",
+      "caseKey": "RMDB2PDB:6VBW",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6VBW"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6VPC",
+      "caseKey": "RMDB2PDB:6VPC",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6VPC"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6VQX",
+      "caseKey": "RMDB2PDB:6VQX",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6VQX"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WBR",
+      "caseKey": "RMDB2PDB:6WBR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WBR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WLK",
+      "caseKey": "RMDB2PDB:6WLK",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WLK"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WNW",
+      "caseKey": "RMDB2PDB:6WNW",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WNW"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6WOO",
+      "caseKey": "RMDB2PDB:6WOO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6WOO"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6XKO",
+      "caseKey": "RMDB2PDB:6XKO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6XKO"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6XZR",
+      "caseKey": "RMDB2PDB:6XZR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6XZR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A6YT9",
+      "caseKey": "RMDB2PDB:6YT9",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "6YT9"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7ASP",
+      "caseKey": "RMDB2PDB:7ASP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7ASP"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7E8O",
+      "caseKey": "RMDB2PDB:7E8O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7E8O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7ELE",
+      "caseKey": "RMDB2PDB:7ELE",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7ELE"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7JNH",
+      "caseKey": "RMDB2PDB:7JNH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7JNH"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7KD1",
+      "caseKey": "RMDB2PDB:7KD1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7KD1"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7KKV",
+      "caseKey": "RMDB2PDB:7KKV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7KKV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7KRO",
+      "caseKey": "RMDB2PDB:7KRO",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7KRO"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7LVA",
+      "caseKey": "RMDB2PDB:7LVA",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7LVA"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7LYG",
+      "caseKey": "RMDB2PDB:7LYG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7LYG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7OKY",
+      "caseKey": "RMDB2PDB:7OKY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7OKY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7PTS",
+      "caseKey": "RMDB2PDB:7PTS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7PTS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7PWG",
+      "caseKey": "RMDB2PDB:7PWG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7PWG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QEP",
+      "caseKey": "RMDB2PDB:7QEP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QEP"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QH4",
+      "caseKey": "RMDB2PDB:7QH4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QH4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QIZ",
+      "caseKey": "RMDB2PDB:7QIZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QIZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QR0",
+      "caseKey": "RMDB2PDB:7QR0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QR0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QR4",
+      "caseKey": "RMDB2PDB:7QR4",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QR4"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7QR8",
+      "caseKey": "RMDB2PDB:7QR8",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7QR8"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7S36",
+      "caseKey": "RMDB2PDB:7S36",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7S36"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7SBA",
+      "caseKey": "RMDB2PDB:7SBA",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7SBA"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7SYS",
+      "caseKey": "RMDB2PDB:7SYS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7SYS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7TQV",
+      "caseKey": "RMDB2PDB:7TQV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7TQV"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7TR9",
+      "caseKey": "RMDB2PDB:7TR9",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7TR9"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7U4A",
+      "caseKey": "RMDB2PDB:7U4A",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7U4A"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7UMC",
+      "caseKey": "RMDB2PDB:7UMC",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7UMC"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7UO5",
+      "caseKey": "RMDB2PDB:7UO5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7UO5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7UR5",
+      "caseKey": "RMDB2PDB:7UR5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7UR5"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7V06",
+      "caseKey": "RMDB2PDB:7V06",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7V06"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7V59",
+      "caseKey": "RMDB2PDB:7V59",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7V59"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7WWU",
+      "caseKey": "RMDB2PDB:7WWU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7WWU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7ZJ5",
+      "caseKey": "RMDB2PDB:7ZJ5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7ZJ5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A7ZO1",
+      "caseKey": "RMDB2PDB:7ZO1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "7ZO1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8A3W",
+      "caseKey": "RMDB2PDB:8A3W",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8A3W"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8A98",
+      "caseKey": "RMDB2PDB:8A98",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8A98"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8C83",
+      "caseKey": "RMDB2PDB:8C83",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8C83"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8D9L",
+      "caseKey": "RMDB2PDB:8D9L",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8D9L"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8DO6",
+      "caseKey": "RMDB2PDB:8DO6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8DO6"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8DZJ",
+      "caseKey": "RMDB2PDB:8DZJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8DZJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8EYU",
+      "caseKey": "RMDB2PDB:8EYU",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8EYU"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8FL2",
+      "caseKey": "RMDB2PDB:8FL2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8FL2"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8GAP",
+      "caseKey": "RMDB2PDB:8GAP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8GAP"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8GS2",
+      "caseKey": "RMDB2PDB:8GS2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8GS2"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8GZQ",
+      "caseKey": "RMDB2PDB:8GZQ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8GZQ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8H1C",
+      "caseKey": "RMDB2PDB:8H1C",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8H1C"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8HBA",
+      "caseKey": "RMDB2PDB:8HBA",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8HBA"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8HF0",
+      "caseKey": "RMDB2PDB:8HF0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8HF0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8HNW",
+      "caseKey": "RMDB2PDB:8HNW",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8HNW"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8JG9",
+      "caseKey": "RMDB2PDB:8JG9",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8JG9"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8JIV",
+      "caseKey": "RMDB2PDB:8JIV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8JIV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8OMR",
+      "caseKey": "RMDB2PDB:8OMR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8OMR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8PTG",
+      "caseKey": "RMDB2PDB:8PTG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8PTG"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8Q6N",
+      "caseKey": "RMDB2PDB:8Q6N",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8Q6N"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8Q7N",
+      "caseKey": "RMDB2PDB:8Q7N",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8Q7N"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8QO3",
+      "caseKey": "RMDB2PDB:8QO3",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8QO3"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8QZS",
+      "caseKey": "RMDB2PDB:8QZS",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8QZS"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8RWG",
+      "caseKey": "RMDB2PDB:8RWG",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8RWG"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8SCH",
+      "caseKey": "RMDB2PDB:8SCH",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8SCH"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8SH5",
+      "caseKey": "RMDB2PDB:8SH5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8SH5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8UPY",
+      "caseKey": "RMDB2PDB:8UPY",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8UPY"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8UYP",
+      "caseKey": "RMDB2PDB:8UYP",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8UYP"
+    },
+    {
+      "availableFamilies": [
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8VVJ",
+      "caseKey": "RMDB2PDB:8VVJ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8VVJ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8VY1",
+      "caseKey": "RMDB2PDB:8VY1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8VY1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8W2O",
+      "caseKey": "RMDB2PDB:8W2O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8W2O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8XI2",
+      "caseKey": "RMDB2PDB:8XI2",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8XI2"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8XT0",
+      "caseKey": "RMDB2PDB:8XT0",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8XT0"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A8ZMI",
+      "caseKey": "RMDB2PDB:8ZMI",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "8ZMI"
+    },
+    {
+      "availableFamilies": [
+        "A"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9BLM",
+      "caseKey": "RMDB2PDB:9BLM",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9BLM"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9DE5",
+      "caseKey": "RMDB2PDB:9DE5",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9DE5"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9DIB",
+      "caseKey": "RMDB2PDB:9DIB",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9DIB"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9DTT",
+      "caseKey": "RMDB2PDB:9DTT",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9DTT"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9EWW",
+      "caseKey": "RMDB2PDB:9EWW",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9EWW"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9EY1",
+      "caseKey": "RMDB2PDB:9EY1",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9EY1"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9FNZ",
+      "caseKey": "RMDB2PDB:9FNZ",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9FNZ"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9G1Z",
+      "caseKey": "RMDB2PDB:9G1Z",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9G1Z"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9GBW",
+      "caseKey": "RMDB2PDB:9GBW",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9GBW"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9H74",
+      "caseKey": "RMDB2PDB:9H74",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9H74"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9KDV",
+      "caseKey": "RMDB2PDB:9KDV",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9KDV"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9LCR",
+      "caseKey": "RMDB2PDB:9LCR",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9LCR"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9M0P",
+      "caseKey": "RMDB2PDB:9M0P",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9M0P"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9N2C",
+      "caseKey": "RMDB2PDB:9N2C",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9N2C"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9N5T",
+      "caseKey": "RMDB2PDB:9N5T",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9N5T"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9NLN",
+      "caseKey": "RMDB2PDB:9NLN",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9NLN"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9RW8",
+      "caseKey": "RMDB2PDB:9RW8",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9RW8"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9V7O",
+      "caseKey": "RMDB2PDB:9V7O",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9V7O"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ZCD",
+      "caseKey": "RMDB2PDB:9ZCD",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ZCD"
+    },
+    {
+      "availableFamilies": [
+        "A",
+        "B"
+      ],
+      "caseDir": "cases/RMDB2PDB%3A9ZQ6",
+      "caseKey": "RMDB2PDB:9ZQ6",
+      "confidenceStatus": "materialized",
+      "linkedViewStatus": "materialized",
+      "pdbId": "9ZQ6"
+    }
+  ],
+  "generatedAt": "2026-06-28T21:54:28.697404Z"
+}

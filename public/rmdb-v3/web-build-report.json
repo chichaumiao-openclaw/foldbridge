@@ -719,9 +719,11 @@
     "RMDB2PDB:9ZQ6"
   ],
   "contract_version": "v3",
-  "family_root": "/data4/rmdb2pdb_ab_v3_launch_132_centered/20260628T193700Z_retry/formal",
-  "output_root": "/data4/rmdb2pdb_ab_v3_launch_132_centered/20260628T193700Z_retry/pages",
-  "site_brand": "family_d_compat",
+  "family_root": "/Users/joseperezmartinez/docs/rmdb2pdb/reports/rmdb2pdb_ab_v3_launch_132_centered/20260628T193700Z_retry/formal",
+  "output_root": "/Users/joseperezmartinez/docs/rmdb2pdb/reports/rmdb2pdb_ab_v3_launch_132_centered/20260628T193700Z_retry/formal",
+  "shared_dir_name": "__rmdb_v3_site__",
+  "site_brand": "rmdb_v3_ab",
+  "site_title": "RMDB2PDB AB case list",
   "skipped_case_count": 0,
   "skipped_cases": [],
   "source_universe": "RMDB2PDB"
