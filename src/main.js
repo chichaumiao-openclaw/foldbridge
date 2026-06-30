@@ -2235,7 +2235,8 @@ function annojoinCasePage() {
     confidenceBundle: confidenceState && typeof confidenceState === 'object' ? confidenceState : null,
     confidenceStatus: confidenceState || 'idle',
     caseId,
-    caseKey
+    caseKey,
+    headerHtml: renderBundleHeader()
   });
 }
 
