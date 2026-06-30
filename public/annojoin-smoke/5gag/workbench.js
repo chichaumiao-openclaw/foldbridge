@@ -695,6 +695,16 @@ function activeResidues() {
     .sort((a, b) => (a.labelSeqId || 0) - (b.labelSeqId || 0));
 }
 
+function resolveStructureSourceHref(href, caseId) {
+  const original = String(href || "");
+  if (/^https?:\/\//i.test(original)) return original;
+  if (!/structure\.cif(\.gz)?$/i.test(original)) return original;
+  const pdbId = String(caseId || "").trim().toUpperCase();
+  if (!pdbId) return original;
+  const gz = /\.gz$/i.test(original) ? ".gz" : "";
+  return `https://files.rcsb.org/download/${pdbId}.cif${gz}`;
+}
+
 function alignmentCropRange(coverage = state.structureCoverage) {
   const chain = coverage?.polymerChain || {};
   const alignment = coverage?.sequenceAlignment || {};
@@ -712,11 +722,12 @@ async function loadStructureSourceForMolstar() {
     throw new Error("linked-view structure-coverage missing Mol* source metadata");
   }
   const range = alignmentCropRange(coverage);
+  const sourceHref = resolveStructureSourceHref(coverage.sourceStructure.href, coverage.caseId);
   return {
     chainKey: coverage.activeChainKey,
     mode: "source-structure",
-    sourceUrl: coverage.sourceStructure.href,
-    url: coverage.sourceStructure.href,
+    sourceUrl: sourceHref,
+    url: sourceHref,
     authAsymId: coverage.atomSiteFilter.auth_asym_id,
     labelAsymId: coverage.atomSiteFilter.label_asym_id,
     atomSiteFilter: coverage.atomSiteFilter,
