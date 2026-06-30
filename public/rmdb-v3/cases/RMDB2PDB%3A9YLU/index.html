@@ -12,20 +12,27 @@
       <h1>9YLU</h1>
       <p>RMDB2PDB:9YLU</p>
       <div class="meta">
-        <span class="chip">source RMDB2PDB</span>
-        <span class="chip">families A,B</span>
         <span class="chip">default chain J</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="J"><a class="chain-btn is-active" href="chains/J/index.html?profileId=top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#17990" data-chain-id="J">
-  <strong>J</strong>
-  <span class="mini">chains/J/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">J</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/J/index.html?profileId=top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#17990"
+          loading="lazy"
+          title="9YLU chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "9YLU", "caseKey": "RMDB2PDB:9YLU", "defaultChainId": "J", "defaultEvidenceId": "annojoin:RMDB2PDB:9YLU:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#17990", "chainPageById": {"J": "chains/J/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:9YLU:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#17990": "J", "annojoin:RMDB2PDB:9YLU:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#17990": "J"}, "evidenceRows": [{"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "J", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:9YLU:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#17990", "family": "B", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 30, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#17990", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#17990"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "J", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:9YLU:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#17990", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 13, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#17990", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#17990"}]}</script>
+  <script src="../../__rmdb_v3_site__/case-shell.js"></script>
 </body>
 </html>

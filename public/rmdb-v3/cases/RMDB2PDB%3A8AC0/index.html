@@ -12,20 +12,27 @@
       <h1>8AC0</h1>
       <p>RMDB2PDB:8AC0</p>
       <div class="meta">
-        <span class="chip">source RMDB2PDB</span>
-        <span class="chip">families A,B</span>
         <span class="chip">default chain R</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="R"><a class="chain-btn is-active" href="chains/R/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#7809" data-chain-id="R">
-  <strong>R</strong>
-  <span class="mini">chains/R/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">R</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/R/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#7809"
+          loading="lazy"
+          title="8AC0 chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "8AC0", "caseKey": "RMDB2PDB:8AC0", "defaultChainId": "R", "defaultEvidenceId": "annojoin:RMDB2PDB:8AC0:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#7809", "chainPageById": {"R": "chains/R/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:8AC0:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7809": "R", "annojoin:RMDB2PDB:8AC0:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#7809": "R"}, "evidenceRows": [{"aucDirectional": 0.344578, "aucEffectSizeZ": -1.620045, "aucEmpiricalPValue": 0.938062, "bridgeStatus": "bridge_missing", "chain": "R", "conflictFraction": 0.5, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:8AC0:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#7809", "family": "B", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 93, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.0, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#7809", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#7809"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "R", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:8AC0:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7809", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 41, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7809", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#7809"}]}</script>
+  <script src="../../__rmdb_v3_site__/case-shell.js"></script>
 </body>
 </html>

@@ -18,14 +18,23 @@
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="B"><a class="chain-btn is-active" href="chains/B/index.html?profileId=rasp_bw_62aa8e4d1c8c" data-chain-id="B">
-  <strong>B</strong>
-  <span class="mini">chains/B/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">B</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/B/index.html?profileId=rasp_bw_62aa8e4d1c8c"
+          loading="lazy"
+          title="9SWO chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "9SWO", "caseKey": "RASP2PDB:9SWO", "defaultChainId": "B", "defaultEvidenceId": "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_62aa8e4d1c8c", "chainPageById": {"B": "chains/B/index.html"}, "evidenceChainMap": {"annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_0b1fc3b5e0c6": "B", "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_0f6f231d0e9b": "B", "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_3610b2034b37": "B", "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_62aa8e4d1c8c": "B", "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_66010bd718ae": "B", "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_71410e749533": "B"}, "evidenceRows": [{"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "B", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_62aa8e4d1c8c", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 29, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "rasp_bw_62aa8e4d1c8c", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "DMS-MaPseq", "trackProfileId": "rasp_bw_62aa8e4d1c8c"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "B", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_3610b2034b37", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 24, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "rasp_bw_3610b2034b37", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "Structure-Seq", "trackProfileId": "rasp_bw_3610b2034b37"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "B", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_0f6f231d0e9b", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 17, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "rasp_bw_0f6f231d0e9b", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "Structure-Seq", "trackProfileId": "rasp_bw_0f6f231d0e9b"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "B", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_71410e749533", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 14, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "rasp_bw_71410e749533", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "Structure-Seq", "trackProfileId": "rasp_bw_71410e749533"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "B", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_0b1fc3b5e0c6", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 11, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "rasp_bw_0b1fc3b5e0c6", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "Structure-Seq", "trackProfileId": "rasp_bw_0b1fc3b5e0c6"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "B", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:9SWO:confidence:A:rasp_bw_66010bd718ae", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 9, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "rasp_bw_66010bd718ae", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "Structure-Seq", "trackProfileId": "rasp_bw_66010bd718ae"}]}</script>
+  <script src="../../__rasp_v3_site__/case-shell.js"></script>
 </body>
 </html>

@@ -42,10 +42,9 @@ import { renderHomeHero, HOME_METRICS } from '../src/siteChrome.js';
 
 test('home hero shows real metrics, no placeholders', () => {
   const html = renderHomeHero();
-  assert.match(html, /3,610/);
-  assert.match(html, /4,070/);
-  assert.match(html, />27</);
-  assert.match(html, />6</);
+  assert.match(html, /4,664/);
+  assert.match(html, /2,386/);
+  assert.match(html, />510</);
   assert.doesNotMatch(html, /\bxx\b/);
   assert.doesNotMatch(html, /Release 0\.1/);
 });
@@ -59,8 +58,9 @@ test('home hero CTAs target live routes', () => {
 });
 
 test('HOME_METRICS carries the launch numbers', () => {
-  assert.equal(HOME_METRICS.structureLinkedRecords, 3610);
-  assert.equal(HOME_METRICS.sourceCases, 4070);
+  assert.equal(HOME_METRICS.probingEntries, 4664);
+  assert.equal(HOME_METRICS.pdbStructures, 2386);
+  assert.equal(HOME_METRICS.highConfidencePaired, 510);
   assert.equal(HOME_METRICS.probingArticles, 27);
   assert.equal(HOME_METRICS.mechanismFamilies, 6);
 });

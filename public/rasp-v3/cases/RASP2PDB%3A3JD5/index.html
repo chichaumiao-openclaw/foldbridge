@@ -18,14 +18,23 @@
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="A"><a class="chain-btn is-active" href="chains/A/index.html?profileId=rasp_bw_f19b2878af92" data-chain-id="A">
-  <strong>A</strong>
-  <span class="mini">chains/A/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">A</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/A/index.html?profileId=rasp_bw_f19b2878af92"
+          loading="lazy"
+          title="3JD5 chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "3JD5", "caseKey": "RASP2PDB:3JD5", "defaultChainId": "A", "defaultEvidenceId": "annojoin:RASP2PDB:3JD5:confidence:B:rasp_bw_f19b2878af92", "chainPageById": {"A": "chains/A/index.html"}, "evidenceChainMap": {"annojoin:RASP2PDB:3JD5:confidence:B:rasp_bw_0ac5e94788d5": "A", "annojoin:RASP2PDB:3JD5:confidence:B:rasp_bw_0c774a52a757": "A", "annojoin:RASP2PDB:3JD5:confidence:B:rasp_bw_f19b2878af92": "A", "annojoin:RASP2PDB:3JD5:confidence:C:rasp_bw_0a2f0f893bac": "A", "annojoin:RASP2PDB:3JD5:confidence:C:rasp_bw_eee90e60acaa": "A"}, "evidenceRows": [{"aucDirectional": 0.580082, "aucEffectSizeZ": 1.433713, "aucEmpiricalPValue": 0.073926, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": 0.230769, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:3JD5:confidence:B:rasp_bw_f19b2878af92", "family": "B", "lssTierCalibrated": "LSS_WEAK", "lssTierUncalibrated": "LSS_WEAK", "nEvaluable": 108, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.461538, "profileKey": "rasp_bw_f19b2878af92", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "tNet-MaPseq", "trackProfileId": "rasp_bw_f19b2878af92"}, {"aucDirectional": 0.447917, "aucEffectSizeZ": -0.476497, "aucEmpiricalPValue": 0.667333, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": 0.25, "directionalMetricKind": "auc_paired_vs_unpaired", "directionalMetricLabel": "AUC paired vs unpaired", "evidenceId": "annojoin:RASP2PDB:3JD5:confidence:C:rasp_bw_0a2f0f893bac", "family": "C", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 28, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.5, "profileKey": "rasp_bw_0a2f0f893bac", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "paired_positive", "technology": "tNet-RNase-seq", "trackProfileId": "rasp_bw_0a2f0f893bac"}, {"aucDirectional": 0.413043, "aucEffectSizeZ": -1.05283, "aucEmpiricalPValue": 0.86014, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": 0.291667, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:3JD5:confidence:B:rasp_bw_0ac5e94788d5", "family": "B", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 47, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.333333, "profileKey": "rasp_bw_0ac5e94788d5", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "tNet-MaPseq", "trackProfileId": "rasp_bw_0ac5e94788d5"}, {"aucDirectional": 0.579861, "aucEffectSizeZ": 0.770184, "aucEmpiricalPValue": 0.213786, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": 0.25, "directionalMetricKind": "auc_paired_vs_unpaired", "directionalMetricLabel": "AUC paired vs unpaired", "evidenceId": "annojoin:RASP2PDB:3JD5:confidence:C:rasp_bw_eee90e60acaa", "family": "C", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_WEAK", "nEvaluable": 34, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.444444, "profileKey": "rasp_bw_eee90e60acaa", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "paired_positive", "technology": "tNet-RNase-seq", "trackProfileId": "rasp_bw_eee90e60acaa"}, {"aucDirectional": 0.48642, "aucEffectSizeZ": -0.325744, "aucEmpiricalPValue": 0.619381, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": 0.240741, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RASP2PDB:3JD5:confidence:B:rasp_bw_0c774a52a757", "family": "B", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 159, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.62963, "profileKey": "rasp_bw_0c774a52a757", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "tNet-MaPseq", "trackProfileId": "rasp_bw_0c774a52a757"}]}</script>
+  <script src="../../__rasp_v3_site__/case-shell.js"></script>
 </body>
 </html>

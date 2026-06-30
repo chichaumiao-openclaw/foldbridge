@@ -18,14 +18,23 @@
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="AY"><a class="chain-btn is-active" href="chains/AY/index.html?profileId=rasp_bw_13bf8094c5c2" data-chain-id="AY">
-  <strong>AY</strong>
-  <span class="mini">chains/AY/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">AY</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/AY/index.html?profileId=rasp_bw_13bf8094c5c2"
+          loading="lazy"
+          title="4V5L chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "4V5L", "caseKey": "RASP2PDB:4V5L", "defaultChainId": "AY", "defaultEvidenceId": "annojoin:RASP2PDB:4V5L:confidence:D:rasp_bw_13bf8094c5c2", "chainPageById": {"AY": "chains/AY/index.html"}, "evidenceChainMap": {"annojoin:RASP2PDB:4V5L:confidence:D:rasp_bw_13bf8094c5c2": "AY", "annojoin:RASP2PDB:4V5L:confidence:D:rasp_bw_c5489e5ab90f": "AY"}, "evidenceRows": [{"aucDirectional": 0.227761, "aucEffectSizeZ": 1.419085, "aucEmpiricalPValue": 0.072927, "bridgeStatus": "bridge_missing", "chain": "AY", "conflictFraction": null, "directionalMetricKind": "spearman_rho", "directionalMetricLabel": "Spearman rho", "evidenceId": "annojoin:RASP2PDB:4V5L:confidence:D:rasp_bw_13bf8094c5c2", "family": "D", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 36, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "rasp_bw_13bf8094c5c2", "recallPath": "spearman_primary", "sasaReferenceStatus": "SASA_PRESENT", "selectedByDefault": true, "signalDirection": "", "technology": "Lead-seq", "trackProfileId": "rasp_bw_13bf8094c5c2"}, {"aucDirectional": 0.073692, "aucEffectSizeZ": 0.497021, "aucEmpiricalPValue": 0.317682, "bridgeStatus": "bridge_missing", "chain": "AY", "conflictFraction": null, "directionalMetricKind": "spearman_rho", "directionalMetricLabel": "Spearman rho", "evidenceId": "annojoin:RASP2PDB:4V5L:confidence:D:rasp_bw_c5489e5ab90f", "family": "D", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 51, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "rasp_bw_c5489e5ab90f", "recallPath": "spearman_primary", "sasaReferenceStatus": "SASA_PRESENT", "selectedByDefault": false, "signalDirection": "", "technology": "Lead-seq", "trackProfileId": "rasp_bw_c5489e5ab90f"}]}</script>
+  <script src="../../__rasp_v3_site__/case-shell.js"></script>
 </body>
 </html>

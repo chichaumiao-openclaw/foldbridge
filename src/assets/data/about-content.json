@@ -1,56 +1,112 @@
 {
   "schema_version": "about.v1",
   "hero": {
-    "kicker": "About FoldBridge",
-    "title": "把 RNA 化学探针数据关联到已解析的三级结构",
-    "summary": "FoldBridge 将 RMDB / RASP 的探针反应性派生序列对齐到 PDB 链，物化为可溯源的结构关联记录，并按测量物理量分族评估置信度。",
-    "detail": "本页说明数据来源、建库流水线、置信度方法与阈值的诚实边界。缺少引用元数据的字段一律留空，不编造。"
+    "kicker": "About & Help · FoldBridge",
+    "title": "Linking RNA chemical-probing data to solved tertiary structures",
+    "summary": "FoldBridge aligns probing-derived sequences from RMDB / RASP onto PDB chains, materialises them as traceable structure-linked records, and scores confidence by the physical quantity each experiment measured.",
+    "detail": "This page doubles as the help page: it explains how the data is collected, how confidence is computed, the honest limits of our thresholds, and how to read the master table and detail pages. Fields without citation metadata are left blank rather than invented."
   },
   "sections": [
     {
       "id": "data-sources",
-      "title": "三源数据",
+      "title": "Three data sources",
       "kind": "cards",
       "items": [
-        { "name": "RMDB", "body": "RNA Mapping Database：社区沉淀的化学探针反应性原始数据。" },
-        { "name": "RASP", "body": "RNA 结构探针公共宇宙：跨技术的反应性派生序列与命中。" },
-        { "name": "PDB", "body": "已实验解析的三级结构，提供 SASA / 配对态等结构真值。" }
+        { "name": "RMDB", "body": "RNA Mapping Database: community-deposited raw chemical-probing reactivities covering reagents such as DMS, SHAPE and CMCT, organised by profile (the reactivity series of a single experiment)." },
+        { "name": "RASP", "body": "The public RNA structure-probing universe: probing-derived sequences and PDB hits across a broader technology range (icLASER, Lead-seq, RL-Seq and more), organised by case (one PDB hit)." },
+        { "name": "PDB", "body": "Experimentally solved tertiary structures. These supply the structural ground truth — paired state (from secondary structure), solvent-accessible surface area (SASA) and inter-residue distances — used as the gold standard for confidence scoring." }
+      ]
+    },
+    {
+      "id": "data-collection",
+      "title": "How the data is collected and aligned",
+      "kind": "prose",
+      "body": "Collection has two steps. First we take the signal: per-residue chemical-probing reactivities from RMDB / RASP, where each reactivity series carries a profile / case identifier and records the probing technology used. Second we take the truth and align to it: each probing-derived sequence is matched to one chain of its corresponding PDB entry, producing a probing-position → PDB-residue coordinate mapping. Only residues that map to structural coordinates enter scoring. When a single PDB has both RMDB and RASP sources, they are summarised into one display row on the master table, while links back to each source case are preserved. Entries that cannot be mapped, or that lack a scorable signal, are honestly dropped or flagged rather than force-scored."
+    },
+    {
+      "id": "structure-truth",
+      "title": "How the structural truth is computed",
+      "kind": "table",
+      "items": [
+        { "term": "Paired state (paired / unpaired)", "body": "Parsed from the chain's dot-bracket (DBN) secondary-structure file. Bracket characters (() [] {} <>) are recorded as paired; dots and dashes (. - _ : ,) as unpaired, aligned residue by residue onto PDB coordinates along a per-chain cursor." },
+        { "term": "Solvent-accessible surface area (SASA)", "body": "Computed per residue on the mmCIF structure with the Shrake-Rupley algorithm. A numbering caveat matters here: reactivity pdb_pos uses label_seq numbering while SASA uses the structure's author numbering (auth_seq); the two are reconciled through an auth→label map before they are joined, which avoids whole-chain mis-registration on protein-RNA complexes." },
+        { "term": "Spatial contact", "body": "Determined from inter-residue atom distances, preferring O2′(i)→C4′(j) and falling back to the nearest heavy atom when missing; short-distance pairs are recorded as contact hits and serve as the ground truth for contact-based methods (family E)." }
       ]
     },
     {
       "id": "pipeline",
-      "title": "ANNOJOIN 建库流水线",
+      "title": "The ANNOJOIN build pipeline",
       "kind": "pipeline",
       "steps": ["probing data", "sequence match", "PDB entry", "confidence scoring", "structure-linked record"],
-      "body": "探针派生序列对齐到 PDB 链，物化为结构关联记录；同一 PDB 的 RMDB / RASP 源会被汇总为一条展示行，但保留指回各自源 case 的链接。"
+      "body": "Probing-derived sequences are aligned to PDB chains → joined to structural truth (paired state / SASA / contacts) → scored per family and calibrated against random permutations → materialised as structure-linked records. RMDB and RASP sources for the same PDB are summarised into one display row, with links back to each source case preserved."
     },
     {
-      "id": "confidence",
-      "title": "置信度方法（A–F 测量家族）",
+      "id": "confidence-overview",
+      "title": "Reading confidence: family + tier",
       "kind": "prose",
-      "body": "family 表示被测量的物理量（A=WC-face 碱基特异 / B=SHAPE 柔性代理 / C=酶切反向 / D=SASA 双参考 / E=接触图 / F=配对集 F1），不是质量排名——A 并不比 D「更好」，只是指向分子的仪器不同。强度全部由 tier（STRONG / MODERATE / WEAK / DISCORDANT / UNDERPOWERED / NOT_SUPPORTED）表达，且 tier 必须经过对随机置换的检验才被授予。"
+      "body": "Every confidence label is two words, each doing a different job. The first word is the measurement family: it tells you which physical quantity the experiment measured. The second word is the calibrated recall tier: it tells you how reliably that evidence recovers the structure actually deposited in the PDB, after testing against chance. Read it as family + tier. The family is not a grade — a bare family letter says nothing about strength, and A is not better than D, it just means a different instrument was pointed at the molecule. All of the strength lives in the tier, and the tier has to be earned through quality gates and a permutation test."
+    },
+    {
+      "id": "confidence-families",
+      "title": "The six measurement families (what is measured + statistic + positive class)",
+      "kind": "table",
+      "items": [
+        { "term": "A — base-specific chemistry", "body": "Reagents that hit the Watson-Crick face of specific bases (DMS, CMCT, Keth-seq). Statistic auc_unpaired_vs_paired, positive class = unpaired: high signal means that base is unpaired." },
+        { "term": "B — backbone flexibility", "body": "SHAPE reagents that report 2′-OH flexibility on any of the four bases. Same statistic as A (auc_unpaired_vs_paired), positive class = unpaired: high signal means a flexible, likely unpaired residue." },
+        { "term": "C — enzymatic (direction reversed)", "body": "Nucleases such as PARS / PARTE cleave paired stems, so the logic is reversed. Statistic auc_paired_vs_unpaired (= 1 − AUC), positive class = paired: high signal means paired." },
+        { "term": "D — solvent accessibility", "body": "Hydroxyl-radical and related probes (RL-Seq, HRF, Lead-seq, icLASER) report how exposed the backbone is. Statistic Spearman(reactivity, SASA): more signal should track more exposed surface. When SASA is missing it falls back to an AUC proxy (flagged PAIRING_PROXY_FALLBACK, and a hard cap keeps it out of STRONG)." },
+        { "term": "E — spatial contacts", "body": "Methods (MCA / MOHCA) that report which residue pairs sit close together in 3D. Statistic contact_pair_auc: near equals a hit." },
+        { "term": "F — base-pair sets", "body": "Mutate-and-map approaches that infer an entire set of base pairs, scored against the reference pair set. Statistic pair-set F1 (precision / recall / F1)." }
+      ]
+    },
+    {
+      "id": "confidence-computation",
+      "title": "How confidence is computed: per-segment LSS",
+      "kind": "prose",
+      "body": "LSS (Local Structure-Signal Support) is computed per segment, where a segment is one (profile, pdb_id, chain) group — a single reactivity profile mapped onto one chain of one PDB entry. For that segment we ask a single question: do the per-residue chemical-probing values agree with the paired / unpaired (or geometric) state of the residues in the deposited structure? The family fixes which agreement statistic we compute (see the table above); the tier is the calibrated answer. Before scoring, a segment must pass evaluability gates (§9.2 / §9.3): at least 15 evaluable residues, with at least 5 paired and 5 unpaired, otherwise it is judged UNDERPOWERED — we draw no strong conclusion when the sample is too small. All AUC / Spearman statistics are implemented in pure standard library (the production environment has no numpy / scipy)."
+    },
+    {
+      "id": "confidence-calibration",
+      "title": "Permutation calibration and gates: how a tier is earned",
+      "kind": "prose",
+      "body": "A high AUC is not enough on its own. Every valid segment undergoes a permutation test (§9.6): the reactivity values are held fixed while the paired / unpaired labels are shuffled a thousand or more times, yielding an empirical p-value (with a +1/+1 correction, so it is never zero). Only evidence that still beats chance after shuffling counts as genuine support; a segment with an inflated AUC but a non-significant p is downgraded to NOT_SUPPORTED. The full conditions for awarding STRONG: permutation run + p ≤ 0.05 + AUC ≥ 0.70 + n_eval ≥ 20 + self-containment (the fraction of paired partners that also lie inside the segment) ≥ 0.70 + conflict fraction ≤ 0.25. MODERATE relaxes these to p ≤ 0.10 / AUC ≥ 0.65 / self-containment ≥ 0.50 / conflict ≤ 0.35. The gates are checked by an automated gate; when the permutation has not been run or the result is uncalibrated, a would-be STRONG is downgraded to MODERATE_CANDIDATE and STRONG_CALIBRATED is never issued."
+    },
+    {
+      "id": "confidence-tiers",
+      "title": "The six recall tiers",
+      "kind": "table",
+      "items": [
+        { "term": "STRONG", "body": "Permutation-calibrated and satisfying every STRONG gate (p ≤ 0.05, AUC ≥ 0.70, n ≥ 20, self-containment ≥ 0.70, low conflict). The evidence strongly supports the structure." },
+        { "term": "MODERATE", "body": "Satisfies the relaxed gates (p ≤ 0.10, AUC ≥ 0.65, self-containment ≥ 0.50). The evidence supports the structure reasonably well. When uncalibrated it appears as MODERATE_CANDIDATE." },
+        { "term": "WEAK", "body": "AUC clears the bar but the secondary gates (self-containment / conflict / sample size) do not; flagged auc_supported_but_not_self_contained." },
+        { "term": "DISCORDANT", "body": "The directional metric falls into the conflict band, or the conflict fraction is too high — the probing signal disagrees in direction with the structural truth and needs review." },
+        { "term": "UNDERPOWERED", "body": "Fails the evaluability gates (n_eval < 15, or fewer than 5 paired or unpaired). Too little data to draw a conclusion." },
+        { "term": "NOT_SUPPORTED", "body": "Not significant under the permutation test (p > 0.10): even a high-looking AUC is no better than chance once the labels are shuffled." }
+      ]
     },
     {
       "id": "thresholds",
-      "title": "阈值诚实声明",
+      "title": "Threshold-honesty statement",
       "kind": "prose",
-      "body": "A/B/C 的 0.70/0.65/0.55 是 RC3 运行值（非论文发布阈值）；只有 RL-Seq 的 Spearman 0.50/0.40/0.30 来自文献设定。threshold_basis 三档：1 SUPPORTED / 10 INFORMED / 23 PENDING（共 34 技术）。"
+      "body": "One thing must be clear: the A/B/C cut-points of 0.70 / 0.65 / 0.55 are not thresholds published in any paper — they are RC3 operating values. Only the RL-Seq Spearman cut-points of 0.50 / 0.40 / 0.30 are literature-set. The registry sorts the 34 technologies into three tiers via its threshold_basis column: 1 LITERATURE_SUPPORTED (RL-Seq only) / 10 LITERATURE_INFORMED / 23 OPERATING_VALUE_PENDING_CALIBRATION. In other words, most thresholds still await calibration; we label their basis truthfully rather than dressing operating values up as published conclusions."
     },
     {
       "id": "cite",
-      "title": "如何引用与数据来源",
+      "title": "How to cite and where the data comes from",
       "kind": "prose",
-      "body": "数据来源 RMDB / RASP / PDB；结构关联经 ANNOJOIN 主表物化。引用方式待定，当前资产未提供引用元数据处一律留空，不编造 DOI。"
+      "body": "Data sources are RMDB / RASP / PDB; structure links are materialised through the ANNOJOIN master table; confidence is assessed with the A–F families and calibrated recall tiers described above. The citation format is to be determined, and any asset that does not supply citation metadata is left blank rather than given an invented DOI. Every confidence record is traceable to its profile / case, the probing technology used and the PDB chain."
     },
     {
       "id": "terms",
-      "title": "关键术语",
+      "title": "Key terms",
       "kind": "table",
       "items": [
-        { "term": "source case vs display row", "body": "原始 case 按 PDB 合并为一条展示行；同一 PDB 的 RMDB / RASP 源被汇总，但保留各自的源链接。" },
-        { "term": "RMDB vs RASP", "body": "两个上游探针数据源。RASP 当前为 positive_confidence_active_now=false，显示为 not active——不要读作已激活的正向置信度。" },
-        { "term": "Confidence A/B/C", "body": "case 级别的分布汇总，不是 best-profile 单值评分；C 是探索性提示，应再对照 route 资产复核。" },
-        { "term": "Conflicts", "body": "标记探针信号与结构真值方向不一致、需要复核的注释 / 证据冲突候选。" }
+        { "term": "segment", "body": "The unit of scoring = one (profile, pdb_id, chain) group: a reactivity profile mapped onto one chain of one PDB entry. LSS and tier are both computed per segment." },
+        { "term": "source case vs display row", "body": "Raw cases are merged into one display row per PDB; the RMDB and RASP sources for the same PDB are summarised together, while each source's links are preserved." },
+        { "term": "RMDB vs RASP", "body": "Two upstream probing data sources. RASP entries that lack a scorable reactivity signal show as not active — this is a property of the data (no scorable signal), not an active positive confidence." },
+        { "term": "Confidence A/B/C", "body": "A case-level distribution summary rather than a single best-profile score; family C is an exploratory hint and should be re-checked against the route assets." },
+        { "term": "Conflicts", "body": "Annotation / evidence-conflict candidates flagging where the probing signal disagrees in direction with the structural truth and needs review." },
+        { "term": "self-containment", "body": "Among evaluable paired residues, the fraction whose base-pair partner also lies inside the same segment. STRONG requires ≥ 0.70 — ensuring the agreement we measure is over base pairs we can actually see." }
       ]
     }
   ]

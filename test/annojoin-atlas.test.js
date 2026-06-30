@@ -399,9 +399,10 @@ test('atlas page renders merged PDB rows with source detail links in the side pa
   assert.match(html, /1 PDBs \(2 source cases\)/);
   assert.match(html, /2 source cases/);
   assert.match(html, /Source cases/);
-  assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10FZ\/index\.html"/);
+  // RMDB2PDB:10FZ has no published detail page → SPA fallback (no 404 link).
+  assert.match(html, /href="#annojoin-case\?caseId=10FZ&amp;caseKey=RMDB2PDB%3A10FZ"/);
+  // RASP2PDB:10FZ is published → static detail page.
   assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A10FZ\/index\.html"/);
-  assert.doesNotMatch(html, /href="#annojoin-case\?caseId=10FZ" class="download-outline-btn">Open detail page/);
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
 
@@ -442,8 +443,10 @@ test('atlas page upgrades completed RMDB source-case links to V3 static detail p
     selectedField: 'moleculeName'
   });
 
+  // RMDB2PDB:10ZT is published → static detail page.
   assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10ZT\/index\.html"/);
-  assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A10ZT\/index\.html"/);
+  // RASP2PDB:10ZT has no published detail page → SPA fallback (no 404 link).
+  assert.match(html, /href="#annojoin-case\?caseId=10ZT&amp;caseKey=RASP2PDB%3A10ZT"/);
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
 
@@ -482,8 +485,11 @@ test('atlas page routes duplicate RASP family cases to its own static detail pag
     selectedField: 'moleculeName'
   });
 
-  // No selector page: each universe links straight to its own static detail tree.
-  assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A8EWB\/index\.html"/);
+  // No selector page: published universes link to their static detail tree,
+  // unpublished ones fall back to the SPA route (never a 404 static link).
+  // RMDB2PDB:8EWB has no published detail page → SPA fallback.
+  assert.match(html, /href="#annojoin-case\?caseId=8EWB&amp;caseKey=RMDB2PDB%3A8EWB"/);
+  // RASP2PDB:8EWB is published → static detail page.
   assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A8EWB\/index\.html"/);
   assert.doesNotMatch(html, /selector/);
 });

@@ -12,20 +12,27 @@
       <h1>28UL</h1>
       <p>RMDB2PDB:28UL</p>
       <div class="meta">
-        <span class="chip">source RMDB2PDB</span>
-        <span class="chip">families B</span>
         <span class="chip">default chain A</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="A"><a class="chain-btn is-active" href="chains/A/index.html?profileId=top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921" data-chain-id="A">
-  <strong>A</strong>
-  <span class="mini">chains/A/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">A</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/A/index.html?profileId=top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921"
+          loading="lazy"
+          title="28UL chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "28UL", "caseKey": "RMDB2PDB:28UL", "defaultChainId": "A", "defaultEvidenceId": "annojoin:RMDB2PDB:28UL:confidence:B:top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921", "chainPageById": {"A": "chains/A/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:28UL:confidence:B:top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921": "A"}, "evidenceRows": [{"aucDirectional": 0.42358, "aucEffectSizeZ": -1.153539, "aucEmpiricalPValue": 0.875125, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": 0.294118, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:28UL:confidence:B:top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921", "family": "B", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 90, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.490196, "profileKey": "top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "1M7", "trackProfileId": "top_x_279::data-eterna/data-eterna/RYOS2_1M7_0000.rdat#921"}]}</script>
+  <script src="../../__rmdb_v3_site__/case-shell.js"></script>
 </body>
 </html>

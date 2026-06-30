@@ -12,20 +12,27 @@
       <h1>10ZU</h1>
       <p>RMDB2PDB:10ZU</p>
       <div class="meta">
-        <span class="chip">source RMDB2PDB</span>
-        <span class="chip">families B</span>
         <span class="chip">default chain A</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="A"><a class="chain-btn is-active" href="chains/A/index.html?profileId=top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1028" data-chain-id="A">
-  <strong>A</strong>
-  <span class="mini">chains/A/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">A</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/A/index.html?profileId=top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1028"
+          loading="lazy"
+          title="10ZU chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "10ZU", "caseKey": "RMDB2PDB:10ZU", "defaultChainId": "A", "defaultEvidenceId": "annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1028", "chainPageById": {"A": "chains/A/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1028": "A", "annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1298": "A", "annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1588": "A", "annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#3736": "A", "annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#5279": "A"}, "evidenceRows": [{"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1028", "family": "B", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 67, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1028", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1028"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1298", "family": "B", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 67, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1298", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1298"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#5279", "family": "B", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 65, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#5279", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#5279"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1588", "family": "B", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 64, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1588", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#1588"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "A", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:10ZU:confidence:B:top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#3736", "family": "B", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 57, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#3736", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK7ALIB_2A3_0000.rdat#3736"}]}</script>
+  <script src="../../__rmdb_v3_site__/case-shell.js"></script>
 </body>
 </html>

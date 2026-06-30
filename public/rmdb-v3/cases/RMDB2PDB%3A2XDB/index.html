@@ -12,20 +12,27 @@
       <h1>2XDB</h1>
       <p>RMDB2PDB:2XDB</p>
       <div class="meta">
-        <span class="chip">source RMDB2PDB</span>
-        <span class="chip">families A,B</span>
         <span class="chip">default chain G</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="G"><a class="chain-btn is-active" href="chains/G/index.html?profileId=top_x_279::data-general/data-general/P50LIB_DMS_0002.rdat#1602" data-chain-id="G">
-  <strong>G</strong>
-  <span class="mini">chains/G/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">G</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/G/index.html?profileId=top_x_279::data-general/data-general/P50LIB_DMS_0002.rdat#1602"
+          loading="lazy"
+          title="2XDB chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "2XDB", "caseKey": "RMDB2PDB:2XDB", "defaultChainId": "G", "defaultEvidenceId": "annojoin:RMDB2PDB:2XDB:confidence:A:top_x_279::data-general/data-general/P50LIB_DMS_0002.rdat#1602", "chainPageById": {"G": "chains/G/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:2XDB:confidence:A:top_x_279::data-general/data-general/P50LIB_DMS_0002.rdat#1602": "G", "annojoin:RMDB2PDB:2XDB:confidence:B:top_x_279::data-general/data-general/P50LIB_2A3_0001.rdat#1602": "G"}, "evidenceRows": [{"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "G", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:2XDB:confidence:A:top_x_279::data-general/data-general/P50LIB_DMS_0002.rdat#1602", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 0, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-general/data-general/P50LIB_DMS_0002.rdat#1602", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-general/data-general/P50LIB_DMS_0002.rdat#1602"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "G", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:2XDB:confidence:B:top_x_279::data-general/data-general/P50LIB_2A3_0001.rdat#1602", "family": "B", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 0, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-general/data-general/P50LIB_2A3_0001.rdat#1602", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-general/data-general/P50LIB_2A3_0001.rdat#1602"}]}</script>
+  <script src="../../__rmdb_v3_site__/case-shell.js"></script>
 </body>
 </html>

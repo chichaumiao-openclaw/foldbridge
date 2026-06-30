@@ -12,20 +12,27 @@
       <h1>5X8P</h1>
       <p>RMDB2PDB:5X8P</p>
       <div class="meta">
-        <span class="chip">source RMDB2PDB</span>
-        <span class="chip">families A,B</span>
         <span class="chip">default chain a</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="a"><a class="chain-btn is-active" href="chains/a/index.html?profileId=top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#90909" data-chain-id="a">
-  <strong>a</strong>
-  <span class="mini">chains/a/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">a</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/a/index.html?profileId=top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#90909"
+          loading="lazy"
+          title="5X8P chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "5X8P", "caseKey": "RMDB2PDB:5X8P", "defaultChainId": "a", "defaultEvidenceId": "annojoin:RMDB2PDB:5X8P:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#90909", "chainPageById": {"a": "chains/a/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:5X8P:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#83965": "a", "annojoin:RMDB2PDB:5X8P:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#90909": "a", "annojoin:RMDB2PDB:5X8P:confidence:B:top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#83965": "a", "annojoin:RMDB2PDB:5X8P:confidence:B:top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#90909": "a"}, "evidenceRows": [{"aucDirectional": 0.533333, "aucEffectSizeZ": 0.929949, "aucEmpiricalPValue": 0.536464, "bridgeStatus": "bridge_missing", "chain": "a", "conflictFraction": 1.0, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:5X8P:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#90909", "family": "A", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 28, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.384615, "profileKey": "top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#90909", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#90909"}, {"aucDirectional": 0.47076, "aucEffectSizeZ": -0.613828, "aucEmpiricalPValue": 0.656344, "bridgeStatus": "bridge_missing", "chain": "a", "conflictFraction": 0.973684, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:5X8P:confidence:B:top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#90909", "family": "B", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 65, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.710526, "profileKey": "top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#90909", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#90909"}, {"aucDirectional": 0.590476, "aucEffectSizeZ": 0.922127, "aucEmpiricalPValue": 0.182817, "bridgeStatus": "bridge_missing", "chain": "a", "conflictFraction": 0.238095, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:5X8P:confidence:A:top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#83965", "family": "A", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_WEAK", "nEvaluable": 36, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.333333, "profileKey": "top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#83965", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK2TRN_DMS_0000.rdat#83965"}, {"aucDirectional": 0.540459, "aucEffectSizeZ": 0.606027, "aucEmpiricalPValue": 0.285714, "bridgeStatus": "bridge_missing", "chain": "a", "conflictFraction": 0.23913, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:5X8P:confidence:B:top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#83965", "family": "B", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 82, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.673913, "profileKey": "top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#83965", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK2TRN_2A3_0000.rdat#83965"}]}</script>
+  <script src="../../__rmdb_v3_site__/case-shell.js"></script>
 </body>
 </html>

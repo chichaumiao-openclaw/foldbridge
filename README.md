@@ -76,9 +76,15 @@ gates.
   Probing is a science hub: mechanism-family index, a 34-technology comparison
   table (family / targetable bases / threshold basis), a glossary, plus the
   carousel and in-depth article collection.
-- About: methodology page covering data sources (RMDB / RASP / PDB), the ANNOJOIN
-  build pipeline, the A–F confidence families, threshold-honesty notes, key terms,
-  and how to cite (the former Help content is merged here).
+- About / Help: methodology and help page (the `help` route redirects here). Covers
+  data sources (RMDB / RASP / PDB), how probing data is collected and aligned to PDB
+  chains, how structure truth is computed (paired state from DBN, SASA via
+  Shrake-Rupley with auth→label remap, spatial contacts), the ANNOJOIN build
+  pipeline, how confidence is scored per (profile, pdb_id, chain) segment (the A–F
+  measurement families, LSS, evaluability gates, permutation calibration, and the
+  STRONG/MODERATE/WEAK/DISCORDANT/UNDERPOWERED/NOT_SUPPORTED tiers), threshold-honesty
+  notes, key terms, and how to cite. Content is data-driven from
+  `src/assets/data/about-content.json`.
 - Stats: global overview with real, build-derived numbers and inline SVG charts
   (structure-linked records, source cases, confidence-tier distribution, and more).
 - Search: Pagefind-backed full-site search with type/tag filters and saved queries.

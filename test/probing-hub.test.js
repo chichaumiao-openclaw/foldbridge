@@ -51,22 +51,23 @@ test('tech table shows a known technology and its family', () => {
   assert.match(html, /mutate-and-map_candidate/);
 });
 
-test('tech table renders all three threshold-basis badge labels', () => {
-  const html = renderProbingTechTable(registry);
-  assert.match(html, /SUPPORTED/);
-  assert.match(html, /INFORMED/);
-  assert.match(html, /PENDING/);
-});
-
 test('tech table caption clarifies family is the measured quantity, not a ranking', () => {
   const html = renderProbingTechTable(registry);
   assert.match(html, /physical quantity/i);
   assert.match(html, /not a quality ranking/i);
 });
 
-test('tech table emits an article link when article_slug present', () => {
+test('tech table links the technology name when article_slug present', () => {
   const html = renderProbingTechTable(registry);
-  assert.match(html, /href="#detail\?tech=rl-seq"/);
+  assert.match(html, /href="#detail\?tech=rl-seq"[^>]*>RL-Seq<\/a>/);
+});
+
+test('tech table drops the threshold-basis column and empty explainer cells', () => {
+  const html = renderProbingTechTable(registry);
+  assert.doesNotMatch(html, /Threshold basis/);
+  assert.doesNotMatch(html, /probing-basis-badge/);
+  assert.doesNotMatch(html, /Read explainer/);
+  assert.doesNotMatch(html, /probing-tech-article-none/);
 });
 
 test('tech table columns carry data-sort hooks', () => {

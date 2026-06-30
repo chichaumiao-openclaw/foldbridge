@@ -12,20 +12,27 @@
       <h1>9EY1</h1>
       <p>RMDB2PDB:9EY1</p>
       <div class="meta">
-        <span class="chip">source RMDB2PDB</span>
-        <span class="chip">families A,B</span>
         <span class="chip">default chain T</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="T"><a class="chain-btn is-active" href="chains/T/index.html?profileId=top_x_279::data-eterna/data-eterna/OK3TST_DMS_0001.rdat#67338" data-chain-id="T">
-  <strong>T</strong>
-  <span class="mini">chains/T/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">T</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/T/index.html?profileId=top_x_279::data-eterna/data-eterna/OK3TST_DMS_0001.rdat#67338"
+          loading="lazy"
+          title="9EY1 chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "9EY1", "caseKey": "RMDB2PDB:9EY1", "defaultChainId": "T", "defaultEvidenceId": "annojoin:RMDB2PDB:9EY1:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0001.rdat#67338", "chainPageById": {"T": "chains/T/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:9EY1:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0001.rdat#67338": "T", "annojoin:RMDB2PDB:9EY1:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0001.rdat#67338": "T"}, "evidenceRows": [{"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "T", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:9EY1:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0001.rdat#67338", "family": "A", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 0, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-eterna/data-eterna/OK3TST_DMS_0001.rdat#67338", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK3TST_DMS_0001.rdat#67338"}, {"aucDirectional": null, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "T", "conflictFraction": null, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:9EY1:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0001.rdat#67338", "family": "B", "lssTierCalibrated": "LSS_UNDERPOWERED", "lssTierUncalibrated": "LSS_UNDERPOWERED", "nEvaluable": 0, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "top_x_279::data-eterna/data-eterna/OK3TST_2A3_0001.rdat#67338", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-eterna/data-eterna/OK3TST_2A3_0001.rdat#67338"}]}</script>
+  <script src="../../__rmdb_v3_site__/case-shell.js"></script>
 </body>
 </html>

@@ -12,20 +12,27 @@
       <h1>4V6I</h1>
       <p>RMDB2PDB:4V6I</p>
       <div class="meta">
-        <span class="chip">source RMDB2PDB</span>
-        <span class="chip">families A,B</span>
         <span class="chip">default chain DC</span>
         <span class="chip">chains 1</span>
       </div>
     </section>
-    <section class="panel">
-      <h2>Chains</h2>
-      <p class="mini">Select a chain to open its workbench (1D tracks, 2D VARNA, 3D Mol*).</p>
-      <div class="chain-list" data-default-chain-id="DC"><a class="chain-btn is-active" href="chains/DC/index.html?profileId=top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#7760" data-chain-id="DC">
-  <strong>DC</strong>
-  <span class="mini">chains/DC/index.html</span>
-</a></div>
+    <section class="layout">
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">DC</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/DC/index.html?profileId=top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#7760"
+          loading="lazy"
+          title="4V6I chain page"
+        ></iframe>
+      </section>
     </section>
   </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "4V6I", "caseKey": "RMDB2PDB:4V6I", "defaultChainId": "DC", "defaultEvidenceId": "annojoin:RMDB2PDB:4V6I:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#7760", "chainPageById": {"DC": "chains/DC/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:4V6I:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#7760": "DC", "annojoin:RMDB2PDB:4V6I:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#7760": "DC"}, "evidenceRows": [{"aucDirectional": 0.367442, "aucEffectSizeZ": -1.509622, "aucEmpiricalPValue": 0.933067, "bridgeStatus": "bridge_missing", "chain": "DC", "conflictFraction": 0.333333, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:4V6I:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#7760", "family": "A", "lssTierCalibrated": "LSS_DISCORDANT", "lssTierUncalibrated": "LSS_DISCORDANT", "nEvaluable": 58, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.133333, "profileKey": "top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#7760", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#7760"}, {"aucDirectional": 0.508763, "aucEffectSizeZ": 0.149482, "aucEmpiricalPValue": 0.425574, "bridgeStatus": "bridge_missing", "chain": "DC", "conflictFraction": 0.25641, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:4V6I:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#7760", "family": "B", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 118, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.512821, "profileKey": "top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#7760", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#7760"}]}</script>
+  <script src="../../__rmdb_v3_site__/case-shell.js"></script>
 </body>
 </html>
