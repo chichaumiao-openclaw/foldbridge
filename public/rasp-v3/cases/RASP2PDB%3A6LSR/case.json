@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6LSR",
+  "biologicalMoleculeName": "6LSR",
+  "caseId": "6LSR",
+  "caseKey": "RASP2PDB:6LSR",
+  "chains": [
+    "2",
+    "5",
+    "8"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "6LSR",
+  "profileCount": 191
+}

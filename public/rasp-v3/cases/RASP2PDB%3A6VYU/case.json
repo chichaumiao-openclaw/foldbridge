@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6VYU",
+  "biologicalMoleculeName": "6VYU",
+  "caseId": "6VYU",
+  "caseKey": "RASP2PDB:6VYU",
+  "chains": [
+    "D",
+    "a",
+    "d"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "6VYU",
+  "profileCount": 33
+}

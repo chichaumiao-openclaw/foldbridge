@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6QIK",
+  "biologicalMoleculeName": "6QIK",
+  "caseId": "6QIK",
+  "caseKey": "RASP2PDB:6QIK",
+  "chains": [
+    "A",
+    "x",
+    "y"
+  ],
+  "confidenceDisplayLabel": "C WEAK",
+  "pdbId": "6QIK",
+  "profileCount": 83
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6BUW",
+  "biologicalMoleculeName": "6BUW",
+  "caseId": "6BUW",
+  "caseKey": "RASP2PDB:6BUW",
+  "chains": [
+    "QV"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "6BUW",
+  "profileCount": 14
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6WD1",
+  "biologicalMoleculeName": "6WD1",
+  "caseId": "6WD1",
+  "caseKey": "RASP2PDB:6WD1",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5"
+  ],
+  "confidenceDisplayLabel": "D MODERATE",
+  "pdbId": "6WD1",
+  "profileCount": 40
+}

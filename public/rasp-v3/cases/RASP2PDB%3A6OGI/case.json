@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6OGI",
+  "biologicalMoleculeName": "6OGI",
+  "caseId": "6OGI",
+  "caseKey": "RASP2PDB:6OGI",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "6OGI",
+  "profileCount": 39
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6BOH",
+  "biologicalMoleculeName": "6BOH",
+  "caseId": "6BOH",
+  "caseKey": "RASP2PDB:6BOH",
+  "chains": [
+    "D"
+  ],
+  "confidenceDisplayLabel": "A DISCORDANT",
+  "pdbId": "6BOH",
+  "profileCount": 14
+}
