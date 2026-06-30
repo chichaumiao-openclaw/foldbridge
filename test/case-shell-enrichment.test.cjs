@@ -3,7 +3,7 @@ const assert = require("node:assert");
 const fs = require("node:fs");
 const path = require("node:path");
 const SRC = fs.readFileSync(path.join(
-  __dirname, "..", "public", "rmdb-v3", "__family_d_site__", "case-shell.js"
+  __dirname, "..", "public", "rmdb-v3", "__rmdb_v3_site__", "case-shell.js"
 ), "utf8");
 // Run the classic script in this realm: `document` is passed undefined so the DOM
 // bootstrap guard is skipped, while `module`/`exports` trigger the export guard.
@@ -138,7 +138,7 @@ test("document-guard path executes without throwing (TDZ regression)", () => {
   layout.parentNode = layoutParent;
 
   const fakeDocument = {
-    currentScript: { src: "https://example.test/__family_d_site__/case-shell.js" },
+    currentScript: { src: "https://example.test/__rmdb_v3_site__/case-shell.js" },
     head: makeEl(),
     body: makeEl(),
     documentElement: makeEl(),

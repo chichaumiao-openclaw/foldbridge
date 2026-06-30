@@ -10,7 +10,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 // and must carry the same richest-signal fix, so 1GTN-style cases whose first
 // profile is sparse no longer open the 3D view almost entirely white.
 const RENDERERS = {
-  'rmdb-v3': path.resolve(here, '../public/rmdb-v3/__family_d_site__/workbench.js'),
+  'rmdb-v3': path.resolve(here, '../public/rmdb-v3/__rmdb_v3_site__/workbench.js'),
   'rasp-v3': path.resolve(here, '../public/rasp-v3/__rasp_v3_site__/workbench.js'),
 };
 
