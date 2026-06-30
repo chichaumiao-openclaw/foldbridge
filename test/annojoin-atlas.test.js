@@ -7,6 +7,12 @@ import {
 } from '../src/annojoinAtlasData.js';
 import { renderAnnojointAtlasPage } from '../src/annojoinAtlasView.js';
 import { buildAtlasIndexAsset, slimAtlasIndexForWrite } from '../scripts/lib/annojoin-atlas-corpus.mjs';
+import {
+  sortAnnojointCases,
+  searchAnnojointRows,
+  paginateAnnojointRows,
+  buildAnnojointTableGroups
+} from '../src/annojoinAtlasTableModel.js';
 import { LOCAL_PAGES_BRIDGE_MANIFEST } from '../src/assets/generated/local_pages_bridge_manifest.js';
 
 const fixtures = {
@@ -16,6 +22,7 @@ const fixtures = {
       case_uid: 'RMDB2PDB|10ZT',
       pdb_id: '10ZT',
       pdb_chain_ids: 'A',
+      chainPlacements: [{ classLabel: 'Ribosome', nameLabel: '16S rRNA' }],
       parent_class_label: 'Ribosome',
       parent_class_source: 'PDB/biological_layer/governance_context_display_name',
       child_class_label: '16S rRNA',
@@ -51,6 +58,7 @@ const fixtures = {
       case_uid: 'RMDB2PDB|10ZU',
       pdb_id: '10ZU',
       pdb_chain_ids: '',
+      chainPlacements: [{ classLabel: 'designed_RNA', nameLabel: 'MPNN-fixbb designed RNA molecule' }],
       parent_class_label: '',
       parent_class_source: '',
       child_class_label: 'MPNN-fixbb designed RNA molecule',
@@ -264,6 +272,7 @@ test('atlas search state preserves the canonical moleculeDisplayName for groupin
     displayCases: [
       {
         atlasCaseKey: 'RMDB2PDB:1G1X', caseId: '1G1X', pdbId: '1G1X',
+        chainPlacements: [{ classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' }],
         parentClassLabel: '16S ribosomal RNA', childClassLabel: '16S ribosomal RNA',
         moleculeDisplayName: '16S ribosomal RNA', biologicalMoleculeName: '16S rRNA',
         confidenceDisplayLabel: 'A_REFERENCE (1)', profileCount: 1, chains: ['A']
@@ -271,6 +280,7 @@ test('atlas search state preserves the canonical moleculeDisplayName for groupin
       {
         // 4V85-like: blank class labels, canonical name only in moleculeDisplayName
         atlasCaseKey: 'RASP2PDB:4V85', caseId: '4V85', pdbId: '4V85',
+        chainPlacements: [{ classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' }],
         parentClassLabel: '', childClassLabel: '',
         moleculeDisplayName: '16S ribosomal RNA', biologicalMoleculeName: '16S rRNA',
         confidenceDisplayLabel: 'B WEAK', profileCount: 1, chains: ['B']
@@ -286,7 +296,7 @@ test('atlas search state preserves the canonical moleculeDisplayName for groupin
 
   const html = renderAnnojointAtlasPage({
     state,
-    expandedGroupIds: new Set(['parent:16S-ribosomal-RNA'])
+    expandedGroupIds: new Set(['parent:rRNA'])
   });
   // Problem 2: 4V85 folds into the "16S ribosomal RNA" parent group.
   assert.match(html, /data-annojoin-case-row="RASP2PDB:4V85"/);
@@ -652,6 +662,7 @@ test('atlas page suppresses molecule name inside a group whose label already sho
         case_id: '20AA',
         case_uid: 'RMDB2PDB|20AA',
         pdb_id: '20AA',
+        chainPlacements: [{ classLabel: '5S ribosomal RNA', nameLabel: '5S ribosomal RNA' }],
         parent_class_label: '5S ribosomal RNA',
         child_class_label: '5S ribosomal RNA',
         biological_molecule_name: '5S ribosomal RNA',
@@ -663,6 +674,7 @@ test('atlas page suppresses molecule name inside a group whose label already sho
         case_id: '20AB',
         case_uid: 'RMDB2PDB|20AB',
         pdb_id: '20AB',
+        chainPlacements: [{ classLabel: '5S ribosomal RNA', nameLabel: '5S ribosomal RNA' }],
         parent_class_label: '5S ribosomal RNA',
         child_class_label: '5S ribosomal RNA',
         biological_molecule_name: '5S ribosomal RNA',
@@ -697,6 +709,7 @@ test('atlas page keeps second-level child folding when a parent has multiple chi
         case_id: '10ZV',
         case_uid: 'RMDB2PDB|10ZV',
         pdb_id: '10ZV',
+        chainPlacements: [{ classLabel: 'Ribosome', nameLabel: '23S rRNA' }],
         child_class_label: '23S rRNA',
         biological_molecule_name: '23S ribosomal RNA',
         search_text: '10ZV 23S ribosomal RNA'
@@ -706,6 +719,7 @@ test('atlas page keeps second-level child folding when a parent has multiple chi
         case_id: '10ZX',
         case_uid: 'RMDB2PDB|10ZX',
         pdb_id: '10ZX',
+        chainPlacements: [{ classLabel: 'Ribosome', nameLabel: '23S rRNA' }],
         child_class_label: '23S rRNA',
         biological_molecule_name: '23S ribosomal RNA',
         search_text: '10ZX 23S ribosomal RNA'
@@ -976,4 +990,26 @@ test('buildAtlasSearchState drops dead caseHierarchy and exposes totalPlacementC
   assert.equal('caseHierarchy' in state, false);
   assert.equal('sourceCaseHierarchy' in state, false);
   assert.equal(state.totalPlacementCount, 1);
+});
+
+test('real pipeline groups by chain placement; search disables grouping', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [
+      { pdb_id: '4V99', chainPlacements: [
+        { classLabel: 'rRNA', nameLabel: '16S ribosomal RNA' },
+        { classLabel: 'tRNA', nameLabel: 'tRNA-Lys' }
+      ] },
+      { pdb_id: '1EHZ', chainPlacements: [{ classLabel: 'tRNA', nameLabel: 'tRNA-Phe' }] }
+    ]
+  });
+  const sorted = sortAnnojointCases(state.cases);
+  const page = paginateAnnojointRows(sorted, { page: 1, pageSize: 50 });
+  const groups = buildAnnojointTableGroups(page.rows);
+  const parentLabels = groups.map((p) => p.label).sort();
+  assert.deepEqual(parentLabels, ['rRNA', 'tRNA']);
+  const tRNA = groups.find((p) => p.label === 'tRNA');
+  const tRNApdbs = tRNA.children.flatMap((c) => c.rows.map((r) => r.pdbId)).sort();
+  assert.ok(tRNApdbs.includes('4V99'));
+  const filtered = searchAnnojointRows(sorted, '4V99');
+  assert.equal(filtered.length, 1);
 });
