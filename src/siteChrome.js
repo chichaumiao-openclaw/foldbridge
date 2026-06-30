@@ -21,21 +21,24 @@ export function renderPrimaryNav(activeRoute = 'home') {
         </nav>`;
 }
 
-// 首页指标（写死，集中一处便于一处更新）。来源（磁盘核对 2026-06-27）：
-//   structureLinkedRecords = annojoin-atlas/index.json totalCaseCount(3610, = displayCases 行数)
-//   sourceCases            = annojoin-atlas/index.json totalSourceCaseCount(4070, = cases 行数)
+// 首页指标（写死，集中一处便于一处更新）。最新口径（用户 2026-06-30）：
+//   probingEntries       = 4,664 chemical probing entries
+//   pdbStructures        = 2,386 PDB structures
+//   highConfidencePaired = 510 high-confidence paired datas
 //   probingArticles/mechanismFamilies = probing-articles/index.json article_count(27)/family_count(6)
-// Atlas 资产再变化时，只改这里的数字（与 Atlas index 顶层字段对齐）。
+// 口径再变化时只改这里的数字。
 export const HOME_METRICS = {
-  structureLinkedRecords: 3610,
-  sourceCases: 4070,
+  probingEntries: 4664,
+  pdbStructures: 2386,
+  highConfidencePaired: 510,
   probingArticles: 27,
   mechanismFamilies: 6
 };
 
 export function renderHomeHero(metrics = HOME_METRICS) {
-  const records = metrics.structureLinkedRecords.toLocaleString('en-US');
-  const sources = metrics.sourceCases.toLocaleString('en-US');
+  const probingEntries = metrics.probingEntries.toLocaleString('en-US');
+  const pdbStructures = metrics.pdbStructures.toLocaleString('en-US');
+  const highConfidencePaired = metrics.highConfidencePaired.toLocaleString('en-US');
   return `<section class="bundle-hero-card bundle-wide-card">
         <div class="bundle-hero-copy">
           <p class="bundle-kicker">RNA structure-linked database</p>
@@ -44,7 +47,7 @@ export function renderHomeHero(metrics = HOME_METRICS) {
             FoldBridge is a curated database that links RNA chemical probing data with experimentally resolved tertiary structures.
           </p>
           <p class="bundle-hero-detail">
-            By matching probing-derived RNA sequences to corresponding sequences in PDB entries, FoldBridge identifies high-confidence structure-linked records and integrates their secondary- and tertiary-structure information.
+            FoldBridge curates ${probingEntries} chemical probing entries and ${pdbStructures} PDB structures, encompassing ${highConfidencePaired} high-confidence paired datas.
           </p>
           <div class="bundle-hero-actions">
             <button type="button" class="bundle-hero-primary" data-route="entry">Browse Entry table &rarr;</button>
@@ -54,19 +57,19 @@ export function renderHomeHero(metrics = HOME_METRICS) {
 
         <aside class="bundle-hero-metrics">
           <article class="bundle-metric-card bundle-metric-large">
-            <p>structure-linked records</p>
-            <strong>${records}</strong>
-            <span>PDB entries in the current build, from ${sources} source cases</span>
+            <p>chemical probing entries</p>
+            <strong>${probingEntries}</strong>
+            <span>probing-derived RNA reactivity records in the current build</span>
           </article>
           <article class="bundle-metric-card">
-            <p>probing articles</p>
-            <strong>${metrics.probingArticles}</strong>
-            <span>across ${metrics.mechanismFamilies} mechanism families</span>
+            <p>PDB structures</p>
+            <strong>${pdbStructures}</strong>
+            <span>experimentally resolved structures matched to probing data</span>
           </article>
           <article class="bundle-metric-card">
-            <p>mechanism families</p>
-            <strong>${metrics.mechanismFamilies}</strong>
-            <span>chemical &amp; enzymatic probing groups</span>
+            <p>high-confidence paired</p>
+            <strong>${highConfidencePaired}</strong>
+            <span>structure-linked paired datasets</span>
           </article>
         </aside>
       </section>`;
@@ -77,7 +80,7 @@ const HOME_MODULE_CARDS = [
     route: 'entry',
     kicker: 'master table',
     title: 'Entry table',
-    summary: `${HOME_METRICS.structureLinkedRecords.toLocaleString('en-US')} structure-linked PDB entries with search, grouping and export.`,
+    summary: `${HOME_METRICS.pdbStructures.toLocaleString('en-US')} structure-linked PDB entries with search, grouping and export.`,
     action: 'Open Entry table'
   },
   {
@@ -253,7 +256,7 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     </div>`;
   }).join('');
   const legend = `<div class="hss-legend"><span>low</span><span class="hss-legend-bar"></span><span>high reactivity</span></div>`;
-  const records = HOME_METRICS.structureLinkedRecords.toLocaleString('en-US');
+  const records = HOME_METRICS.pdbStructures.toLocaleString('en-US');
   const kicker = `A FoldBridge story · ${caseData.molecule_label || ''} (PDB ${caseData.pdb_id || ''})`;
   const intro = `<header class="hss-intro">
       <p class="hss-kicker">${kicker}</p>

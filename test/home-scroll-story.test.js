@@ -117,7 +117,7 @@ test('renderHomeScrollStory emits 3 scenes + 3 state layers + legend', () => {
     // closing CTA
     assert.match(html, /class="hss-closing"/);
     assert.match(html, /Every record in FoldBridge tells this story/);
-    assert.match(html, /3,610 structure-linked records/);
+    assert.match(html, /2,386 structure-linked records/);
     assert.match(html, /data-route="entry"/);
     assert.match(html, /Browse the Entry table/);
 });
