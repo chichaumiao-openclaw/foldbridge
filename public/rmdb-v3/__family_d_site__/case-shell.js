@@ -53,11 +53,23 @@ if (typeof document !== "undefined") {
     chainStatus.textContent = `chain ${state.activeChainId}`;
   }
 
+  function loadEvidence(evidenceId) {
+    state.selectedEvidenceId = evidenceId;
+    const chainId = bootstrap.evidenceChainMap[evidenceId];
+    if (chainId && chainId !== state.activeChainId) {
+      state.activeChainId = chainId;
+    }
+    syncUi();
+  }
+
   function syncUi() {
     for (const button of chainButtons) {
       button.classList.toggle("is-active", button.dataset.chainId === state.activeChainId);
     }
     updateFrame();
+    if (typeof refreshEvidenceHighlight === "function") {
+      refreshEvidenceHighlight(state.selectedEvidenceId);
+    }
   }
 
   for (const button of chainButtons) {
