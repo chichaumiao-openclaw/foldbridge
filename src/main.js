@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex, renderProbingTechTable, renderProbingGlossary } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHelpPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex, renderProbingTechTable, renderProbingGlossary } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -31,6 +31,7 @@ import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
 import { createProbingArticleStore } from './probingArticleStore.js';
 import { createAboutContentStore } from './aboutContentStore.js';
+import { createHelpContentStore } from './helpContentStore.js';
 import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
 import { createSiteStatsStore } from './siteStatsStore.js';import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
 import {
@@ -78,6 +79,8 @@ const homeScrollStoryStore = createHomeScrollStoryStore();
 // About 页策展内容（about-content.json 在 ./src/assets/data/ 下，store 自带 'assets/data/' 后缀）。
 const aboutContentStore = createAboutContentStore({ assetBase: './src/' });
 let aboutContentState = null; // null=未加载, 'loading', 或 about-content.json 对象
+const helpContentStore = createHelpContentStore({ assetBase: './src/' });
+let helpContentState = null; // null=未加载, 'loading', 'error', 或 help-content.json 对象
 const siteStatsStore = createSiteStatsStore();
 let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
 const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
@@ -1977,7 +1980,20 @@ async function loadAboutContent() {
     console.error('[main] 加载 About 内容失败', err);
     aboutContentState = 'error';
   }
-  if (route === 'about' || route === 'help') render({ preserveScroll: true });
+  if (route === 'about') render({ preserveScroll: true });
+}
+
+async function loadHelpContent() {
+  if (helpContentState === 'loading') return;
+  helpContentState = 'loading';
+  try {
+    // 与 About 同款：store 失败返回 null → 终态 'error'，避免无限重试。
+    helpContentState = (await helpContentStore.loadContent()) || 'error';
+  } catch (err) {
+    console.error('[main] 加载 Help 内容失败', err);
+    helpContentState = 'error';
+  }
+  if (route === 'help') render({ preserveScroll: true });
 }
 
 async function loadSiteStats() {
@@ -2480,6 +2496,13 @@ function aboutPage() {
   // 仅在未缓存且加载未在进行/未终态失败时触发，避免失败后无限重试循环。
   if (!cached && aboutContentState !== 'loading' && aboutContentState !== 'error') loadAboutContent();
   return `<main class="page-detail">${renderBundleHeader()}${renderAboutPage(cached)}</main>`;
+}
+
+function helpPage() {
+  const cached = helpContentStore.peek();
+  // 与 aboutPage 同款懒加载：未缓存且非 loading/error 终态时触发一次。
+  if (!cached && helpContentState !== 'loading' && helpContentState !== 'error') loadHelpContent();
+  return `<main class="page-detail">${renderBundleHeader()}${renderHelpPage(cached)}</main>`;
 }
 
 function statsPage() {
@@ -2996,7 +3019,8 @@ function pageFor(name) {
   if (safeRoute === 'download-structures') return downloadStructuresPage();
   if (safeRoute === 'detail') return detailPage();
   if (safeRoute === 'publications') return publicationsPage();
-  if (safeRoute === 'help' || safeRoute === 'about') return aboutPage();
+  if (safeRoute === 'help') return helpPage();
+  if (safeRoute === 'about') return aboutPage();
   if (safeRoute === 'stats') return statsPage();
   if (safeRoute === 'sequence-detail') return sequenceDetailPage();
   return homePage();
