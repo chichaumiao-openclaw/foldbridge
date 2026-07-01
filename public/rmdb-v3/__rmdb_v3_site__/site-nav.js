@@ -61,11 +61,12 @@
     { name: "FoldBridge", tone: "gold", topLabel: "Probing-to-structure bridge", href: null }
   ];
 
-  // Primary route nav — same five launch routes as the portal home header.
+  // Primary route nav — mirrors the portal home header launch routes.
   var NAV_ITEMS = [
     { route: "home", label: "Home" },
     { route: "entry", label: "Entry" },
     { route: "probing", label: "Probing" },
+    { route: "stats", label: "Stats" },
     { route: "search", label: "Search" },
     { route: "help", label: "Help" }
   ];

@@ -7,7 +7,8 @@ const PRIMARY_NAV_ITEMS = [
   { route: 'entry', label: 'Entry', activeRoutes: ['entry', 'sequence', 'download-sequences'] },
   { route: 'probing', label: 'Probing', activeRoutes: ['probing', 'detail'] },
   { route: 'stats', label: 'Stats', activeRoutes: ['stats'] },
-  { route: 'about', label: 'About', activeRoutes: ['about', 'help'] },
+  { route: 'about', label: 'About', activeRoutes: ['about'] },
+  { route: 'help', label: 'Help', activeRoutes: ['help'] },
   { route: 'search', label: 'Search', activeRoutes: ['search'] }
 ];
 
@@ -366,6 +367,30 @@ export function renderAboutPage(content) {
   const heroHtml = `<section class="about-hero">
       ${hero.kicker ? `<p class="about-hero-kicker">${aboutText(hero.kicker)}</p>` : ''}
       <h1>${aboutText(hero.title) || 'About'}</h1>
+      ${hero.summary ? `<p class="about-hero-summary">${aboutText(hero.summary)}</p>` : ''}
+      ${hero.detail ? `<p class="about-hero-detail">${aboutText(hero.detail)}</p>` : ''}
+    </section>`;
+  const sectionsHtml = sections.map(renderAboutSection).join('\n    ');
+  return `${heroHtml}
+    ${sectionsHtml}`;
+}
+
+// Help / 使用指南页纯渲染。与 About 复用同一套 section 渲染器（cards/pipeline/
+// table/prose），入参 content（help-content.json 解析对象）→ HTML 字符串。
+// content 为空（未加载 / 加载失败）时降级为最小壳，含 <h1>Help</h1>，绝不产出
+// undefined。help-content.json 是入 git 的静态可信数据，无需 escape。
+export function renderHelpPage(content) {
+  if (!content || typeof content !== 'object') {
+    return `<section class="card bundle-wide-card about-section">
+      <h1>Help</h1>
+      <p>Help content is unavailable right now.</p>
+    </section>`;
+  }
+  const hero = content.hero || {};
+  const sections = Array.isArray(content.sections) ? content.sections : [];
+  const heroHtml = `<section class="about-hero">
+      ${hero.kicker ? `<p class="about-hero-kicker">${aboutText(hero.kicker)}</p>` : ''}
+      <h1>${aboutText(hero.title) || 'Help'}</h1>
       ${hero.summary ? `<p class="about-hero-summary">${aboutText(hero.summary)}</p>` : ''}
       ${hero.detail ? `<p class="about-hero-detail">${aboutText(hero.detail)}</p>` : ''}
     </section>`;

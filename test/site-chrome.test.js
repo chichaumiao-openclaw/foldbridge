@@ -2,23 +2,25 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { renderPrimaryNav } from '../src/siteChrome.js';
 
-test('primary nav exposes the launch routes incl. Stats/About', () => {
+test('primary nav exposes the launch routes incl. Stats/About/Help', () => {
   const html = renderPrimaryNav('home');
-  for (const label of ['Home', 'Entry', 'Probing', 'Stats', 'About', 'Search']) {
+  for (const label of ['Home', 'Entry', 'Probing', 'Stats', 'About', 'Help', 'Search']) {
     assert.match(html, new RegExp(`>${label}</button>`), `missing nav button: ${label}`);
   }
   assert.match(html, /data-route="stats"[^>]*>Stats<\/button>/);
   assert.match(html, /data-route="about"[^>]*>About<\/button>/);
+  assert.match(html, /data-route="help"[^>]*>Help<\/button>/);
 });
 
-test('primary nav no longer shows a standalone Help button', () => {
+test('primary nav shows a standalone Help button', () => {
   const html = renderPrimaryNav('home');
-  assert.doesNotMatch(html, />Help<\/button>/);
+  assert.match(html, />Help<\/button>/);
 });
 
-test('help route keeps About active', () => {
+test('help route marks Help active, not About', () => {
   const html = renderPrimaryNav('help');
-  assert.match(html, /class="nav-btn active"\s+data-route="about"/);
+  assert.match(html, /class="nav-btn active"\s+data-route="help"/);
+  assert.doesNotMatch(html, /class="nav-btn active"\s+data-route="about"/);
 });
 
 test('primary nav drops removed entries', () => {
@@ -126,4 +128,35 @@ test('empty input returns a placeholder shell with no slides', () => {
   const html = renderHomeProbingCarousel([]);
   assert.doesNotMatch(html, /data-carousel-slide=/);
   assert.match(html, /home-probing-carousel/);
+});
+
+import { renderHelpPage, renderAboutPage } from '../src/siteChrome.js';
+
+const SAMPLE_HELP = {
+  hero: { kicker: 'Help · FoldBridge', title: 'How to use FoldBridge', summary: 'A practical guide.', detail: 'Usage, not methodology.' },
+  sections: [
+    { id: 'navigate', title: 'Finding your way around', kind: 'table', items: [{ term: 'Entry', body: 'The master table.' }] },
+    { id: 'quickread', title: 'Reading a label', kind: 'prose', body: 'Family plus tier.' }
+  ]
+};
+
+test('help page renders hero title and sections', () => {
+  const html = renderHelpPage(SAMPLE_HELP);
+  assert.match(html, /How to use FoldBridge/);
+  assert.match(html, /Finding your way around/);
+  assert.match(html, /The master table\./);
+  assert.match(html, /Family plus tier\./);
+});
+
+test('help page falls back to a minimal shell with an H1 when content is missing', () => {
+  const html = renderHelpPage(null);
+  assert.match(html, /<h1>Help<\/h1>/);
+  assert.doesNotMatch(html, /undefined/);
+});
+
+test('help page is distinct from about page for the same-shaped input', () => {
+  const helpHtml = renderHelpPage(SAMPLE_HELP);
+  const aboutHtml = renderAboutPage(null);
+  assert.match(helpHtml, /How to use FoldBridge/);
+  assert.doesNotMatch(aboutHtml, /How to use FoldBridge/);
 });
