@@ -16,10 +16,10 @@
   --surface: #ffffff;
   --surfaceAlt: #EEF3EE;
   --border: #D6E0D8;
-  --textPrimary: #13241B;
-  --textSecondary: #5C6F65;
+  --textPrimary: #1A1A1A;
+  --textSecondary: #5B5B5B;
   --textMuted: var(--textSecondary);
-  --textAccent: #1F8A5B;
+  --textAccent: #9A7B18;
   --onPrimary: #F4F7F2;
   --shadow: 0 18px 50px rgba(20, 34, 28, 0.08);
   --shadowSoft: 0 10px 28px rgba(20, 34, 28, 0.06);
