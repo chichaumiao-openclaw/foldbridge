@@ -382,6 +382,19 @@ export async function hydrateLssEvidence({ store, root = document, caseKey, getC
   liveSlot.innerHTML = evidence ? renderLssEvidenceContent(evidence) : LSS_EVIDENCE_EMPTY;
 }
 
+function helpTooltip(text) {
+  return `<span class="annojoin-help-tooltip"><span class="annojoin-help-icon" aria-hidden="true">ⓘ</span><span class="annojoin-help-bubble" role="tooltip">${escapeHtml(text)}</span></span>`;
+}
+
+const COLUMN_HELP = {
+  moleculeName: 'Biological molecule name for this structure; click it to open the case detail page.',
+  pdbId: 'RCSB Protein Data Bank identifier for the deposited structure.',
+  chains: 'RNA chain identifiers carrying chemical-probing evidence in this case.',
+  profileCount: 'Number of source chemical-probing signal records (profiles) mapped onto this structure.',
+  techniqueFamilies: 'Chemical-probing technique families (A–D) contributing evidence; hover a badge for full technique names.',
+  confidenceDisplayLabel: 'Case-level distribution of confidence-relevant annotation labels, not a single best-profile score.'
+};
+
 function renderConfidencePanel(row) {
   const hasContext = row.hasContextAnnotation ? 'context annotation present' : 'context annotation not present';
   const hasLss = row.hasLssAnnotation ? 'LSS annotation present' : 'LSS annotation not present';
@@ -391,7 +404,7 @@ function renderConfidencePanel(row) {
     ? `<div class="annojoin-lss-evidence-slot" data-lss-evidence-slot="${escapeHtml(caseKey)}"><p class="mini-note">Loading per-profile LSS evidence…</p></div>`
     : '';
   return `<aside class="annojoin-detail-sidebar" aria-label="ANNOJOIN confidence explanation">
-    <p class="technology-kicker">Confidence classification</p>
+    <p class="technology-kicker">Confidence classification${helpTooltip('Confidence tiers summarize annotation support: A/B labels are context-stratified; C-level labels are exploratory hints to review against the underlying route assets.')}</p>
     <h2>${escapeHtml(row.confidenceDisplayLabel || 'not annotated')}</h2>
     <p>This is a case-level distribution, not a best-profile confidence score.</p>
     <dl>
@@ -402,7 +415,6 @@ function renderConfidencePanel(row) {
     ${entries.length > 1 ? renderSourceCaseLinks(row) : ''}
     ${evidenceSlot}
     <p class="mini-note">A/B/C labels summarize confidence-relevant annotation support. C-level labels are exploratory hints and should be reviewed with the underlying route assets.</p>
-    <p><a class="annojoin-confidence-explainer-link" href="#annojoin-confidence">What do these confidence labels mean?</a></p>
   </aside>`;
 }
 
@@ -657,7 +669,7 @@ export function renderAnnojointAtlasPage({
           <thead>
             <tr>
               <th>Select</th>
-              ${visibleColumns.map((column) => `<th>${escapeHtml(column.label)}</th>`).join('')}
+              ${visibleColumns.map((column) => `<th>${escapeHtml(column.label)}${COLUMN_HELP[column.id] ? helpTooltip(COLUMN_HELP[column.id]) : ''}</th>`).join('')}
             </tr>
           </thead>
           <tbody>${tableBody}</tbody>

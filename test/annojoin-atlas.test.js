@@ -619,7 +619,7 @@ test('atlas page renders case-level display fields and profile/confidence semant
   assert.doesNotMatch(html, /<th>Biological molecule<\/th>/);
   assert.doesNotMatch(html, /<th>PDB molecule<\/th>/);
   assert.doesNotMatch(html, /<th>Probe family<\/th>/);
-  assert.match(html, /<th>Confidence<\/th>/);
+  assert.match(html, /<th>Confidence/);
   assert.match(html, /16S ribosomal RNA/);
   assert.match(html, /B_CONTEXT_STRATIFIED \(1\); C_EXPLORATORY_HINT \(2\)/);
   assert.match(html, /3 profiles/);
@@ -652,7 +652,7 @@ test('atlas page expands singleton-child parent groups with one click', () => {
   });
 
   assert.match(html, /Molecule name/);
-  assert.match(html, /<th>Confidence<\/th>/);
+  assert.match(html, /<th>Confidence/);
   assert.match(html, /data-annojoin-group-state="expanded"/);
   assert.doesNotMatch(html, /annojoin-child-group-row/);
   assert.match(html, /class="annojoin-case-row is-in-expanded-group"/);
@@ -828,9 +828,9 @@ test('atlas side panel renders field-specific explanations', () => {
   assert.match(confidenceHtml, /Confidence classification/);
   assert.match(confidenceHtml, /B_CONTEXT_STRATIFIED \(1\); C_EXPLORATORY_HINT \(2\)/);
   assert.match(confidenceHtml, /Annotation coverage/);
-  // confidence panel links out to the dedicated explainer page
-  assert.match(confidenceHtml, /href="#annojoin-confidence"/);
-  assert.match(confidenceHtml, /What do these confidence labels mean\?/);
+  // confidence panel explains tiers via a hover tooltip, not a click-through link
+  assert.match(confidenceHtml, /class="annojoin-help-tooltip"/);
+  assert.doesNotMatch(confidenceHtml, /href="#annojoin-confidence"/);
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 
   const pdbHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'pdbId' });
@@ -1162,8 +1162,8 @@ test('hydrateLssEvidence discards stale responses when the sidebar moved on', as
 test('atlas table puts Molecule name column before PDB column', () => {
   const state = buildAtlasSearchState(fixtures, {});
   const html = renderAnnojointAtlasPage({ state });
-  const molIdx = html.indexOf('<th>Molecule name</th>');
-  const pdbIdx = html.indexOf('<th>PDB</th>');
+  const molIdx = html.indexOf('<th>Molecule name');
+  const pdbIdx = html.indexOf('<th>PDB');
   assert.ok(molIdx > -1 && pdbIdx > -1, 'both headers present');
   assert.ok(molIdx < pdbIdx, 'Molecule name header comes before PDB header');
 });
@@ -1247,4 +1247,15 @@ test('table is wrapped in a horizontal-scroll container with a dismissible hint'
   assert.match(html, /class="[^"]*annojoin-table-scroll[^"]*"/);
   assert.match(html, /data-annojoin-scroll-hint/);
   assert.match(html, /foldbridge\.entryTableScrollHintSeen/);
+});
+
+test('column headers carry hover-tooltip info affordances', () => {
+  const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({ displayCases: [{ pdb_id: '1GID' }] }, {}) });
+  assert.match(html, /class="annojoin-help-tooltip"/);
+  assert.match(html, /role="tooltip"/);
+});
+
+test('confidence label help is a hover tooltip, not a click-through link', () => {
+  const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({ displayCases: [{ pdb_id: '1GID' }] }, {}) });
+  assert.doesNotMatch(html, /What do these confidence labels mean\?/);
 });

@@ -534,6 +534,11 @@ main.page-sequence-detail {
 .annojoin-family-badge-C { color: var(--family-c); background: var(--family-c-bg); }
 .annojoin-family-badge-D { color: var(--family-d); background: var(--family-d-bg); }
 .annojoin-technique-empty { color: var(--textMuted, #999); }
+.annojoin-help-tooltip { position: relative; display: inline-block; margin-left: 4px; cursor: help; }
+.annojoin-help-icon { font-size: 0.85em; opacity: 0.6; }
+.annojoin-help-bubble { display: none; position: absolute; z-index: 5; left: 0; top: 130%; border: 1px solid var(--border); border-radius: 6px; background: var(--surface, #fff); padding: 6px 10px; white-space: normal; width: max-content; max-width: 240px; font-weight: 400; font-size: 0.82rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+.annojoin-help-tooltip:hover .annojoin-help-bubble,
+.annojoin-help-tooltip:focus-within .annojoin-help-bubble { display: block; }
 
 /* Filter chips */
 .annojoin-filter-chips {
