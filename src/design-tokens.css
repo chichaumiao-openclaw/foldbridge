@@ -15,7 +15,13 @@
   --backgroundStrong: #E8EFE8;
   --surface: #ffffff;
   --surfaceAlt: #EEF3EE;
-  --border: #D6E0D8;
+  --border: #E3DCC8;
+  /* family 语义色板（Entry 徽标 / profile 下拉 / 两级筛选器 chip 共用）。本次仅 A–D；E/F 留位。 */
+  --family-a: #7C5CBF;  --family-a-bg: #EFEAF8;
+  --family-b: #2F6FB0;  --family-b-bg: #E6EFF7;
+  --family-c: #C9761E;  --family-c-bg: #F8EEDF;
+  --family-d: #3E9463;  --family-d-bg: #E6F3EC;
+  /* E/F 后续补：--family-e(黄) / --family-f(品红) */
   --textPrimary: #1A1A1A;
   --textSecondary: #5B5B5B;
   --textMuted: var(--textSecondary);
@@ -29,7 +35,7 @@
   --feature-card-max-width: 1344px;
   --feature-card-width: min(var(--feature-card-max-width), calc(100vw - 40px));
   --panel-card-bg: #ffffff;
-  --panel-card-border: 1px solid rgba(227, 191, 92, 0.24);
+  --panel-card-border: 1px solid var(--border);
   --panel-card-radius: 38px;
   --panel-card-shadow: 0 30px 80px rgba(155, 122, 38, 0.09);
 }
