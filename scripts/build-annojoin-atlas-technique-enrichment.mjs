@@ -24,13 +24,13 @@ import { applyCaseTechniques } from './lib/annojoin-atlas-technique-overlay.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const DEFAULT_PUBLISH_ROOT = '/Volumes/tianyi/foldbridgeAssessert/发布准备';
+const DEFAULT_PUBLISH_ROOT = path.resolve(__dirname, '../public');
 const DEFAULT_INDEX = path.resolve(__dirname, '../src/assets/generated/annojoin-atlas/index.json');
 
-// 两套 case 页相对发布准备根的路径。
+// 两套 case 页相对仓内 public/ 根的路径。
 const CASE_PAGE_ROOTS = [
-  'rmdb2pdb_ab_v3_launch_132_centered/20260628T193700Z_retry/pages/cases',
-  'rasp2pdb_v3_universe_20260629/2275_pages/cases'
+  'rmdb-v3/cases',
+  'rasp-v3/cases'
 ];
 
 function parseArgs(argv) {
