@@ -625,7 +625,7 @@ export function renderAnnojointAtlasPage({
       <a class="download-outline-btn" href="${escapeHtml(atlasHref(routeName))}">Reset</a>
     </section>
 
-    ${renderTechniqueFilterControls(atlasState.cases, atlasState.filters)}
+    ${renderTechniqueFilterControls(atlasState.unfilteredCases || atlasState.cases, atlasState.filters)}
     ${renderActiveConditionChips(atlasState.filters, query)}
     ${searchModeNote}
     ${statusBanner}

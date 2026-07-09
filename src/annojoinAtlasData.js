@@ -525,6 +525,7 @@ export function buildAtlasSearchState(tables = {}, filters = {}) {
       techniqueNames: asArray(filters.techniqueNames)
     },
     cases,
+    unfilteredCases: normalizedCases,
     totalCaseCount: numberOrZero(tables.totalCaseCount) || normalizedCases.length,
     totalSourceCaseCount: numberOrZero(tables.totalSourceCaseCount) || sourceRows.length || normalizedCases.length,
     totalPlacementCount: numberOrZero(tables.totalPlacementCount),

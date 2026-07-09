@@ -1211,3 +1211,15 @@ test('entry page renders two-level technique filter chips (family A-D)', () => {
   assert.match(html, /data-technique-family="C"/);
   assert.match(html, /data-technique-name="PARS"/);
 });
+
+test('technique filter chips are built from the full universe, not the filtered subset', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [
+      { pdb_id: '1GID', techniqueFamilies: ['A'], techniqueNames: ['DMS'] },
+      { pdb_id: '1P5P', techniqueFamilies: ['C'], techniqueNames: ['PARS'] }
+    ]
+  }, { techniqueFamilies: ['A'] });
+  const html = renderAnnojointAtlasPage({ state });
+  assert.match(html, /data-technique-family="C"/);
+  assert.match(html, /data-technique-name="PARS"/);
+});
