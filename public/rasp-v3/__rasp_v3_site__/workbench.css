@@ -36,7 +36,7 @@ header {
 }
 h1 {
   margin: 0;
-  font-size: 15px;
+  font-size: 20px;
   line-height: 1.25;
   letter-spacing: 0;
 }
@@ -54,14 +54,11 @@ h2 {
 }
 .controls {
   display: grid;
-  grid-template-columns: minmax(280px, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   align-items: end;
   margin-top: 14px;
   min-width: 0;
-}
-.track-viewport-controls {
-  padding: 10px 11px 0;
 }
 label {
   display: grid;
@@ -187,6 +184,11 @@ button:focus-visible {
 }
 .track-panel {
   margin-top: 12px;
+}
+.track-viewport-controls {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 .track-viewport {
   height: 408px;
