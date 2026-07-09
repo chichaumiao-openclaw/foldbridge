@@ -200,7 +200,7 @@ button:focus-visible {
 .view-grid {
   margin-top: 12px;
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.8fr);
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
   align-items: stretch;
 }
@@ -267,7 +267,7 @@ svg {
 .view3d-body {
   position: relative;
   padding: 12px;
-  min-height: 520px;
+  min-height: 404px;
   background: #fbfcfd;
 }
 .molstar-split {
@@ -330,7 +330,7 @@ svg {
 .molstar-host canvas {
   width: 100% !important;
   height: 100% !important;
-  min-height: 404px;
+  min-height: 0;
 }
 .molstar-meta {
   margin-top: 9px;
