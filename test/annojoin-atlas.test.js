@@ -1167,3 +1167,15 @@ test('atlas table puts Molecule name column before PDB column', () => {
   assert.ok(molIdx > -1 && pdbIdx > -1, 'both headers present');
   assert.ok(molIdx < pdbIdx, 'Molecule name header comes before PDB header');
 });
+
+test('normalizeCase passes through techniqueFamilies and techniqueNames', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [{
+      pdb_id: '1GID',
+      techniqueFamilies: ['A', 'B'],
+      techniqueNames: ['2A3', 'DMS']
+    }]
+  }, {});
+  assert.deepEqual(state.cases[0].techniqueFamilies, ['A', 'B']);
+  assert.deepEqual(state.cases[0].techniqueNames, ['2A3', 'DMS']);
+});

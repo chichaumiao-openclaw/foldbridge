@@ -194,6 +194,8 @@ function normalizeCase(row) {
     confidenceSource: text(row.confidence_source || row.confidenceSource),
     sourceDatabases: splitList(row.source_databases || row.sourceDatabases),
     assayFamilies: splitList(row.assay_family_set || row.assayFamilies),
+    techniqueFamilies: splitList(row.technique_families || row.techniqueFamilies),
+    techniqueNames: splitList(row.technique_names || row.techniqueNames),
     rnaFamily: text(row.rna_family_label || row.rnaFamily),
     rnaFamilyProvenance: text(row.rna_family_provenance || row.rnaFamilyProvenance),
     motif: text(row.motif_label || row.motif),
