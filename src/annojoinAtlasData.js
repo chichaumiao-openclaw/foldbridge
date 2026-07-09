@@ -1,3 +1,5 @@
+import { matchesTechniqueFilter } from './techniqueFilterModel.js';
+
 export const REQUIRED_ATLAS_CAPABILITIES = [
   { id: 'searchable-web-interface', label: 'Searchable web interface' },
   { id: 'facet-search', label: 'RNA family / probe type / PDB ID / motif / structure class search' },
@@ -467,7 +469,10 @@ function filterCases(cases, filters = {}) {
       && includesFolded(row.pdbId, filters.pdbId)
       && includesFolded(row.motif, filters.motif)
       && includesFolded(row.structureClass, filters.structureClass)
-      && (!filters.probeType || row.assayFamilies.some((family) => includesFolded(family, filters.probeType)));
+      && matchesTechniqueFilter(row, {
+        families: new Set(filters.techniqueFamilies || []),
+        techniques: new Set(filters.techniqueNames || [])
+      });
   });
 }
 
@@ -515,7 +520,9 @@ export function buildAtlasSearchState(tables = {}, filters = {}) {
       probeType: text(filters.probeType),
       pdbId: text(filters.pdbId),
       motif: text(filters.motif),
-      structureClass: text(filters.structureClass)
+      structureClass: text(filters.structureClass),
+      techniqueFamilies: asArray(filters.techniqueFamilies),
+      techniqueNames: asArray(filters.techniqueNames)
     },
     cases,
     totalCaseCount: numberOrZero(tables.totalCaseCount) || normalizedCases.length,

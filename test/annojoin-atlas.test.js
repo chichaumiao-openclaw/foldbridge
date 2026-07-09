@@ -1179,3 +1179,23 @@ test('normalizeCase passes through techniqueFamilies and techniqueNames', () => 
   assert.deepEqual(state.cases[0].techniqueFamilies, ['A', 'B']);
   assert.deepEqual(state.cases[0].techniqueNames, ['2A3', 'DMS']);
 });
+
+test('filterCases matches on techniqueFamilies (two-level filter)', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [
+      { pdb_id: '1GID', techniqueFamilies: ['A', 'B'], techniqueNames: ['2A3', 'DMS'] },
+      { pdb_id: '1P5P', techniqueFamilies: ['C'], techniqueNames: ['PARS'] }
+    ]
+  }, { techniqueFamilies: ['C'] });
+  assert.deepEqual(state.cases.map((c) => c.pdbId), ['1P5P']);
+});
+
+test('filterCases cross-level OR: family + technique', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [
+      { pdb_id: '1GID', techniqueFamilies: ['A', 'B'], techniqueNames: ['2A3', 'DMS'] },
+      { pdb_id: '1P5P', techniqueFamilies: ['C'], techniqueNames: ['PARS'] }
+    ]
+  }, { techniqueFamilies: ['B'], techniqueNames: ['PARS'] });
+  assert.deepEqual(state.cases.map((c) => c.pdbId).sort(), ['1GID', '1P5P']);
+});
