@@ -2016,6 +2016,7 @@ function mountProfileDropdown() {
   });
 
   const items = () => Array.from(list.querySelectorAll("li[role='option']"));
+  const visibleItems = () => items().filter((li) => !li.classList.contains("filtered-out"));
 
   const refreshTrigger = () => {
     const idx = currentIndex();
@@ -2040,8 +2041,8 @@ function mountProfileDropdown() {
   const openList = () => {
     list.hidden = false;
     trigger.setAttribute("aria-expanded", "true");
-    const active = items().find((li) => Number(li.dataset.index) === currentIndex());
-    (active || items()[0])?.focus();
+    const active = visibleItems().find((li) => Number(li.dataset.index) === currentIndex());
+    (active || visibleItems()[0])?.focus();
   };
   const selectIndex = (idx) => {
     select.value = String(idx);
@@ -2059,7 +2060,7 @@ function mountProfileDropdown() {
     selectIndex(Number(li.dataset.index));
   });
   list.addEventListener("keydown", (event) => {
-    const all = items();
+    const all = visibleItems();
     const focused = document.activeElement?.closest?.("li[role='option']");
     const pos = focused ? all.indexOf(focused) : -1;
     if (event.key === "ArrowDown") {
