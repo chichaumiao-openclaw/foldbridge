@@ -1253,6 +1253,7 @@ test('column headers carry hover-tooltip info affordances', () => {
   const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({ displayCases: [{ pdb_id: '1GID' }] }, {}) });
   assert.match(html, /class="annojoin-help-tooltip"/);
   assert.match(html, /role="tooltip"/);
+  assert.match(html, /class="annojoin-help-icon" tabindex="0"/);
 });
 
 test('confidence label help is a hover tooltip, not a click-through link', () => {

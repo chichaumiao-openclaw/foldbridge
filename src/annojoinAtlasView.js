@@ -383,7 +383,7 @@ export async function hydrateLssEvidence({ store, root = document, caseKey, getC
 }
 
 function helpTooltip(text) {
-  return `<span class="annojoin-help-tooltip"><span class="annojoin-help-icon" aria-hidden="true">ⓘ</span><span class="annojoin-help-bubble" role="tooltip">${escapeHtml(text)}</span></span>`;
+  return `<span class="annojoin-help-tooltip"><span class="annojoin-help-icon" tabindex="0" role="img" aria-label="${escapeHtml(text)}">ⓘ</span><span class="annojoin-help-bubble" role="tooltip">${escapeHtml(text)}</span></span>`;
 }
 
 const COLUMN_HELP = {
