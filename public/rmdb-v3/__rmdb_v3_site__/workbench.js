@@ -2041,8 +2041,8 @@ function mountProfileDropdown() {
   };
   const selectIndex = (idx) => {
     select.value = String(idx);
+    // change listener runs synchronously and refreshes the trigger for us.
     select.dispatchEvent(new Event("change"));
-    refreshTrigger();
     closeList(true);
   };
   trigger.addEventListener("click", () => {
@@ -2254,6 +2254,9 @@ async function init() {
   const requestedIndex = profileIndexForId(requestedProfileId);
   const initialIndex = requestedIndex >= 0 ? requestedIndex : await richestProfileIndex();
   await renderProfile(initialIndex);
+  // renderProfile sets el.select.value without dispatching change, so re-sync the
+  // custom dropdown trigger to the initially rendered profile. No-op if unmounted.
+  refreshProfileDropdownTrigger();
   initMolstarViewer();
 }
 
