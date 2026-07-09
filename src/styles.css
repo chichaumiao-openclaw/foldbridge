@@ -200,8 +200,8 @@ main.page-sequence-detail {
 }
 
 .page-annojoin-master-table {
-  width: min(100%, 1680px);
-  max-width: 1680px;
+  width: min(100%, var(--page-max-width));
+  max-width: var(--page-max-width);
 }
 
 .annojoin-table-heading {
