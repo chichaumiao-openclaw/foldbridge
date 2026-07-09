@@ -40,6 +40,12 @@ test('primary nav marks the active route', () => {
   assert.match(dlHtml, /class="nav-btn active"\s+data-route="entry"/);
 });
 
+test('primary nav order is Home Entry Search Probing Stats About Help', () => {
+  const html = renderPrimaryNav('home');
+  const labels = [...html.matchAll(/data-route="([a-z-]+)"/g)].map((m) => m[1]);
+  assert.deepEqual(labels, ['home', 'entry', 'search', 'probing', 'stats', 'about', 'help']);
+});
+
 import { renderHomeHero, HOME_METRICS } from '../src/siteChrome.js';
 
 test('home hero shows real metrics, no placeholders', () => {

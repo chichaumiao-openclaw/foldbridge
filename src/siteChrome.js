@@ -5,11 +5,11 @@
 const PRIMARY_NAV_ITEMS = [
   { route: 'home', label: 'Home', activeRoutes: ['home'] },
   { route: 'entry', label: 'Entry', activeRoutes: ['entry', 'sequence', 'download-sequences'] },
+  { route: 'search', label: 'Search', activeRoutes: ['search'] },
   { route: 'probing', label: 'Probing', activeRoutes: ['probing', 'detail'] },
   { route: 'stats', label: 'Stats', activeRoutes: ['stats'] },
   { route: 'about', label: 'About', activeRoutes: ['about'] },
-  { route: 'help', label: 'Help', activeRoutes: ['help'] },
-  { route: 'search', label: 'Search', activeRoutes: ['search'] }
+  { route: 'help', label: 'Help', activeRoutes: ['help'] }
 ];
 
 export function renderPrimaryNav(activeRoute = 'home') {
