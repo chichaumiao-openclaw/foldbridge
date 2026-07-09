@@ -23,3 +23,12 @@ export function joinTechniqueByProfile(rows, chainId) {
   });
   return map;
 }
+
+// Render a colored family badge span. Uses data-family for CSS color hook
+// (--family-a..d tokens); empty/unknown family renders a neutral "unassigned"
+// badge so every profile stays visually consistent.
+export function familyBadgeMarkup(family) {
+  const f = String(family || "").toUpperCase();
+  const label = f || "?";
+  return `<span class="family-badge" data-family="${esc(f)}">${esc(label)}</span>`;
+}

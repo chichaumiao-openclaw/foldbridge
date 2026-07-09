@@ -1,5 +1,5 @@
 import "./site-nav.js";
-import { joinTechniqueByProfile } from "./workbench-pure.mjs";
+import { joinTechniqueByProfile, familyBadgeMarkup } from "./workbench-pure.mjs";
 
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const caseUrl = config.caseUrl || "./case-2d-structure.json";
@@ -1907,8 +1907,13 @@ function buildProfileSelectMarkup(profiles) {
     if (family) withFamily.push({ profile, idx, family: String(family).toUpperCase() });
     else withoutFamily.push({ profile, idx });
   });
-  const optionFor = (entry) =>
-    `<option value="${entry.idx}">${escapeHtml(`${entry.profile.pair_id} | ${entry.profile.profile_id}`)}</option>`;
+  const optionFor = (entry) => {
+    const tech = state.techniqueByProfile?.get(entry.profile.profile_id) || {};
+    const techName = tech.technology || "—";
+    const fam = tech.family || entry.family || "";
+    const famSuffix = fam ? ` · Family ${fam}` : "";
+    return `<option value="${entry.idx}">${escapeHtml(`${entry.profile.pair_id} | ${techName}${famSuffix}`)}</option>`;
+  };
   // No family signal anywhere: keep the original flat list of every profile.
   if (!withFamily.length) {
     return list.map((profile, idx) => optionFor({ profile, idx })).join("");
@@ -1939,6 +1944,144 @@ function buildProfileSelectMarkup(profiles) {
     ? `<optgroup label="Unassigned family">${withoutFamily.map(optionFor).join("")}</optgroup>`
     : "";
   return `${familyGroups}${otherGroup}`;
+}
+
+// Resolve the family letter for a profile: prefer the joined technique family
+// (case confidence-evidence), fall back to the lssContext family. Returns "".
+function familyForProfile(profileId) {
+  const joined = state.techniqueByProfile?.get(profileId)?.family;
+  if (joined) return String(joined).toUpperCase();
+  const ctx = lssContextForProfile(profileId)?.family;
+  return ctx ? String(ctx).toUpperCase() : "";
+}
+
+// Technique display name for a profile; "—" when unknown.
+function techniqueForProfile(profileId) {
+  return state.techniqueByProfile?.get(profileId)?.technology || "—";
+}
+
+// Human label for a profile option (used as the truncated trigger/list text).
+function profileOptionLabel(profile) {
+  const tech = techniqueForProfile(profile.profile_id);
+  const fam = familyForProfile(profile.profile_id);
+  const famSuffix = fam ? ` · Family ${fam}` : "";
+  return `${profile.pair_id} | ${tech}${famSuffix}`;
+}
+
+// Module-level refresh hook so renderProfile/change can re-sync the trigger label
+// with the native <select>'s current value. No-op until the dropdown is mounted.
+let refreshProfileDropdownTrigger = () => {};
+
+// Build a self-contained colored family-badge dropdown as a sibling of the native
+// <select>, which stays in the DOM (hidden) as the source of truth + fallback.
+// DOM-only + defensive: returns early if the select is missing or no profiles.
+function mountProfileDropdown() {
+  const select = el.select;
+  if (!select || !Array.isArray(state.profiles) || !state.profiles.length) return;
+  // Avoid double-mount if init runs more than once.
+  if (select.parentElement?.querySelector(".profile-dropdown")) return;
+
+  const root = document.createElement("div");
+  root.className = "profile-dropdown";
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.className = "profile-dropdown-trigger";
+  trigger.setAttribute("aria-haspopup", "listbox");
+  trigger.setAttribute("aria-expanded", "false");
+  const list = document.createElement("ul");
+  list.className = "profile-dropdown-list";
+  list.setAttribute("role", "listbox");
+  list.hidden = true;
+  root.append(trigger, list);
+
+  const currentIndex = () => {
+    const idx = Number(select.value);
+    return Number.isInteger(idx) && idx >= 0 ? idx : 0;
+  };
+  // Populate the floating listbox once; each <li> mirrors a native option index.
+  state.profiles.forEach((profile, idx) => {
+    const li = document.createElement("li");
+    li.setAttribute("role", "option");
+    li.dataset.index = String(idx);
+    li.tabIndex = -1;
+    const fam = familyForProfile(profile.profile_id);
+    const label = profileOptionLabel(profile);
+    li.title = label;
+    li.innerHTML = `${familyBadgeMarkup(fam)}<span class="profile-dropdown-text">${escapeHtml(label)}</span>`;
+    list.appendChild(li);
+  });
+
+  const items = () => Array.from(list.querySelectorAll("li[role='option']"));
+
+  const refreshTrigger = () => {
+    const idx = currentIndex();
+    const profile = state.profiles[idx];
+    if (!profile) return;
+    const fam = familyForProfile(profile.profile_id);
+    const label = profileOptionLabel(profile);
+    trigger.title = label;
+    trigger.innerHTML = `${familyBadgeMarkup(fam)}<span class="profile-dropdown-text">${escapeHtml(label)}</span>`;
+    items().forEach((li) => {
+      const selected = Number(li.dataset.index) === idx;
+      li.setAttribute("aria-selected", selected ? "true" : "false");
+      li.classList.toggle("active", selected);
+    });
+  };
+
+  const closeList = (focusTrigger = false) => {
+    list.hidden = true;
+    trigger.setAttribute("aria-expanded", "false");
+    if (focusTrigger) trigger.focus();
+  };
+  const openList = () => {
+    list.hidden = false;
+    trigger.setAttribute("aria-expanded", "true");
+    const active = items().find((li) => Number(li.dataset.index) === currentIndex());
+    (active || items()[0])?.focus();
+  };
+  const selectIndex = (idx) => {
+    select.value = String(idx);
+    select.dispatchEvent(new Event("change"));
+    refreshTrigger();
+    closeList(true);
+  };
+  trigger.addEventListener("click", () => {
+    if (list.hidden) openList();
+    else closeList();
+  });
+  list.addEventListener("click", (event) => {
+    const li = event.target.closest("li[role='option']");
+    if (!li) return;
+    selectIndex(Number(li.dataset.index));
+  });
+  list.addEventListener("keydown", (event) => {
+    const all = items();
+    const focused = document.activeElement?.closest?.("li[role='option']");
+    const pos = focused ? all.indexOf(focused) : -1;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      (all[pos + 1] || all[0])?.focus();
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      (all[pos - 1] || all[all.length - 1])?.focus();
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      if (focused) selectIndex(Number(focused.dataset.index));
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      closeList(true);
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (!root.contains(event.target)) closeList();
+  });
+
+  // Mount as sibling, then hide the native select (kept as source-of-truth +
+  // fallback). Hide only AFTER the dropdown is in the DOM.
+  select.insertAdjacentElement("afterend", root);
+  select.hidden = true;
+  refreshTrigger();
+  refreshProfileDropdownTrigger = refreshTrigger;
 }
 
 // Choose the default profile by reactivity signal richness rather than the raw
@@ -2105,6 +2248,7 @@ async function init() {
   const strand = activeStrand() || caseData.strands[0];
   state.viewport = { start: 1, end: Math.min(strand.sequence.length, TRACK_DEFAULT_SPAN) };
   el.select.innerHTML = buildProfileSelectMarkup(state.profiles);
+  mountProfileDropdown();
   el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
   const requestedProfileId = state.requestedProfileId || initialProfileIdFromLocation();
   const requestedIndex = profileIndexForId(requestedProfileId);
@@ -2113,7 +2257,10 @@ async function init() {
   initMolstarViewer();
 }
 
-el.select.addEventListener("change", () => void renderProfile(Number(el.select.value)));
+el.select.addEventListener("change", () => {
+  refreshProfileDropdownTrigger();
+  void renderProfile(Number(el.select.value));
+});
 el.zoomIn.addEventListener("click", () => zoomTrack(1));
 el.zoomOut.addEventListener("click", () => zoomTrack(-1));
 el.panLeft.addEventListener("click", () => panTrack(-1));
