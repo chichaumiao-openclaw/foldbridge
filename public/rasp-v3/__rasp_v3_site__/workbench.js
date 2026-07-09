@@ -1,3 +1,5 @@
+import "./site-nav.js";
+
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const caseUrl = config.caseUrl || "./case-2d-structure.json";
 const profileIndexUrl = config.profileIndexUrl || "./profiles/profile-index.json";

@@ -1,5 +1,15 @@
+export function shouldRenderSiteNav(win) {
+  try {
+    return win.self === win.top;
+  } catch (_e) {
+    return false;
+  }
+}
+
 (function () {
   "use strict";
+  if (typeof window === "undefined") return;
+  if (!shouldRenderSiteNav(window)) return;
   if (document.querySelector(".fb-detail-nav")) {
     return;
   }
