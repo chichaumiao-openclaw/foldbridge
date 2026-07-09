@@ -2269,7 +2269,9 @@ function getAnnojointAtlasFilters(params) {
     probeType: params.get('probeType') || '',
     pdbId: params.get('pdbId') || '',
     motif: params.get('motif') || '',
-    structureClass: params.get('structureClass') || ''
+    structureClass: params.get('structureClass') || '',
+    techniqueFamilies: params.getAll('techniqueFamilies'),
+    techniqueNames: params.getAll('techniqueNames')
   };
 }
 
@@ -2357,13 +2359,30 @@ function clearAnnojointAtlasFilters() {
   const parsed = parseHashRoute(window.location.hash);
   const params = parsed.params;
   const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
-  ['q', 'rnaFamily', 'probeType', 'pdbId', 'motif', 'structureClass'].forEach((key) => params.delete(key));
+  ['q', 'rnaFamily', 'probeType', 'pdbId', 'motif', 'structureClass', 'techniqueFamilies', 'techniqueNames'].forEach((key) => params.delete(key));
   params.set('page', '1');
   params.delete('caseId');
   params.delete('caseKey');
   params.delete('field');
   const next = params.toString();
   window.location.hash = next ? `${routeName}?${next}` : routeName;
+}
+
+function toggleAnnojointAtlasTechnique(kind, value) {
+  // kind = 'techniqueFamilies' | 'techniqueNames'; value = the family id or technique name.
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
+  const current = params.getAll(kind);
+  const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
+  params.delete(kind);
+  for (const v of next) params.append(kind, v);
+  params.set('page', '1');
+  params.delete('caseId');
+  params.delete('caseKey');
+  params.delete('field');
+  const nextQs = params.toString();
+  window.location.hash = nextQs ? `${routeName}?${nextQs}` : routeName;
 }
 
 function setAnnojointAtlasQuery(query) {
@@ -3315,8 +3334,21 @@ function render(options = {}) {
         render({ preserveScroll: true });
       },
       rerender: () => render({ preserveScroll: true }),
-      removeFilter: (key) => setAnnojointAtlasFilter(key, ''),
-      clearFilters: () => clearAnnojointAtlasFilters()
+      removeFilter: (key) => {
+        if (key && key.includes(':')) {
+          const idx = key.indexOf(':');
+          const kind = key.slice(0, idx);
+          const value = key.slice(idx + 1);
+          if (kind === 'techniqueFamilies' || kind === 'techniqueNames') {
+            toggleAnnojointAtlasTechnique(kind, value);
+            return;
+          }
+        }
+        setAnnojointAtlasFilter(key, '');
+      },
+      clearFilters: () => clearAnnojointAtlasFilters(),
+      toggleTechniqueFamily: (fam) => toggleAnnojointAtlasTechnique('techniqueFamilies', fam),
+      toggleTechniqueName: (name) => toggleAnnojointAtlasTechnique('techniqueNames', name)
     });
     const selectedField = parseHashRoute(window.location.hash).params.get('field') || '';
     if (selectedField === 'confidenceDisplayLabel') {

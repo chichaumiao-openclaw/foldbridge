@@ -1199,3 +1199,15 @@ test('filterCases cross-level OR: family + technique', () => {
   }, { techniqueFamilies: ['B'], techniqueNames: ['PARS'] });
   assert.deepEqual(state.cases.map((c) => c.pdbId).sort(), ['1GID', '1P5P']);
 });
+
+test('entry page renders two-level technique filter chips (family A-D)', () => {
+  const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({
+    displayCases: [
+      { pdb_id: '1GID', techniqueFamilies: ['A', 'B'], techniqueNames: ['2A3', 'DMS'] },
+      { pdb_id: '1P5P', techniqueFamilies: ['C'], techniqueNames: ['PARS'] }
+    ]
+  }, {}) });
+  assert.match(html, /data-technique-family="A"/);
+  assert.match(html, /data-technique-family="C"/);
+  assert.match(html, /data-technique-name="PARS"/);
+});

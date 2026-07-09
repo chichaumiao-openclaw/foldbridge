@@ -9,6 +9,7 @@ import {
   sortAnnojointCases
 } from './annojoinAtlasTableModel.js';
 import { resolveLocalPagesBridgeDetailHref } from './localPagesBridgeLinks.js';
+import { buildTechniqueFilterModel } from './techniqueFilterModel.js';
 
 const DEFAULT_GROUP_ROW_LIMIT = 5;
 
@@ -44,7 +45,9 @@ function buildPreservedParams(filters = {}, page = 1) {
   if (filters.query) preserved.q = filters.query;
   if (Number(page) > 1) preserved.page = String(page);
   if (filters.rnaFamily) preserved.rnaFamily = filters.rnaFamily;
-  if (filters.probeType) preserved.probeType = filters.probeType;
+  // technique filters are array-valued; not preserved on field-click links (see Task 13).
+  // atlasHref serializes preserved via URLSearchParams.set(String(v)), which cannot
+  // represent multi-valued params, so pushing arrays here would corrupt the link.
   if (filters.pdbId) preserved.pdbId = filters.pdbId;
   if (filters.motif) preserved.motif = filters.motif;
   if (filters.structureClass) preserved.structureClass = filters.structureClass;
@@ -62,7 +65,8 @@ function currentFilterExportHref(filters = {}, format = 'csv') {
   const params = new URLSearchParams();
   if (filters.query) params.set('q', filters.query);
   if (filters.rnaFamily) params.set('rnaFamily', filters.rnaFamily);
-  if (filters.probeType) params.set('probeType', filters.probeType);
+  for (const fam of filters.techniqueFamilies || []) params.append('techniqueFamilies', fam);
+  for (const name of filters.techniqueNames || []) params.append('techniqueNames', name);
   if (filters.pdbId) params.set('pdbId', filters.pdbId);
   if (filters.motif) params.set('motif', filters.motif);
   if (filters.structureClass) params.set('structureClass', filters.structureClass);
@@ -494,10 +498,29 @@ function renderDetailSidebar({ row, routeName, selectedField }) {
   return renderEmptySidebar();
 }
 
-const ANNOJOIN_FILTER_CHIP_KEYS = ['rnaFamily', 'pdbId', 'motif', 'structureClass', 'probeType'];
+const ANNOJOIN_FILTER_CHIP_KEYS = ['rnaFamily', 'pdbId', 'motif', 'structureClass'];
 
 function renderFilterChip(removeKey, label) {
   return `<span class="annojoin-filter-chip">${escapeHtml(label)} <button type="button" data-annojoin-chip-remove="${escapeHtml(removeKey)}">×</button></span>`;
+}
+
+function renderTechniqueFilterControls(cases = [], filters = {}) {
+  const model = buildTechniqueFilterModel(cases);
+  if (!model.families.length) return '';
+  const selectedFamilies = new Set(filters.techniqueFamilies || []);
+  const selectedNames = new Set(filters.techniqueNames || []);
+  const familyBlocks = model.families.map((family) => {
+    const famActive = selectedFamilies.has(family.id) ? ' is-active' : '';
+    const techButtons = family.techniques.map((name) => {
+      const nameActive = selectedNames.has(name) ? ' is-active' : '';
+      return `<button type="button" class="annojoin-technique-name-chip${nameActive}" data-technique-name="${escapeHtml(name)}">${escapeHtml(name)}</button>`;
+    }).join('');
+    return `<div class="annojoin-technique-family-group">
+        <button type="button" class="annojoin-technique-family-chip annojoin-family-badge-${escapeHtml(family.id)}${famActive}" data-technique-family="${escapeHtml(family.id)}">${escapeHtml(family.id)}</button>
+        <div class="annojoin-technique-names">${techButtons}</div>
+      </div>`;
+  }).join('');
+  return `<section class="annojoin-technique-filter" aria-label="Technique filter">${familyBlocks}</section>`;
 }
 
 function renderActiveConditionChips(filters = {}, query = '') {
@@ -506,6 +529,12 @@ function renderActiveConditionChips(filters = {}, query = '') {
   for (const key of ANNOJOIN_FILTER_CHIP_KEYS) {
     const value = filters[key];
     if (value) chips.push(renderFilterChip(key, value));
+  }
+  for (const fam of filters.techniqueFamilies || []) {
+    chips.push(renderFilterChip(`techniqueFamilies:${fam}`, `Family ${fam}`));
+  }
+  for (const name of filters.techniqueNames || []) {
+    chips.push(renderFilterChip(`techniqueNames:${name}`, name));
   }
   if (!chips.length) return '';
   return `<section class="annojoin-filter-chips" aria-label="Active conditions">
@@ -596,6 +625,7 @@ export function renderAnnojointAtlasPage({
       <a class="download-outline-btn" href="${escapeHtml(atlasHref(routeName))}">Reset</a>
     </section>
 
+    ${renderTechniqueFilterControls(atlasState.cases, atlasState.filters)}
     ${renderActiveConditionChips(atlasState.filters, query)}
     ${searchModeNote}
     ${statusBanner}

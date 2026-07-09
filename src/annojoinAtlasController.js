@@ -12,6 +12,8 @@ export function bindAnnojointAtlasTable({
   collapseAllGroups,
   removeFilter,
   clearFilters,
+  toggleTechniqueFamily,
+  toggleTechniqueName,
   rerender
 } = {}) {
   const rowCaseKey = (row = {}) => String(row.atlasCaseKey || row.caseKey || row.caseId || row.pdbId || '').trim();
@@ -39,6 +41,18 @@ export function bindAnnojointAtlasTable({
 
   root.querySelectorAll?.('[data-annojoin-clear-all]').forEach((button) => {
     button.addEventListener('click', () => clearFilters?.());
+  });
+
+  root.querySelectorAll?.('[data-technique-family]').forEach((button) => {
+    button.addEventListener('click', () => {
+      toggleTechniqueFamily?.(button.getAttribute('data-technique-family'));
+    });
+  });
+
+  root.querySelectorAll?.('[data-technique-name]').forEach((button) => {
+    button.addEventListener('click', () => {
+      toggleTechniqueName?.(button.getAttribute('data-technique-name'));
+    });
   });
 
   root.querySelectorAll?.('[data-annojoin-clear-search]').forEach((button) => {
