@@ -619,7 +619,7 @@ test('atlas page renders case-level display fields and profile/confidence semant
   assert.doesNotMatch(html, /<th>Biological molecule<\/th>/);
   assert.doesNotMatch(html, /<th>PDB molecule<\/th>/);
   assert.doesNotMatch(html, /<th>Probe family<\/th>/);
-  assert.match(html, /Confidence distribution/);
+  assert.match(html, /<th>Confidence<\/th>/);
   assert.match(html, /16S ribosomal RNA/);
   assert.match(html, /B_CONTEXT_STRATIFIED \(1\); C_EXPLORATORY_HINT \(2\)/);
   assert.match(html, /3 profiles/);
@@ -652,7 +652,7 @@ test('atlas page expands singleton-child parent groups with one click', () => {
   });
 
   assert.match(html, /Molecule name/);
-  assert.match(html, /<th>Confidence distribution<\/th>/);
+  assert.match(html, /<th>Confidence<\/th>/);
   assert.match(html, /data-annojoin-group-state="expanded"/);
   assert.doesNotMatch(html, /annojoin-child-group-row/);
   assert.match(html, /class="annojoin-case-row is-in-expanded-group"/);

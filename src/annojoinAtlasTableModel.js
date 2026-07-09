@@ -3,9 +3,10 @@ const MISSING_LABELS = new Set(['', '未注释', 'not annotated', 'missing sourc
 export const ANNOJOIN_TABLE_COLUMNS = [
   { id: 'moleculeName', label: 'Molecule name' },
   { id: 'pdbId', label: 'PDB' },
-  { id: 'confidenceDisplayLabel', label: 'Confidence distribution' },
-  { id: 'profileCount', label: 'Profiles' },
-  { id: 'chains', label: 'Chains' }
+  { id: 'chains', label: 'Chains' },
+  { id: 'profileCount', label: 'Probing profiles' },
+  { id: 'techniqueFamilies', label: 'Technique' },
+  { id: 'confidenceDisplayLabel', label: 'Confidence' }
 ];
 
 function cleanLabel(value) {

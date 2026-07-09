@@ -58,11 +58,20 @@ const rows = [
   }
 ];
 
-test('table model defines the five fixed master-table columns', () => {
+test('table has 6 columns in the redesigned order', () => {
   assert.deepEqual(
-    ANNOJOIN_TABLE_COLUMNS.map((column) => column.id),
-    ['moleculeName', 'pdbId', 'confidenceDisplayLabel', 'profileCount', 'chains']
+    ANNOJOIN_TABLE_COLUMNS.map((c) => c.id),
+    ['moleculeName', 'pdbId', 'chains', 'profileCount', 'techniqueFamilies', 'confidenceDisplayLabel']
   );
+});
+
+test('probing profiles + technique labels are set', () => {
+  const byId = new Map(ANNOJOIN_TABLE_COLUMNS.map((c) => [c.id, c.label]));
+  assert.equal(byId.get('profileCount'), 'Probing profiles');
+  assert.equal(byId.get('techniqueFamilies'), 'Technique');
+});
+
+test('table model omits derived/internal columns', () => {
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'conflictCandidateCount'), false);
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'biologicalMoleculeName'), false);
   assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'pdbMoleculeName'), false);
