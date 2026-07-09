@@ -6451,7 +6451,7 @@ body[data-mode="dark"] .mode-toggle:hover {
   flex-direction: column;
   gap: 0.2rem;
   padding: 1rem 1.1rem;
-  border: 1px solid var(--panel-card-border, var(--border));
+  border: var(--panel-card-border);
   border-radius: 12px;
   background: var(--panel-card-bg, var(--surface));
 }
