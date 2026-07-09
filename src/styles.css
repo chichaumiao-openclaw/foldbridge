@@ -519,6 +519,14 @@ main.page-sequence-detail {
   font-size: 0.78rem;
 }
 
+/* Technique family badges */
+.annojoin-family-badge { display: inline-block; padding: 1px 6px; border-radius: 4px; font-weight: 600; font-size: 0.82em; margin-right: 3px; }
+.annojoin-family-badge-A { color: var(--family-a); background: var(--family-a-bg); }
+.annojoin-family-badge-B { color: var(--family-b); background: var(--family-b-bg); }
+.annojoin-family-badge-C { color: var(--family-c); background: var(--family-c-bg); }
+.annojoin-family-badge-D { color: var(--family-d); background: var(--family-d-bg); }
+.annojoin-technique-empty { color: var(--textMuted, #999); }
+
 /* Filter chips */
 .annojoin-filter-chips {
   display: flex;

@@ -1223,3 +1223,19 @@ test('technique filter chips are built from the full universe, not the filtered 
   assert.match(html, /data-technique-family="C"/);
   assert.match(html, /data-technique-name="PARS"/);
 });
+
+test('technique column renders colored family badges with hover names', () => {
+  const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({
+    displayCases: [{ pdb_id: '1GID', techniqueFamilies: ['A', 'B'], techniqueNames: ['2A3', 'DMS'] }]
+  }, {}) });
+  assert.match(html, /annojoin-family-badge-A/);
+  assert.match(html, /annojoin-family-badge-B/);
+  assert.match(html, /title="[^"]*2A3[^"]*DMS[^"]*"/);
+});
+
+test('technique column shows dash when no family', () => {
+  const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({
+    displayCases: [{ pdb_id: '9XXX' }]
+  }, {}) });
+  assert.match(html, /annojoin-technique-empty/);
+});

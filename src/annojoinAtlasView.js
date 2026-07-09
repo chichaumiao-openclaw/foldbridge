@@ -106,6 +106,16 @@ function renderConfidenceSegments(label = '') {
   return `<span class="annojoin-confidence" title="${escapeHtml(full)}">${segs || `<span class="annojoin-confidence-seg">${escapeHtml(full)}</span>`}</span>`;
 }
 
+function renderTechniqueBadges(row) {
+  const families = row.techniqueFamilies || [];
+  if (!families.length) return '<span class="annojoin-technique-empty">—</span>';
+  const names = (row.techniqueNames || []).join(' · ');
+  const badges = families
+    .map((fam) => `<span class="annojoin-family-badge annojoin-family-badge-${escapeHtml(fam)}">${escapeHtml(fam)}</span>`)
+    .join('');
+  return `<span class="annojoin-technique-badges" title="${escapeHtml(names)}">${badges}</span>`;
+}
+
 function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabels = [], preserved = {}) {
   const caseId = rowCaseId(row);
   const moleculeHref = detailPageHref({
@@ -120,7 +130,8 @@ function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabe
     moleculeName: `<a class="annojoin-field-link annojoin-molecule-detail-link" href="${escapeHtml(moleculeHref)}">${sourceValue(moleculeName(row), row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource)}</a>`,
     confidenceDisplayLabel: fieldLink(row, routeName, 'confidenceDisplayLabel', renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution), preserved),
     profileCount: fieldLink(row, routeName, 'profileCount', `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`, preserved),
-    chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated'), preserved)
+    chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated'), preserved),
+    techniqueFamilies: renderTechniqueBadges(row)
   };
   return values[columnId] ?? escapeHtml(row[columnId] || '');
 }
