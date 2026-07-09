@@ -17,3 +17,12 @@ test('renderSearchDocumentHtml emits technique Pagefind facet', () => {
   const html = renderSearchDocumentHtml(doc);
   assert.match(html, /data-pagefind-filter="technique:/);
 });
+
+test('technique facets never include null-ish placeholder tokens', () => {
+  const cases = buildSearchDocuments().filter((d) => d.type === 'pdb-case');
+  const values = new Set();
+  cases.forEach((d) => d.techniques.forEach((t) => values.add(t.toLowerCase())));
+  for (const junk of ['none', 'null', 'nan', '']) {
+    assert.ok(!values.has(junk), `technique facet leaked placeholder: ${junk}`);
+  }
+});

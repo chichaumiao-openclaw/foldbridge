@@ -13,9 +13,13 @@ function escapeHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
+const CLEAN_TOKEN_PLACEHOLDERS = new Set(['', '未注释', 'not annotated', 'missing source']);
+const CLEAN_TOKEN_NULLISH = new Set(['none', 'null', 'nan']);
 function cleanToken(value) {
   const token = String(value ?? '').trim();
-  return ['', '未注释', 'not annotated', 'missing source'].includes(token) ? '' : token;
+  if (CLEAN_TOKEN_PLACEHOLDERS.has(token)) return '';
+  if (CLEAN_TOKEN_NULLISH.has(token.toLowerCase())) return '';
+  return token;
 }
 
 function caseDocId(caseKey, caseId) {
