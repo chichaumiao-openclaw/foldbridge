@@ -331,6 +331,14 @@ main.page-sequence-detail {
   background: var(--surfaceAlt);
 }
 
+.annojoin-master-table td { white-space: nowrap; }
+.annojoin-master-table th:nth-child(2),
+.annojoin-master-table td:nth-child(2) { position: sticky; left: 0; background: var(--surface, #fff); z-index: 2; }
+.annojoin-master-table th:nth-child(2) { z-index: 3; }
+.annojoin-scroll-hint { border: var(--panel-card-border); border-radius: 6px; padding: 6px 10px; margin-bottom: 8px; font-size: 0.9em; color: var(--textSecondary); }
+.annojoin-scroll-hint[hidden] { display: none; }
+.annojoin-scroll-hint-dismiss { margin-left: 8px; border: none; background: transparent; cursor: pointer; font-size: 1em; line-height: 1; }
+
 .annojoin-field-link {
   color: inherit;
   text-decoration: underline;

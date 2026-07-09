@@ -1239,3 +1239,12 @@ test('technique column shows dash when no family', () => {
   }, {}) });
   assert.match(html, /annojoin-technique-empty/);
 });
+
+test('table is wrapped in a horizontal-scroll container with a dismissible hint', () => {
+  const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({
+    displayCases: [{ pdb_id: '1GID' }]
+  }, {}) });
+  assert.match(html, /class="[^"]*annojoin-table-scroll[^"]*"/);
+  assert.match(html, /data-annojoin-scroll-hint/);
+  assert.match(html, /foldbridge\.entryTableScrollHintSeen/);
+});

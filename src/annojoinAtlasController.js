@@ -106,4 +106,29 @@ export function bindAnnojointAtlasTable({
 
   const collapseAllBtn = root.getElementById?.('collapse-all-annojoin-groups');
   if (collapseAllBtn) collapseAllBtn.addEventListener('click', () => collapseAllGroups?.());
+
+  const scrollHintNote = root.querySelector?.('[data-annojoin-scroll-hint-note]');
+  if (scrollHintNote) {
+    const scrollWrap = root.querySelector?.('[data-annojoin-scroll-hint]');
+    const hintKey = scrollWrap?.getAttribute?.('data-annojoin-scroll-hint') || 'foldbridge.entryTableScrollHintSeen';
+    const readSeen = () => {
+      try {
+        if (typeof localStorage === 'undefined') return null;
+        return localStorage.getItem(hintKey);
+      } catch (error) {
+        return null;
+      }
+    };
+    if (readSeen()) scrollHintNote.hidden = true;
+    root.querySelectorAll?.('[data-annojoin-scroll-hint-dismiss]').forEach((button) => {
+      button.addEventListener('click', () => {
+        try {
+          if (typeof localStorage !== 'undefined') localStorage.setItem(hintKey, '1');
+        } catch (error) {
+          /* localStorage unavailable — dismiss visually only */
+        }
+        scrollHintNote.hidden = true;
+      });
+    });
+  }
 }

@@ -648,7 +648,11 @@ export function renderAnnojointAtlasPage({
     </section>
 
     <section class="annojoin-table-layout">
-      <div class="annojoin-master-table-wrap">
+      <div class="annojoin-scroll-hint" role="note" data-annojoin-scroll-hint-note>
+        表格可左右滑动查看更多列
+        <button type="button" class="annojoin-scroll-hint-dismiss" data-annojoin-scroll-hint-dismiss aria-label="关闭提示">×</button>
+      </div>
+      <div class="annojoin-master-table-wrap annojoin-table-scroll" data-annojoin-scroll-hint="foldbridge.entryTableScrollHintSeen">
         <table class="annojoin-master-table">
           <thead>
             <tr>
