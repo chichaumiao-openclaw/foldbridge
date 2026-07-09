@@ -80,6 +80,10 @@ function buildPdbCaseDocs() {
       title,
       href: caseDetailHref(caseId, caseKey),
       tags: tagForCase(row),
+      techniques: (Array.isArray(row.techniqueFamilies) && row.techniqueFamilies.length
+        ? row.techniqueFamilies
+        : (Array.isArray(row.assayFamilies) ? row.assayFamilies : [])
+      ).map((t) => cleanToken(t)).filter(Boolean),
       summary: summaryParts.join(' · '),
       content: [...new Set(contentTokens)].join(' ')
     };
@@ -122,6 +126,10 @@ export function renderSearchDocumentHtml(doc) {
     .map((tag) => `<span data-pagefind-filter="tag:${escapeHtml(tag)}"></span>`)
     .join('');
 
+  const techniqueFacets = (doc.techniques ?? [])
+    .map((t) => `<span data-pagefind-filter="technique:${escapeHtml(t)}"></span>`)
+    .join('');
+
   return `<!doctype html>
 <html lang="en">
   <head>
@@ -135,6 +143,7 @@ export function renderSearchDocumentHtml(doc) {
       data-pagefind-meta="href:${escapeHtml(doc.href)}"
     >
       ${tags}
+      ${techniqueFacets}
       <span data-pagefind-meta="type:${escapeHtml(doc.type)}"></span>
       <span data-pagefind-meta="tags:${escapeHtml((doc.tags ?? []).join(','))}"></span>
       <h1 data-pagefind-meta="title">${escapeHtml(doc.title)}</h1>

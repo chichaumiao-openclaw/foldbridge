@@ -1,4 +1,4 @@
-const SEARCH_FILTER_KEYS = ['type', 'tag'];
+const SEARCH_FILTER_KEYS = ['type', 'tag', 'technique'];
 
 export function searchParamsFromHash(hashValue = '') {
   const hash = String(hashValue || '');

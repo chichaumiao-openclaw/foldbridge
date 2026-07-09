@@ -3097,7 +3097,7 @@ function toggleSearchFilter(key, value) {
 }
 
 function renderSearchFilters(filters, activeFilters) {
-  const allowedKeys = ['type', 'tag'];
+  const allowedKeys = ['type', 'tag', 'technique'];
   return allowedKeys
     .map((key) => {
       const values = filters?.[key] ?? {};
