@@ -1,4 +1,5 @@
 import "./site-nav.js";
+import { joinTechniqueByProfile } from "./workbench-pure.mjs";
 
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const caseUrl = config.caseUrl || "./case-2d-structure.json";
@@ -21,6 +22,7 @@ const linkedViewUrls = {
 const state = {
   caseData: null,
   profileIndex: null,
+  techniqueByProfile: new Map(),
   linkedView: null,
   residueByKey: new Map(),
   residueByStrandPosition: new Map(),
@@ -2072,11 +2074,13 @@ async function init() {
     profileIndex,
     varnaTemplate,
     linkedView,
+    confidenceEvidence,
   ] = await Promise.all([
     fetchJsonMaybeGzip(caseUrl),
     fetchJsonMaybeGzip(profileIndexUrl),
     fetchTextMaybeGzip(varnaTemplateUrl),
     linkedViewPromise,
+    fetchJsonMaybeGzip("../../confidence-evidence.json").catch(() => null),
   ]);
   const {
     residueIndex,
@@ -2095,6 +2099,9 @@ async function init() {
   installLinkedViewIndexes(state.linkedView);
   state.varnaTemplate = varnaTemplate;
   state.profiles = profileIndex.profiles;
+  const evidenceRows = confidenceEvidence?.rows || [];
+  state.techniqueByProfile = joinTechniqueByProfile(evidenceRows, config.chainId);
+  state.evidenceRows = evidenceRows;
   const strand = activeStrand() || caseData.strands[0];
   state.viewport = { start: 1, end: Math.min(strand.sequence.length, TRACK_DEFAULT_SPAN) };
   el.select.innerHTML = buildProfileSelectMarkup(state.profiles);
