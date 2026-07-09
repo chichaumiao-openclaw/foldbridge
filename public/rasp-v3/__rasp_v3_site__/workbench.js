@@ -1,5 +1,5 @@
 import "./site-nav.js";
-import { joinTechniqueByProfile, familyBadgeMarkup } from "./workbench-pure.mjs";
+import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter } from "./workbench-pure.mjs";
 
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const caseUrl = config.caseUrl || "./case-2d-structure.json";
@@ -1972,6 +1972,10 @@ function profileOptionLabel(profile) {
 // with the native <select>'s current value. No-op until the dropdown is mounted.
 let refreshProfileDropdownTrigger = () => {};
 
+// Module-level hook so the technique chip filter can gray/hide non-hit profiles
+// in the self-built dropdown. No-op until the dropdown is mounted.
+let applyProfileDropdownFilter = () => {};
+
 // Build a self-contained colored family-badge dropdown as a sibling of the native
 // <select>, which stays in the DOM (hidden) as the source of truth + fallback.
 // DOM-only + defensive: returns early if the select is missing or no profiles.
@@ -2078,10 +2082,117 @@ function mountProfileDropdown() {
 
   // Mount as sibling, then hide the native select (kept as source-of-truth +
   // fallback). Hide only AFTER the dropdown is in the DOM.
+  // Gray/hide <li> items whose profile is NOT in the given hit set of
+  // profileIds. Empty/null hitIds = show all (no active filter). Defensive:
+  // never throws if state.profiles is missing.
+  const applyFilter = (hitIds) => {
+    const filtering = !!(hitIds && hitIds.size);
+    items().forEach((li) => {
+      const idx = Number(li.dataset.index);
+      const pid = state.profiles?.[idx]?.profile_id;
+      const hidden = filtering && pid != null && !hitIds.has(String(pid));
+      li.classList.toggle("filtered-out", hidden);
+      if (hidden) li.setAttribute("aria-hidden", "true");
+      else li.removeAttribute("aria-hidden");
+    });
+  };
+
   select.insertAdjacentElement("afterend", root);
   select.hidden = true;
   refreshTrigger();
   refreshProfileDropdownTrigger = refreshTrigger;
+  applyProfileDropdownFilter = applyFilter;
+}
+
+// Two-level technique chip filter above the profile control. First level = one
+// colored family chip per family; toggling a family chip both toggles the family
+// into the selection AND expands/collapses that family's technique chips (second
+// level). Cross-level OR union: a profile is a hit if its family is selected OR
+// its technology is selected. Empty selection = show all. DOM-only + defensive.
+function mountTechniqueFilter() {
+  const select = el.select;
+  if (!select || !Array.isArray(state.evidenceRows) || !state.evidenceRows.length) return;
+  // Avoid double-mount if init runs more than once.
+  if (select.closest(".controls")?.querySelector(".technique-filter")) return;
+
+  const model = buildTechniqueFilterModel(state.evidenceRows, config.chainId);
+  if (!model.families.length) return;
+
+  const selection = { families: new Set(), techniques: new Set() };
+
+  const container = document.createElement("div");
+  container.className = "technique-filter";
+  const famRow = document.createElement("div");
+  famRow.className = "technique-chip-row";
+  const subLevel = document.createElement("div");
+  subLevel.className = "technique-chip-sublevel";
+  container.append(famRow, subLevel);
+
+  const refilter = () => {
+    applyProfileDropdownFilter(applyTechniqueFilter(model, selection));
+  };
+
+  model.families.forEach((fam) => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "technique-chip";
+    chip.dataset.family = fam;
+    chip.setAttribute("aria-pressed", "false");
+    chip.innerHTML = familyBadgeMarkup(fam);
+    chip.addEventListener("click", () => {
+      const on = !selection.families.has(fam);
+      chip.setAttribute("aria-pressed", on ? "true" : "false");
+      if (on) {
+        selection.families.add(fam);
+        appendTechniqueChips(fam);
+      } else {
+        selection.families.delete(fam);
+        removeTechniqueChips(fam);
+      }
+      refilter();
+    });
+    famRow.appendChild(chip);
+  });
+
+  function appendTechniqueChips(fam) {
+    const techs = model.techniquesByFamily.get(fam) || [];
+    const group = document.createElement("div");
+    group.className = "technique-chip-group";
+    group.dataset.family = fam;
+    techs.forEach((tech) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "technique-chip technique-chip-sub";
+      chip.dataset.technique = tech;
+      chip.dataset.family = fam;
+      chip.setAttribute("aria-pressed", "false");
+      chip.textContent = tech;
+      chip.addEventListener("click", () => {
+        const on = !selection.techniques.has(tech);
+        chip.setAttribute("aria-pressed", on ? "true" : "false");
+        if (on) selection.techniques.add(tech);
+        else selection.techniques.delete(tech);
+        refilter();
+      });
+      group.appendChild(chip);
+    });
+    subLevel.appendChild(group);
+  }
+
+  function removeTechniqueChips(fam) {
+    const group = subLevel.querySelector(`.technique-chip-group[data-family="${fam}"]`);
+    if (group) {
+      group.querySelectorAll(".technique-chip-sub").forEach((chip) => {
+        selection.techniques.delete(chip.dataset.technique);
+      });
+      group.remove();
+    }
+  }
+
+  // Insert directly above the profile control (the <label> wrapping the select),
+  // falling back to before the dropdown/select itself if no wrapping label.
+  const anchor = select.closest("label") || select.parentElement || select;
+  anchor.insertAdjacentElement("beforebegin", container);
 }
 
 // Choose the default profile by reactivity signal richness rather than the raw
@@ -2249,6 +2360,7 @@ async function init() {
   state.viewport = { start: 1, end: Math.min(strand.sequence.length, TRACK_DEFAULT_SPAN) };
   el.select.innerHTML = buildProfileSelectMarkup(state.profiles);
   mountProfileDropdown();
+  mountTechniqueFilter();
   el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
   const requestedProfileId = state.requestedProfileId || initialProfileIdFromLocation();
   const requestedIndex = profileIndexForId(requestedProfileId);

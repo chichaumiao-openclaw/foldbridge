@@ -548,3 +548,40 @@ pre {
   outline: none;
   box-shadow: inset 0 0 0 1px var(--accent);
 }
+.profile-dropdown-list li.filtered-out { display: none; }
+
+/* Two-level technique chip filter above the profile control. */
+.technique-filter { margin-bottom: 8px; }
+.technique-chip-row,
+.technique-chip-sublevel {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.technique-chip-sublevel { margin-top: 6px; }
+.technique-chip-group { display: contents; }
+.technique-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.technique-chip:hover,
+.technique-chip:focus-visible {
+  border-color: var(--accent);
+  outline: none;
+}
+.technique-chip[aria-pressed="true"] {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.technique-chip-sub { font-size: 12px; }

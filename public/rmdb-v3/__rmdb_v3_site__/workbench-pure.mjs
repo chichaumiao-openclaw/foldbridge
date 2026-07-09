@@ -32,3 +32,36 @@ export function familyBadgeMarkup(family) {
   const label = f || "?";
   return `<span class="family-badge" data-family="${esc(f)}">${esc(label)}</span>`;
 }
+
+export function buildTechniqueFilterModel(rows, chainId) {
+  const techniquesByFamily = new Map();
+  const profileMeta = new Map();
+  (Array.isArray(rows) ? rows : []).forEach((row) => {
+    if (!row || (chainId != null && row.chain !== chainId)) return;
+    const fam = String(row.family || "").toUpperCase();
+    const tech = row.technology || "";
+    const pid = row.trackProfileId || row.profileKey;
+    if (fam) {
+      if (!techniquesByFamily.has(fam)) techniquesByFamily.set(fam, new Set());
+      if (tech) techniquesByFamily.get(fam).add(tech);
+    }
+    if (pid) profileMeta.set(String(pid), { family: fam, technology: tech });
+  });
+  const families = [...techniquesByFamily.keys()].sort();
+  return {
+    families,
+    techniquesByFamily: new Map([...techniquesByFamily].map(([k, v]) => [k, [...v]])),
+    profileMeta,
+  };
+}
+export function applyTechniqueFilter(model, selection) {
+  const fams = selection?.families || new Set();
+  const techs = selection?.techniques || new Set();
+  const all = new Set(model.profileMeta.keys());
+  if (!fams.size && !techs.size) return all;
+  const hit = new Set();
+  model.profileMeta.forEach((meta, pid) => {
+    if (fams.has(meta.family) || techs.has(meta.technology)) hit.add(pid);
+  });
+  return hit;
+}
