@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 
-import { shouldRenderSiteNav } from "../site-nav.js";
+import { resolvePortalRoot, resolveSiteNavScriptSrc, shouldRenderSiteNav } from "../site-nav.js";
 
 test("shouldRenderSiteNav returns true when window is top-level", () => {
   const win = {};
@@ -24,4 +24,24 @@ test("shouldRenderSiteNav returns false when top access throws", () => {
     },
   };
   assert.equal(shouldRenderSiteNav(win), false);
+});
+
+test("resolveSiteNavScriptSrc prefers module URL", () => {
+  const doc = {
+    currentScript: null,
+    querySelectorAll() {
+      throw new Error("DOM fallback should not be used");
+    },
+  };
+  assert.equal(
+    resolveSiteNavScriptSrc(doc, "https://example.test/public/rasp-v3/__rasp_v3_site__/site-nav.js"),
+    "https://example.test/public/rasp-v3/__rasp_v3_site__/site-nav.js",
+  );
+});
+
+test("resolvePortalRoot resolves from site nav script URL", () => {
+  assert.equal(
+    resolvePortalRoot("https://example.test/foldbridge/public/rasp-v3/__rasp_v3_site__/site-nav.js"),
+    "https://example.test/foldbridge/",
+  );
 });

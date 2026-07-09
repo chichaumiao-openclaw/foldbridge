@@ -6,6 +6,35 @@ export function shouldRenderSiteNav(win) {
   }
 }
 
+export function resolveSiteNavScriptSrc(doc, moduleUrl) {
+  if (moduleUrl) {
+    return moduleUrl;
+  }
+  var current = doc && doc.currentScript;
+  if (current && current.getAttribute("data-fb-script-src")) {
+    return current.getAttribute("data-fb-script-src");
+  }
+  if (current && current.src) {
+    return current.src;
+  }
+  var scripts = doc && doc.querySelectorAll ? doc.querySelectorAll("script[src]") : [];
+  for (var i = scripts.length - 1; i >= 0; i -= 1) {
+    var src = scripts[i].getAttribute("src") || "";
+    if (/site-nav\.js(\?|$)/.test(src)) {
+      return scripts[i].src;
+    }
+  }
+  return "";
+}
+
+export function resolvePortalRoot(scriptSrc) {
+  try {
+    return new URL("../../../", scriptSrc).href;
+  } catch (err) {
+    return "/";
+  }
+}
+
 (function () {
   "use strict";
   if (typeof window === "undefined") return;
@@ -14,35 +43,10 @@ export function shouldRenderSiteNav(win) {
     return;
   }
 
-  // Self-locate this script's URL without relying solely on document.currentScript
-  // (it is null inside a dynamically injected external script — the case-page path).
-  function resolveScriptSrc() {
-    var current = document.currentScript;
-    if (current && current.getAttribute("data-fb-script-src")) {
-      return current.getAttribute("data-fb-script-src");
-    }
-    if (current && current.src) {
-      return current.src;
-    }
-    var scripts = document.querySelectorAll("script[src]");
-    for (var i = scripts.length - 1; i >= 0; i -= 1) {
-      var src = scripts[i].getAttribute("src") || "";
-      if (/site-nav\.js(\?|$)/.test(src)) {
-        return scripts[i].src;
-      }
-    }
-    return "";
-  }
-
-  var scriptSrc = resolveScriptSrc();
   // Bundle script lives at <root>/public/<universe>/__<bundle>__/site-nav.js
   // so three "../" hops reach the deploy root (where the portal index.html lives).
-  var portalRoot;
-  try {
-    portalRoot = new URL("../../../", scriptSrc).href;
-  } catch (err) {
-    portalRoot = "/";
-  }
+  var scriptSrc = resolveSiteNavScriptSrc(document, import.meta.url);
+  var portalRoot = resolvePortalRoot(scriptSrc);
 
   function esc(value) {
     return String(value == null ? "" : value)
