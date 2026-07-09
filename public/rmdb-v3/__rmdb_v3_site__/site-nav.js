@@ -79,9 +79,10 @@ export function resolvePortalRoot(scriptSrc) {
   var NAV_ITEMS = [
     { route: "home", label: "Home" },
     { route: "entry", label: "Entry" },
+    { route: "search", label: "Search" },
     { route: "probing", label: "Probing" },
     { route: "stats", label: "Stats" },
-    { route: "search", label: "Search" },
+    { route: "about", label: "About" },
     { route: "help", label: "Help" }
   ];
 
