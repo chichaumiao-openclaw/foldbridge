@@ -37,13 +37,21 @@
 - 可能修改（仅当判定「漏了」）：对应源文件 in `release-public`
 - 产出：reconciliation 对照表（写进本任务的完成记录 / commit message）
 
-- [ ] **步骤 1：确认工作副本在 release-public 且远端最新**
+- [ ] **步骤 1：切到 release-public、确认干净且远端最新**
 
-运行：
+先抓远端：
 ```bash
-cd /Users/joseperezmartinez/docs/foldbridge-release && git fetch origin && git rev-parse --abbrev-ref HEAD && git rev-parse release-public origin/release-public origin/public
+cd /Users/joseperezmartinez/docs/foldbridge-release && git fetch origin
 ```
-预期：当前分支 = `release-public`；打印 4 个 sha（本地/远端 release-public + origin/public）。若本地 release-public 落后 origin，先对齐再继续。
+**显式切到 release-public**（不要只检查——cherry-pick 必须落在 release-public，落错分支会让权威源静默不完整）：
+```bash
+cd /Users/joseperezmartinez/docs/foldbridge-release && git checkout release-public
+```
+确认工作树干净 + 远端对齐：
+```bash
+cd /Users/joseperezmartinez/docs/foldbridge-release && git status && git rev-parse release-public origin/release-public origin/public
+```
+预期：当前分支 = `release-public`，`git status` 干净（无未提交改动）；打印 3 个 sha。若本地 release-public 落后 origin，先 `git pull --ff-only` 对齐再继续；若工作树有未提交改动，先处理（stash/commit）再进步骤 4 的 cherry-pick。
 
 - [ ] **步骤 2：逐个 diff 6 提交触碰的文件**
 
@@ -142,7 +150,11 @@ cd /Users/joseperezmartinez/docs/foldbridge-release && git rev-parse release-pub
 
 - [ ] **步骤 2：切到 public 分支**
 
-运行：
+**先清掉可能存在的未跟踪 `dist/`**（否则 `git checkout public` 会因 public 跟踪 `dist/pagefind`、而工作树有同名未跟踪文件而报错中止；首次干净跑没有，重试时可能有）：
+```bash
+cd /Users/joseperezmartinez/docs/foldbridge-release && rm -rf dist
+```
+再切分支：
 ```bash
 cd /Users/joseperezmartinez/docs/foldbridge-release && git checkout public
 ```
@@ -203,7 +215,7 @@ cd /Users/joseperezmartinez/docs/foldbridge-release && ls public/rasp-v3/cases |
 ```bash
 cd /Users/joseperezmartinez/docs/foldbridge-release && ls public/rmdb-v3/cases | head -1
 ```
-预期：各打印一个 case 目录名。
+预期：各打印一个 case 目录名。（若 `cases` 子目录名与实际不符，退而查 `ls public/rasp-v3/` / `ls public/rmdb-v3/` 确认 case 页目录存在。）
 
 - [ ] **步骤 6：强制加 pagefind 产物**
 
@@ -243,11 +255,17 @@ cd /Users/joseperezmartinez/docs/foldbridge-release && git rev-parse origin/publ
 
 - [ ] **步骤 9：部署后核对（线上）**
 
-抽查线上可访问：首页 `https://foldbridge.ribocentre.org/`、搜索、一个 case 页。核对 `CNAME` = `foldbridge.ribocentre.org`：
+**先等 GitHub Pages 完成重新部署**（classic 模式 push 后通常 1-2 分钟；立刻访问可能看到旧内容）。核对本地 `CNAME` 值：
 ```bash
 cd /Users/joseperezmartinez/docs/foldbridge-release && cat CNAME
 ```
 预期：`foldbridge.ribocentre.org`。
+
+抽查线上可访问（首页 200）：
+```bash
+curl -sI https://foldbridge.ribocentre.org/
+```
+预期：`HTTP/2 200`。再在浏览器抽查首页、搜索、一个 case 页可访问渲染正常。
 
 **风险与回退：** 整树替换 + 提交前，`public` 旧状态即 `origin/public`；未 push 前 `git reset --hard origin/public` 零风险，已 push 后可 `git revert` 该 rebuild 提交回退。
 
