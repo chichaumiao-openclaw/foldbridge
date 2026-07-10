@@ -88,7 +88,7 @@ test "$(git rev-parse origin/public)" = "$(git rev-parse HEAD)"   # push 后 sha
 
 **本地退路安全前置（C2）：** 脚本首行的 clean-tree 门 + `git pull --ff-only`（release-public）+ `git reset --hard origin/public`（public 侧）三重护栏，使这段破坏性配方在**持久化本地 worktree** 里也安全：脏树直接拒跑（防丢未提交改动），两分支都对齐 origin（防 stale 部署 / 防落后于并发部署）。这也是 CI↔本地行为一致的前提。
 
-**非快进 push（I4）：** 若 `origin/public` 在 checkout 与 push 之间被推进（CI-vs-本地竞争，或手动办法 B 并发），`git push` 会被拒、`set -e` 中止。脚本**不自动 rebase/force**（force push 到线上服务分支违反前向安全铁律）；由操作者重跑脚本（重跑会 `git reset --hard origin/public` 重新对齐后再重建）。concurrency group 只串行 CI-vs-CI，CI-vs-本地竞争靠重跑收敛。
+**非快进 push（I4）：** 若 `origin/public` 在 checkout 与 push 之间被推进（CI-vs-本地竞争，或手动办法 B 并发），`git push` 会被拒、`set -e` 中止。脚本**不自动 rebase/force**（force push 到线上服务分支违反前向安全铁律）；由操作者重跑脚本（重跑会 `git reset --hard origin/public` 重新对齐后再重建）。concurrency group（`cancel-in-progress: true`）对并发 CI 是**取消去重**（非排队串行），故 CI-vs-CI 不会撞 push；CI-vs-本地竞争靠重跑收敛。
 
 **幂等 / 可重跑：** 脚本每次从 `git fetch` + `reset --hard origin/public` + 整树替换重建，不依赖上次残留状态；中途失败重跑安全（未 push 前 `git reset --hard origin/public` 零风险）。
 
@@ -149,6 +149,6 @@ jobs:
 
 ## 验证方式
 
-- 脚本逻辑：本地 `bash scripts/deploy-to-public.sh` 干跑一遍（首次即真部署，等价 Phase A 手动流程；用户确认后执行）。脚本内已 assert `dist/pagefind/pagefind.js` 非空、`CNAME` 存在且值正确、`.nojekyll` 存在（I2 恢复 Phase A 完整性检查）。
+- 脚本逻辑：本地 `bash scripts/deploy-to-public.sh` 首跑一遍（**即真部署**，非 dry-run，等价 Phase A 手动流程；用户确认后执行）。脚本内已 assert `dist/pagefind/pagefind.js` 非空、`CNAME` 存在且值正确、`.nojekyll` 存在（I2 恢复 Phase A 完整性检查）。
 - workflow：合并到 `release-public` 后首次 push 触发，观察 Actions run 是否绿；push step 成败即判定写权限是否可用。
 - 部署后：**先等 Pages classic 模式重新部署（push 后约 1-2 分钟；立刻访问可能看到旧内容，别误判失败，M5）**，再 `curl -sI https://foldbridge.ribocentre.org/` 期望 `HTTP/2 200` + 浏览器抽查首页/搜索/case 页。
