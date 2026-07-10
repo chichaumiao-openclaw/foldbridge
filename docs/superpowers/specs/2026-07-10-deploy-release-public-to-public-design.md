@@ -70,24 +70,33 @@ FoldBridge 是 vanilla-JS（ESM）hash 路由静态 SPA + 已部署 case 页资�
 
 **执行（全在 worktree `~/docs/foldbridge-release`，每条命令需先 `cd` 进去）**：
 
-1. **锁定源 sha**：记录当前 `release-public` HEAD sha（进部署提交信息，保证可复现）。
-2. **本地生成 pagefind 索引**：`npm ci` → `npm run build:search-docs` → `npm run build:search-index`。产出 `dist/pagefind/`（`public` 唯一需要的构建产物；`dist/` 在 release-public 被 gitignore）。
+1. **锁定源 sha**：记录当前 `release-public` HEAD sha（`git rev-parse release-public`）。此 sha 必须写进步骤 7 的部署提交信息 `deploy(public): rebuild from release-public <sha>`，作为唯一可复现锚点。
+2. **本地全量构建**：`npm ci` → `npm run build:site`（= `build:static && build:search-docs && build:search-index`，链式）。产出完整 `dist/`，其中 `dist/pagefind/` 是 `public` 唯一需要提交的构建产物。**注意**：`build:search-docs` 若无 `dist/` 会直接报错退出，所以必须走 `build:site` 全链，不能只跑 `build:search-docs`/`build:search-index`。`dist/` 其余内容仍被 gitignore、不提交。
 3. **切到 `public` 分支**（本地跟踪 origin/public，保留其历史）。
-4. **整树替换**：用 reconciled 的 release-public 源码树整体覆盖 `public` 工作树——`index.html` / `src/` / `public/`（含全部 case 页）/ `scripts/` / `test/` / `package*.json` / `.github/` / `CNAME` / `.nojekyll` 等，逐一从 release-public 取。**是"替换"不是"合并"**，从根上杜绝历史里的漏文件 bug。
-5. **强制带上 `dist/pagefind`**：因 `dist/` 被 gitignore，需 `git add -f dist/pagefind`，确保搜索索引落到 `public`。
-6. **保留 `public` 专属托管必需项**：`CNAME`（= `foldbridge.ribocentre.org`）、`.nojekyll` 保持不变。
-7. **一次提交**：`deploy(public): rebuild from release-public <sha>`（单原子提交 = 单可部署状态；`public` 历史线性往前，旧 deploy 历史保留）。
-8. **push `public`**：首次是大 push（源码树 + case 页 + pagefind），git 能扛。
+4. **整树替换（orphan-free 配方，是"替换"不是"合并"）**：
+   - `git rm -rf .`（清空 `public` 工作树的所有跟踪文件，确保 release-public 上已删除的文件不会作为孤儿残留）；
+   - `git checkout release-public -- .`（把 reconciled 的 release-public 整棵树取过来：`index.html` / `src/` / `public/` 含全部 case 页 / `scripts/` / `test/` / `package*.json` / `.github/` / `CNAME` / `.nojekyll` 等，全部随之带入，无需逐一手动列举）。
+   - 这个"先清空再取整树"的配方，才真正兑现"从根上杜绝漏文件/孤儿"的安全属性；单纯 `git checkout ... -- <path>` 只增改不删，无法保证。
+5. **处理 pagefind 产物（避免旧索引孤儿）**：
+   - 因 pagefind 用内容哈希命名，重建会产生新文件名、不覆盖旧文件；`dist/` 又被 gitignore，普通复制/checkout 永远删不掉旧索引 → 会复现根因 #3 的"漏文件"症状。
+   - 配方：`git rm -r --cached dist/pagefind`（如 index 里有旧的）→ 确认工作树 `dist/pagefind` 是步骤 2 刚生成的新索引 → `git add -f dist/pagefind`（`dist/` 被 gitignore，必须 `-f` 强制加）。
+6. **CNAME / .nojekyll**：这两个文件在 release-public 上已跟踪且与 public 字节相同，步骤 4 的整树取过程已自动带入，无需额外动作（此处仅做部署后核对，确认 `CNAME` = `foldbridge.ribocentre.org`）。
+7. **一次提交**：`deploy(public): rebuild from release-public <sha>`（单原子提交 = 单可部署状态；`public` 历史线性往前，旧 deploy 历史保留，可回退）。
+8. **push `public`**：首次是大 push（源码树 + 11.4 万 case 页文件 + structure.cif.gz 二进制 + pagefind）。若单次 push 触发 HTTP/pack 上限被迫分块，**必须在 push 完成后核对** `git rev-parse origin/public` == 本地 rebuild 提交 sha，确认远端树完整（防止再次出现分块漏文件）。
+9. **CI 不会自动触发**：当前 `pages.yml` 触发条件是别的分支，推 `public` 不会跑 CI——这是本轮预期行为（Phase A 是纯手动部署 + classic 托管），实施者不要因"没有 CI 自动跑"而困惑。
 
-**验证（部署前）**：
+**验证（部署前，提交之前）**：
 - `node --test` 仅 3 个已知 5GAG 失败；
-- 抽查 `dist/pagefind/` 存在且非空；
+- `npm run verify:mvp` 通过（CI 里的真实 sanity gate，本轮沿用）；
+- 抽查 `dist/pagefind/` 存在且是本次新生成、非空；
 - 抽查一个 RASP + 一个 RMDB case 页文件在树里；
-- `git status` 干净。
+- `git status` 干净（整树替换后无意外残留/未跟踪文件）。
 
 **验证（部署后）**：抽查首页、搜索、一个 case 页线上可访问。
 
-**风险与回退**：整树替换 + 提交前，`public` 旧状态即 `origin/public`；未 push 前 `git reset` 零风险，已 push 后可 `git revert` 该 rebuild 提交回退。
+**风险与回退**：整树替换 + 提交前，`public` 旧状态即 `origin/public`；未 push 前 `git reset --hard origin/public` 零风险，已 push 后可 `git revert` 该 rebuild 提交回退。
+
+**遗留观察（本轮范围外，仅记录）**：`.env` 在两分支均被跟踪且未 gitignore（当前仅含 `FOLDBRIDGE_PORT`、无密钥，无泄露风险），整树替换会带到 public 并被 Pages 托管。建议后续单独 `git rm --cached .env` + 加进 `.gitignore`，防止将来误存密钥泄露。
 
 ---
 
