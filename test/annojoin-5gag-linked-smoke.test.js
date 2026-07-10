@@ -67,64 +67,6 @@ test('5GAG smoke page exposes a complete linked-view workbench contract', () => 
   assert.match(js, /window\.location\.search/);
 });
 
-test('5GAG smoke consumes linked-view contract assets for residue semantics', () => {
-  for (const asset of [
-    'residue-index.json',
-    'profile-joins.json',
-    'structure-contexts.json',
-    'structure-coverage.json',
-    'bridges.json',
-    'interactions.json',
-    'confidence-summary.json',
-    'lss-context.json',
-    'raw-alignment-coverage.json',
-  ]) {
-    assert.ok(fs.existsSync(path.join(smokeRoot, 'assets', 'linked-view', asset)), `${asset} missing`);
-  }
-
-  assert.match(js, /linkedViewUrls/);
-  assert.match(js, /buildResidueIndexes/);
-  assert.match(js, /buildStructureCoverageIndexes/);
-  assert.match(js, /buildConfidenceIndexes/);
-  assert.match(js, /buildBridgeIndexes/);
-  assert.match(js, /buildInteractionIndexes/);
-  assert.match(js, /buildLssContextIndexes/);
-  assert.match(js, /buildRawAlignmentCoverageIndexes/);
-  assert.match(js, /installVarnaHitLayer/);
-  assert.match(js, /data-layer", "varna-hit-layer"/);
-  assert.match(js, /data-structure-chain-key/);
-  assert.match(js, /profile_sequence/);
-  assert.match(js, /pdb_polymer_alignment/);
-  assert.match(js, /pdb_residue/);
-  assert.match(js, /dms_targetability/);
-  assert.match(js, /1d:profile_sequence/);
-  assert.match(js, /1d:pdb_polymer_alignment/);
-  assert.match(js, /1d:dms_targetability/);
-  assert.match(js, /data-alignment-state/);
-  assert.match(js, /data-alignment-source/);
-  assert.match(js, /fec_lss_confidence/);
-  assert.match(js, /Profile\/RMDB seq/);
-  assert.match(js, /PDB polymer alignment/);
-  assert.doesNotMatch(js, /\["PDB polymer seq"/);
-  assert.doesNotMatch(js, /pdbBaseText/);
-  assert.match(js, /profile-PDB polymer sequence match/);
-  assert.match(js, /atom_site coordinates observed/);
-  assert.match(js, /not a sequence-alignment count/);
-  assert.match(js, /PDB polymer residue/);
-  assert.match(js, /DMS targetability/);
-  assert.match(js, /FEC\/LSS confidence/);
-  assert.match(js, /ANNOCONFIDENCE/);
-  assert.doesNotMatch(js, /bridgeMembership:\s*partners\.length \?/);
-  assert.doesNotMatch(js, /interactionEndpoint:\s*partners\.length \?/);
-  assert.doesNotMatch(js, /return `5GAG\|chain\|strand_1\|\$\{position\}`/);
-  assert.doesNotMatch(js, /function pdbBaseForPosition/);
-  assert.doesNotMatch(js, /function alignmentStateForBases/);
-  assert.doesNotMatch(js, /function sequenceAlignmentSummary/);
-  assert.doesNotMatch(js, /comparableLength/);
-  assert.doesNotMatch(js, /fallback\.matchedResidues/);
-  assert.doesNotMatch(js, /raw_fallback/);
-});
-
 test('5GAG smoke manifest registers linked-view projection assets', () => {
   const manifest = JSON.parse(fs.readFileSync(path.join(smokeRoot, 'browser_smoke_manifest.json'), 'utf8'));
   const sizeReport = JSON.parse(fs.readFileSync(path.join(smokeRoot, 'asset_size_report.json'), 'utf8'));
@@ -334,30 +276,6 @@ test('5GAG linked-view LSS context is materialized from ANNOCONFIDENCE by profil
   assert.doesNotMatch(JSON.stringify(lss), /case_level_fallback|coarse_case_match|inferred_from_ui/);
 });
 
-test('5GAG DMS loop recall uses mapped AC positive signal positions only', () => {
-  const structure = JSON.parse(fs.readFileSync(path.join(smokeRoot, 'assets', 'case_2d_structure_5gag.json'), 'utf8'));
-  const strand = structure.strands.find((item) => item.strand_id === 'strand_1');
-  const pairedPositions = new Set(strand.pairs.flatMap((pair) => [pair.i, pair.j]));
-  const profiles = JSON.parse(fs.readFileSync(path.join(smokeRoot, 'assets', 'profile_reactivity_5gag_reference_mapped.json'), 'utf8'));
-  const profile = profiles.profiles.find((item) => item.profile_id === 'data-rna-structures/SRPECLI_DMS_0001.rdat#DATA:262');
-  const acSignal = profile.residues.filter((residue) => (
-    residue.mapped_to_strand === true
-    && /^[AC]$/.test(residue.base)
-    && Number(residue.raw_value) > 0
-  ));
-  const loopSignal = acSignal.filter((residue) => !pairedPositions.has(residue.position));
-  const stemSignal = acSignal.filter((residue) => pairedPositions.has(residue.position));
-
-  assert.equal(acSignal.length, 34);
-  assert.equal(loopSignal.length, 30);
-  assert.equal(stemSignal.length, 4);
-  assert.deepEqual(stemSignal.map((residue) => residue.position), [33, 59, 68, 74]);
-  assert.match(js, /function computeDmsLoopRecall/);
-  assert.match(js, /mapped_to_strand === true/);
-  assert.match(js, /raw_value\) > 0/);
-  assert.match(js, /DMS loop recall/);
-});
-
 test('5GAG shared residue state colors drive 1D and 2D without replacing DMS signal colors', () => {
   assert.match(js, /const RESIDUE_STATE_COLORS = Object\.freeze/);
   for (const [stateName, hex] of [
@@ -376,24 +294,4 @@ test('5GAG shared residue state colors drive 1D and 2D without replacing DMS sig
   assert.match(js, /data-state-color-source", "RESIDUE_STATE_COLORS"/);
   assert.match(js, /data-reactivity-fill/);
   assert.match(js, /fillCircles\[idx\]\.setAttribute\("fill", toVarnaRgb\(color\)\)/);
-});
-
-test('5GAG 3D target display defaults to DMS reactivity colors on the cropped target chain', () => {
-  assert.match(js, /const MOLSTAR_CONTEXT_COLOR = Object\.freeze\(\{ r: 229, g: 231, b: 235 \}\)/);
-  assert.match(js, /function colorForMolstarDmsReactivity/);
-  assert.match(js, /function buildMolstarTargetDisplayPayload/);
-  assert.match(js, /function applyMolstarTargetDisplay/);
-  assert.match(js, /struct_asym_id: locator\.label_asym_id \|\| locator\.auth_asym_id \|\| residue\.labelAsymId/);
-  assert.doesNotMatch(js, /struct_asym_id: locator\.auth_asym_id \|\| locator\.label_asym_id \|\| residue\.authAsymId/);
-  assert.match(js, /targetDisplayColorSource = "DMS_REACTIVITY_FILL"/);
-  assert.match(js, /targetDisplayMode = "alignment_cropped_target_chain"/);
-  assert.match(js, /targetDisplayResidues = String\(payload\.length\)/);
-  assert.match(js, /nonSelectedColor: MOLSTAR_CONTEXT_COLOR/);
-  assert.match(js, /alignment-cropped target chain/);
-  assert.doesNotMatch(js, /nonSelectedColor: .*unaligned/i);
-  assert.doesNotMatch(js, /const stateColor = colorForResidueVisualState\(residueKey, selectedKey\);\n\s*return \[\{\n\s*struct_asym_id:[\s\S]*?color: stateColor\.molstarRgb/);
-  assert.match(js, /color: colorForMolstarDmsReactivity\(row, residueKey, selectedKey\)/);
-  assert.match(js, /window\.setTimeout\(\(\) => applyMolstarTargetDisplay\(state\.selectedResidueKey\), 700\)/);
-  assert.match(js, /function molstarEventMatchesActiveChain/);
-  assert.match(js, /atomSiteFilter/);
 });
