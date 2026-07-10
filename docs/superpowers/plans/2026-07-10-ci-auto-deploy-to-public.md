@@ -202,7 +202,7 @@ jobs:
 ```bash
 cd /Users/joseperezmartinez/docs/foldbridge-release && python3 -c "import yaml,sys; d=yaml.safe_load(open('.github/workflows/deploy-to-public.yml')); print('parsed ok:', list(d.keys()))"
 ```
-预期：`parsed ok: [True, 'name', 'permissions', 'concurrency', 'jobs']` 或类似（注意 YAML 把裸 `on:` 解析成布尔 `True` 键——这是 YAML 1.1 的已知行为，GitHub Actions 仍正确识别 `on`，不是 bug）。退出码 0 = YAML 合法。
+预期：`parsed ok: ['name', True, 'permissions', 'concurrency', 'jobs']` 或类似（注意 YAML 把裸 `on:` 解析成布尔 `True` 键——这是 YAML 1.1 的已知行为，`yaml.safe_load` 按插入序返回故 `True` 在第二位，GitHub Actions 仍正确识别 `on`，不是 bug）。退出码 0 = YAML 合法。
 
 - [ ] **步骤 3：结构断言（grep 触发白名单 + 权限 + 脚本调用）**
 
