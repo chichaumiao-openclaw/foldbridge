@@ -25,9 +25,20 @@ test('family index renders a card per mechanism family with titles', () => {
   assert.equal((html.match(/data-probing-family-link=/g) || []).length, 6);
 });
 
-test('family index links into the probing detail route', () => {
+test('family index links to same-page family anchors', () => {
   const html = renderProbingFamilyIndex(articlesIndex.families);
-  assert.match(html, /href="#detail/);
+  assert.match(html, /href="#probing-family-dms"/);
+  assert.match(html, /data-probing-family-link="dms"/);
+  assert.doesNotMatch(html, /href="#detail/);
+});
+
+test('family index escapes same-page anchor attributes', () => {
+  const html = renderProbingFamilyIndex([
+    { id: 'bad"id', title: 'Escaped family', summary: 'Summary', articles: [] }
+  ]);
+  assert.match(html, /href="#probing-family-bad&quot;id"/);
+  assert.match(html, /data-probing-family-link="bad&quot;id"/);
+  assert.doesNotMatch(html, /bad"id/);
 });
 
 test('family index empty input returns a degraded shell, not a throw', () => {

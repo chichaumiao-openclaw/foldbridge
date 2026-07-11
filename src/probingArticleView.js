@@ -10,7 +10,9 @@ function escapeHtml(s) {
   return String(s == null ? '' : s)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;');
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 }
 
 // 行内 markdown：先转义，再恢复 `code` 与 **bold**。
@@ -19,20 +21,6 @@ function renderInline(text) {
   out = out.replace(/`([^`]+)`/g, (_m, c) => `<code class="article-code">${c}</code>`);
   out = out.replace(/\*\*([^*]+)\*\*/g, (_m, c) => `<strong>${c}</strong>`);
   return out;
-}
-
-function familyAccent(id) {
-  // 在主色系内做轻微区分，避免引入站点之外的颜色。
-  const map = {
-    dms: 'var(--primary)',
-    shape: 'var(--accent)',
-    'in-cell-shape': '#3a7d5d',
-    footprinting: '#4a6b8a',
-    'carbodiimide-special': '#8a6d3a',
-    inference: '#6d4a8a',
-    other: 'var(--textSecondary)'
-  };
-  return map[id] || 'var(--primary)';
 }
 
 // ---- 总览页 ----
@@ -59,10 +47,9 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
     }).join('');
 
     return `
-      <section class="card bundle-wide-card technology-section-card" data-probing-family="${escapeHtml(fam.id)}">
+      <section id="probing-family-${escapeHtml(fam.id)}" class="card bundle-wide-card technology-section-card" data-probing-family="${escapeHtml(fam.id)}">
         <div class="technology-section-heading">
           <div>
-            <p class="technology-kicker" style="color:${familyAccent(fam.id)}">${escapeHtml(fam.title)}</p>
             <h2>${escapeHtml(fam.title)}</h2>
           </div>
           <p>${escapeHtml(fam.summary)}</p>

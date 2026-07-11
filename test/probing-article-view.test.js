@@ -7,11 +7,23 @@ const articlesIndex = JSON.parse(
   fs.readFileSync(new URL('../src/assets/generated/probing-articles/index.json', import.meta.url), 'utf8')
 );
 
-test('article index still renders hero + family sections + article cards', () => {
+test('article index family sections have same-page anchors without duplicate colored kickers', () => {
   const html = renderProbingArticleIndex(articlesIndex);
-  assert.match(html, /RNA probing methods explained/);
-  assert.match(html, /technology-section-card/);
-  assert.match(html, /probing-article-card/);
+  assert.match(html, /id="probing-family-dms"/);
+  assert.doesNotMatch(html, /<p class="technology-kicker"[^>]*>DMS chemical probing<\/p>/);
+  assert.match(html, /<h2>DMS chemical probing<\/h2>/);
+});
+
+test('article index escapes family section anchor attributes', () => {
+  const html = renderProbingArticleIndex({
+    article_count: 0,
+    families: [
+      { id: 'bad"id', title: 'Escaped family', summary: 'Summary', articles: [] }
+    ]
+  });
+  assert.match(html, /id="probing-family-bad&quot;id"/);
+  assert.match(html, /data-probing-family="bad&quot;id"/);
+  assert.doesNotMatch(html, /bad"id/);
 });
 
 test('extraSectionsHtml is injected without breaking the family grid', () => {

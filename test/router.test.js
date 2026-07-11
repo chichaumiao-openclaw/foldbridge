@@ -28,6 +28,14 @@ test('parseHashRoute preserves PDB case query parameters', () => {
   assert.equal(parsed.params.get('bundleProfileId'), 'RMDB_1');
 });
 
+test('parseHashRoute resolves probing family anchors to the probing overview', () => {
+  assert.equal(routeFromHash('#probing-family-dms'), 'probing');
+  assert.equal(routeFromHash('#probing-family-inference'), 'probing');
+  assert.equal(parseHashRoute('#probing-family-dms').route, 'probing');
+  // 非家族锚点仍走原有归一化（未知 → home）。
+  assert.equal(routeFromHash('#probing-other'), 'home');
+});
+
 test('buildPdbCaseHash creates stable external case URLs', () => {
   assert.equal(
     buildPdbCaseHash({

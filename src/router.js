@@ -34,6 +34,11 @@ export function parseHashRoute(hashValue) {
 
   const withoutHash = hashValue.startsWith('#') ? hashValue.slice(1) : hashValue;
   const [routeOnly = 'home', queryString = ''] = withoutHash.split('?');
+  // 探针家族同页锚点（#probing-family-<id>）：解析成 probing 总览路由，
+  // 使无 JS / 直达链接时也落在探针页并由浏览器原生跳到对应 section，而非归一化回 home。
+  if (/^probing-family-/i.test(routeOnly)) {
+    return { route: 'probing', params: new URLSearchParams(queryString) };
+  }
   return {
     route: normalizeRoute(routeOnly),
     params: new URLSearchParams(queryString)

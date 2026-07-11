@@ -3464,6 +3464,19 @@ document.addEventListener('click', () => {
     });
   });
 
+  // Browse by mechanism 卡片：同页滚动到对应家族 section，不改 hash（改 hash 会被路由归一化回 home 并整页重渲染）。
+  // 目标缺失时不阻止默认行为，交回浏览器原生锚点跳转。
+  document.querySelectorAll('[data-probing-family-link]').forEach((el) => {
+    el.addEventListener('click', (event) => {
+      const id = el.getAttribute('data-probing-family-link');
+      if (!id) return;
+      const target = document.getElementById(`probing-family-${id}`);
+      if (!target) return;
+      event.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
   if (activeSearch) {
     const el = document.getElementById('annojoin-search-input');
     if (el) {

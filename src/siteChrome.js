@@ -606,7 +606,7 @@ export function renderProbingFamilyIndex(families) {
   const cards = list.map((fam) => {
     const id = escapeProbingHtml(fam.id);
     const count = Array.isArray(fam.articles) ? fam.articles.length : 0;
-    return `<a class="probing-family-card" href="#detail?family=${encodeURIComponent(fam.id || '')}" data-probing-family-link="${id}">
+    return `<a class="probing-family-card" href="#probing-family-${id}" data-probing-family-link="${id}">
         <h3 class="probing-family-card-title">${escapeProbingHtml(fam.title)}</h3>
         <p class="probing-family-card-summary">${escapeProbingHtml(fam.summary)}</p>
         <span class="probing-family-card-count">${count} ${count === 1 ? 'article' : 'articles'}</span>
