@@ -719,8 +719,8 @@
     "RMDB2PDB:9ZQ6"
   ],
   "contract_version": "v3",
-  "family_root": "/Users/joseperezmartinez/docs/rmdb2pdb/reports/rmdb2pdb_ab_v3_launch_132_centered/20260628T193700Z_retry/formal",
-  "output_root": "/Users/joseperezmartinez/docs/rmdb2pdb/reports/rmdb2pdb_ab_v3_launch_132_centered/20260628T193700Z_retry/formal",
+  "family_root": "/Volumes/tainyissd/foldbridge-release-b/public/rmdb-v3",
+  "output_root": "/Volumes/tainyissd/foldbridge-release-b/public/rmdb-v3",
   "shared_dir_name": "__rmdb_v3_site__",
   "site_brand": "rmdb_v3_ab",
   "site_title": "RMDB2PDB AB case list",

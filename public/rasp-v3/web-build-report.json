@@ -1675,8 +1675,8 @@
     "RASP2PDB:9ZED"
   ],
   "contract_version": "v3",
-  "family_root": "/data/sunhao/rasp2pdb_local_bypass_20260629/FORMAL_FULL",
-  "output_root": "/data/sunhao/rasp2pdb_local_bypass_20260629/SITE_FULL",
+  "family_root": "/Volumes/tainyissd/foldbridge-release-b/public/rasp-v3",
+  "output_root": "/Volumes/tainyissd/foldbridge-release-b/public/rasp-v3",
   "shared_dir_name": "__rasp_v3_site__",
   "site_brand": "rasp_v3_abcd",
   "site_title": "RASP2PDB ABCD case list",
