@@ -6350,7 +6350,10 @@ body[data-mode="dark"] .mode-toggle:hover {
 
 /* === ABOUT PAGE === */
 .about-hero {
-  margin: 0 0 28px;
+  width: var(--feature-card-width);
+  max-width: var(--feature-card-width);
+  margin: 0 auto 28px;
+  box-sizing: border-box;
   padding: 28px 32px;
   border-radius: var(--radiusCard);
   background: var(--primarySoft);
