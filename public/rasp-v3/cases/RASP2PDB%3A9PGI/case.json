@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9PGI",
+  "biologicalMoleculeName": "9PGI",
+  "caseId": "9PGI",
+  "caseKey": "RASP2PDB:9PGI",
+  "chains": [
+    "A",
+    "AA",
+    "Ax",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "9PGI",
+  "profileCount": 152
+}

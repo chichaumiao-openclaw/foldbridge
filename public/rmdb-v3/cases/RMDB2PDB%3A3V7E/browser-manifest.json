@@ -1,0 +1,29 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "D": {
+      "case2dPath": "chains/D/case-2d-structure.json.gz",
+      "chainId": "D",
+      "chainRoot": "chains/D",
+      "linkedViewBundlePath": "chains/D/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/D/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/D/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "D",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:3V7E:confidence:A:top_x_279::data-eterna/data-eterna/OK1LIB_DMS_0000.rdat#75960": "D",
+    "annojoin:RMDB2PDB:3V7E:confidence:A:top_x_279::data-eterna/data-eterna/OK1LIB_DMS_0000.rdat#77459": "D",
+    "annojoin:RMDB2PDB:3V7E:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#12389": "D",
+    "annojoin:RMDB2PDB:3V7E:confidence:B:top_x_279::data-eterna/data-eterna/OK1LIB_2A3_0000.rdat#75960": "D",
+    "annojoin:RMDB2PDB:3V7E:confidence:B:top_x_279::data-eterna/data-eterna/OK1LIB_2A3_0000.rdat#77459": "D",
+    "annojoin:RMDB2PDB:3V7E:confidence:B:top_x_279::data-rna-structures/data-rna-structures/M2RFPK_2A3_0000.rdat#10579": "D",
+    "annojoin:RMDB2PDB:3V7E:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#12389": "D"
+  }
+}

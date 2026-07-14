@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7AJU",
+  "biologicalMoleculeName": "7AJU",
+  "caseId": "7AJU",
+  "caseKey": "RMDB2PDB:7AJU",
+  "chains": [
+    "D2"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "7AJU",
+  "profileCount": 2
+}

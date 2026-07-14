@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8VCI",
+  "biologicalMoleculeName": "8VCI",
+  "caseId": "8VCI",
+  "caseKey": "RMDB2PDB:8VCI",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "8VCI",
+  "profileCount": 9
+}

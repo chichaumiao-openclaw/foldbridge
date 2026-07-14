@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3EQ4",
+  "biologicalMoleculeName": "3EQ4",
+  "caseId": "3EQ4",
+  "caseKey": "RASP2PDB:3EQ4",
+  "chains": [
+    "Y"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "3EQ4",
+  "profileCount": 25
+}

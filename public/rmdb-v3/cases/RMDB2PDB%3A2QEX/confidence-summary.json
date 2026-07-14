@@ -1,0 +1,26 @@
+{
+  "atlasCaseKey": "RMDB2PDB:2QEX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 62,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:2QEX:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#12307",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 31,
+    "B": 31
+  },
+  "generatedAt": "2026-07-06T08:53:57.839842Z",
+  "materializedEvidenceCount": 62,
+  "pdbId": "2QEX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_NOT_SUPPORTED": 2,
+    "LSS_STRONG": 1,
+    "LSS_UNDERPOWERED": 58,
+    "LSS_WEAK": 1
+  },
+  "totalEvidenceCount": 62
+}

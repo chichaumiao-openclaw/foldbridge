@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:3DEG",
+  "biologicalMoleculeName": "3DEG",
+  "caseId": "3DEG",
+  "caseKey": "RASP2PDB:3DEG",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "3DEG",
+  "profileCount": 26
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9O3V",
+  "biologicalMoleculeName": "9O3V",
+  "caseId": "9O3V",
+  "caseKey": "RASP2PDB:9O3V",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "mR"
+  ],
+  "confidenceDisplayLabel": "D DISCORDANT",
+  "pdbId": "9O3V",
+  "profileCount": 4
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2QEX",
+  "biologicalMoleculeName": "2QEX",
+  "caseId": "2QEX",
+  "caseKey": "RMDB2PDB:2QEX",
+  "chains": [
+    "0"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "2QEX",
+  "profileCount": 62
+}

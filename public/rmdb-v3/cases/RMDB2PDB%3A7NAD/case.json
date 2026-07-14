@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:7NAD",
+  "biologicalMoleculeName": "7NAD",
+  "caseId": "7NAD",
+  "caseKey": "RMDB2PDB:7NAD",
+  "chains": [
+    "1"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "7NAD",
+  "profileCount": 18
+}

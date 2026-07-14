@@ -1,0 +1,18 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6T4Q",
+  "biologicalMoleculeName": "6T4Q",
+  "caseId": "6T4Q",
+  "caseKey": "RASP2PDB:6T4Q",
+  "chains": [
+    "6",
+    "7",
+    "C1",
+    "C2",
+    "C3",
+    "C4"
+  ],
+  "confidenceDisplayLabel": "B MODERATE",
+  "pdbId": "6T4Q",
+  "profileCount": 118
+}

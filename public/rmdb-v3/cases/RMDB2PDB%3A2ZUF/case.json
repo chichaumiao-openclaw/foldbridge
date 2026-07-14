@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:2ZUF",
+  "biologicalMoleculeName": "2ZUF",
+  "caseId": "2ZUF",
+  "caseKey": "RMDB2PDB:2ZUF",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "2ZUF",
+  "profileCount": 2
+}

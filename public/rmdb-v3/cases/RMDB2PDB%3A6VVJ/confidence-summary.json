@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "RMDB2PDB:6VVJ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 9,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:6VVJ:confidence:A:top_x_279::data-rna-structures/data-rna-structures/VIRWIN_DMS_0000.rdat#7116",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 5
+  },
+  "generatedAt": "2026-07-06T08:55:59.437773Z",
+  "materializedEvidenceCount": 9,
+  "pdbId": "6VVJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_UNDERPOWERED": 9
+  },
+  "totalEvidenceCount": 9
+}

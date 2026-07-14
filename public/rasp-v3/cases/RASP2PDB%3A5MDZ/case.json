@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:5MDZ",
+  "biologicalMoleculeName": "5MDZ",
+  "caseId": "5MDZ",
+  "caseKey": "RASP2PDB:5MDZ",
+  "chains": [
+    "1",
+    "2",
+    "3"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "5MDZ",
+  "profileCount": 28
+}

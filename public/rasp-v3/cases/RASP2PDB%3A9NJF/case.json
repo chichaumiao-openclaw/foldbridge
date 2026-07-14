@@ -1,0 +1,16 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9NJF",
+  "biologicalMoleculeName": "9NJF",
+  "caseId": "9NJF",
+  "caseKey": "RASP2PDB:9NJF",
+  "chains": [
+    "R1",
+    "R2",
+    "R3",
+    "T"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "9NJF",
+  "profileCount": 42
+}

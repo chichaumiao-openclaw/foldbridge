@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:6SPC",
+  "biologicalMoleculeName": "6SPC",
+  "caseId": "6SPC",
+  "caseKey": "RASP2PDB:6SPC",
+  "chains": [
+    "a"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "6SPC",
+  "profileCount": 6
+}
