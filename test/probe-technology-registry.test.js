@@ -38,3 +38,35 @@ test('article_slug, when present, exists in the probing articles index', () => {
     assert.ok(known.has(row.article_slug), `dangling slug ${row.article_slug} for ${row.technology}`);
   }
 });
+
+test('merged sub-technologies point at their umbrella article page', () => {
+  // These technologies have no standalone article; their content was merged
+  // into another technology's page. The registry must route them to that page
+  // rather than leaving them unlinked. (tier 1: unambiguous shared/renamed pages;
+  // tier 2: DMS-MaPseq→dms, tNet-RNase-seq→tnet-mapseq, MOHCA_candidate→mca.)
+  const expected = {
+    SHAPE: 'shape-reagents',
+    NMIA: 'shape-reagents',
+    '1M7': 'shape-reagents',
+    BzCN: 'shape-reagents',
+    '2A3': 'shape-2a3',
+    CMC: 'cmc-cmct',
+    CMCT: 'cmc-cmct',
+    HRF: 'hrf-seq',
+    'mutate-and-map_candidate': 'mutate-and-map',
+    'DMS-MaPseq': 'dms',
+    'tNet-RNase-seq': 'tnet-mapseq',
+    MOHCA_candidate: 'mca',
+  };
+  const byTech = new Map(registry.technologies.map((r) => [r.technology, r]));
+  for (const [tech, slug] of Object.entries(expected)) {
+    const row = byTech.get(tech);
+    assert.ok(row, `registry missing technology ${tech}`);
+    assert.equal(row.article_slug, slug, `${tech} should link to ${slug}`);
+  }
+});
+
+test('no technology is left without an article link', () => {
+  const orphans = registry.technologies.filter((r) => !r.article_slug);
+  assert.equal(orphans.length, 0, `unlinked technologies: ${orphans.map((r) => r.technology).join(', ')}`);
+});
