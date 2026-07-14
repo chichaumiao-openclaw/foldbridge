@@ -1586,7 +1586,7 @@ function renderTechnologyOverviewPage() {
     const methodsMarkup = category.methods
       .map((slug) => technologyMethods.find((method) => method.slug === slug))
       .filter(Boolean)
-      .map((method) => `<a class="technology-method-pill" href="#detail?tech=${encodeURIComponent(method.slug)}">${method.title}</a>`)
+      .map((method) => `<a class="technology-method-pill" href="#probing?tech=${encodeURIComponent(method.slug)}">${method.title}</a>`)
       .join('');
 
     return `
@@ -1667,7 +1667,7 @@ function renderTechnologyMethodPage(method) {
   return `<main class="page-detail">
     ${renderBundleHeader()}
     <section class="card bundle-wide-card technology-detail-hero">
-      <a class="technology-back-link" href="#detail">Back to technology overview</a>
+      <a class="technology-back-link" href="#probing">Back to technology overview</a>
       <div class="technology-detail-header">
         <div>
           <p class="technology-kicker">${method.category}</p>
@@ -1810,7 +1810,7 @@ function renderProbingArticleLoadingPage(slug, headerHtml, isError) {
   return `<main class="page-detail page-probing-article">
     ${headerHtml}
     <section class="card bundle-wide-card technology-detail-hero">
-      <a class="technology-back-link" href="#detail">← Back to probing methods overview</a>
+      <a class="technology-back-link" href="#probing">← Back to probing methods overview</a>
       <div class="technology-detail-header">
         <div>
           <p class="technology-kicker">probing article</p>

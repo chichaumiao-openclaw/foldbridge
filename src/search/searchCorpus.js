@@ -113,7 +113,7 @@ function buildProbingArticleDocs() {
       id: `probing-article-${art.slug}`,
       type: 'probing-article',
       title: art.title,
-      href: `#detail?tech=${art.slug}`,
+      href: `#probing?tech=${art.slug}`,
       tags: ['probing', fam.id].filter(Boolean),
       summary: art.summary || '',
       content: [art.title, art.summary, fam.title].filter(Boolean).join(' ')

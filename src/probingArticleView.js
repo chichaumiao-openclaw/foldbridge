@@ -35,7 +35,7 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
       if (a.figure_count) meta.push(`${a.figure_count} figures`);
       if (a.rep_pmid) meta.push(`PMID ${escapeHtml(a.rep_pmid)}`);
       return `
-        <a class="probing-article-card" href="#detail?tech=${encodeURIComponent(a.slug)}">
+        <a class="probing-article-card" href="#probing?tech=${encodeURIComponent(a.slug)}">
           <div class="probing-article-card-head">
             <h3>${escapeHtml(a.title)}</h3>
           </div>
@@ -148,15 +148,15 @@ export function renderProbingArticlePage(detail, index, headerHtml = '') {
     const next = idx < siblings.length - 1 ? siblings[idx + 1] : null;
     siblingNav = `
       <nav class="article-sibling-nav" aria-label="Articles in the same family">
-        ${prev ? `<a class="article-sibling-link prev" href="#detail?tech=${encodeURIComponent(prev.slug)}"><span>Previous</span><strong>${escapeHtml(prev.title)}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
-        ${next ? `<a class="article-sibling-link next" href="#detail?tech=${encodeURIComponent(next.slug)}"><span>Next</span><strong>${escapeHtml(next.title)}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
+        ${prev ? `<a class="article-sibling-link prev" href="#probing?tech=${encodeURIComponent(prev.slug)}"><span>Previous</span><strong>${escapeHtml(prev.title)}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
+        ${next ? `<a class="article-sibling-link next" href="#probing?tech=${encodeURIComponent(next.slug)}"><span>Next</span><strong>${escapeHtml(next.title)}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
       </nav>`;
   }
 
   return `<main class="page-detail page-probing-article">
     ${headerHtml}
     <section class="card bundle-wide-card technology-detail-hero">
-      <a class="technology-back-link" href="#detail">← Back to probing methods overview</a>
+      <a class="technology-back-link" href="#probing">← Back to probing methods overview</a>
       <div class="technology-detail-header">
         <div>
           <p class="technology-kicker">${escapeHtml(familyTitle || 'probing article')}</p>

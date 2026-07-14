@@ -135,7 +135,7 @@ export function renderHomeProbingCarousel(articles = []) {
       : `<div class="home-probing-slide-img home-probing-slide-noimg" aria-hidden="true"></div>`;
     // 注意属性顺序：data-carousel-slide 在 class 之前，以匹配 active-slide 测试正则
     // （/data-carousel-slide="0"[^>]*class="[^"]*active/，[^>]* 不跨越 '>'）。
-    return `<a data-carousel-slide="${i}" class="home-probing-slide${activeClass}" href="#detail?tech=${encodeURIComponent(a.slug)}">
+    return `<a data-carousel-slide="${i}" class="home-probing-slide${activeClass}" href="#probing?tech=${encodeURIComponent(a.slug)}">
         ${img}
         <div class="home-probing-slide-copy">
           <span class="home-probing-slide-family">${a.family_title || ''}</span>
@@ -595,7 +595,7 @@ function escapeProbingHtml(value) {
     .replaceAll("'", '&#39;');
 }
 
-// 机制家族索引：6 个家族卡片，每张链回 #detail 总览的对应家族锚点。
+// 机制家族索引：6 个家族卡片，每张链回 #probing 总览的对应家族锚点。
 export function renderProbingFamilyIndex(families) {
   const list = Array.isArray(families) ? families : [];
   if (!list.length) {
@@ -645,7 +645,7 @@ export function renderProbingTechTable(registry) {
     const famMeaning = escapeProbingHtml(PROBING_FAMILY_MEANING[row.family] || '');
     const bases = escapeProbingHtml(row.targetable_bases);
     const techCell = row.article_slug
-      ? `<a class="probing-tech-article-link" href="#detail?tech=${encodeURIComponent(row.article_slug)}">${tech}</a>`
+      ? `<a class="probing-tech-article-link" href="#probing?tech=${encodeURIComponent(row.article_slug)}">${tech}</a>`
       : `<span class="probing-tech-name">${tech}</span>`;
     return `<tr data-tech-row>
         <td data-col="technology">${techCell}</td>

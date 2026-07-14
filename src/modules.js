@@ -209,7 +209,7 @@ export function initHeaderSearch() {
       ? matched
           .slice(0, 8)
           .map(
-            (row) => `<a class="search-result-item" href="#detail"><strong>${row.aptamerName}</strong> · ${row.category} · ${row.year} <span>${row.pdbId}</span></a>`
+            (row) => `<a class="search-result-item" href="#probing"><strong>${row.aptamerName}</strong> · ${row.category} · ${row.year} <span>${row.pdbId}</span></a>`
           )
           .join('')
       : '<div class="search-result-item muted">No results found.</div>';

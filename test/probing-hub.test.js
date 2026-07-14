@@ -70,7 +70,7 @@ test('tech table caption clarifies family is the measured quantity, not a rankin
 
 test('tech table links the technology name when article_slug present', () => {
   const html = renderProbingTechTable(registry);
-  assert.match(html, /href="#detail\?tech=rl-seq"[^>]*>RL-Seq<\/a>/);
+  assert.match(html, /href="#probing\?tech=rl-seq"[^>]*>RL-Seq<\/a>/);
 });
 
 test('tech table drops the threshold-basis column and empty explainer cells', () => {

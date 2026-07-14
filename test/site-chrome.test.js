@@ -99,11 +99,11 @@ test('carousel renders one slide per article', () => {
   assert.equal((html.match(/data-carousel-slide=/g) || []).length, 3);
 });
 
-test('each slide links to its detail route', () => {
+test('each slide links to its probing route', () => {
   const html = renderHomeProbingCarousel(SAMPLE_ARTICLES);
-  assert.match(html, /href="#detail\?tech=dms"/);
-  assert.match(html, /href="#detail\?tech=shape-map"/);
-  assert.match(html, /href="#detail\?tech=pars"/);
+  assert.match(html, /href="#probing\?tech=dms"/);
+  assert.match(html, /href="#probing\?tech=shape-map"/);
+  assert.match(html, /href="#probing\?tech=pars"/);
 });
 
 test('each slide uses the per-slug asset path for its figure', () => {
