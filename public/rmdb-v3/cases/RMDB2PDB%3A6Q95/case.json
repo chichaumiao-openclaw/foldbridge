@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6Q95",
+  "biologicalMoleculeName": "6Q95",
+  "caseId": "6Q95",
+  "caseKey": "RMDB2PDB:6Q95",
+  "chains": [
+    "4"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "6Q95",
+  "profileCount": 106
+}

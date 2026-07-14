@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>7OSM case page</title>
+  <link rel="stylesheet" href="../../__rmdb_v3_site__/case-shell.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>7OSM</h1>
+      <p>RMDB2PDB:7OSM</p>
+      <div class="meta">
+        <span class="chip">source RMDB2PDB</span>
+        <span class="chip">families A,B</span>
+        <span class="chip">default chain ASIT</span>
+        <span class="chip">chains 1</span>
+      </div>
+    </section>
+    <section class="layout">
+      <aside class="panel">
+        <h2>Chains</h2>
+        <div class="chain-list"><button class="chain-btn is-active" type="button" data-chain-id="ASIT">
+  <strong>ASIT</strong>
+  <span class="mini">chains/ASIT/index.html</span>
+</button></div>
+      </aside>
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">ASIT</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/ASIT/index.html?profileId=top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#15321"
+          loading="lazy"
+          title="7OSM chain page"
+        ></iframe>
+      </section>
+    </section>
+  </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "7OSM", "caseKey": "RMDB2PDB:7OSM", "defaultChainId": "ASIT", "defaultEvidenceId": "annojoin:RMDB2PDB:7OSM:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#15321", "chainPageById": {"ASIT": "chains/ASIT/index.html"}, "evidenceChainMap": {"annojoin:RMDB2PDB:7OSM:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#15321": "ASIT", "annojoin:RMDB2PDB:7OSM:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#15321": "ASIT"}, "evidenceRows": [{"aucDirectional": 0.528333, "aucEffectSizeZ": 0.300711, "aucEmpiricalPValue": 0.393606, "bridgeStatus": "bridge_missing", "chain": "ASIT", "conflictFraction": 0.25, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:7OSM:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#15321", "family": "A", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 35, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.25, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#15321", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "unpaired_positive", "technology": "DMS", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#15321"}, {"aucDirectional": 0.500705, "aucEffectSizeZ": 0.003234, "aucEmpiricalPValue": 0.507493, "bridgeStatus": "bridge_missing", "chain": "ASIT", "conflictFraction": 0.27907, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:RMDB2PDB:7OSM:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#15321", "family": "B", "lssTierCalibrated": "LSS_NOT_SUPPORTED", "lssTierUncalibrated": "LSS_NOT_SUPPORTED", "nEvaluable": 76, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": 0.930233, "profileKey": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#15321", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "unpaired_positive", "technology": "2A3", "trackProfileId": "top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#15321"}]}</script>
+  <script src="../../__rmdb_v3_site__/case-shell.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9RMU",
+  "biologicalMoleculeName": "9RMU",
+  "caseId": "9RMU",
+  "caseKey": "RMDB2PDB:9RMU",
+  "chains": [
+    "i"
+  ],
+  "confidenceDisplayLabel": "B UNDERPOWERED",
+  "pdbId": "9RMU",
+  "profileCount": 2
+}

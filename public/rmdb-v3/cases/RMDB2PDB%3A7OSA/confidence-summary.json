@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "RMDB2PDB:7OSA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:7OSA:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#14445",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-07-14T17:01:14.538114Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "7OSA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 3,
+    "LSS_NOT_SUPPORTED": 2,
+    "LSS_WEAK": 1
+  },
+  "totalEvidenceCount": 6
+}

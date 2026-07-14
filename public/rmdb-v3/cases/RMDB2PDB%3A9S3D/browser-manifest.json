@@ -1,0 +1,32 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "CP": {
+      "case2dPath": "chains/CP/case-2d-structure.json.gz",
+      "chainId": "CP",
+      "chainRoot": "chains/CP",
+      "linkedViewBundlePath": "chains/CP/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/CP/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/CP/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "CP",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:9S3D:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#18240": "CP",
+    "annojoin:RMDB2PDB:9S3D:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#18241": "CP",
+    "annojoin:RMDB2PDB:9S3D:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#18243": "CP",
+    "annojoin:RMDB2PDB:9S3D:confidence:A:top_x_279::data-general/data-general/ARCHII_DMS_0000.rdat#18244": "CP",
+    "annojoin:RMDB2PDB:9S3D:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#11719": "CP",
+    "annojoin:RMDB2PDB:9S3D:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#18240": "CP",
+    "annojoin:RMDB2PDB:9S3D:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#18241": "CP",
+    "annojoin:RMDB2PDB:9S3D:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#18243": "CP",
+    "annojoin:RMDB2PDB:9S3D:confidence:B:top_x_279::data-general/data-general/ARCHII_2A3_0000.rdat#18244": "CP",
+    "annojoin:RMDB2PDB:9S3D:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#11719": "CP"
+  }
+}

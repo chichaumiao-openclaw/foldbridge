@@ -1,0 +1,17 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8IPA",
+  "biologicalMoleculeName": "8IPA",
+  "caseId": "8IPA",
+  "caseKey": "RMDB2PDB:8IPA",
+  "chains": [
+    "RB",
+    "SB",
+    "TB",
+    "aa",
+    "cl"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "8IPA",
+  "profileCount": 344
+}

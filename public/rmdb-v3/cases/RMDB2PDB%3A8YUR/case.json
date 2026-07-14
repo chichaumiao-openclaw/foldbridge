@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8YUR",
+  "biologicalMoleculeName": "8YUR",
+  "caseId": "8YUR",
+  "caseKey": "RMDB2PDB:8YUR",
+  "chains": [
+    "V"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "8YUR",
+  "profileCount": 22
+}

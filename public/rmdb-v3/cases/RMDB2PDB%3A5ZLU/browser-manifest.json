@@ -1,0 +1,42 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "DD": {
+      "case2dPath": "chains/DD/case-2d-structure.json.gz",
+      "chainId": "DD",
+      "chainRoot": "chains/DD",
+      "linkedViewBundlePath": "chains/DD/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/DD/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/DD/varna-template.svg.gz"
+    },
+    "V": {
+      "case2dPath": "chains/V/case-2d-structure.json.gz",
+      "chainId": "V",
+      "chainRoot": "chains/V",
+      "linkedViewBundlePath": "chains/V/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/V/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/V/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "V",
+  "evidenceChainMap": {
+    "annojoin:RMDB2PDB:5ZLU:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0003.rdat#64351": "V",
+    "annojoin:RMDB2PDB:5ZLU:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0003.rdat#64352": "V",
+    "annojoin:RMDB2PDB:5ZLU:confidence:A:top_x_279::data-eterna/data-eterna/OK3TST_DMS_0003.rdat#64353": "V",
+    "annojoin:RMDB2PDB:5ZLU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#10883": "V",
+    "annojoin:RMDB2PDB:5ZLU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#10951": "V",
+    "annojoin:RMDB2PDB:5ZLU:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#4246": "DD",
+    "annojoin:RMDB2PDB:5ZLU:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0003.rdat#64351": "V",
+    "annojoin:RMDB2PDB:5ZLU:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0003.rdat#64352": "V",
+    "annojoin:RMDB2PDB:5ZLU:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0003.rdat#64353": "V",
+    "annojoin:RMDB2PDB:5ZLU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#10883": "V",
+    "annojoin:RMDB2PDB:5ZLU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#10951": "V",
+    "annojoin:RMDB2PDB:5ZLU:confidence:B:top_x_279::data-rna-structures/data-rna-structures/PDB130_2A3_0000.rdat#4246": "DD"
+  }
+}

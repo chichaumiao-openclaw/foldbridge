@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:8S1P",
+  "biologicalMoleculeName": "8S1P",
+  "caseId": "8S1P",
+  "caseKey": "RMDB2PDB:8S1P",
+  "chains": [
+    "a"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "8S1P",
+  "profileCount": 10
+}

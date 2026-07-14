@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "RMDB2PDB:8UTI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:8UTI:confidence:A:top_x_279::data-rna-structures/data-rna-structures/PDB130_DMS_0000.rdat#6460",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-07-14T17:01:14.538114Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "8UTI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 4,
+    "LSS_NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 6
+}

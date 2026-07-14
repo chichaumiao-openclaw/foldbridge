@@ -1,0 +1,26 @@
+{
+  "atlasCaseKey": "RMDB2PDB:5ZLU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 12,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:5ZLU:confidence:B:top_x_279::data-eterna/data-eterna/OK3TST_2A3_0003.rdat#64351",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 6
+  },
+  "generatedAt": "2026-07-14T17:01:14.538114Z",
+  "materializedEvidenceCount": 12,
+  "pdbId": "5ZLU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 3,
+    "LSS_NOT_SUPPORTED": 4,
+    "LSS_STRONG": 2,
+    "LSS_WEAK": 3
+  },
+  "totalEvidenceCount": 12
+}

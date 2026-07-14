@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:6CZR",
+  "biologicalMoleculeName": "6CZR",
+  "caseId": "6CZR",
+  "caseKey": "RMDB2PDB:6CZR",
+  "chains": [
+    "2a"
+  ],
+  "confidenceDisplayLabel": "B STRONG",
+  "pdbId": "6CZR",
+  "profileCount": 90
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5LZC",
+  "biologicalMoleculeName": "5LZC",
+  "caseId": "5LZC",
+  "caseKey": "RMDB2PDB:5LZC",
+  "chains": [
+    "x",
+    "y"
+  ],
+  "confidenceDisplayLabel": "A WEAK",
+  "pdbId": "5LZC",
+  "profileCount": 10
+}

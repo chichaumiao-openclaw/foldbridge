@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:5VPP",
+  "biologicalMoleculeName": "5VPP",
+  "caseId": "5VPP",
+  "caseKey": "RMDB2PDB:5VPP",
+  "chains": [
+    "XV"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "5VPP",
+  "profileCount": 2
+}
