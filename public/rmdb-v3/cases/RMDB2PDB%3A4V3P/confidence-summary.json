@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "RMDB2PDB:4V3P",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8,
+  "defaultEvidenceId": "annojoin:RMDB2PDB:4V3P:confidence:A:top_x_279::data-rna-structures/data-rna-structures/RFMREP_DMS_0001.rdat#8554",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 4
+  },
+  "generatedAt": "2026-07-15T08:15:20.959586Z",
+  "materializedEvidenceCount": 8,
+  "pdbId": "4V3P",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LSS_DISCORDANT": 6,
+    "LSS_NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 8
+}

@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:9ZTL",
+  "biologicalMoleculeName": "9ZTL",
+  "caseId": "9ZTL",
+  "caseKey": "RMDB2PDB:9ZTL",
+  "chains": [
+    "A",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "9ZTL",
+  "profileCount": 238
+}

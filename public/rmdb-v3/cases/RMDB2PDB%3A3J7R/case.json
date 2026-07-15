@@ -1,0 +1,14 @@
+{
+  "assetFamily": "RMDB2PDB",
+  "atlasCaseKey": "RMDB2PDB:3J7R",
+  "biologicalMoleculeName": "3J7R",
+  "caseId": "3J7R",
+  "caseKey": "RMDB2PDB:3J7R",
+  "chains": [
+    "S2",
+    "S6"
+  ],
+  "confidenceDisplayLabel": "B WEAK",
+  "pdbId": "3J7R",
+  "profileCount": 14
+}
