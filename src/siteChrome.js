@@ -603,19 +603,61 @@ export function renderProbingFamilyIndex(families) {
       <p class="probing-hub-empty">Mechanism families are not available yet.</p>
     </section>`;
   }
-  const cards = list.map((fam) => {
+  const visibleFamilies = list.filter((fam) => fam.id !== 'inference');
+  const cards = visibleFamilies.map((fam) => {
     const id = escapeProbingHtml(fam.id);
-    const count = Array.isArray(fam.articles) ? fam.articles.length : 0;
+    const isDmsFamily = fam.id === 'dms';
+    const isShapeFamily = fam.id === 'shape';
+    const isCleavageFamily = fam.id === 'in-cell-shape';
+    const isNucleotideFamily = fam.id === 'footprinting';
+    const isInteractionFamily = fam.id === 'carbodiimide-special';
+    const isNamedMethodFamily = isDmsFamily || isShapeFamily || isCleavageFamily || isNucleotideFamily || isInteractionFamily;
+    const title = isDmsFamily
+      ? 'DMS-based methods'
+      : (isShapeFamily
+        ? 'SHAPE-based methods'
+        : (isCleavageFamily
+          ? 'Cleavage-based methods'
+          : (isNucleotideFamily
+            ? 'Nucleotide-specific chemical probing methods'
+            : (isInteractionFamily ? 'RNA–RNA interaction mapping methods' : fam.title))));
+    const familyMethods = isDmsFamily
+      ? [
+          'DMS',
+          'DMS-seq',
+          'Structure-seq',
+          'Structure-seq2',
+          'Mod-seq',
+          'DMS-MaPseq',
+          'DIM-2P-seq'
+        ]
+      : (isShapeFamily
+        ? ['SHAPE', 'SHAPE-Seq', 'SHAPE-MaP', 'icSHAPE', 'icSHAPE-MaP', 'NAI-MaP', 'smartSHAPE']
+        : (isCleavageFamily
+          ? ['PARS', 'PARTE', 'HRF-seq']
+          : (isNucleotideFamily
+            ? ['Keth-seq', 'EDC probing', 'LASER-seq']
+            : (isInteractionFamily ? ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES'] : []))));
+    const count = isNamedMethodFamily ? familyMethods.length : (Array.isArray(fam.articles) ? fam.articles.length : 0);
+    const methodList = isNamedMethodFamily
+      ? `<div class="probing-family-methods" aria-label="${escapeProbingHtml(title)}">
+          <span class="probing-family-methods-label">Methods</span>
+          <div class="probing-family-method-list">
+            ${familyMethods.map((method) => `<span class="probing-family-method-tag">${escapeProbingHtml(method)}</span>`).join('')}
+          </div>
+        </div>`
+      : '';
     return `<a class="probing-family-card" href="#probing-family-${id}" data-probing-family-link="${id}">
-        <h3 class="probing-family-card-title">${escapeProbingHtml(fam.title)}</h3>
+        <h3 class="probing-family-card-title">${escapeProbingHtml(title)}</h3>
         <p class="probing-family-card-summary">${escapeProbingHtml(fam.summary)}</p>
-        <span class="probing-family-card-count">${count} ${count === 1 ? 'article' : 'articles'}</span>
+        ${methodList}
+        <span class="probing-family-card-count">${count} ${isNamedMethodFamily ? 'methods' : (count === 1 ? 'article' : 'articles')}</span>
       </a>`;
   }).join('');
   return `<section class="card bundle-wide-card probing-family-index" aria-label="Probing mechanism families">
       <div class="probing-hub-heading">
         <p class="technology-kicker">browse by mechanism</p>
-        <h2>Six mechanism families</h2>
+        <h2>${visibleFamilies.length} mechanism families</h2>
         <p>Each family groups methods by the chemical event they read out. Open a family to jump into its explainers.</p>
       </div>
       <div class="probing-family-grid">${cards}</div>

@@ -43,15 +43,15 @@ export function bindAnnojointAtlasTable({
     button.addEventListener('click', () => clearFilters?.());
   });
 
-  root.querySelectorAll?.('[data-technique-family]').forEach((button) => {
-    button.addEventListener('click', () => {
-      toggleTechniqueFamily?.(button.getAttribute('data-technique-family'));
+  root.querySelectorAll?.('[data-technique-family]').forEach((input) => {
+    input.addEventListener('change', () => {
+      toggleTechniqueFamily?.(input.getAttribute('data-technique-family'));
     });
   });
 
-  root.querySelectorAll?.('[data-technique-name]').forEach((button) => {
-    button.addEventListener('click', () => {
-      toggleTechniqueName?.(button.getAttribute('data-technique-name'));
+  root.querySelectorAll?.('[data-technique-name]').forEach((input) => {
+    input.addEventListener('change', () => {
+      toggleTechniqueName?.(input.getAttribute('data-technique-name'));
     });
   });
 

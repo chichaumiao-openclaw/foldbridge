@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHelpPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex, renderProbingTechTable, renderProbingGlossary } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHelpPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex, renderProbingGlossary } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -93,7 +93,6 @@ let siteStatsState = null; // null=未加载, 'loading', 'error', 或 stats.json
 let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
 let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
-let probeTechRegistryState = null; // null=未加载, 'loading', 'error', 或 probe-technology-registry.json
 // 探针术语速查表（站点内联策展，与 About 概念呼应但无硬依赖）。
 const PROBING_GLOSSARY_TERMS = [
   { term: 'WC-face', definition: 'The Watson-Crick edge of a base, where canonical pairing hydrogen bonds form; base-specific probes read its accessibility.' },
@@ -1785,17 +1784,11 @@ function detailPage() {
     // index 已加载但无此 slug → 回退到旧占位方法页（保留 legacy 方法目录）
     const method = technologyMethods.find((item) => item.slug === slug);
     if (method) return renderTechnologyMethodPage(method);
-    if (probeTechRegistryState !== 'loading' && probeTechRegistryState !== 'error') {
-      loadProbeTechRegistry();
-    }
     return renderProbingArticleIndex(probingArticleIndexState, header, buildProbingHubSections());
   }
 
   // 无 slug：总览页。优先真实文章索引；未加载则后台拉取并显示原 technology 总览作为占位。
   if (hasIndex) {
-    if (probeTechRegistryState !== 'loading' && probeTechRegistryState !== 'error') {
-      loadProbeTechRegistry();
-    }
     return renderProbingArticleIndex(probingArticleIndexState, header, buildProbingHubSections());
   }
   if (probingArticleIndexState !== 'loading' && probingArticleIndexState !== 'error') {
@@ -2009,34 +2002,13 @@ async function loadSiteStats() {
   if (route === 'stats') render({ preserveScroll: true });
 }
 
-// 探针技术 registry（静态资产，无构建依赖）：轻量 fetch+缓存，懒加载，带 re-render guard。
-async function loadProbeTechRegistry() {
-  if (probeTechRegistryState === 'loading') return;
-  if (probeTechRegistryState && typeof probeTechRegistryState === 'object') return;
-  probeTechRegistryState = 'loading';
-  try {
-    const res = await fetch('./src/assets/data/probe-technology-registry.json');
-    if (!res || !res.ok) throw new Error(`status ${res ? res.status : 'no-response'}`);
-    probeTechRegistryState = await res.json();
-  } catch (err) {
-    console.error('[main] 加载探针技术 registry 失败', err);
-    probeTechRegistryState = 'error';
-  }
-  if (route === 'detail' || route === 'probing') render({ preserveScroll: true });
-}
-
-// 组装探针 hub 三块（家族索引 + 技术对照表 + 术语表），注入文章总览页。
-// registry 未就绪时仍渲染可用的家族索引 + 术语表（降级，不阻塞）。
+// 组装探针 hub 内容（家族索引 + 术语表），注入文章总览页。
 function buildProbingHubSections() {
   const families = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
     ? probingArticleIndexState.families
     : [];
-  const registry = (probeTechRegistryState && typeof probeTechRegistryState === 'object')
-    ? probeTechRegistryState
-    : { technologies: [] };
   return [
     renderProbingFamilyIndex(families),
-    renderProbingTechTable(registry),
     renderProbingGlossary(PROBING_GLOSSARY_TERMS)
   ].join('\n');
 }
@@ -2246,7 +2218,9 @@ function annojoinAtlasPage() {
 
   const state = buildAtlasSearchState(annojoinAtlasIndexState, filters);
   if (!annojoinGroupsDefaultedExpanded) {
-    expandedAnnojointGroupIds = new Set(allAnnojointAtlasGroupIds());
+    // Keep the first view compact: users can expand only the molecule group
+    // they want to inspect instead of rendering every group at once.
+    expandedAnnojointGroupIds = new Set();
     annojoinGroupsDefaultedExpanded = true;
   }
   return renderAnnojointAtlasPage({

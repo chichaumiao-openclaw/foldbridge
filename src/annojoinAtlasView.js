@@ -533,17 +533,35 @@ function renderTechniqueFilterControls(cases = [], filters = {}) {
   const selectedFamilies = new Set(filters.techniqueFamilies || []);
   const selectedNames = new Set(filters.techniqueNames || []);
   const familyBlocks = model.families.map((family) => {
-    const famActive = selectedFamilies.has(family.id) ? ' is-active' : '';
-    const techButtons = family.techniques.map((name) => {
-      const nameActive = selectedNames.has(name) ? ' is-active' : '';
-      return `<button type="button" class="annojoin-technique-name-chip${nameActive}" data-technique-name="${escapeHtml(name)}">${escapeHtml(name)}</button>`;
-    }).join('');
-    return `<div class="annojoin-technique-family-group">
-        <button type="button" class="annojoin-technique-family-chip annojoin-family-badge-${escapeHtml(family.id)}${famActive}" data-technique-family="${escapeHtml(family.id)}">${escapeHtml(family.id)}</button>
-        <div class="annojoin-technique-names">${techButtons}</div>
-      </div>`;
+    const familyActive = selectedFamilies.has(family.id);
+    const hasSelectedTechnique = family.techniques.some((name) => selectedNames.has(name));
+    const techOptions = family.techniques.map((name) => `
+      <label class="annojoin-technique-option">
+        <input type="checkbox" data-technique-name="${escapeHtml(name)}"${selectedNames.has(name) ? ' checked' : ''} />
+        <span>${escapeHtml(name)}</span>
+      </label>`).join('');
+    return `<details class="annojoin-technique-family-group"${familyActive || hasSelectedTechnique ? ' open' : ''}>
+        <summary>
+          <span class="annojoin-technique-family-summary">
+            <input type="checkbox" data-technique-family="${escapeHtml(family.id)}"${familyActive ? ' checked' : ''} />
+            <span class="annojoin-family-badge annojoin-family-badge-${escapeHtml(family.id)}">${escapeHtml(family.id)}</span>
+            <strong>Measurement family ${escapeHtml(family.id)}</strong>
+            <small>${escapeHtml(family.techniques.length)} techniques</small>
+          </span>
+        </summary>
+        <div class="annojoin-technique-names">${techOptions}</div>
+      </details>`;
   }).join('');
-  return `<section class="annojoin-technique-filter" aria-label="Technique filter">${familyBlocks}</section>`;
+  return `<section class="annojoin-technique-filter" aria-label="Technique filter">
+    <div class="annojoin-technique-filter-heading">
+      <div>
+        <strong>Filter by probing technique</strong>
+        <span>Families describe what was measured, not evidence quality.</span>
+      </div>
+      <span class="mini-note">Select a family to view its techniques</span>
+    </div>
+    <div class="annojoin-technique-family-list">${familyBlocks}</div>
+  </section>`;
 }
 
 function renderActiveConditionChips(filters = {}, query = '') {
@@ -629,8 +647,8 @@ export function renderAnnojointAtlasPage({
     ? `Showing ${escapeHtml(baseRows.length)} of ${escapeHtml(displayCount)} entries matching "${escapeHtml(query)}"`
     : `${escapeHtml(displayCount)} PDBs${placementCount ? ` · ${escapeHtml(placementCount)} entries` : ''}${sourceCount && sourceCount !== displayCount ? ` (${escapeHtml(sourceCount)} source cases)` : ''}`;
 
-  return `<main class="page-annojoin-atlas page-annojoin-master-table">
-    ${headerHtml}
+  return `${headerHtml}
+  <main class="page-annojoin-atlas page-annojoin-master-table">
     <section class="annojoin-table-heading">
       <p class="technology-kicker">ANNOJOIN</p>
       <h1>ANNOJOIN master table</h1>
