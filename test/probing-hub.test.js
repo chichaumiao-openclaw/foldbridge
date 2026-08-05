@@ -18,11 +18,12 @@ const articlesIndex = JSON.parse(
 
 test('family index renders a card per mechanism family with titles', () => {
   const html = renderProbingFamilyIndex(articlesIndex.families);
-  assert.match(html, /DMS chemical probing/);
-  assert.match(html, /SHAPE 2′-OH acylation/);
-  assert.match(html, /Mutational \/ proximity inference/);
-  // 6 families => 6 cards
-  assert.equal((html.match(/data-probing-family-link=/g) || []).length, 6);
+  assert.match(html, /DMS-based methods/);
+  assert.match(html, /SHAPE-based methods/);
+  assert.match(html, /RNA–RNA interaction mapping methods/);
+  assert.doesNotMatch(html, /Mutational \/ proximity inference/);
+  // 5 visible families; inference is intentionally omitted.
+  assert.equal((html.match(/data-probing-family-link=/g) || []).length, 5);
 });
 
 test('family index links to same-page family anchors', () => {
