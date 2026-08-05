@@ -11,7 +11,7 @@ test('article index family sections have same-page anchors without duplicate col
   const html = renderProbingArticleIndex(articlesIndex);
   assert.match(html, /id="probing-family-dms"/);
   assert.doesNotMatch(html, /<p class="technology-kicker"[^>]*>DMS chemical probing<\/p>/);
-  assert.match(html, /<h2>DMS chemical probing<\/h2>/);
+  assert.match(html, /<h2>DMS-based methods<\/h2>/);
 });
 
 test('article index escapes family section anchor attributes', () => {
