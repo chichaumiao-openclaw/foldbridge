@@ -5472,7 +5472,9 @@ body[data-mode="dark"] .mode-toggle:hover {
 
 .technology-summary-card span {
   color: var(--textSecondary);
+  font-size: 0.82rem;
   line-height: 1.55;
+  white-space: nowrap;
 }
 
 .technology-section-heading {
@@ -6500,11 +6502,11 @@ body[data-mode="dark"] .mode-toggle:hover {
   .home-scroll-story.hss-js .hss-scene { opacity: .35; transform: translateY(18px); }
   .home-scroll-story.hss-js .hss-scene.is-active { opacity: 1; transform: translateY(0); }
 }
-.hss-scene-num { font-size: 12px; font-weight: 700; color: var(--textAccent); letter-spacing: 1px; }
+.hss-scene-num { font-size: 15.5px; font-weight: 700; color: var(--textAccent); letter-spacing: 1px; }
 .hss-scene-title { font-size: 30px; margin: 8px 0 0; letter-spacing: -.5px; color: var(--textPrimary); }
 .hss-scene-body { font-size: 15.5px; line-height: 1.7; color: var(--textSecondary);
   margin: 14px 0 0; max-width: 440px; }
-.hss-chip { display: inline-block; margin-top: 16px; font-size: 12px;
+.hss-chip { display: inline-block; margin-top: 16px; font-size: 15.5px;
   background: var(--primarySoft); color: var(--textAccent); padding: 5px 12px;
   border-radius: 980px; font-weight: 600; }
 
@@ -6647,6 +6649,115 @@ body[data-mode="dark"] .mode-toggle:hover {
 .about-terms dd {
   margin: 4px 0 0;
   line-height: 1.6;
+}
+
+/* Help page group members */
+.help-group-members {
+  padding: 30px 32px 34px;
+}
+.help-group-members-heading {
+  padding-bottom: 14px;
+  margin-bottom: 28px;
+  border-bottom: 2px solid rgba(154, 123, 24, 0.62);
+}
+.help-group-members-heading .about-hero-kicker {
+  margin-bottom: 6px;
+}
+.help-group-members-heading h2 {
+  margin: 0;
+  color: var(--textAccent);
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+}
+.help-group-members-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px 48px;
+}
+.help-member-card {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.help-member-portrait {
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  width: 148px;
+  aspect-ratio: 0.82;
+  border-radius: 16px;
+  border: 1px solid rgba(154, 123, 24, 0.34);
+  background: linear-gradient(145deg, #fff2b8 0%, #e7b83f 100%);
+  color: #72580d;
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 12px 26px rgba(155, 122, 38, 0.16);
+}
+.help-member-portrait img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.help-member-copy h3 {
+  margin: 0;
+  color: var(--textAccent);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.18;
+}
+.help-member-role {
+  margin: 12px 0 0;
+  color: var(--textPrimary);
+  font-style: italic;
+  font-weight: 600;
+  line-height: 1.45;
+}
+.help-member-details {
+  display: grid;
+  gap: 6px;
+  margin-top: 18px;
+}
+.help-member-details p {
+  margin: 0;
+  color: var(--textSecondary);
+  line-height: 1.45;
+}
+.help-member-link {
+  color: var(--textAccent);
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-color: rgba(154, 123, 24, 0.42);
+  text-underline-offset: 3px;
+}
+.help-member-link:hover {
+  color: var(--primary);
+  text-decoration-color: currentColor;
+}
+.help-member-label {
+  color: var(--textPrimary);
+  font-weight: 600;
+}
+
+@media (max-width: 900px) {
+  .help-group-members-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 560px) {
+  .help-group-members {
+    padding: 24px 18px 26px;
+  }
+  .help-member-card {
+    grid-template-columns: 92px minmax(0, 1fr);
+    gap: 14px;
+  }
+  .help-member-portrait {
+    width: 92px;
+    font-size: 1.45rem;
+  }
 }
 
 /* === STATS PAGE === */

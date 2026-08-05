@@ -69,8 +69,8 @@ test('HOME_METRICS carries the launch numbers', () => {
   assert.equal(HOME_METRICS.probingEntries, 4664);
   assert.equal(HOME_METRICS.pdbStructures, 2386);
   assert.equal(HOME_METRICS.highConfidencePaired, 510);
-  assert.equal(HOME_METRICS.probingArticles, 27);
-  assert.equal(HOME_METRICS.mechanismFamilies, 6);
+  assert.equal(HOME_METRICS.probingArticles, 26);
+  assert.equal(HOME_METRICS.mechanismFamilies, 5);
 });
 
 import { renderHomeModuleCards } from '../src/siteChrome.js';

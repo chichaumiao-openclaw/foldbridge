@@ -72,5 +72,31 @@
         { "term": "A threshold looks arbitrary \u2014 is it published?", "body": "Often not. Only RL-Seq's Spearman cut-points are literature-set; most thresholds are operating values pending calibration, labelled truthfully in the registry. See the About page's threshold-honesty statement." }
       ]
     }
+  ],
+  "group_members": [
+    {
+      "initials": "ZM",
+      "photo": "./src/assets/team/Chichau_photo.jpg",
+      "name": "Zhichao (Chichau) Miao",
+      "role": "Principal Investigator of Guangzhou Lab",
+      "details": [
+        { "prefix": "PhD", "organization": "Institute of Biophysics, CAS", "url": "https://english.ibp.cas.cn/about_us/brief_introduction/" },
+        { "prefix": "Chercheur", "organization": "IBMC, CNRS", "url": "https://ibmc.cnrs.fr/" },
+        { "prefix": "PostDoc", "organization": "EMBL-EBI", "url": "https://www.ebi.ac.uk/" },
+        { "prefix": "Visiting Scientist", "organization": "Wellcome Sanger Institute", "url": "https://www.sanger.ac.uk/" },
+        { "prefix": "Senior Bioinformatician", "organization": "EMBL-EBI", "url": "https://www.ebi.ac.uk/" }
+      ]
+    },
+    {
+      "initials": "LH",
+      "photo": "./src/assets/team/Lin_Huang.jpg",
+      "name": "Lin Huang",
+      "role": { "prefix": "Principal Investigator of", "organization": "Sun Yat-sen University" },
+      "details": [
+        { "prefix": "PhD", "organization": "Wuhan University", "url": "https://en.whu.edu.cn/" },
+        { "prefix": "Postdoctoral Research Assistant", "organization": "University of Dundee, UK", "url": "https://www.dundee.ac.uk/" },
+        { "prefix": "Senior Research Associate", "organization": "University of Dundee, UK", "url": "https://www.dundee.ac.uk/" }
+      ]
+    }
   ]
 }

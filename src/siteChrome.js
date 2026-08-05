@@ -26,14 +26,14 @@ export function renderPrimaryNav(activeRoute = 'home') {
 //   probingEntries       = 4,664 chemical probing entries
 //   pdbStructures        = 2,386 PDB structures
 //   highConfidencePaired = 510 high-confidence paired datas
-//   probingArticles/mechanismFamilies = probing-articles/index.json article_count(27)/family_count(6)
+//   probingArticles/mechanismFamilies = probing-articles 首页展示口径（26 篇文章 / 5 个 families）
 // 口径再变化时只改这里的数字。
 export const HOME_METRICS = {
   probingEntries: 4664,
   pdbStructures: 2386,
   highConfidencePaired: 510,
-  probingArticles: 27,
-  mechanismFamilies: 6
+  probingArticles: 26,
+  mechanismFamilies: 5
 };
 
 export function renderHomeHero(metrics = HOME_METRICS) {
@@ -379,6 +379,26 @@ export function renderAboutPage(content) {
 // table/prose），入参 content（help-content.json 解析对象）→ HTML 字符串。
 // content 为空（未加载 / 加载失败）时降级为最小壳，含 <h1>Help</h1>，绝不产出
 // undefined。help-content.json 是入 git 的静态可信数据，无需 escape。
+function renderHelpMemberDetail(detail) {
+  if (typeof detail === 'string') return aboutText(detail);
+  if (!detail || typeof detail !== 'object') return '';
+  const prefix = detail.prefix ? `${aboutText(detail.prefix)} · ` : '';
+  const organization = aboutText(detail.organization);
+  if (!organization) return prefix;
+  if (!detail.url) return `${prefix}${organization}`;
+  return `${prefix}<a class="help-member-link" href="${aboutText(detail.url)}" target="_blank" rel="noopener noreferrer">${organization}</a>`;
+}
+
+function renderHelpMemberRole(role) {
+  if (typeof role === 'string') return aboutText(role);
+  if (!role || typeof role !== 'object') return '';
+  const prefix = role.prefix ? `${aboutText(role.prefix)} ` : '';
+  const organization = aboutText(role.organization);
+  if (!organization) return prefix;
+  if (!role.url) return `${prefix}<span class="help-member-label">${organization}</span>`;
+  return `${prefix}<a class="help-member-link" href="${aboutText(role.url)}" target="_blank" rel="noopener noreferrer">${organization}</a>`;
+}
+
 export function renderHelpPage(content) {
   if (!content || typeof content !== 'object') {
     return `<section class="card bundle-wide-card about-section">
@@ -395,8 +415,32 @@ export function renderHelpPage(content) {
       ${hero.detail ? `<p class="about-hero-detail">${aboutText(hero.detail)}</p>` : ''}
     </section>`;
   const sectionsHtml = sections.map(renderAboutSection).join('\n    ');
+  const members = Array.isArray(content.group_members) ? content.group_members : [];
+  const membersHtml = members.length > 0 ? `<section class="card bundle-wide-card help-group-members" aria-labelledby="help-group-members-title">
+      <div class="help-group-members-heading">
+        <h2 id="help-group-members-title">Group Members</h2>
+      </div>
+      <div class="help-group-members-grid">
+        ${members.map((member) => {
+          const details = Array.isArray(member.details) ? member.details : [];
+          return `<article class="help-member-card">
+            <div class="help-member-portrait">
+              ${member.photo
+                ? `<img src="${aboutText(member.photo)}" alt="${aboutText(member.name)}" loading="lazy">`
+                : aboutText(member.initials)}
+            </div>
+            <div class="help-member-copy">
+              <h3>${aboutText(member.name)}</h3>
+              ${member.role ? `<p class="help-member-role">${renderHelpMemberRole(member.role)}</p>` : ''}
+              <div class="help-member-details">${details.map((detail) => `<p>${renderHelpMemberDetail(detail)}</p>`).join('')}</div>
+            </div>
+          </article>`;
+        }).join('')}
+      </div>
+    </section>` : '';
   return `${heroHtml}
-    ${sectionsHtml}`;
+    ${sectionsHtml}
+    ${membersHtml}`;
 }
 
 // === STATS PAGE (W-B 在此追加 renderStatsPage) ===

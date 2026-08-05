@@ -6,6 +6,8 @@
 //   renderProbingArticleIndex(index)        — 文章总览（按机制家族分组的卡片墙）
 //   renderProbingArticlePage(detail, index) — 单篇阅读页（标题 + 有序 block + 图注）
 
+import { HOME_METRICS } from './siteChrome.js';
+
 function escapeHtml(s) {
   return String(s == null ? '' : s)
     .replace(/&/g, '&amp;')
@@ -173,7 +175,7 @@ const RNA_INTERACTION_METHOD_DESCRIPTIONS = [
 export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsHtml = '') {
   const families = (index && index.families) || [];
   const visibleFamilies = families.filter((family) => family.id !== 'inference');
-  const articleCount = (index && index.article_count) || 0;
+  const articleCount = HOME_METRICS.probingArticles;
   const articlesBySlug = new Map(
     families.flatMap((family) => Array.isArray(family.articles) ? family.articles : [])
       .map((article) => [article.slug, article])
