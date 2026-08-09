@@ -583,7 +583,7 @@ test('atlas page renders only the compact master table surface', () => {
   const state = buildAtlasSearchState(fixtures, {});
   const html = renderAnnojointAtlasPage({ state, selectedCaseIds: new Set(['10ZT']), pageSize: 1 });
 
-  assert.match(html, /RNA Structure Database/);
+  assert.match(html, /Entry table/);
   assert.doesNotMatch(html, /<p class="technology-kicker">ANNOJOIN<\/p>/);
   assert.match(html, /Export Selected \(1\)/);
   assert.match(html, /Export All Results/);

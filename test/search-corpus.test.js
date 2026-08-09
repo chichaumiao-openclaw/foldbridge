@@ -23,7 +23,7 @@ test('search corpus exposes probing-article and pdb-case docs, no dead routes', 
   assert.match(nineEly.summary, /^PDB 9ELY · /);
 
   const articles = docs.filter((doc) => doc.type === 'probing-article');
-  assert.equal(articles.length, 27);
+  assert.equal(articles.length, 37);
   assert.ok(articles.every((doc) => doc.href.startsWith('#probing?tech=')));
 
   assert.ok(!docs.some((doc) => ['#browse', '#home', '#publications'].includes(doc.href)));
