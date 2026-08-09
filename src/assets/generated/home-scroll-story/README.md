@@ -11,7 +11,7 @@
 ## 重生成步骤（手动一次性策展）
 
 ### 1. story.json（反应性 + 序列 + 坐标）
-从 `src/assets/generated/annojoin-atlas-rmdb/cases/RMDB2PDB%3A<PDB>.json` 的 `visualPreview.reactivity1d.points` 提取：sequence=rmdbBase / reactivity=reactivityValue 原值 / positions=rmdbPosition。norm_ceiling=reactivity 的 P95（截断不低于 1.0）。
+从 `src/assets/generated/annojoin-atlas-rmdb/cases/RMDB2PDB%3A<PDB>.json` 的 `visualPreview.reactivity1d.points` 提取：sequence=rmdbBase / reactivity=reactivityValue 原值 / positions=rmdbPosition；由于展示对象是 RNA，sequence 中的 `T` 必须规范化为 `U`，以与 VARNA 二级结构序列一致。norm_ceiling=reactivity 的 P95（截断不低于 1.0）。
 
 ### 2. paired_state 回填（来自真实 dbn）
 离线 dbn：`/Volumes/tianyi/tmp/rmdb2pdb_symlinked_assets_20260622/task_packages/confidence_v3_restart_20260613/remote_root/ANNOJOIN/2d_asset_build_20260618/dbn/<pdb_lower>.dbn`。

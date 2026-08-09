@@ -37,7 +37,7 @@ import { createSiteStatsStore } from './siteStatsStore.js';import { renderProbin
 import {
   buildAtlasSearchState
 } from './annojoinAtlasData.js';
-import { renderAnnojointAtlasPage, hydrateLssEvidence } from './annojoinAtlasView.js';
+import { renderAnnojointAtlasPage } from './annojoinAtlasView.js';
 import { bindAnnojointAtlasTable } from './annojoinAtlasController.js';
 import {
   annojoinExportRow,
@@ -1669,7 +1669,6 @@ function renderTechnologyMethodPage(method) {
       <a class="technology-back-link" href="#probing">Back to technology overview</a>
       <div class="technology-detail-header">
         <div>
-          <p class="technology-kicker">${method.category}</p>
           <h1>${method.title}</h1>
           <p class="technology-intro">${method.subtitle}</p>
         </div>
@@ -1744,7 +1743,11 @@ function renderTechnologyMethodPage(method) {
 }
 
 function detailPage() {
-  const slug = getTechnologySlugFromHash();
+  const requestedSlug = getTechnologySlugFromHash();
+  // The legacy technology directory links to `shape`, while the curated
+  // article asset is `shape-reagents`; keep the old entry point pointing at
+  // the new article instead of rendering the placeholder method page.
+  const slug = requestedSlug === 'shape' ? 'shape-reagents' : requestedSlug;
   const header = renderBundleHeader();
 
   // 探针科普文章优先：若 index 里存在该 slug，则渲染真实阅读页。
@@ -2184,7 +2187,6 @@ function annojoinAtlasPage() {
   const filters = getAnnojointAtlasFilters(params);
   const selectedCaseId = params.get('caseId') || '';
   const selectedCaseKey = params.get('caseKey') || '';
-  const selectedField = params.get('field') || '';
   const headerHtml = renderBundleHeader();
   if (!annojoinAtlasIndexState || annojoinAtlasIndexState === 'loading') {
     if (annojoinAtlasIndexState !== 'loading') loadAnnojointAtlasIndex();
@@ -2196,7 +2198,6 @@ function annojoinAtlasPage() {
       uncappedGroupIds: uncappedAnnojointGroupIds,
       selectedCaseId,
       selectedCaseKey,
-      selectedField,
       statusMessage: { tone: 'loading', text: 'Loading the master table…' },
       headerHtml
     });
@@ -2210,7 +2211,6 @@ function annojoinAtlasPage() {
       uncappedGroupIds: uncappedAnnojointGroupIds,
       selectedCaseId,
       selectedCaseKey,
-      selectedField,
       statusMessage: { tone: 'error', text: 'The master table could not be loaded. Refresh to try again.' },
       headerHtml
     });
@@ -2231,7 +2231,6 @@ function annojoinAtlasPage() {
     uncappedGroupIds: uncappedAnnojointGroupIds,
     selectedCaseId,
     selectedCaseKey,
-    selectedField,
     headerHtml
   });
 }
@@ -3324,22 +3323,6 @@ function render(options = {}) {
       toggleTechniqueFamily: (fam) => toggleAnnojointAtlasTechnique('techniqueFamilies', fam),
       toggleTechniqueName: (name) => toggleAnnojointAtlasTechnique('techniqueNames', name)
     });
-    const selectedField = parseHashRoute(window.location.hash).params.get('field') || '';
-    if (selectedField === 'confidenceDisplayLabel') {
-      const selectedKey = getAnnojointCaseKeyFromHash();
-      hydrateLssEvidence({
-        store: annojoinAtlasStore,
-        root: document,
-        caseKey: selectedKey,
-        getCurrentCaseKey: () => {
-          const p = parseHashRoute(window.location.hash).params;
-          if ((p.get('field') || '') !== 'confidenceDisplayLabel') return null;
-          return getAnnojointCaseKeyFromHash();
-        }
-      }).catch((error) => {
-        console.error('[main] hydrate ANNOJOIN LSS 证据失败', error);
-      });
-    }
   }
   initAnnojointStructureViewers().catch((error) => {
     console.error('[main] 初始化 ANNOJOIN 3D viewer 失败', error);
@@ -3447,6 +3430,7 @@ document.addEventListener('click', () => {
       const target = document.getElementById(`probing-family-${id}`);
       if (!target) return;
       event.preventDefault();
+      if (target.tagName === 'DETAILS') target.open = true;
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });

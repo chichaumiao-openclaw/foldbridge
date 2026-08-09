@@ -358,7 +358,7 @@ test('atlas search state prefers PDB-level display cases while preserving source
   assert.equal(state.totalSourceCaseCount, 2);
 });
 
-test('atlas page renders merged PDB rows with source detail links in the side panel', () => {
+test('atlas page renders merged PDB rows without the field inspector', () => {
   const originalOrigin = LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl;
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = 'https://pages.example.test';
   const state = buildAtlasSearchState({
@@ -397,16 +397,14 @@ test('atlas page renders merged PDB rows with source detail links in the side pa
 
   assert.equal((html.match(/data-annojoin-case-row="PDB:10FZ"/g) || []).length, 1);
   assert.match(html, /1 PDBs \(2 source cases\)/);
-  assert.match(html, /2 source cases/);
-  assert.match(html, /Source cases/);
-  // RMDB2PDB:10FZ has no published detail page → SPA fallback (no 404 link).
-  assert.match(html, /href="#annojoin-case\?caseId=10FZ&amp;caseKey=RMDB2PDB%3A10FZ"/);
-  // RASP2PDB:10FZ is published → static detail page.
-  assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A10FZ\/index\.html"/);
+  assert.doesNotMatch(html, /Source cases/);
+  assert.doesNotMatch(html, /field=/);
+  assert.doesNotMatch(html, /annojoin-detail-sidebar/);
+  assert.match(html, /annojoin-molecule-detail-link/);
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
 
-test('atlas page upgrades completed RMDB source-case links to V3 static detail pages', () => {
+test('atlas page keeps the merged row while removing source-case inspector links', () => {
   const originalOrigin = LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl;
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = 'https://pages.example.test';
   const state = buildAtlasSearchState({
@@ -443,14 +441,14 @@ test('atlas page upgrades completed RMDB source-case links to V3 static detail p
     selectedField: 'moleculeName'
   });
 
-  // RMDB2PDB:10ZT is published → static detail page.
-  assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10ZT\/index\.html"/);
-  // RASP2PDB:10ZT has no published detail page → SPA fallback (no 404 link).
-  assert.match(html, /href="#annojoin-case\?caseId=10ZT&amp;caseKey=RASP2PDB%3A10ZT"/);
+  assert.match(html, /data-annojoin-case-row="PDB:10ZT"/);
+  assert.doesNotMatch(html, /RMDB2PDB%3A10ZT/);
+  assert.doesNotMatch(html, /RASP2PDB%3A10ZT/);
+  assert.doesNotMatch(html, /annojoin-detail-sidebar/);
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
 
-test('atlas page routes duplicate RASP family cases to its own static detail page (no selector)', () => {
+test('atlas page renders duplicate-family rows without a source selector or inspector', () => {
   const state = buildAtlasSearchState({
     cases: [
       { atlasCaseKey: 'RMDB2PDB:8EWB', caseId: '8EWB', pdbId: '8EWB', assetFamily: 'RMDB2PDB', profileCount: 1 },
@@ -485,13 +483,10 @@ test('atlas page routes duplicate RASP family cases to its own static detail pag
     selectedField: 'moleculeName'
   });
 
-  // No selector page: published universes link to their static detail tree,
-  // unpublished ones fall back to the SPA route (never a 404 static link).
-  // RMDB2PDB:8EWB has no published detail page → SPA fallback.
-  assert.match(html, /href="#annojoin-case\?caseId=8EWB&amp;caseKey=RMDB2PDB%3A8EWB"/);
-  // RASP2PDB:8EWB is published → static detail page.
-  assert.match(html, /href="public\/rasp-v3\/cases\/RASP2PDB%253A8EWB\/index\.html"/);
-  assert.doesNotMatch(html, /selector/);
+  assert.match(html, /data-annojoin-case-row="PDB:8EWB"/);
+  assert.doesNotMatch(html, /RMDB2PDB%3A8EWB/);
+  assert.doesNotMatch(html, /RASP2PDB%3A8EWB/);
+  assert.doesNotMatch(html, /annojoin-detail-sidebar/);
 });
 
 test('confidence panel never surfaces the legacy ANNOCONFIDENCE coverage_topology pointer string', () => {
@@ -588,7 +583,8 @@ test('atlas page renders only the compact master table surface', () => {
   const state = buildAtlasSearchState(fixtures, {});
   const html = renderAnnojointAtlasPage({ state, selectedCaseIds: new Set(['10ZT']), pageSize: 1 });
 
-  assert.match(html, /ANNOJOIN master table/);
+  assert.match(html, /RNA Structure Database/);
+  assert.doesNotMatch(html, /<p class="technology-kicker">ANNOJOIN<\/p>/);
   assert.match(html, /Export Selected \(1\)/);
   assert.match(html, /Export All Results/);
   assert.match(html, /Select All Results/);
@@ -804,21 +800,26 @@ test('atlas page does not render folding rows for singleton classes', () => {
   assert.match(html, /data-annojoin-case-row="10ZU"/);
 });
 
-test('atlas page renders an index-row detail sidebar without loading detail panes', () => {
+test('atlas page renders the table without a detail sidebar', () => {
   const state = buildAtlasSearchState(fixtures, {});
   const html = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', routeName: 'sequence' });
 
-  assert.match(html, /class="annojoin-detail-sidebar/);
-  assert.match(html, /Click a table field/);
-  assert.match(html, /Confidence, PDB, profiles, and chains each open a focused explanation here/);
-  assert.match(html, /Click a molecule name to open its detail page/);
+  assert.doesNotMatch(html, /annojoin-detail-sidebar-empty/);
+  assert.doesNotMatch(html, /Click a table field/);
+  assert.match(html, /class="annojoin-table-layout"/);
+  assert.doesNotMatch(html, /has-detail-sidebar/);
+  assert.doesNotMatch(html, /annojoin-detail-sidebar/);
   assert.doesNotMatch(html, /Index row detail/);
 });
 
-test('atlas side panel renders field-specific explanations', () => {
+test('atlas ignores field selection and keeps the table values visible', () => {
   const originalOrigin = LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl;
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = 'https://pages.example.test';
   const state = buildAtlasSearchState(fixtures, {});
+  const tableHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'confidenceDisplayLabel', routeName: 'sequence' });
+  assert.doesNotMatch(tableHtml, /annojoin-detail-sidebar|Index row detail|Confidence classification|PDB metadata|Profile hits|Chain definitions|Conflict candidates/);
+  LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
+  return;
   const moleculeHtml = renderAnnojointAtlasPage({ state, selectedCaseId: '10ZT', selectedField: 'moleculeName', routeName: 'sequence' });
   assert.match(moleculeHtml, /Index row detail/);
   assert.match(moleculeHtml, /Molecule name/);
@@ -872,50 +873,43 @@ test('atlas side panel renders field-specific explanations', () => {
   assert.match(conflictsHtml, /review candidate/);
 });
 
-test('atlas table field links target the side panel', () => {
+test('atlas table keeps molecule detail links but removes field links', () => {
   const state = buildAtlasSearchState(fixtures, {});
   const html = renderAnnojointAtlasPage({ state, routeName: 'sequence' });
 
   // Molecule name jumps straight to the detail page, NOT the side panel.
   assert.match(html, /href="public\/rmdb-v3\/cases\/RMDB2PDB%253A10ZT\/index\.html"/);
   assert.doesNotMatch(html, /href="#sequence\?caseId=10ZT&amp;field=moleculeName"/);
-  assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=confidenceDisplayLabel"/);
-  assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=profileCount"/);
-  assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=chains"/);
-  assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=pdbId"/);
+  assert.doesNotMatch(html, /field=confidenceDisplayLabel|field=profileCount|field=chains|field=pdbId/);
   // Conflicts column was removed from the master table; no cell links to it.
   assert.doesNotMatch(html, /field=conflictCandidateCount"/);
 });
 
-test('atlas page can render as the sequence route entry', () => {
+test('atlas page can render as the sequence route entry without field links', () => {
   const state = buildAtlasSearchState(fixtures, {});
   const html = renderAnnojointAtlasPage({ state, routeName: 'sequence' });
 
   assert.match(html, /href="#sequence"/);
-  assert.match(html, /href="#sequence\?caseId=10ZT&amp;field=pdbId"/);
+  assert.doesNotMatch(html, /field=pdbId/);
   assert.doesNotMatch(html, /href="#annojoin-atlas\?caseId=10ZT"/);
 });
 
-test('atlas field links preserve the active filter and page so clicking does not reset the table', () => {
+test('atlas table preserves the active filter without field links', () => {
   const state = buildAtlasSearchState(fixtures, { query: '10ZT' });
   const html = renderAnnojointAtlasPage({ state, routeName: 'entry', page: 1 });
 
-  // a filtered field click must retain q=10ZT alongside the field/case selection
-  assert.match(html, /href="#entry\?q=10ZT&amp;caseId=10ZT&amp;field=pdbId"/);
-  assert.match(html, /href="#entry\?q=10ZT&amp;caseId=10ZT&amp;field=confidenceDisplayLabel"/);
-  // Molecule name now jumps to the detail page, not a panel field click.
+  assert.match(html, /value="10ZT"/);
   assert.doesNotMatch(html, /field=moleculeName/);
-  // and must NOT drop the query (the bug: #entry?caseId=10ZT&field=pdbId)
-  assert.doesNotMatch(html, /href="#entry\?caseId=10ZT&amp;field=pdbId"/);
+  assert.doesNotMatch(html, /field=pdbId|field=confidenceDisplayLabel/);
 });
 
-test('atlas field links carry a non-default page through the field click', () => {
+test('atlas table renders a non-default page without field links', () => {
   // query '10Z' matches both fixtures; pageSize 1 leaves one case on page 2
   const state = buildAtlasSearchState(fixtures, { query: '10Z' });
   const html = renderAnnojointAtlasPage({ state, routeName: 'entry', page: 2, pageSize: 1 });
 
-  // the active query and page must both survive the field click (caseId varies by sort)
-  assert.match(html, /href="#entry\?q=10Z&amp;page=2&amp;caseId=10Z[A-Z]&amp;field=pdbId"/);
+  assert.match(html, /data-annojoin-case-row=/);
+  assert.doesNotMatch(html, /field=pdbId/);
 });
 
 test('atlas page omits visual/detail panes from the master table page', () => {
@@ -1116,16 +1110,16 @@ test('renderLssEvidenceContent degrades gracefully for empty or unmaterialized e
   assert.match(renderLssEvidenceContent(null), /No per-profile LSS evidence/);
 });
 
-test('confidence panel emits an LSS evidence slot only when hasLssAnnotation is true', () => {
+test('master table does not emit the removed LSS sidebar slot', () => {
   const makeState = (hasLss) => buildAtlasSearchState({
     cases: [{ atlasCaseKey: 'RASP2PDB:5EEW', caseId: '5EEW', pdbId: '5EEW', assetFamily: 'RASP2PDB', confidenceDisplayLabel: 'B', profileCount: 1, chains: ['W'], hasLssAnnotation: hasLss }],
     displayCases: [{ atlasCaseKey: 'RASP2PDB:5EEW', caseId: '5EEW', pdbId: '5EEW', assetFamily: 'RASP2PDB', confidenceDisplayLabel: 'B', profileCount: 1, chains: ['W'], hasLssAnnotation: hasLss, sourceCaseCount: 1, sourceCaseKeys: ['RASP2PDB:5EEW'], sourceFamilies: ['RASP2PDB'] }],
     totalSourceCaseCount: 1, totalCaseCount: 1, facets: []
   }, {});
   const withLss = renderAnnojointAtlasPage({ state: makeState(true), routeName: 'sequence', selectedCaseKey: 'RASP2PDB:5EEW', selectedField: 'confidenceDisplayLabel' });
-  assert.match(withLss, /data-lss-evidence-slot="RASP2PDB:5EEW"/);
   const withoutLss = renderAnnojointAtlasPage({ state: makeState(false), routeName: 'sequence', selectedCaseKey: 'RASP2PDB:5EEW', selectedField: 'confidenceDisplayLabel' });
-  assert.doesNotMatch(withoutLss, /data-lss-evidence-slot/);
+  assert.doesNotMatch(withLss, /data-lss-evidence-slot|annojoin-detail-sidebar/);
+  assert.doesNotMatch(withoutLss, /data-lss-evidence-slot|annojoin-detail-sidebar/);
 });
 
 function makeFakeRoot(caseKey) {
@@ -1200,15 +1194,16 @@ test('filterCases cross-level OR: family + technique', () => {
   assert.deepEqual(state.cases.map((c) => c.pdbId).sort(), ['1GID', '1P5P']);
 });
 
-test('entry page renders two-level technique filter chips (family A-D)', () => {
+test('entry page renders the five probing mechanism families', () => {
   const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({
     displayCases: [
       { pdb_id: '1GID', techniqueFamilies: ['A', 'B'], techniqueNames: ['2A3', 'DMS'] },
       { pdb_id: '1P5P', techniqueFamilies: ['C'], techniqueNames: ['PARS'] }
     ]
   }, {}) });
-  assert.match(html, /data-technique-family="A"/);
-  assert.match(html, /data-technique-family="C"/);
+  assert.match(html, /data-technique-family="dms"/);
+  assert.match(html, /data-technique-family="cleavage"/);
+  assert.match(html, /data-technique-family="interaction"/);
   assert.match(html, /data-technique-name="PARS"/);
 });
 
@@ -1220,7 +1215,7 @@ test('technique filter chips are built from the full universe, not the filtered 
     ]
   }, { techniqueFamilies: ['A'] });
   const html = renderAnnojointAtlasPage({ state });
-  assert.match(html, /data-technique-family="C"/);
+  assert.match(html, /data-technique-family="interaction"/);
   assert.match(html, /data-technique-name="PARS"/);
 });
 
@@ -1228,8 +1223,8 @@ test('technique column renders colored family badges with hover names', () => {
   const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({
     displayCases: [{ pdb_id: '1GID', techniqueFamilies: ['A', 'B'], techniqueNames: ['2A3', 'DMS'] }]
   }, {}) });
-  assert.match(html, /annojoin-family-badge-A/);
-  assert.match(html, /annojoin-family-badge-B/);
+  assert.match(html, /annojoin-family-badge-dms/);
+  assert.doesNotMatch(html, /annojoin-family-badge-[ABC]/);
   assert.match(html, /title="[^"]*2A3[^"]*DMS[^"]*"/);
 });
 

@@ -1,13 +1,45 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "shape-map",
-  "title": "SHAPE-MaP: reading the flexibility of the 2′-OH as sequencing mutations",
+  "title": "SHAPE-MaP: Mutation-based RNA structure profiling through SHAPE chemical probing",
   "date": "",
   "figure_count": 4,
   "rep_pmid": "25028896",
   "rep_pmcid": "PMC4259394",
   "rep_doi": "10.1038/nmeth.3029",
   "asset_base": "./src/assets/generated/probing-articles/assets/shape-map",
+  "key_innovation": "Compared with SHAPE-Seq approaches relying on reverse transcription stops, SHAPE-MaP uses mutation-aware reverse transcription to encode SHAPE modifications as nucleotide substitutions, eliminating truncation bias and enabling quantitative analysis of complex RNA structures.",
+  "body_start_heading": "A real case: how a SHAPE-MaP profile flows through three layers (illustrative)",
+  "ppt_overview": [
+    {
+      "title": "How does SHAPE-MaP transform chemical modifications into sequencing mutations?",
+      "srcBasename": "shapemap_figure1.png",
+      "alt": "Principle of SHAPE-MaP",
+      "captionTitle": "Figure 1. Principle of SHAPE-MaP.",
+      "text": "SHAPE reagents modify flexible nucleotides within RNA. During reverse transcription, the polymerase reads through these adducts and introduces mutations into cDNA. These mutations are identified by deep sequencing to generate quantitative SHAPE reactivity profiles."
+    },
+    {
+      "title": "How can SHAPE-MaP detect RNA conformational changes?",
+      "srcBasename": "shapemap_figure2.png",
+      "alt": "Nucleotide-resolution mapping of RNA structural dynamics",
+      "captionTitle": "Figure 2. Nucleotide-resolution mapping of RNA structural dynamics.",
+      "text": "SHAPE-MaP quantitatively measures nucleotide flexibility changes induced by ligand binding, revealing structural rearrangements within RNA switches."
+    },
+    {
+      "title": "How does SHAPE-MaP improve RNA structure prediction?",
+      "srcBasename": "shapemap_figure3.png",
+      "alt": "SHAPE-MaP-guided RNA secondary structure modeling",
+      "captionTitle": "Figure 3. SHAPE-MaP-guided RNA secondary structure modeling.",
+      "text": "Mutation-derived SHAPE profiles provide quantitative structural restraints that improve secondary structure prediction compared with unconstrained folding."
+    },
+    {
+      "title": "Can SHAPE-MaP resolve large and complex RNA structures?",
+      "srcBasename": "shapemap_figure4.png",
+      "alt": "Genome-scale RNA structure analysis using SHAPE-MaP",
+      "captionTitle": "Figure 4. Genome-scale RNA structure analysis using SHAPE-MaP.",
+      "text": "SHAPE-MaP enables structural modeling of long RNAs, including viral genomes, by combining high-resolution chemical probing with computational structure inference."
+    }
+  ],
   "blocks": [
     {
       "type": "paragraph",

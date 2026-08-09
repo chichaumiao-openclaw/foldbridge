@@ -1,13 +1,38 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "mod-seq",
-  "title": "Mod-seq: drawing DMS modification sites onto the ribosome with high-throughput sequencing",
+  "title": "Mod-seq: Genome-wide RNA structure profiling through modification-induced mutation detection",
   "date": "",
   "figure_count": 3,
   "rep_pmid": "24664469",
   "rep_pmcid": "PMC3988572",
   "rep_doi": "10.1261/rna.042218.113",
+  "key_innovation": "Compared with conventional DMS footprinting, Mod-seq converts DMS-induced reverse transcription stops into genome-wide sequencing signals, enabling unbiased identification of RNA accessibility sites in vivo.",
   "asset_base": "./src/assets/generated/probing-articles/assets/mod-seq",
+  "ppt_overview": [
+    {
+      "title": "How does Mod-seq identify DMS modification sites by sequencing?",
+      "srcBasename": "modseq_f1__PMC3988572__F1.jpg",
+      "alt": "Mapping DMS modification sites with high-throughput sequencing",
+      "captionTitle": "Figure 1. Mapping DMS modification sites with high-throughput sequencing.",
+      "text": "DMS-treated RNA is fragmented, ligated with sequencing adapters, reverse transcribed, and amplified for Illumina sequencing. Reads corresponding to RT stops are mapped back to RNA sequences to identify modified nucleotides."
+    },
+    {
+      "title": "What RNA structures can Mod-seq detect genome-wide?",
+      "srcBasename": "modseq_f2__PMC3988572__F2.jpg",
+      "alt": "Genome-wide identification of DMS-reactive nucleotides",
+      "captionTitle": "Figure 2. Genome-wide identification of DMS-reactive nucleotides.",
+      "text": "Mod-seq identifies significant DMS modification sites across cellular RNAs, with strong enrichment at accessible adenine and cytosine residues."
+    },
+    {
+      "title": "How can Mod-seq probe RNA–protein interactions in vivo?",
+      "srcBasename": "modseq_f3__PMC3988572__F3.jpg",
+      "alt": "Detecting protein-binding sites through differential chemical reactivity",
+      "captionTitle": "Figure 3. Detecting protein-binding sites through differential chemical reactivity.",
+      "text": "Mod-seq can detect RNA regions protected by RNA-binding proteins in vivo. Comparison between wild-type cells and L26-deficient cells reveals increased DMS reactivity at nucleotides surrounding the L26 binding site in the ribosome structure, demonstrating that Mod-seq can identify protein–RNA interaction interfaces."
+    }
+  ],
+  "body_start_heading": "A real example (illustrative)",
   "blocks": [
     {
       "type": "paragraph",

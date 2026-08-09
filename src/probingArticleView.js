@@ -17,12 +17,29 @@ function escapeHtml(s) {
     .replace(/'/g, '&#39;');
 }
 
+function shortArticleName(article) {
+  const title = String(article?.title || '');
+  const colonIndex = title.indexOf(':');
+  if (colonIndex > 0) return title.slice(0, colonIndex).trim();
+  if (article?.slug === 'parte') return 'PARTE';
+  return title;
+}
+
 // 行内 markdown：先转义，再恢复 `code` 与 **bold**。
 function renderInline(text) {
   let out = escapeHtml(text);
   out = out.replace(/`([^`]+)`/g, (_m, c) => `<code class="article-code">${c}</code>`);
   out = out.replace(/\*\*([^*]+)\*\*/g, (_m, c) => `<strong>${c}</strong>`);
   return out;
+}
+
+function renderFigureLegend(text) {
+  const legend = String(text == null ? '' : text);
+  const titleMatch = legend.match(/^\*\*([^*]+)\*\*(.*)$/s);
+  if (!titleMatch) return renderInline(legend);
+  const title = `<strong>${escapeHtml(titleMatch[1])}</strong>`;
+  const description = titleMatch[2].trimStart();
+  return description ? `${title}<br />${renderInline(description)}` : title;
 }
 
 const DMS_METHOD_DESCRIPTIONS = [
@@ -181,7 +198,7 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
       .map((article) => [article.slug, article])
   );
 
-  const familySections = visibleFamilies.map((fam) => {
+  const familySections = visibleFamilies.map((fam, familyIndex) => {
     const familyTitle = fam.id === 'dms'
       ? 'DMS-based methods'
       : (fam.id === 'shape'
@@ -235,41 +252,33 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
     }).join('');
 
     return `
-      <section id="probing-family-${escapeHtml(fam.id)}" class="card bundle-wide-card technology-section-card" data-probing-family="${escapeHtml(fam.id)}">
-        <div class="technology-section-heading">
-          <div>
-            <h2>${escapeHtml(familyTitle)}</h2>
+      <details id="probing-family-${escapeHtml(fam.id)}" class="technology-section-card" data-probing-family="${escapeHtml(fam.id)}"${familyIndex === 0 ? ' open' : ''}>
+        <summary class="technology-section-summary">
+          <div class="technology-section-heading">
+            <div>
+              <h2>${escapeHtml(familyTitle)}</h2>
+            </div>
+            <p>${escapeHtml(familySummary)}</p>
           </div>
-          <p>${escapeHtml(familySummary)}</p>
-        </div>
+        </summary>
         <div class="probing-article-grid">${cards}</div>
-      </section>`;
+      </details>`;
   }).join('');
 
   return `<main class="page-detail">
     ${headerHtml}
-    <section class="card bundle-wide-card technology-hero-card">
+    <section class="card bundle-wide-card technology-hero-card technology-hero-card-solo">
       <div class="technology-hero-copy">
         <p class="technology-kicker">probing articles</p>
         <h1>RNA probing methods explained</h1>
         <p class="technology-intro">This collection gathers ${articleCount} in-depth explainers on RNA structure probing methods. Each one starts from the boundary that "signal is not pairing ground truth", and walks through the original figures to make clear what chemical event the method actually measures, and how it should be interpreted across FoldBridge's three layers: raw, visualization, and confidence.</p>
         <p class="technology-intro technology-intro-secondary">Browse by mechanism family first, then open any method to enter its full reading page.</p>
       </div>
-      <aside class="technology-summary-panel">
-        <article class="technology-summary-card">
-          <p>articles</p>
-          <strong>${articleCount}</strong>
-          <span>in-depth probing explainers, walked through figure by figure</span>
-        </article>
-        <article class="technology-summary-card">
-          <p>families</p>
-          <strong>${visibleFamilies.length}</strong>
-          <span>mechanism family groups</span>
-        </article>
-      </aside>
     </section>
     ${extraSectionsHtml || ''}
-    ${familySections}
+    <section class="card bundle-wide-card probing-family-collection" aria-label="Probing mechanism families">
+      ${familySections}
+    </section>
   </main>`;
 }
 
@@ -295,7 +304,7 @@ function renderBlock(block, assetBase) {
     return `
       <figure class="article-figure" id="${escapeHtml(block.anchor || '')}">
         <img src="${src}" alt="${escapeHtml(block.alt || block.label || '')}" loading="lazy" />
-        <figcaption class="article-figure-legend">${renderInline(block.legend || '')}</figcaption>
+        <figcaption class="article-figure-legend">${renderFigureLegend(block.legend || '')}</figcaption>
         ${citeLine}
       </figure>
       ${bodyParas}`;
@@ -303,18 +312,37 @@ function renderBlock(block, assetBase) {
   return '';
 }
 
+function renderPptOverview(detail, assetBase) {
+  const items = Array.isArray(detail.ppt_overview) ? detail.ppt_overview : [];
+  if (!items.length) return '';
+  return `
+    <section class="card bundle-wide-card article-ppt-overview">
+      <div class="article-ppt-grid">
+        ${items.map((item) => `
+          <article class="article-ppt-item">
+            <h2>${escapeHtml(item.title || '')}</h2>
+            <img src="${assetBase}/${escapeHtml(item.srcBasename || '')}" alt="${escapeHtml(item.alt || item.title || '')}" loading="lazy" />
+            <p>${item.captionTitle ? `<strong>${escapeHtml(item.captionTitle)}</strong><br />` : ''}${escapeHtml(item.text || '')}</p>
+          </article>`).join('')}
+      </div>
+    </section>`;
+}
+
 export function renderProbingArticlePage(detail, index, headerHtml = '') {
   const assetBase = detail.asset_base || `./src/assets/generated/probing-articles/assets/${detail.slug}`;
 
   // 家族归属（用于面包屑 / 上下篇导航）。
-  let familyTitle = '';
   let siblings = [];
   if (index && index.families) {
     for (const fam of index.families) {
       const found = fam.articles.find((a) => a.slug === detail.slug);
       if (found) {
-        familyTitle = fam.title;
-        siblings = fam.articles;
+        const order = Array.isArray(fam.article_order) ? new Map(fam.article_order.map((slug, position) => [slug, position])) : null;
+        siblings = order
+          ? fam.articles
+              .filter((article) => order.has(article.slug))
+              .sort((a, b) => order.get(a.slug) - order.get(b.slug))
+          : fam.articles;
         break;
       }
     }
@@ -322,24 +350,50 @@ export function renderProbingArticlePage(detail, index, headerHtml = '') {
 
   const meta = [];
   if (detail.date) meta.push(`<div><dt>Date</dt><dd>${escapeHtml(detail.date)}</dd></div>`);
-  if (familyTitle) meta.push(`<div><dt>Mechanism family</dt><dd>${escapeHtml(familyTitle)}</dd></div>`);
-  if (detail.figure_count) meta.push(`<div><dt>Original figures</dt><dd>${detail.figure_count}</dd></div>`);
-  if (detail.rep_doi) meta.push(`<div><dt>Primary source</dt><dd>DOI ${escapeHtml(detail.rep_doi)}</dd></div>`);
+  if (detail.rep_doi) {
+    const doi = escapeHtml(detail.rep_doi);
+    const doiHref = encodeURIComponent(detail.rep_doi);
+    meta.push(`<div class="technology-detail-primary-source"><dt>Primary source</dt><dd><a href="https://doi.org/${doiHref}" target="_blank" rel="noopener noreferrer">DOI ${doi}</a></dd></div>`);
+  }
 
-  const body = (detail.blocks || []).map((b) => renderBlock(b, assetBase)).join('\n');
+  const allBlocks = Array.isArray(detail.blocks) ? detail.blocks : [];
+  const startIndex = detail.body_start_heading
+    ? allBlocks.findIndex((block) => block.type === 'heading' && block.text === detail.body_start_heading)
+    : -1;
+  const visibleBlocks = startIndex >= 0 ? allBlocks.slice(startIndex) : allBlocks;
+  const body = visibleBlocks.map((b) => renderBlock(b, assetBase)).join('\n');
 
   // 同家族上下篇导航。
   let siblingNav = '';
+  if (detail.sibling_navigation && typeof detail.sibling_navigation === 'object') {
+    const configured = detail.sibling_navigation;
+    siblings = [
+      ...(configured.previous ? [{ slug: configured.previous.slug, title: configured.previous.title }] : []),
+      { slug: detail.slug, title: detail.title },
+      ...(configured.next ? [{ slug: configured.next.slug, title: configured.next.title }] : [])
+    ];
+  }
   if (siblings.length > 1) {
     const idx = siblings.findIndex((a) => a.slug === detail.slug);
     const prev = idx > 0 ? siblings[idx - 1] : null;
     const next = idx < siblings.length - 1 ? siblings[idx + 1] : null;
+    const siblingMode = prev && next ? '' : (next ? ' next-only' : ' prev-only');
     siblingNav = `
-      <nav class="article-sibling-nav" aria-label="Articles in the same family">
-        ${prev ? `<a class="article-sibling-link prev" href="#probing?tech=${encodeURIComponent(prev.slug)}"><span>Previous</span><strong>${escapeHtml(prev.title)}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
-        ${next ? `<a class="article-sibling-link next" href="#probing?tech=${encodeURIComponent(next.slug)}"><span>Next</span><strong>${escapeHtml(next.title)}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
+      <nav class="article-sibling-nav${siblingMode}" aria-label="Articles in the same family">
+        ${prev ? `<a class="article-sibling-link prev" href="#probing?tech=${encodeURIComponent(prev.slug)}"><span>Previous</span><strong>${escapeHtml(shortArticleName(prev))}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
+        ${next ? `<a class="article-sibling-link next" href="#probing?tech=${encodeURIComponent(next.slug)}"><span>Next</span><strong>${escapeHtml(shortArticleName(next))}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
       </nav>`;
   }
+
+  const readingBody = body ? `
+      <div class="article-reading-body">
+        ${body}
+      </div>` : '';
+  const readingSection = body ? `
+    <article class="card bundle-wide-card article-reading-card">
+      ${readingBody}
+      ${siblingNav}
+    </article>` : '';
 
   return `<main class="page-detail page-probing-article">
     ${headerHtml}
@@ -347,18 +401,15 @@ export function renderProbingArticlePage(detail, index, headerHtml = '') {
       <a class="technology-back-link" href="#probing">← Back to probing methods overview</a>
       <div class="technology-detail-header">
         <div>
-          <p class="technology-kicker">${escapeHtml(familyTitle || 'probing article')}</p>
           <h1>${escapeHtml(detail.title)}</h1>
         </div>
         ${meta.length ? `<dl class="technology-detail-meta">${meta.join('')}</dl>` : ''}
       </div>
     </section>
+    ${detail.key_innovation ? `<section class="card bundle-wide-card article-key-innovation"><h2>Key innovation</h2><p>${escapeHtml(detail.key_innovation)}</p></section>` : ''}
+    ${renderPptOverview(detail, assetBase)}
 
-    <article class="card bundle-wide-card article-reading-card">
-      <div class="article-reading-body">
-        ${body}
-      </div>
-      ${siblingNav}
-    </article>
+    ${readingSection}
+    ${body ? '' : siblingNav}
   </main>`;
 }

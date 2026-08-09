@@ -1,13 +1,45 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "icshape-map",
-  "title": "icSHAPE-MaP: reading 2′-OH accessibility as mutations in living cells",
+  "title": "icSHAPE-MaP: In vivo RNA structure profiling using selective 2′-hydroxyl acylation and mutation detection by reverse transcription",
   "date": "",
   "figure_count": 4,
   "rep_pmid": "34099665",
   "rep_pmcid": "PMC8184798",
   "rep_doi": "10.1038/s41467-021-23607-w",
   "asset_base": "./src/assets/generated/probing-articles/assets/icshape-map",
+  "key_innovation": "Compared with conventional icSHAPE approaches, icSHAPE-MaP converts SHAPE-induced reverse transcription events into nucleotide-resolution mutation signatures, enabling transcriptome-wide RNA structure profiling in intact cellular environments without requiring RT-stop detection.",
+  "body_start_heading": "A real example: how an icSHAPE-MaP profile flows through three layers (illustrative)",
+  "ppt_overview": [
+    {
+      "title": "How does icSHAPE-MaP convert RNA flexibility into sequencing-based structural signals?",
+      "srcBasename": "icshapemap_figure1.png",
+      "alt": "Principle and validation of icSHAPE-MaP for probing intact RNA structures",
+      "captionTitle": "Figure 1. Principle and validation of icSHAPE-MaP for probing intact RNA structures.",
+      "text": "icSHAPE-MaP combines NAI-N3 selective acylation of flexible RNA nucleotides with mutational profiling during reverse transcription. Modified nucleotides are converted into characteristic cDNA mutations, which are quantified by high-throughput sequencing to generate icSHAPE-MaP scores. The method accurately captures RNA structural accessibility in intact cellular RNA, as demonstrated by human 5S rRNA profiling."
+    },
+    {
+      "title": "How can icSHAPE-MaP reveal RNA structures of biologically important RNA substrates?",
+      "srcBasename": "icshapemap_figure2.png",
+      "alt": "icSHAPE-MaP profiles reveal structural features of Dicer-associated RNAs",
+      "captionTitle": "Figure 2. icSHAPE-MaP profiles reveal structural features of Dicer-associated RNAs.",
+      "text": "RIP-icSHAPE-MaP combines RNA immunoprecipitation with icSHAPE-MaP profiling to characterize structures of RNAs recognized by Dicer. icSHAPE-MaP-guided structural modeling improves secondary structure prediction and reveals structural features that distinguish Dicer substrates from non-substrate RNAs."
+    },
+    {
+      "title": "Can icSHAPE-MaP identify structural features governing RNA processing?",
+      "srcBasename": "icshapemap_figure3.png",
+      "alt": "RNA structural landscapes define functional substrate classes",
+      "captionTitle": "Figure 3. RNA structural landscapes define functional substrate classes.",
+      "text": "Genome-wide icSHAPE-MaP profiles of Dicer-associated RNAs were analyzed by clustering approaches to identify distinct structural signatures. Differential structural patterns correlate with Dicer enrichment, cleavage efficiency, and small RNA production, demonstrating that RNA folding landscapes influence RNA processing."
+    },
+    {
+      "title": "How does icSHAPE-MaP reveal the structural determinants of RNA processing?",
+      "srcBasename": "icshapemap_figure4.png",
+      "alt": "Experimental RNA structures reveal spatial constraints controlling Dicer processing",
+      "captionTitle": "Figure 4. Experimental RNA structures reveal spatial constraints controlling Dicer processing.",
+      "text": "icSHAPE-MaP-derived structural information combined with computational modeling identifies structural parameters that determine Dicer cleavage positions. Structural distance measurements and mutational analyses demonstrate how RNA architecture influences generation of mature miRNAs."
+    }
+  ],
   "blocks": [
     {
       "type": "paragraph",

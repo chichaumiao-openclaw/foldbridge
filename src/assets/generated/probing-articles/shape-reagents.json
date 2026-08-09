@@ -1,13 +1,38 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "shape-reagents",
-  "title": "SHAPE reagents read the flexibility of the 2′-hydroxyl, not the ground truth of base pairing",
+  "title": "SHAPE: RNA structure probing through selective 2′-hydroxyl acylation of flexible nucleotides",
   "date": "",
-  "figure_count": 9,
+  "figure_count": 3,
   "rep_pmid": "",
   "rep_pmcid": "",
   "rep_doi": "10.1021/ja043822v",
   "asset_base": "./src/assets/generated/probing-articles/assets/shape-reagents",
+  "key_innovation": "Compared with traditional base-targeting chemical probing methods, SHAPE detects RNA backbone flexibility by measuring the reactivity of ribose 2′-hydroxyl groups, providing nucleotide-resolution information on RNA conformational dynamics.",
+  "body_start_heading": "A real case (illustrative): the three-layer handling of a single SHAPE profile",
+  "ppt_overview": [
+    {
+      "title": "How does SHAPE chemistry selectively probe RNA structure?",
+      "srcBasename": "shape_figure1.png",
+      "alt": "Chemical basis of SHAPE reactivity",
+      "captionTitle": "Figure 1. Chemical basis of SHAPE reactivity.",
+      "text": "SHAPE reagents such as NMIA react with the 2′-hydroxyl group of ribose through formation of a 2′-O-adduct. Nucleotides with flexible ribose conformations favor acylation, whereas structurally constrained nucleotides show reduced reactivity."
+    },
+    {
+      "title": "How does SHAPE distinguish structured and flexible RNA regions?",
+      "srcBasename": "shape_figure2.png",
+      "alt": "Structure-dependent SHAPE modification",
+      "captionTitle": "Figure 2. Structure-dependent SHAPE modification.",
+      "text": "SHAPE reactivity depends on local RNA backbone dynamics rather than nucleotide identity or solvent accessibility. Flexible single-stranded regions show higher 2′-O-adduct formation, whereas constrained nucleotides within structured regions are less reactive."
+    },
+    {
+      "title": "How can SHAPE data be converted into nucleotide-resolution RNA structures?",
+      "srcBasename": "shape_figure3.png",
+      "alt": "SHAPE-guided RNA structure analysis",
+      "captionTitle": "Figure 3. SHAPE-guided RNA structure analysis.",
+      "text": "SHAPE modification profiles are measured by primer extension and mapped onto RNA secondary structures. Reactivity values provide quantitative constraints that improve RNA structure modeling."
+    }
+  ],
   "blocks": [
     {
       "type": "paragraph",

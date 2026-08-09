@@ -9,7 +9,11 @@ import {
   sortAnnojointCases
 } from './annojoinAtlasTableModel.js';
 import { resolveLocalPagesBridgeDetailHref } from './localPagesBridgeLinks.js';
-import { buildTechniqueFilterModel } from './techniqueFilterModel.js';
+import {
+  buildMechanismFilterModel,
+  mechanismFamiliesForRow,
+  MECHANISM_FAMILIES
+} from './techniqueFilterModel.js';
 
 const DEFAULT_GROUP_ROW_LIMIT = 5;
 
@@ -54,13 +58,6 @@ function buildPreservedParams(filters = {}, page = 1) {
   return preserved;
 }
 
-function panelHref(routeName = 'annojoin-atlas', row = {}, field = '', preserved = {}) {
-  const caseId = rowCaseId(row);
-  const caseKey = rowCaseKey(row);
-  if (row.assetFamily || caseKey.includes(':')) return atlasHref(routeName, { ...preserved, caseKey, field });
-  return atlasHref(routeName, { ...preserved, caseId, field });
-}
-
 function currentFilterExportHref(filters = {}, format = 'csv') {
   const params = new URLSearchParams();
   if (filters.query) params.set('q', filters.query);
@@ -87,10 +84,6 @@ function profileValue(row = {}) {
   return `${count} ${count === 1 ? 'profile' : 'profiles'}`;
 }
 
-function fieldLink(row = {}, routeName = 'annojoin-atlas', field = '', label = '', preserved = {}) {
-  return `<a class="annojoin-field-link" href="${escapeHtml(panelHref(routeName, row, field, preserved))}">${label}</a>`;
-}
-
 // confidence 复合标签分段呈现且不截断；完整原文保留在 title，便于追溯与对比。
 function renderConfidenceSegments(label = '') {
   const full = String(label ?? '');
@@ -107,11 +100,13 @@ function renderConfidenceSegments(label = '') {
 }
 
 function renderTechniqueBadges(row) {
-  const families = row.techniqueFamilies || [];
+  const families = mechanismFamiliesForRow(row)
+    .map((id) => MECHANISM_FAMILIES.find((family) => family.id === id))
+    .filter(Boolean);
   if (!families.length) return '<span class="annojoin-technique-empty">—</span>';
   const names = (row.techniqueNames || []).join(' · ');
   const badges = families
-    .map((fam) => `<span class="annojoin-family-badge annojoin-family-badge-${escapeHtml(fam)}">${escapeHtml(fam)}</span>`)
+    .map((family) => `<span class="annojoin-family-badge annojoin-family-badge-${escapeHtml(family.id)}">${escapeHtml(family.shortLabel)}</span>`)
     .join('');
   return `<span class="annojoin-technique-badges" title="${escapeHtml(names)}">${badges}</span>`;
 }
@@ -126,11 +121,11 @@ function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabe
     pdbId: row.pdbId || caseId
   });
   const values = {
-    pdbId: fieldLink(row, routeName, 'pdbId', escapeHtml(row.pdbId || caseId), preserved),
+    pdbId: escapeHtml(row.pdbId || caseId),
     moleculeName: `<a class="annojoin-field-link annojoin-molecule-detail-link" href="${escapeHtml(moleculeHref)}">${sourceValue(moleculeName(row), row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource)}</a>`,
-    confidenceDisplayLabel: fieldLink(row, routeName, 'confidenceDisplayLabel', renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution), preserved),
-    profileCount: fieldLink(row, routeName, 'profileCount', `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`, preserved),
-    chains: fieldLink(row, routeName, 'chains', escapeHtml((row.chains || []).join(', ') || 'not annotated'), preserved),
+    confidenceDisplayLabel: renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution),
+    profileCount: `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`,
+    chains: escapeHtml((row.chains || []).join(', ') || 'not annotated'),
     techniqueFamilies: renderTechniqueBadges(row)
   };
   return values[columnId] ?? escapeHtml(row[columnId] || '');
@@ -267,11 +262,7 @@ function renderSourceCaseLinks(row = {}) {
 }
 
 function renderEmptySidebar() {
-  return `<aside class="annojoin-detail-sidebar annojoin-detail-sidebar-empty" aria-label="ANNOJOIN field explanation">
-    <p class="technology-kicker">Field inspector</p>
-    <h2>Click a table field</h2>
-    <p>Confidence, PDB, profiles, and chains each open a focused explanation here. Click a molecule name to open its detail page.</p>
-  </aside>`;
+  return '';
 }
 
 function renderMoleculePanel(row, routeName) {
@@ -528,7 +519,7 @@ function renderFilterChip(removeKey, label) {
 }
 
 function renderTechniqueFilterControls(cases = [], filters = {}) {
-  const model = buildTechniqueFilterModel(cases);
+  const model = buildMechanismFilterModel(cases);
   if (!model.families.length) return '';
   const selectedFamilies = new Set(filters.techniqueFamilies || []);
   const selectedNames = new Set(filters.techniqueNames || []);
@@ -544,9 +535,8 @@ function renderTechniqueFilterControls(cases = [], filters = {}) {
         <summary>
           <span class="annojoin-technique-family-summary">
             <input type="checkbox" data-technique-family="${escapeHtml(family.id)}"${familyActive ? ' checked' : ''} />
-            <span class="annojoin-family-badge annojoin-family-badge-${escapeHtml(family.id)}">${escapeHtml(family.id)}</span>
-            <strong>Measurement family ${escapeHtml(family.id)}</strong>
-            <small>${escapeHtml(family.techniques.length)} techniques</small>
+            <span class="annojoin-family-badge annojoin-family-badge-${escapeHtml(family.id)}">${escapeHtml(family.shortLabel)}</span>
+            <strong>${escapeHtml(family.label)}</strong>
           </span>
         </summary>
         <div class="annojoin-technique-names">${techOptions}</div>
@@ -556,9 +546,9 @@ function renderTechniqueFilterControls(cases = [], filters = {}) {
     <div class="annojoin-technique-filter-heading">
       <div>
         <strong>Filter by probing technique</strong>
-        <span>Families describe what was measured, not evidence quality.</span>
+        <span>Families group methods by the chemical event they read out.</span>
       </div>
-      <span class="mini-note">Select a family to view its techniques</span>
+      <span class="mini-note">Select a family to view its methods</span>
     </div>
     <div class="annojoin-technique-family-list">${familyBlocks}</div>
   </section>`;
@@ -609,11 +599,6 @@ export function renderAnnojointAtlasPage({
   const preserved = buildPreservedParams(atlasState.filters || {}, page);
   const baseRows = searchActive ? searchAnnojointRows(sortedRows, query) : sortedRows;
   const groups = searchActive ? [] : buildAnnojointTableGroups(baseRows);
-  const detailKey = String(selectedCaseKey || selectedCaseId || '').toUpperCase();
-  const detailRow = detailKey
-    ? sortedRows.find((row) => rowCaseKey(row).toUpperCase() === detailKey || rowCaseId(row).toUpperCase() === detailKey)
-    : null;
-
   const searchModeNote = searchActive && baseRows.length
     ? `<section class="annojoin-search-mode-banner" role="status">
       <p class="annojoin-search-mode-note">Search results — grouping is paused. Clear the filter to return to grouped browsing.</p>
@@ -650,9 +635,8 @@ export function renderAnnojointAtlasPage({
   return `${headerHtml}
   <main class="page-annojoin-atlas page-annojoin-master-table">
     <section class="annojoin-table-heading">
-      <p class="technology-kicker">ANNOJOIN</p>
-      <h1>ANNOJOIN master table</h1>
-      <p class="pdb-case-lede">PDB-level browser table from <code>ANNOJOIN/anno_case_search_index.tsv</code>. Duplicate RMDB/RASP source cases are summarized into one PDB entry; profile count is not a representative profile, and confidence is a source-level summary.</p>
+      <h1>Entry table</h1>
+      <p class="pdb-case-lede">Browse RNA structures, probing profiles, and confidence summaries.</p>
     </section>
 
     <section class="annojoin-table-toolbar" aria-label="ANNOJOIN table controls">
@@ -693,7 +677,6 @@ export function renderAnnojointAtlasPage({
           <tbody>${tableBody}</tbody>
         </table>
       </div>
-      ${renderDetailSidebar({ row: detailRow, routeName, selectedField })}
     </section>
   </main>`;
 }

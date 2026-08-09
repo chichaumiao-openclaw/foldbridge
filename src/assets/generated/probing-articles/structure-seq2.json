@@ -1,13 +1,38 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "structure-seq2",
-  "title": "Structure-seq2: making the library and coverage of in vivo DMS cleaner",
+  "title": "Structure-seq2: Improved transcriptome-wide RNA structure mapping through optimized DMS probing and sequencing",
   "date": "",
-  "figure_count": 4,
+  "figure_count": 3,
   "rep_pmid": "28637286",
   "rep_pmcid": "PMC5737731",
   "rep_doi": "10.1093/nar/gkx533",
+  "key_innovation": "Compared with Structure-seq, Structure-seq2 improves sequencing quality by reducing ligation bias, removing unwanted by-products, and increasing signal sensitivity through optimized library preparation.",
   "asset_base": "./src/assets/generated/probing-articles/assets/structure-seq2",
+  "ppt_overview": [
+    {
+      "title": "How was Structure-seq optimized for improved RNA structure profiling?",
+      "srcBasename": "structureseq2_f1__PMC5737731__F1.jpg",
+      "alt": "Structure-seq2 library construction strategy",
+      "captionTitle": "Figure 1. Structure-seq2 library construction strategy.",
+      "text": "Structure-seq2 introduces improved adaptor ligation, purification strategies, and optional biotin-based enrichment to increase library quality and sequencing efficiency."
+    },
+    {
+      "title": "How does Structure-seq2 reduce sequencing bias?",
+      "srcBasename": "structureseq2_f2__PMC5737731__F2.jpg",
+      "alt": "Reduction of ligation bias in Structure-seq2",
+      "captionTitle": "Figure 2. Reduction of ligation bias in Structure-seq2.",
+      "text": "The optimized ligation strategy minimizes adaptor-related artifacts and improves nucleotide representation in sequencing libraries."
+    },
+    {
+      "title": "What biological insights can Structure-seq2 reveal?",
+      "srcBasename": "structureseq2_f3__PMC5737731__F3.jpg",
+      "alt": "Identification of RNA modifications and structural features",
+      "captionTitle": "Figure 3. Identification of RNA modifications and structural features.",
+      "text": "Structure-seq2 improves read coverage and enables detection of previously inaccessible RNA regions, including structured rRNA regions and nucleotide modifications."
+    }
+  ],
+  "body_start_heading": "A real case (illustrative)",
   "blocks": [
     {
       "type": "paragraph",

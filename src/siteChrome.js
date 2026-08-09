@@ -572,8 +572,9 @@ export function renderStatsPage(stats) {
   return `<section class="card bundle-wide-card stats-page" data-pdb-total="${Number(stats.pdb_total) || 0}">
       <header class="stats-head">
         <h1>Statistics</h1>
-        <p class="stats-lede">A build-time snapshot of what FoldBridge links: published structure entries, the chemical-probing
-          technologies behind them, and how the per-segment confidence calibration distributes across recall tiers.</p>
+        <p class="stats-lede">A build-time snapshot of what FoldBridge links: published structure entries,
+          the chemical-probing technologies behind them, and how the per-segment
+          confidence calibration distributes across recall tiers.</p>
       </header>
 
       <div class="stats-metric-grid">
@@ -586,13 +587,13 @@ export function renderStatsPage(stats) {
       </div>
       <p class="stats-footnote">An entry is a set of published PDB chains that share the same biological molecule name within one structure
         (${statsNumber(stats.probing_entries)} entries across ${statsNumber(stats.pdb_total)} structures); ${statsNumber(stats.strong_entries)} of the
-        high-confidence entries reach STRONG. Published PDB count is the build-time allowlist: only structures with generated detail-page
-        assets are counted. Source: ${prov.pdb_total || 'published allowlist'}.</p>
+        high-confidence entries reach STRONG. Published PDB count is the build-time allowlist: only structures with generated detail-page assets are counted.
+        Source: ${prov.pdb_total || 'published allowlist'}.</p>
 
       <div class="stats-section">
         <h2>LSS calibrated recall tiers</h2>
-        <p class="stats-section-lede">Each published entry that carries a localized-signal-support (LSS) calibration earns a recall
-          tier after a permutation test. Distribution across ${statsNumber(stats.lss_calibrated_entries ?? tierTotal)} calibrated entries:</p>
+        <p class="stats-section-lede">Each published entry that carries a localized-signal-support (LSS) calibration earns a recall tier after a permutation test.
+          Distribution across ${statsNumber(stats.lss_calibrated_entries ?? tierTotal)} calibrated entries:</p>
         ${renderStatsTierChart(tier)}
         <p class="stats-footnote">Source: ${prov.tier || 'per-entry LSS recall tier from confidenceDisplayLabel'}.</p>
       </div>
@@ -655,7 +656,6 @@ export function renderProbingFamilyIndex(families) {
     const isCleavageFamily = fam.id === 'in-cell-shape';
     const isNucleotideFamily = fam.id === 'footprinting';
     const isInteractionFamily = fam.id === 'carbodiimide-special';
-    const isNamedMethodFamily = isDmsFamily || isShapeFamily || isCleavageFamily || isNucleotideFamily || isInteractionFamily;
     const title = isDmsFamily
       ? 'DMS-based methods'
       : (isShapeFamily
@@ -665,44 +665,15 @@ export function renderProbingFamilyIndex(families) {
           : (isNucleotideFamily
             ? 'Nucleotide-specific chemical probing methods'
             : (isInteractionFamily ? 'RNA–RNA interaction mapping methods' : fam.title))));
-    const familyMethods = isDmsFamily
-      ? [
-          'DMS',
-          'DMS-seq',
-          'Structure-seq',
-          'Structure-seq2',
-          'Mod-seq',
-          'DMS-MaPseq',
-          'DIM-2P-seq'
-        ]
-      : (isShapeFamily
-        ? ['SHAPE', 'SHAPE-Seq', 'SHAPE-MaP', 'icSHAPE', 'icSHAPE-MaP', 'NAI-MaP', 'smartSHAPE']
-        : (isCleavageFamily
-          ? ['PARS', 'PARTE', 'HRF-seq']
-          : (isNucleotideFamily
-            ? ['Keth-seq', 'EDC probing', 'LASER-seq']
-            : (isInteractionFamily ? ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES'] : []))));
-    const count = isNamedMethodFamily ? familyMethods.length : (Array.isArray(fam.articles) ? fam.articles.length : 0);
-    const methodList = isNamedMethodFamily
-      ? `<div class="probing-family-methods" aria-label="${escapeProbingHtml(title)}">
-          <span class="probing-family-methods-label">Methods</span>
-          <div class="probing-family-method-list">
-            ${familyMethods.map((method) => `<span class="probing-family-method-tag">${escapeProbingHtml(method)}</span>`).join('')}
-          </div>
-        </div>`
-      : '';
     return `<a class="probing-family-card" href="#probing-family-${id}" data-probing-family-link="${id}">
         <h3 class="probing-family-card-title">${escapeProbingHtml(title)}</h3>
         <p class="probing-family-card-summary">${escapeProbingHtml(fam.summary)}</p>
-        ${methodList}
-        <span class="probing-family-card-count">${count} ${isNamedMethodFamily ? 'methods' : (count === 1 ? 'article' : 'articles')}</span>
       </a>`;
   }).join('');
   return `<section class="card bundle-wide-card probing-family-index" aria-label="Probing mechanism families">
       <div class="probing-hub-heading">
         <p class="technology-kicker">browse by mechanism</p>
         <h2>${visibleFamilies.length} mechanism families</h2>
-        <p>Each family groups methods by the chemical event they read out. Open a family to jump into its explainers.</p>
       </div>
       <div class="probing-family-grid">${cards}</div>
     </section>`;

@@ -1,13 +1,45 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "structure-seq",
-  "title": "Structure-seq: taking DMS to the whole transcriptome in living cells",
+  "title": "Structure-seq: In vivo transcriptome-wide RNA structure profiling using DMS",
   "date": "",
-  "figure_count": 3,
+  "figure_count": 4,
   "rep_pmid": "24270811",
   "rep_pmcid": "",
   "rep_doi": "10.1038/nature12756",
+  "key_innovation": "Compared with DMS-seq, Structure-seq introduces an optimized experimental and computational workflow for in vivo DMS probing, enabling robust transcriptome-wide RNA structure profiling in living cells.",
   "asset_base": "./src/assets/generated/probing-articles/assets/structure-seq",
+  "ppt_overview": [
+    {
+      "title": "How does Structure-seq convert DMS modification into sequencing signals?",
+      "srcBasename": "structureseq_workflow_figure1.png",
+      "alt": "Principle of Structure-seq library construction",
+      "captionTitle": "Figure 1. Principle of Structure-seq library construction.",
+      "text": "Structure-seq couples DMS chemical probing with next-generation sequencing to measure RNA accessibility in vivo. Arabidopsis seedlings are treated with DMS, which modifies exposed adenine and cytosine residues. Reverse transcription generates cDNA fragments that terminate one nucleotide upstream of DMS-modified sites. These RT-stop products are converted into sequencing libraries using adaptor ligation and PCR amplification. A matched untreated control library is generated in parallel, allowing DMS-dependent RT stops to be identified after normalization and subtraction."
+    },
+    {
+      "title": "How accurately does Structure-seq reproduce known RNA structures?",
+      "srcBasename": "structureseq_figure2.png",
+      "alt": "Structure-seq reproduces known RNA structures",
+      "captionTitle": "Figure 2. Structure-seq accurately reproduces known RNA structures.",
+      "text": "Structure-seq DMS reactivity profiles were mapped onto the known secondary structure of Arabidopsis 18S rRNA and compared with conventional gel-based DMS probing. The high correlation between sequencing-based and traditional measurements demonstrates that Structure-seq accurately identifies nucleotide accessibility and recapitulates established RNA structural features."
+    },
+    {
+      "title": "What RNA structures are associated with translation, alternative polyadenylation, and splicing?",
+      "srcBasename": "structureseq_figure3.png",
+      "alt": "RNA structures associated with translation, alternative polyadenylation, and splicing",
+      "captionTitle": "Figure 3. RNA structures associated with translation, alternative polyadenylation, and splicing.",
+      "text": "Genome-wide Structure-seq profiles reveal distinct RNA structural patterns associated with biological processes. Differential DMS reactivity patterns identify periodic RNA structures within coding regions of efficiently translated mRNAs, structural changes around alternative polyadenylation sites, and differences between spliced and unspliced transcripts."
+    },
+    {
+      "title": "What does global Structure-seq profiling reveal across thousands of mRNAs?",
+      "srcBasename": "structureseq_figure4.png",
+      "alt": "Global RNA structural profiling across thousands of mRNAs",
+      "captionTitle": "Figure 4. Global RNA structural profiling across thousands of mRNAs.",
+      "text": "Structure-seq generated nucleotide-resolution DMS reactivity maps for 10,623 Arabidopsis mRNAs. Comparison between experimentally constrained structures and computational predictions revealed extensive differences between predicted and in vivo RNA structures. Transcripts with distinct structural features showed enrichment for different biological functions, demonstrating that RNA folding landscapes are shaped by cellular context."
+    }
+  ],
+  "body_start_heading": "A real case (illustrative)",
   "blocks": [
     {
       "type": "paragraph",

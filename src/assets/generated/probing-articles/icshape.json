@@ -1,13 +1,45 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "icshape",
-  "title": "icSHAPE: reading the accessibility of 2′-OH in living cells",
+  "title": "icSHAPE: In vivo transcriptome-wide RNA structure profiling using selective 2′-hydroxyl acylation",
   "date": "",
   "figure_count": 4,
   "rep_pmid": "25799993",
   "rep_pmcid": "PMC4376618",
   "rep_doi": "10.1038/nature14263",
   "asset_base": "./src/assets/generated/probing-articles/assets/icshape",
+  "key_innovation": "Compared with conventional SHAPE approaches, icSHAPE introduces an in vivo compatible NAI-N3 chemical probe with biotin-based enrichment, enabling transcriptome-wide mapping of RNA structures inside living cells at single-nucleotide resolution.",
+  "body_start_heading": "A real case: how an icSHAPE profile flows through three layers (illustrative)",
+  "ppt_overview": [
+    {
+      "title": "How does icSHAPE measure RNA structures inside living cells?",
+      "srcBasename": "icshape_figure1.png",
+      "alt": "Principle and workflow of icSHAPE modification and sequencing",
+      "captionTitle": "Figure 1. Principle and workflow of icSHAPE modification and sequencing.",
+      "text": "icSHAPE uses the NAI-N3 reagent to selectively acylate flexible RNA nucleotides in living cells. Modified RNAs are enriched through biotin–streptavidin purification and converted into sequencing libraries to generate transcriptome-wide RNA structural profiles."
+    },
+    {
+      "title": "How does icSHAPE reveal transcriptome-wide RNA structural landscapes?",
+      "srcBasename": "icshape_figure2.png",
+      "alt": "Transcriptome-wide RNA structure profiling by icSHAPE",
+      "captionTitle": "Figure 2. Transcriptome-wide RNA structure profiling by icSHAPE.",
+      "text": "icSHAPE generates nucleotide-resolution structural profiles across cellular RNAs. Reactivity patterns reveal differential RNA accessibility between in vivo and in vitro conditions, reflecting cellular RNA folding environments."
+    },
+    {
+      "title": "How can icSHAPE identify RNA regulatory structures?",
+      "srcBasename": "icshape_figure3.png",
+      "alt": "Structural features associated with translation and RNA regulation",
+      "captionTitle": "Figure 3. Structural features associated with translation and RNA regulation.",
+      "text": "icSHAPE profiles reveal structural signatures associated with translation initiation, ribosome interactions, and regulatory RNA elements, demonstrating the biological applications of in vivo RNA structure mapping."
+    },
+    {
+      "title": "How can icSHAPE detect dynamic RNA structural changes?",
+      "srcBasename": "icshape_figure4.png",
+      "alt": "Differential icSHAPE analysis reveals RNA structural remodeling",
+      "captionTitle": "Figure 4. Differential icSHAPE analysis reveals RNA structural remodeling.",
+      "text": "Comparing icSHAPE profiles under different cellular conditions reveals structural rearrangements caused by RNA-binding proteins and RNA modifications."
+    }
+  ],
   "blocks": [
     {
       "type": "paragraph",

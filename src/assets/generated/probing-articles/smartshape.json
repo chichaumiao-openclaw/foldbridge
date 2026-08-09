@@ -1,13 +1,45 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "smartshape",
-  "title": "smartSHAPE: reading 2′-OH flexibility in living cells with very little starting material",
+  "title": "SmartSHAPE: Ultra-low-input SHAPE profiling for transcriptome-wide RNA structure analysis",
   "date": "",
   "figure_count": 4,
   "rep_pmid": "38933905",
   "rep_pmcid": "PMC11197792",
   "rep_doi": "10.1016/j.fmre.2021.12.007",
   "asset_base": "./src/assets/generated/probing-articles/assets/smartshape",
+  "key_innovation": "Compared with conventional SHAPE-based transcriptome profiling, smartSHAPE improves library preparation efficiency and reduces input requirements, enabling global RNA structure mapping from limited biological samples.",
+  "body_start_heading": "A real example: how a smartSHAPE profile flows through three layers (illustrative)",
+  "ppt_overview": [
+    {
+      "title": "How does smartSHAPE enable RNA structure profiling from low-input samples?",
+      "srcBasename": "smartshape_figure1.png",
+      "alt": "Overview of the smartSHAPE experimental workflow",
+      "captionTitle": "Figure 1. Overview of the smartSHAPE experimental workflow",
+      "text": "smartSHAPE integrates optimized SHAPE chemistry with improved sequencing library preparation to achieve transcriptome-wide RNA structure profiling using substantially reduced RNA input."
+    },
+    {
+      "title": "How does smartSHAPE improve probing sensitivity?",
+      "srcBasename": "smartshape_figure2.png",
+      "alt": "Enhanced signal quality and reduced background in smartSHAPE datasets",
+      "captionTitle": "Figure 2. Enhanced signal quality and reduced background in smartSHAPE datasets",
+      "text": "Benchmarking experiments demonstrate that smartSHAPE produces higher-quality structural profiles with improved signal-to-noise ratios compared with conventional SHAPE approaches."
+    },
+    {
+      "title": "Can smartSHAPE measure RNA structures genome-wide?",
+      "srcBasename": "smartshape_figure3.png",
+      "alt": "Transcriptome-wide RNA structure landscape revealed by smartSHAPE",
+      "captionTitle": "Figure 3. Transcriptome-wide RNA structure landscape revealed by smartSHAPE",
+      "text": "smartSHAPE enables global profiling of RNA structural accessibility across cellular transcripts, providing nucleotide-resolution structural information from limited samples."
+    },
+    {
+      "title": "What biological regulation can be uncovered by smartSHAPE?",
+      "srcBasename": "smartshape_figure4.png",
+      "alt": "Identification of RNA structural regulation mediated by Regnase-1",
+      "captionTitle": "Figure 4. Identification of RNA structural regulation mediated by Regnase-1",
+      "text": "Application of smartSHAPE identifies RNA structural changes associated with Regnase-1-mediated regulation, demonstrating its capability for studying RNA structure–function relationships."
+    }
+  ],
   "blocks": [
     {
       "type": "paragraph",

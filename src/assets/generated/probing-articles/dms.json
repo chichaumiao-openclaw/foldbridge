@@ -1,13 +1,31 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "dms",
-  "title": "Why DMS can only seriously interpret A/C",
+  "title": "DMS: Chemical probing of DMS-seq RNA secondary structures through selective base modification",
   "date": "",
-  "figure_count": 4,
+  "figure_count": 2,
   "rep_pmid": "17948004",
   "rep_pmcid": "PMC2701642",
   "rep_doi": "10.1038/nprot.2007.380",
+  "key_innovation": "Compared with classical RNA structure analysis methods, DMS probing provides nucleotide-resolution structural information by selectively methylating the Watson–Crick faces of adenine and cytosine, allowing RNA base-pairing accessibility to be monitored through reverse transcription.",
   "asset_base": "./src/assets/generated/probing-articles/assets/dms",
+  "body_start_heading": "A real case: 5GAG / SRPECLI_DMS_0001",
+  "ppt_overview": [
+    {
+      "title": "How does DMS probing work?",
+      "srcBasename": "dms_principle_figure1.png",
+      "alt": "Principle of DMS probing",
+      "captionTitle": "Figure 1. Principle of DMS Probing.",
+      "text": "DMS selectively methylates the Watson–Crick faces of adenine (N1) and cytosine (N3). During reverse transcription, the enzyme terminates one nucleotide upstream of the modified nucleotide, generating cDNA fragments of different lengths. These fragments are separated by denaturing PAGE and aligned with sequencing ladders to identify modified nucleotides. DMS probing is typically performed under single-hit conditions, so band intensity reflects nucleotide accessibility."
+    },
+    {
+      "title": "How can DMS probing monitor RNA folding and molecular interactions?",
+      "srcBasename": "dms_rna_folding_figure2.png",
+      "alt": "DMS footprinting monitors RNA folding and molecular interactions",
+      "captionTitle": "Figure 2. Monitoring RNA folding by DMS footprinting.",
+      "text": "DMS modification patterns change when RNA adopts different conformations or interacts with proteins. Protection indicates reduced accessibility caused by base pairing or molecular contacts, whereas enhanced modification reflects increased exposure during structural rearrangement."
+    }
+  ],
   "blocks": [
     {
       "type": "paragraph",
@@ -23,7 +41,7 @@
     },
     {
       "type": "heading",
-      "text": "Traditional DMS footprinting: reading protection and accessibility"
+      "text": "How does DMS probing work?"
     },
     {
       "type": "figure",
@@ -41,6 +59,27 @@
       "doi": "10.1038/nprot.2007.380",
       "figureId": "F1",
       "legendText": "a, The modifications detected by this method are methylation at N1 of adenine and N3 of cytosine, as indicated in yellow. b, Primer extension. The DMS modification reaction is carried out under limiting conditions so that each molecule has no more than an average of one detectable modification. Reverse transcription is illustrated (product in green) proceeding from a radiolabeled primer (blue line) until it is blocked at a position one nucleotide upstream from a methylated A or C nucleotide. This reaction on a population of modified RNAs generates a family of radiolabeled products whose lengths are determined by the positions of modifications, and the proportions of these different products reflect the extents of modification at each position. c, PAGE analysis of reverse transcription products. Sequencing lanes at the left are used to determine the position of modification for each experimental band. To the left and right of the gel is shown the sequence of the RNA, as determined from the sequencing reactions. The four lanes at the right show expected results from the experimental lanes. The lane illustrating a reaction that was not treated with DMS (the ‘No DMS’ lane) displays several bands, which is a typical result. These are DMS-independent positions of reverse transcriptase stopping or pausing. In contrast, the bands that are enriched in the DMS treated samples (‘Unfolded’, ‘Folded’, and ‘+ protein’) reflect DMS modification. Note that these bands are one position lower on the gel than A and C nucleotides as determined in the sequencing lanes. This is because reverse transcriptase is blocked one position upstream from the modified position. Nucleotides that give changes in extent of modification upon folding or protein binding are indicated with asterisks and ‘P’ for protection or ‘E’ for enhancement."
+    },
+    {
+      "type": "heading",
+      "text": "How can DMS probing monitor RNA folding and molecular interactions?"
+    },
+    {
+      "type": "paragraph",
+      "text": "DMS modification patterns change when RNA adopts different conformations or interacts with proteins. Protection indicates reduced accessibility caused by base pairing or molecular contacts, whereas enhanced modification reflects increased exposure during structural rearrangement."
+    },
+    {
+      "type": "figure",
+      "anchor": "slide-figure-dms-rna-folding",
+      "alt": "DMS footprinting monitors RNA folding and molecular interactions",
+      "srcBasename": "dms_rna_folding_figure2.png",
+      "legend": "**Figure 2. Monitoring RNA folding by DMS footprinting.** DMS modification patterns change when RNA adopts different conformations or interacts with proteins. Protection indicates reduced accessibility caused by base pairing or molecular contacts, whereas enhanced modification reflects increased exposure during structural rearrangement.",
+      "label": "DMS RNA folding and molecular interactions",
+      "pmid": "17948004",
+      "pmcid": "PMC2701642",
+      "doi": "10.1038/nprot.2007.380",
+      "figureId": "F4",
+      "legendText": "Quantitative analysis of DMS footprinting to monitor RNA folding."
     },
     {
       "type": "heading",

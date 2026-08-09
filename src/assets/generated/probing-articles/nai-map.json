@@ -1,13 +1,45 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "nai-map",
-  "title": "NAI-MaP: reading the acylation adduct as a sequencing mutation, reporting 2′-OH accessibility",
+  "title": "NAI-MaP: NAI-based mutational profiling for nucleotide-resolution RNA structure probing",
   "date": "",
   "figure_count": 4,
-  "rep_pmid": "30926818",
-  "rep_pmcid": "PMC6441010",
-  "rep_doi": "10.1038/s41467-019-09391-8",
+  "rep_pmid": "26426499",
+  "rep_pmcid": "PMC4900152",
+  "rep_doi": "10.1038/nprot.2015.103",
   "asset_base": "./src/assets/generated/probing-articles/assets/nai-map",
+  "key_innovation": "Compared with traditional SHAPE methods that rely on reverse-transcription stops, NAI-MaP converts NAI-induced RNA modifications into mutation signatures, enabling quantitative structure probing through sequencing-based mutational profiling.",
+  "body_start_heading": "A real case: how a NAI-MaP profile flows through three layers (illustrative)",
+  "ppt_overview": [
+    {
+      "title": "How does NAI-MaP convert RNA modifications into mutation signals?",
+      "srcBasename": "naimap_figure1.png",
+      "alt": "Principle of NAI-MaP mutational profiling",
+      "captionTitle": "Figure 1. Principle of NAI-MaP mutational profiling",
+      "text": "NAI modifies flexible RNA nucleotides through 2′-hydroxyl acylation. During reverse transcription, modified nucleotides are bypassed and recorded as mutations in cDNA. Sequencing-based mutation counting generates nucleotide-resolution RNA structural reactivity profiles."
+    },
+    {
+      "title": "Why does mutation-based readout improve RNA structure probing?",
+      "srcBasename": "naimap_figure2.png",
+      "alt": "Mutation profiling provides quantitative SHAPE reactivity measurements",
+      "captionTitle": "Figure 2. Mutation profiling provides quantitative SHAPE reactivity measurements",
+      "text": "Unlike conventional RT-stop approaches, MaP detects chemical modifications as mutations distributed throughout cDNA molecules, improving signal retention and allowing quantitative measurement of RNA structural dynamics."
+    },
+    {
+      "title": "How can NAI-MaP improve RNA structure modeling?",
+      "srcBasename": "naimap_figure3.png",
+      "alt": "Structure prediction guided by mutation-derived reactivities",
+      "captionTitle": "Figure 3. Structure prediction guided by mutation-derived reactivities",
+      "text": "NAI-MaP-derived reactivity profiles can be incorporated into RNA secondary structure prediction algorithms, improving structural models compared with sequence-only prediction."
+    },
+    {
+      "title": "What biological information can NAI-MaP reveal?",
+      "srcBasename": "naimap_figure4.png",
+      "alt": "Mapping RNA structural landscapes in complex biological systems",
+      "captionTitle": "Figure 4. Mapping RNA structural landscapes in complex biological systems",
+      "text": "NAI-MaP enables structural analysis of long and complex RNAs by capturing heterogeneous conformational states that are difficult to resolve using traditional probing approaches."
+    }
+  ],
   "blocks": [
     {
       "type": "paragraph",

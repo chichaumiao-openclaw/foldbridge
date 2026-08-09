@@ -1,13 +1,38 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "dms-seq",
-  "title": "DMS-seq: seeing RNA active unfolding in living cells",
+  "title": "DMS-seq: Transcriptome-wide RNA structure profiling by coupling DMS modification with sequencing",
   "date": "",
-  "figure_count": 4,
+  "figure_count": 3,
   "rep_pmid": "24336214",
   "rep_pmcid": "PMC3966492",
   "rep_doi": "10.1038/nature12894",
+  "key_innovation": "Compared with classical DMS probing, DMS-seq couples DMS chemistry with next-generation sequencing, enabling transcriptome-wide measurement of RNA structure at single-nucleotide resolution.",
   "asset_base": "./src/assets/generated/probing-articles/assets/dms-seq",
+  "ppt_overview": [
+    {
+      "title": "How does DMS-seq convert chemical modifications into genome-wide structural maps?",
+      "srcBasename": "dmsseq_f1__PMC3966492__F1.jpg",
+      "alt": "Workflow of DMS-seq",
+      "captionTitle": "Figure 1. Workflow of DMS-seq.",
+      "text": "DMS-treated RNA is fragmented and converted into sequencing libraries. Reverse transcriptase stops one nucleotide upstream of DMS-modified A and C residues, and the resulting cDNA 5′ ends are mapped to identify modification sites across the transcriptome."
+    },
+    {
+      "title": "What structural information can DMS-seq reveal in vivo?",
+      "srcBasename": "dmsseq_f2__PMC3966492__F2.jpg",
+      "alt": "DMS-seq structural accessibility patterns in vivo",
+      "captionTitle": "Figure 2. Genome-wide DMS reactivity profiles.",
+      "text": "DMS-seq identifies nucleotide-resolution structural accessibility patterns across cellular RNAs and reveals regions protected by RNA folding or cellular interactions."
+    },
+    {
+      "title": "How can DMS-seq data reveal RNA structural landscapes?",
+      "srcBasename": "dmsseq_f3__PMC3966492__F3.jpg",
+      "alt": "Transcriptome-wide RNA structure analysis using DMS-seq",
+      "captionTitle": "Figure 3. Transcriptome-wide RNA structure analysis using DMS-seq.",
+      "text": "Genome-wide DMS reactivity maps reveal that cellular RNAs contain dynamic structures that differ from predictions based only on naked RNA folding."
+    }
+  ],
+  "body_start_heading": "A real case (illustrative)",
   "blocks": [
     {
       "type": "paragraph",

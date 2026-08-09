@@ -61,6 +61,9 @@ a { color: inherit; }
   grid-template-columns: minmax(0, 1fr);
   gap: 20px;
 }
+.layout > aside.panel {
+  display: none;
+}
 .panel {
   padding: 18px;
 }
@@ -507,7 +510,7 @@ a { color: inherit; }
 .fb-evtable summary {
   cursor: pointer;
   font-weight: 600;
-  color: #2f8f6b;
+  color: #AA7A38;
   font-size: 14px;
   padding: 8px 0;
 }
@@ -547,4 +550,3 @@ a { color: inherit; }
   font-size: 11px;
 }
 /* FB-ENRICH-END */
-

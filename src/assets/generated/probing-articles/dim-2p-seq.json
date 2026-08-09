@@ -1,13 +1,38 @@
 {
   "schema_version": "probing-articles.v1",
   "slug": "dim-2p-seq",
-  "title": "DIM-2P-seq: reading mRNA 3' end structure in living cells, where the chemical boundary is still A/C",
+  "title": "DIM-2P-seq: Mapping mRNA 3′-end RNA structures and their regulatory roles in polyadenylation",
   "date": "",
-  "figure_count": 4,
+  "figure_count": 3,
   "rep_pmid": "28525757",
   "rep_pmcid": "PMC5546744",
   "rep_doi": "10.1016/j.cell.2017.04.036",
   "asset_base": "./src/assets/generated/probing-articles/assets/dim-2p-seq",
+  "key_innovation": "Compared with conventional DMS probing methods, DIM-2P-seq uses an optimized DMS analogue to quantitatively profile intracellular RNA structures, enabling transcriptome-wide analysis of mRNA 3′-end folding and its functional impact on poly(A)-site selection.",
+  "body_start_heading": "A real example (illustrative)",
+  "ppt_overview": [
+    {
+      "title": "How does DIM-2P-seq measure RNA structures at mRNA 3′ ends?",
+      "srcBasename": "dim2pseq_figure1.png",
+      "alt": "DIM-2P-seq workflow and structural mapping around polyadenylation sites",
+      "captionTitle": "Figure 1. DIM-2P-seq workflow and structural mapping around polyadenylation sites.",
+      "text": "DIM-2P-seq applies intracellular DMS probing to polyadenylated transcripts and detects RNA structural accessibility within mRNA 3′-terminal regions. DMS selectively modifies exposed adenine and cytosine residues, and reverse transcription introduces mutation signatures that are quantified by sequencing. The resulting nucleotide-resolution profiles reveal RNA structural patterns surrounding endogenous poly(A) sites."
+    },
+    {
+      "title": "How does DIM-2P-seq demonstrate that RNA structures regulate poly(A)-site selection?",
+      "srcBasename": "dim2pseq_figure2.png",
+      "alt": "RNA structure controls poly(A)-site selection",
+      "captionTitle": "Figure 2. RNA structure controls poly(A)-site selection.",
+      "text": "DIM-2P-seq-guided analyses identified conserved RNA structures near polyadenylation sites. Mutational perturbation of CENPB 3′-end structures altered poly(A)-site usage, whereas compensatory mutations restoring base pairing rescued processing efficiency. These results establish a causal relationship between RNA folding and 3′-end processing."
+    },
+    {
+      "title": "Can DIM-2P-seq identify functional RNA structures in endogenous transcripts?",
+      "srcBasename": "dim2pseq_figure3.png",
+      "alt": "Functional RNA structures revealed by DIM-2P-seq",
+      "captionTitle": "Figure 3. Functional RNA structures revealed by DIM-2P-seq.",
+      "text": "DIM-2P-seq profiling identified structured regions in endogenous transcripts, including TFE3 and ILVBL 3′-end regions. Mutational analyses confirmed that these structures influence poly(A)-site selection, demonstrating that endogenous RNA folding landscapes contribute to gene regulation."
+    }
+  ],
   "blocks": [
     {
       "type": "paragraph",
