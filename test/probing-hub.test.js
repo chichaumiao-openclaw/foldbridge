@@ -3,8 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {
   renderProbingFamilyIndex,
-  renderProbingTechTable,
-  renderProbingGlossary
+  renderProbingTechTable
 } from '../src/siteChrome.js';
 
 const registry = JSON.parse(
@@ -18,9 +17,11 @@ const articlesIndex = JSON.parse(
 
 test('family index renders a card per mechanism family with titles', () => {
   const html = renderProbingFamilyIndex(articlesIndex.families);
+  assert.doesNotMatch(html, /browse by mechanism/i);
   assert.match(html, /DMS-based methods/);
   assert.match(html, /SHAPE-based methods/);
   assert.match(html, /RNA–RNA interaction mapping methods/);
+  assert.match(html, /Crosslinking and proximity ligation capture RNA–RNA contacts and higher-order RNA organization\./);
   assert.doesNotMatch(html, /Mutational \/ proximity inference/);
   // 5 visible families; inference is intentionally omitted.
   assert.equal((html.match(/data-probing-family-link=/g) || []).length, 5);
@@ -92,30 +93,4 @@ test('tech table empty input returns a degraded shell, not a throw', () => {
   assert.equal(typeof html, 'string');
   assert.match(html, /probing-tech-table/);
   assert.doesNotMatch(html, /data-tech-row/);
-});
-
-// ---- renderProbingGlossary ----
-
-const SAMPLE_TERMS = [
-  { term: 'WC-face', definition: 'The Watson-Crick edge of a base where pairing hydrogen bonds form.' },
-  { term: 'SHAPE', definition: 'Acylation of the ribose 2′-OH that reads backbone flexibility.' },
-  { term: 'SASA', definition: 'Solvent-accessible surface area of a residue.' },
-  { term: 'paired_state', definition: 'Whether a nucleotide is paired or unpaired in the reference structure.' },
-  { term: 'tier', definition: 'Confidence tier assigned to a linked-structure claim.' },
-  { term: 'reactivity', definition: 'The per-nucleotide probing signal magnitude.' }
-];
-
-test('glossary renders one entry per term with definitions', () => {
-  const html = renderProbingGlossary(SAMPLE_TERMS);
-  assert.match(html, /WC-face/);
-  assert.match(html, /paired_state/);
-  assert.match(html, /Solvent-accessible surface area/);
-  assert.equal((html.match(/probing-glossary-term/g) || []).length, 6);
-});
-
-test('glossary empty input returns a degraded shell, not a throw', () => {
-  const html = renderProbingGlossary([]);
-  assert.equal(typeof html, 'string');
-  assert.match(html, /probing-glossary/);
-  assert.doesNotMatch(html, /probing-glossary-term/);
 });

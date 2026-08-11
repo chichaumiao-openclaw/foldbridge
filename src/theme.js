@@ -38,7 +38,7 @@ export const themeTokens = {
       primarySoft: '#DBEAFE',
       accent: '#0891B2',
       accentSoft: '#CFFAFE',
-      border: '#D7E2F2'
+      border: 'rgba(224, 174, 36, 0.68)'
     },
     dark: {
       primary: '#93C5FD',
@@ -46,7 +46,7 @@ export const themeTokens = {
       primarySoft: 'rgba(147, 197, 253, 0.14)',
       accent: '#67E8F9',
       accentSoft: '#164E63',
-      border: '#26364D'
+      border: 'rgba(224, 174, 36, 0.68)'
     }
   },
   riboswitch: {
@@ -57,7 +57,7 @@ export const themeTokens = {
       primarySoft: '#E4EFE8',
       accent: '#2F8F6B',
       accentSoft: '#C7E36B',
-      border: '#D6E0D8'
+      border: 'rgba(224, 174, 36, 0.68)'
     },
     dark: {
       primary: '#7dd4aa',
@@ -65,7 +65,7 @@ export const themeTokens = {
       primarySoft: 'rgba(125, 212, 170, 0.14)',
       accent: '#63cfa0',
       accentSoft: '#d9e99d',
-      border: '#2c3a34'
+      border: 'rgba(224, 174, 36, 0.68)'
     }
   },
   aptamer: {
@@ -76,7 +76,7 @@ export const themeTokens = {
       primarySoft: '#EDE9FE',
       accent: '#C026D3',
       accentSoft: '#FAE8FF',
-      border: '#DDD6FE'
+      border: 'rgba(224, 174, 36, 0.68)'
     },
     dark: {
       primary: '#C4B5FD',
@@ -84,7 +84,7 @@ export const themeTokens = {
       primarySoft: 'rgba(196, 181, 253, 0.14)',
       accent: '#F0ABFC',
       accentSoft: '#581C87',
-      border: '#3B315A'
+      border: 'rgba(224, 174, 36, 0.68)'
     }
   }
 };

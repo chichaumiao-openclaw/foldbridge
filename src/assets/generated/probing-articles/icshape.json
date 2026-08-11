@@ -8,6 +8,16 @@
   "rep_pmcid": "PMC4376618",
   "rep_doi": "10.1038/nature14263",
   "asset_base": "./src/assets/generated/probing-articles/assets/icshape",
+  "sibling_navigation": {
+    "previous": {
+      "slug": "shape-map",
+      "title": "SHAPE-MaP"
+    },
+    "next": {
+      "slug": "icshape-map",
+      "title": "icSHAPE-MaP"
+    }
+  },
   "key_innovation": "Compared with conventional SHAPE approaches, icSHAPE introduces an in vivo compatible NAI-N3 chemical probe with biotin-based enrichment, enabling transcriptome-wide mapping of RNA structures inside living cells at single-nucleotide resolution.",
   "body_start_heading": "A real case: how an icSHAPE profile flows through three layers (illustrative)",
   "ppt_overview": [

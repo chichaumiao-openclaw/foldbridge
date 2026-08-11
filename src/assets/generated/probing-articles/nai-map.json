@@ -8,6 +8,16 @@
   "rep_pmcid": "PMC4900152",
   "rep_doi": "10.1038/nprot.2015.103",
   "asset_base": "./src/assets/generated/probing-articles/assets/nai-map",
+  "sibling_navigation": {
+    "previous": {
+      "slug": "icshape-map",
+      "title": "icSHAPE-MaP"
+    },
+    "next": {
+      "slug": "smartshape",
+      "title": "SmartSHAPE"
+    }
+  },
   "key_innovation": "Compared with traditional SHAPE methods that rely on reverse-transcription stops, NAI-MaP converts NAI-induced RNA modifications into mutation signatures, enabling quantitative structure probing through sequencing-based mutational profiling.",
   "body_start_heading": "A real case: how a NAI-MaP profile flows through three layers (illustrative)",
   "ppt_overview": [

@@ -322,6 +322,22 @@ test('normalizeCase passes through chainPlacements', () => {
   ]);
 });
 
+test('uses the curated preQ₁ aptamer name for the 2L1V display row', () => {
+  const state = buildAtlasSearchState({
+    displayCases: [{
+      atlasCaseKey: 'PDB:2L1V',
+      caseId: '2L1V',
+      pdbId: '2L1V',
+      biologicalMoleculeName: '36-MER',
+      pdbMoleculeName: '36-MER'
+    }]
+  });
+  const row = state.cases.find((entry) => entry.pdbId === '2L1V');
+
+  assert.equal(row.moleculeDisplayName, 'preQ₁ riboswitch aptamer domain (36 nt)');
+  assert.match(row.searchText, /preQ₁ riboswitch aptamer domain/);
+});
+
 test('atlas search state prefers PDB-level display cases while preserving source case counts', () => {
   const state = buildAtlasSearchState({
     cases: [
@@ -1160,6 +1176,13 @@ test('atlas table puts Molecule name column before PDB column', () => {
   const pdbIdx = html.indexOf('<th>PDB');
   assert.ok(molIdx > -1 && pdbIdx > -1, 'both headers present');
   assert.ok(molIdx < pdbIdx, 'Molecule name header comes before PDB header');
+});
+
+test('atlas table links each PDB ID directly to its RCSB structure page', () => {
+  const state = buildAtlasSearchState(fixtures, {});
+  const html = renderAnnojointAtlasPage({ state });
+  assert.match(html, /class="annojoin-pdb-link" href="https:\/\/www\.rcsb\.org\/structure\/10ZT"/);
+  assert.match(html, /target="_blank" rel="noopener noreferrer">10ZT<\/a>/);
 });
 
 test('normalizeCase passes through techniqueFamilies and techniqueNames', () => {

@@ -8,6 +8,12 @@
   "rep_pmcid": "PMC7784297",
   "rep_doi": "10.1186/s13059-020-02236-4",
   "asset_base": "./src/assets/generated/probing-articles/assets/nuc-shape-structure-seq",
+  "sibling_navigation": {
+    "next": {
+      "slug": "cotranscriptional-shape-seq",
+      "title": "Cotranscriptional SHAPE-seq"
+    }
+  },
   "blocks": [
     {
       "type": "paragraph",

@@ -4,12 +4,24 @@
 
 const PRIMARY_NAV_ITEMS = [
   { route: 'home', label: 'Home', activeRoutes: ['home'] },
-  { route: 'entry', label: 'Entry', activeRoutes: ['entry', 'sequence', 'download-sequences'] },
+  {
+    route: 'entry',
+    label: 'Entry',
+    activeRoutes: [
+      'entry',
+      'sequence',
+      'download-sequences',
+      'pdb-case',
+      'annojoin-atlas',
+      'annojoin-case',
+      'annojoin-confidence'
+    ]
+  },
   { route: 'search', label: 'Search', activeRoutes: ['search'] },
   { route: 'probing', label: 'Probing', activeRoutes: ['probing', 'detail'] },
   { route: 'stats', label: 'Stats', activeRoutes: ['stats'] },
-  { route: 'about', label: 'About', activeRoutes: ['about'] },
-  { route: 'help', label: 'Help', activeRoutes: ['help'] }
+  { route: 'download', label: 'Download', activeRoutes: ['download'] },
+  { route: 'about', label: 'About', activeRoutes: ['about'] }
 ];
 
 export function renderPrimaryNav(activeRoute = 'home') {
@@ -43,12 +55,9 @@ export function renderHomeHero(metrics = HOME_METRICS) {
   return `<section class="bundle-hero-card bundle-wide-card">
         <div class="bundle-hero-copy">
           <p class="bundle-kicker">RNA structure-linked database</p>
-          <h2>FoldBridge Database Portal</h2>
+          <h2>FoldBridge</h2>
           <p class="bundle-hero-summary">
-            FoldBridge is a curated database that links RNA chemical probing data with experimentally resolved tertiary structures.
-          </p>
-          <p class="bundle-hero-detail">
-            FoldBridge curates ${probingEntries} chemical probing entries and ${pdbStructures} PDB structures, encompassing ${highConfidencePaired} high-confidence paired datas.
+            A curated database that links RNA chemical probing data with experimentally resolved tertiary structures.
           </p>
           <div class="bundle-hero-actions">
             <button type="button" class="bundle-hero-primary" data-route="entry">Browse Entry table &rarr;</button>
@@ -60,17 +69,17 @@ export function renderHomeHero(metrics = HOME_METRICS) {
           <article class="bundle-metric-card bundle-metric-large">
             <p>chemical probing entries</p>
             <strong>${probingEntries}</strong>
-            <span>probing-derived RNA reactivity records in the current build</span>
+            <span>RNA reactivity records</span>
           </article>
           <article class="bundle-metric-card">
             <p>PDB structures</p>
             <strong>${pdbStructures}</strong>
-            <span>experimentally resolved structures matched to probing data</span>
+            <span>Structures matched to probing data</span>
           </article>
           <article class="bundle-metric-card">
             <p>high-confidence paired</p>
             <strong>${highConfidencePaired}</strong>
-            <span>structure-linked paired datasets</span>
+            <span>Structure-linked paired datasets</span>
           </article>
         </aside>
       </section>`;
@@ -258,9 +267,7 @@ export function renderHomeScrollStory(caseData, opts = {}) {
   }).join('');
   const legend = `<div class="hss-legend"><span>low</span><span class="hss-legend-bar"></span><span>high reactivity</span></div>`;
   const records = HOME_METRICS.pdbStructures.toLocaleString('en-US');
-  const kicker = `A FoldBridge story · ${caseData.molecule_label || ''} (PDB ${caseData.pdb_id || ''})`;
   const intro = `<header class="hss-intro">
-      <p class="hss-kicker">${kicker}</p>
       <h1 class="hss-headline">Follow one RNA from<br><span class="hss-headline-grad">probing signal to 3D fold</span></h1>
       <p class="hss-lede">The same reactivity colors travel with every nucleotide — from the raw alignment, into the secondary structure, and onto the deposited tertiary structure. Scroll to watch it transform.</p>
       <p class="hss-scrollcue">↓ Scroll</p>
@@ -665,14 +672,16 @@ export function renderProbingFamilyIndex(families) {
           : (isNucleotideFamily
             ? 'Nucleotide-specific chemical probing methods'
             : (isInteractionFamily ? 'RNA–RNA interaction mapping methods' : fam.title))));
+    const summary = isInteractionFamily
+      ? 'Crosslinking and proximity ligation capture RNA–RNA contacts and higher-order RNA organization.'
+      : fam.summary;
     return `<a class="probing-family-card" href="#probing-family-${id}" data-probing-family-link="${id}">
         <h3 class="probing-family-card-title">${escapeProbingHtml(title)}</h3>
-        <p class="probing-family-card-summary">${escapeProbingHtml(fam.summary)}</p>
+        <p class="probing-family-card-summary">${escapeProbingHtml(summary)}</p>
       </a>`;
   }).join('');
   return `<section class="card bundle-wide-card probing-family-index" aria-label="Probing mechanism families">
       <div class="probing-hub-heading">
-        <p class="technology-kicker">browse by mechanism</p>
         <h2>${visibleFamilies.length} mechanism families</h2>
       </div>
       <div class="probing-family-grid">${cards}</div>
@@ -728,27 +737,5 @@ export function renderProbingTechTable(registry) {
           <tbody>${body}</tbody>
         </table>
       </div>
-    </section>`;
-}
-
-// 快速术语表：~6-10 条简短定义。
-export function renderProbingGlossary(terms) {
-  const list = Array.isArray(terms) ? terms : [];
-  if (!list.length) {
-    return `<section class="card bundle-wide-card probing-glossary probing-glossary--empty">
-      <p class="probing-hub-empty">Glossary terms are not available yet.</p>
-    </section>`;
-  }
-  const items = list.map((entry) => `<div class="probing-glossary-term">
-        <dt>${escapeProbingHtml(entry.term)}</dt>
-        <dd>${escapeProbingHtml(entry.definition)}</dd>
-      </div>`).join('');
-  return `<section class="card bundle-wide-card probing-glossary" aria-label="Probing quick-reference glossary">
-      <div class="probing-hub-heading">
-        <p class="technology-kicker">quick reference</p>
-        <h2>Probing glossary</h2>
-        <p>Short definitions for the terms used across the probing pages and confidence labels.</p>
-      </div>
-      <dl class="probing-glossary-list">${items}</dl>
     </section>`;
 }

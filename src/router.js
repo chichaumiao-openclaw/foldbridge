@@ -13,7 +13,6 @@ const ALLOWED_ROUTES = new Set([
   'download-structures',
   'detail',
   'publications',
-  'help',
   'sequence-detail',
   'pdb-case',
   'annojoin-atlas',
@@ -24,6 +23,7 @@ const ALLOWED_ROUTES = new Set([
 export function normalizeRoute(value) {
   if (typeof value !== 'string') return 'home';
   const lowered = value.trim().toLowerCase();
+  if (lowered === 'help') return 'about';
   return ALLOWED_ROUTES.has(lowered) ? lowered : 'home';
 }
 

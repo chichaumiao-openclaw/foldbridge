@@ -1,3 +1,5 @@
+import { displayMoleculeName } from './moleculeNameOverrides.js';
+
 function escapeHtml(value) {
   return String(value ?? '')
     .replaceAll('&', '&amp;')
@@ -192,8 +194,8 @@ export function renderAnnojointCasePage({
   const selectedCaseId = caseAsset?.case?.caseId || caseId || '10ZT';
   const selectedCaseKey = caseAsset?.case?.atlasCaseKey || caseKey || selectedCaseId;
   if (!caseAsset) {
-    return `<main class="page-annojoin-case">
-      ${headerHtml}
+    return `${headerHtml}
+    <main class="page-annojoin-case">
       <section class="annojoin-case-hero">
         <p class="technology-kicker">ANNOJOIN case</p>
         <h1>${escapeHtml(selectedCaseId)}</h1>
@@ -215,12 +217,12 @@ export function renderAnnojointCasePage({
 
   const chainIdentityPanel = renderChainIdentityPanel(caseAsset.case?.chainIdentities);
 
-  return `<main class="page-annojoin-case">
-    ${headerHtml}
-    <section class="annojoin-case-hero">
-      <p class="technology-kicker">ANNOJOIN case detail</p>
-      <h1>${escapeHtml(caseAsset.case?.biologicalMoleculeName || selectedCaseId)}</h1>
-      <div class="annojoin-case-hero-meta">
+  return `${headerHtml}
+    <main class="page-annojoin-case">
+      <section class="annojoin-case-hero">
+        <p class="technology-kicker">ANNOJOIN case detail</p>
+        <h1>${escapeHtml(displayMoleculeName(caseAsset.case, caseAsset.case?.biologicalMoleculeName || selectedCaseId))}</h1>
+        <div class="annojoin-case-hero-meta">
         ${renderMetric('Atlas case', selectedCaseKey)}
         ${renderMetric('PDB', caseAsset.case?.pdbId || selectedCaseId)}
         ${renderMetric('Source', caseAsset.case?.assetFamily || 'unknown')}

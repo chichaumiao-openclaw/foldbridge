@@ -17,6 +17,14 @@ test('light mode vars include expected tokens', () => {
   assert.ok(vars.includes('--textPrimary: #14221C;'));
 });
 
+test('all theme borders use the shared Switch gold', () => {
+  const expected = 'rgba(224, 174, 36, 0.68)';
+  for (const theme of Object.values(themeTokens)) {
+    assert.equal(theme.light.border, expected);
+    assert.equal(theme.dark.border, expected);
+  }
+});
+
 test('dark mode vars include dark tokens', () => {
   const vars = cssVarsFor('aptamer', 'dark');
   assert.ok(vars.includes('--background: #08110e;'));

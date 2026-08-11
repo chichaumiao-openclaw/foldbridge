@@ -4,10 +4,13 @@ import { extname, join, normalize, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { buildAnnojointCurrentFilterResponse } from './lib/annojoin-atlas-export.mjs';
 import { resolveAnnojointStructurePath } from './lib/annojoin-atlas-structure.mjs';
+import { createRmdbRdatResolver, isRmdbRdatRequest, rmdbRdatFilenameFromRequest } from './lib/rmdb-rdat-server.mjs';
 
 const root = resolve(fileURLToPath(new URL('..', import.meta.url)));
 const defaultAnnoRoot = '/Users/joseperezmartinez/docs/rmdb2pdb/task_packages/confidence_v3_restart_20260613/remote_root';
 const annoRoot = process.env.FOLDBRIDGE_ANNO_ROOT || defaultAnnoRoot;
+const defaultRmdbRoot = '/Users/hulinyan/Desktop/RMDB';
+const rmdbRoot = process.env.FOLDBRIDGE_RMDB_ROOT || defaultRmdbRoot;
 const args = new Map();
 
 for (let i = 2; i < process.argv.length; i += 1) {
@@ -22,6 +25,7 @@ for (let i = 2; i < process.argv.length; i += 1) {
 const host = args.get('host') ?? '127.0.0.1';
 const port = Number(args.get('port') ?? 8080);
 const annojoinIndexPath = join(root, 'src/assets/generated/annojoin-atlas/index.json');
+const rmdbRdatResolverPromise = createRmdbRdatResolver(rmdbRoot);
 
 const contentTypes = {
   '.html': 'text/html; charset=utf-8',
@@ -77,6 +81,17 @@ function sendAnnojointStructure(req, res) {
   createReadStream(resolved.fullPath).pipe(res);
 }
 
+async function sendRmdbRdat(req, res) {
+  const resolveRdat = await rmdbRdatResolverPromise;
+  const filePath = resolveRdat(rmdbRdatFilenameFromRequest(req.url));
+  if (!filePath) {
+    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+    res.end('RMDB RDAT not found');
+    return;
+  }
+  sendFile(res, filePath);
+}
+
 const server = createServer((req, res) => {
   if ((req.url ?? '').startsWith('/api/annojoin/export-current-filter')) {
     try {
@@ -96,6 +111,14 @@ const server = createServer((req, res) => {
       res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' });
       res.end(`${JSON.stringify({ error: 'annojoin_structure_unavailable', message: error.message })}\n`);
     }
+    return;
+  }
+
+  if (isRmdbRdatRequest(req.url)) {
+    void sendRmdbRdat(req, res).catch((error) => {
+      res.writeHead(500, { 'Content-Type': 'text/plain; charset=utf-8' });
+      res.end(`RMDB RDAT unavailable: ${error.message}`);
+    });
     return;
   }
 

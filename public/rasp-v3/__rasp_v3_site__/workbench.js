@@ -51,6 +51,9 @@ const state = {
   molstarCroppedUrl: null,
   molstarBridgeInstalled: false,
   requestedProfileId: "",
+  rmdbHeatmapRequestId: 0,
+  rmdbHeatmapMatrix: null,
+  rmdbHeatmapFilename: "",
 };
 
 const el = {
@@ -82,6 +85,14 @@ const el = {
   molstarSelectionStatus: document.querySelector("#molstar-selection-status"),
   molstarMeta: document.querySelector("#molstarMeta"),
   tip: document.querySelector("#tip"),
+  rmdbHeatmapPanel: null,
+  rmdbHeatmapStatus: null,
+  rmdbHeatmapMeta: null,
+  rmdbHeatmapScroll: null,
+  rmdbHeatmapStage: null,
+  rmdbHeatmapCanvas: null,
+  rmdbHeatmapTip: null,
+  rmdbHeatmapRangeSelect: null,
 };
 
 function escapeHtml(value) {
@@ -142,6 +153,464 @@ function colorForBase(base) {
     U: "#b279a2",
     T: "#b279a2",
   }[String(base || "N").toUpperCase()] || "#d8dee4";
+}
+
+function rmdbRdatFilename(profile) {
+  const profileId = String(profile?.profile_id || "");
+  const match = profileId.match(/([^/\\]+\.rdat)(?:#\d+)?$/i);
+  const filename = match?.[1]?.trim() || "";
+  return /^(?!\.\.?(?:\.rdat)?$)[^/\\]+\.rdat$/i.test(filename) ? filename : "";
+}
+
+function rmdbRdatUrl(filename) {
+  // The static build copies src/ beside public/, so this remains valid both
+  // from the source tree and from dist/public/rmdb-v3/.../chains/<chain>/.
+  return resolveAssetUrl(`../../../../../../src/assets/data/rmdb-puzzle/${encodeURIComponent(filename)}`);
+}
+
+function rmdbRdatUrls(filename) {
+  const urls = [];
+  if (window.location.origin && window.location.origin !== "null") {
+    urls.push(`${window.location.origin}/api/rmdb/rdat/${encodeURIComponent(filename)}`);
+  }
+  urls.push(rmdbRdatUrl(filename));
+  return [...new Set(urls)];
+}
+
+async function fetchRmdbRdatText(filename) {
+  let lastError = null;
+  for (const url of rmdbRdatUrls(filename)) {
+    try {
+      return await fetchTextMaybeGzip(url);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError || new Error(`RDAT unavailable: ${filename}`);
+}
+
+function parseRmdbRdat(text) {
+  const lines = String(text || "").split(/\r?\n/);
+  let sequence = "";
+  let offset = 0;
+  let seqpos = [];
+  const annotations = new Map();
+  const reactivityRows = [];
+  const errorRows = new Map();
+
+  for (const line of lines) {
+    if (/^SEQUENCE(?:\s+|\s*:)/i.test(line)) {
+      sequence = line.replace(/^SEQUENCE\s*:?\s*/i, "").replace(/\s+/g, "").trim();
+      continue;
+    }
+    const offsetMatch = line.match(/^OFFSET\s+(\d+)/i);
+    if (offsetMatch) {
+      offset = Number(offsetMatch[1]);
+      continue;
+    }
+    if (/^SEQPOS(?:\s+|\s*:)/i.test(line)) {
+      const body = line.replace(/^SEQPOS\s*:?\s*/i, "").trim();
+      seqpos = body.split(/\s+/).map((token) => {
+        const match = token.match(/-?\d+$/);
+        return match ? Number(match[0]) : null;
+      }).filter((value) => Number.isFinite(value));
+      continue;
+    }
+    const annotationMatch = line.match(/^ANNOTATION_DATA\s*:\s*(\d+)\s*(.*)$/i);
+    if (annotationMatch) {
+      const rowNumber = Number(annotationMatch[1]);
+      const raw = annotationMatch[2].trim();
+      const mutation = raw.match(/(?:^|\s)mutation:([^\s]+)/i)?.[1];
+      const chemical = raw.match(/(?:^|\s)chemical:([^\s]+)/i)?.[1];
+      const recordId = raw.match(/(?:^|\s)Eterna:id:([^\s]+)/i)?.[1]
+        || raw.match(/(?:^|\s)ID:([^\s]+)/i)?.[1];
+      const designName = raw.match(/(?:^|\s)Eterna:design_name:([^\t]+)/i)?.[1]?.trim();
+      const experimentName = raw.match(/(?:^|\s)name:([^\s]+)/i)?.[1];
+      const sequenceLabel = raw.match(/(?:^|\s)sequence:([^\s]+)/i)?.[1] || "";
+      annotations.set(rowNumber, {
+        label: mutation || chemical || recordId || designName || experimentName || raw || `row ${rowNumber}`,
+        raw,
+        warning: /warning:/i.test(raw),
+        sequence: sequenceLabel,
+      });
+      continue;
+    }
+    const errorMatch = line.match(/^REACTIVITY_ERROR\s*:\s*(\d+)\s*(.*)$/i);
+    if (errorMatch) {
+      const rowNumber = Number(errorMatch[1]);
+      errorRows.set(rowNumber, errorMatch[2].trim().split(/\s+/).map((value) => {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : null;
+      }));
+      continue;
+    }
+    const reactivityMatch = line.match(/^REACTIVITY\s*:\s*(\d+)\s*(.*)$/i);
+    if (reactivityMatch) {
+      const rowNumber = Number(reactivityMatch[1]);
+      const values = reactivityMatch[2].trim().split(/\s+/).map((value) => {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : null;
+      });
+      reactivityRows.push({ rowNumber, values });
+    }
+  }
+
+  reactivityRows.sort((a, b) => a.rowNumber - b.rowNumber);
+  const columns = seqpos.length
+    ? seqpos
+    : Array.from({ length: Math.max(0, ...reactivityRows.map((row) => row.values.length)) }, (_, idx) => idx + 1);
+  const rows = reactivityRows.map((row, idx) => {
+    const annotation = annotations.get(row.rowNumber) || annotations.get(idx + 1) || {};
+    return {
+      rowNumber: row.rowNumber,
+      label: annotation.label || `row ${row.rowNumber}`,
+      rawAnnotation: annotation.raw || "",
+      warning: Boolean(annotation.warning),
+      sequence: annotation.sequence || "",
+      error: errorRows.get(row.rowNumber) || errorRows.get(idx + 1) || [],
+      values: row.values,
+    };
+  });
+  const positiveValues = rows.flatMap((row) => row.values).filter((value) => Number.isFinite(value) && value > 0);
+  const cleanSequence = sequence.replace(/\s+/g, "");
+  const colLabelDetails = columns.map((position) => {
+    const raw = String(position);
+    const sequenceIndex = position - offset - 1;
+    const base = cleanSequence[sequenceIndex] || "";
+    return {
+      raw,
+      base: /^[AUGCT]$/i.test(base) ? (base.toUpperCase() === "T" ? "U" : base.toUpperCase()) : "",
+      position: raw,
+      display: base ? `${base.toUpperCase() === "T" ? "U" : base.toUpperCase()}${raw}` : raw,
+    };
+  });
+  return {
+    sequence,
+    offset,
+    columns,
+    colLabelDetails,
+    rows,
+    positiveCap: percentile(positiveValues, 0.95),
+  };
+}
+
+function ensureRmdbHeatmapPanel() {
+  if (el.rmdbHeatmapPanel) return true;
+  const trackPanel = el.track?.closest(".track-panel");
+  if (!trackPanel) return false;
+  const panel = document.createElement("section");
+  panel.className = "panel rmdb-heatmap-panel";
+  panel.id = "rmdb-heatmap-panel";
+  panel.hidden = true;
+  panel.innerHTML = `
+    <div class="panel-head">
+      <h2>RMDB raw reactivity heatmap</h2>
+      <span id="rmdbHeatmapStatus">not loaded</span>
+    </div>
+    <div class="rmdb-heatmap-controls" id="rmdbHeatmapControls" hidden>
+      <label for="rmdbHeatmapRangeSelect">Rows</label>
+      <select id="rmdbHeatmapRangeSelect" aria-label="Select experiment row range"></select>
+    </div>
+    <div class="rmdb-heatmap-meta" id="rmdbHeatmapMeta"></div>
+    <div class="rmdb-heatmap-scroll" id="rmdbHeatmapScroll">
+      <div class="rmdb-heatmap-stage" id="rmdbHeatmapStage">
+        <canvas id="rmdbHeatmapCanvas" role="img" aria-label="RMDB raw reactivity heatmap"></canvas>
+        <div class="rmdb-heatmap-tip" id="rmdbHeatmapTip" hidden></div>
+      </div>
+    </div>`;
+  trackPanel.insertAdjacentElement("afterend", panel);
+  el.rmdbHeatmapPanel = panel;
+  el.rmdbHeatmapStatus = panel.querySelector("#rmdbHeatmapStatus");
+  el.rmdbHeatmapMeta = panel.querySelector("#rmdbHeatmapMeta");
+  el.rmdbHeatmapScroll = panel.querySelector("#rmdbHeatmapScroll");
+  el.rmdbHeatmapStage = panel.querySelector("#rmdbHeatmapStage");
+  el.rmdbHeatmapCanvas = panel.querySelector("#rmdbHeatmapCanvas");
+  el.rmdbHeatmapTip = panel.querySelector("#rmdbHeatmapTip");
+  el.rmdbHeatmapRangeSelect = panel.querySelector("#rmdbHeatmapRangeSelect");
+  el.rmdbHeatmapRangeSelect.addEventListener("change", () => {
+    renderSelectedRmdbHeatmapRange();
+  });
+  return true;
+}
+
+function formatRmdbHeatmapLabel(label) {
+  if (!label) return "";
+  const match = String(label).match(/^([AUGC])(\d+)([AUGC])$/i);
+  return match ? `${match[1].toUpperCase()}${match[2]}${match[3].toUpperCase()}` : String(label);
+}
+
+function rmdbHeatmapCellBase(row, columnIndex, columnCount, fallback = "") {
+  const rowSequence = String(row?.sequence || "").replace(/\s+/g, "");
+  const candidate = rowSequence.length === columnCount ? rowSequence[columnIndex] : fallback;
+  const base = candidate || fallback;
+  if (!/^[AUGCT]$/i.test(base)) return "";
+  return base.toUpperCase() === "T" ? "U" : base.toUpperCase();
+}
+
+function renderRmdbHeatmapCanvas(matrix, sourceRows = matrix.rows) {
+  const canvas = el.rmdbHeatmapCanvas;
+  const stage = el.rmdbHeatmapStage;
+  if (!canvas || !stage) return { rawRows: sourceRows.length, displayRows: 0, downsampled: false };
+  const labelGap = 10;
+  const leftLabelBand = 28;
+  const rightLabelBand = 108;
+  const topLabelBand = 58;
+  const bottomLabelBand = 28;
+  const rawRows = sourceRows.length;
+  const cols = matrix.columns.length;
+  const hostWidth = Math.floor(el.rmdbHeatmapScroll?.getBoundingClientRect().width || el.rmdbHeatmapScroll?.clientWidth || 0);
+  const availableWidth = Math.max(620, hostWidth - 12);
+  const cellSize = Math.min(16, Math.max(8, Math.floor((availableWidth - leftLabelBand - rightLabelBand) / Math.max(cols, 1))));
+  // Keep every RDAT experiment row in the matrix. The scroll container below
+  // provides vertical navigation when the full matrix is taller than the card.
+  const displayRows = sourceRows.map((row, index) => ({
+    ...row,
+    rawStart: Number.isFinite(row.rowNumber) ? row.rowNumber : index + 1,
+    rawEnd: Number.isFinite(row.rowNumber) ? row.rowNumber : index + 1,
+  }));
+  const rows = displayRows.length;
+  const width = leftLabelBand + cols * cellSize + rightLabelBand;
+  const height = topLabelBand + rows * cellSize + bottomLabelBand;
+  const requestedDpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+  // A tall RDAT file can exceed the browser's maximum backing-store
+  // dimension at devicePixelRatio 2. Lower only the internal bitmap scale;
+  // the CSS size remains unchanged, so every row is still displayed.
+  const maxCanvasDimension = 32000;
+  const dpr = Math.min(requestedDpr, maxCanvasDimension / Math.max(width, height));
+  canvas.width = Math.max(1, Math.round(width * dpr));
+  canvas.height = Math.max(1, Math.round(height * dpr));
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  stage.style.width = `${width}px`;
+  stage.style.height = `${height}px`;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas unavailable");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const flatValues = displayRows.flatMap((row) => row.values).filter((value) => Number.isFinite(value));
+  // Avoid Math.max(...flatValues): large RDAT files can contain thousands of
+  // rows and expanding the full matrix into call arguments overflows the JS
+  // call stack before the canvas is even painted.
+  const maxValue = flatValues.reduce((max, value) => Math.max(max, value), 1);
+  const font = `${Math.max(10, cellSize - 2)}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
+  const monoFont = `${Math.max(10, cellSize - 2)}px Menlo, Consolas, monospace`;
+  const baseColors = { A: "#ff8c42", U: "#4b9cff", G: "#ff5a36", C: "#4dbb63" };
+  const reactivityColorStops = [
+    [0.000, [255, 255, 255]],
+    [0.018, [255, 255, 255]],
+    [0.040, [255, 242, 0]],
+    [0.140, [255, 191, 0]],
+    [0.380, [240, 126, 44]],
+    [0.700, [219, 53, 37]],
+    [1.000, [198, 0, 0]],
+  ];
+  const reactivityColor = (normalized) => {
+    const value = Math.max(0, Math.min(1, normalized));
+    const upperIndex = reactivityColorStops.findIndex(([position]) => value <= position);
+    const upper = reactivityColorStops[upperIndex < 0 ? reactivityColorStops.length - 1 : upperIndex];
+    const lower = reactivityColorStops[Math.max(0, upperIndex - 1)];
+    const span = upper[0] - lower[0];
+    const fraction = span ? (value - lower[0]) / span : 0;
+    const rgb = lower[1].map((channel, index) => Math.round(channel + (upper[1][index] - channel) * fraction));
+    return `rgb(${rgb.join(", ")})`;
+  };
+
+  function paint(activeCell = null) {
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
+    for (let rowIndex = 0; rowIndex < rows; rowIndex += 1) {
+      const row = displayRows[rowIndex];
+      const y = topLabelBand + rowIndex * cellSize;
+      ctx.fillStyle = "#69d9ca";
+      ctx.font = `italic ${Math.max(10, cellSize - 1)}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.fillText(String(row.rawStart ?? rowIndex + 1), leftLabelBand - labelGap, y + cellSize / 2);
+
+      ctx.fillStyle = row.warning ? "#9a5b16" : "#101010";
+      ctx.font = font;
+      ctx.textAlign = "left";
+      ctx.fillText(formatRmdbHeatmapLabel(row.label), leftLabelBand + cols * cellSize + labelGap, y + cellSize / 2);
+
+      for (let columnIndex = 0; columnIndex < cols; columnIndex += 1) {
+        const x = leftLabelBand + columnIndex * cellSize;
+        const value = row.values[columnIndex];
+        const normalized = Number.isFinite(value) ? Math.max(0, Math.min(1, value / maxValue)) : 0;
+        ctx.fillStyle = Number.isFinite(value) ? reactivityColor(normalized) : "#f2f2f2";
+        ctx.fillRect(x, y, cellSize, cellSize);
+        ctx.strokeStyle = "#202020";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + 0.5, y + 0.5, cellSize, cellSize);
+      }
+    }
+
+    for (let columnIndex = 0; columnIndex < cols; columnIndex += 1) {
+      const x = leftLabelBand + columnIndex * cellSize + cellSize / 2;
+      const label = matrix.colLabelDetails?.[columnIndex] || {
+        base: "",
+        position: matrix.columns[columnIndex],
+        display: matrix.columns[columnIndex],
+      };
+      const base = rmdbHeatmapCellBase(displayRows[0], columnIndex, cols, label.base || "");
+      const position = label.position || matrix.columns[columnIndex];
+
+      ctx.save();
+      ctx.translate(x, topLabelBand - labelGap);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.font = monoFont;
+      ctx.fillStyle = baseColors[base] || "#101010";
+      ctx.fillText(base, 0, 0);
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(x, topLabelBand - labelGap - 16);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.font = font;
+      ctx.fillStyle = "#101010";
+      ctx.fillText(String(position), 0, 0);
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(x, height - bottomLabelBand + labelGap);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.font = `italic ${Math.max(9, cellSize - 3)}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
+      ctx.fillStyle = "#7fe5d9";
+      ctx.fillText(String(columnIndex + 1), 0, 0);
+      ctx.restore();
+    }
+
+    if (activeCell) {
+      const { row, col } = activeCell;
+      const x = leftLabelBand + col * cellSize;
+      const y = topLabelBand + row * cellSize;
+      ctx.strokeStyle = "#b892ff";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
+      ctx.strokeStyle = "rgba(184, 146, 255, 0.65)";
+      ctx.beginPath();
+      ctx.moveTo(leftLabelBand, y + cellSize / 2);
+      ctx.lineTo(leftLabelBand + cols * cellSize, y + cellSize / 2);
+      ctx.moveTo(x + cellSize / 2, topLabelBand);
+      ctx.lineTo(x + cellSize / 2, topLabelBand + rows * cellSize);
+      ctx.stroke();
+    }
+  }
+
+  paint();
+  canvas.onmousemove = (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const col = Math.floor((x - leftLabelBand) / cellSize);
+    const rowIndex = Math.floor((y - topLabelBand) / cellSize);
+    if (col < 0 || col >= cols || rowIndex < 0 || rowIndex >= rows) {
+      el.rmdbHeatmapTip.hidden = true;
+      paint();
+      return;
+    }
+
+    const row = displayRows[rowIndex];
+    const label = matrix.colLabelDetails?.[col] || {};
+    const value = row.values[col];
+    const error = row.error?.[col];
+    const base = rmdbHeatmapCellBase(row, col, cols, label.base || "");
+    const rowLabel = formatRmdbHeatmapLabel(row.label);
+    const rowTitle = row.rawEnd > row.rawStart
+      ? `${row.rawStart}–${row.rawEnd} (binned)`
+      : `${row.rawStart}: ${rowLabel}`;
+    el.rmdbHeatmapTip.innerHTML = `
+      <div><span>ROW</span><strong>${escapeHtml(rowTitle)}</strong></div>
+      <div><span>COLUMN</span><strong>${col + 1}: ${escapeHtml(label.display || matrix.columns[col])}</strong></div>
+      <div><span>SEQUENCE</span><strong>${escapeHtml(base || "—")}</strong></div>
+      <div><span>REACTIVITY</span><strong>${Number.isFinite(value) ? value.toFixed(3) : "—"}</strong></div>
+      <div><span>ERROR</span><strong>${Number.isFinite(error) ? error.toFixed(3) : "—"}</strong></div>
+    `;
+    el.rmdbHeatmapTip.hidden = false;
+    const tooltipWidth = 210;
+    const tooltipHeight = 150;
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const left = Math.min(event.clientX + 22, viewportWidth - tooltipWidth - 16);
+    const top = Math.min(event.clientY + 22, viewportHeight - tooltipHeight - 16);
+    el.rmdbHeatmapTip.style.left = `${Math.max(12, left)}px`;
+    el.rmdbHeatmapTip.style.top = `${Math.max(12, top)}px`;
+    paint({ row: rowIndex, col });
+  };
+  canvas.onmouseleave = () => {
+    el.rmdbHeatmapTip.hidden = true;
+    paint();
+  };
+  return { rawRows, displayRows: rows, downsampled: rawRows > rows };
+}
+
+function populateRmdbHeatmapRangeSelect(matrix) {
+  const select = el.rmdbHeatmapRangeSelect;
+  const controls = select?.closest(".rmdb-heatmap-controls");
+  if (!select || !controls) return;
+  select.replaceChildren();
+  const fragment = document.createDocumentFragment();
+  const pageSize = 100;
+  for (let start = 0; start < matrix.rows.length; start += pageSize) {
+    const end = Math.min(start + pageSize, matrix.rows.length);
+    const option = document.createElement("option");
+    option.value = String(start);
+    option.textContent = `Rows ${start + 1}–${end}`;
+    fragment.append(option);
+  }
+  select.append(fragment);
+  select.value = "0";
+  controls.hidden = matrix.rows.length <= pageSize;
+}
+
+function renderSelectedRmdbHeatmapRange() {
+  const matrix = state.rmdbHeatmapMatrix;
+  const filename = state.rmdbHeatmapFilename;
+  const select = el.rmdbHeatmapRangeSelect;
+  if (!matrix || !filename || !select) return;
+  const start = Math.max(0, Number(select.value) || 0);
+  const end = Math.min(start + 100, matrix.rows.length);
+  const view = renderRmdbHeatmapCanvas(matrix, matrix.rows.slice(start, end));
+  el.rmdbHeatmapStatus.textContent = `rows ${start + 1}–${end} of ${matrix.rows.length} × ${matrix.columns.length} positions`;
+  el.rmdbHeatmapMeta.innerHTML = `<span>raw RDAT experiments · white–yellow–red reactivity</span><span>· ${escapeHtml(filename)} · rows ${start + 1}–${end} shown · hover a cell for row, column, sequence, reactivity and error</span>`;
+  return view;
+}
+
+async function renderRmdbHeatmap(profile) {
+  if (!ensureRmdbHeatmapPanel()) return;
+  const requestId = ++state.rmdbHeatmapRequestId;
+  const filename = rmdbRdatFilename(profile);
+  if (!filename) {
+    el.rmdbHeatmapPanel.hidden = true;
+    return;
+  }
+  el.rmdbHeatmapPanel.hidden = false;
+  el.rmdbHeatmapStatus.textContent = `loading ${filename}`;
+  el.rmdbHeatmapMeta.textContent = "Loading raw ANNOTATION_DATA × SEQPOS reactivity matrix…";
+  try {
+    const text = await fetchRmdbRdatText(filename);
+    if (requestId !== state.rmdbHeatmapRequestId) return;
+    const matrix = parseRmdbRdat(text);
+    if (!matrix.rows.length || !matrix.columns.length) throw new Error("RDAT has no reactivity matrix");
+    state.rmdbHeatmapMatrix = matrix;
+    state.rmdbHeatmapFilename = filename;
+    populateRmdbHeatmapRangeSelect(matrix);
+    renderSelectedRmdbHeatmapRange();
+  } catch (error) {
+    if (requestId !== state.rmdbHeatmapRequestId) return;
+    state.rmdbHeatmapMatrix = null;
+    state.rmdbHeatmapFilename = "";
+    const controls = el.rmdbHeatmapRangeSelect?.closest(".rmdb-heatmap-controls");
+    if (controls) controls.hidden = true;
+    el.rmdbHeatmapStatus.textContent = "RDAT unavailable";
+    el.rmdbHeatmapMeta.textContent = `Could not load ${filename}: ${error.message || error}`;
+  }
 }
 
 const coordinateResolvedStyle = { fill: "#e3f1fb", stroke: "#3f7da8" };
@@ -1866,7 +2335,6 @@ async function renderProfile(index) {
     ? `${activeChainKey()} | profile ${profile.profile_id} | target chain alignment crop displayed with reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel(profile.profile_id)}.`
     : `${activeChainKey()} | profile ${profile.profile_id} | ${activeResidues().length} residues in active profile.`;
   el.stats.innerHTML = [
-    metric("update ms", elapsed.toFixed(2)),
     metric("profiles loaded", state.profiles.length),
     metric("sequence match", `${sequenceSummary.matchedResidues}/${sequenceSummary.profileResidues}`),
     metric("atom_site obs", coverage?.profileResidues ? `${coverage.resolvedResidues}/${coverage.profileResidues}` : "n/a"),
@@ -1880,6 +2348,7 @@ async function renderProfile(index) {
   ].join("");
   updateView();
   renderTrackRail();
+  void renderRmdbHeatmap(profile);
   renderInspector(state.selectedResidueKey);
   applyMolstarTargetDisplay(state.selectedResidueKey);
 }

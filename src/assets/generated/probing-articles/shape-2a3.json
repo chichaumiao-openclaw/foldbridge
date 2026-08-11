@@ -8,6 +8,7 @@
   "rep_pmcid": "PMC8034653",
   "rep_doi": "10.1093/nar/gkaa1255",
   "asset_base": "./src/assets/generated/probing-articles/assets/shape-2a3",
+  "sibling_navigation": {},
   "blocks": [
     {
       "type": "paragraph",

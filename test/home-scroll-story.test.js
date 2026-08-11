@@ -108,8 +108,8 @@ test('renderHomeScrollStory emits 3 scenes + 3 state layers + legend', () => {
   assert.match(html, /one continuous thread/);
     // hero intro
     assert.match(html, /class="hss-intro"/);
-    assert.match(html, /class="hss-kicker"/);
-    assert.match(html, /A FoldBridge story · tRNA-Phe \(yeast\) \(PDB 1OB5\)/);
+    assert.doesNotMatch(html, /class="hss-kicker"/);
+    assert.doesNotMatch(html, /A FoldBridge story · tRNA-Phe \(yeast\) \(PDB 1OB5\)/);
     assert.match(html, /Follow one RNA from/);
     assert.match(html, /class="hss-headline-grad"/);  // gradient span on second line
     assert.match(html, /Scroll to watch it transform/);

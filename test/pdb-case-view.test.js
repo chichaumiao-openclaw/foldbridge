@@ -74,9 +74,12 @@ test('PDB case page explains projection semantics and residue-map boundary', () 
   const alignmentPage = { page: 1, pageSize: 25, rows: [{ alignment_column: '1', rmdb_query_pos: '47', pdb_pos: '1', rmdb_base: 'G', pdb_base: 'G', match_state: 'match' }] };
   const reactivitySummary = { profileKey: 'pf-2a3', minPos: 1, maxPos: 109, pointCount: 109, trackPreview: [{ pdbPos: 1, pdbBase: 'G', reactivity: null }, { pdbPos: 2, pdbBase: 'U', reactivity: 0.5 }] };
 
-  const html = renderPdbCasePage(detail, { pdbId: '8CBL' }, { profiles, alignmentPage, reactivitySummary });
+  const html = renderPdbCasePage(detail, { pdbId: '8CBL' }, { profiles, alignmentPage, reactivitySummary }, {
+    headerHtml: '<header class="bundle-home-header"></header>'
+  });
 
   assert.match(html, /PDB case page/);
+  assert.match(html, /bundle-home-header/);
   assert.match(html, /projection_status=pass only means the projection workflow completed/);
   assert.match(html, /pdb_pos is a PDB reference sequence position/);
   assert.match(html, /3D residue coloring is disabled/);

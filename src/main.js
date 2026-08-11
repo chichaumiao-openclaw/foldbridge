@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHelpPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex, renderProbingGlossary } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHelpPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -93,17 +93,6 @@ let siteStatsState = null; // null=未加载, 'loading', 'error', 或 stats.json
 let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
 let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
-// 探针术语速查表（站点内联策展，与 About 概念呼应但无硬依赖）。
-const PROBING_GLOSSARY_TERMS = [
-  { term: 'WC-face', definition: 'The Watson-Crick edge of a base, where canonical pairing hydrogen bonds form; base-specific probes read its accessibility.' },
-  { term: 'SHAPE', definition: 'Selective 2′-hydroxyl acylation analyzed by primer extension; reports local backbone flexibility rather than pairing directly.' },
-  { term: 'SASA', definition: 'Solvent-accessible surface area of a residue, computed from 3D structure; the geometric reference for hydroxyl-radical / footprinting methods.' },
-  { term: 'paired_state', definition: 'Whether a nucleotide is base-paired or unpaired in the reference structure used to score a probing signal.' },
-  { term: 'reactivity', definition: 'The per-nucleotide probing signal magnitude — a chemical readout, not a direct measurement of structure.' },
-  { term: 'tier', definition: 'The confidence label assigned to a structure-linked claim (e.g. strong / moderate / weak), gated by signal–structure agreement and calibration.' },
-  { term: 'measurement family', definition: 'Grouping (A–F) by the physical quantity a method measures; a descriptor of mechanism, not a quality ranking.' },
-  { term: 'threshold basis', definition: 'How a method\u2019s confidence cut-points are anchored: literature-SUPPORTED, literature-INFORMED, or operating-value PENDING calibration.' }
-];
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let pdbCaseConfidenceFilter = 'all';
@@ -886,8 +875,8 @@ function sequenceDetailPage() {
     ?? sequenceRows.find((item) => item.pdbName === pdbName);
 
   if (!row) {
-    return `<main class="page-sequence-detail">
-      ${renderBundleHeader()}
+    return `${renderBundleHeader()}
+    <main class="page-sequence-detail">
       <section class="card">
         <h1>Sequence Not Found</h1>
         <p>No sequence record matched this link.</p>
@@ -895,8 +884,8 @@ function sequenceDetailPage() {
     </main>`;
   }
 
-  return `<main class="page-sequence-detail">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-sequence-detail">
     <section class="sequence-detail-card">
       <div class="sequence-detail-header">
         <a class="sequence-detail-back" href="#download-sequences">Back to sequence list</a>
@@ -1164,8 +1153,8 @@ function downloadSequencesPage() {
     </tr>
   `).join('');
 
-  return `<main class="page-download-sequences">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-download-sequences">
     <section class="card download-card">
       <h1>Structures</h1>
       <p class="download-intro">Select one or more rows below to download example structure records. Current data are demo entries copied from the first available record.</p>
@@ -1513,9 +1502,9 @@ function homePage() {
   }).join('');
   const bundleHeader = renderBundleHeader(featuredNames);
 
-  return `<main class="page-home bundle-home-page">
+  return `${bundleHeader}
+  <main class="page-home bundle-home-page">
     <section class="bundle-home-shell">
-      ${bundleHeader}
       ${renderHomeHero()}
       ${scrollStoryHtml}
       ${renderHomeProbingCarousel(articles)}
@@ -1548,7 +1537,7 @@ function renderBundleHeader(featuredNamesMarkup = null) {
           <div class="bundle-home-brand-copy">
             <p class="bundle-home-bundle-label">FoldBridge axis</p>
             <h1>FoldBridge</h1>
-            <span>FoldBridge is a curated database that links RNA chemical probing data with experimentally resolved tertiary structures.</span>
+            <span>A curated database that links RNA chemical probing data with experimentally resolved tertiary structures.</span>
           </div>
         </div>
       </div>
@@ -1611,8 +1600,8 @@ function renderTechnologyOverviewPage() {
     .map((category) => `<span class="technology-chip">${category.title.replace(/^\d+\.\s*/, '')}</span>`)
     .join('');
 
-  return `<main class="page-detail">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-detail">
     <section class="card bundle-wide-card technology-hero-card">
       <div class="technology-hero-copy">
         <p class="technology-kicker">technology atlas</p>
@@ -1663,8 +1652,8 @@ function renderTechnologyMethodPage(method) {
   const outputs = method.outputs.map((item) => `<li>${item}</li>`).join('');
   const references = method.references.map((item) => `<li>${item}</li>`).join('');
 
-  return `<main class="page-detail">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-detail">
     <section class="card bundle-wide-card technology-detail-hero">
       <a class="technology-back-link" href="#probing">Back to technology overview</a>
       <div class="technology-detail-header">
@@ -1803,8 +1792,8 @@ function detailPage() {
 function renderProbingArticleLoadingPage(slug, headerHtml, isError) {
   const method = technologyMethods.find((item) => item.slug === slug);
   const title = method ? method.title : slug;
-  return `<main class="page-detail page-probing-article">
-    ${headerHtml}
+  return `${headerHtml}
+  <main class="page-detail page-probing-article">
     <section class="card bundle-wide-card technology-detail-hero">
       <a class="technology-back-link" href="#probing">← Back to probing methods overview</a>
       <div class="technology-detail-header">
@@ -1844,8 +1833,8 @@ function browsePage() {
         .join('')
     : `<tr><td colspan="7" class="entry-table-empty">No entries yet.</td></tr>`;
 
-  return `<main class="page-download-sequences page-browse">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-download-sequences page-browse">
     <section class="card download-card entry-table-card">
       <div class="download-toolbar browse-toolbar">
         <span
@@ -1902,8 +1891,9 @@ function structurePage() {
   return downloadStructuresPage();
 }
 
-function renderPdbCaseLoadingPage(message) {
-  return `<main class="page-pdb-case">
+function renderPdbCaseLoadingPage(message, headerHtml = '') {
+  return `${headerHtml}
+  <main class="page-pdb-case">
     <section class="card bundle-wide-card pdb-case-hero">
       <a class="technology-back-link" href="#pdb-case">Back to PDB case index</a>
       <p class="technology-kicker">PDB case</p>
@@ -2005,15 +1995,12 @@ async function loadSiteStats() {
   if (route === 'stats') render({ preserveScroll: true });
 }
 
-// 组装探针 hub 内容（家族索引 + 术语表），注入文章总览页。
+// 组装探针 hub 的家族索引，注入文章总览页。
 function buildProbingHubSections() {
   const families = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
     ? probingArticleIndexState.families
     : [];
-  return [
-    renderProbingFamilyIndex(families),
-    renderProbingGlossary(PROBING_GLOSSARY_TERMS)
-  ].join('\n');
+  return renderProbingFamilyIndex(families);
 }
 
 // 访问计数：每次成功加载招牌 story 自增（localStorage），用于 pickFeaturedCase 轮换。
@@ -2158,13 +2145,15 @@ async function loadAlignmentForCase(pdbId, page) {
 
 function pdbCasePage() {
   const params = getPdbCaseParamsFromHash();
+  const headerHtml = renderBundleHeader();
   if (!params.pdbId) {
     if (pdbCaseIndexState && typeof pdbCaseIndexState === 'object') {
-      return renderPdbCaseIndexPage(pdbCaseIndexState.cases);
+      return renderPdbCaseIndexPage(pdbCaseIndexState.cases, { headerHtml });
     }
     if (pdbCaseIndexState !== 'loading') loadPdbCaseIndex();
     return renderPdbCaseLoadingPage(
-      pdbCaseIndexState === 'error' ? 'PDB case index unavailable' : 'Loading PDB case index…'
+      pdbCaseIndexState === 'error' ? 'PDB case index unavailable' : 'Loading PDB case index…',
+      headerHtml
     );
   }
   const state = pdbCaseDetailState.get(params.pdbId);
@@ -2173,11 +2162,11 @@ function pdbCasePage() {
       profiles: state.profiles,
       alignmentPage: state.alignmentPage,
       reactivitySummary: state.reactivitySummary
-    });
+    }, { headerHtml });
   }
-  if (state === 'error') return renderPdbCasePage(null, params);
+  if (state === 'error') return renderPdbCasePage(null, params, {}, { headerHtml });
   if (state !== 'loading') loadPdbCaseDetail(params.pdbId);
-  return renderPdbCaseLoadingPage(`Loading case assets for ${params.pdbId}…`);
+  return renderPdbCaseLoadingPage(`Loading case assets for ${params.pdbId}…`, headerHtml);
 }
 
 function annojoinAtlasPage() {
@@ -2383,18 +2372,8 @@ function toggleAnnojointAtlasGroupLimit(groupId) {
 }
 
 function downloadPage() {
-  return `<main class="page-download">
-    ${renderBundleHeader()}
-    <section class="card bundle-wide-card">
-      <h1>Download</h1>
-      <p>Use this page as the download entry for FoldBridge sequence and structure assets.</p>
-      <div class="actions">
-        <button type="button" data-route="sequence">Sequence downloads</button>
-        <button type="button" data-route="structure">Structure downloads</button>
-        <button type="button" data-route="annojoin-atlas">ANNOJOIN Atlas</button>
-      </div>
-    </section>
-  </main>`;
+  return `${renderBundleHeader()}
+  <main class="page-download" aria-label="Download"></main>`;
 }
 
 function searchPage() {
@@ -2404,12 +2383,11 @@ function searchPage() {
   const activeTags = Array.isArray(filters.tag) ? filters.tag : filters.tag ? [filters.tag] : [];
   const activeType = filters.type ?? '';
 
-  return `<main class="page-detail page-browse page-search">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-detail page-browse page-search">
     <section class="card bundle-wide-card site-search-card">
       <div class="site-search-header">
         <div>
-          <p class="technology-kicker">central search</p>
           <h1>Search</h1>
         </div>
         <button id="save-search-query" type="button" class="download-outline-btn">Save Search</button>
@@ -2450,8 +2428,8 @@ function searchPage() {
 
 
 function downloadStructuresPage() {
-  return `<main class="page-download">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-download">
     <section class="card bundle-wide-card">
       <h1>Structure</h1>
       <p>Structure-linked downloads and related assets are collected here.</p>
@@ -2467,8 +2445,8 @@ function publicationsPage() {
     </tr>
   `).join('');
 
-  return `<main class="page-publications">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-publications">
     <section class="card bundle-wide-card">
       <h1>Publications Page</h1>
       <table class="structure-table">
@@ -2484,17 +2462,12 @@ function publicationsPage() {
 }
 
 function aboutPage() {
-  const cached = aboutContentStore.peek();
+  const aboutCached = aboutContentStore.peek();
   // 仅在未缓存且加载未在进行/未终态失败时触发，避免失败后无限重试循环。
-  if (!cached && aboutContentState !== 'loading' && aboutContentState !== 'error') loadAboutContent();
-  return `<main class="page-detail">${renderBundleHeader()}${renderAboutPage(cached)}</main>`;
-}
-
-function helpPage() {
-  const cached = helpContentStore.peek();
-  // 与 aboutPage 同款懒加载：未缓存且非 loading/error 终态时触发一次。
-  if (!cached && helpContentState !== 'loading' && helpContentState !== 'error') loadHelpContent();
-  return `<main class="page-detail">${renderBundleHeader()}${renderHelpPage(cached)}</main>`;
+  if (!aboutCached && aboutContentState !== 'loading' && aboutContentState !== 'error') loadAboutContent();
+  const helpCached = helpContentStore.peek();
+  if (!helpCached && helpContentState !== 'loading' && helpContentState !== 'error') loadHelpContent();
+  return `${renderBundleHeader()}<main class="page-detail">${renderAboutPage(aboutCached)}${renderHelpPage(helpCached)}</main>`;
 }
 
 function statsPage() {
@@ -2503,13 +2476,14 @@ function statsPage() {
   if (siteStatsState === null) {
     loadSiteStats();
   }
-  return `<main class="page-detail">${renderBundleHeader()}${renderStatsPage(stats)}</main>`;
+  return `${renderBundleHeader()}<main class="page-detail">${renderStatsPage(stats)}</main>`;
 }
 
 // ANNOJOIN 置信度科普页：解释主表 Confidence distribution 列里 A/B/C/D 族、
 // LSS 召回层级（STRONG/MODERATE/WEAK/...）、以及 RASP "not active" 的含义。
 function annojoinConfidencePage() {
-  return `<main class="page-annojoin-confidence annojoin-confidence-article">
+  return `${renderBundleHeader()}
+  <main class="page-annojoin-confidence annojoin-confidence-article">
     <section class="annojoin-confidence-article-head">
       <p class="technology-kicker">ANNOJOIN · Confidence guide</p>
       <h1>Reading the ANNOJOIN confidence labels</h1>
@@ -3011,7 +2985,6 @@ function pageFor(name) {
   if (safeRoute === 'download-structures') return downloadStructuresPage();
   if (safeRoute === 'detail') return detailPage();
   if (safeRoute === 'publications') return publicationsPage();
-  if (safeRoute === 'help') return helpPage();
   if (safeRoute === 'about') return aboutPage();
   if (safeRoute === 'stats') return statsPage();
   if (safeRoute === 'sequence-detail') return sequenceDetailPage();

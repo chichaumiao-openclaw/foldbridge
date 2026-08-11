@@ -106,6 +106,14 @@ export function resolvePortalRoot(scriptSrc) {
     return '<a class="nav-btn" href="' + esc(portalRoot + "#" + item.route) + '">' + esc(item.label) + "</a>";
   }).join("\n          ");
 
+  var initialMode = "light";
+  try {
+    initialMode = window.localStorage.getItem("foldbridge-mode") === "dark" ? "dark" : "light";
+  } catch (_e) {
+    // Private browsing or a blocked storage backend should not prevent the nav
+    // from rendering.
+  }
+
   var wrapper = document.createElement("div");
   wrapper.className = "fb-detail-nav";
   wrapper.innerHTML =
@@ -118,7 +126,7 @@ export function resolvePortalRoot(scriptSrc) {
             '<div class="bundle-home-brand-copy">' +
               '<p class="bundle-home-bundle-label">FoldBridge axis</p>' +
               "<h1>FoldBridge</h1>" +
-              "<span>FoldBridge is a curated database that links RNA chemical probing data with experimentally resolved tertiary structures.</span>" +
+              "<span>A curated database that links RNA chemical probing data with experimentally resolved tertiary structures.</span>" +
             "</div>" +
           "</a>" +
         "</div>" +
@@ -130,6 +138,13 @@ export function resolvePortalRoot(scriptSrc) {
             "</div>" +
             '<div class="bundle-home-meta">' +
               '<span class="bundle-home-domain">foldbridge.gznl.org</span>' +
+              '<form class="global-search-form" id="global-search-form">' +
+                '<input id="global-search-input" type="search" placeholder="Search FoldBridge" aria-label="Search FoldBridge"/>' +
+                '<button type="submit">Search</button>' +
+              '</form>' +
+              '<button type="button" class="mode-toggle" id="mode-toggle">' +
+                (initialMode === "dark" ? "Switch to light mode" : "Switch to dark mode") +
+              '</button>' +
             "</div>" +
           "</div>" +
           '<nav class="bundle-home-route-nav" aria-label="Primary navigation">\n          ' + routeLinks + "\n        </nav>" +
@@ -139,11 +154,43 @@ export function resolvePortalRoot(scriptSrc) {
 
   if (document.body) {
     document.body.insertBefore(wrapper, document.body.firstChild);
+    bindHeaderControls();
   } else {
     document.addEventListener("DOMContentLoaded", function () {
       if (!document.querySelector(".fb-detail-nav")) {
         document.body.insertBefore(wrapper, document.body.firstChild);
+        bindHeaderControls();
       }
+    });
+  }
+
+  function bindHeaderControls() {
+    var form = wrapper.querySelector("#global-search-form");
+    var input = wrapper.querySelector("#global-search-input");
+    var modeToggle = wrapper.querySelector("#mode-toggle");
+
+    function setMode(nextMode) {
+      var safeMode = nextMode === "dark" ? "dark" : "light";
+      document.body.setAttribute("data-mode", safeMode);
+      try {
+        window.localStorage.setItem("foldbridge-mode", safeMode);
+      } catch (_e) {
+        // Keep the control usable when localStorage is unavailable.
+      }
+      if (modeToggle) {
+        modeToggle.textContent = safeMode === "dark" ? "Switch to light mode" : "Switch to dark mode";
+        modeToggle.setAttribute("aria-pressed", safeMode === "dark" ? "true" : "false");
+      }
+    }
+
+    setMode(initialMode);
+    modeToggle && modeToggle.addEventListener("click", function () {
+      setMode(document.body.getAttribute("data-mode") === "dark" ? "light" : "dark");
+    });
+    form && form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var query = input ? input.value.trim() : "";
+      window.location.href = portalRoot + (query ? "#search?q=" + encodeURIComponent(query) : "#search");
     });
   }
 })();

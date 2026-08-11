@@ -119,7 +119,6 @@ if (typeof document !== "undefined") {
 
   const chainButtons = [...document.querySelectorAll("[data-chain-id]")];
   const frame = document.getElementById("chainFrame");
-  const chainStatus = document.getElementById("chainStatus");
 
   function evidenceById(evidenceId) {
     return bootstrap.evidenceRows.find((row) => row.evidenceId === evidenceId) || null;
@@ -139,7 +138,6 @@ if (typeof document !== "undefined") {
     const query = profileId ? `?profileId=${encodeURIComponent(profileId)}` : "";
     const chainPage = bootstrap.chainPageById[state.activeChainId] || "";
     frame.src = `${chainPage}${query}`;
-    chainStatus.textContent = `chain ${state.activeChainId}`;
   }
 
   function loadEvidence(evidenceId) {

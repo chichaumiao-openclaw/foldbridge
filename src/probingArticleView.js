@@ -3,10 +3,17 @@
 // 文章正文用专门的 article-* class 控制阅读排版（行宽、行高、图注）。
 //
 // 两个入口：
-//   renderProbingArticleIndex(index)        — 文章总览（按机制家族分组的卡片墙）
+//   renderProbingArticleIndex(index)        — 方法总览（按机制家族分组的卡片墙）
 //   renderProbingArticlePage(detail, index) — 单篇阅读页（标题 + 有序 block + 图注）
 
 import { HOME_METRICS } from './siteChrome.js';
+
+const ENLARGED_FIGURE_ARTICLE_SLUGS = new Set([
+  'structure-seq',
+  'structure-seq2',
+  'mod-seq',
+  'dim-2p-seq'
+]);
 
 function escapeHtml(s) {
   return String(s == null ? '' : s)
@@ -265,13 +272,12 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
       </details>`;
   }).join('');
 
-  return `<main class="page-detail">
-    ${headerHtml}
+  return `${headerHtml}
+  <main class="page-detail page-probing-index">
     <section class="card bundle-wide-card technology-hero-card technology-hero-card-solo">
       <div class="technology-hero-copy">
-        <p class="technology-kicker">probing articles</p>
         <h1>RNA probing methods explained</h1>
-        <p class="technology-intro">This collection gathers ${articleCount} in-depth explainers on RNA structure probing methods. Each one starts from the boundary that "signal is not pairing ground truth", and walks through the original figures to make clear what chemical event the method actually measures, and how it should be interpreted across FoldBridge's three layers: raw, visualization, and confidence.</p>
+        <p class="technology-intro">This curated overview presents ${articleCount} in-depth explainers on RNA structure probing methods. The articles use original figures to clarify the chemical events each method measures and, where applicable, relate those measurements to FoldBridge’s raw data, visualization, and confidence layers.</p>
         <p class="technology-intro technology-intro-secondary">Browse by mechanism family first, then open any method to enter its full reading page.</p>
       </div>
     </section>
@@ -312,24 +318,48 @@ function renderBlock(block, assetBase) {
   return '';
 }
 
-function renderPptOverview(detail, assetBase) {
+function isRealCaseHeading(block) {
+  return block?.type === 'heading'
+    && /^a real (case|example)\b/i.test(String(block.text || '').trim());
+}
+
+function withoutRealCaseSections(blocks) {
+  let skipping = false;
+  return blocks.filter((block) => {
+    if (block.type === 'heading') {
+      if (isRealCaseHeading(block)) {
+        skipping = true;
+        return false;
+      }
+      if (skipping) skipping = false;
+    }
+    return !skipping;
+  });
+}
+
+function renderPptOverview(detail, assetBase, introHtml = '', footerHtml = '') {
   const items = Array.isArray(detail.ppt_overview) ? detail.ppt_overview : [];
   if (!items.length) return '';
   return `
     <section class="card bundle-wide-card article-ppt-overview">
+      ${introHtml}
       <div class="article-ppt-grid">
         ${items.map((item) => `
           <article class="article-ppt-item">
             <h2>${escapeHtml(item.title || '')}</h2>
             <img src="${assetBase}/${escapeHtml(item.srcBasename || '')}" alt="${escapeHtml(item.alt || item.title || '')}" loading="lazy" />
-            <p>${item.captionTitle ? `<strong>${escapeHtml(item.captionTitle)}</strong><br />` : ''}${escapeHtml(item.text || '')}</p>
+          <p>${item.captionTitle ? `<strong>${escapeHtml(item.captionTitle)}</strong><br />` : ''}${escapeHtml(item.text || '')}</p>
           </article>`).join('')}
       </div>
+      ${footerHtml}
     </section>`;
 }
 
 export function renderProbingArticlePage(detail, index, headerHtml = '') {
   const assetBase = detail.asset_base || `./src/assets/generated/probing-articles/assets/${detail.slug}`;
+  const enlargedFigureClass = ENLARGED_FIGURE_ARTICLE_SLUGS.has(detail.slug)
+    ? ' page-probing-article--enlarged-figures'
+    : '';
 
   // 家族归属（用于面包屑 / 上下篇导航）。
   let siblings = [];
@@ -353,14 +383,16 @@ export function renderProbingArticlePage(detail, index, headerHtml = '') {
   if (detail.rep_doi) {
     const doi = escapeHtml(detail.rep_doi);
     const doiHref = encodeURIComponent(detail.rep_doi);
-    meta.push(`<div class="technology-detail-primary-source"><dt>Primary source</dt><dd><a href="https://doi.org/${doiHref}" target="_blank" rel="noopener noreferrer">DOI ${doi}</a></dd></div>`);
+    meta.push(`<div class="technology-detail-primary-source"><dt>Primary source:</dt><dd><a href="https://doi.org/${doiHref}" target="_blank" rel="noopener noreferrer">DOI ${doi}</a></dd></div>`);
   }
 
   const allBlocks = Array.isArray(detail.blocks) ? detail.blocks : [];
   const startIndex = detail.body_start_heading
     ? allBlocks.findIndex((block) => block.type === 'heading' && block.text === detail.body_start_heading)
     : -1;
-  const visibleBlocks = startIndex >= 0 ? allBlocks.slice(startIndex) : allBlocks;
+  const visibleBlocks = withoutRealCaseSections(
+    startIndex >= 0 ? allBlocks.slice(startIndex) : allBlocks
+  );
   const body = visibleBlocks.map((b) => renderBlock(b, assetBase)).join('\n');
 
   // 同家族上下篇导航。
@@ -375,28 +407,48 @@ export function renderProbingArticlePage(detail, index, headerHtml = '') {
   }
   if (siblings.length > 1) {
     const idx = siblings.findIndex((a) => a.slug === detail.slug);
-    const prev = idx > 0 ? siblings[idx - 1] : null;
-    const next = idx < siblings.length - 1 ? siblings[idx + 1] : null;
-    const siblingMode = prev && next ? '' : (next ? ' next-only' : ' prev-only');
-    siblingNav = `
-      <nav class="article-sibling-nav${siblingMode}" aria-label="Articles in the same family">
-        ${prev ? `<a class="article-sibling-link prev" href="#probing?tech=${encodeURIComponent(prev.slug)}"><span>Previous</span><strong>${escapeHtml(shortArticleName(prev))}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
-        ${next ? `<a class="article-sibling-link next" href="#probing?tech=${encodeURIComponent(next.slug)}"><span>Next</span><strong>${escapeHtml(shortArticleName(next))}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
-      </nav>`;
+    if (idx !== -1) {
+      const prev = idx > 0 ? siblings[idx - 1] : null;
+      const next = idx < siblings.length - 1 ? siblings[idx + 1] : null;
+      const siblingMode = prev && next ? '' : (next ? ' next-only' : ' prev-only');
+      siblingNav = `
+        <nav class="article-sibling-nav${siblingMode}" aria-label="Articles in the same family">
+          ${prev ? `<a class="article-sibling-link prev" href="#probing?tech=${encodeURIComponent(prev.slug)}"><span>Previous</span><strong>${escapeHtml(shortArticleName(prev))}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
+          ${next ? `<a class="article-sibling-link next" href="#probing?tech=${encodeURIComponent(next.slug)}"><span>Next</span><strong>${escapeHtml(shortArticleName(next))}</strong></a>` : '<span class="article-sibling-spacer"></span>'}
+        </nav>`;
+    }
   }
 
+  const keyInnovation = detail.key_innovation ? `
+      <section class="article-key-innovation">
+        <h2>Key innovation</h2>
+        <p>${escapeHtml(detail.key_innovation)}</p>
+      </section>` : '';
+  const hasPptOverview = Array.isArray(detail.ppt_overview) && detail.ppt_overview.length > 0;
   const readingBody = body ? `
       <div class="article-reading-body">
         ${body}
       </div>` : '';
   const readingSection = body ? `
     <article class="card bundle-wide-card article-reading-card">
+      ${hasPptOverview ? '' : keyInnovation}
       ${readingBody}
       ${siblingNav}
     </article>` : '';
+  const pptOverview = renderPptOverview(
+    detail,
+    assetBase,
+    keyInnovation,
+    body ? '' : siblingNav
+  );
+  const keyInnovationOnlySection = !body && !hasPptOverview && keyInnovation ? `
+    <article class="card bundle-wide-card article-reading-card">
+      ${keyInnovation}
+      ${siblingNav}
+    </article>` : '';
 
-  return `<main class="page-detail page-probing-article">
-    ${headerHtml}
+  return `${headerHtml}
+  <main class="page-detail page-probing-article${enlargedFigureClass}">
     <section class="card bundle-wide-card technology-detail-hero">
       <a class="technology-back-link" href="#probing">← Back to probing methods overview</a>
       <div class="technology-detail-header">
@@ -406,10 +458,10 @@ export function renderProbingArticlePage(detail, index, headerHtml = '') {
         ${meta.length ? `<dl class="technology-detail-meta">${meta.join('')}</dl>` : ''}
       </div>
     </section>
-    ${detail.key_innovation ? `<section class="card bundle-wide-card article-key-innovation"><h2>Key innovation</h2><p>${escapeHtml(detail.key_innovation)}</p></section>` : ''}
-    ${renderPptOverview(detail, assetBase)}
+    ${pptOverview}
 
     ${readingSection}
-    ${body ? '' : siblingNav}
+    ${keyInnovationOnlySection}
+    ${body || hasPptOverview || keyInnovation ? '' : siblingNav}
   </main>`;
 }

@@ -120,8 +120,10 @@ function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabe
     caseUid: row.caseUid,
     pdbId: row.pdbId || caseId
   });
+  const pdbId = String(row.pdbId || caseId || '').trim();
+  const pdbHref = `https://www.rcsb.org/structure/${encodeURIComponent(pdbId)}`;
   const values = {
-    pdbId: escapeHtml(row.pdbId || caseId),
+    pdbId: `<a class="annojoin-pdb-link" href="${escapeHtml(pdbHref)}" target="_blank" rel="noopener noreferrer">${escapeHtml(pdbId)}</a>`,
     moleculeName: `<a class="annojoin-field-link annojoin-molecule-detail-link" href="${escapeHtml(moleculeHref)}">${sourceValue(moleculeName(row), row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource)}</a>`,
     confidenceDisplayLabel: renderConfidenceSegments(row.confidenceDisplayLabel || row.fecClaimCeilingDistribution),
     profileCount: `<span title="profile_count; profile preview, not a representative profile">${escapeHtml(profileValue(row))}</span>`,
@@ -546,7 +548,6 @@ function renderTechniqueFilterControls(cases = [], filters = {}) {
     <div class="annojoin-technique-filter-heading">
       <div>
         <strong>Filter by probing technique</strong>
-        <span>Families group methods by the chemical event they read out.</span>
       </div>
       <span class="mini-note">Select a family to view its methods</span>
     </div>

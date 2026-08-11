@@ -8,6 +8,12 @@
   "rep_pmcid": "PMC8599799",
   "rep_doi": "10.1093/nar/gkab885",
   "asset_base": "./src/assets/generated/probing-articles/assets/iclaser",
+  "sibling_navigation": {
+    "previous": {
+      "slug": "cotranscriptional-shape-seq",
+      "title": "Cotranscriptional SHAPE-seq"
+    }
+  },
   "blocks": [
     {
       "type": "paragraph",

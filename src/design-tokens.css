@@ -15,7 +15,8 @@
   --backgroundStrong: #E8EFE8;
   --surface: #ffffff;
   --surfaceAlt: #EEF3EE;
-  --border: #E3DCC8;
+  /* Use the same warm gold as the Switch pill for the site's shared borders. */
+  --border: rgba(224, 174, 36, 0.68);
   --surfaceMuted: var(--surfaceAlt);
   --borderSubtle: var(--border);
   /* family 语义色板（Entry 徽标 / profile 下拉 / 两级筛选器 chip 共用）。本次仅 A–D；E/F 留位。 */

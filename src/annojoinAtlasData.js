@@ -1,4 +1,5 @@
 import { matchesTechniqueFilter } from './techniqueFilterModel.js';
+import { moleculeDisplayNameOverride } from './moleculeNameOverrides.js';
 
 export const REQUIRED_ATLAS_CAPABILITIES = [
   { id: 'searchable-web-interface', label: 'Searchable web interface' },
@@ -173,9 +174,18 @@ function normalizeChainPlacements(value) {
 
 function normalizeCase(row) {
   const atlasCaseKey = atlasCaseKeyFor(row);
+  const rowAssetFamily = assetFamily(row);
+  const rowCaseId = text(row.case_id || row.caseId);
+  const rowPdbId = text(row.pdb_id || row.pdbId);
+  const moleculeDisplayName = moleculeDisplayNameOverride({
+    atlasCaseKey,
+    assetFamily: rowAssetFamily,
+    caseId: rowCaseId,
+    pdbId: rowPdbId
+  });
   const isMergedDisplayRow = row.isMergedDisplayRow === true || truthy(row.is_merged_display_row);
   return {
-    assetFamily: assetFamily(row),
+    assetFamily: rowAssetFamily,
     sourceLine: text(row.source_line || row.sourceLine),
     evidenceNamespace: text(row.evidence_namespace || row.evidenceNamespace),
     sourceAssetRoot: text(row.source_asset_root || row.sourceAssetRoot),
@@ -183,11 +193,11 @@ function normalizeCase(row) {
     publicCaseStatus: text(row.public_case_status || row.publicCaseStatus),
     caseUid: text(row.case_uid || row.caseUid),
     atlasCaseKey,
-    caseId: text(row.case_id || row.caseId),
-    pdbId: text(row.pdb_id || row.pdbId),
+    caseId: rowCaseId,
+    pdbId: rowPdbId,
     chains: splitList(row.pdb_chain_ids || row.chains),
     chainPlacements: normalizeChainPlacements(row.chainPlacements || row.chain_placements),
-    moleculeDisplayName: text(row.molecule_display_name || row.moleculeDisplayName),
+    moleculeDisplayName: moleculeDisplayName || text(row.molecule_display_name || row.moleculeDisplayName),
     biologicalMoleculeName: text(row.biological_molecule_name || row.biologicalMoleculeName),
     biologicalMoleculeNameSource: text(row.biological_molecule_name_source || row.biologicalMoleculeNameSource),
     pdbMoleculeName: text(row.pdb_molecule_name || row.pdbMoleculeName),
@@ -214,7 +224,7 @@ function normalizeCase(row) {
     conflictCandidateCount: numberOrZero(row.conflict_candidate_count ?? row.conflictCandidateCount),
     hasContextAnnotation: row.hasContextAnnotation === true || truthy(row.has_context_annotation),
     hasLssAnnotation: row.hasLssAnnotation === true || truthy(row.has_lss_annotation),
-    searchText: text(row.search_text || row.searchText),
+    searchText: [text(row.search_text || row.searchText), moleculeDisplayName].filter(Boolean).join(' '),
     routeId: text(row.route_id || row.routeId),
     caseAssetPath: isMergedDisplayRow ? text(row.caseAssetPath || row.case_asset_path) : caseAssetPathFor({ ...row, atlasCaseKey }),
     isMergedDisplayRow,

@@ -8,6 +8,12 @@
   "rep_pmcid": "PMC11197792",
   "rep_doi": "10.1016/j.fmre.2021.12.007",
   "asset_base": "./src/assets/generated/probing-articles/assets/smartshape",
+  "sibling_navigation": {
+    "previous": {
+      "slug": "nai-map",
+      "title": "NAI-MaP"
+    }
+  },
   "key_innovation": "Compared with conventional SHAPE-based transcriptome profiling, smartSHAPE improves library preparation efficiency and reduces input requirements, enabling global RNA structure mapping from limited biological samples.",
   "body_start_heading": "A real example: how a smartSHAPE profile flows through three layers (illustrative)",
   "ppt_overview": [

@@ -74,6 +74,7 @@ test('annojoin case page renders confidence-first shell with the homepage header
   });
 
   assert.match(html, /confidence-first/);
+  assert.ok(html.indexOf('<header class="bundle-home-header"></header>') < html.indexOf('<main class="page-annojoin-case">'));
   assert.match(html, /annojoin-family-filter/);
   assert.match(html, /annojoin-evidence-row is-selected/);
   assert.match(html, /bundle-home-header/);
@@ -85,6 +86,25 @@ test('annojoin case page renders confidence-first shell with the homepage header
   assert.doesNotMatch(html, /calibrated evidence rows are route-bridge ready/);
   // The unfinished "Pair segment" focus row must be gone.
   assert.doesNotMatch(html, /Pair segment/);
+});
+
+test('annojoin case page uses the curated preQ₁ aptamer name for 2L1V', () => {
+  const html = renderAnnojointCasePage({
+    caseAsset: {
+      case: {
+        caseId: '2L1V',
+        pdbId: '2L1V',
+        atlasCaseKey: 'RMDB2PDB:2L1V',
+        assetFamily: 'RMDB2PDB',
+        biologicalMoleculeName: '36-MER'
+      },
+      summary: { profileCount: 1 }
+    },
+    confidenceStatus: 'ready'
+  });
+
+  assert.match(html, /<h1>preQ₁ riboswitch aptamer domain \(36 nt\)<\/h1>/);
+  assert.doesNotMatch(html, /<h1>36-MER<\/h1>/);
 });
 
 test('annojoin case page stays honest when calibrated confidence sidecars are absent', () => {

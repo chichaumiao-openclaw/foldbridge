@@ -53,7 +53,7 @@ function formatScore(value) {
   return n.toFixed(3);
 }
 
-export function renderPdbCaseIndexPage(rows = []) {
+export function renderPdbCaseIndexPage(rows = [], { headerHtml = '' } = {}) {
   const counts = { all: rows.length, high: 0, medium: 0, low: 0 };
   rows.forEach((row) => { if (counts[row.confidenceClass] != null) counts[row.confidenceClass] += 1; });
 
@@ -127,7 +127,8 @@ export function renderPdbCaseIndexPage(rows = []) {
   const groupedBody = sortedParents.map(([name, group]) => renderParentGroupRows(name, group)).join('');
   const ungroupedBody = ungrouped.map((row) => renderChildRow(row)).join('');
 
-  return `<main class="page-pdb-case page-download-sequences">
+  return `${headerHtml}
+  <main class="page-pdb-case page-download-sequences">
     <section class="card bundle-wide-card pdb-case-hero">
       <p class="technology-kicker">PDB case index</p>
       <h1>RMDB→PDB Case Index</h1>
@@ -272,9 +273,10 @@ function renderProfilesSection(profiles) {
   </section>`;
 }
 
-export function renderPdbCasePage(detail, params = {}, assets = {}) {
+export function renderPdbCasePage(detail, params = {}, assets = {}, { headerHtml = '' } = {}) {
   if (!detail) {
-    return `<main class="page-pdb-case">
+    return `${headerHtml}
+      <main class="page-pdb-case">
       <section class="card bundle-wide-card pdb-case-hero">
         <p class="technology-kicker">PDB case page</p>
         <h1>PDB case not found</h1>
@@ -287,7 +289,8 @@ export function renderPdbCasePage(detail, params = {}, assets = {}) {
   const { profiles, alignmentPage, reactivitySummary } = assets;
   const reactivityEntries = detail.reactivity || [];
 
-  return `<main class="page-pdb-case">
+  return `${headerHtml}
+  <main class="page-pdb-case">
     <section class="card bundle-wide-card pdb-case-hero">
       <a class="technology-back-link" href="#pdb-case">Back to PDB case index</a>
       <p class="technology-kicker">PDB case page</p>

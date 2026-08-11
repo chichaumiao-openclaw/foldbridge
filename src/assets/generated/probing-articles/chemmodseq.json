@@ -8,6 +8,7 @@
   "rep_pmcid": "PMC4231735",
   "rep_doi": "10.1093/nar/gku815",
   "asset_base": "./src/assets/generated/probing-articles/assets/chemmodseq",
+  "sibling_navigation": {},
   "blocks": [
     {
       "type": "paragraph",
