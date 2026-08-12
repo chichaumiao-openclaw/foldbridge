@@ -2,10 +2,14 @@
 // 纯逻辑取自 ef-heatmap-core（见前置说明）；本层只做 SVG 装配 + 事件 + 三视图联动。
 "use strict";
 (function () {
-  const MODE = "full-3d"; // 退路开关：'full-3d' | 'highlight-only'（spec §8，纯渲染层）
   const NEUTRAL_GRAY = { r: 200, g: 200, b: 200 };
 
   window.createEfHeatmap = function ({ heatmapHost, varnaHost, molstarPlugin, payload }) {
+    // fail-loud：三视图完整联动无退路（spec §8，NO fallback）。
+    // 未传入可用的 molstar plugin 即在装配阶段抛错，绝不静默降级为 highlight-only 或跳过 3D。
+    if (!molstarPlugin || !molstarPlugin.visual) {
+      throw new Error("createEfHeatmap requires a molstar plugin with .visual (full-3d 三视图联动无退路)");
+    }
     const core = window.EfHeatmapCore;
     core.assertContract(payload);
     const idx = core.buildIndices(payload);
@@ -56,15 +60,13 @@
       );
       state.hoveredCell = { i_index: i, j_index: j };
       const targets = core.buildHoverTargets(i, j, idx, H);
-      if (targets.length && molstarPlugin && molstarPlugin.visual) {
+      if (targets.length) {
         molstarPlugin.visual.highlight({ data: targets });
       }
     }
 
     function onLeave() {
-      if (molstarPlugin && molstarPlugin.visual) {
-        molstarPlugin.visual.clearHighlight();
-      }
+      molstarPlugin.visual.clearHighlight();
       state.hoveredCell = null;
     }
 
@@ -76,14 +78,11 @@
       state.selected = { axis, index };
       const selPayload = core.buildMolstarSelectPayload(index, axis, idx, H);
 
-      if (MODE === "full-3d" && molstarPlugin && molstarPlugin.visual) {
-        molstarPlugin.visual.select({
-          data: selPayload,
-          nonSelectedColor: NEUTRAL_GRAY
-        });
-      } else if (molstarPlugin && molstarPlugin.visual) {
-        molstarPlugin.visual.highlight({ data: selPayload });
-      }
+      // 恒 full-3d：整链按 value[k][*] 梯度重着色，无 highlight-only 降级。
+      molstarPlugin.visual.select({
+        data: selPayload,
+        nonSelectedColor: NEUTRAL_GRAY
+      });
 
       const varnaColors = core.buildVarnaColorMap(index, axis, idx, H);
       recolorVarna(varnaColors);
