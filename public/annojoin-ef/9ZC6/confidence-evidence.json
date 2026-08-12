@@ -1,0 +1,38 @@
+{
+  "atlasCaseKey": "RASP2PDB:9ZC6",
+  "generatedAt": "2026-06-28T08:08:45.254810Z",
+  "modality": "2d_pair_set",
+  "pdbId": "9ZC6",
+  "rows": [
+    {
+      "bridgeStatus": "bridge_missing",
+      "candidateNote": "calibrated_strong_perm_p_0.000999",
+      "chain": "A",
+      "confidenceRankedSetEligible": true,
+      "contactPairAuc": 0.779861,
+      "directionalMetric": 0.779861,
+      "directionalMetricKind": "contact_pair_auc",
+      "directionalMetricLabel": "Contact pair AUC",
+      "effectSizeZ": 7.56,
+      "empiricalPValue": 0.000999,
+      "evidenceId": "annojoin:RASP2PDB:9ZC6:confidence:TRP4P6_MCA_0000",
+      "family": "E",
+      "lssCalibrationStatus": "calibrated",
+      "lssTierCalibrated": "LSS_STRONG",
+      "lssTierUncalibrated": "LSS_MODERATE_CANDIDATE",
+      "nEvaluable": 75,
+      "nUnits": 75,
+      "pairF1": null,
+      "pairId": "",
+      "pairPrecision": null,
+      "pairSegmentId": "",
+      "profileKey": "TRP4P6_MCA_0000",
+      "selectedByDefault": true,
+      "supports2d": true,
+      "supportsResidueColoring": false,
+      "technology": "MCA"
+    }
+  ],
+  "schemaVersion": "family-case-bundle.v2",
+  "status": "materialized"
+}

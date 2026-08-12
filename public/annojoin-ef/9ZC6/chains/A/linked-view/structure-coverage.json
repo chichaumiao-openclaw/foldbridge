@@ -1,0 +1,31 @@
+{
+  "activeChainKey": "9ZC6|chain|A",
+  "atomSiteFilter": {
+    "auth_asym_id": "A",
+    "label_asym_id": "A"
+  },
+  "caseId": "9ZC6",
+  "coverage": {
+    "profileResidues": 388,
+    "resolvedProfileRangeLabel": "1-387",
+    "resolvedResidues": 387
+  },
+  "polymerChain": {
+    "auth_asym_id": "A",
+    "displayName": "9ZC6|chain|A",
+    "label_asym_id": "A",
+    "pdbStrandId": "A",
+    "profileEnd": 388,
+    "profileStart": 1,
+    "sequence": "GGAGGGAAAAGUUAUCAGGCAUGCACCUGGUAGCUAGUCUUUAAACCAAUAGAUUGCAUCGGUUUAAAAGGCAAGACCGUCAAAUUGCGGGAAAGGGGUCAACAGCCGUUCAGUACCAAGUCUCAGGGGAAACUUUGAGAUGGCCUUGCAAAGGGUAUGGUAAUAAGCUGACGGACAUGGUCCUAACCACGCAGCCAAGUCCUAAGUCAACAGAUCUUCUGUUGAUAUGGAUGCAGUUCACAGACUAAAUGUCGGUCGGGGAAGAUGUAUUCUUCUCAUAAGAUAUAGUCGGACCUCUCCUUAAUGGGAGCUAGCGGAUGAAGUGAUGCAACACUGGAGCCGCUGGGAACUAAUUUGUAUGCGAAAGUAUAUUGAUUAGUUUUGGAGU"
+  },
+  "protocolVersion": "linked-view-v0.1",
+  "sequenceAlignment": {
+    "matchedResidues": 388,
+    "mismatchedResidues": 0,
+    "profileResidues": 388
+  },
+  "sourceStructure": {
+    "href": "../../../structure.cif"
+  }
+}

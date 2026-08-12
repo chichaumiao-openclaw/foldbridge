@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8UYE",
+  "biologicalMoleculeName": "BtCoV-HKU5 5' proximal stem-loop 5, conformation 1",
+  "caseId": "8UYE",
+  "caseKey": "RASP2PDB:8UYE",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "F DISCORDANT",
+  "measurementFamily": "F",
+  "modality": "2d_pair_set",
+  "pdbId": "8UYE",
+  "profileCount": 1
+}

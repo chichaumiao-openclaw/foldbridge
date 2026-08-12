@@ -1,0 +1,17 @@
+{
+  "caseId": "z",
+  "modality": "2d_pair_set",
+  "protocolVersion": "linked-view-v0.1",
+  "records": [
+    {
+      "confidenceRankedSetEligible": false,
+      "contextEngine": "family_ef_case_bundle_v1",
+      "directionalMetric": null,
+      "directionalMetricKind": "contact_pair_auc",
+      "lssStatus": "LSS_NOT_EVALUABLE",
+      "nEvaluable": 0,
+      "nUnits": 0,
+      "profileId": "HCIRES_MCA_0000"
+    }
+  ]
+}

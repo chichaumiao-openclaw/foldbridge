@@ -1,0 +1,5826 @@
+{
+  "caseId": "9ZC6",
+  "protocolVersion": "linked-view-v0.1",
+  "residues": [
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:1"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 1,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|1"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:2"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 2,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|2"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:3"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 3,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|3"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:4"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 4,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|4"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:5"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 5,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|5"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:6"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 6,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|6"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:7"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 7,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|7"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:8"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 8,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|8"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:9"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 9,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|9"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:10"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 10,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|10"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:11"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 11,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|11"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:12"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 12,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|12"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:13"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 13,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|13"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:14"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 14,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|14"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:15"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 15,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|15"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:16"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 16,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|16"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:17"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 17,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|17"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:18"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 18,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|18"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:19"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 19,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|19"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:20"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 20,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|20"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:21"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 21,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|21"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:22"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 22,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|22"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:23"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 23,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|23"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:24"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 24,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|24"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:25"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 25,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|25"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:26"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 26,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|26"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:27"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 27,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|27"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:28"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 28,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|28"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:29"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 29,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|29"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:30"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 30,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|30"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:31"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 31,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|31"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:32"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 32,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|32"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:33"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 33,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|33"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:34"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 34,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|34"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:35"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 35,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|35"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:36"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 36,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|36"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:37"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 37,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|37"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:38"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 38,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|38"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:39"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 39,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|39"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:40"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 40,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|40"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:41"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 41,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|41"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:42"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 42,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|42"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:43"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 43,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|43"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:44"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 44,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|44"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:45"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 45,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|45"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:46"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 46,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|46"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:47"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 47,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|47"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:48"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 48,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|48"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:49"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 49,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|49"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:50"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 50,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|50"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:51"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 51,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|51"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:52"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 52,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|52"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:53"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 53,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|53"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:54"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 54,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|54"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:55"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 55,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|55"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:56"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 56,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|56"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:57"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 57,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|57"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:58"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 58,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|58"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:59"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 59,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|59"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:60"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 60,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|60"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:61"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 61,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|61"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:62"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 62,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|62"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:63"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 63,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|63"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:64"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 64,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|64"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:65"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 65,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|65"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:66"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 66,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|66"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:67"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 67,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|67"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:68"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 68,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|68"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:69"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 69,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|69"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:70"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 70,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|70"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:71"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 71,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|71"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:72"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 72,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|72"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:73"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 73,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|73"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:74"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 74,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|74"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:75"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 75,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|75"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:76"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 76,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|76"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:77"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 77,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|77"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:78"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 78,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|78"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:79"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 79,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|79"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:80"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 80,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|80"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:81"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 81,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|81"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:82"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 82,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|82"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:83"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 83,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|83"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:84"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 84,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|84"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:85"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 85,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|85"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:86"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 86,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|86"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:87"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 87,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|87"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:88"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 88,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|88"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:89"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 89,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|89"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:90"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 90,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|90"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:91"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 91,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|91"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:92"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 92,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|92"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:93"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 93,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|93"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:94"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 94,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|94"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:95"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 95,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|95"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:96"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 96,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|96"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:97"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 97,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|97"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:98"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 98,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|98"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:99"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 99,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|99"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:100"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 100,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|100"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:101"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 101,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|101"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:102"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 102,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|102"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:103"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 103,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|103"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:104"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 104,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|104"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:105"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 105,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|105"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:106"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 106,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|106"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:107"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 107,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|107"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:108"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 108,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|108"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:109"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 109,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|109"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:110"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 110,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|110"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:111"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 111,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|111"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:112"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 112,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|112"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:113"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 113,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|113"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:114"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 114,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|114"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:115"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 115,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|115"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:116"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 116,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|116"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:117"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 117,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|117"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:118"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 118,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|118"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:119"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 119,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|119"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:120"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 120,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|120"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:121"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 121,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|121"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:122"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 122,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|122"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:123"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 123,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|123"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:124"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 124,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|124"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:125"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 125,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|125"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:126"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 126,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|126"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:127"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 127,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|127"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:128"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 128,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|128"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:129"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 129,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|129"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:130"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 130,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|130"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:131"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 131,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|131"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:132"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 132,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|132"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:133"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 133,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|133"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:134"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 134,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|134"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:135"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 135,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|135"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:136"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 136,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|136"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:137"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 137,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|137"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:138"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 138,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|138"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:139"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 139,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|139"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:140"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 140,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|140"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:141"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 141,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|141"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:142"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 142,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|142"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:143"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 143,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|143"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:144"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 144,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|144"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:145"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 145,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|145"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:146"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 146,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|146"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:147"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 147,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|147"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:148"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 148,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|148"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:149"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 149,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|149"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:150"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 150,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|150"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:151"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 151,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|151"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:152"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 152,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|152"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:153"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 153,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|153"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:154"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 154,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|154"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:155"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 155,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|155"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:156"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 156,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|156"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:157"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 157,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|157"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:158"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 158,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|158"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:159"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 159,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|159"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:160"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 160,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|160"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:161"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 161,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|161"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:162"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 162,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|162"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:163"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 163,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|163"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:164"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 164,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|164"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:165"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 165,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|165"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:166"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 166,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|166"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:167"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 167,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|167"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:168"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 168,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|168"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:169"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 169,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|169"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:170"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 170,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|170"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:171"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 171,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|171"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:172"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 172,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|172"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:173"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 173,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|173"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:174"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 174,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|174"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:175"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 175,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|175"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:176"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 176,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|176"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:177"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 177,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|177"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:178"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 178,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|178"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:179"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 179,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|179"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:180"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 180,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|180"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:181"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 181,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|181"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:182"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 182,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|182"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:183"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 183,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|183"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:184"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 184,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|184"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:185"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 185,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|185"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:186"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 186,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|186"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:187"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 187,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|187"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:188"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 188,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|188"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:189"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 189,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|189"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:190"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 190,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|190"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:191"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 191,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|191"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:192"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 192,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|192"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:193"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 193,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|193"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:194"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 194,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|194"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:195"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 195,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|195"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:196"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 196,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|196"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:197"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 197,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|197"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:198"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 198,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|198"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:199"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 199,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|199"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:200"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 200,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|200"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:201"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 201,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|201"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:202"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 202,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|202"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:203"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 203,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|203"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:204"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 204,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|204"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:205"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 205,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|205"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:206"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 206,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|206"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:207"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 207,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|207"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:208"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 208,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|208"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:209"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 209,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|209"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:210"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 210,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|210"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:211"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 211,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|211"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:212"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 212,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|212"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:213"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 213,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|213"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:214"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 214,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|214"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:215"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 215,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|215"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:216"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 216,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|216"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:217"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 217,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|217"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:218"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 218,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|218"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:219"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 219,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|219"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:220"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 220,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|220"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:221"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 221,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|221"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:222"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 222,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|222"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:223"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 223,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|223"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:224"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 224,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|224"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:225"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 225,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|225"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:226"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 226,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|226"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:227"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 227,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|227"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:228"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 228,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|228"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:229"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 229,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|229"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:230"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 230,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|230"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:231"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 231,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|231"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:232"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 232,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|232"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:233"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 233,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|233"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:234"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 234,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|234"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:235"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 235,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|235"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:236"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 236,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|236"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:237"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 237,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|237"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:238"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 238,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|238"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:239"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 239,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|239"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:240"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 240,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|240"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:241"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 241,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|241"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:242"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 242,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|242"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:243"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 243,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|243"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:244"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 244,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|244"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:245"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 245,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|245"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:246"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 246,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|246"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:247"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 247,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|247"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:248"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 248,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|248"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:249"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 249,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|249"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:250"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 250,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|250"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:251"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 251,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|251"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:252"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 252,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|252"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:253"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 253,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|253"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:254"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 254,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|254"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:255"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 255,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|255"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:256"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 256,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|256"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:257"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 257,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|257"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:258"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 258,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|258"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:259"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 259,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|259"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:260"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 260,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|260"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:261"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 261,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|261"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:262"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 262,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|262"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:263"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 263,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|263"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:264"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 264,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|264"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:265"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 265,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|265"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:266"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 266,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|266"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:267"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 267,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|267"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:268"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 268,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|268"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:269"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 269,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|269"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:270"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 270,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|270"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:271"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 271,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|271"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:272"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 272,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|272"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:273"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 273,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|273"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:274"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 274,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|274"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:275"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 275,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|275"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:276"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 276,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|276"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:277"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 277,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|277"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:278"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 278,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|278"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:279"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 279,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|279"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:280"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 280,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|280"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:281"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 281,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|281"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:282"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 282,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|282"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:283"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 283,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|283"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:284"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 284,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|284"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:285"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 285,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|285"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:286"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 286,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|286"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:287"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 287,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|287"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:288"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 288,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|288"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:289"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 289,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|289"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:290"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 290,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|290"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:291"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 291,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|291"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:292"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 292,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|292"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:293"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 293,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|293"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:294"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 294,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|294"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:295"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 295,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|295"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:296"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 296,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|296"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:297"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 297,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|297"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:298"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 298,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|298"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:299"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 299,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|299"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:300"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 300,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|300"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:301"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 301,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|301"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:302"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 302,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|302"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:303"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 303,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|303"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:304"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 304,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|304"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:305"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 305,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|305"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:306"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 306,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|306"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:307"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 307,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|307"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:308"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 308,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|308"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:309"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 309,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|309"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:310"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 310,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|310"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:311"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 311,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|311"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:312"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 312,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|312"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:313"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 313,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|313"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:314"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 314,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|314"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:315"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 315,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|315"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:316"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 316,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|316"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:317"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 317,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|317"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:318"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 318,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|318"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:319"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 319,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|319"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:320"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 320,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|320"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:321"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 321,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|321"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:322"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 322,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|322"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:323"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 323,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|323"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:324"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 324,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|324"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:325"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 325,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|325"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:326"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 326,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|326"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:327"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 327,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|327"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:328"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 328,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|328"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:329"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 329,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|329"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:330"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 330,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|330"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:331"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 331,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|331"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:332"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 332,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|332"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:333"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 333,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|333"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:334"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 334,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|334"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:335"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 335,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|335"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:336"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 336,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|336"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:337"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 337,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|337"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:338"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 338,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|338"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:339"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 339,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|339"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:340"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 340,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|340"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:341"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 341,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|341"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:342"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 342,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|342"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:343"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 343,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|343"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:344"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 344,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|344"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:345"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 345,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|345"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:346"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 346,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|346"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:347"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 347,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|347"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:348"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 348,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|348"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:349"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 349,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|349"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:350"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 350,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|350"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:351"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 351,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|351"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:352"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 352,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|352"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:353"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 353,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|353"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:354"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 354,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|354"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:355"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 355,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|355"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:356"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 356,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|356"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:357"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 357,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|357"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:358"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 358,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|358"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:359"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 359,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|359"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:360"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 360,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|360"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:361"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 361,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|361"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:362"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "C",
+      "labelSeqId": 362,
+      "parentBase": "C",
+      "residueKey": "9ZC6|chain|A|362"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:363"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 363,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|363"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:364"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 364,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|364"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:365"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 365,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|365"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:366"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 366,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|366"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:367"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 367,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|367"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:368"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 368,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|368"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:369"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 369,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|369"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:370"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 370,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|370"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:371"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 371,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|371"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:372"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 372,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|372"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:373"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 373,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|373"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:374"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 374,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|374"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:375"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 375,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|375"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:376"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 376,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|376"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:377"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 377,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|377"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:378"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 378,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|378"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:379"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 379,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|379"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:380"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 380,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|380"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:381"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 381,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|381"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:382"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 382,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|382"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:383"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 383,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|383"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:384"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 384,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|384"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:385"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 385,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|385"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:386"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "A",
+      "labelSeqId": 386,
+      "parentBase": "A",
+      "residueKey": "9ZC6|chain|A|386"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:387"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "G",
+      "labelSeqId": 387,
+      "parentBase": "G",
+      "residueKey": "9ZC6|chain|A|387"
+    },
+    {
+      "aliases": {
+        "legacyResidueKey": [
+          "A:388"
+        ],
+        "renderStrand": [
+          "strand_A"
+        ]
+      },
+      "chainKey": "9ZC6|chain|A",
+      "compId": "U",
+      "labelSeqId": 388,
+      "parentBase": "U",
+      "residueKey": "9ZC6|chain|A|388"
+    }
+  ]
+}

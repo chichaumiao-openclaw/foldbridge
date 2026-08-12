@@ -1,0 +1,38 @@
+{
+  "atlasCaseKey": "RASP2PDB:7SYS",
+  "generatedAt": "2026-06-28T08:08:45.254810Z",
+  "modality": "2d_pair_set",
+  "pdbId": "7SYS",
+  "rows": [
+    {
+      "bridgeStatus": "bridge_missing",
+      "candidateNote": "not_evaluable_contacts_outside_resolved_chain",
+      "chain": "z",
+      "confidenceRankedSetEligible": false,
+      "contactPairAuc": null,
+      "directionalMetric": null,
+      "directionalMetricKind": "contact_pair_auc",
+      "directionalMetricLabel": "Contact pair AUC",
+      "effectSizeZ": null,
+      "empiricalPValue": null,
+      "evidenceId": "annojoin:RASP2PDB:7SYS:confidence:HCIRES_MCA_0000",
+      "family": "E",
+      "lssCalibrationStatus": "uncalibrated",
+      "lssTierCalibrated": "LSS_NOT_EVALUABLE",
+      "lssTierUncalibrated": "LSS_NOT_EVALUABLE",
+      "nEvaluable": 0,
+      "nUnits": 0,
+      "pairF1": null,
+      "pairId": "",
+      "pairPrecision": null,
+      "pairSegmentId": "",
+      "profileKey": "HCIRES_MCA_0000",
+      "selectedByDefault": true,
+      "supports2d": true,
+      "supportsResidueColoring": false,
+      "technology": "MCA"
+    }
+  ],
+  "schemaVersion": "family-case-bundle.v2",
+  "status": "materialized"
+}

@@ -1,0 +1,116 @@
+{
+  "caseId": "8QO5",
+  "edges": [
+    {
+      "interactionKey": "8QO5|chain|A|pair|50|57",
+      "residueA": "8QO5|chain|A|50",
+      "residueB": "8QO5|chain|A|57"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|49|58",
+      "residueA": "8QO5|chain|A|49",
+      "residueB": "8QO5|chain|A|58"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|44|64",
+      "residueA": "8QO5|chain|A|44",
+      "residueB": "8QO5|chain|A|64"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|43|65",
+      "residueA": "8QO5|chain|A|43",
+      "residueB": "8QO5|chain|A|65"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|42|66",
+      "residueA": "8QO5|chain|A|42",
+      "residueB": "8QO5|chain|A|66"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|41|67",
+      "residueA": "8QO5|chain|A|41",
+      "residueB": "8QO5|chain|A|67"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|36|76",
+      "residueA": "8QO5|chain|A|36",
+      "residueB": "8QO5|chain|A|76"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|35|77",
+      "residueA": "8QO5|chain|A|35",
+      "residueB": "8QO5|chain|A|77"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|89|93",
+      "residueA": "8QO5|chain|A|89",
+      "residueB": "8QO5|chain|A|93"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|88|95",
+      "residueA": "8QO5|chain|A|88",
+      "residueB": "8QO5|chain|A|95"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|84|98",
+      "residueA": "8QO5|chain|A|84",
+      "residueB": "8QO5|chain|A|98"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|104|113",
+      "residueA": "8QO5|chain|A|104",
+      "residueB": "8QO5|chain|A|113"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|33|114",
+      "residueA": "8QO5|chain|A|33",
+      "residueB": "8QO5|chain|A|114"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|26|121",
+      "residueA": "8QO5|chain|A|26",
+      "residueB": "8QO5|chain|A|121"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|24|122",
+      "residueA": "8QO5|chain|A|24",
+      "residueB": "8QO5|chain|A|122"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|23|123",
+      "residueA": "8QO5|chain|A|23",
+      "residueB": "8QO5|chain|A|123"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|18|127",
+      "residueA": "8QO5|chain|A|18",
+      "residueB": "8QO5|chain|A|127"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|17|128",
+      "residueA": "8QO5|chain|A|17",
+      "residueB": "8QO5|chain|A|128"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|15|129",
+      "residueA": "8QO5|chain|A|15",
+      "residueB": "8QO5|chain|A|129"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|14|130",
+      "residueA": "8QO5|chain|A|14",
+      "residueB": "8QO5|chain|A|130"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|6|140",
+      "residueA": "8QO5|chain|A|6",
+      "residueB": "8QO5|chain|A|140"
+    },
+    {
+      "interactionKey": "8QO5|chain|A|pair|2|144",
+      "residueA": "8QO5|chain|A|2",
+      "residueB": "8QO5|chain|A|144"
+    }
+  ],
+  "protocolVersion": "linked-view-v0.1"
+}

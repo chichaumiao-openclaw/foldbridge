@@ -1,0 +1,17 @@
+{
+  "atlasCaseKey": "RASP2PDB:8UYE",
+  "bridgeFailureSample": [],
+  "bridgeStrategy": "2d confidence badge grouped by chain to chains/<encodedChainId>",
+  "bridgeStrategyVersion": "family_ef_case_chain_badge_v1",
+  "failureReasons": {},
+  "generatedAt": "2026-06-28T08:19:19.995268Z",
+  "modality": "2d_pair_set",
+  "pdbId": "8UYE",
+  "schemaVersion": "family-case-bundle.v2",
+  "status": "materialized",
+  "totals": {
+    "bridgeMissingCount": 1,
+    "calibratedRows": 1,
+    "materializedEvidenceCount": 1
+  }
+}

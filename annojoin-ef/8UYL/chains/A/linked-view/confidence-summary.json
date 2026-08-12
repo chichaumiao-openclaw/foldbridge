@@ -1,0 +1,19 @@
+{
+  "annoconfidence": {
+    "displayLabel": "ANNOCONFIDENCE",
+    "status": "materialized"
+  },
+  "fec": {
+    "displayLabel": "FEC",
+    "status": "materialized"
+  },
+  "lss": {
+    "displayLabel": "LSS",
+    "status": "materialized"
+  },
+  "profileJoinConfidence": {
+    "explanation": "profile joins materialized at build time"
+  },
+  "protocolVersion": "linked-view-v0.1",
+  "scope": "RASP2PDB:8UYL"
+}

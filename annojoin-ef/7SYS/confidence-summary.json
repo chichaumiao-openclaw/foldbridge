@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "RASP2PDB:7SYS",
+  "availableFamilies": [
+    "E"
+  ],
+  "bridgeMissingCount": 1,
+  "defaultEvidenceId": "annojoin:RASP2PDB:7SYS:confidence:HCIRES_MCA_0000",
+  "defaultSelectionRuleVersion": "tier_metric_p_n_v1",
+  "familyCounts": {
+    "E": 1
+  },
+  "generatedAt": "2026-06-28T08:08:45.254810Z",
+  "materializedEvidenceCount": 1,
+  "modality": "2d_pair_set",
+  "pdbId": "7SYS",
+  "schemaVersion": "family-case-bundle.v2",
+  "status": "materialized",
+  "supports2d": true,
+  "supportsResidueColoring": false,
+  "tierCounts": {
+    "LSS_NOT_EVALUABLE": 1
+  },
+  "totalEvidenceCount": 1
+}

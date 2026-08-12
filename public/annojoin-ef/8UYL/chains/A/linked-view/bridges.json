@@ -1,0 +1,349 @@
+{
+  "bridges": [
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|41|48",
+      "residueKeys": [
+        "8UYL|chain|A|41",
+        "8UYL|chain|A|48"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|40|49",
+      "residueKeys": [
+        "8UYL|chain|A|40",
+        "8UYL|chain|A|49"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|39|50",
+      "residueKeys": [
+        "8UYL|chain|A|39",
+        "8UYL|chain|A|50"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|37|51",
+      "residueKeys": [
+        "8UYL|chain|A|37",
+        "8UYL|chain|A|51"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|36|52",
+      "residueKeys": [
+        "8UYL|chain|A|36",
+        "8UYL|chain|A|52"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|35|53",
+      "residueKeys": [
+        "8UYL|chain|A|35",
+        "8UYL|chain|A|53"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|32|55",
+      "residueKeys": [
+        "8UYL|chain|A|32",
+        "8UYL|chain|A|55"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|31|56",
+      "residueKeys": [
+        "8UYL|chain|A|31",
+        "8UYL|chain|A|56"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|30|57",
+      "residueKeys": [
+        "8UYL|chain|A|30",
+        "8UYL|chain|A|57"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|29|58",
+      "residueKeys": [
+        "8UYL|chain|A|29",
+        "8UYL|chain|A|58"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|28|59",
+      "residueKeys": [
+        "8UYL|chain|A|28",
+        "8UYL|chain|A|59"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|26|66",
+      "residueKeys": [
+        "8UYL|chain|A|26",
+        "8UYL|chain|A|66"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|25|67",
+      "residueKeys": [
+        "8UYL|chain|A|25",
+        "8UYL|chain|A|67"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|24|68",
+      "residueKeys": [
+        "8UYL|chain|A|24",
+        "8UYL|chain|A|68"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|79|86",
+      "residueKeys": [
+        "8UYL|chain|A|79",
+        "8UYL|chain|A|86"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|78|87",
+      "residueKeys": [
+        "8UYL|chain|A|78",
+        "8UYL|chain|A|87"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|77|88",
+      "residueKeys": [
+        "8UYL|chain|A|77",
+        "8UYL|chain|A|88"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|75|89",
+      "residueKeys": [
+        "8UYL|chain|A|75",
+        "8UYL|chain|A|89"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|74|90",
+      "residueKeys": [
+        "8UYL|chain|A|74",
+        "8UYL|chain|A|90"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|73|91",
+      "residueKeys": [
+        "8UYL|chain|A|73",
+        "8UYL|chain|A|91"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|72|92",
+      "residueKeys": [
+        "8UYL|chain|A|72",
+        "8UYL|chain|A|92"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|71|93",
+      "residueKeys": [
+        "8UYL|chain|A|71",
+        "8UYL|chain|A|93"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|70|94",
+      "residueKeys": [
+        "8UYL|chain|A|70",
+        "8UYL|chain|A|94"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|69|95",
+      "residueKeys": [
+        "8UYL|chain|A|69",
+        "8UYL|chain|A|95"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|102|110",
+      "residueKeys": [
+        "8UYL|chain|A|102",
+        "8UYL|chain|A|110"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|101|111",
+      "residueKeys": [
+        "8UYL|chain|A|101",
+        "8UYL|chain|A|111"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|100|112",
+      "residueKeys": [
+        "8UYL|chain|A|100",
+        "8UYL|chain|A|112"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|99|113",
+      "residueKeys": [
+        "8UYL|chain|A|99",
+        "8UYL|chain|A|113"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|98|114",
+      "residueKeys": [
+        "8UYL|chain|A|98",
+        "8UYL|chain|A|114"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|97|115",
+      "residueKeys": [
+        "8UYL|chain|A|97",
+        "8UYL|chain|A|115"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|96|116",
+      "residueKeys": [
+        "8UYL|chain|A|96",
+        "8UYL|chain|A|116"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|23|117",
+      "residueKeys": [
+        "8UYL|chain|A|23",
+        "8UYL|chain|A|117"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|22|118",
+      "residueKeys": [
+        "8UYL|chain|A|22",
+        "8UYL|chain|A|118"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|21|119",
+      "residueKeys": [
+        "8UYL|chain|A|21",
+        "8UYL|chain|A|119"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|20|120",
+      "residueKeys": [
+        "8UYL|chain|A|20",
+        "8UYL|chain|A|120"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|19|121",
+      "residueKeys": [
+        "8UYL|chain|A|19",
+        "8UYL|chain|A|121"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|18|122",
+      "residueKeys": [
+        "8UYL|chain|A|18",
+        "8UYL|chain|A|122"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|15|124",
+      "residueKeys": [
+        "8UYL|chain|A|15",
+        "8UYL|chain|A|124"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|14|125",
+      "residueKeys": [
+        "8UYL|chain|A|14",
+        "8UYL|chain|A|125"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|13|126",
+      "residueKeys": [
+        "8UYL|chain|A|13",
+        "8UYL|chain|A|126"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|11|127",
+      "residueKeys": [
+        "8UYL|chain|A|11",
+        "8UYL|chain|A|127"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|10|128",
+      "residueKeys": [
+        "8UYL|chain|A|10",
+        "8UYL|chain|A|128"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|7|129",
+      "residueKeys": [
+        "8UYL|chain|A|7",
+        "8UYL|chain|A|129"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|6|130",
+      "residueKeys": [
+        "8UYL|chain|A|6",
+        "8UYL|chain|A|130"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|5|131",
+      "residueKeys": [
+        "8UYL|chain|A|5",
+        "8UYL|chain|A|131"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|4|132",
+      "residueKeys": [
+        "8UYL|chain|A|4",
+        "8UYL|chain|A|132"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|3|133",
+      "residueKeys": [
+        "8UYL|chain|A|3",
+        "8UYL|chain|A|133"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|2|134",
+      "residueKeys": [
+        "8UYL|chain|A|2",
+        "8UYL|chain|A|134"
+      ]
+    },
+    {
+      "bridgeKey": "8UYL|chain|A|bridge|1|135",
+      "residueKeys": [
+        "8UYL|chain|A|1",
+        "8UYL|chain|A|135"
+      ]
+    }
+  ],
+  "caseId": "8UYL",
+  "protocolVersion": "linked-view-v0.1"
+}

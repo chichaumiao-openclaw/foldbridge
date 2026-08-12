@@ -1,0 +1,31 @@
+{
+  "activeChainKey": "7SYS|chain|z",
+  "atomSiteFilter": {
+    "auth_asym_id": "z",
+    "label_asym_id": "LA"
+  },
+  "caseId": "7SYS",
+  "coverage": {
+    "profileResidues": 400,
+    "resolvedProfileRangeLabel": "120-356",
+    "resolvedResidues": 188
+  },
+  "polymerChain": {
+    "auth_asym_id": "z",
+    "displayName": "7SYS|chain|z",
+    "label_asym_id": "LA",
+    "pdbStrandId": "z",
+    "profileEnd": 400,
+    "profileStart": 1,
+    "sequence": "GCCAGCCCCCUGAUGGGGGCGACACUCCACCAUGAAUCACUCCCCUGUGAGGAACUACUGUCUUCACGCAGAAAGCGUCUAGCCAUGGCGUUAGUAUGAGUGUCGUGCAGCCUCCAGGACCCCCCCUCCCGGGAGAGCCAUAGUGGUCUGCGGAACCGGUGAGUACACCGGAAUUGCCAGGACGACCGGGUCCUUUCUUGGAUCAACCCGCUCAAUGCCUGGAGAUUUGGGCGUGCCCCCGCAAGACUGCUAGCCGAGUAGUGUUGGGUCGCGAAAGGCCUUGUGGUACUGCCUGAUAGGGUGCUUGCGAGUGCCCCGGGAGGUCUCGUAGACCGUGCACCAUGAGCACGAAUCCUAAACCUCAAAGAAAAACCAAACGUAACACCAACCGUCGCCCACA"
+  },
+  "protocolVersion": "linked-view-v0.1",
+  "sequenceAlignment": {
+    "matchedResidues": 400,
+    "mismatchedResidues": 0,
+    "profileResidues": 400
+  },
+  "sourceStructure": {
+    "href": "../../../structure.cif"
+  }
+}

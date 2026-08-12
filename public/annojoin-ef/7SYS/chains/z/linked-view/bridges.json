@@ -1,0 +1,377 @@
+{
+  "bridges": [
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|161|166",
+      "residueKeys": [
+        "7SYS|chain|z|161",
+        "7SYS|chain|z|166"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|160|167",
+      "residueKeys": [
+        "7SYS|chain|z|160",
+        "7SYS|chain|z|167"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|159|168",
+      "residueKeys": [
+        "7SYS|chain|z|159",
+        "7SYS|chain|z|168"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|158|169",
+      "residueKeys": [
+        "7SYS|chain|z|158",
+        "7SYS|chain|z|169"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|157|170",
+      "residueKeys": [
+        "7SYS|chain|z|157",
+        "7SYS|chain|z|170"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|156|171",
+      "residueKeys": [
+        "7SYS|chain|z|156",
+        "7SYS|chain|z|171"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|174|225",
+      "residueKeys": [
+        "7SYS|chain|z|174",
+        "7SYS|chain|z|225"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|173|226",
+      "residueKeys": [
+        "7SYS|chain|z|173",
+        "7SYS|chain|z|226"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|172|227",
+      "residueKeys": [
+        "7SYS|chain|z|172",
+        "7SYS|chain|z|227"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|232|235",
+      "residueKeys": [
+        "7SYS|chain|z|232",
+        "7SYS|chain|z|235"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|231|236",
+      "residueKeys": [
+        "7SYS|chain|z|231",
+        "7SYS|chain|z|236"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|230|237",
+      "residueKeys": [
+        "7SYS|chain|z|230",
+        "7SYS|chain|z|237"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|229|238",
+      "residueKeys": [
+        "7SYS|chain|z|229",
+        "7SYS|chain|z|238"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|153|239",
+      "residueKeys": [
+        "7SYS|chain|z|153",
+        "7SYS|chain|z|239"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|152|240",
+      "residueKeys": [
+        "7SYS|chain|z|152",
+        "7SYS|chain|z|240"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|151|241",
+      "residueKeys": [
+        "7SYS|chain|z|151",
+        "7SYS|chain|z|241"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|150|242",
+      "residueKeys": [
+        "7SYS|chain|z|150",
+        "7SYS|chain|z|242"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|149|244",
+      "residueKeys": [
+        "7SYS|chain|z|149",
+        "7SYS|chain|z|244"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|148|245",
+      "residueKeys": [
+        "7SYS|chain|z|148",
+        "7SYS|chain|z|245"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|147|246",
+      "residueKeys": [
+        "7SYS|chain|z|147",
+        "7SYS|chain|z|246"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|146|247",
+      "residueKeys": [
+        "7SYS|chain|z|146",
+        "7SYS|chain|z|247"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|145|248",
+      "residueKeys": [
+        "7SYS|chain|z|145",
+        "7SYS|chain|z|248"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|144|249",
+      "residueKeys": [
+        "7SYS|chain|z|144",
+        "7SYS|chain|z|249"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|143|250",
+      "residueKeys": [
+        "7SYS|chain|z|143",
+        "7SYS|chain|z|250"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|142|251",
+      "residueKeys": [
+        "7SYS|chain|z|142",
+        "7SYS|chain|z|251"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|141|252",
+      "residueKeys": [
+        "7SYS|chain|z|141",
+        "7SYS|chain|z|252"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|262|271",
+      "residueKeys": [
+        "7SYS|chain|z|262",
+        "7SYS|chain|z|271"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|261|272",
+      "residueKeys": [
+        "7SYS|chain|z|261",
+        "7SYS|chain|z|272"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|255|277",
+      "residueKeys": [
+        "7SYS|chain|z|255",
+        "7SYS|chain|z|277"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|254|278",
+      "residueKeys": [
+        "7SYS|chain|z|254",
+        "7SYS|chain|z|278"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|253|279",
+      "residueKeys": [
+        "7SYS|chain|z|253",
+        "7SYS|chain|z|279"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|280|283",
+      "residueKeys": [
+        "7SYS|chain|z|280",
+        "7SYS|chain|z|283"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|140|284",
+      "residueKeys": [
+        "7SYS|chain|z|140",
+        "7SYS|chain|z|284"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|139|285",
+      "residueKeys": [
+        "7SYS|chain|z|139",
+        "7SYS|chain|z|285"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|138|286",
+      "residueKeys": [
+        "7SYS|chain|z|138",
+        "7SYS|chain|z|286"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|137|287",
+      "residueKeys": [
+        "7SYS|chain|z|137",
+        "7SYS|chain|z|287"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|135|289",
+      "residueKeys": [
+        "7SYS|chain|z|135",
+        "7SYS|chain|z|289"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|134|290",
+      "residueKeys": [
+        "7SYS|chain|z|134",
+        "7SYS|chain|z|290"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|294|299",
+      "residueKeys": [
+        "7SYS|chain|z|294",
+        "7SYS|chain|z|299"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|293|300",
+      "residueKeys": [
+        "7SYS|chain|z|293",
+        "7SYS|chain|z|300"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|292|301",
+      "residueKeys": [
+        "7SYS|chain|z|292",
+        "7SYS|chain|z|301"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|291|302",
+      "residueKeys": [
+        "7SYS|chain|z|291",
+        "7SYS|chain|z|302"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|304|313",
+      "residueKeys": [
+        "7SYS|chain|z|304",
+        "7SYS|chain|z|313"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|303|314",
+      "residueKeys": [
+        "7SYS|chain|z|303",
+        "7SYS|chain|z|314"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|133|315",
+      "residueKeys": [
+        "7SYS|chain|z|133",
+        "7SYS|chain|z|315"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|132|316",
+      "residueKeys": [
+        "7SYS|chain|z|132",
+        "7SYS|chain|z|316"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|131|317",
+      "residueKeys": [
+        "7SYS|chain|z|131",
+        "7SYS|chain|z|317"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|130|318",
+      "residueKeys": [
+        "7SYS|chain|z|130",
+        "7SYS|chain|z|318"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|129|319",
+      "residueKeys": [
+        "7SYS|chain|z|129",
+        "7SYS|chain|z|319"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|128|320",
+      "residueKeys": [
+        "7SYS|chain|z|128",
+        "7SYS|chain|z|320"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|127|321",
+      "residueKeys": [
+        "7SYS|chain|z|127",
+        "7SYS|chain|z|321"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|126|322",
+      "residueKeys": [
+        "7SYS|chain|z|126",
+        "7SYS|chain|z|322"
+      ]
+    },
+    {
+      "bridgeKey": "7SYS|chain|z|bridge|125|323",
+      "residueKeys": [
+        "7SYS|chain|z|125",
+        "7SYS|chain|z|323"
+      ]
+    }
+  ],
+  "caseId": "7SYS",
+  "protocolVersion": "linked-view-v0.1"
+}

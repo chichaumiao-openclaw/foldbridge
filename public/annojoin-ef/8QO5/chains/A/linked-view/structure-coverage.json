@@ -1,0 +1,31 @@
+{
+  "activeChainKey": "8QO5|chain|A",
+  "atomSiteFilter": {
+    "auth_asym_id": "A",
+    "label_asym_id": "A"
+  },
+  "caseId": "8QO5",
+  "coverage": {
+    "profileResidues": 145,
+    "resolvedProfileRangeLabel": "1-145",
+    "resolvedResidues": 145
+  },
+  "polymerChain": {
+    "auth_asym_id": "A",
+    "displayName": "8QO5|chain|A",
+    "label_asym_id": "A",
+    "pdbStrandId": "A",
+    "profileEnd": 145,
+    "profileStart": 1,
+    "sequence": "UCGUUGACAGGACACGAGUAACUCGUCUAUCUUCUGCAGGCUGCUUACGGUUUCGUCCGUGUUGCAGCCGAUCAUCAGCACAUCUAGGUUUCGUCCGGGUGUGACCGAAAGGUAAGAUGGAGAGCCUUGUCCCUGGUUUCAACGA"
+  },
+  "protocolVersion": "linked-view-v0.1",
+  "sequenceAlignment": {
+    "matchedResidues": 145,
+    "mismatchedResidues": 0,
+    "profileResidues": 145
+  },
+  "sourceStructure": {
+    "href": "../../../structure.cif"
+  }
+}

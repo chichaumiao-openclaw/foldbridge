@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "RASP2PDB:8UYE",
+  "availableFamilies": [
+    "F"
+  ],
+  "bridgeMissingCount": 1,
+  "defaultEvidenceId": "annojoin:RASP2PDB:8UYE:confidence:SL5HKU_2A3_0001",
+  "defaultSelectionRuleVersion": "tier_metric_p_n_v1",
+  "familyCounts": {
+    "F": 1
+  },
+  "generatedAt": "2026-06-28T08:19:19.995268Z",
+  "materializedEvidenceCount": 1,
+  "modality": "2d_pair_set",
+  "pdbId": "8UYE",
+  "schemaVersion": "family-case-bundle.v2",
+  "status": "materialized",
+  "supports2d": true,
+  "supportsResidueColoring": false,
+  "tierCounts": {
+    "LSS_DISCORDANT": 1
+  },
+  "totalEvidenceCount": 1
+}

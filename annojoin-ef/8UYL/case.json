@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:8UYL",
+  "biologicalMoleculeName": "MERS 5' proximal stem-loop 5, conformation 2",
+  "caseId": "8UYL",
+  "caseKey": "RASP2PDB:8UYL",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "F DISCORDANT",
+  "measurementFamily": "F",
+  "modality": "2d_pair_set",
+  "pdbId": "8UYL",
+  "profileCount": 1
+}

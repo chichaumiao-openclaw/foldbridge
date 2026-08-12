@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9ZC6",
+  "biologicalMoleculeName": "5-methyl-cytidine L-21 ScaI Tetrahymena Ribozyme",
+  "caseId": "9ZC6",
+  "caseKey": "RASP2PDB:9ZC6",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "E STRONG",
+  "measurementFamily": "E",
+  "modality": "2d_pair_set",
+  "pdbId": "9ZC6",
+  "profileCount": 1
+}

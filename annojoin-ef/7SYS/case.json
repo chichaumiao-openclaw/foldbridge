@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:7SYS",
+  "biologicalMoleculeName": "Structure of the delta dII IRES eIF2-containing 48S initiation complex, closed conformation. Structure 12(delta dII).",
+  "caseId": "7SYS",
+  "caseKey": "RASP2PDB:7SYS",
+  "chains": [
+    "z"
+  ],
+  "confidenceDisplayLabel": "E NOT_EVALUABLE",
+  "measurementFamily": "E",
+  "modality": "2d_pair_set",
+  "pdbId": "7SYS",
+  "profileCount": 1
+}

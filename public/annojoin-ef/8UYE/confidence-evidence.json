@@ -1,0 +1,38 @@
+{
+  "atlasCaseKey": "RASP2PDB:8UYE",
+  "generatedAt": "2026-06-28T08:19:19.995268Z",
+  "modality": "2d_pair_set",
+  "pdbId": "8UYE",
+  "rows": [
+    {
+      "bridgeStatus": "bridge_missing",
+      "candidateNote": "significant_but_below_f1_floor_z2_pending_z2.5",
+      "chain": "A",
+      "confidenceRankedSetEligible": false,
+      "contactPairAuc": null,
+      "directionalMetric": 0.0944,
+      "directionalMetricKind": "pair_f1",
+      "directionalMetricLabel": "Pair-set F1",
+      "effectSizeZ": 14.72,
+      "empiricalPValue": 0.000999,
+      "evidenceId": "annojoin:RASP2PDB:8UYE:confidence:SL5HKU_2A3_0001",
+      "family": "F",
+      "lssCalibrationStatus": "calibrated",
+      "lssTierCalibrated": "LSS_DISCORDANT",
+      "lssTierUncalibrated": "LSS_DISCORDANT",
+      "nEvaluable": 50,
+      "nUnits": 543,
+      "pairF1": 0.0944,
+      "pairId": "",
+      "pairPrecision": 0.0516,
+      "pairSegmentId": "",
+      "profileKey": "SL5HKU_2A3_0001",
+      "selectedByDefault": true,
+      "supports2d": true,
+      "supportsResidueColoring": false,
+      "technology": "mutate-and-map_candidate"
+    }
+  ],
+  "schemaVersion": "family-case-bundle.v2",
+  "status": "materialized"
+}

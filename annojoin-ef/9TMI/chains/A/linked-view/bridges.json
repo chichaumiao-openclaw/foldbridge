@@ -1,0 +1,3016 @@
+{
+  "bridges": [
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|82|87",
+      "residueKeys": [
+        "9TMI|chain|A|82",
+        "9TMI|chain|A|87"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|80|89",
+      "residueKeys": [
+        "9TMI|chain|A|80",
+        "9TMI|chain|A|89"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|79|90",
+      "residueKeys": [
+        "9TMI|chain|A|79",
+        "9TMI|chain|A|90"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|78|91",
+      "residueKeys": [
+        "9TMI|chain|A|78",
+        "9TMI|chain|A|91"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|77|92",
+      "residueKeys": [
+        "9TMI|chain|A|77",
+        "9TMI|chain|A|92"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|76|93",
+      "residueKeys": [
+        "9TMI|chain|A|76",
+        "9TMI|chain|A|93"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|75|95",
+      "residueKeys": [
+        "9TMI|chain|A|75",
+        "9TMI|chain|A|95"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|73|97",
+      "residueKeys": [
+        "9TMI|chain|A|73",
+        "9TMI|chain|A|97"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|70|98",
+      "residueKeys": [
+        "9TMI|chain|A|70",
+        "9TMI|chain|A|98"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|69|99",
+      "residueKeys": [
+        "9TMI|chain|A|69",
+        "9TMI|chain|A|99"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|67|102",
+      "residueKeys": [
+        "9TMI|chain|A|67",
+        "9TMI|chain|A|102"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|66|103",
+      "residueKeys": [
+        "9TMI|chain|A|66",
+        "9TMI|chain|A|103"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|63|104",
+      "residueKeys": [
+        "9TMI|chain|A|63",
+        "9TMI|chain|A|104"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|62|105",
+      "residueKeys": [
+        "9TMI|chain|A|62",
+        "9TMI|chain|A|105"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|61|106",
+      "residueKeys": [
+        "9TMI|chain|A|61",
+        "9TMI|chain|A|106"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|158|163",
+      "residueKeys": [
+        "9TMI|chain|A|158",
+        "9TMI|chain|A|163"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|157|164",
+      "residueKeys": [
+        "9TMI|chain|A|157",
+        "9TMI|chain|A|164"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|155|166",
+      "residueKeys": [
+        "9TMI|chain|A|155",
+        "9TMI|chain|A|166"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|154|167",
+      "residueKeys": [
+        "9TMI|chain|A|154",
+        "9TMI|chain|A|167"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|153|168",
+      "residueKeys": [
+        "9TMI|chain|A|153",
+        "9TMI|chain|A|168"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|147|175",
+      "residueKeys": [
+        "9TMI|chain|A|147",
+        "9TMI|chain|A|175"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|146|176",
+      "residueKeys": [
+        "9TMI|chain|A|146",
+        "9TMI|chain|A|176"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|144|178",
+      "residueKeys": [
+        "9TMI|chain|A|144",
+        "9TMI|chain|A|178"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|186|191",
+      "residueKeys": [
+        "9TMI|chain|A|186",
+        "9TMI|chain|A|191"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|185|192",
+      "residueKeys": [
+        "9TMI|chain|A|185",
+        "9TMI|chain|A|192"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|184|193",
+      "residueKeys": [
+        "9TMI|chain|A|184",
+        "9TMI|chain|A|193"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|202|215",
+      "residueKeys": [
+        "9TMI|chain|A|202",
+        "9TMI|chain|A|215"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|200|217",
+      "residueKeys": [
+        "9TMI|chain|A|200",
+        "9TMI|chain|A|217"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|199|218",
+      "residueKeys": [
+        "9TMI|chain|A|199",
+        "9TMI|chain|A|218"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|198|219",
+      "residueKeys": [
+        "9TMI|chain|A|198",
+        "9TMI|chain|A|219"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|142|221",
+      "residueKeys": [
+        "9TMI|chain|A|142",
+        "9TMI|chain|A|221"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|141|222",
+      "residueKeys": [
+        "9TMI|chain|A|141",
+        "9TMI|chain|A|222"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|140|223",
+      "residueKeys": [
+        "9TMI|chain|A|140",
+        "9TMI|chain|A|223"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|139|224",
+      "residueKeys": [
+        "9TMI|chain|A|139",
+        "9TMI|chain|A|224"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|138|225",
+      "residueKeys": [
+        "9TMI|chain|A|138",
+        "9TMI|chain|A|225"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|137|226",
+      "residueKeys": [
+        "9TMI|chain|A|137",
+        "9TMI|chain|A|226"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|136|227",
+      "residueKeys": [
+        "9TMI|chain|A|136",
+        "9TMI|chain|A|227"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|132|230",
+      "residueKeys": [
+        "9TMI|chain|A|132",
+        "9TMI|chain|A|230"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|131|231",
+      "residueKeys": [
+        "9TMI|chain|A|131",
+        "9TMI|chain|A|231"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|128|233",
+      "residueKeys": [
+        "9TMI|chain|A|128",
+        "9TMI|chain|A|233"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|127|234",
+      "residueKeys": [
+        "9TMI|chain|A|127",
+        "9TMI|chain|A|234"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|126|235",
+      "residueKeys": [
+        "9TMI|chain|A|126",
+        "9TMI|chain|A|235"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|125|236",
+      "residueKeys": [
+        "9TMI|chain|A|125",
+        "9TMI|chain|A|236"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|124|237",
+      "residueKeys": [
+        "9TMI|chain|A|124",
+        "9TMI|chain|A|237"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|123|238",
+      "residueKeys": [
+        "9TMI|chain|A|123",
+        "9TMI|chain|A|238"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|122|239",
+      "residueKeys": [
+        "9TMI|chain|A|122",
+        "9TMI|chain|A|239"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|259|267",
+      "residueKeys": [
+        "9TMI|chain|A|259",
+        "9TMI|chain|A|267"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|258|268",
+      "residueKeys": [
+        "9TMI|chain|A|258",
+        "9TMI|chain|A|268"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|257|269",
+      "residueKeys": [
+        "9TMI|chain|A|257",
+        "9TMI|chain|A|269"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|256|270",
+      "residueKeys": [
+        "9TMI|chain|A|256",
+        "9TMI|chain|A|270"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|255|271",
+      "residueKeys": [
+        "9TMI|chain|A|255",
+        "9TMI|chain|A|271"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|254|272",
+      "residueKeys": [
+        "9TMI|chain|A|254",
+        "9TMI|chain|A|272"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|253|273",
+      "residueKeys": [
+        "9TMI|chain|A|253",
+        "9TMI|chain|A|273"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|252|274",
+      "residueKeys": [
+        "9TMI|chain|A|252",
+        "9TMI|chain|A|274"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|249|275",
+      "residueKeys": [
+        "9TMI|chain|A|249",
+        "9TMI|chain|A|275"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|248|276",
+      "residueKeys": [
+        "9TMI|chain|A|248",
+        "9TMI|chain|A|276"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|247|277",
+      "residueKeys": [
+        "9TMI|chain|A|247",
+        "9TMI|chain|A|277"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|242|284",
+      "residueKeys": [
+        "9TMI|chain|A|242",
+        "9TMI|chain|A|284"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|241|285",
+      "residueKeys": [
+        "9TMI|chain|A|241",
+        "9TMI|chain|A|285"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|240|286",
+      "residueKeys": [
+        "9TMI|chain|A|240",
+        "9TMI|chain|A|286"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|296|301",
+      "residueKeys": [
+        "9TMI|chain|A|296",
+        "9TMI|chain|A|301"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|295|302",
+      "residueKeys": [
+        "9TMI|chain|A|295",
+        "9TMI|chain|A|302"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|294|303",
+      "residueKeys": [
+        "9TMI|chain|A|294",
+        "9TMI|chain|A|303"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|293|304",
+      "residueKeys": [
+        "9TMI|chain|A|293",
+        "9TMI|chain|A|304"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|292|308",
+      "residueKeys": [
+        "9TMI|chain|A|292",
+        "9TMI|chain|A|308"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|291|309",
+      "residueKeys": [
+        "9TMI|chain|A|291",
+        "9TMI|chain|A|309"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|290|310",
+      "residueKeys": [
+        "9TMI|chain|A|290",
+        "9TMI|chain|A|310"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|289|311",
+      "residueKeys": [
+        "9TMI|chain|A|289",
+        "9TMI|chain|A|311"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|115|312",
+      "residueKeys": [
+        "9TMI|chain|A|115",
+        "9TMI|chain|A|312"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|114|313",
+      "residueKeys": [
+        "9TMI|chain|A|114",
+        "9TMI|chain|A|313"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|113|314",
+      "residueKeys": [
+        "9TMI|chain|A|113",
+        "9TMI|chain|A|314"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|320|333",
+      "residueKeys": [
+        "9TMI|chain|A|320",
+        "9TMI|chain|A|333"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|319|334",
+      "residueKeys": [
+        "9TMI|chain|A|319",
+        "9TMI|chain|A|334"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|318|335",
+      "residueKeys": [
+        "9TMI|chain|A|318",
+        "9TMI|chain|A|335"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|317|336",
+      "residueKeys": [
+        "9TMI|chain|A|317",
+        "9TMI|chain|A|336"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|316|337",
+      "residueKeys": [
+        "9TMI|chain|A|316",
+        "9TMI|chain|A|337"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|342|347",
+      "residueKeys": [
+        "9TMI|chain|A|342",
+        "9TMI|chain|A|347"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|340|349",
+      "residueKeys": [
+        "9TMI|chain|A|340",
+        "9TMI|chain|A|349"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|339|350",
+      "residueKeys": [
+        "9TMI|chain|A|339",
+        "9TMI|chain|A|350"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|58|354",
+      "residueKeys": [
+        "9TMI|chain|A|58",
+        "9TMI|chain|A|354"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|57|355",
+      "residueKeys": [
+        "9TMI|chain|A|57",
+        "9TMI|chain|A|355"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|56|356",
+      "residueKeys": [
+        "9TMI|chain|A|56",
+        "9TMI|chain|A|356"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|54|357",
+      "residueKeys": [
+        "9TMI|chain|A|54",
+        "9TMI|chain|A|357"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|53|358",
+      "residueKeys": [
+        "9TMI|chain|A|53",
+        "9TMI|chain|A|358"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|52|359",
+      "residueKeys": [
+        "9TMI|chain|A|52",
+        "9TMI|chain|A|359"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|47|361",
+      "residueKeys": [
+        "9TMI|chain|A|47",
+        "9TMI|chain|A|361"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|379|384",
+      "residueKeys": [
+        "9TMI|chain|A|379",
+        "9TMI|chain|A|384"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|378|385",
+      "residueKeys": [
+        "9TMI|chain|A|378",
+        "9TMI|chain|A|385"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|377|386",
+      "residueKeys": [
+        "9TMI|chain|A|377",
+        "9TMI|chain|A|386"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|376|387",
+      "residueKeys": [
+        "9TMI|chain|A|376",
+        "9TMI|chain|A|387"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|375|389",
+      "residueKeys": [
+        "9TMI|chain|A|375",
+        "9TMI|chain|A|389"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|371|390",
+      "residueKeys": [
+        "9TMI|chain|A|371",
+        "9TMI|chain|A|390"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|370|391",
+      "residueKeys": [
+        "9TMI|chain|A|370",
+        "9TMI|chain|A|391"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|369|392",
+      "residueKeys": [
+        "9TMI|chain|A|369",
+        "9TMI|chain|A|392"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|367|393",
+      "residueKeys": [
+        "9TMI|chain|A|367",
+        "9TMI|chain|A|393"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|46|395",
+      "residueKeys": [
+        "9TMI|chain|A|46",
+        "9TMI|chain|A|395"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|45|396",
+      "residueKeys": [
+        "9TMI|chain|A|45",
+        "9TMI|chain|A|396"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|44|398",
+      "residueKeys": [
+        "9TMI|chain|A|44",
+        "9TMI|chain|A|398"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|43|399",
+      "residueKeys": [
+        "9TMI|chain|A|43",
+        "9TMI|chain|A|399"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|42|400",
+      "residueKeys": [
+        "9TMI|chain|A|42",
+        "9TMI|chain|A|400"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|41|401",
+      "residueKeys": [
+        "9TMI|chain|A|41",
+        "9TMI|chain|A|401"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|40|402",
+      "residueKeys": [
+        "9TMI|chain|A|40",
+        "9TMI|chain|A|402"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|39|403",
+      "residueKeys": [
+        "9TMI|chain|A|39",
+        "9TMI|chain|A|403"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|419|424",
+      "residueKeys": [
+        "9TMI|chain|A|419",
+        "9TMI|chain|A|424"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|418|425",
+      "residueKeys": [
+        "9TMI|chain|A|418",
+        "9TMI|chain|A|425"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|417|426",
+      "residueKeys": [
+        "9TMI|chain|A|417",
+        "9TMI|chain|A|426"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|416|427",
+      "residueKeys": [
+        "9TMI|chain|A|416",
+        "9TMI|chain|A|427"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|409|433",
+      "residueKeys": [
+        "9TMI|chain|A|409",
+        "9TMI|chain|A|433"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|408|434",
+      "residueKeys": [
+        "9TMI|chain|A|408",
+        "9TMI|chain|A|434"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|407|435",
+      "residueKeys": [
+        "9TMI|chain|A|407",
+        "9TMI|chain|A|435"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|406|436",
+      "residueKeys": [
+        "9TMI|chain|A|406",
+        "9TMI|chain|A|436"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|461|471",
+      "residueKeys": [
+        "9TMI|chain|A|461",
+        "9TMI|chain|A|471"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|460|472",
+      "residueKeys": [
+        "9TMI|chain|A|460",
+        "9TMI|chain|A|472"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|459|473",
+      "residueKeys": [
+        "9TMI|chain|A|459",
+        "9TMI|chain|A|473"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|458|474",
+      "residueKeys": [
+        "9TMI|chain|A|458",
+        "9TMI|chain|A|474"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|457|475",
+      "residueKeys": [
+        "9TMI|chain|A|457",
+        "9TMI|chain|A|475"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|456|476",
+      "residueKeys": [
+        "9TMI|chain|A|456",
+        "9TMI|chain|A|476"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|455|477",
+      "residueKeys": [
+        "9TMI|chain|A|455",
+        "9TMI|chain|A|477"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|454|479",
+      "residueKeys": [
+        "9TMI|chain|A|454",
+        "9TMI|chain|A|479"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|450|483",
+      "residueKeys": [
+        "9TMI|chain|A|450",
+        "9TMI|chain|A|483"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|446|488",
+      "residueKeys": [
+        "9TMI|chain|A|446",
+        "9TMI|chain|A|488"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|445|489",
+      "residueKeys": [
+        "9TMI|chain|A|445",
+        "9TMI|chain|A|489"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|444|490",
+      "residueKeys": [
+        "9TMI|chain|A|444",
+        "9TMI|chain|A|490"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|443|491",
+      "residueKeys": [
+        "9TMI|chain|A|443",
+        "9TMI|chain|A|491"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|442|492",
+      "residueKeys": [
+        "9TMI|chain|A|442",
+        "9TMI|chain|A|492"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|440|497",
+      "residueKeys": [
+        "9TMI|chain|A|440",
+        "9TMI|chain|A|497"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|522|527",
+      "residueKeys": [
+        "9TMI|chain|A|522",
+        "9TMI|chain|A|527"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|521|528",
+      "residueKeys": [
+        "9TMI|chain|A|521",
+        "9TMI|chain|A|528"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|515|536",
+      "residueKeys": [
+        "9TMI|chain|A|515",
+        "9TMI|chain|A|536"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|514|537",
+      "residueKeys": [
+        "9TMI|chain|A|514",
+        "9TMI|chain|A|537"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|513|538",
+      "residueKeys": [
+        "9TMI|chain|A|513",
+        "9TMI|chain|A|538"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|512|539",
+      "residueKeys": [
+        "9TMI|chain|A|512",
+        "9TMI|chain|A|539"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|511|540",
+      "residueKeys": [
+        "9TMI|chain|A|511",
+        "9TMI|chain|A|540"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|504|541",
+      "residueKeys": [
+        "9TMI|chain|A|504",
+        "9TMI|chain|A|541"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|503|542",
+      "residueKeys": [
+        "9TMI|chain|A|503",
+        "9TMI|chain|A|542"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|502|543",
+      "residueKeys": [
+        "9TMI|chain|A|502",
+        "9TMI|chain|A|543"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|501|544",
+      "residueKeys": [
+        "9TMI|chain|A|501",
+        "9TMI|chain|A|544"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|500|545",
+      "residueKeys": [
+        "9TMI|chain|A|500",
+        "9TMI|chain|A|545"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|36|548",
+      "residueKeys": [
+        "9TMI|chain|A|36",
+        "9TMI|chain|A|548"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|35|549",
+      "residueKeys": [
+        "9TMI|chain|A|35",
+        "9TMI|chain|A|549"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|34|550",
+      "residueKeys": [
+        "9TMI|chain|A|34",
+        "9TMI|chain|A|550"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|33|551",
+      "residueKeys": [
+        "9TMI|chain|A|33",
+        "9TMI|chain|A|551"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|32|552",
+      "residueKeys": [
+        "9TMI|chain|A|32",
+        "9TMI|chain|A|552"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|30|553",
+      "residueKeys": [
+        "9TMI|chain|A|30",
+        "9TMI|chain|A|553"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|29|554",
+      "residueKeys": [
+        "9TMI|chain|A|29",
+        "9TMI|chain|A|554"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|28|555",
+      "residueKeys": [
+        "9TMI|chain|A|28",
+        "9TMI|chain|A|555"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|27|556",
+      "residueKeys": [
+        "9TMI|chain|A|27",
+        "9TMI|chain|A|556"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|617|623",
+      "residueKeys": [
+        "9TMI|chain|A|617",
+        "9TMI|chain|A|623"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|616|624",
+      "residueKeys": [
+        "9TMI|chain|A|616",
+        "9TMI|chain|A|624"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|615|625",
+      "residueKeys": [
+        "9TMI|chain|A|615",
+        "9TMI|chain|A|625"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|614|626",
+      "residueKeys": [
+        "9TMI|chain|A|614",
+        "9TMI|chain|A|626"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|613|627",
+      "residueKeys": [
+        "9TMI|chain|A|613",
+        "9TMI|chain|A|627"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|612|628",
+      "residueKeys": [
+        "9TMI|chain|A|612",
+        "9TMI|chain|A|628"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|605|633",
+      "residueKeys": [
+        "9TMI|chain|A|605",
+        "9TMI|chain|A|633"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|604|634",
+      "residueKeys": [
+        "9TMI|chain|A|604",
+        "9TMI|chain|A|634"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|603|635",
+      "residueKeys": [
+        "9TMI|chain|A|603",
+        "9TMI|chain|A|635"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|602|636",
+      "residueKeys": [
+        "9TMI|chain|A|602",
+        "9TMI|chain|A|636"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|601|637",
+      "residueKeys": [
+        "9TMI|chain|A|601",
+        "9TMI|chain|A|637"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|600|638",
+      "residueKeys": [
+        "9TMI|chain|A|600",
+        "9TMI|chain|A|638"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|599|639",
+      "residueKeys": [
+        "9TMI|chain|A|599",
+        "9TMI|chain|A|639"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|598|640",
+      "residueKeys": [
+        "9TMI|chain|A|598",
+        "9TMI|chain|A|640"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|597|643",
+      "residueKeys": [
+        "9TMI|chain|A|597",
+        "9TMI|chain|A|643"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|596|644",
+      "residueKeys": [
+        "9TMI|chain|A|596",
+        "9TMI|chain|A|644"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|594|645",
+      "residueKeys": [
+        "9TMI|chain|A|594",
+        "9TMI|chain|A|645"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|593|646",
+      "residueKeys": [
+        "9TMI|chain|A|593",
+        "9TMI|chain|A|646"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|592|647",
+      "residueKeys": [
+        "9TMI|chain|A|592",
+        "9TMI|chain|A|647"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|591|648",
+      "residueKeys": [
+        "9TMI|chain|A|591",
+        "9TMI|chain|A|648"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|590|649",
+      "residueKeys": [
+        "9TMI|chain|A|590",
+        "9TMI|chain|A|649"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|589|650",
+      "residueKeys": [
+        "9TMI|chain|A|589",
+        "9TMI|chain|A|650"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|588|651",
+      "residueKeys": [
+        "9TMI|chain|A|588",
+        "9TMI|chain|A|651"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|689|698",
+      "residueKeys": [
+        "9TMI|chain|A|689",
+        "9TMI|chain|A|698"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|688|699",
+      "residueKeys": [
+        "9TMI|chain|A|688",
+        "9TMI|chain|A|699"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|684|706",
+      "residueKeys": [
+        "9TMI|chain|A|684",
+        "9TMI|chain|A|706"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|683|707",
+      "residueKeys": [
+        "9TMI|chain|A|683",
+        "9TMI|chain|A|707"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|682|708",
+      "residueKeys": [
+        "9TMI|chain|A|682",
+        "9TMI|chain|A|708"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|681|709",
+      "residueKeys": [
+        "9TMI|chain|A|681",
+        "9TMI|chain|A|709"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|680|710",
+      "residueKeys": [
+        "9TMI|chain|A|680",
+        "9TMI|chain|A|710"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|679|711",
+      "residueKeys": [
+        "9TMI|chain|A|679",
+        "9TMI|chain|A|711"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|678|712",
+      "residueKeys": [
+        "9TMI|chain|A|678",
+        "9TMI|chain|A|712"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|677|713",
+      "residueKeys": [
+        "9TMI|chain|A|677",
+        "9TMI|chain|A|713"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|673|717",
+      "residueKeys": [
+        "9TMI|chain|A|673",
+        "9TMI|chain|A|717"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|726|731",
+      "residueKeys": [
+        "9TMI|chain|A|726",
+        "9TMI|chain|A|731"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|725|732",
+      "residueKeys": [
+        "9TMI|chain|A|725",
+        "9TMI|chain|A|732"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|672|734",
+      "residueKeys": [
+        "9TMI|chain|A|672",
+        "9TMI|chain|A|734"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|671|735",
+      "residueKeys": [
+        "9TMI|chain|A|671",
+        "9TMI|chain|A|735"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|670|736",
+      "residueKeys": [
+        "9TMI|chain|A|670",
+        "9TMI|chain|A|736"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|669|737",
+      "residueKeys": [
+        "9TMI|chain|A|669",
+        "9TMI|chain|A|737"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|668|738",
+      "residueKeys": [
+        "9TMI|chain|A|668",
+        "9TMI|chain|A|738"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|667|739",
+      "residueKeys": [
+        "9TMI|chain|A|667",
+        "9TMI|chain|A|739"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|666|740",
+      "residueKeys": [
+        "9TMI|chain|A|666",
+        "9TMI|chain|A|740"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|662|743",
+      "residueKeys": [
+        "9TMI|chain|A|662",
+        "9TMI|chain|A|743"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|661|744",
+      "residueKeys": [
+        "9TMI|chain|A|661",
+        "9TMI|chain|A|744"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|660|745",
+      "residueKeys": [
+        "9TMI|chain|A|660",
+        "9TMI|chain|A|745"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|659|747",
+      "residueKeys": [
+        "9TMI|chain|A|659",
+        "9TMI|chain|A|747"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|658|748",
+      "residueKeys": [
+        "9TMI|chain|A|658",
+        "9TMI|chain|A|748"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|657|749",
+      "residueKeys": [
+        "9TMI|chain|A|657",
+        "9TMI|chain|A|749"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|656|750",
+      "residueKeys": [
+        "9TMI|chain|A|656",
+        "9TMI|chain|A|750"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|655|751",
+      "residueKeys": [
+        "9TMI|chain|A|655",
+        "9TMI|chain|A|751"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|654|754",
+      "residueKeys": [
+        "9TMI|chain|A|654",
+        "9TMI|chain|A|754"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|586|755",
+      "residueKeys": [
+        "9TMI|chain|A|586",
+        "9TMI|chain|A|755"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|585|756",
+      "residueKeys": [
+        "9TMI|chain|A|585",
+        "9TMI|chain|A|756"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|584|757",
+      "residueKeys": [
+        "9TMI|chain|A|584",
+        "9TMI|chain|A|757"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|580|761",
+      "residueKeys": [
+        "9TMI|chain|A|580",
+        "9TMI|chain|A|761"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|579|762",
+      "residueKeys": [
+        "9TMI|chain|A|579",
+        "9TMI|chain|A|762"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|578|763",
+      "residueKeys": [
+        "9TMI|chain|A|578",
+        "9TMI|chain|A|763"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|577|764",
+      "residueKeys": [
+        "9TMI|chain|A|577",
+        "9TMI|chain|A|764"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|786|796",
+      "residueKeys": [
+        "9TMI|chain|A|786",
+        "9TMI|chain|A|796"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|785|797",
+      "residueKeys": [
+        "9TMI|chain|A|785",
+        "9TMI|chain|A|797"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|784|798",
+      "residueKeys": [
+        "9TMI|chain|A|784",
+        "9TMI|chain|A|798"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|783|799",
+      "residueKeys": [
+        "9TMI|chain|A|783",
+        "9TMI|chain|A|799"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|779|803",
+      "residueKeys": [
+        "9TMI|chain|A|779",
+        "9TMI|chain|A|803"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|778|804",
+      "residueKeys": [
+        "9TMI|chain|A|778",
+        "9TMI|chain|A|804"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|774|805",
+      "residueKeys": [
+        "9TMI|chain|A|774",
+        "9TMI|chain|A|805"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|773|806",
+      "residueKeys": [
+        "9TMI|chain|A|773",
+        "9TMI|chain|A|806"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|772|807",
+      "residueKeys": [
+        "9TMI|chain|A|772",
+        "9TMI|chain|A|807"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|771|808",
+      "residueKeys": [
+        "9TMI|chain|A|771",
+        "9TMI|chain|A|808"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|770|809",
+      "residueKeys": [
+        "9TMI|chain|A|770",
+        "9TMI|chain|A|809"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|769|810",
+      "residueKeys": [
+        "9TMI|chain|A|769",
+        "9TMI|chain|A|810"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|840|846",
+      "residueKeys": [
+        "9TMI|chain|A|840",
+        "9TMI|chain|A|846"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|839|847",
+      "residueKeys": [
+        "9TMI|chain|A|839",
+        "9TMI|chain|A|847"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|838|848",
+      "residueKeys": [
+        "9TMI|chain|A|838",
+        "9TMI|chain|A|848"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|837|849",
+      "residueKeys": [
+        "9TMI|chain|A|837",
+        "9TMI|chain|A|849"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|836|850",
+      "residueKeys": [
+        "9TMI|chain|A|836",
+        "9TMI|chain|A|850"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|835|851",
+      "residueKeys": [
+        "9TMI|chain|A|835",
+        "9TMI|chain|A|851"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|834|852",
+      "residueKeys": [
+        "9TMI|chain|A|834",
+        "9TMI|chain|A|852"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|833|853",
+      "residueKeys": [
+        "9TMI|chain|A|833",
+        "9TMI|chain|A|853"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|832|854",
+      "residueKeys": [
+        "9TMI|chain|A|832",
+        "9TMI|chain|A|854"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|831|855",
+      "residueKeys": [
+        "9TMI|chain|A|831",
+        "9TMI|chain|A|855"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|830|856",
+      "residueKeys": [
+        "9TMI|chain|A|830",
+        "9TMI|chain|A|856"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|829|857",
+      "residueKeys": [
+        "9TMI|chain|A|829",
+        "9TMI|chain|A|857"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|862|867",
+      "residueKeys": [
+        "9TMI|chain|A|862",
+        "9TMI|chain|A|867"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|861|868",
+      "residueKeys": [
+        "9TMI|chain|A|861",
+        "9TMI|chain|A|868"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|826|874",
+      "residueKeys": [
+        "9TMI|chain|A|826",
+        "9TMI|chain|A|874"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|825|875",
+      "residueKeys": [
+        "9TMI|chain|A|825",
+        "9TMI|chain|A|875"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|824|876",
+      "residueKeys": [
+        "9TMI|chain|A|824",
+        "9TMI|chain|A|876"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|823|877",
+      "residueKeys": [
+        "9TMI|chain|A|823",
+        "9TMI|chain|A|877"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|822|878",
+      "residueKeys": [
+        "9TMI|chain|A|822",
+        "9TMI|chain|A|878"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|821|879",
+      "residueKeys": [
+        "9TMI|chain|A|821",
+        "9TMI|chain|A|879"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|575|880",
+      "residueKeys": [
+        "9TMI|chain|A|575",
+        "9TMI|chain|A|880"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|569|881",
+      "residueKeys": [
+        "9TMI|chain|A|569",
+        "9TMI|chain|A|881"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|568|882",
+      "residueKeys": [
+        "9TMI|chain|A|568",
+        "9TMI|chain|A|882"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|567|883",
+      "residueKeys": [
+        "9TMI|chain|A|567",
+        "9TMI|chain|A|883"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|897|902",
+      "residueKeys": [
+        "9TMI|chain|A|897",
+        "9TMI|chain|A|902"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|896|903",
+      "residueKeys": [
+        "9TMI|chain|A|896",
+        "9TMI|chain|A|903"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|895|904",
+      "residueKeys": [
+        "9TMI|chain|A|895",
+        "9TMI|chain|A|904"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|894|905",
+      "residueKeys": [
+        "9TMI|chain|A|894",
+        "9TMI|chain|A|905"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|887|910",
+      "residueKeys": [
+        "9TMI|chain|A|887",
+        "9TMI|chain|A|910"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|886|911",
+      "residueKeys": [
+        "9TMI|chain|A|886",
+        "9TMI|chain|A|911"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|885|912",
+      "residueKeys": [
+        "9TMI|chain|A|885",
+        "9TMI|chain|A|912"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|19|916",
+      "residueKeys": [
+        "9TMI|chain|A|19",
+        "9TMI|chain|A|916"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|18|917",
+      "residueKeys": [
+        "9TMI|chain|A|18",
+        "9TMI|chain|A|917"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|17|918",
+      "residueKeys": [
+        "9TMI|chain|A|17",
+        "9TMI|chain|A|918"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|15|920",
+      "residueKeys": [
+        "9TMI|chain|A|15",
+        "9TMI|chain|A|920"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|963|972",
+      "residueKeys": [
+        "9TMI|chain|A|963",
+        "9TMI|chain|A|972"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|962|973",
+      "residueKeys": [
+        "9TMI|chain|A|962",
+        "9TMI|chain|A|973"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1012|1017",
+      "residueKeys": [
+        "9TMI|chain|A|1012",
+        "9TMI|chain|A|1017"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1011|1018",
+      "residueKeys": [
+        "9TMI|chain|A|1011",
+        "9TMI|chain|A|1018"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1010|1019",
+      "residueKeys": [
+        "9TMI|chain|A|1010",
+        "9TMI|chain|A|1019"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1008|1021",
+      "residueKeys": [
+        "9TMI|chain|A|1008",
+        "9TMI|chain|A|1021"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1007|1022",
+      "residueKeys": [
+        "9TMI|chain|A|1007",
+        "9TMI|chain|A|1022"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1006|1023",
+      "residueKeys": [
+        "9TMI|chain|A|1006",
+        "9TMI|chain|A|1023"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1027|1034",
+      "residueKeys": [
+        "9TMI|chain|A|1027",
+        "9TMI|chain|A|1034"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1003|1037",
+      "residueKeys": [
+        "9TMI|chain|A|1003",
+        "9TMI|chain|A|1037"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1002|1038",
+      "residueKeys": [
+        "9TMI|chain|A|1002",
+        "9TMI|chain|A|1038"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1001|1039",
+      "residueKeys": [
+        "9TMI|chain|A|1001",
+        "9TMI|chain|A|1039"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1000|1040",
+      "residueKeys": [
+        "9TMI|chain|A|1000",
+        "9TMI|chain|A|1040"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|999|1041",
+      "residueKeys": [
+        "9TMI|chain|A|999",
+        "9TMI|chain|A|1041"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|998|1043",
+      "residueKeys": [
+        "9TMI|chain|A|998",
+        "9TMI|chain|A|1043"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|997|1044",
+      "residueKeys": [
+        "9TMI|chain|A|997",
+        "9TMI|chain|A|1044"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|993|1045",
+      "residueKeys": [
+        "9TMI|chain|A|993",
+        "9TMI|chain|A|1045"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1076|1081",
+      "residueKeys": [
+        "9TMI|chain|A|1076",
+        "9TMI|chain|A|1081"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1075|1082",
+      "residueKeys": [
+        "9TMI|chain|A|1075",
+        "9TMI|chain|A|1082"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1074|1083",
+      "residueKeys": [
+        "9TMI|chain|A|1074",
+        "9TMI|chain|A|1083"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1089|1096",
+      "residueKeys": [
+        "9TMI|chain|A|1089",
+        "9TMI|chain|A|1096"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1088|1097",
+      "residueKeys": [
+        "9TMI|chain|A|1088",
+        "9TMI|chain|A|1097"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1087|1098",
+      "residueKeys": [
+        "9TMI|chain|A|1087",
+        "9TMI|chain|A|1098"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1086|1099",
+      "residueKeys": [
+        "9TMI|chain|A|1086",
+        "9TMI|chain|A|1099"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1073|1102",
+      "residueKeys": [
+        "9TMI|chain|A|1073",
+        "9TMI|chain|A|1102"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1072|1103",
+      "residueKeys": [
+        "9TMI|chain|A|1072",
+        "9TMI|chain|A|1103"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1071|1104",
+      "residueKeys": [
+        "9TMI|chain|A|1071",
+        "9TMI|chain|A|1104"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1070|1105",
+      "residueKeys": [
+        "9TMI|chain|A|1070",
+        "9TMI|chain|A|1105"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1069|1106",
+      "residueKeys": [
+        "9TMI|chain|A|1069",
+        "9TMI|chain|A|1106"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1068|1107",
+      "residueKeys": [
+        "9TMI|chain|A|1068",
+        "9TMI|chain|A|1107"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1134|1140",
+      "residueKeys": [
+        "9TMI|chain|A|1134",
+        "9TMI|chain|A|1140"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1133|1141",
+      "residueKeys": [
+        "9TMI|chain|A|1133",
+        "9TMI|chain|A|1141"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1132|1142",
+      "residueKeys": [
+        "9TMI|chain|A|1132",
+        "9TMI|chain|A|1142"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1129|1143",
+      "residueKeys": [
+        "9TMI|chain|A|1129",
+        "9TMI|chain|A|1143"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1128|1144",
+      "residueKeys": [
+        "9TMI|chain|A|1128",
+        "9TMI|chain|A|1144"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1124|1149",
+      "residueKeys": [
+        "9TMI|chain|A|1124",
+        "9TMI|chain|A|1149"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1123|1150",
+      "residueKeys": [
+        "9TMI|chain|A|1123",
+        "9TMI|chain|A|1150"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1122|1151",
+      "residueKeys": [
+        "9TMI|chain|A|1122",
+        "9TMI|chain|A|1151"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1121|1152",
+      "residueKeys": [
+        "9TMI|chain|A|1121",
+        "9TMI|chain|A|1152"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1120|1153",
+      "residueKeys": [
+        "9TMI|chain|A|1120",
+        "9TMI|chain|A|1153"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1119|1154",
+      "residueKeys": [
+        "9TMI|chain|A|1119",
+        "9TMI|chain|A|1154"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1118|1155",
+      "residueKeys": [
+        "9TMI|chain|A|1118",
+        "9TMI|chain|A|1155"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1165|1171",
+      "residueKeys": [
+        "9TMI|chain|A|1165",
+        "9TMI|chain|A|1171"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1164|1172",
+      "residueKeys": [
+        "9TMI|chain|A|1164",
+        "9TMI|chain|A|1172"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1163|1173",
+      "residueKeys": [
+        "9TMI|chain|A|1163",
+        "9TMI|chain|A|1173"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1162|1174",
+      "residueKeys": [
+        "9TMI|chain|A|1162",
+        "9TMI|chain|A|1174"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1161|1175",
+      "residueKeys": [
+        "9TMI|chain|A|1161",
+        "9TMI|chain|A|1175"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1158|1181",
+      "residueKeys": [
+        "9TMI|chain|A|1158",
+        "9TMI|chain|A|1181"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1116|1184",
+      "residueKeys": [
+        "9TMI|chain|A|1116",
+        "9TMI|chain|A|1184"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1115|1185",
+      "residueKeys": [
+        "9TMI|chain|A|1115",
+        "9TMI|chain|A|1185"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1114|1186",
+      "residueKeys": [
+        "9TMI|chain|A|1114",
+        "9TMI|chain|A|1186"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1113|1187",
+      "residueKeys": [
+        "9TMI|chain|A|1113",
+        "9TMI|chain|A|1187"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1063|1193",
+      "residueKeys": [
+        "9TMI|chain|A|1063",
+        "9TMI|chain|A|1193"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1061|1195",
+      "residueKeys": [
+        "9TMI|chain|A|1061",
+        "9TMI|chain|A|1195"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1060|1197",
+      "residueKeys": [
+        "9TMI|chain|A|1060",
+        "9TMI|chain|A|1197"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1059|1198",
+      "residueKeys": [
+        "9TMI|chain|A|1059",
+        "9TMI|chain|A|1198"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1058|1199",
+      "residueKeys": [
+        "9TMI|chain|A|1058",
+        "9TMI|chain|A|1199"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1057|1203",
+      "residueKeys": [
+        "9TMI|chain|A|1057",
+        "9TMI|chain|A|1203"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1056|1204",
+      "residueKeys": [
+        "9TMI|chain|A|1056",
+        "9TMI|chain|A|1204"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1055|1205",
+      "residueKeys": [
+        "9TMI|chain|A|1055",
+        "9TMI|chain|A|1205"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1052|1206",
+      "residueKeys": [
+        "9TMI|chain|A|1052",
+        "9TMI|chain|A|1206"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1051|1207",
+      "residueKeys": [
+        "9TMI|chain|A|1051",
+        "9TMI|chain|A|1207"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1050|1208",
+      "residueKeys": [
+        "9TMI|chain|A|1050",
+        "9TMI|chain|A|1208"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1048|1209",
+      "residueKeys": [
+        "9TMI|chain|A|1048",
+        "9TMI|chain|A|1209"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1047|1210",
+      "residueKeys": [
+        "9TMI|chain|A|1047",
+        "9TMI|chain|A|1210"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|990|1215",
+      "residueKeys": [
+        "9TMI|chain|A|990",
+        "9TMI|chain|A|1215"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|989|1216",
+      "residueKeys": [
+        "9TMI|chain|A|989",
+        "9TMI|chain|A|1216"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|988|1217",
+      "residueKeys": [
+        "9TMI|chain|A|988",
+        "9TMI|chain|A|1217"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|987|1218",
+      "residueKeys": [
+        "9TMI|chain|A|987",
+        "9TMI|chain|A|1218"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|986|1219",
+      "residueKeys": [
+        "9TMI|chain|A|986",
+        "9TMI|chain|A|1219"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|985|1220",
+      "residueKeys": [
+        "9TMI|chain|A|985",
+        "9TMI|chain|A|1220"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|984|1221",
+      "residueKeys": [
+        "9TMI|chain|A|984",
+        "9TMI|chain|A|1221"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|955|1225",
+      "residueKeys": [
+        "9TMI|chain|A|955",
+        "9TMI|chain|A|1225"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|954|1226",
+      "residueKeys": [
+        "9TMI|chain|A|954",
+        "9TMI|chain|A|1226"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|953|1228",
+      "residueKeys": [
+        "9TMI|chain|A|953",
+        "9TMI|chain|A|1228"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|952|1229",
+      "residueKeys": [
+        "9TMI|chain|A|952",
+        "9TMI|chain|A|1229"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|951|1230",
+      "residueKeys": [
+        "9TMI|chain|A|951",
+        "9TMI|chain|A|1230"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|950|1231",
+      "residueKeys": [
+        "9TMI|chain|A|950",
+        "9TMI|chain|A|1231"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|949|1232",
+      "residueKeys": [
+        "9TMI|chain|A|949",
+        "9TMI|chain|A|1232"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|948|1233",
+      "residueKeys": [
+        "9TMI|chain|A|948",
+        "9TMI|chain|A|1233"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|947|1234",
+      "residueKeys": [
+        "9TMI|chain|A|947",
+        "9TMI|chain|A|1234"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|946|1235",
+      "residueKeys": [
+        "9TMI|chain|A|946",
+        "9TMI|chain|A|1235"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1265|1270",
+      "residueKeys": [
+        "9TMI|chain|A|1265",
+        "9TMI|chain|A|1270"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1264|1271",
+      "residueKeys": [
+        "9TMI|chain|A|1264",
+        "9TMI|chain|A|1271"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1263|1272",
+      "residueKeys": [
+        "9TMI|chain|A|1263",
+        "9TMI|chain|A|1272"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1259|1276",
+      "residueKeys": [
+        "9TMI|chain|A|1259",
+        "9TMI|chain|A|1276"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1258|1277",
+      "residueKeys": [
+        "9TMI|chain|A|1258",
+        "9TMI|chain|A|1277"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1255|1282",
+      "residueKeys": [
+        "9TMI|chain|A|1255",
+        "9TMI|chain|A|1282"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1254|1283",
+      "residueKeys": [
+        "9TMI|chain|A|1254",
+        "9TMI|chain|A|1283"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1253|1284",
+      "residueKeys": [
+        "9TMI|chain|A|1253",
+        "9TMI|chain|A|1284"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1247|1290",
+      "residueKeys": [
+        "9TMI|chain|A|1247",
+        "9TMI|chain|A|1290"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1246|1291",
+      "residueKeys": [
+        "9TMI|chain|A|1246",
+        "9TMI|chain|A|1291"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1245|1292",
+      "residueKeys": [
+        "9TMI|chain|A|1245",
+        "9TMI|chain|A|1292"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1244|1293",
+      "residueKeys": [
+        "9TMI|chain|A|1244",
+        "9TMI|chain|A|1293"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1243|1294",
+      "residueKeys": [
+        "9TMI|chain|A|1243",
+        "9TMI|chain|A|1294"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1242|1295",
+      "residueKeys": [
+        "9TMI|chain|A|1242",
+        "9TMI|chain|A|1295"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1241|1296",
+      "residueKeys": [
+        "9TMI|chain|A|1241",
+        "9TMI|chain|A|1296"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1314|1323",
+      "residueKeys": [
+        "9TMI|chain|A|1314",
+        "9TMI|chain|A|1323"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1313|1324",
+      "residueKeys": [
+        "9TMI|chain|A|1313",
+        "9TMI|chain|A|1324"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1312|1325",
+      "residueKeys": [
+        "9TMI|chain|A|1312",
+        "9TMI|chain|A|1325"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1311|1326",
+      "residueKeys": [
+        "9TMI|chain|A|1311",
+        "9TMI|chain|A|1326"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1310|1327",
+      "residueKeys": [
+        "9TMI|chain|A|1310",
+        "9TMI|chain|A|1327"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1309|1328",
+      "residueKeys": [
+        "9TMI|chain|A|1309",
+        "9TMI|chain|A|1328"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1308|1329",
+      "residueKeys": [
+        "9TMI|chain|A|1308",
+        "9TMI|chain|A|1329"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1303|1334",
+      "residueKeys": [
+        "9TMI|chain|A|1303",
+        "9TMI|chain|A|1334"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1237|1337",
+      "residueKeys": [
+        "9TMI|chain|A|1237",
+        "9TMI|chain|A|1337"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|943|1340",
+      "residueKeys": [
+        "9TMI|chain|A|943",
+        "9TMI|chain|A|1340"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|942|1341",
+      "residueKeys": [
+        "9TMI|chain|A|942",
+        "9TMI|chain|A|1341"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|941|1342",
+      "residueKeys": [
+        "9TMI|chain|A|941",
+        "9TMI|chain|A|1342"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|940|1343",
+      "residueKeys": [
+        "9TMI|chain|A|940",
+        "9TMI|chain|A|1343"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|939|1344",
+      "residueKeys": [
+        "9TMI|chain|A|939",
+        "9TMI|chain|A|1344"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1356|1366",
+      "residueKeys": [
+        "9TMI|chain|A|1356",
+        "9TMI|chain|A|1366"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1355|1367",
+      "residueKeys": [
+        "9TMI|chain|A|1355",
+        "9TMI|chain|A|1367"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1354|1368",
+      "residueKeys": [
+        "9TMI|chain|A|1354",
+        "9TMI|chain|A|1368"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1353|1369",
+      "residueKeys": [
+        "9TMI|chain|A|1353",
+        "9TMI|chain|A|1369"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1352|1370",
+      "residueKeys": [
+        "9TMI|chain|A|1352",
+        "9TMI|chain|A|1370"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1351|1371",
+      "residueKeys": [
+        "9TMI|chain|A|1351",
+        "9TMI|chain|A|1371"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1350|1372",
+      "residueKeys": [
+        "9TMI|chain|A|1350",
+        "9TMI|chain|A|1372"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|936|1379",
+      "residueKeys": [
+        "9TMI|chain|A|936",
+        "9TMI|chain|A|1379"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|935|1380",
+      "residueKeys": [
+        "9TMI|chain|A|935",
+        "9TMI|chain|A|1380"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|933|1384",
+      "residueKeys": [
+        "9TMI|chain|A|933",
+        "9TMI|chain|A|1384"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|932|1385",
+      "residueKeys": [
+        "9TMI|chain|A|932",
+        "9TMI|chain|A|1385"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|931|1386",
+      "residueKeys": [
+        "9TMI|chain|A|931",
+        "9TMI|chain|A|1386"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|930|1387",
+      "residueKeys": [
+        "9TMI|chain|A|930",
+        "9TMI|chain|A|1387"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|929|1388",
+      "residueKeys": [
+        "9TMI|chain|A|929",
+        "9TMI|chain|A|1388"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|928|1389",
+      "residueKeys": [
+        "9TMI|chain|A|928",
+        "9TMI|chain|A|1389"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|927|1390",
+      "residueKeys": [
+        "9TMI|chain|A|927",
+        "9TMI|chain|A|1390"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|925|1391",
+      "residueKeys": [
+        "9TMI|chain|A|925",
+        "9TMI|chain|A|1391"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|924|1392",
+      "residueKeys": [
+        "9TMI|chain|A|924",
+        "9TMI|chain|A|1392"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|923|1393",
+      "residueKeys": [
+        "9TMI|chain|A|923",
+        "9TMI|chain|A|1393"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|922|1395",
+      "residueKeys": [
+        "9TMI|chain|A|922",
+        "9TMI|chain|A|1395"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|921|1396",
+      "residueKeys": [
+        "9TMI|chain|A|921",
+        "9TMI|chain|A|1396"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1449|1454",
+      "residueKeys": [
+        "9TMI|chain|A|1449",
+        "9TMI|chain|A|1454"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1448|1455",
+      "residueKeys": [
+        "9TMI|chain|A|1448",
+        "9TMI|chain|A|1455"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1445|1457",
+      "residueKeys": [
+        "9TMI|chain|A|1445",
+        "9TMI|chain|A|1457"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1444|1458",
+      "residueKeys": [
+        "9TMI|chain|A|1444",
+        "9TMI|chain|A|1458"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1443|1459",
+      "residueKeys": [
+        "9TMI|chain|A|1443",
+        "9TMI|chain|A|1459"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1442|1460",
+      "residueKeys": [
+        "9TMI|chain|A|1442",
+        "9TMI|chain|A|1460"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1440|1461",
+      "residueKeys": [
+        "9TMI|chain|A|1440",
+        "9TMI|chain|A|1461"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1439|1462",
+      "residueKeys": [
+        "9TMI|chain|A|1439",
+        "9TMI|chain|A|1462"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1438|1463",
+      "residueKeys": [
+        "9TMI|chain|A|1438",
+        "9TMI|chain|A|1463"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1437|1464",
+      "residueKeys": [
+        "9TMI|chain|A|1437",
+        "9TMI|chain|A|1464"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1436|1465",
+      "residueKeys": [
+        "9TMI|chain|A|1436",
+        "9TMI|chain|A|1465"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1435|1466",
+      "residueKeys": [
+        "9TMI|chain|A|1435",
+        "9TMI|chain|A|1466"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1430|1470",
+      "residueKeys": [
+        "9TMI|chain|A|1430",
+        "9TMI|chain|A|1470"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1429|1471",
+      "residueKeys": [
+        "9TMI|chain|A|1429",
+        "9TMI|chain|A|1471"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1428|1472",
+      "residueKeys": [
+        "9TMI|chain|A|1428",
+        "9TMI|chain|A|1472"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1427|1473",
+      "residueKeys": [
+        "9TMI|chain|A|1427",
+        "9TMI|chain|A|1473"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1426|1474",
+      "residueKeys": [
+        "9TMI|chain|A|1426",
+        "9TMI|chain|A|1474"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1425|1475",
+      "residueKeys": [
+        "9TMI|chain|A|1425",
+        "9TMI|chain|A|1475"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1424|1476",
+      "residueKeys": [
+        "9TMI|chain|A|1424",
+        "9TMI|chain|A|1476"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1423|1477",
+      "residueKeys": [
+        "9TMI|chain|A|1423",
+        "9TMI|chain|A|1477"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1422|1478",
+      "residueKeys": [
+        "9TMI|chain|A|1422",
+        "9TMI|chain|A|1478"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1421|1479",
+      "residueKeys": [
+        "9TMI|chain|A|1421",
+        "9TMI|chain|A|1479"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1420|1480",
+      "residueKeys": [
+        "9TMI|chain|A|1420",
+        "9TMI|chain|A|1480"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1419|1481",
+      "residueKeys": [
+        "9TMI|chain|A|1419",
+        "9TMI|chain|A|1481"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1416|1484",
+      "residueKeys": [
+        "9TMI|chain|A|1416",
+        "9TMI|chain|A|1484"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1415|1485",
+      "residueKeys": [
+        "9TMI|chain|A|1415",
+        "9TMI|chain|A|1485"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1414|1486",
+      "residueKeys": [
+        "9TMI|chain|A|1414",
+        "9TMI|chain|A|1486"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1412|1488",
+      "residueKeys": [
+        "9TMI|chain|A|1412",
+        "9TMI|chain|A|1488"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1411|1489",
+      "residueKeys": [
+        "9TMI|chain|A|1411",
+        "9TMI|chain|A|1489"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1410|1490",
+      "residueKeys": [
+        "9TMI|chain|A|1410",
+        "9TMI|chain|A|1490"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1409|1491",
+      "residueKeys": [
+        "9TMI|chain|A|1409",
+        "9TMI|chain|A|1491"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1407|1494",
+      "residueKeys": [
+        "9TMI|chain|A|1407",
+        "9TMI|chain|A|1494"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1405|1496",
+      "residueKeys": [
+        "9TMI|chain|A|1405",
+        "9TMI|chain|A|1496"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1404|1497",
+      "residueKeys": [
+        "9TMI|chain|A|1404",
+        "9TMI|chain|A|1497"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1401|1501",
+      "residueKeys": [
+        "9TMI|chain|A|1401",
+        "9TMI|chain|A|1501"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1399|1504",
+      "residueKeys": [
+        "9TMI|chain|A|1399",
+        "9TMI|chain|A|1504"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1515|1520",
+      "residueKeys": [
+        "9TMI|chain|A|1515",
+        "9TMI|chain|A|1520"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1514|1521",
+      "residueKeys": [
+        "9TMI|chain|A|1514",
+        "9TMI|chain|A|1521"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1513|1522",
+      "residueKeys": [
+        "9TMI|chain|A|1513",
+        "9TMI|chain|A|1522"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1512|1523",
+      "residueKeys": [
+        "9TMI|chain|A|1512",
+        "9TMI|chain|A|1523"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1511|1524",
+      "residueKeys": [
+        "9TMI|chain|A|1511",
+        "9TMI|chain|A|1524"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1510|1525",
+      "residueKeys": [
+        "9TMI|chain|A|1510",
+        "9TMI|chain|A|1525"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1509|1526",
+      "residueKeys": [
+        "9TMI|chain|A|1509",
+        "9TMI|chain|A|1526"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1508|1527",
+      "residueKeys": [
+        "9TMI|chain|A|1508",
+        "9TMI|chain|A|1527"
+      ]
+    },
+    {
+      "bridgeKey": "9TMI|chain|A|bridge|1507|1528",
+      "residueKeys": [
+        "9TMI|chain|A|1507",
+        "9TMI|chain|A|1528"
+      ]
+    }
+  ],
+  "caseId": "9TMI",
+  "protocolVersion": "linked-view-v0.1"
+}

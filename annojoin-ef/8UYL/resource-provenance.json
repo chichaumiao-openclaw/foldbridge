@@ -1,0 +1,31 @@
+{
+  "groups": [
+    {
+      "groupId": "case-shell",
+      "sourcePaths": [
+        "/Volumes/tianyi/foldbridgeAssessert/_ef_inputs_20260628/cases/8UYL/case.json"
+      ]
+    },
+    {
+      "groupId": "confidence",
+      "sourcePaths": [
+        "/Users/joseperezmartinez/docs/rmdb2pdb/task_packages/fec_lss_rc3_release_20260623/family_ef_delivery_20260628/def_ef_lss_calibrated.tsv"
+      ]
+    },
+    {
+      "groupId": "2d",
+      "sourcePaths": [
+        "/Volumes/tianyi/tmp/rmdb2pdb_symlinked_assets_20260622/task_packages/confidence_v3_restart_20260613/remote_root/ANNOJOIN/2d_asset_build_20260618/dbn/8uyl.dbn",
+        "/Volumes/tianyi/foldbridgeAssessert/_ef_stage_20260628/\u5bb6\u65cfF/_build/RASP2PDB%3A8UYL/chains/A/varna-template.svg"
+      ]
+    },
+    {
+      "groupId": "3d",
+      "sourcePaths": [
+        "/Volumes/tianyi/tmp/rmdb2pdb_symlinked_assets_20260622/task_packages/confidence_v3_restart_20260613/remote_root/10_structure_context/alpha_full_20260615/mmcif_inputs_from_132/8uyl.cif"
+      ]
+    }
+  ],
+  "modality": "2d_pair_set",
+  "protocolVersion": "family-case-bundle.v2"
+}

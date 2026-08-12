@@ -1,0 +1,4006 @@
+{
+  "caseId": "7SYS",
+  "loci": [
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 1,
+        "label_asym_id": "LA",
+        "label_seq_id": 1
+      },
+      "residueKey": "7SYS|chain|z|1"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 2,
+        "label_asym_id": "LA",
+        "label_seq_id": 2
+      },
+      "residueKey": "7SYS|chain|z|2"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 3,
+        "label_asym_id": "LA",
+        "label_seq_id": 3
+      },
+      "residueKey": "7SYS|chain|z|3"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 4,
+        "label_asym_id": "LA",
+        "label_seq_id": 4
+      },
+      "residueKey": "7SYS|chain|z|4"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 5,
+        "label_asym_id": "LA",
+        "label_seq_id": 5
+      },
+      "residueKey": "7SYS|chain|z|5"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 6,
+        "label_asym_id": "LA",
+        "label_seq_id": 6
+      },
+      "residueKey": "7SYS|chain|z|6"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 7,
+        "label_asym_id": "LA",
+        "label_seq_id": 7
+      },
+      "residueKey": "7SYS|chain|z|7"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 8,
+        "label_asym_id": "LA",
+        "label_seq_id": 8
+      },
+      "residueKey": "7SYS|chain|z|8"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 9,
+        "label_asym_id": "LA",
+        "label_seq_id": 9
+      },
+      "residueKey": "7SYS|chain|z|9"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 10,
+        "label_asym_id": "LA",
+        "label_seq_id": 10
+      },
+      "residueKey": "7SYS|chain|z|10"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 11,
+        "label_asym_id": "LA",
+        "label_seq_id": 11
+      },
+      "residueKey": "7SYS|chain|z|11"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 12,
+        "label_asym_id": "LA",
+        "label_seq_id": 12
+      },
+      "residueKey": "7SYS|chain|z|12"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 13,
+        "label_asym_id": "LA",
+        "label_seq_id": 13
+      },
+      "residueKey": "7SYS|chain|z|13"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 14,
+        "label_asym_id": "LA",
+        "label_seq_id": 14
+      },
+      "residueKey": "7SYS|chain|z|14"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 15,
+        "label_asym_id": "LA",
+        "label_seq_id": 15
+      },
+      "residueKey": "7SYS|chain|z|15"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 16,
+        "label_asym_id": "LA",
+        "label_seq_id": 16
+      },
+      "residueKey": "7SYS|chain|z|16"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 17,
+        "label_asym_id": "LA",
+        "label_seq_id": 17
+      },
+      "residueKey": "7SYS|chain|z|17"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 18,
+        "label_asym_id": "LA",
+        "label_seq_id": 18
+      },
+      "residueKey": "7SYS|chain|z|18"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 19,
+        "label_asym_id": "LA",
+        "label_seq_id": 19
+      },
+      "residueKey": "7SYS|chain|z|19"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 20,
+        "label_asym_id": "LA",
+        "label_seq_id": 20
+      },
+      "residueKey": "7SYS|chain|z|20"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 21,
+        "label_asym_id": "LA",
+        "label_seq_id": 21
+      },
+      "residueKey": "7SYS|chain|z|21"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 22,
+        "label_asym_id": "LA",
+        "label_seq_id": 22
+      },
+      "residueKey": "7SYS|chain|z|22"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 23,
+        "label_asym_id": "LA",
+        "label_seq_id": 23
+      },
+      "residueKey": "7SYS|chain|z|23"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 24,
+        "label_asym_id": "LA",
+        "label_seq_id": 24
+      },
+      "residueKey": "7SYS|chain|z|24"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 25,
+        "label_asym_id": "LA",
+        "label_seq_id": 25
+      },
+      "residueKey": "7SYS|chain|z|25"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 26,
+        "label_asym_id": "LA",
+        "label_seq_id": 26
+      },
+      "residueKey": "7SYS|chain|z|26"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 27,
+        "label_asym_id": "LA",
+        "label_seq_id": 27
+      },
+      "residueKey": "7SYS|chain|z|27"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 28,
+        "label_asym_id": "LA",
+        "label_seq_id": 28
+      },
+      "residueKey": "7SYS|chain|z|28"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 29,
+        "label_asym_id": "LA",
+        "label_seq_id": 29
+      },
+      "residueKey": "7SYS|chain|z|29"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 30,
+        "label_asym_id": "LA",
+        "label_seq_id": 30
+      },
+      "residueKey": "7SYS|chain|z|30"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 31,
+        "label_asym_id": "LA",
+        "label_seq_id": 31
+      },
+      "residueKey": "7SYS|chain|z|31"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 32,
+        "label_asym_id": "LA",
+        "label_seq_id": 32
+      },
+      "residueKey": "7SYS|chain|z|32"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 33,
+        "label_asym_id": "LA",
+        "label_seq_id": 33
+      },
+      "residueKey": "7SYS|chain|z|33"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 34,
+        "label_asym_id": "LA",
+        "label_seq_id": 34
+      },
+      "residueKey": "7SYS|chain|z|34"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 35,
+        "label_asym_id": "LA",
+        "label_seq_id": 35
+      },
+      "residueKey": "7SYS|chain|z|35"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 36,
+        "label_asym_id": "LA",
+        "label_seq_id": 36
+      },
+      "residueKey": "7SYS|chain|z|36"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 37,
+        "label_asym_id": "LA",
+        "label_seq_id": 37
+      },
+      "residueKey": "7SYS|chain|z|37"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 38,
+        "label_asym_id": "LA",
+        "label_seq_id": 38
+      },
+      "residueKey": "7SYS|chain|z|38"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 39,
+        "label_asym_id": "LA",
+        "label_seq_id": 39
+      },
+      "residueKey": "7SYS|chain|z|39"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 40,
+        "label_asym_id": "LA",
+        "label_seq_id": 40
+      },
+      "residueKey": "7SYS|chain|z|40"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 41,
+        "label_asym_id": "LA",
+        "label_seq_id": 41
+      },
+      "residueKey": "7SYS|chain|z|41"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 42,
+        "label_asym_id": "LA",
+        "label_seq_id": 42
+      },
+      "residueKey": "7SYS|chain|z|42"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 43,
+        "label_asym_id": "LA",
+        "label_seq_id": 43
+      },
+      "residueKey": "7SYS|chain|z|43"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 44,
+        "label_asym_id": "LA",
+        "label_seq_id": 44
+      },
+      "residueKey": "7SYS|chain|z|44"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 45,
+        "label_asym_id": "LA",
+        "label_seq_id": 45
+      },
+      "residueKey": "7SYS|chain|z|45"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 46,
+        "label_asym_id": "LA",
+        "label_seq_id": 46
+      },
+      "residueKey": "7SYS|chain|z|46"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 47,
+        "label_asym_id": "LA",
+        "label_seq_id": 47
+      },
+      "residueKey": "7SYS|chain|z|47"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 48,
+        "label_asym_id": "LA",
+        "label_seq_id": 48
+      },
+      "residueKey": "7SYS|chain|z|48"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 49,
+        "label_asym_id": "LA",
+        "label_seq_id": 49
+      },
+      "residueKey": "7SYS|chain|z|49"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 50,
+        "label_asym_id": "LA",
+        "label_seq_id": 50
+      },
+      "residueKey": "7SYS|chain|z|50"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 51,
+        "label_asym_id": "LA",
+        "label_seq_id": 51
+      },
+      "residueKey": "7SYS|chain|z|51"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 52,
+        "label_asym_id": "LA",
+        "label_seq_id": 52
+      },
+      "residueKey": "7SYS|chain|z|52"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 53,
+        "label_asym_id": "LA",
+        "label_seq_id": 53
+      },
+      "residueKey": "7SYS|chain|z|53"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 54,
+        "label_asym_id": "LA",
+        "label_seq_id": 54
+      },
+      "residueKey": "7SYS|chain|z|54"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 55,
+        "label_asym_id": "LA",
+        "label_seq_id": 55
+      },
+      "residueKey": "7SYS|chain|z|55"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 56,
+        "label_asym_id": "LA",
+        "label_seq_id": 56
+      },
+      "residueKey": "7SYS|chain|z|56"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 57,
+        "label_asym_id": "LA",
+        "label_seq_id": 57
+      },
+      "residueKey": "7SYS|chain|z|57"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 58,
+        "label_asym_id": "LA",
+        "label_seq_id": 58
+      },
+      "residueKey": "7SYS|chain|z|58"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 59,
+        "label_asym_id": "LA",
+        "label_seq_id": 59
+      },
+      "residueKey": "7SYS|chain|z|59"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 60,
+        "label_asym_id": "LA",
+        "label_seq_id": 60
+      },
+      "residueKey": "7SYS|chain|z|60"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 61,
+        "label_asym_id": "LA",
+        "label_seq_id": 61
+      },
+      "residueKey": "7SYS|chain|z|61"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 62,
+        "label_asym_id": "LA",
+        "label_seq_id": 62
+      },
+      "residueKey": "7SYS|chain|z|62"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 63,
+        "label_asym_id": "LA",
+        "label_seq_id": 63
+      },
+      "residueKey": "7SYS|chain|z|63"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 64,
+        "label_asym_id": "LA",
+        "label_seq_id": 64
+      },
+      "residueKey": "7SYS|chain|z|64"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 65,
+        "label_asym_id": "LA",
+        "label_seq_id": 65
+      },
+      "residueKey": "7SYS|chain|z|65"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 66,
+        "label_asym_id": "LA",
+        "label_seq_id": 66
+      },
+      "residueKey": "7SYS|chain|z|66"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 67,
+        "label_asym_id": "LA",
+        "label_seq_id": 67
+      },
+      "residueKey": "7SYS|chain|z|67"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 68,
+        "label_asym_id": "LA",
+        "label_seq_id": 68
+      },
+      "residueKey": "7SYS|chain|z|68"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 69,
+        "label_asym_id": "LA",
+        "label_seq_id": 69
+      },
+      "residueKey": "7SYS|chain|z|69"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 70,
+        "label_asym_id": "LA",
+        "label_seq_id": 70
+      },
+      "residueKey": "7SYS|chain|z|70"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 71,
+        "label_asym_id": "LA",
+        "label_seq_id": 71
+      },
+      "residueKey": "7SYS|chain|z|71"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 72,
+        "label_asym_id": "LA",
+        "label_seq_id": 72
+      },
+      "residueKey": "7SYS|chain|z|72"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 73,
+        "label_asym_id": "LA",
+        "label_seq_id": 73
+      },
+      "residueKey": "7SYS|chain|z|73"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 74,
+        "label_asym_id": "LA",
+        "label_seq_id": 74
+      },
+      "residueKey": "7SYS|chain|z|74"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 75,
+        "label_asym_id": "LA",
+        "label_seq_id": 75
+      },
+      "residueKey": "7SYS|chain|z|75"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 76,
+        "label_asym_id": "LA",
+        "label_seq_id": 76
+      },
+      "residueKey": "7SYS|chain|z|76"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 77,
+        "label_asym_id": "LA",
+        "label_seq_id": 77
+      },
+      "residueKey": "7SYS|chain|z|77"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 78,
+        "label_asym_id": "LA",
+        "label_seq_id": 78
+      },
+      "residueKey": "7SYS|chain|z|78"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 79,
+        "label_asym_id": "LA",
+        "label_seq_id": 79
+      },
+      "residueKey": "7SYS|chain|z|79"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 80,
+        "label_asym_id": "LA",
+        "label_seq_id": 80
+      },
+      "residueKey": "7SYS|chain|z|80"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 81,
+        "label_asym_id": "LA",
+        "label_seq_id": 81
+      },
+      "residueKey": "7SYS|chain|z|81"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 82,
+        "label_asym_id": "LA",
+        "label_seq_id": 82
+      },
+      "residueKey": "7SYS|chain|z|82"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 83,
+        "label_asym_id": "LA",
+        "label_seq_id": 83
+      },
+      "residueKey": "7SYS|chain|z|83"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 84,
+        "label_asym_id": "LA",
+        "label_seq_id": 84
+      },
+      "residueKey": "7SYS|chain|z|84"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 85,
+        "label_asym_id": "LA",
+        "label_seq_id": 85
+      },
+      "residueKey": "7SYS|chain|z|85"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 86,
+        "label_asym_id": "LA",
+        "label_seq_id": 86
+      },
+      "residueKey": "7SYS|chain|z|86"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 87,
+        "label_asym_id": "LA",
+        "label_seq_id": 87
+      },
+      "residueKey": "7SYS|chain|z|87"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 88,
+        "label_asym_id": "LA",
+        "label_seq_id": 88
+      },
+      "residueKey": "7SYS|chain|z|88"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 89,
+        "label_asym_id": "LA",
+        "label_seq_id": 89
+      },
+      "residueKey": "7SYS|chain|z|89"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 90,
+        "label_asym_id": "LA",
+        "label_seq_id": 90
+      },
+      "residueKey": "7SYS|chain|z|90"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 91,
+        "label_asym_id": "LA",
+        "label_seq_id": 91
+      },
+      "residueKey": "7SYS|chain|z|91"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 92,
+        "label_asym_id": "LA",
+        "label_seq_id": 92
+      },
+      "residueKey": "7SYS|chain|z|92"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 93,
+        "label_asym_id": "LA",
+        "label_seq_id": 93
+      },
+      "residueKey": "7SYS|chain|z|93"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 94,
+        "label_asym_id": "LA",
+        "label_seq_id": 94
+      },
+      "residueKey": "7SYS|chain|z|94"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 95,
+        "label_asym_id": "LA",
+        "label_seq_id": 95
+      },
+      "residueKey": "7SYS|chain|z|95"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 96,
+        "label_asym_id": "LA",
+        "label_seq_id": 96
+      },
+      "residueKey": "7SYS|chain|z|96"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 97,
+        "label_asym_id": "LA",
+        "label_seq_id": 97
+      },
+      "residueKey": "7SYS|chain|z|97"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 98,
+        "label_asym_id": "LA",
+        "label_seq_id": 98
+      },
+      "residueKey": "7SYS|chain|z|98"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 99,
+        "label_asym_id": "LA",
+        "label_seq_id": 99
+      },
+      "residueKey": "7SYS|chain|z|99"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 100,
+        "label_asym_id": "LA",
+        "label_seq_id": 100
+      },
+      "residueKey": "7SYS|chain|z|100"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 101,
+        "label_asym_id": "LA",
+        "label_seq_id": 101
+      },
+      "residueKey": "7SYS|chain|z|101"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 102,
+        "label_asym_id": "LA",
+        "label_seq_id": 102
+      },
+      "residueKey": "7SYS|chain|z|102"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 103,
+        "label_asym_id": "LA",
+        "label_seq_id": 103
+      },
+      "residueKey": "7SYS|chain|z|103"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 104,
+        "label_asym_id": "LA",
+        "label_seq_id": 104
+      },
+      "residueKey": "7SYS|chain|z|104"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 105,
+        "label_asym_id": "LA",
+        "label_seq_id": 105
+      },
+      "residueKey": "7SYS|chain|z|105"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 106,
+        "label_asym_id": "LA",
+        "label_seq_id": 106
+      },
+      "residueKey": "7SYS|chain|z|106"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 107,
+        "label_asym_id": "LA",
+        "label_seq_id": 107
+      },
+      "residueKey": "7SYS|chain|z|107"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 108,
+        "label_asym_id": "LA",
+        "label_seq_id": 108
+      },
+      "residueKey": "7SYS|chain|z|108"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 109,
+        "label_asym_id": "LA",
+        "label_seq_id": 109
+      },
+      "residueKey": "7SYS|chain|z|109"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 110,
+        "label_asym_id": "LA",
+        "label_seq_id": 110
+      },
+      "residueKey": "7SYS|chain|z|110"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 111,
+        "label_asym_id": "LA",
+        "label_seq_id": 111
+      },
+      "residueKey": "7SYS|chain|z|111"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 112,
+        "label_asym_id": "LA",
+        "label_seq_id": 112
+      },
+      "residueKey": "7SYS|chain|z|112"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 113,
+        "label_asym_id": "LA",
+        "label_seq_id": 113
+      },
+      "residueKey": "7SYS|chain|z|113"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 114,
+        "label_asym_id": "LA",
+        "label_seq_id": 114
+      },
+      "residueKey": "7SYS|chain|z|114"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 115,
+        "label_asym_id": "LA",
+        "label_seq_id": 115
+      },
+      "residueKey": "7SYS|chain|z|115"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 116,
+        "label_asym_id": "LA",
+        "label_seq_id": 116
+      },
+      "residueKey": "7SYS|chain|z|116"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 117,
+        "label_asym_id": "LA",
+        "label_seq_id": 117
+      },
+      "residueKey": "7SYS|chain|z|117"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 118,
+        "label_asym_id": "LA",
+        "label_seq_id": 118
+      },
+      "residueKey": "7SYS|chain|z|118"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 119,
+        "label_asym_id": "LA",
+        "label_seq_id": 119
+      },
+      "residueKey": "7SYS|chain|z|119"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "120",
+        "label_asym_id": "LA",
+        "label_seq_id": "120"
+      },
+      "residueKey": "7SYS|chain|z|120"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "121",
+        "label_asym_id": "LA",
+        "label_seq_id": "121"
+      },
+      "residueKey": "7SYS|chain|z|121"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "122",
+        "label_asym_id": "LA",
+        "label_seq_id": "122"
+      },
+      "residueKey": "7SYS|chain|z|122"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "123",
+        "label_asym_id": "LA",
+        "label_seq_id": "123"
+      },
+      "residueKey": "7SYS|chain|z|123"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "124",
+        "label_asym_id": "LA",
+        "label_seq_id": "124"
+      },
+      "residueKey": "7SYS|chain|z|124"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "125",
+        "label_asym_id": "LA",
+        "label_seq_id": "125"
+      },
+      "residueKey": "7SYS|chain|z|125"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "126",
+        "label_asym_id": "LA",
+        "label_seq_id": "126"
+      },
+      "residueKey": "7SYS|chain|z|126"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "127",
+        "label_asym_id": "LA",
+        "label_seq_id": "127"
+      },
+      "residueKey": "7SYS|chain|z|127"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "128",
+        "label_asym_id": "LA",
+        "label_seq_id": "128"
+      },
+      "residueKey": "7SYS|chain|z|128"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "129",
+        "label_asym_id": "LA",
+        "label_seq_id": "129"
+      },
+      "residueKey": "7SYS|chain|z|129"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "130",
+        "label_asym_id": "LA",
+        "label_seq_id": "130"
+      },
+      "residueKey": "7SYS|chain|z|130"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "131",
+        "label_asym_id": "LA",
+        "label_seq_id": "131"
+      },
+      "residueKey": "7SYS|chain|z|131"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "132",
+        "label_asym_id": "LA",
+        "label_seq_id": "132"
+      },
+      "residueKey": "7SYS|chain|z|132"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "133",
+        "label_asym_id": "LA",
+        "label_seq_id": "133"
+      },
+      "residueKey": "7SYS|chain|z|133"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "134",
+        "label_asym_id": "LA",
+        "label_seq_id": "134"
+      },
+      "residueKey": "7SYS|chain|z|134"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "135",
+        "label_asym_id": "LA",
+        "label_seq_id": "135"
+      },
+      "residueKey": "7SYS|chain|z|135"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "136",
+        "label_asym_id": "LA",
+        "label_seq_id": "136"
+      },
+      "residueKey": "7SYS|chain|z|136"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "137",
+        "label_asym_id": "LA",
+        "label_seq_id": "137"
+      },
+      "residueKey": "7SYS|chain|z|137"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "138",
+        "label_asym_id": "LA",
+        "label_seq_id": "138"
+      },
+      "residueKey": "7SYS|chain|z|138"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "139",
+        "label_asym_id": "LA",
+        "label_seq_id": "139"
+      },
+      "residueKey": "7SYS|chain|z|139"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "140",
+        "label_asym_id": "LA",
+        "label_seq_id": "140"
+      },
+      "residueKey": "7SYS|chain|z|140"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "141",
+        "label_asym_id": "LA",
+        "label_seq_id": "141"
+      },
+      "residueKey": "7SYS|chain|z|141"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "142",
+        "label_asym_id": "LA",
+        "label_seq_id": "142"
+      },
+      "residueKey": "7SYS|chain|z|142"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "143",
+        "label_asym_id": "LA",
+        "label_seq_id": "143"
+      },
+      "residueKey": "7SYS|chain|z|143"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "144",
+        "label_asym_id": "LA",
+        "label_seq_id": "144"
+      },
+      "residueKey": "7SYS|chain|z|144"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "145",
+        "label_asym_id": "LA",
+        "label_seq_id": "145"
+      },
+      "residueKey": "7SYS|chain|z|145"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "146",
+        "label_asym_id": "LA",
+        "label_seq_id": "146"
+      },
+      "residueKey": "7SYS|chain|z|146"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "147",
+        "label_asym_id": "LA",
+        "label_seq_id": "147"
+      },
+      "residueKey": "7SYS|chain|z|147"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "148",
+        "label_asym_id": "LA",
+        "label_seq_id": "148"
+      },
+      "residueKey": "7SYS|chain|z|148"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "149",
+        "label_asym_id": "LA",
+        "label_seq_id": "149"
+      },
+      "residueKey": "7SYS|chain|z|149"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "150",
+        "label_asym_id": "LA",
+        "label_seq_id": "150"
+      },
+      "residueKey": "7SYS|chain|z|150"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "151",
+        "label_asym_id": "LA",
+        "label_seq_id": "151"
+      },
+      "residueKey": "7SYS|chain|z|151"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "152",
+        "label_asym_id": "LA",
+        "label_seq_id": "152"
+      },
+      "residueKey": "7SYS|chain|z|152"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "153",
+        "label_asym_id": "LA",
+        "label_seq_id": "153"
+      },
+      "residueKey": "7SYS|chain|z|153"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "154",
+        "label_asym_id": "LA",
+        "label_seq_id": "154"
+      },
+      "residueKey": "7SYS|chain|z|154"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "155",
+        "label_asym_id": "LA",
+        "label_seq_id": "155"
+      },
+      "residueKey": "7SYS|chain|z|155"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "156",
+        "label_asym_id": "LA",
+        "label_seq_id": "156"
+      },
+      "residueKey": "7SYS|chain|z|156"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "157",
+        "label_asym_id": "LA",
+        "label_seq_id": "157"
+      },
+      "residueKey": "7SYS|chain|z|157"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "158",
+        "label_asym_id": "LA",
+        "label_seq_id": "158"
+      },
+      "residueKey": "7SYS|chain|z|158"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "159",
+        "label_asym_id": "LA",
+        "label_seq_id": "159"
+      },
+      "residueKey": "7SYS|chain|z|159"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "160",
+        "label_asym_id": "LA",
+        "label_seq_id": "160"
+      },
+      "residueKey": "7SYS|chain|z|160"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "161",
+        "label_asym_id": "LA",
+        "label_seq_id": "161"
+      },
+      "residueKey": "7SYS|chain|z|161"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "162",
+        "label_asym_id": "LA",
+        "label_seq_id": "162"
+      },
+      "residueKey": "7SYS|chain|z|162"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "163",
+        "label_asym_id": "LA",
+        "label_seq_id": "163"
+      },
+      "residueKey": "7SYS|chain|z|163"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "164",
+        "label_asym_id": "LA",
+        "label_seq_id": "164"
+      },
+      "residueKey": "7SYS|chain|z|164"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "165",
+        "label_asym_id": "LA",
+        "label_seq_id": "165"
+      },
+      "residueKey": "7SYS|chain|z|165"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "166",
+        "label_asym_id": "LA",
+        "label_seq_id": "166"
+      },
+      "residueKey": "7SYS|chain|z|166"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "167",
+        "label_asym_id": "LA",
+        "label_seq_id": "167"
+      },
+      "residueKey": "7SYS|chain|z|167"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "168",
+        "label_asym_id": "LA",
+        "label_seq_id": "168"
+      },
+      "residueKey": "7SYS|chain|z|168"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "169",
+        "label_asym_id": "LA",
+        "label_seq_id": "169"
+      },
+      "residueKey": "7SYS|chain|z|169"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "170",
+        "label_asym_id": "LA",
+        "label_seq_id": "170"
+      },
+      "residueKey": "7SYS|chain|z|170"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "171",
+        "label_asym_id": "LA",
+        "label_seq_id": "171"
+      },
+      "residueKey": "7SYS|chain|z|171"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "172",
+        "label_asym_id": "LA",
+        "label_seq_id": "172"
+      },
+      "residueKey": "7SYS|chain|z|172"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "173",
+        "label_asym_id": "LA",
+        "label_seq_id": "173"
+      },
+      "residueKey": "7SYS|chain|z|173"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "174",
+        "label_asym_id": "LA",
+        "label_seq_id": "174"
+      },
+      "residueKey": "7SYS|chain|z|174"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 175,
+        "label_asym_id": "LA",
+        "label_seq_id": 175
+      },
+      "residueKey": "7SYS|chain|z|175"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 176,
+        "label_asym_id": "LA",
+        "label_seq_id": 176
+      },
+      "residueKey": "7SYS|chain|z|176"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 177,
+        "label_asym_id": "LA",
+        "label_seq_id": 177
+      },
+      "residueKey": "7SYS|chain|z|177"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 178,
+        "label_asym_id": "LA",
+        "label_seq_id": 178
+      },
+      "residueKey": "7SYS|chain|z|178"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 179,
+        "label_asym_id": "LA",
+        "label_seq_id": 179
+      },
+      "residueKey": "7SYS|chain|z|179"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 180,
+        "label_asym_id": "LA",
+        "label_seq_id": 180
+      },
+      "residueKey": "7SYS|chain|z|180"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 181,
+        "label_asym_id": "LA",
+        "label_seq_id": 181
+      },
+      "residueKey": "7SYS|chain|z|181"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 182,
+        "label_asym_id": "LA",
+        "label_seq_id": 182
+      },
+      "residueKey": "7SYS|chain|z|182"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 183,
+        "label_asym_id": "LA",
+        "label_seq_id": 183
+      },
+      "residueKey": "7SYS|chain|z|183"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 184,
+        "label_asym_id": "LA",
+        "label_seq_id": 184
+      },
+      "residueKey": "7SYS|chain|z|184"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 185,
+        "label_asym_id": "LA",
+        "label_seq_id": 185
+      },
+      "residueKey": "7SYS|chain|z|185"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 186,
+        "label_asym_id": "LA",
+        "label_seq_id": 186
+      },
+      "residueKey": "7SYS|chain|z|186"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 187,
+        "label_asym_id": "LA",
+        "label_seq_id": 187
+      },
+      "residueKey": "7SYS|chain|z|187"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 188,
+        "label_asym_id": "LA",
+        "label_seq_id": 188
+      },
+      "residueKey": "7SYS|chain|z|188"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 189,
+        "label_asym_id": "LA",
+        "label_seq_id": 189
+      },
+      "residueKey": "7SYS|chain|z|189"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 190,
+        "label_asym_id": "LA",
+        "label_seq_id": 190
+      },
+      "residueKey": "7SYS|chain|z|190"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 191,
+        "label_asym_id": "LA",
+        "label_seq_id": 191
+      },
+      "residueKey": "7SYS|chain|z|191"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 192,
+        "label_asym_id": "LA",
+        "label_seq_id": 192
+      },
+      "residueKey": "7SYS|chain|z|192"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 193,
+        "label_asym_id": "LA",
+        "label_seq_id": 193
+      },
+      "residueKey": "7SYS|chain|z|193"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 194,
+        "label_asym_id": "LA",
+        "label_seq_id": 194
+      },
+      "residueKey": "7SYS|chain|z|194"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 195,
+        "label_asym_id": "LA",
+        "label_seq_id": 195
+      },
+      "residueKey": "7SYS|chain|z|195"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 196,
+        "label_asym_id": "LA",
+        "label_seq_id": 196
+      },
+      "residueKey": "7SYS|chain|z|196"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 197,
+        "label_asym_id": "LA",
+        "label_seq_id": 197
+      },
+      "residueKey": "7SYS|chain|z|197"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 198,
+        "label_asym_id": "LA",
+        "label_seq_id": 198
+      },
+      "residueKey": "7SYS|chain|z|198"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 199,
+        "label_asym_id": "LA",
+        "label_seq_id": 199
+      },
+      "residueKey": "7SYS|chain|z|199"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 200,
+        "label_asym_id": "LA",
+        "label_seq_id": 200
+      },
+      "residueKey": "7SYS|chain|z|200"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 201,
+        "label_asym_id": "LA",
+        "label_seq_id": 201
+      },
+      "residueKey": "7SYS|chain|z|201"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 202,
+        "label_asym_id": "LA",
+        "label_seq_id": 202
+      },
+      "residueKey": "7SYS|chain|z|202"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 203,
+        "label_asym_id": "LA",
+        "label_seq_id": 203
+      },
+      "residueKey": "7SYS|chain|z|203"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 204,
+        "label_asym_id": "LA",
+        "label_seq_id": 204
+      },
+      "residueKey": "7SYS|chain|z|204"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 205,
+        "label_asym_id": "LA",
+        "label_seq_id": 205
+      },
+      "residueKey": "7SYS|chain|z|205"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 206,
+        "label_asym_id": "LA",
+        "label_seq_id": 206
+      },
+      "residueKey": "7SYS|chain|z|206"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 207,
+        "label_asym_id": "LA",
+        "label_seq_id": 207
+      },
+      "residueKey": "7SYS|chain|z|207"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 208,
+        "label_asym_id": "LA",
+        "label_seq_id": 208
+      },
+      "residueKey": "7SYS|chain|z|208"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 209,
+        "label_asym_id": "LA",
+        "label_seq_id": 209
+      },
+      "residueKey": "7SYS|chain|z|209"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 210,
+        "label_asym_id": "LA",
+        "label_seq_id": 210
+      },
+      "residueKey": "7SYS|chain|z|210"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 211,
+        "label_asym_id": "LA",
+        "label_seq_id": 211
+      },
+      "residueKey": "7SYS|chain|z|211"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 212,
+        "label_asym_id": "LA",
+        "label_seq_id": 212
+      },
+      "residueKey": "7SYS|chain|z|212"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 213,
+        "label_asym_id": "LA",
+        "label_seq_id": 213
+      },
+      "residueKey": "7SYS|chain|z|213"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 214,
+        "label_asym_id": "LA",
+        "label_seq_id": 214
+      },
+      "residueKey": "7SYS|chain|z|214"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 215,
+        "label_asym_id": "LA",
+        "label_seq_id": 215
+      },
+      "residueKey": "7SYS|chain|z|215"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 216,
+        "label_asym_id": "LA",
+        "label_seq_id": 216
+      },
+      "residueKey": "7SYS|chain|z|216"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 217,
+        "label_asym_id": "LA",
+        "label_seq_id": 217
+      },
+      "residueKey": "7SYS|chain|z|217"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 218,
+        "label_asym_id": "LA",
+        "label_seq_id": 218
+      },
+      "residueKey": "7SYS|chain|z|218"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 219,
+        "label_asym_id": "LA",
+        "label_seq_id": 219
+      },
+      "residueKey": "7SYS|chain|z|219"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 220,
+        "label_asym_id": "LA",
+        "label_seq_id": 220
+      },
+      "residueKey": "7SYS|chain|z|220"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 221,
+        "label_asym_id": "LA",
+        "label_seq_id": 221
+      },
+      "residueKey": "7SYS|chain|z|221"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 222,
+        "label_asym_id": "LA",
+        "label_seq_id": 222
+      },
+      "residueKey": "7SYS|chain|z|222"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 223,
+        "label_asym_id": "LA",
+        "label_seq_id": 223
+      },
+      "residueKey": "7SYS|chain|z|223"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "224",
+        "label_asym_id": "LA",
+        "label_seq_id": "224"
+      },
+      "residueKey": "7SYS|chain|z|224"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "225",
+        "label_asym_id": "LA",
+        "label_seq_id": "225"
+      },
+      "residueKey": "7SYS|chain|z|225"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "226",
+        "label_asym_id": "LA",
+        "label_seq_id": "226"
+      },
+      "residueKey": "7SYS|chain|z|226"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "227",
+        "label_asym_id": "LA",
+        "label_seq_id": "227"
+      },
+      "residueKey": "7SYS|chain|z|227"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "228",
+        "label_asym_id": "LA",
+        "label_seq_id": "228"
+      },
+      "residueKey": "7SYS|chain|z|228"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "229",
+        "label_asym_id": "LA",
+        "label_seq_id": "229"
+      },
+      "residueKey": "7SYS|chain|z|229"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "230",
+        "label_asym_id": "LA",
+        "label_seq_id": "230"
+      },
+      "residueKey": "7SYS|chain|z|230"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "231",
+        "label_asym_id": "LA",
+        "label_seq_id": "231"
+      },
+      "residueKey": "7SYS|chain|z|231"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "232",
+        "label_asym_id": "LA",
+        "label_seq_id": "232"
+      },
+      "residueKey": "7SYS|chain|z|232"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "233",
+        "label_asym_id": "LA",
+        "label_seq_id": "233"
+      },
+      "residueKey": "7SYS|chain|z|233"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "234",
+        "label_asym_id": "LA",
+        "label_seq_id": "234"
+      },
+      "residueKey": "7SYS|chain|z|234"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "235",
+        "label_asym_id": "LA",
+        "label_seq_id": "235"
+      },
+      "residueKey": "7SYS|chain|z|235"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "236",
+        "label_asym_id": "LA",
+        "label_seq_id": "236"
+      },
+      "residueKey": "7SYS|chain|z|236"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "237",
+        "label_asym_id": "LA",
+        "label_seq_id": "237"
+      },
+      "residueKey": "7SYS|chain|z|237"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "238",
+        "label_asym_id": "LA",
+        "label_seq_id": "238"
+      },
+      "residueKey": "7SYS|chain|z|238"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "239",
+        "label_asym_id": "LA",
+        "label_seq_id": "239"
+      },
+      "residueKey": "7SYS|chain|z|239"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "240",
+        "label_asym_id": "LA",
+        "label_seq_id": "240"
+      },
+      "residueKey": "7SYS|chain|z|240"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "241",
+        "label_asym_id": "LA",
+        "label_seq_id": "241"
+      },
+      "residueKey": "7SYS|chain|z|241"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "242",
+        "label_asym_id": "LA",
+        "label_seq_id": "242"
+      },
+      "residueKey": "7SYS|chain|z|242"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "243",
+        "label_asym_id": "LA",
+        "label_seq_id": "243"
+      },
+      "residueKey": "7SYS|chain|z|243"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "244",
+        "label_asym_id": "LA",
+        "label_seq_id": "244"
+      },
+      "residueKey": "7SYS|chain|z|244"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "245",
+        "label_asym_id": "LA",
+        "label_seq_id": "245"
+      },
+      "residueKey": "7SYS|chain|z|245"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "246",
+        "label_asym_id": "LA",
+        "label_seq_id": "246"
+      },
+      "residueKey": "7SYS|chain|z|246"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "247",
+        "label_asym_id": "LA",
+        "label_seq_id": "247"
+      },
+      "residueKey": "7SYS|chain|z|247"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "248",
+        "label_asym_id": "LA",
+        "label_seq_id": "248"
+      },
+      "residueKey": "7SYS|chain|z|248"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "249",
+        "label_asym_id": "LA",
+        "label_seq_id": "249"
+      },
+      "residueKey": "7SYS|chain|z|249"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "250",
+        "label_asym_id": "LA",
+        "label_seq_id": "250"
+      },
+      "residueKey": "7SYS|chain|z|250"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "251",
+        "label_asym_id": "LA",
+        "label_seq_id": "251"
+      },
+      "residueKey": "7SYS|chain|z|251"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "252",
+        "label_asym_id": "LA",
+        "label_seq_id": "252"
+      },
+      "residueKey": "7SYS|chain|z|252"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "253",
+        "label_asym_id": "LA",
+        "label_seq_id": "253"
+      },
+      "residueKey": "7SYS|chain|z|253"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "254",
+        "label_asym_id": "LA",
+        "label_seq_id": "254"
+      },
+      "residueKey": "7SYS|chain|z|254"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "255",
+        "label_asym_id": "LA",
+        "label_seq_id": "255"
+      },
+      "residueKey": "7SYS|chain|z|255"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "256",
+        "label_asym_id": "LA",
+        "label_seq_id": "256"
+      },
+      "residueKey": "7SYS|chain|z|256"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "257",
+        "label_asym_id": "LA",
+        "label_seq_id": "257"
+      },
+      "residueKey": "7SYS|chain|z|257"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "258",
+        "label_asym_id": "LA",
+        "label_seq_id": "258"
+      },
+      "residueKey": "7SYS|chain|z|258"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "259",
+        "label_asym_id": "LA",
+        "label_seq_id": "259"
+      },
+      "residueKey": "7SYS|chain|z|259"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "260",
+        "label_asym_id": "LA",
+        "label_seq_id": "260"
+      },
+      "residueKey": "7SYS|chain|z|260"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "261",
+        "label_asym_id": "LA",
+        "label_seq_id": "261"
+      },
+      "residueKey": "7SYS|chain|z|261"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "262",
+        "label_asym_id": "LA",
+        "label_seq_id": "262"
+      },
+      "residueKey": "7SYS|chain|z|262"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "263",
+        "label_asym_id": "LA",
+        "label_seq_id": "263"
+      },
+      "residueKey": "7SYS|chain|z|263"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "264",
+        "label_asym_id": "LA",
+        "label_seq_id": "264"
+      },
+      "residueKey": "7SYS|chain|z|264"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "265",
+        "label_asym_id": "LA",
+        "label_seq_id": "265"
+      },
+      "residueKey": "7SYS|chain|z|265"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "266",
+        "label_asym_id": "LA",
+        "label_seq_id": "266"
+      },
+      "residueKey": "7SYS|chain|z|266"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "267",
+        "label_asym_id": "LA",
+        "label_seq_id": "267"
+      },
+      "residueKey": "7SYS|chain|z|267"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "268",
+        "label_asym_id": "LA",
+        "label_seq_id": "268"
+      },
+      "residueKey": "7SYS|chain|z|268"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "269",
+        "label_asym_id": "LA",
+        "label_seq_id": "269"
+      },
+      "residueKey": "7SYS|chain|z|269"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "270",
+        "label_asym_id": "LA",
+        "label_seq_id": "270"
+      },
+      "residueKey": "7SYS|chain|z|270"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "271",
+        "label_asym_id": "LA",
+        "label_seq_id": "271"
+      },
+      "residueKey": "7SYS|chain|z|271"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "272",
+        "label_asym_id": "LA",
+        "label_seq_id": "272"
+      },
+      "residueKey": "7SYS|chain|z|272"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "273",
+        "label_asym_id": "LA",
+        "label_seq_id": "273"
+      },
+      "residueKey": "7SYS|chain|z|273"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "274",
+        "label_asym_id": "LA",
+        "label_seq_id": "274"
+      },
+      "residueKey": "7SYS|chain|z|274"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "275",
+        "label_asym_id": "LA",
+        "label_seq_id": "275"
+      },
+      "residueKey": "7SYS|chain|z|275"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "276",
+        "label_asym_id": "LA",
+        "label_seq_id": "276"
+      },
+      "residueKey": "7SYS|chain|z|276"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "277",
+        "label_asym_id": "LA",
+        "label_seq_id": "277"
+      },
+      "residueKey": "7SYS|chain|z|277"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "278",
+        "label_asym_id": "LA",
+        "label_seq_id": "278"
+      },
+      "residueKey": "7SYS|chain|z|278"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "279",
+        "label_asym_id": "LA",
+        "label_seq_id": "279"
+      },
+      "residueKey": "7SYS|chain|z|279"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "280",
+        "label_asym_id": "LA",
+        "label_seq_id": "280"
+      },
+      "residueKey": "7SYS|chain|z|280"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "281",
+        "label_asym_id": "LA",
+        "label_seq_id": "281"
+      },
+      "residueKey": "7SYS|chain|z|281"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "282",
+        "label_asym_id": "LA",
+        "label_seq_id": "282"
+      },
+      "residueKey": "7SYS|chain|z|282"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "283",
+        "label_asym_id": "LA",
+        "label_seq_id": "283"
+      },
+      "residueKey": "7SYS|chain|z|283"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "284",
+        "label_asym_id": "LA",
+        "label_seq_id": "284"
+      },
+      "residueKey": "7SYS|chain|z|284"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "285",
+        "label_asym_id": "LA",
+        "label_seq_id": "285"
+      },
+      "residueKey": "7SYS|chain|z|285"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "286",
+        "label_asym_id": "LA",
+        "label_seq_id": "286"
+      },
+      "residueKey": "7SYS|chain|z|286"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "287",
+        "label_asym_id": "LA",
+        "label_seq_id": "287"
+      },
+      "residueKey": "7SYS|chain|z|287"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "288",
+        "label_asym_id": "LA",
+        "label_seq_id": "288"
+      },
+      "residueKey": "7SYS|chain|z|288"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "289",
+        "label_asym_id": "LA",
+        "label_seq_id": "289"
+      },
+      "residueKey": "7SYS|chain|z|289"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "290",
+        "label_asym_id": "LA",
+        "label_seq_id": "290"
+      },
+      "residueKey": "7SYS|chain|z|290"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "291",
+        "label_asym_id": "LA",
+        "label_seq_id": "291"
+      },
+      "residueKey": "7SYS|chain|z|291"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "292",
+        "label_asym_id": "LA",
+        "label_seq_id": "292"
+      },
+      "residueKey": "7SYS|chain|z|292"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "293",
+        "label_asym_id": "LA",
+        "label_seq_id": "293"
+      },
+      "residueKey": "7SYS|chain|z|293"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "294",
+        "label_asym_id": "LA",
+        "label_seq_id": "294"
+      },
+      "residueKey": "7SYS|chain|z|294"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "295",
+        "label_asym_id": "LA",
+        "label_seq_id": "295"
+      },
+      "residueKey": "7SYS|chain|z|295"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "296",
+        "label_asym_id": "LA",
+        "label_seq_id": "296"
+      },
+      "residueKey": "7SYS|chain|z|296"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "297",
+        "label_asym_id": "LA",
+        "label_seq_id": "297"
+      },
+      "residueKey": "7SYS|chain|z|297"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "298",
+        "label_asym_id": "LA",
+        "label_seq_id": "298"
+      },
+      "residueKey": "7SYS|chain|z|298"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "299",
+        "label_asym_id": "LA",
+        "label_seq_id": "299"
+      },
+      "residueKey": "7SYS|chain|z|299"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "300",
+        "label_asym_id": "LA",
+        "label_seq_id": "300"
+      },
+      "residueKey": "7SYS|chain|z|300"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "301",
+        "label_asym_id": "LA",
+        "label_seq_id": "301"
+      },
+      "residueKey": "7SYS|chain|z|301"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "302",
+        "label_asym_id": "LA",
+        "label_seq_id": "302"
+      },
+      "residueKey": "7SYS|chain|z|302"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "303",
+        "label_asym_id": "LA",
+        "label_seq_id": "303"
+      },
+      "residueKey": "7SYS|chain|z|303"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "304",
+        "label_asym_id": "LA",
+        "label_seq_id": "304"
+      },
+      "residueKey": "7SYS|chain|z|304"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "305",
+        "label_asym_id": "LA",
+        "label_seq_id": "305"
+      },
+      "residueKey": "7SYS|chain|z|305"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "306",
+        "label_asym_id": "LA",
+        "label_seq_id": "306"
+      },
+      "residueKey": "7SYS|chain|z|306"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "307",
+        "label_asym_id": "LA",
+        "label_seq_id": "307"
+      },
+      "residueKey": "7SYS|chain|z|307"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "308",
+        "label_asym_id": "LA",
+        "label_seq_id": "308"
+      },
+      "residueKey": "7SYS|chain|z|308"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "309",
+        "label_asym_id": "LA",
+        "label_seq_id": "309"
+      },
+      "residueKey": "7SYS|chain|z|309"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "310",
+        "label_asym_id": "LA",
+        "label_seq_id": "310"
+      },
+      "residueKey": "7SYS|chain|z|310"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "311",
+        "label_asym_id": "LA",
+        "label_seq_id": "311"
+      },
+      "residueKey": "7SYS|chain|z|311"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "312",
+        "label_asym_id": "LA",
+        "label_seq_id": "312"
+      },
+      "residueKey": "7SYS|chain|z|312"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "313",
+        "label_asym_id": "LA",
+        "label_seq_id": "313"
+      },
+      "residueKey": "7SYS|chain|z|313"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "314",
+        "label_asym_id": "LA",
+        "label_seq_id": "314"
+      },
+      "residueKey": "7SYS|chain|z|314"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "315",
+        "label_asym_id": "LA",
+        "label_seq_id": "315"
+      },
+      "residueKey": "7SYS|chain|z|315"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "316",
+        "label_asym_id": "LA",
+        "label_seq_id": "316"
+      },
+      "residueKey": "7SYS|chain|z|316"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "317",
+        "label_asym_id": "LA",
+        "label_seq_id": "317"
+      },
+      "residueKey": "7SYS|chain|z|317"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "318",
+        "label_asym_id": "LA",
+        "label_seq_id": "318"
+      },
+      "residueKey": "7SYS|chain|z|318"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "319",
+        "label_asym_id": "LA",
+        "label_seq_id": "319"
+      },
+      "residueKey": "7SYS|chain|z|319"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "320",
+        "label_asym_id": "LA",
+        "label_seq_id": "320"
+      },
+      "residueKey": "7SYS|chain|z|320"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "321",
+        "label_asym_id": "LA",
+        "label_seq_id": "321"
+      },
+      "residueKey": "7SYS|chain|z|321"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "322",
+        "label_asym_id": "LA",
+        "label_seq_id": "322"
+      },
+      "residueKey": "7SYS|chain|z|322"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "323",
+        "label_asym_id": "LA",
+        "label_seq_id": "323"
+      },
+      "residueKey": "7SYS|chain|z|323"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "324",
+        "label_asym_id": "LA",
+        "label_seq_id": "324"
+      },
+      "residueKey": "7SYS|chain|z|324"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "325",
+        "label_asym_id": "LA",
+        "label_seq_id": "325"
+      },
+      "residueKey": "7SYS|chain|z|325"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "326",
+        "label_asym_id": "LA",
+        "label_seq_id": "326"
+      },
+      "residueKey": "7SYS|chain|z|326"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "327",
+        "label_asym_id": "LA",
+        "label_seq_id": "327"
+      },
+      "residueKey": "7SYS|chain|z|327"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "328",
+        "label_asym_id": "LA",
+        "label_seq_id": "328"
+      },
+      "residueKey": "7SYS|chain|z|328"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "329",
+        "label_asym_id": "LA",
+        "label_seq_id": "329"
+      },
+      "residueKey": "7SYS|chain|z|329"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "330",
+        "label_asym_id": "LA",
+        "label_seq_id": "330"
+      },
+      "residueKey": "7SYS|chain|z|330"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "331",
+        "label_asym_id": "LA",
+        "label_seq_id": "331"
+      },
+      "residueKey": "7SYS|chain|z|331"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "332",
+        "label_asym_id": "LA",
+        "label_seq_id": "332"
+      },
+      "residueKey": "7SYS|chain|z|332"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "333",
+        "label_asym_id": "LA",
+        "label_seq_id": "333"
+      },
+      "residueKey": "7SYS|chain|z|333"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "334",
+        "label_asym_id": "LA",
+        "label_seq_id": "334"
+      },
+      "residueKey": "7SYS|chain|z|334"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "335",
+        "label_asym_id": "LA",
+        "label_seq_id": "335"
+      },
+      "residueKey": "7SYS|chain|z|335"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "336",
+        "label_asym_id": "LA",
+        "label_seq_id": "336"
+      },
+      "residueKey": "7SYS|chain|z|336"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "337",
+        "label_asym_id": "LA",
+        "label_seq_id": "337"
+      },
+      "residueKey": "7SYS|chain|z|337"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "338",
+        "label_asym_id": "LA",
+        "label_seq_id": "338"
+      },
+      "residueKey": "7SYS|chain|z|338"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "339",
+        "label_asym_id": "LA",
+        "label_seq_id": "339"
+      },
+      "residueKey": "7SYS|chain|z|339"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "340",
+        "label_asym_id": "LA",
+        "label_seq_id": "340"
+      },
+      "residueKey": "7SYS|chain|z|340"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "341",
+        "label_asym_id": "LA",
+        "label_seq_id": "341"
+      },
+      "residueKey": "7SYS|chain|z|341"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "342",
+        "label_asym_id": "LA",
+        "label_seq_id": "342"
+      },
+      "residueKey": "7SYS|chain|z|342"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "343",
+        "label_asym_id": "LA",
+        "label_seq_id": "343"
+      },
+      "residueKey": "7SYS|chain|z|343"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "344",
+        "label_asym_id": "LA",
+        "label_seq_id": "344"
+      },
+      "residueKey": "7SYS|chain|z|344"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "345",
+        "label_asym_id": "LA",
+        "label_seq_id": "345"
+      },
+      "residueKey": "7SYS|chain|z|345"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "346",
+        "label_asym_id": "LA",
+        "label_seq_id": "346"
+      },
+      "residueKey": "7SYS|chain|z|346"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "347",
+        "label_asym_id": "LA",
+        "label_seq_id": "347"
+      },
+      "residueKey": "7SYS|chain|z|347"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "348",
+        "label_asym_id": "LA",
+        "label_seq_id": "348"
+      },
+      "residueKey": "7SYS|chain|z|348"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "349",
+        "label_asym_id": "LA",
+        "label_seq_id": "349"
+      },
+      "residueKey": "7SYS|chain|z|349"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "350",
+        "label_asym_id": "LA",
+        "label_seq_id": "350"
+      },
+      "residueKey": "7SYS|chain|z|350"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "351",
+        "label_asym_id": "LA",
+        "label_seq_id": "351"
+      },
+      "residueKey": "7SYS|chain|z|351"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "352",
+        "label_asym_id": "LA",
+        "label_seq_id": "352"
+      },
+      "residueKey": "7SYS|chain|z|352"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "353",
+        "label_asym_id": "LA",
+        "label_seq_id": "353"
+      },
+      "residueKey": "7SYS|chain|z|353"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "354",
+        "label_asym_id": "LA",
+        "label_seq_id": "354"
+      },
+      "residueKey": "7SYS|chain|z|354"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "355",
+        "label_asym_id": "LA",
+        "label_seq_id": "355"
+      },
+      "residueKey": "7SYS|chain|z|355"
+    },
+    {
+      "coordinateStatus": "resolved",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": "356",
+        "label_asym_id": "LA",
+        "label_seq_id": "356"
+      },
+      "residueKey": "7SYS|chain|z|356"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 357,
+        "label_asym_id": "LA",
+        "label_seq_id": 357
+      },
+      "residueKey": "7SYS|chain|z|357"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 358,
+        "label_asym_id": "LA",
+        "label_seq_id": 358
+      },
+      "residueKey": "7SYS|chain|z|358"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 359,
+        "label_asym_id": "LA",
+        "label_seq_id": 359
+      },
+      "residueKey": "7SYS|chain|z|359"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 360,
+        "label_asym_id": "LA",
+        "label_seq_id": 360
+      },
+      "residueKey": "7SYS|chain|z|360"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 361,
+        "label_asym_id": "LA",
+        "label_seq_id": 361
+      },
+      "residueKey": "7SYS|chain|z|361"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 362,
+        "label_asym_id": "LA",
+        "label_seq_id": 362
+      },
+      "residueKey": "7SYS|chain|z|362"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 363,
+        "label_asym_id": "LA",
+        "label_seq_id": 363
+      },
+      "residueKey": "7SYS|chain|z|363"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 364,
+        "label_asym_id": "LA",
+        "label_seq_id": 364
+      },
+      "residueKey": "7SYS|chain|z|364"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 365,
+        "label_asym_id": "LA",
+        "label_seq_id": 365
+      },
+      "residueKey": "7SYS|chain|z|365"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 366,
+        "label_asym_id": "LA",
+        "label_seq_id": 366
+      },
+      "residueKey": "7SYS|chain|z|366"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 367,
+        "label_asym_id": "LA",
+        "label_seq_id": 367
+      },
+      "residueKey": "7SYS|chain|z|367"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 368,
+        "label_asym_id": "LA",
+        "label_seq_id": 368
+      },
+      "residueKey": "7SYS|chain|z|368"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 369,
+        "label_asym_id": "LA",
+        "label_seq_id": 369
+      },
+      "residueKey": "7SYS|chain|z|369"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 370,
+        "label_asym_id": "LA",
+        "label_seq_id": 370
+      },
+      "residueKey": "7SYS|chain|z|370"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 371,
+        "label_asym_id": "LA",
+        "label_seq_id": 371
+      },
+      "residueKey": "7SYS|chain|z|371"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 372,
+        "label_asym_id": "LA",
+        "label_seq_id": 372
+      },
+      "residueKey": "7SYS|chain|z|372"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 373,
+        "label_asym_id": "LA",
+        "label_seq_id": 373
+      },
+      "residueKey": "7SYS|chain|z|373"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 374,
+        "label_asym_id": "LA",
+        "label_seq_id": 374
+      },
+      "residueKey": "7SYS|chain|z|374"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 375,
+        "label_asym_id": "LA",
+        "label_seq_id": 375
+      },
+      "residueKey": "7SYS|chain|z|375"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 376,
+        "label_asym_id": "LA",
+        "label_seq_id": 376
+      },
+      "residueKey": "7SYS|chain|z|376"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 377,
+        "label_asym_id": "LA",
+        "label_seq_id": 377
+      },
+      "residueKey": "7SYS|chain|z|377"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 378,
+        "label_asym_id": "LA",
+        "label_seq_id": 378
+      },
+      "residueKey": "7SYS|chain|z|378"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 379,
+        "label_asym_id": "LA",
+        "label_seq_id": 379
+      },
+      "residueKey": "7SYS|chain|z|379"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 380,
+        "label_asym_id": "LA",
+        "label_seq_id": 380
+      },
+      "residueKey": "7SYS|chain|z|380"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 381,
+        "label_asym_id": "LA",
+        "label_seq_id": 381
+      },
+      "residueKey": "7SYS|chain|z|381"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 382,
+        "label_asym_id": "LA",
+        "label_seq_id": 382
+      },
+      "residueKey": "7SYS|chain|z|382"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 383,
+        "label_asym_id": "LA",
+        "label_seq_id": 383
+      },
+      "residueKey": "7SYS|chain|z|383"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 384,
+        "label_asym_id": "LA",
+        "label_seq_id": 384
+      },
+      "residueKey": "7SYS|chain|z|384"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 385,
+        "label_asym_id": "LA",
+        "label_seq_id": 385
+      },
+      "residueKey": "7SYS|chain|z|385"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 386,
+        "label_asym_id": "LA",
+        "label_seq_id": 386
+      },
+      "residueKey": "7SYS|chain|z|386"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 387,
+        "label_asym_id": "LA",
+        "label_seq_id": 387
+      },
+      "residueKey": "7SYS|chain|z|387"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 388,
+        "label_asym_id": "LA",
+        "label_seq_id": 388
+      },
+      "residueKey": "7SYS|chain|z|388"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 389,
+        "label_asym_id": "LA",
+        "label_seq_id": 389
+      },
+      "residueKey": "7SYS|chain|z|389"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 390,
+        "label_asym_id": "LA",
+        "label_seq_id": 390
+      },
+      "residueKey": "7SYS|chain|z|390"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 391,
+        "label_asym_id": "LA",
+        "label_seq_id": 391
+      },
+      "residueKey": "7SYS|chain|z|391"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 392,
+        "label_asym_id": "LA",
+        "label_seq_id": 392
+      },
+      "residueKey": "7SYS|chain|z|392"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 393,
+        "label_asym_id": "LA",
+        "label_seq_id": 393
+      },
+      "residueKey": "7SYS|chain|z|393"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 394,
+        "label_asym_id": "LA",
+        "label_seq_id": 394
+      },
+      "residueKey": "7SYS|chain|z|394"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 395,
+        "label_asym_id": "LA",
+        "label_seq_id": 395
+      },
+      "residueKey": "7SYS|chain|z|395"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 396,
+        "label_asym_id": "LA",
+        "label_seq_id": 396
+      },
+      "residueKey": "7SYS|chain|z|396"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 397,
+        "label_asym_id": "LA",
+        "label_seq_id": 397
+      },
+      "residueKey": "7SYS|chain|z|397"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 398,
+        "label_asym_id": "LA",
+        "label_seq_id": 398
+      },
+      "residueKey": "7SYS|chain|z|398"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 399,
+        "label_asym_id": "LA",
+        "label_seq_id": 399
+      },
+      "residueKey": "7SYS|chain|z|399"
+    },
+    {
+      "coordinateStatus": "sequence_only",
+      "locator": {
+        "auth_asym_id": "z",
+        "auth_seq_id": 400,
+        "label_asym_id": "LA",
+        "label_seq_id": 400
+      },
+      "residueKey": "7SYS|chain|z|400"
+    }
+  ],
+  "protocolVersion": "linked-view-v0.1"
+}

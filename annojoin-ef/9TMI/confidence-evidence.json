@@ -1,0 +1,38 @@
+{
+  "atlasCaseKey": "RASP2PDB:9TMI",
+  "generatedAt": "2026-06-28T08:08:45.254810Z",
+  "modality": "2d_pair_set",
+  "pdbId": "9TMI",
+  "rows": [
+    {
+      "bridgeStatus": "bridge_missing",
+      "candidateNote": "underpowered_signal_pairs_below_5",
+      "chain": "A",
+      "confidenceRankedSetEligible": false,
+      "contactPairAuc": null,
+      "directionalMetric": null,
+      "directionalMetricKind": "contact_pair_auc",
+      "directionalMetricLabel": "Contact pair AUC",
+      "effectSizeZ": null,
+      "empiricalPValue": null,
+      "evidenceId": "annojoin:RASP2PDB:9TMI:confidence:16SFWJ_MCA_0000",
+      "family": "E",
+      "lssCalibrationStatus": "uncalibrated",
+      "lssTierCalibrated": "LSS_UNDERPOWERED",
+      "lssTierUncalibrated": "LSS_UNDERPOWERED",
+      "nEvaluable": 4,
+      "nUnits": 4,
+      "pairF1": null,
+      "pairId": "",
+      "pairPrecision": null,
+      "pairSegmentId": "",
+      "profileKey": "16SFWJ_MCA_0000",
+      "selectedByDefault": true,
+      "supports2d": true,
+      "supportsResidueColoring": false,
+      "technology": "MCA"
+    }
+  ],
+  "schemaVersion": "family-case-bundle.v2",
+  "status": "materialized"
+}

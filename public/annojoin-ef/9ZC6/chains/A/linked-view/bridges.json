@@ -1,0 +1,769 @@
+{
+  "bridges": [
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|19|26",
+      "residueKeys": [
+        "9ZC6|chain|A|19",
+        "9ZC6|chain|A|26"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|18|27",
+      "residueKeys": [
+        "9ZC6|chain|A|18",
+        "9ZC6|chain|A|27"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|17|28",
+      "residueKeys": [
+        "9ZC6|chain|A|17",
+        "9ZC6|chain|A|28"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|16|29",
+      "residueKeys": [
+        "9ZC6|chain|A|16",
+        "9ZC6|chain|A|29"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|15|30",
+      "residueKeys": [
+        "9ZC6|chain|A|15",
+        "9ZC6|chain|A|30"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|14|31",
+      "residueKeys": [
+        "9ZC6|chain|A|14",
+        "9ZC6|chain|A|31"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|13|32",
+      "residueKeys": [
+        "9ZC6|chain|A|13",
+        "9ZC6|chain|A|32"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|12|33",
+      "residueKeys": [
+        "9ZC6|chain|A|12",
+        "9ZC6|chain|A|33"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|11|35",
+      "residueKeys": [
+        "9ZC6|chain|A|11",
+        "9ZC6|chain|A|35"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|52|60",
+      "residueKeys": [
+        "9ZC6|chain|A|52",
+        "9ZC6|chain|A|60"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|45|63",
+      "residueKeys": [
+        "9ZC6|chain|A|45",
+        "9ZC6|chain|A|63"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|44|64",
+      "residueKeys": [
+        "9ZC6|chain|A|44",
+        "9ZC6|chain|A|64"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|43|65",
+      "residueKeys": [
+        "9ZC6|chain|A|43",
+        "9ZC6|chain|A|65"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|42|66",
+      "residueKeys": [
+        "9ZC6|chain|A|42",
+        "9ZC6|chain|A|66"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|41|68",
+      "residueKeys": [
+        "9ZC6|chain|A|41",
+        "9ZC6|chain|A|68"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|40|69",
+      "residueKeys": [
+        "9ZC6|chain|A|40",
+        "9ZC6|chain|A|69"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|39|70",
+      "residueKeys": [
+        "9ZC6|chain|A|39",
+        "9ZC6|chain|A|70"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|38|71",
+      "residueKeys": [
+        "9ZC6|chain|A|38",
+        "9ZC6|chain|A|71"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|37|72",
+      "residueKeys": [
+        "9ZC6|chain|A|37",
+        "9ZC6|chain|A|72"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|128|133",
+      "residueKeys": [
+        "9ZC6|chain|A|128",
+        "9ZC6|chain|A|133"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|127|134",
+      "residueKeys": [
+        "9ZC6|chain|A|127",
+        "9ZC6|chain|A|134"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|126|135",
+      "residueKeys": [
+        "9ZC6|chain|A|126",
+        "9ZC6|chain|A|135"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|125|136",
+      "residueKeys": [
+        "9ZC6|chain|A|125",
+        "9ZC6|chain|A|136"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|124|137",
+      "residueKeys": [
+        "9ZC6|chain|A|124",
+        "9ZC6|chain|A|137"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|123|138",
+      "residueKeys": [
+        "9ZC6|chain|A|123",
+        "9ZC6|chain|A|138"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|122|139",
+      "residueKeys": [
+        "9ZC6|chain|A|122",
+        "9ZC6|chain|A|139"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|121|140",
+      "residueKeys": [
+        "9ZC6|chain|A|121",
+        "9ZC6|chain|A|140"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|120|141",
+      "residueKeys": [
+        "9ZC6|chain|A|120",
+        "9ZC6|chain|A|141"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|145|153",
+      "residueKeys": [
+        "9ZC6|chain|A|145",
+        "9ZC6|chain|A|153"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|144|154",
+      "residueKeys": [
+        "9ZC6|chain|A|144",
+        "9ZC6|chain|A|154"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|117|159",
+      "residueKeys": [
+        "9ZC6|chain|A|117",
+        "9ZC6|chain|A|159"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|116|160",
+      "residueKeys": [
+        "9ZC6|chain|A|116",
+        "9ZC6|chain|A|160"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|115|161",
+      "residueKeys": [
+        "9ZC6|chain|A|115",
+        "9ZC6|chain|A|161"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|113|168",
+      "residueKeys": [
+        "9ZC6|chain|A|113",
+        "9ZC6|chain|A|168"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|112|169",
+      "residueKeys": [
+        "9ZC6|chain|A|112",
+        "9ZC6|chain|A|169"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|111|170",
+      "residueKeys": [
+        "9ZC6|chain|A|111",
+        "9ZC6|chain|A|170"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|110|171",
+      "residueKeys": [
+        "9ZC6|chain|A|110",
+        "9ZC6|chain|A|171"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|108|172",
+      "residueKeys": [
+        "9ZC6|chain|A|108",
+        "9ZC6|chain|A|172"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|107|173",
+      "residueKeys": [
+        "9ZC6|chain|A|107",
+        "9ZC6|chain|A|173"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|106|174",
+      "residueKeys": [
+        "9ZC6|chain|A|106",
+        "9ZC6|chain|A|174"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|100|179",
+      "residueKeys": [
+        "9ZC6|chain|A|100",
+        "9ZC6|chain|A|179"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|99|180",
+      "residueKeys": [
+        "9ZC6|chain|A|99",
+        "9ZC6|chain|A|180"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|98|181",
+      "residueKeys": [
+        "9ZC6|chain|A|98",
+        "9ZC6|chain|A|181"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|97|182",
+      "residueKeys": [
+        "9ZC6|chain|A|97",
+        "9ZC6|chain|A|182"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|96|183",
+      "residueKeys": [
+        "9ZC6|chain|A|96",
+        "9ZC6|chain|A|183"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|95|184",
+      "residueKeys": [
+        "9ZC6|chain|A|95",
+        "9ZC6|chain|A|184"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|91|187",
+      "residueKeys": [
+        "9ZC6|chain|A|91",
+        "9ZC6|chain|A|187"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|90|188",
+      "residueKeys": [
+        "9ZC6|chain|A|90",
+        "9ZC6|chain|A|188"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|89|190",
+      "residueKeys": [
+        "9ZC6|chain|A|89",
+        "9ZC6|chain|A|190"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|87|192",
+      "residueKeys": [
+        "9ZC6|chain|A|87",
+        "9ZC6|chain|A|192"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|86|193",
+      "residueKeys": [
+        "9ZC6|chain|A|86",
+        "9ZC6|chain|A|193"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|213|219",
+      "residueKeys": [
+        "9ZC6|chain|A|213",
+        "9ZC6|chain|A|219"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|212|220",
+      "residueKeys": [
+        "9ZC6|chain|A|212",
+        "9ZC6|chain|A|220"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|211|221",
+      "residueKeys": [
+        "9ZC6|chain|A|211",
+        "9ZC6|chain|A|221"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|210|222",
+      "residueKeys": [
+        "9ZC6|chain|A|210",
+        "9ZC6|chain|A|222"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|209|223",
+      "residueKeys": [
+        "9ZC6|chain|A|209",
+        "9ZC6|chain|A|223"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|208|224",
+      "residueKeys": [
+        "9ZC6|chain|A|208",
+        "9ZC6|chain|A|224"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|207|225",
+      "residueKeys": [
+        "9ZC6|chain|A|207",
+        "9ZC6|chain|A|225"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|206|226",
+      "residueKeys": [
+        "9ZC6|chain|A|206",
+        "9ZC6|chain|A|226"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|202|229",
+      "residueKeys": [
+        "9ZC6|chain|A|202",
+        "9ZC6|chain|A|229"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|201|230",
+      "residueKeys": [
+        "9ZC6|chain|A|201",
+        "9ZC6|chain|A|230"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|200|231",
+      "residueKeys": [
+        "9ZC6|chain|A|200",
+        "9ZC6|chain|A|231"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|199|232",
+      "residueKeys": [
+        "9ZC6|chain|A|199",
+        "9ZC6|chain|A|232"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|195|236",
+      "residueKeys": [
+        "9ZC6|chain|A|195",
+        "9ZC6|chain|A|236"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|194|237",
+      "residueKeys": [
+        "9ZC6|chain|A|194",
+        "9ZC6|chain|A|237"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|265|271",
+      "residueKeys": [
+        "9ZC6|chain|A|265",
+        "9ZC6|chain|A|271"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|264|272",
+      "residueKeys": [
+        "9ZC6|chain|A|264",
+        "9ZC6|chain|A|272"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|263|273",
+      "residueKeys": [
+        "9ZC6|chain|A|263",
+        "9ZC6|chain|A|273"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|262|274",
+      "residueKeys": [
+        "9ZC6|chain|A|262",
+        "9ZC6|chain|A|274"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|261|275",
+      "residueKeys": [
+        "9ZC6|chain|A|261",
+        "9ZC6|chain|A|275"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|260|276",
+      "residueKeys": [
+        "9ZC6|chain|A|260",
+        "9ZC6|chain|A|276"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|259|277",
+      "residueKeys": [
+        "9ZC6|chain|A|259",
+        "9ZC6|chain|A|277"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|247|286",
+      "residueKeys": [
+        "9ZC6|chain|A|247",
+        "9ZC6|chain|A|286"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|246|287",
+      "residueKeys": [
+        "9ZC6|chain|A|246",
+        "9ZC6|chain|A|287"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|245|288",
+      "residueKeys": [
+        "9ZC6|chain|A|245",
+        "9ZC6|chain|A|288"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|244|289",
+      "residueKeys": [
+        "9ZC6|chain|A|244",
+        "9ZC6|chain|A|289"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|243|290",
+      "residueKeys": [
+        "9ZC6|chain|A|243",
+        "9ZC6|chain|A|290"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|241|291",
+      "residueKeys": [
+        "9ZC6|chain|A|241",
+        "9ZC6|chain|A|291"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|301|306",
+      "residueKeys": [
+        "9ZC6|chain|A|301",
+        "9ZC6|chain|A|306"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|299|308",
+      "residueKeys": [
+        "9ZC6|chain|A|299",
+        "9ZC6|chain|A|308"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|298|309",
+      "residueKeys": [
+        "9ZC6|chain|A|298",
+        "9ZC6|chain|A|309"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|297|310",
+      "residueKeys": [
+        "9ZC6|chain|A|297",
+        "9ZC6|chain|A|310"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|325|332",
+      "residueKeys": [
+        "9ZC6|chain|A|325",
+        "9ZC6|chain|A|332"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|324|333",
+      "residueKeys": [
+        "9ZC6|chain|A|324",
+        "9ZC6|chain|A|333"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|323|334",
+      "residueKeys": [
+        "9ZC6|chain|A|323",
+        "9ZC6|chain|A|334"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|322|335",
+      "residueKeys": [
+        "9ZC6|chain|A|322",
+        "9ZC6|chain|A|335"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|317|340",
+      "residueKeys": [
+        "9ZC6|chain|A|317",
+        "9ZC6|chain|A|340"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|316|341",
+      "residueKeys": [
+        "9ZC6|chain|A|316",
+        "9ZC6|chain|A|341"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|315|342",
+      "residueKeys": [
+        "9ZC6|chain|A|315",
+        "9ZC6|chain|A|342"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|314|343",
+      "residueKeys": [
+        "9ZC6|chain|A|314",
+        "9ZC6|chain|A|343"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|313|344",
+      "residueKeys": [
+        "9ZC6|chain|A|313",
+        "9ZC6|chain|A|344"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|312|345",
+      "residueKeys": [
+        "9ZC6|chain|A|312",
+        "9ZC6|chain|A|345"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|311|346",
+      "residueKeys": [
+        "9ZC6|chain|A|311",
+        "9ZC6|chain|A|346"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|362|367",
+      "residueKeys": [
+        "9ZC6|chain|A|362",
+        "9ZC6|chain|A|367"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|361|368",
+      "residueKeys": [
+        "9ZC6|chain|A|361",
+        "9ZC6|chain|A|368"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|360|369",
+      "residueKeys": [
+        "9ZC6|chain|A|360",
+        "9ZC6|chain|A|369"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|359|370",
+      "residueKeys": [
+        "9ZC6|chain|A|359",
+        "9ZC6|chain|A|370"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|358|371",
+      "residueKeys": [
+        "9ZC6|chain|A|358",
+        "9ZC6|chain|A|371"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|357|372",
+      "residueKeys": [
+        "9ZC6|chain|A|357",
+        "9ZC6|chain|A|372"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|355|374",
+      "residueKeys": [
+        "9ZC6|chain|A|355",
+        "9ZC6|chain|A|374"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|354|375",
+      "residueKeys": [
+        "9ZC6|chain|A|354",
+        "9ZC6|chain|A|375"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|353|376",
+      "residueKeys": [
+        "9ZC6|chain|A|353",
+        "9ZC6|chain|A|376"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|352|377",
+      "residueKeys": [
+        "9ZC6|chain|A|352",
+        "9ZC6|chain|A|377"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|351|378",
+      "residueKeys": [
+        "9ZC6|chain|A|351",
+        "9ZC6|chain|A|378"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|350|379",
+      "residueKeys": [
+        "9ZC6|chain|A|350",
+        "9ZC6|chain|A|379"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|349|380",
+      "residueKeys": [
+        "9ZC6|chain|A|349",
+        "9ZC6|chain|A|380"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|348|381",
+      "residueKeys": [
+        "9ZC6|chain|A|348",
+        "9ZC6|chain|A|381"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|295|384",
+      "residueKeys": [
+        "9ZC6|chain|A|295",
+        "9ZC6|chain|A|384"
+      ]
+    },
+    {
+      "bridgeKey": "9ZC6|chain|A|bridge|294|385",
+      "residueKeys": [
+        "9ZC6|chain|A|294",
+        "9ZC6|chain|A|385"
+      ]
+    }
+  ],
+  "caseId": "9ZC6",
+  "protocolVersion": "linked-view-v0.1"
+}

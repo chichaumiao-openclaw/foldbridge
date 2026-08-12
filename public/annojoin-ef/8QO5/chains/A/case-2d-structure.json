@@ -1,0 +1,108 @@
+{
+  "case_id": "8QO5",
+  "dbn_source": "8qo5.dbn",
+  "default_render_strand_id": "strand_A",
+  "normalization_policy": {
+    "id": "browser_profile_positive_p95_cap_v1",
+    "missing_unmapped_nan_le_zero": "white",
+    "positive_value": "norm=min(value/p95_positive,1); yellow_to_red"
+  },
+  "strands": [
+    {
+      "dotbracket": ".(...(.......((.((....((.(......(.((....((((....((......)).....))))........))......(...((...).)..).....(........))......)))...)))).........)...).",
+      "length": 145,
+      "pairs": [
+        {
+          "i": 50,
+          "j": 57
+        },
+        {
+          "i": 49,
+          "j": 58
+        },
+        {
+          "i": 44,
+          "j": 64
+        },
+        {
+          "i": 43,
+          "j": 65
+        },
+        {
+          "i": 42,
+          "j": 66
+        },
+        {
+          "i": 41,
+          "j": 67
+        },
+        {
+          "i": 36,
+          "j": 76
+        },
+        {
+          "i": 35,
+          "j": 77
+        },
+        {
+          "i": 89,
+          "j": 93
+        },
+        {
+          "i": 88,
+          "j": 95
+        },
+        {
+          "i": 84,
+          "j": 98
+        },
+        {
+          "i": 104,
+          "j": 113
+        },
+        {
+          "i": 33,
+          "j": 114
+        },
+        {
+          "i": 26,
+          "j": 121
+        },
+        {
+          "i": 24,
+          "j": 122
+        },
+        {
+          "i": 23,
+          "j": 123
+        },
+        {
+          "i": 18,
+          "j": 127
+        },
+        {
+          "i": 17,
+          "j": 128
+        },
+        {
+          "i": 15,
+          "j": 129
+        },
+        {
+          "i": 14,
+          "j": 130
+        },
+        {
+          "i": 6,
+          "j": 140
+        },
+        {
+          "i": 2,
+          "j": 144
+        }
+      ],
+      "sequence": "UCGUUGACAGGACACGAGUAACUCGUCUAUCUUCUGCAGGCUGCUUACGGUUUCGUCCGUGUUGCAGCCGAUCAUCAGCACAUCUAGGUUUCGUCCGGGUGUGACCGAAAGGUAAGAUGGAGAGCCUUGUCCCUGGUUUCAACGA",
+      "strand_id": "strand_A"
+    }
+  ]
+}

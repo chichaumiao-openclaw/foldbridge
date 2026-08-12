@@ -1,0 +1,15 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:9TMI",
+  "biologicalMoleculeName": "E. coli 70S ribosome with A- and P-site tRNA",
+  "caseId": "9TMI",
+  "caseKey": "RASP2PDB:9TMI",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "E UNDERPOWERED",
+  "measurementFamily": "E",
+  "modality": "2d_pair_set",
+  "pdbId": "9TMI",
+  "profileCount": 1
+}

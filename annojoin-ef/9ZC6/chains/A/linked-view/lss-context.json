@@ -1,0 +1,17 @@
+{
+  "caseId": "A",
+  "modality": "2d_pair_set",
+  "protocolVersion": "linked-view-v0.1",
+  "records": [
+    {
+      "confidenceRankedSetEligible": true,
+      "contextEngine": "family_ef_case_bundle_v1",
+      "directionalMetric": 0.779861,
+      "directionalMetricKind": "contact_pair_auc",
+      "lssStatus": "LSS_STRONG",
+      "nEvaluable": 75,
+      "nUnits": 75,
+      "profileId": "TRP4P6_MCA_0000"
+    }
+  ]
+}

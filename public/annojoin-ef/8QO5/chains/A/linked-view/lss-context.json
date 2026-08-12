@@ -1,0 +1,17 @@
+{
+  "caseId": "A",
+  "modality": "2d_pair_set",
+  "protocolVersion": "linked-view-v0.1",
+  "records": [
+    {
+      "confidenceRankedSetEligible": false,
+      "contextEngine": "family_ef_case_bundle_v1",
+      "directionalMetric": 0.0468,
+      "directionalMetricKind": "pair_f1",
+      "lssStatus": "LSS_DISCORDANT",
+      "nEvaluable": 22,
+      "nUnits": 448,
+      "profileId": "SL5CV2_2A3_0001"
+    }
+  ]
+}

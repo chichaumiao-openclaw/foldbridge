@@ -1,0 +1,271 @@
+{
+  "caseId": "7SYS",
+  "edges": [
+    {
+      "interactionKey": "7SYS|chain|z|pair|161|166",
+      "residueA": "7SYS|chain|z|161",
+      "residueB": "7SYS|chain|z|166"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|160|167",
+      "residueA": "7SYS|chain|z|160",
+      "residueB": "7SYS|chain|z|167"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|159|168",
+      "residueA": "7SYS|chain|z|159",
+      "residueB": "7SYS|chain|z|168"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|158|169",
+      "residueA": "7SYS|chain|z|158",
+      "residueB": "7SYS|chain|z|169"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|157|170",
+      "residueA": "7SYS|chain|z|157",
+      "residueB": "7SYS|chain|z|170"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|156|171",
+      "residueA": "7SYS|chain|z|156",
+      "residueB": "7SYS|chain|z|171"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|174|225",
+      "residueA": "7SYS|chain|z|174",
+      "residueB": "7SYS|chain|z|225"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|173|226",
+      "residueA": "7SYS|chain|z|173",
+      "residueB": "7SYS|chain|z|226"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|172|227",
+      "residueA": "7SYS|chain|z|172",
+      "residueB": "7SYS|chain|z|227"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|232|235",
+      "residueA": "7SYS|chain|z|232",
+      "residueB": "7SYS|chain|z|235"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|231|236",
+      "residueA": "7SYS|chain|z|231",
+      "residueB": "7SYS|chain|z|236"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|230|237",
+      "residueA": "7SYS|chain|z|230",
+      "residueB": "7SYS|chain|z|237"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|229|238",
+      "residueA": "7SYS|chain|z|229",
+      "residueB": "7SYS|chain|z|238"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|153|239",
+      "residueA": "7SYS|chain|z|153",
+      "residueB": "7SYS|chain|z|239"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|152|240",
+      "residueA": "7SYS|chain|z|152",
+      "residueB": "7SYS|chain|z|240"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|151|241",
+      "residueA": "7SYS|chain|z|151",
+      "residueB": "7SYS|chain|z|241"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|150|242",
+      "residueA": "7SYS|chain|z|150",
+      "residueB": "7SYS|chain|z|242"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|149|244",
+      "residueA": "7SYS|chain|z|149",
+      "residueB": "7SYS|chain|z|244"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|148|245",
+      "residueA": "7SYS|chain|z|148",
+      "residueB": "7SYS|chain|z|245"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|147|246",
+      "residueA": "7SYS|chain|z|147",
+      "residueB": "7SYS|chain|z|246"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|146|247",
+      "residueA": "7SYS|chain|z|146",
+      "residueB": "7SYS|chain|z|247"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|145|248",
+      "residueA": "7SYS|chain|z|145",
+      "residueB": "7SYS|chain|z|248"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|144|249",
+      "residueA": "7SYS|chain|z|144",
+      "residueB": "7SYS|chain|z|249"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|143|250",
+      "residueA": "7SYS|chain|z|143",
+      "residueB": "7SYS|chain|z|250"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|142|251",
+      "residueA": "7SYS|chain|z|142",
+      "residueB": "7SYS|chain|z|251"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|141|252",
+      "residueA": "7SYS|chain|z|141",
+      "residueB": "7SYS|chain|z|252"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|262|271",
+      "residueA": "7SYS|chain|z|262",
+      "residueB": "7SYS|chain|z|271"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|261|272",
+      "residueA": "7SYS|chain|z|261",
+      "residueB": "7SYS|chain|z|272"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|255|277",
+      "residueA": "7SYS|chain|z|255",
+      "residueB": "7SYS|chain|z|277"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|254|278",
+      "residueA": "7SYS|chain|z|254",
+      "residueB": "7SYS|chain|z|278"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|253|279",
+      "residueA": "7SYS|chain|z|253",
+      "residueB": "7SYS|chain|z|279"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|280|283",
+      "residueA": "7SYS|chain|z|280",
+      "residueB": "7SYS|chain|z|283"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|140|284",
+      "residueA": "7SYS|chain|z|140",
+      "residueB": "7SYS|chain|z|284"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|139|285",
+      "residueA": "7SYS|chain|z|139",
+      "residueB": "7SYS|chain|z|285"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|138|286",
+      "residueA": "7SYS|chain|z|138",
+      "residueB": "7SYS|chain|z|286"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|137|287",
+      "residueA": "7SYS|chain|z|137",
+      "residueB": "7SYS|chain|z|287"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|135|289",
+      "residueA": "7SYS|chain|z|135",
+      "residueB": "7SYS|chain|z|289"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|134|290",
+      "residueA": "7SYS|chain|z|134",
+      "residueB": "7SYS|chain|z|290"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|294|299",
+      "residueA": "7SYS|chain|z|294",
+      "residueB": "7SYS|chain|z|299"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|293|300",
+      "residueA": "7SYS|chain|z|293",
+      "residueB": "7SYS|chain|z|300"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|292|301",
+      "residueA": "7SYS|chain|z|292",
+      "residueB": "7SYS|chain|z|301"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|291|302",
+      "residueA": "7SYS|chain|z|291",
+      "residueB": "7SYS|chain|z|302"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|304|313",
+      "residueA": "7SYS|chain|z|304",
+      "residueB": "7SYS|chain|z|313"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|303|314",
+      "residueA": "7SYS|chain|z|303",
+      "residueB": "7SYS|chain|z|314"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|133|315",
+      "residueA": "7SYS|chain|z|133",
+      "residueB": "7SYS|chain|z|315"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|132|316",
+      "residueA": "7SYS|chain|z|132",
+      "residueB": "7SYS|chain|z|316"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|131|317",
+      "residueA": "7SYS|chain|z|131",
+      "residueB": "7SYS|chain|z|317"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|130|318",
+      "residueA": "7SYS|chain|z|130",
+      "residueB": "7SYS|chain|z|318"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|129|319",
+      "residueA": "7SYS|chain|z|129",
+      "residueB": "7SYS|chain|z|319"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|128|320",
+      "residueA": "7SYS|chain|z|128",
+      "residueB": "7SYS|chain|z|320"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|127|321",
+      "residueA": "7SYS|chain|z|127",
+      "residueB": "7SYS|chain|z|321"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|126|322",
+      "residueA": "7SYS|chain|z|126",
+      "residueB": "7SYS|chain|z|322"
+    },
+    {
+      "interactionKey": "7SYS|chain|z|pair|125|323",
+      "residueA": "7SYS|chain|z|125",
+      "residueB": "7SYS|chain|z|323"
+    }
+  ],
+  "protocolVersion": "linked-view-v0.1"
+}

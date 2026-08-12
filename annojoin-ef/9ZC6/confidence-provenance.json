@@ -1,0 +1,17 @@
+{
+  "atlasCaseKey": "RASP2PDB:9ZC6",
+  "bridgeFailureSample": [],
+  "bridgeStrategy": "2d confidence badge grouped by chain to chains/<encodedChainId>",
+  "bridgeStrategyVersion": "family_ef_case_chain_badge_v1",
+  "failureReasons": {},
+  "generatedAt": "2026-06-28T08:08:45.254810Z",
+  "modality": "2d_pair_set",
+  "pdbId": "9ZC6",
+  "schemaVersion": "family-case-bundle.v2",
+  "status": "materialized",
+  "totals": {
+    "bridgeMissingCount": 1,
+    "calibratedRows": 1,
+    "materializedEvidenceCount": 1
+  }
+}
