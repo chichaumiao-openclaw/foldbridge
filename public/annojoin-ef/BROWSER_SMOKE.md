@@ -42,8 +42,9 @@
 
 ### 3. 选轴位 k（全链梯度重着色）
 
-- [ ] **热图点击行/列表头（未实现，跳过）**
-  - 待 ef-case.js 接线轴刻度点击事件
+- [ ] **热图点击 → selectAxis('i', i)**
+  - 操作：ef-case.js 已接线（`wireHeatmapClick`）——点击热图任意格
+  - 预期：以点击落点反算的 i 轴位触发 selectAxis，整链按 `value[i][*]` 梯度重着色（molstar 整链 + VARNA 同步）
 
 - [ ] **molstar 点选碱基**
   - 操作：在 molstar 3D 视图点选一个残基
@@ -71,19 +72,18 @@
     - 新热图正常渲染
     - 无残留事件监听（用 Elements 面板检查）
 
-### 6. 性能自验（决定 MODE 默认值）
+### 6. 性能自验（恒 full-3d，无 MODE 开关）
+
+> B1 已删除 `MODE`/highlight-only fallback：select 恒走 full-3d 整链重着色，无降级分支（呼应「无 fallback」诉求）。本节仅做性能观测，不再有"改 MODE"这一步。
 
 - [ ] **200×200 矩阵切 k（真机测试）**
   - 操作：
-    1. 找一个大矩阵 E/F case（~200×200）
-    2. Console 运行：`console.time('select'); window._efHeatmap.selectAxis('i', 50); console.timeEnd('select');`
-    3. 观察 molstar 重着色是否交互感知内完成（<100ms 可感知）
+    1. 找一个大矩阵 E case（9ZC6 203×203 或 9TMI 181×181）
+    2. Console 运行：`console.time('select'); window.createEfHeatmap` 返回的 controller `.selectAxis('i', 50); console.timeEnd('select');`
+    3. 观察 molstar 全链重着色是否交互感知内完成
   - 预期：
     - payload 构建 <16ms
-    - molstar select 异步，总体流畅
-  - **若卡顿（>200ms）**：
-    - 改 `ef-heatmap.js` 顶部 `MODE = "highlight-only"`
-    - 重测：3D 只 highlight 不全链重着色
+    - molstar select 异步，总体流畅（full-3d 整链重着色）
 
 ### 7. 契约校验
 
@@ -95,6 +95,21 @@
     ```
   - 预期：抛错 "out of range"
 
+- [ ] **无 molstar plugin fail-loud（验证「无 fallback」落地）**
+  - 操作：Console 手动不传（或传 null）molstarPlugin 调用：
+    ```js
+    window.createEfHeatmap({ heatmapHost: document.getElementById('ef-heatmap-host'),
+                             varnaHost: document.getElementById('varna-host'),
+                             molstarPlugin: null,
+                             payload: window._efPayload });
+    ```
+  - 预期：立即抛错，信息含 "requires a molstar plugin with .visual"（不静默降级为无 3D 空渲染）
+
+- [ ] **结构加载失败 fail-loud（page 可见红字）**
+  - 操作：临时把某 case 的 `structure.cif` 改名/挪走后刷新页面
+  - 预期：热图容器显示红色 `ef-case load failed:` 报错（含 `[case <id>]` 上下文），而非静默空白 3D
+  - 复原：改回文件名
+
 ---
 
 ## 执行记录
@@ -103,8 +118,7 @@
 **测试人：** ____________
 **浏览器：** ____________ (Chrome/Firefox/Safari)
 
-**MODE 最终值：** `full-3d` / `highlight-only` (勾选一个)
-**理由：** ____________________________________________
+**渲染模式：** 恒 `full-3d`（B1 已删除 MODE/highlight-only fallback，无可选项）
 
 **发现的问题：**
 -
