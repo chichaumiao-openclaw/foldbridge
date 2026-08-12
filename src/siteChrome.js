@@ -549,11 +549,10 @@ function renderStatsRnaClassChart(structureClasses) {
 }
 
 // 单张数字卡。
-function statsMetricCard(value, label, note = '') {
+function statsMetricCard(value, label) {
   return `<div class="stats-metric">
       <span class="stats-metric-value">${statsNumber(value)}</span>
       <span class="stats-metric-label">${label}</span>
-      ${note ? `<span class="stats-metric-note">${note}</span>` : ''}
     </div>`;
 }
 
@@ -562,7 +561,9 @@ function statsMetricCard(value, label, note = '') {
 export function renderStatsPage(stats) {
   if (!stats || typeof stats !== 'object') {
     return `<section class="card bundle-wide-card stats-page">
-      <h1>Statistics</h1>
+      <header class="stats-head">
+        <h1>Statistics</h1>
+      </header>
       <p class="stats-empty">Statistics are still loading. If this persists, the stats asset may not be built yet.</p>
     </section>`;
   }
@@ -579,17 +580,14 @@ export function renderStatsPage(stats) {
   return `<section class="card bundle-wide-card stats-page" data-pdb-total="${Number(stats.pdb_total) || 0}">
       <header class="stats-head">
         <h1>Statistics</h1>
-        <p class="stats-lede">A build-time snapshot of what FoldBridge links: published structure entries,
-          the chemical-probing technologies behind them, and how the per-segment
-          confidence calibration distributes across recall tiers.</p>
       </header>
 
       <div class="stats-metric-grid">
-        ${statsMetricCard(stats.probing_entries, 'Chemical probing entries', 'PDB chains merged by molecule')}
-        ${statsMetricCard(stats.pdb_total, 'Published PDB structures', 'with detail pages')}
-        ${statsMetricCard(stats.high_confidence_entries, 'High-confidence entries', '≥1 chain STRONG or MODERATE')}
+        ${statsMetricCard(stats.probing_entries, 'Chemical probing entries')}
+        ${statsMetricCard(stats.pdb_total, 'Published PDB structures')}
+        ${statsMetricCard(stats.high_confidence_entries, 'High-confidence entries')}
         ${statsMetricCard(stats.technologies, 'Probe technologies')}
-        ${statsMetricCard(stats.families, 'Measurement families', 'A–F')}
+        ${statsMetricCard(stats.families, 'Measurement families')}
         ${statsMetricCard(stats.articles, 'Probing articles')}
       </div>
       <p class="stats-footnote">An entry is a set of published PDB chains that share the same biological molecule name within one structure
@@ -682,7 +680,7 @@ export function renderProbingFamilyIndex(families) {
   }).join('');
   return `<section class="card bundle-wide-card probing-family-index" aria-label="Probing mechanism families">
       <div class="probing-hub-heading">
-        <h2>${visibleFamilies.length} mechanism families</h2>
+        <h2>Five mechanism families</h2>
       </div>
       <div class="probing-family-grid">${cards}</div>
     </section>`;

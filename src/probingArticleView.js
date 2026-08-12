@@ -276,7 +276,7 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
   <main class="page-detail page-probing-index">
     <section class="card bundle-wide-card technology-hero-card technology-hero-card-solo">
       <div class="technology-hero-copy">
-        <h1>RNA probing methods explained</h1>
+        <h1>Chemical probing methods</h1>
         <p class="technology-intro">This curated overview presents ${articleCount} in-depth explainers on RNA structure probing methods. The articles use original figures to clarify the chemical events each method measures and, where applicable, relate those measurements to FoldBridge’s raw data, visualization, and confidence layers.</p>
         <p class="technology-intro technology-intro-secondary">Browse by mechanism family first, then open any method to enter its full reading page.</p>
       </div>

@@ -527,29 +527,27 @@ function renderTechniqueFilterControls(cases = [], filters = {}) {
   const selectedNames = new Set(filters.techniqueNames || []);
   const familyBlocks = model.families.map((family) => {
     const familyActive = selectedFamilies.has(family.id);
-    const hasSelectedTechnique = family.techniques.some((name) => selectedNames.has(name));
     const techOptions = family.techniques.map((name) => `
       <label class="annojoin-technique-option">
         <input type="checkbox" data-technique-name="${escapeHtml(name)}"${selectedNames.has(name) ? ' checked' : ''} />
         <span>${escapeHtml(name)}</span>
       </label>`).join('');
-    return `<details class="annojoin-technique-family-group"${familyActive || hasSelectedTechnique ? ' open' : ''}>
-        <summary>
-          <span class="annojoin-technique-family-summary">
-            <input type="checkbox" data-technique-family="${escapeHtml(family.id)}"${familyActive ? ' checked' : ''} />
-            <span class="annojoin-family-badge annojoin-family-badge-${escapeHtml(family.id)}">${escapeHtml(family.shortLabel)}</span>
-            <strong>${escapeHtml(family.label)}</strong>
+    return `<section class="annojoin-technique-family-group" aria-label="${escapeHtml(family.label)}">
+        <label class="annojoin-technique-family-summary">
+          <input type="checkbox" data-technique-family="${escapeHtml(family.id)}"${familyActive ? ' checked' : ''} />
+          <span class="annojoin-technique-family-heading">
+            <span class="annojoin-family-badge annojoin-family-badge-${escapeHtml(family.id)}">${escapeHtml(family.label)}</span>
           </span>
-        </summary>
+        </label>
         <div class="annojoin-technique-names">${techOptions}</div>
-      </details>`;
+      </section>`;
   }).join('');
   return `<section class="annojoin-technique-filter" aria-label="Technique filter">
     <div class="annojoin-technique-filter-heading">
       <div>
         <strong>Filter by probing technique</strong>
       </div>
-      <span class="mini-note">Select a family to view its methods</span>
+      <span class="mini-note">All families and methods are shown</span>
     </div>
     <div class="annojoin-technique-family-list">${familyBlocks}</div>
   </section>`;

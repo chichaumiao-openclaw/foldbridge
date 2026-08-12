@@ -2373,7 +2373,13 @@ function toggleAnnojointAtlasGroupLimit(groupId) {
 
 function downloadPage() {
   return `${renderBundleHeader()}
-  <main class="page-download" aria-label="Download"></main>`;
+  <main class="page-download" aria-label="Download">
+    <section class="card bundle-wide-card download-page-card">
+      <header class="page-card-heading">
+        <h1>Download</h1>
+      </header>
+    </section>
+  </main>`;
 }
 
 function searchPage() {

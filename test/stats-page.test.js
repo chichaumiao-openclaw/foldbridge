@@ -4,7 +4,7 @@ import { renderStatsPage } from '../src/siteChrome.js';
 
 const STATS = {
   pdb_total: 2386, probing_entries: 4664, high_confidence_entries: 510, strong_entries: 176,
-  source_cases: 2386, technologies: 34, families: 6, articles: 27,
+  source_cases: 2386, technologies: 26, families: 5, articles: 26,
   lss_calibrated_entries: 1671,
   tier_distribution: { STRONG: 91, MODERATE: 280, WEAK: 847, DISCORDANT: 340, UNDERPOWERED: 56, NOT_SUPPORTED: 57 },
   sasa_probe_coverage: { entries: 1247, technologies: { 'Lead-seq': 729, icLASER: 518, 'RL-Seq': 478 } },
@@ -33,6 +33,14 @@ test('renderStatsPage surfaces high-confidence + strong entry calibers', () => {
   assert.match(html, /510/);
   assert.match(html, /High-confidence entries/);
   assert.match(html, /176/);
+});
+
+test('renderStatsPage uses the curated method, family, and article counts', () => {
+  const html = renderStatsPage(STATS);
+  assert.match(html, />26<\/span>\s*<span class="stats-metric-label">Probe technologies/);
+  assert.match(html, />5<\/span>\s*<span class="stats-metric-label">Measurement families/);
+  assert.match(html, />26<\/span>\s*<span class="stats-metric-label">Probing articles/);
+  assert.doesNotMatch(html, /stats-metric-note/);
 });
 
 test('renderStatsPage renders tier bar chart as inline svg (entry caliber)', () => {

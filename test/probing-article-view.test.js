@@ -35,7 +35,7 @@ test('extraSectionsHtml is injected without breaking the family grid', () => {
   // existing structure intact (no regression)
   assert.match(html, /technology-section-card/);
   assert.match(html, /probing-article-card/);
-  assert.match(html, /RNA probing methods explained/);
+  assert.match(html, /Chemical probing methods/);
   assert.match(html, /This curated overview presents 26 in-depth explainers/);
   assert.match(html, /where applicable, relate those measurements/);
   assert.doesNotMatch(html, /probing articles/);

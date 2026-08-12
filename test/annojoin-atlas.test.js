@@ -1228,6 +1228,12 @@ test('entry page renders the five probing mechanism families', () => {
   assert.match(html, /data-technique-family="cleavage"/);
   assert.match(html, /data-technique-family="interaction"/);
   assert.match(html, /data-technique-name="PARS"/);
+  assert.match(html, /All families and methods are shown/);
+  assert.doesNotMatch(html, /<details class="annojoin-technique-family-group"/);
+  assert.match(html, /annojoin-family-badge-dms">DMS-based<\/span>/);
+  assert.match(html, />RNA–RNA interaction mapping<\/span>/);
+  assert.doesNotMatch(html, /DMS-based methods/);
+  assert.doesNotMatch(html, /annojoin-technique-family-label/);
 });
 
 test('technique filter chips are built from the full universe, not the filtered subset', () => {

@@ -3,31 +3,31 @@ const ALLOWED_FAMILIES = ['A', 'B', 'C', 'D'];
 export const MECHANISM_FAMILIES = [
   {
     id: 'dms',
-    label: 'DMS-based methods',
+    label: 'DMS-based',
     shortLabel: 'DMS',
     techniques: ['DMS', 'DMS-seq', 'Structure-seq', 'Structure-seq2', 'Mod-seq', 'DMS-MaPseq', 'DIM-2P-seq']
   },
   {
     id: 'shape',
-    label: 'SHAPE-based methods',
+    label: 'SHAPE-based',
     shortLabel: 'SHAPE',
     techniques: ['SHAPE', 'SHAPE-Seq', 'SHAPE-MaP', 'icSHAPE', 'icSHAPE-MaP', 'NAI-MaP', 'smartSHAPE']
   },
   {
     id: 'cleavage',
-    label: 'Cleavage-based methods',
+    label: 'Cleavage-based',
     shortLabel: 'Cleavage',
     techniques: ['PARS', 'PARTE', 'HRF-seq']
   },
   {
     id: 'nucleotide',
-    label: 'Nucleotide-specific chemical probing methods',
+    label: 'Nucleotide-specific probing',
     shortLabel: 'Nucleotide-specific',
     techniques: ['Keth-seq', 'EDC probing', 'LASER-seq']
   },
   {
     id: 'interaction',
-    label: 'RNA–RNA interaction mapping methods',
+    label: 'RNA–RNA interaction mapping',
     shortLabel: 'RNA–RNA interaction',
     techniques: ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES']
   }

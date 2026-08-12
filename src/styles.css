@@ -231,11 +231,17 @@ main.page-sequence-detail {
   max-width: var(--feature-card-width);
 }
 
-.annojoin-table-heading {
+.annojoin-table-heading,
+.stats-head,
+.site-search-header,
+.page-card-heading {
   padding: 0 0 2px;
 }
 
-.annojoin-table-heading h1 {
+.annojoin-table-heading h1,
+.stats-head h1,
+.site-search-header h1,
+.page-card-heading h1 {
   margin: 0 0 6px;
   color: var(--textPrimary);
   font-size: var(--page-title-size);
@@ -243,7 +249,8 @@ main.page-sequence-detail {
   letter-spacing: 0;
 }
 
-.annojoin-table-heading p {
+.annojoin-table-heading p,
+.stats-head p {
   margin: 0;
 }
 
@@ -526,8 +533,8 @@ main.page-sequence-detail {
 
 .annojoin-technique-filter {
   display: grid;
-  gap: 12px;
-  padding: 14px 16px;
+  gap: 10px;
+  padding: 12px 14px;
   border: 1px solid var(--border);
   border-radius: 16px;
   border-color: rgba(227, 191, 92, 0.46);
@@ -540,7 +547,8 @@ main.page-sequence-detail {
   justify-content: space-between;
   gap: 12px;
   color: var(--textSecondary);
-  font-size: 0.82rem;
+  font-size: var(--body-text-size);
+  font-weight: 400;
 }
 
 .annojoin-technique-filter-heading > div {
@@ -550,7 +558,8 @@ main.page-sequence-detail {
 
 .annojoin-technique-filter-heading strong {
   color: var(--textPrimary);
-  font-size: 0.96rem;
+  font-size: var(--body-text-size);
+  font-weight: 400;
 }
 
 .annojoin-technique-filter .mini-note {
@@ -566,48 +575,41 @@ main.page-sequence-detail {
 .annojoin-technique-family-group {
   min-width: 0;
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 10px;
   background: var(--surface);
-}
-
-.annojoin-technique-family-group[open] {
-  grid-column: 1 / -1;
-}
-
-.annojoin-technique-family-group summary {
-  padding: 9px 10px;
-  cursor: pointer;
-  list-style-position: inside;
-  color: var(--textPrimary);
-}
-
-.annojoin-technique-family-group summary::marker {
-  color: var(--textAccent);
+  padding: 9px 10px 10px;
 }
 
 .annojoin-technique-family-summary {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: start;
-  gap: 7px 8px;
-  vertical-align: middle;
+  gap: 7px;
+  min-width: 0;
+  color: var(--textPrimary);
+  cursor: pointer;
 }
 
 .annojoin-technique-family-summary > input {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-  margin-top: 4px;
+  margin: 5px 0 0;
 }
 
-.annojoin-technique-family-summary > .annojoin-family-badge {
-  grid-column: 2;
-  grid-row: 1;
+.annojoin-technique-family-heading {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  min-width: 0;
+  min-height: 52px;
+}
+
+.annojoin-technique-family-heading > .annojoin-family-badge {
   justify-self: start;
-}
-
-.annojoin-technique-family-summary > strong {
-  grid-column: 2;
-  grid-row: 2;
+  margin: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  font-size: var(--body-text-size);
+  font-weight: 400;
 }
 
 .annojoin-technique-family-summary input,
@@ -615,38 +617,31 @@ main.page-sequence-detail {
   accent-color: #e0ae24;
 }
 
-.annojoin-technique-family-summary strong {
-  font-size: 0.84rem;
-}
-
-.annojoin-technique-family-summary small {
-  color: var(--textMuted);
-  font-size: 0.72rem;
-}
-
 .annojoin-technique-names {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  gap: 6px;
-  padding: 0 10px 10px 30px;
+  grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
+  gap: 4px 8px;
+  padding: 8px 0 0;
 }
 
 .annojoin-technique-option {
   display: flex;
   align-items: center;
-  gap: 7px;
+  gap: 6px;
   min-width: 0;
-  padding: 5px 7px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--surface);
-  color: var(--textSecondary);
-  font-size: 0.78rem;
+  padding: 2px 3px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--textPrimary);
+  font-size: var(--body-text-size);
+  font-weight: 400;
   cursor: pointer;
 }
 
 .annojoin-technique-option:hover {
-  border-color: rgba(227, 191, 92, 0.7);
+  border-color: rgba(227, 191, 92, 0.55);
+  background: rgba(255, 244, 202, 0.45);
   color: var(--textPrimary);
 }
 
@@ -656,13 +651,19 @@ main.page-sequence-detail {
   white-space: nowrap;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1180px) {
+  .annojoin-technique-family-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
   .annojoin-technique-family-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media (max-width: 640px) {
+@media (max-width: 520px) {
   .annojoin-technique-filter-heading {
     align-items: flex-start;
     flex-direction: column;
@@ -5373,6 +5374,15 @@ body[data-mode="dark"] .mode-toggle:hover {
   gap: 28px;
 }
 
+/* Match the Entry table card's internal title spacing on the Probing index. */
+main.page-probing-index > .technology-hero-card {
+  padding: 28px 32px 32px;
+}
+
+main.page-probing-index .technology-hero-copy {
+  padding: 0 0 2px;
+}
+
 .technology-hero-copy,
 .technology-summary-panel,
 .technology-section-heading,
@@ -5932,11 +5942,19 @@ main.page-probing-index .technology-intro {
 /* Match the FoldBridge heading used on the home-page hero. */
 main.page-probing-index .technology-hero-copy h1,
 main.page-probing-index .probing-hub-heading h2 {
-  margin: 0;
   color: var(--textPrimary);
   font-size: var(--page-title-size);
   font-weight: var(--fontWeightHeading);
   line-height: 1.1;
+}
+
+main.page-probing-index .technology-hero-copy h1 {
+  margin: 0 0 6px;
+  letter-spacing: 0;
+}
+
+main.page-probing-index .probing-hub-heading h2 {
+  margin: 0;
   letter-spacing: -0.04em;
 }
 
@@ -6418,6 +6436,11 @@ main.page-probing-index .technology-section-heading h2 {
   margin-right: auto;
 }
 
+/* Match the Entry table and Statistics card's internal title spacing. */
+main.page-detail.page-search > .site-search-card {
+  padding: 28px 32px 32px;
+}
+
 .site-search-header,
 .site-search-form {
   display: grid;
@@ -6430,13 +6453,8 @@ main.page-probing-index .technology-section-heading h2 {
 }
 
 .site-search-header h1 {
-  margin: 0 0 8px;
   font-family: var(--fontFamily);
-  font-size: var(--page-title-size);
-  line-height: 1.1;
   font-weight: var(--fontWeightHeading);
-  letter-spacing: -0.04em;
-  color: var(--textPrimary);
 }
 
 .page-search .download-outline-btn {
@@ -7170,13 +7188,14 @@ main.page-probing-index .technology-section-heading h2 {
 }
 
 /* === STATS PAGE === */
-.stats-page { display: flex; flex-direction: column; gap: 1.75rem; }
-.stats-head h1 {
-  margin: 0 0 0.4rem;
-  font-size: var(--page-title-size);
-  line-height: 1.1;
+/* Keep the Statistics panel aligned with the Entry table panel. */
+main.page-detail > .stats-page {
+  padding: 28px 32px 32px;
 }
-.stats-lede { margin: 0; max-width: 60ch; color: var(--textMuted); }
+.download-page-card {
+  padding: 28px 32px 32px;
+}
+.stats-page { display: flex; flex-direction: column; gap: 1.75rem; }
 .stats-metric-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -7191,9 +7210,8 @@ main.page-probing-index .technology-section-heading h2 {
   border-radius: 12px;
   background: var(--panel-card-bg, var(--surface));
 }
-.stats-metric-value { font-size: 1.8rem; font-weight: 700; color: var(--textAccent); line-height: 1.1; }
-.stats-metric-label { font-size: 0.85rem; font-weight: 600; color: var(--textPrimary); }
-.stats-metric-note { font-size: 0.75rem; color: var(--textMuted); }
+.stats-metric-value { font-size: var(--page-title-size); font-weight: 700; color: var(--textAccent); line-height: 1.1; }
+.stats-metric-label { font-size: var(--body-text-size); font-weight: 400; color: var(--textPrimary); }
 .stats-section { display: flex; flex-direction: column; gap: 0.7rem; }
 .stats-section h2 { margin: 0; font-size: 1.15rem; color: var(--textAccent); }
 .stats-section-lede { margin: 0; max-width: 72ch; color: var(--textMuted); font-size: 0.92rem; }
@@ -7381,14 +7399,19 @@ main.page-probing-index .technology-section-heading h2 {
 /* Entry page content uses one neutral Arial text treatment. */
 main.page-annojoin-atlas .annojoin-table-toolbar,
 main.page-annojoin-atlas .annojoin-table-toolbar *,
-main.page-annojoin-atlas .annojoin-technique-filter,
-main.page-annojoin-atlas .annojoin-technique-filter *,
 main.page-annojoin-atlas .annojoin-table-meta,
 main.page-annojoin-atlas .annojoin-master-table,
 main.page-annojoin-atlas .annojoin-master-table * {
   font-family: Arial, sans-serif;
   font-size: 1.08rem;
   font-weight: 400;
+}
+
+/* The technique picker has its own compact type scale so all five expanded
+   families remain easy to scan without growing into full-width panels. */
+main.page-annojoin-atlas .annojoin-technique-filter,
+main.page-annojoin-atlas .annojoin-technique-filter * {
+  font-family: Arial, sans-serif;
 }
 
 main.page-annojoin-atlas .annojoin-table-toolbar input::placeholder {
@@ -7433,7 +7456,6 @@ main .about-prose,
 main .about-source-card p,
 main .about-pipeline-note,
 main .about-terms dd,
-main .stats-lede,
 main .stats-section-lede,
 main .stats-empty,
 main .probing-hub-heading > p,

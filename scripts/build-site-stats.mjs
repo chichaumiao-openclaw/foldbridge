@@ -121,9 +121,9 @@ export function deriveStats({ index = {}, allowlistTsv = '' } = {}) {
     strong_entries: 176,
     total_raw: totalRaw,
     source_cases: sourceCases,
-    families: 6,
-    technologies: 34,
-    articles: 27,
+    families: 5,
+    technologies: 26,
+    articles: 26,
     lss_calibrated_entries: calibratedEntries,
     tier_distribution: tierDistribution,
     sasa_probe_coverage: sasaProbeCoverage,
@@ -145,8 +145,8 @@ export function deriveStats({ index = {}, allowlistTsv = '' } = {}) {
       lss_calibrated_entries: 'published entries carrying an LSS calibrated recall tier (RASP line); RMDB-line entries use FEC claim-ceiling labels and are not tiered here',
       sasa_probe_coverage: 'entry caliber: published entries whose assayFamilies include a SASA-based footprinting probe (RL-Seq / Lead-seq / icLASER / HRF)',
       rna_biology: 'entry caliber: structureClass / rnaFamily / assayFamilies over published entries (PDB Rfam annotation; pending/unannotated values excluded)',
-      technologies: 'probe_confidence_method_registry.tsv (34 RNA probe technologies)',
-      families: 'probing-articles/index.json family_count + A–F measurement families',
+      technologies: 'curated chemical-probing methods shown on the Statistics page (26)',
+      families: 'curated measurement families shown on the Statistics page (A–E)',
       articles: 'probing-articles/index.json article_count'
     }
   };
