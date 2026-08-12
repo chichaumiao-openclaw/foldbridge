@@ -14,7 +14,7 @@
   };
   const PDBE_CSS = "https://cdn.jsdelivr.net/npm/pdbe-molstar@3.3.0/build/pdbe-molstar.css";
   const PDBE_JS = "https://cdn.jsdelivr.net/npm/pdbe-molstar@3.3.0/build/pdbe-molstar-plugin.js";
-  const MOLSTAR_READY_FALLBACK_MS = 6000;
+  const MOLSTAR_READY_TIMEOUT_MS = 6000;
 
   // --- 加载器 ---------------------------------------------------------------
   async function fetchOk(url) {
@@ -78,8 +78,8 @@
 
   // --- molstar viewer init + ready 时序 -------------------------------------
   // PDBeMolstarPlugin 实例构造后 .visual 立即存在，但 model 异步 parse——在
-  // loadComplete 之前 select/highlight 会静默落空。故等 loadComplete（带 fallback
-  // timer）再把 plugin 交给 createEfHeatmap，保证首帧 select 路径可用。
+  // loadComplete 之前 select/highlight 会静默落空。故等 loadComplete（带超时 reject
+  // 兜底）再把 plugin 交给 createEfHeatmap，保证首帧 select 路径可用。
   async function initMolstarViewer(molstarHost, structureCifUrl) {
     await loadPdbeMolstarAssets();
     const viewer = new window.PDBeMolstarPlugin();
@@ -111,8 +111,8 @@
         rendered.catch((err) => settle(reject, new Error(`molstar render 失败: ${structureCifUrl}: ${err && err.message ? err.message : err}`)));
       }
       window.setTimeout(
-        () => settle(reject, new Error(`molstar 结构加载超时（${MOLSTAR_READY_FALLBACK_MS}ms 未见 loadComplete）: ${structureCifUrl}`)),
-        MOLSTAR_READY_FALLBACK_MS
+        () => settle(reject, new Error(`molstar 结构加载超时（${MOLSTAR_READY_TIMEOUT_MS}ms 未见 loadComplete）: ${structureCifUrl}`)),
+        MOLSTAR_READY_TIMEOUT_MS
       );
     });
     return viewer;
