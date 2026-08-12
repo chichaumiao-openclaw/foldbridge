@@ -8,7 +8,8 @@
       "chainRoot": "chains/z",
       "linkedViewRoot": "chains/z/linked-view",
       "structureCoveragePath": "chains/z/linked-view/structure-coverage.json",
-      "varnaTemplatePath": "chains/z/varna-template.svg"
+      "varnaTemplatePath": "chains/z/varna-template.svg",
+      "efMatrixPath": "chains/z/ef-matrix.json.gz"
     }
   },
   "commonAssets": {
