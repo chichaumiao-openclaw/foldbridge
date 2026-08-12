@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>EF 2D Case 7SYS</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      color: #1a1a1a;
+      background: #fafafa;
+    }
+    header.ef-title {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e0e0e0;
+      background: #fff;
+    }
+    header.ef-title h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 600;
+    }
+    header.ef-title .ef-sub {
+      margin-top: 2px;
+      font-size: 13px;
+      color: #666;
+    }
+    main.ef-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 420px 420px;
+      grid-template-areas:
+        "heatmap varna"
+        "molstar molstar";
+      gap: 12px;
+      padding: 12px;
+    }
+    .ef-panel {
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #e0e0e0;
+      border-radius: 6px;
+      background: #fff;
+      overflow: hidden;
+    }
+    .ef-panel h2 {
+      margin: 0;
+      padding: 8px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #444;
+      border-bottom: 1px solid #eee;
+      background: #f7f7f7;
+    }
+    .ef-host {
+      flex: 1 1 auto;
+      min-height: 0;
+      position: relative;
+      overflow: auto;
+    }
+    #ef-heatmap-host { grid-area: heatmap; }
+    #varna-host { grid-area: varna; }
+    #molstar-host { grid-area: molstar; }
+    .ef-panel[data-area="heatmap"] { grid-area: heatmap; }
+    .ef-panel[data-area="varna"] { grid-area: varna; }
+    .ef-panel[data-area="molstar"] { grid-area: molstar; }
+    @media (max-width: 860px) {
+      main.ef-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto auto auto;
+        grid-template-areas: "heatmap" "varna" "molstar";
+      }
+    }
+  </style>
+</head>
+<body data-case="7SYS" data-chain="z">
+  <header class="ef-title">
+    <h1>EF 2D Case 7SYS</h1>
+    <div class="ef-sub">chain z</div>
+  </header>
+  <main class="ef-grid">
+    <section class="ef-panel" data-area="heatmap">
+      <h2>2D contact / pair heatmap</h2>
+      <div id="ef-heatmap-host" class="ef-host"></div>
+    </section>
+    <section class="ef-panel" data-area="varna">
+      <h2>VARNA secondary structure</h2>
+      <div id="varna-host" class="ef-host"></div>
+    </section>
+    <section class="ef-panel" data-area="molstar">
+      <h2>3D structure</h2>
+      <div id="molstar-host" class="ef-host"></div>
+    </section>
+  </main>
+  <script src="../ef-heatmap-core.js"></script>
+  <script src="../ef-heatmap.js"></script>
+  <script src="../ef-case.js"></script>
+</body>
+</html>
