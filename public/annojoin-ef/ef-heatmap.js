@@ -89,19 +89,27 @@
     }
 
     function recolorVarna(colorMap) {
-      // DOMParser 解析 varnaHost 现有 SVG，按 partner matrix_index -> pdb_pos -> VARNA 圈 idx
-      // setAttribute("fill", rgb)。防回环：不回触发同视图重绘（origin 标签）。
-      // 具体圈定位借鉴 workbench.js:1481 recolorVarnaSvg。
-      if (!varnaHost || !varnaHost.querySelector('svg')) return;
-
+      // colorMap 键 = varna_index（VARNA 圈 0-based 序 = query_pos − 1），由 buildVarnaColorMap 派生。
+      // fail-loud（spec §8，NO silent fallback）：缺 SVG / 零圈 = 模板损坏，抛错不静默返回。
+      // 圈选择器 [stroke=none][r=5.0] 实测精确匹配 400 个核苷酸圈（参考 workbench.js recolorVarnaSvg）。
+      if (!varnaHost) {
+        throw new Error("recolorVarna: no varnaHost");
+      }
       const svgEl = varnaHost.querySelector('svg');
+      if (!svgEl) {
+        throw new Error("recolorVarna: varnaHost has no SVG (VARNA template not loaded)");
+      }
       const circles = svgEl.querySelectorAll('circle[stroke="none"][r="5.0"]');
+      if (circles.length === 0) {
+        throw new Error("recolorVarna: no VARNA nucleotide circles found (selector [stroke=none][r=5.0])");
+      }
 
-      // 简化实现：按 matrix_index 直接索引圈（假设圈序与 matrix_index 对应）
-      colorMap.forEach((rgb, matrixIdx) => {
-        if (circles[matrixIdx]) {
-          circles[matrixIdx].setAttribute('fill', rgb);
+      colorMap.forEach((rgb, varnaIdx) => {
+        const c = circles[varnaIdx];
+        if (!c) {
+          throw new Error(`recolorVarna: varna_index ${varnaIdx} out of circle range (${circles.length} circles)`);
         }
+        c.setAttribute('fill', rgb);
       });
     }
 

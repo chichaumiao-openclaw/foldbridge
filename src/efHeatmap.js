@@ -69,7 +69,7 @@ export function buildMolstarSelectPayload(k, axis, idx, header) {
     if (!row || row.pdb_pos == null || row.observed === false) continue;
     const c = colorForValue(value, header);
     out.push({
-      struct_asym_id: header.chain,
+      struct_asym_id: header.label_asym_id,
       start_residue_number: row.pdb_pos,
       end_residue_number: row.pdb_pos,
       color: c,
@@ -79,9 +79,12 @@ export function buildMolstarSelectPayload(k, axis, idx, header) {
 }
 
 export function buildVarnaColorMap(k, axis, idx, header) {
+  // 键 = partner 行的 varna_index（VARNA 圈 0-based 序），非 matrix_index（稠密矩阵轴序）。
   const m = new Map();
-  for (const { partner, value } of partnersFor(k, axis, idx)) {
-    m.set(partner, rgbStr(colorForValue(value, header)));
+  for (const { partner, value, partnerAxis } of partnersFor(k, axis, idx)) {
+    const row = idx.axisByIndex[partnerAxis].get(partner);
+    if (!row || row.varna_index == null) continue;   // 缺行 / 出 span → 跳过（不臆造圈）
+    m.set(row.varna_index, rgbStr(colorForValue(value, header)));
   }
   return m;
 }
@@ -92,7 +95,7 @@ export function buildHoverTargets(i, j, idx, header) {
   const rj = idx.axisByIndex.j.get(j);
   for (const row of [ri, rj]) {
     if (row && row.pdb_pos != null && row.observed !== false) {
-      out.push({ struct_asym_id: header.chain, start_residue_number: row.pdb_pos, end_residue_number: row.pdb_pos });
+      out.push({ struct_asym_id: header.label_asym_id, start_residue_number: row.pdb_pos, end_residue_number: row.pdb_pos });
     }
   }
   return out;
