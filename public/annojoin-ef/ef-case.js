@@ -83,22 +83,37 @@
   async function initMolstarViewer(molstarHost, structureCifUrl) {
     await loadPdbeMolstarAssets();
     const viewer = new window.PDBeMolstarPlugin();
-    viewer.render(molstarHost, {
-      customData: { url: structureCifUrl, format: "cif" },
-      expanded: false,
-      hideControls: true,
-      bgColor: { r: 255, g: 255, b: 255 },
-    });
     if (!viewer.visual) {
       throw new Error("PDBeMolstarPlugin instance missing .visual (三视图联动无退路)");
     }
-    await new Promise((resolve) => {
+    // NO-fallback：结构加载失败/超时必须 reject → 交回无 model 的空 plugin 是禁止的。
+    // done 幂等锁保证只 settle 一次。三条退出路径：
+    //   (1) loadComplete(ok=true) → resolve（真正就绪）
+    //   (2) loadComplete(ok=false) → reject（明确加载失败，不等 timer 掩盖）
+    //   (3) render() promise reject → reject（CIF 404 / parse 失败）
+    //   (4) timer 到期未见 loadComplete → reject（无法确认 model ready，首帧 select 会落空）
+    await new Promise((resolve, reject) => {
       let done = false;
-      const once = () => { if (!done) { done = true; resolve(); } };
+      const settle = (fn, arg) => { if (!done) { done = true; fn(arg); } };
       if (viewer.events?.loadComplete?.subscribe) {
-        viewer.events.loadComplete.subscribe((ok) => { if (ok) once(); });
+        viewer.events.loadComplete.subscribe((ok) => {
+          if (ok) settle(resolve);
+          else settle(reject, new Error(`molstar 结构加载失败（loadComplete=false）: ${structureCifUrl}`));
+        });
       }
-      window.setTimeout(once, MOLSTAR_READY_FALLBACK_MS);
+      const rendered = viewer.render(molstarHost, {
+        customData: { url: structureCifUrl, format: "cif" },
+        expanded: false,
+        hideControls: true,
+        bgColor: { r: 255, g: 255, b: 255 },
+      });
+      if (rendered && typeof rendered.catch === "function") {
+        rendered.catch((err) => settle(reject, new Error(`molstar render 失败: ${structureCifUrl}: ${err && err.message ? err.message : err}`)));
+      }
+      window.setTimeout(
+        () => settle(reject, new Error(`molstar 结构加载超时（${MOLSTAR_READY_FALLBACK_MS}ms 未见 loadComplete）: ${structureCifUrl}`)),
+        MOLSTAR_READY_FALLBACK_MS
+      );
     });
     return viewer;
   }
@@ -167,7 +182,12 @@
   function wireHeatmapClick(heatmapHost, controller, header) {
     const core = window.EfHeatmapCore;
     const svg = heatmapHost.querySelector("svg");
-    if (!svg) return;
+    if (!svg) {
+      // 组件应已注入 svg；缺失只降级掉可选点击交互（hover 仍在），告警不致命。
+      // eslint-disable-next-line no-console
+      console.warn("[ef-case] heatmap svg 未找到，跳过点击→selectAxis 接线");
+      return;
+    }
     svg.addEventListener("click", (evt) => {
       const box = svg.getBoundingClientRect();
       const { i } = core.cellFromXY(
@@ -183,32 +203,39 @@
 
   async function assemble(hosts, caseId, chainId) {
     const { heatmap, varna, molstar } = hosts;
-    const manifest = await loadJson("browser-manifest.json");
-    const { chainId: resolvedChain, chain } = resolveChain(manifest, chainId);
-    const efMatrixPath = requirePath(chain.efMatrixPath, `chains.${resolvedChain}.efMatrixPath`);
-    const varnaTemplatePath = requirePath(chain.varnaTemplatePath, `chains.${resolvedChain}.varnaTemplatePath`);
-    const structurePath = requirePath(manifest.commonAssets?.structure, "commonAssets.structure");
+    // caseId 并入所有 fail-loud 错误信息做上下文，便于 C1 逐 case smoke 定位是哪个 case。
+    const ctx = caseId ? ` [case ${caseId}]` : "";
+    try {
+      const manifest = await loadJson("browser-manifest.json");
+      const { chainId: resolvedChain, chain } = resolveChain(manifest, chainId);
+      const efMatrixPath = requirePath(chain.efMatrixPath, `chains.${resolvedChain}.efMatrixPath`);
+      const varnaTemplatePath = requirePath(chain.varnaTemplatePath, `chains.${resolvedChain}.varnaTemplatePath`);
+      const structurePath = requirePath(manifest.commonAssets?.structure, "commonAssets.structure");
 
-    // 并行加载：payload(gzip) + varna template text + molstar init(自 fetch cif)。
-    const [payload, varnaText, viewer] = await Promise.all([
-      loadGzipJson(efMatrixPath),
-      loadText(varnaTemplatePath),
-      initMolstarViewer(molstar, structurePath),
-    ]);
+      // 并行加载：payload(gzip) + varna template text + molstar init(自 fetch cif)。
+      const [payload, varnaText, viewer] = await Promise.all([
+        loadGzipJson(efMatrixPath),
+        loadText(varnaTemplatePath),
+        initMolstarViewer(molstar, structurePath),
+      ]);
 
-    // 先注入 VARNA <svg>，组件 recolorVarna 才能 querySelector 到圈。
-    injectVarnaTemplate(varna, varnaText);
+      // 先注入 VARNA <svg>，组件 recolorVarna 才能 querySelector 到圈。
+      injectVarnaTemplate(varna, varnaText);
 
-    // 组件内部自驱动 molstar + VARNA；缺 molstarPlugin.visual 即 fail-loud throw。
-    const controller = window.createEfHeatmap({
-      heatmapHost: heatmap,
-      varnaHost: varna,
-      molstarPlugin: viewer,
-      payload,
-    });
+      // 组件内部自驱动 molstar + VARNA；缺 molstarPlugin.visual 即 fail-loud throw。
+      const controller = window.createEfHeatmap({
+        heatmapHost: heatmap,
+        varnaHost: varna,
+        molstarPlugin: viewer,
+        payload,
+      });
 
-    wireHeatmapClick(heatmap, controller, payload.header);
-    return { manifest, resolvedChain, controller };
+      wireHeatmapClick(heatmap, controller, payload.header);
+      return { manifest, resolvedChain, controller };
+    } catch (error) {
+      const msg = error && error.message ? error.message : String(error);
+      throw new Error(`${msg}${ctx}`);
+    }
   }
 
   // --- 错误显示（fail-loud，页面可见） --------------------------------------
