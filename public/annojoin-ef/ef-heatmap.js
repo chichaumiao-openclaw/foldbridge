@@ -91,7 +91,7 @@
     function recolorVarna(colorMap) {
       // colorMap 键 = varna_index（VARNA 圈 0-based 序 = query_pos − 1），由 buildVarnaColorMap 派生。
       // fail-loud（spec §8，NO silent fallback）：缺 SVG / 零圈 = 模板损坏，抛错不静默返回。
-      // 圈选择器 [stroke=none][r=5.0] 实测精确匹配 400 个核苷酸圈（参考 workbench.js recolorVarnaSvg）。
+      // 圈选择器 [stroke=none][r=5.0] 实测精确匹配 query 长度个核苷酸圈（参考 workbench.js recolorVarnaSvg）。
       if (!varnaHost) {
         throw new Error("recolorVarna: no varnaHost");
       }
