@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { renderAboutPage } from '../src/siteChrome.js';
+
+const PUBLISHED_CONTENT = JSON.parse(fs.readFileSync(new URL('../src/assets/data/about-content.json', import.meta.url), 'utf8'));
 
 const CONTENT = {
   hero: { kicker: 'About', title: '关联探针与结构', summary: '摘要', detail: '细节' },
@@ -17,6 +20,13 @@ test('renderAboutPage shows hero + all section titles', () => {
   assert.match(html, /三源数据/);
   assert.match(html, /流水线/);
   assert.match(html, /阈值/);
+});
+
+test('published About content has a concise FoldBridge hero and omits duplicate sections', () => {
+  const html = renderAboutPage(PUBLISHED_CONTENT);
+  assert.match(html, /<h1>FoldBridge<\/h1>/);
+  assert.doesNotMatch(html, /About &amp; Help|This page doubles as the help page/);
+  assert.doesNotMatch(html, /How to cite and where the data comes from|Key terms/);
 });
 test('renderAboutPage renders pipeline as inline svg', () => {
   const html = renderAboutPage(CONTENT);

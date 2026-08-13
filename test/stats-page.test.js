@@ -32,7 +32,16 @@ test('renderStatsPage surfaces high-confidence + strong entry calibers', () => {
   const html = renderStatsPage(STATS);
   assert.match(html, /510/);
   assert.match(html, /High-confidence entries/);
-  assert.match(html, /176/);
+});
+
+test('renderStatsPage keeps the entry definition concise', () => {
+  const html = renderStatsPage(STATS);
+  assert.match(html, /Each entry groups PDB chains with the same biological-molecule name within one structure\./);
+  assert.doesNotMatch(html, /An entry is a set of published PDB chains/);
+  assert.doesNotMatch(html, /How these statistics are counted/);
+  assert.doesNotMatch(html, /stats-footnote/);
+  assert.doesNotMatch(html, /Source:/);
+  assert.doesNotMatch(html, /annojoin-atlas-published-case-keys\.tsv/);
 });
 
 test('renderStatsPage uses the curated method, family, and article counts', () => {

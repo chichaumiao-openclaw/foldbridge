@@ -33,6 +33,7 @@ test('renderStatsPage never leaks the raw 3401 to user-facing output', () => {
   const html = renderStatsPage(committedStats);
   assert.ok(!html.includes('3401'), 'rendered stats must not contain 3401');
   assert.ok(!html.includes('3,401'), 'rendered stats must not contain 3,401');
+  assert.ok(!html.includes('annojoin-atlas-published-case-keys.tsv'), 'rendered stats must not expose an internal source path');
 });
 
 test('stats schema has required fields', () => {

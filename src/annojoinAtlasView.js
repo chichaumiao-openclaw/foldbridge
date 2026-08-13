@@ -135,7 +135,8 @@ function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabe
 
 function renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass = '', groupLabels = [], preserved = {} }) {
   const caseKey = rowCaseKey(row);
-  return `<tr class="annojoin-case-row${rowClass ? ` ${rowClass}` : ''}" data-annojoin-case-row="${escapeHtml(caseKey)}">
+  const pdbId = String(row.pdbId || row.caseId || '').trim();
+  return `<tr class="annojoin-case-row${rowClass ? ` ${rowClass}` : ''}" data-annojoin-case-row="${escapeHtml(caseKey)}" data-pdb-id="${escapeHtml(pdbId)}">
       <td><input type="checkbox" class="annojoin-case-select" data-annojoin-case-id="${escapeHtml(caseKey)}" ${selectedCaseIds.has(caseKey) ? 'checked' : ''} /></td>
       ${visibleColumns.map((column) => `<td>${columnValue(row, column.id, routeName, groupLabels, preserved)}</td>`).join('')}
     </tr>`;

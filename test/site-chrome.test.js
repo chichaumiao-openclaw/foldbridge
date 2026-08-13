@@ -2,17 +2,17 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { renderPrimaryNav } from '../src/siteChrome.js';
 
-test('primary nav exposes the launch routes incl. Stats/About/Download', () => {
+test('primary nav exposes the launch routes incl. Stats/Help/Download', () => {
   const html = renderPrimaryNav('home');
-  for (const label of ['Home', 'Entry', 'Probing', 'Stats', 'About', 'Download', 'Search']) {
+  for (const label of ['Home', 'Entry', 'Probing', 'Stats', 'Help', 'Download', 'Search']) {
     assert.match(html, new RegExp(`>${label}</button>`), `missing nav button: ${label}`);
   }
   assert.match(html, /data-route="stats"[^>]*>Stats<\/button>/);
-  assert.match(html, /data-route="about"[^>]*>About<\/button>/);
-  assert.doesNotMatch(html, />Help<\/button>/);
+  assert.match(html, /data-route="about"[^>]*>Help<\/button>/);
+  assert.doesNotMatch(html, />About<\/button>/);
 });
 
-test('legacy help route marks About active', () => {
+test('legacy help route marks Help active', () => {
   const html = renderPrimaryNav('about');
   assert.match(html, /class="nav-btn active"\s+data-route="about"/);
   assert.doesNotMatch(html, /data-route="help"/);
@@ -47,7 +47,7 @@ test('entry detail routes keep the Entry tab active', () => {
   }
 });
 
-test('primary nav order is Home Entry Search Probing Stats Download About', () => {
+test('primary nav order is Home Entry Search Probing Stats Download Help', () => {
   const html = renderPrimaryNav('home');
   const labels = [...html.matchAll(/data-route="([a-z-]+)"/g)].map((m) => m[1]);
   assert.deepEqual(labels, ['home', 'entry', 'search', 'probing', 'stats', 'download', 'about']);

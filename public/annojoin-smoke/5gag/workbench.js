@@ -1887,7 +1887,9 @@ function installExternalProfileBridge() {
 }
 
 function updateView() {
-  el.caption.textContent = "VARNA layout with active profile coloring.";
+  document.querySelector(".swatch-empty + span")?.replaceChildren("No data (missing, unmapped, or non-positive)");
+  document.querySelector(".swatch-gradient + span")?.replaceChildren("Reactivity: low → high");
+  el.caption.textContent = "Colors show the selected profile's reactivity.";
 }
 
 async function init() {

@@ -1,4 +1,5 @@
 import { cssVarsFor, themeTokens } from './theme.js';
+import { renderBundleHeader as renderSharedBundleHeader, renderGlobalNav } from './portalChrome.js';
 import {
   renderGlobalSearch,
   renderFacetPanel,
@@ -101,64 +102,6 @@ let homeDashboardFilters = {
   years: [],
   categories: []
 };
-const homeBundleSites = [
-  {
-    name: 'Ribocentre',
-    short: 'RC',
-    tone: 'blue',
-    summary: 'Curated structured RNA entries, sequence annotations, and evidence-backed reference records.',
-    tag: 'External portal',
-    accent: 'core repository',
-    topLabel: 'Ribozyme database',
-    href: 'https://www.ribocentre.org/',
-    action: { label: 'Open site', href: 'https://www.ribocentre.org/' }
-  },
-  {
-    name: 'Switch',
-    short: 'RS',
-    tone: 'green',
-    summary: 'Ligand-responsive riboswitch modules, families, and responsive motif collections for comparison.',
-    tag: 'External portal',
-    accent: 'switch systems',
-    topLabel: 'Riboswitch database',
-    href: 'https://riboswitch.ribocentre.org/',
-    action: { label: 'Open site', href: 'https://riboswitch.ribocentre.org/' }
-  },
-  {
-    name: 'Aptamer',
-    short: 'RA',
-    tone: 'violet',
-    summary: 'Aptamer sequences, assay metadata, target classes, and structural evidence in one entrance.',
-    tag: 'External portal',
-    accent: 'aptamer discovery',
-    topLabel: 'Aptamer database',
-    href: 'https://aptamer.ribocentre.org/',
-    action: { label: 'Open site', href: 'https://aptamer.ribocentre.org/' }
-  },
-  {
-    name: 'GlycoRNA',
-    short: 'GR',
-    tone: 'blue',
-    summary: 'GlycoRNA-focused records and reference content for glycosylated RNA exploration.',
-    tag: 'External portal',
-    accent: 'glycoRNA resource',
-    topLabel: 'GlycoRNA database',
-    href: 'http://www.glycornadb.com',
-    action: { label: 'Open site', href: 'http://www.glycornadb.com' }
-  },
-  {
-    name: 'FoldBridge',
-    short: 'FB',
-    tone: 'gold',
-    summary: 'A structure bridge for folding, visualization, and comparative RNA exploration workflows.',
-    tag: 'Current database',
-    accent: 'folding workspace',
-    topLabel: 'Probing-to-structure bridge',
-    href: null,
-    action: { label: 'Stay here', route: 'home' }
-  }
-];
-
 const technologyCategories = [
   {
     id: 'shape-based-probing',
@@ -1247,15 +1190,7 @@ let isDownloadMenuOpen = false;
 let isSubnavMenuOpen = false;
 
 function nav() {
-  return `<header>
-    <div class="black-nav" aria-label="GZNL global navigation">
-      <a href="http://www.gznl.org/" target="_blank" rel="noopener noreferrer"><img src="./src/assets/header/home.svg" alt=""/>Home</a>
-      <a href="https://www.gznl.org/database/" target="_blank" rel="noopener noreferrer"><img src="./src/assets/header/database.svg" alt=""/>Database</a>
-      <a href="https://www.gznl.org/research/" target="_blank" rel="noopener noreferrer"><img src="./src/assets/header/research.svg" alt=""/>Research</a>
-      <a href="https://www.gznl.org/aboutus/" target="_blank" rel="noopener noreferrer"><img src="./src/assets/header/aboutus.svg" alt=""/>About us</a>
-      <a class="gznl-rdc-link" href="https://gzlab.ac.cn/" target="_blank" rel="noopener noreferrer"><img src="./src/assets/header/gznl2.svg" alt=""/>GZNL-RDC</a>
-    </div>
-  </header>`;
+  return `<header>${renderGlobalNav()}</header>`;
 }
 
 
@@ -1486,21 +1421,7 @@ function homePage() {
     scrollStoryHtml = renderHomeScrollStory(featured, { assetBase: homeScrollStoryStore.assetBase });
   }
 
-  const featuredNames = homeBundleSites.map((site, index) => {
-    const activeClass = site.href ? '' : 'active';
-    if (site.href) {
-      return `<a class="bundle-switch-pill tone-${site.tone} ${activeClass}" href="${site.href}" target="_blank" rel="noopener noreferrer">
-        <strong>${site.name}</strong>
-        <span>${site.topLabel ?? ''}</span>
-      </a>`;
-    }
-
-    return `<span class="bundle-switch-pill tone-${site.tone} ${activeClass}" aria-current="page">
-      <strong>${site.name}</strong>
-      <span>${site.topLabel ?? ''}</span>
-    </span>`;
-  }).join('');
-  const bundleHeader = renderBundleHeader(featuredNames);
+  const bundleHeader = renderBundleHeader();
 
   return `${bundleHeader}
   <main class="page-home bundle-home-page">
@@ -1513,59 +1434,8 @@ function homePage() {
   </main>`;
 }
 
-function renderBundleHeader(featuredNamesMarkup = null) {
-  const featuredNames = featuredNamesMarkup ?? homeBundleSites.map((site, index) => {
-    const activeClass = site.href ? '' : 'active';
-    if (site.href) {
-      return `<a class="bundle-switch-pill tone-${site.tone} ${activeClass}" href="${site.href}" target="_blank" rel="noopener noreferrer">
-        <strong>${site.name}</strong>
-        <span>${site.topLabel ?? ''}</span>
-      </a>`;
-    }
-
-    return `<span class="bundle-switch-pill tone-${site.tone} ${activeClass}" aria-current="page">
-      <strong>${site.name}</strong>
-      <span>${site.topLabel ?? ''}</span>
-    </span>`;
-  }).join('');
-
-  return `<header class="bundle-home-header">
-    <div class="bundle-home-header-inner">
-      <div class="bundle-home-brand-column">
-        <div class="bundle-home-brand">
-          <div class="bundle-home-mark">FB</div>
-          <div class="bundle-home-brand-copy">
-            <p class="bundle-home-bundle-label">FoldBridge axis</p>
-            <h1>FoldBridge</h1>
-            <span>A curated database that links RNA chemical probing data with experimentally resolved tertiary structures.</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="bundle-home-nav-column">
-        <div class="bundle-home-topline">
-          <div class="bundle-home-bundle-block">
-            <p class="bundle-home-switch-label">RNA database bundle</p>
-            <div class="bundle-home-switches">
-              ${featuredNames}
-            </div>
-          </div>
-          <div class="bundle-home-meta">
-            <span class="bundle-home-domain">foldbridge.gznl.org</span>
-            <form class="global-search-form" id="global-search-form">
-              <input id="global-search-input" type="search" placeholder="Search FoldBridge" aria-label="Search FoldBridge" />
-              <button type="submit">Search</button>
-            </form>
-            <button type="button" class="mode-toggle" id="mode-toggle">
-              ${mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            </button>
-          </div>
-        </div>
-
-        ${renderPrimaryNav(route)}
-      </div>
-    </div>
-  </header>`;
+function renderBundleHeader() {
+  return renderSharedBundleHeader({ mode, navHtml: renderPrimaryNav(route) });
 }
 
 
@@ -2000,7 +1870,7 @@ function buildProbingHubSections() {
   const families = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
     ? probingArticleIndexState.families
     : [];
-  return renderProbingFamilyIndex(families);
+  return renderProbingFamilyIndex(families, { embedded: true });
 }
 
 // 访问计数：每次成功加载招牌 story 自增（localStorage），用于 pickFeaturedCase 轮换。
@@ -2371,13 +2241,177 @@ function toggleAnnojointAtlasGroupLimit(groupId) {
   render({ preserveScroll: true });
 }
 
+function downloadGeneratedText(text, filename, mimeType = 'text/plain;charset=utf-8') {
+  const blob = new Blob([text], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function downloadCsvRows(rows, filename) {
+  const columns = rows.length ? Object.keys(rows[0]) : [];
+  const csvValue = (value) => {
+    const text = Array.isArray(value) ? value.join('; ') : String(value ?? '');
+    return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+  };
+  const csv = [
+    columns.map(csvValue).join(','),
+    ...rows.map((row) => columns.map((column) => csvValue(row[column])).join(','))
+  ].join('\n');
+  downloadGeneratedText(`\uFEFF${csv}\n`, filename, 'text/csv;charset=utf-8');
+}
+
+async function downloadAnnojointEntryCatalog() {
+  const index = await annojoinAtlasStore.loadIndex();
+  const rows = (index.displayCases || []).map((row) => ({
+    atlas_case_key: row.atlasCaseKey || row.atlas_case_key || '',
+    pdb_id: row.pdbId || row.pdb_id || '',
+    molecule: row.moleculeDisplayName || row.molecule_display_name || '',
+    family: row.assetFamily || row.asset_family || '',
+    chains: Array.isArray(row.chains) ? row.chains.join('; ') : (row.chains || ''),
+    profile_count: row.profileCount || row.profile_count || 0,
+    confidence: row.confidenceDisplayLabel || row.confidence_display_label || '',
+    structure_class: row.structureClass || row.structure_class_label || ''
+  }));
+  downloadCsvRows(rows, 'foldbridge-entry-catalog.csv');
+}
+
+function downloadStructureCatalog() {
+  const rows = sequenceRows.map((row) => ({
+    pdb_id: row.pdbName || '',
+    name: row.sequenceName || '',
+    description: row.aptamerName || '',
+    category: row.category || '',
+    structure_file: row.structureFile || '',
+    sequence_length: row.type ? row.type.length : 0,
+    confidence: row.confidence || ''
+  }));
+  downloadCsvRows(rows, 'foldbridge-structure-catalog.csv');
+}
+
+function downloadBundledStructureFiles() {
+  sequenceRows
+    .filter((row) => row.structureFile)
+    .forEach((row, index) => {
+      const filePath = row.structureFile;
+      const filename = filePath.split('/').pop() || `${row.pdbName || 'structure'}.cif`;
+      const link = document.createElement('a');
+      link.href = `./${filePath.replace(/^\.\//, '')}`;
+      link.download = filename;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      window.setTimeout(() => {
+        link.click();
+        link.remove();
+      }, index * 180);
+    });
+}
+
+function downloadDataManifest() {
+  const manifest = {
+    name: 'FoldBridge download manifest',
+    version: '2026-06-16.generated-rmdb-cases.v1',
+    generated_at: new Date().toISOString(),
+    downloads: [
+      { id: 'entry-catalog', file: 'foldbridge-entry-catalog.csv', description: 'Case-level Entry catalog exported from the ANNOJOIN index.' },
+      { id: 'rdat-summary', file: 'src/assets/data/rmdb-puzzle/rdat_summary.csv', description: 'RDAT record summary for the bundled RMDB examples.' },
+      { id: 'structure-catalog', file: 'foldbridge-structure-catalog.csv', description: 'Structure records and local mmCIF asset paths.' },
+      { id: 'entry-detail', description: 'Use the Download entry button on an Entry detail page for a case JSON and HTML summary.' },
+      { id: 'profile', description: 'Use the Download profile button on an Entry detail page for the selected profile CSV and color map JSON.' },
+      { id: 'structure-3d', description: 'Use the Download 3D structure button on an Entry detail page for target-chain/full-structure mmCIF and color map JSON.' }
+    ]
+  };
+  downloadGeneratedText(JSON.stringify(manifest, null, 2), 'foldbridge-download-manifest.json', 'application/json;charset=utf-8');
+}
+
+function bindDownloadPageControls() {
+  document.getElementById('download-entry-catalog')?.addEventListener('click', async (event) => {
+    const button = event.currentTarget;
+    button.disabled = true;
+    button.textContent = 'Preparing…';
+    try {
+      await downloadAnnojointEntryCatalog();
+    } catch (error) {
+      console.error('[main] entry catalog download failed', error);
+      window.alert('The Entry catalog is temporarily unavailable. Please try again.');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Download Entry catalog';
+    }
+  });
+  document.getElementById('download-structure-catalog')?.addEventListener('click', () => {
+    if (!sequenceRows.length) {
+      window.alert('The structure catalog is still loading. Please try again in a moment.');
+      return;
+    }
+    downloadStructureCatalog();
+  });
+  document.getElementById('download-structure-files')?.addEventListener('click', downloadBundledStructureFiles);
+  document.getElementById('download-data-manifest')?.addEventListener('click', downloadDataManifest);
+}
+
 function downloadPage() {
   return `${renderBundleHeader()}
   <main class="page-download" aria-label="Download">
     <section class="card bundle-wide-card download-page-card">
       <header class="page-card-heading">
-        <h1>Download</h1>
+        <h1>Download center</h1>
+        <p class="download-page-intro">Download the data behind FoldBridge, or open an Entry detail page for a focused export of one profile and its mapped structure.</p>
       </header>
+
+      <div class="download-center-grid">
+        <section class="download-center-section">
+          <div class="download-center-heading">
+            <span class="download-center-number">01</span>
+            <div>
+              <h2>Entry data</h2>
+              <p>Case-level metadata and the bundled chemical-probing records.</p>
+            </div>
+          </div>
+          <div class="download-center-actions">
+            <button id="download-entry-catalog" type="button" class="download-center-button">Download Entry catalog</button>
+            <a class="download-center-button" href="./src/assets/data/rmdb-puzzle/rdat_summary.csv" download>Download RDAT summary</a>
+            <a class="download-center-link" href="#entry">Open Entry table →</a>
+          </div>
+        </section>
+
+        <section class="download-center-section">
+          <div class="download-center-heading">
+            <span class="download-center-number">02</span>
+            <div>
+              <h2>Structure data</h2>
+              <p>Structure records are available as mmCIF files, with a catalog for quick lookup.</p>
+            </div>
+          </div>
+          <div class="download-center-actions">
+            <button id="download-structure-catalog" type="button" class="download-center-button">Download structure catalog</button>
+            <button id="download-structure-files" type="button" class="download-center-button">Download example mmCIF files</button>
+          </div>
+        </section>
+
+        <section class="download-center-section">
+          <div class="download-center-heading">
+            <span class="download-center-number">03</span>
+            <div>
+              <h2>Entry-specific exports</h2>
+              <p>Open an Entry, choose a profile, then export the page summary, profile table, or 3D structure.</p>
+            </div>
+          </div>
+          <div class="download-center-actions">
+            <a class="download-center-button" href="#entry">Choose an Entry</a>
+            <button id="download-data-manifest" type="button" class="download-center-button">Download data manifest</button>
+          </div>
+          <p class="download-center-note">Detail-page downloads are small and reproducible.</p>
+        </section>
+      </div>
+
+      <p class="download-page-footnote">File formats: CSV for tables and catalogs, JSON for metadata and color maps, and mmCIF for structures.</p>
     </section>
   </main>`;
 }
@@ -2468,12 +2502,9 @@ function publicationsPage() {
 }
 
 function aboutPage() {
-  const aboutCached = aboutContentStore.peek();
-  // 仅在未缓存且加载未在进行/未终态失败时触发，避免失败后无限重试循环。
-  if (!aboutCached && aboutContentState !== 'loading' && aboutContentState !== 'error') loadAboutContent();
   const helpCached = helpContentStore.peek();
   if (!helpCached && helpContentState !== 'loading' && helpContentState !== 'error') loadHelpContent();
-  return `${renderBundleHeader()}<main class="page-detail">${renderAboutPage(aboutCached)}${renderHelpPage(helpCached)}</main>`;
+  return `${renderBundleHeader()}<main class="page-detail">${renderHelpPage(helpCached)}</main>`;
 }
 
 function statsPage() {
@@ -3212,6 +3243,17 @@ function render(options = {}) {
 
   setTheme(theme, mode);
   document.getElementById('app').innerHTML = `${nav()}${pageFor(route)}${renderFooter()}`;
+  if (route === 'entry' || route === 'sequence') {
+    const targetPdbId = new URLSearchParams(window.location.hash.split('?')[1] || '').get('pdbId')?.trim();
+    if (targetPdbId) {
+      requestAnimationFrame(() => {
+        const target = [...document.querySelectorAll('[data-annojoin-case-row]')]
+          .find((row) => String(row.getAttribute('data-pdb-id') || '').toUpperCase() === targetPdbId.toUpperCase());
+        target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target?.classList.add('is-return-target');
+      });
+    }
+  }
   const exportAllBtn = document.getElementById('export-all-sequences');
   const modeToggle = document.getElementById('mode-toggle');
   if (modeToggle) {
@@ -3359,6 +3401,7 @@ function render(options = {}) {
   initHomeScrollStory();
   initPdbCasePage();
   initSearchPage();
+  bindDownloadPageControls();
 
 const subnavMenuToggle = document.getElementById('subnav-menu-toggle');
 const subnavNav = document.querySelector('.hero-subnav nav');

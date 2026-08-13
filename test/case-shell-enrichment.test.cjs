@@ -124,6 +124,7 @@ test("document-guard path executes without throwing (TDZ regression)", () => {
       addEventListener() {},
       querySelector() { return null; },
       replaceChildren() { this.children = []; },
+      remove() { this.removed = true; },
     };
     return node;
   }
@@ -158,6 +159,6 @@ test("document-guard path executes without throwing (TDZ regression)", () => {
 
   const fn = new Function("document", "module", "exports", SRC);
   assert.doesNotThrow(() => fn(fakeDocument, undefined, undefined));
-  // Prove renderEnrichment actually ran: .meta got its 3 derived chips.
-  assert.strictEqual(metaNode.children.length, 3);
+  // Prove renderEnrichment actually ran: dense hero metadata is removed.
+  assert.strictEqual(metaNode.removed, true);
 });

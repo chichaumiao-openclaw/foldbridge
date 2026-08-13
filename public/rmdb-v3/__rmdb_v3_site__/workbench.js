@@ -1,6 +1,42 @@
 import "./site-nav.js";
 import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter } from "./workbench-pure.mjs";
 
+function removeRetiredWorkbenchPanels() {
+  document.querySelector("#molstar-full-host")?.closest(".molstar-view")?.remove();
+  document.querySelector("#molstarFullMeta")?.remove();
+  document.querySelectorAll(".debug-panel").forEach((panel) => panel.remove());
+  document.querySelector("#assetStatus")?.remove();
+  document.querySelector("#profileMeta")?.remove();
+  document.querySelectorAll(".technique-filter").forEach((filter) => filter.remove());
+  document.querySelector(".workbench-shell > header")?.remove();
+  document.querySelector(".track-panel .panel-head h2")?.replaceChildren("sequence mapping");
+  document.querySelector("#trackStatus")?.remove();
+  document.querySelector(".track-viewport-controls")?.remove();
+}
+
+removeRetiredWorkbenchPanels();
+
+function reportEmbeddedPageHeight() {
+  if (window.parent === window) return;
+  const root = document.querySelector(".workbench-shell");
+  const visibleChildren = root
+    ? [...root.children].filter((child) => getComputedStyle(child).display !== "none")
+    : [];
+  const lastChild = visibleChildren.at(-1);
+  const rootStyle = root ? getComputedStyle(root) : null;
+  const height = root && lastChild && rootStyle
+    ? Math.ceil(lastChild.getBoundingClientRect().bottom + window.scrollY + (parseFloat(rootStyle.paddingBottom) || 0))
+    : Math.max(document.documentElement.scrollHeight, document.body?.scrollHeight || 0);
+  window.parent.postMessage({ type: "foldbridge-workbench-height", height }, window.location.origin);
+}
+
+if (window.parent !== window && typeof ResizeObserver !== "undefined") {
+  const reportHeightSoon = () => requestAnimationFrame(reportEmbeddedPageHeight);
+  new ResizeObserver(reportHeightSoon).observe(document.body);
+  window.addEventListener("load", reportHeightSoon, { once: true });
+  reportHeightSoon();
+}
+
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const caseUrl = config.caseUrl || "./case-2d-structure.json";
 const profileIndexUrl = config.profileIndexUrl || "./profiles/profile-index.json";
@@ -75,8 +111,6 @@ const el = {
   varnaZoomOut: document.querySelector("#varna-zoom-out"),
   varnaZoomReset: document.querySelector("#varna-zoom-reset"),
   varnaZoomStatus: document.querySelector("#varna-zoom-status"),
-  profilePair: document.querySelector("#profilePair"),
-  profileId: document.querySelector("#profileId"),
   caption: document.querySelector("#viewCaption"),
   inspector: document.querySelector("#linked-inspector"),
   inspectorStatus: document.querySelector("#inspectorStatus"),
@@ -102,6 +136,127 @@ function escapeHtml(value) {
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#39;");
+}
+
+function safeDownloadStem(value, fallback = "foldbridge") {
+  return String(value || fallback).replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^_+|_+$/g, "") || fallback;
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function downloadText(filename, text, mime = "text/plain;charset=utf-8") {
+  downloadBlob(new Blob([text], { type: mime }), filename);
+}
+
+function csvField(value) {
+  const text = value === null || value === undefined ? "" : String(value);
+  return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+}
+
+function selectedProfileCsv() {
+  const profile = state.lastRender?.profile;
+  const normalized = state.lastRender?.normalized;
+  const strand = activeStrand();
+  if (!profile || !normalized || !strand) return null;
+  const columns = [
+    "position", "profile_base", "raw_value", "normalized_value", "reactivity_color",
+    "structure_state", "residue_key", "pdb_base", "sequence_match",
+    "coordinate_status", "pdb_label_asym_id", "pdb_label_seq_id", "pdb_auth_asym_id", "pdb_auth_seq_id",
+  ];
+  const rows = [columns.join(",")];
+  for (let position = 1; position <= strand.sequence.length; position += 1) {
+    const residue = residueForPosition(position, strand);
+    const row = normalized.byPosition.get(position) || {};
+    const pdb = state.pdbResidueByKey.get(residue.residueKey) || {};
+    rows.push([
+      position,
+      residue.parentBase || strand.sequence[position - 1] || "",
+      Number.isFinite(row.raw) ? row.raw : "",
+      Number.isFinite(row.norm) ? row.norm : "",
+      row.color || "",
+      secondaryStructureStateForPosition(position, strand),
+      residue.residueKey,
+      residue.compId || "",
+      alignmentStateForResidue(residue.residueKey),
+      pdb.coordinateStatus || "unavailable",
+      pdb.labelAsymId || "",
+      pdb.labelSeqId || "",
+      pdb.authAsymId || "",
+      pdb.authSeqId || "",
+    ].map(csvField).join(","));
+  }
+  return rows.join("\n");
+}
+
+function selectedProfileColorMap() {
+  const profile = state.lastRender?.profile;
+  const normalized = state.lastRender?.normalized;
+  const strand = activeStrand();
+  if (!profile || !normalized || !strand) return null;
+  return {
+    downloadType: "foldbridge-profile-color-map",
+    generatedAt: new Date().toISOString(),
+    caseId: state.caseData?.case_id || config.caseId || "",
+    chain: activeChainKey(),
+    profileId: profile.profile_id || "",
+    positions: Array.from({ length: strand.sequence.length }, (_, index) => {
+      const position = index + 1;
+      const residue = residueForPosition(position, strand);
+      const row = normalized.byPosition.get(position) || {};
+      const pdb = state.pdbResidueByKey.get(residue.residueKey) || {};
+      return {
+        position,
+        base: residue.parentBase || strand.sequence[index] || "",
+        rawValue: Number.isFinite(row.raw) ? row.raw : null,
+        normalizedValue: Number.isFinite(row.norm) ? row.norm : null,
+        color: row.color || "#ffffff",
+        residueKey: residue.residueKey,
+        coordinateStatus: pdb.coordinateStatus || "unavailable",
+      };
+    }),
+  };
+}
+
+function downloadSelectedProfile() {
+  const profile = state.lastRender?.profile;
+  const csv = selectedProfileCsv();
+  if (!profile || !csv) return;
+  const stem = safeDownloadStem(profile.profile_id, "profile");
+  downloadText(`${stem}.csv`, csv, "text/csv;charset=utf-8");
+}
+
+async function downloadSelected3d() {
+  const profile = state.lastRender?.profile;
+  if (!profile) return;
+  try {
+    const sourceCif = await loadStructureSourceForMolstar();
+    if (!state.molstarCroppedUrl) {
+      await prepareClientAlignmentCroppedCif(sourceCif);
+    }
+    const response = await fetch(state.molstarCroppedUrl);
+    if (!response.ok) throw new Error(`target structure unavailable (${response.status})`);
+    const cifBlob = await response.blob();
+    const stem = safeDownloadStem(profile.profile_id, "profile");
+    downloadBlob(cifBlob, `${stem}-target-chain.cif`);
+    const sourceBuffer = await fetchArrayBufferOrThrow(sourceCif.sourceUrl);
+    const sourceDecoded = String(sourceCif.sourceUrl).endsWith(".gz")
+      ? await decodeGzipArrayBuffer(sourceBuffer)
+      : sourceBuffer;
+    downloadBlob(new Blob([sourceDecoded], { type: "chemical/x-mmcif" }), `${stem}-full-structure.cif`);
+    const colorMap = selectedProfileColorMap();
+    if (colorMap) downloadText(`${stem}-reactivity-colors.json`, JSON.stringify(colorMap, null, 2), "application/json;charset=utf-8");
+  } catch (error) {
+    if (el.molstarStatus) el.molstarStatus.textContent = `3D download unavailable: ${error.message || error}`;
+  }
 }
 
 function resolveAssetUrl(href, baseUrl = window.location.href) {
@@ -683,6 +838,17 @@ function atomSiteCoverageStatusLabel(coverage = state.structureCoverage?.coverag
   return coverage.profileResidues
     ? `atom_site coordinates observed ${coverage.resolvedResidues}/${coverage.profileResidues} (${coverage.resolvedProfileRangeLabel || "no resolved range"}; not a sequence-alignment count)`
     : "atom_site coordinate coverage unavailable";
+}
+
+function conciseMolstarMeta({ chainKey = "", rangeLabel = "", summary = {}, coverage = {} } = {}) {
+  const chain = String(chainKey || "").split("|").at(-1) || "—";
+  const profileCount = Number(summary.profileResidues || coverage.profileResidues) || 0;
+  const sequenceMatch = profileCount ? `${summary.matchedResidues || 0}/${profileCount}` : "n/a";
+  const coordinates = coverage.profileResidues
+    ? `${coverage.resolvedResidues}/${coverage.profileResidues}`
+    : "n/a";
+  const range = rangeLabel || (profileCount ? `1–${profileCount}` : "target");
+  return `Chain ${chain} · structure positions ${range} · profile–PDB sequence match ${sequenceMatch} · coordinates available ${coordinates} · colors show current profile reactivity.`;
 }
 
 function sequenceOnlyCoordinateNote() {
@@ -1746,14 +1912,13 @@ function renderTrackRail() {
   const strand = activeStrand();
   const normalized = state.lastRender?.normalized;
   if (!strand || !normalized) return;
-  const activeFamily = lssContextForProfile(activeProfileId())?.family || "";
-  state.viewport = clampViewport(state.viewport.start, state.viewport.end, strand.sequence.length);
+  state.viewport = { start: 1, end: strand.sequence.length };
   const { start, end } = state.viewport;
   const positions = Array.from({ length: end - start + 1 }, (_, idx) => start + idx);
-  const width = 1120;
-  const height = 354;
-  const left = 112;
+  const height = 182;
+  const left = 210;
   const right = 18;
+  const width = Math.max(1120, left + right + positions.length * 24);
   const usable = width - left - right;
   const xFor = (position) => left + ((position - start + 0.5) / positions.length) * usable;
   const cellW = Math.max(4, usable / positions.length - 1);
@@ -1762,20 +1927,17 @@ function renderTrackRail() {
     ["Profile/RMDB seq", 52],
     ["PDB polymer alignment", 84],
     ["Structure state", 116],
-    ["3D coords", 148],
-    ["targetability", 180],
-    ["reactivity", 212],
-    ["DBN bridge", 244],
-    ["3D coordinates", 276],
-    ["Interactions", 308],
+    ["reactivity", 148],
   ];
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("width", String(width));
+  svg.setAttribute("height", String(height));
   svg.setAttribute("role", "img");
   svg.setAttribute("aria-label", "1D residue track rail");
   svg.appendChild(createSvgNode(svg, "rect", { x: 0, y: 0, width, height, fill: "#ffffff" }));
   for (const [label, y] of rows) {
-    const text = createSvgNode(svg, "text", { x: 10, y: y + 4, "font-size": 12, fill: "#5b6670" });
+    const text = createSvgNode(svg, "text", { x: 2, y: y + 6, "font-size": "1.08rem", "font-weight": 400, fill: "#000000" });
     text.textContent = label;
     svg.appendChild(text);
     svg.appendChild(createSvgNode(svg, "line", { x1: left, x2: width - right, y1: y, y2: y, stroke: "#e3e7ec", "stroke-width": 1 }));
@@ -1790,15 +1952,9 @@ function renderTrackRail() {
     const alignmentState = alignmentStateForResidue(residueKey);
     const row = normalized.byPosition.get(position) || {};
     const color = row.color || "#ffffff";
-    const bridgeMembership = state.bridgeByResidueKey.get(residueKey) || [];
-    const interactionEndpoints = state.interactionsByResidueKey.get(residueKey) || [];
-    const pdbResidue = state.pdbResidueByKey.get(residueKey);
-    const observed = pdbResidue?.coordinateStatus === "resolved";
-    const coordinateStyle = observed ? coordinateResolvedStyle : coordinateSequenceOnlyStyle;
-    const coordinateMeaning = observed ? "resolved_atom_site_coordinate" : "sequence_only_no_atom_site_coordinate";
     if (position === 1 || position % 10 === 0 || position === strand.sequence.length) {
       svg.appendChild(createSvgNode(svg, "line", { x1: x, x2: x, y1: 15, y2: 30, stroke: "#7c8792", "stroke-width": 0.8 }));
-      const tick = createSvgNode(svg, "text", { x, y: 12, "font-size": 10, "text-anchor": "middle", fill: "#39434d" });
+      const tick = createSvgNode(svg, "text", { x, y: 14, "font-size": "1.08rem", "font-weight": 400, "text-anchor": "middle", fill: "#000000" });
       tick.textContent = String(position);
       svg.appendChild(tick);
     }
@@ -1853,83 +2009,18 @@ function renderTrackRail() {
       svg.appendChild(stateTick);
     }
 
-    const pdbCell = createSvgNode(svg, "rect", {
-      x: x - cellW / 2,
-      y: 136,
-      width: cellW,
-      height: 24,
-      fill: coordinateStyle.fill,
-      stroke: coordinateStyle.stroke,
-      "stroke-width": observed ? 0.7 : 0.4,
-      rx: 1,
-      "data-pdb-residue": pdbResidue ? `${pdbResidue.pdbStrandId}:${pdbResidue.labelSeqId}` : "",
-      "data-coordinate-status": pdbResidue?.coordinateStatus || "unavailable",
-      "data-coordinate-meaning": coordinateMeaning,
-    });
-    wireTrackMark(pdbCell, residueKey, "pdb_residue", handlePdbResidueTrackEvent);
-    svg.appendChild(pdbCell);
-    if (position === 1 || position % 10 === 0 || position === strand.sequence.length || position === state.structureCoverage?.coverage?.firstResolvedProfilePosition || position === state.structureCoverage?.coverage?.lastResolvedProfilePosition) {
-      const pdbTick = createSvgNode(svg, "text", { x, y: 152, "font-size": 8.5, "text-anchor": "middle", fill: observed ? "#164b6c" : "#7b858e", "pointer-events": "none" });
-      pdbTick.textContent = pdbResidue ? String(pdbResidue.labelSeqId) : "-";
-      svg.appendChild(pdbTick);
-    }
-
-    const targetable = familyTargetsBase(activeFamily, profileBase) === "applicable";
-    const targetability = createSvgNode(svg, "rect", {
-      x: x - cellW / 2,
-      y: 172,
-      width: cellW,
-      height: 16,
-      fill: targetable ? "#dceccf" : "#f4f5f6",
-      stroke: targetable ? "#5d8a45" : "#c8cdd2",
-      "stroke-width": 0.5,
-      rx: 1,
-      "data-assay-state": targetable ? "applicable" : "not_applicable",
-    });
-    wireTrackMark(targetability, residueKey, "dms_targetability", handleTargetabilityTrackEvent);
-    svg.appendChild(targetability);
-
-    const profileRect = createSvgNode(svg, "rect", { x: x - cellW / 2, y: 200, width: cellW, height: 24, fill: color, stroke: "#aeb7c1", "stroke-width": 0.5, rx: 1 });
+    const profileRect = createSvgNode(svg, "rect", { x: x - cellW / 2, y: 136, width: cellW, height: 24, fill: color, stroke: "#aeb7c1", "stroke-width": 0.5, rx: 1 });
     wireTrackMark(profileRect, residueKey, "profile_value", (event, key) => selectResidue(key, "1d:profile_value"));
     svg.appendChild(profileRect);
     if (row.norm > 0) {
       const barH = Math.max(1, Math.round(row.norm * 21));
-      svg.appendChild(createSvgNode(svg, "rect", { x: x - 2, y: 223 - barH, width: 4, height: barH, fill: "#17212b", opacity: 0.35 }));
-    }
-
-    if (bridgeMembership.length) {
-      const bridge = createSvgNode(svg, "rect", { x: x - cellW / 2, y: 236, width: cellW, height: 16, fill: "#2c7a7b", stroke: "#195d5e", "stroke-width": 0.5, rx: 1 });
-      wireTrackMark(bridge, residueKey, "bridge_membership", handleBridgeTrackEvent);
-      svg.appendChild(bridge);
-    } else {
-      const bridgeEmpty = createSvgNode(svg, "rect", { x: x - cellW / 2, y: 240, width: cellW, height: 8, fill: "#eef3f2", stroke: "#d5dfdd", "stroke-width": 0.4, rx: 1 });
-      wireTrackMark(bridgeEmpty, residueKey, "bridge_membership", handleBridgeTrackEvent);
-      svg.appendChild(bridgeEmpty);
-    }
-
-    const obs = createSvgNode(svg, "circle", { cx: x, cy: 276, r: observed ? 4.2 : 3.4, fill: observed ? "#1f2933" : coordinateSequenceOnlyStyle.fill, stroke: observed ? "#1f2933" : coordinateSequenceOnlyStyle.stroke, "stroke-width": observed ? 0.8 : 1.2, "data-coordinate-status": pdbResidue?.coordinateStatus || "unavailable", "data-coordinate-meaning": coordinateMeaning });
-    wireTrackMark(obs, residueKey, "observed_mask", handleObservedTrackEvent);
-    svg.appendChild(obs);
-
-    if (interactionEndpoints.length) {
-      const dot = createSvgNode(svg, "circle", { cx: x, cy: 308, r: 4.2, fill: "#1f78b4", stroke: "#0f3f60", "stroke-width": 0.6 });
-      wireTrackMark(dot, residueKey, "interaction_endpoint_occupancy", handleInteractionTrackEvent);
-      svg.appendChild(dot);
-    } else {
-      const dot = createSvgNode(svg, "circle", { cx: x, cy: 308, r: 2.2, fill: "#ffffff", stroke: "#aab5bf", "stroke-width": 0.8 });
-      wireTrackMark(dot, residueKey, "interaction_endpoint_occupancy", handleInteractionTrackEvent);
-      svg.appendChild(dot);
+      svg.appendChild(createSvgNode(svg, "rect", { x: x - 2, y: 159 - barH, width: 4, height: barH, fill: "#17212b", opacity: 0.35 }));
     }
   }
   el.track.replaceChildren(svg);
-  el.viewportStatus.textContent = `${start}-${end} / ${strand.sequence.length}`;
+  if (el.viewportStatus) el.viewportStatus.textContent = `${start}-${end} / ${strand.sequence.length}`;
   syncViewportSlider(start, end, strand.sequence.length);
   recolorVarnaViewportLink();
-  const coverage = state.structureCoverage?.coverage;
-  const sequenceSummary = materializedSequenceAlignment();
-  el.trackStatus.textContent = coverage
-    ? `${positions.length} residues visible | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)} | ${lssContextLabel()}`
-    : `${positions.length} residues visible | ${sequenceAgreementStatusLabel(sequenceSummary)}`;
   applyLinkedHover(state.hoveredResidueKey);
   applyLinkedSelection(state.selectedResidueKey);
 }
@@ -2258,7 +2349,7 @@ function setMolstarStructureDataset(host, structure, sourceKind) {
 async function initMolstarViewer() {
   if (state.molstarViewer || !el.molstarHost) return;
   el.molstarStatus.textContent = `loading Mol* from ${sourceStructureUrl}`;
-  el.molstarMeta.textContent = `${activeChainKey()} will use a target chain alignment crop.`;
+  el.molstarMeta.textContent = "Loading target chain structure…";
   try {
     const sourceCif = await loadStructureSourceForMolstar();
     const croppedCif = await prepareClientAlignmentCroppedCif(sourceCif);
@@ -2266,9 +2357,12 @@ async function initMolstarViewer() {
     installMolstarEventBridge({ events: null }, el.molstarHost);
     const coverage = state.structureCoverage?.coverage;
     const sequenceSummary = materializedSequenceAlignment();
-    el.molstarMeta.textContent = coverage
-      ? `${croppedCif.chainKey} | ${croppedCif.mode} | target chain alignment crop from ${croppedCif.alignmentRange.label}; auth_asym_id=${croppedCif.authAsymId} label_asym_id=${croppedCif.labelAsymId}; ${croppedCif.croppedAtomSiteRows} atom_site rows kept; displayed with reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel()}.`
-      : `${croppedCif.chainKey} | ${croppedCif.mode} | auth_asym_id=${croppedCif.authAsymId} label_asym_id=${croppedCif.labelAsymId}.`;
+    el.molstarMeta.textContent = conciseMolstarMeta({
+      chainKey: croppedCif.chainKey,
+      rangeLabel: croppedCif.alignmentRange.label,
+      summary: sequenceSummary,
+      coverage,
+    });
     await loadPdbeMolstarAssets();
     const croppedViewer = new window.PDBeMolstarPlugin();
     state.molstarViewer = croppedViewer;
@@ -2322,29 +2416,24 @@ async function renderProfile(index) {
   state.lastRender = { profile, normalized, shard, elapsed, dmsLoopRecall };
   state.requestedProfileId = profile.profile_id || "";
   el.select.value = String(index);
-  const initialView = defaultViewport(strand.sequence.length, normalized);
-  state.viewport = clampViewport(initialView.start, initialView.end, strand.sequence.length);
-  el.profilePair.textContent = profile.pair_id;
-  el.profileId.textContent = profile.profile_id;
-  el.profilePair.title = profile.pair_id;
-  el.profileId.title = profile.profile_id;
+  state.viewport = { start: 1, end: strand.sequence.length };
   el.molstarHost.setAttribute("data-structure-chain-key", activeChainKey());
   const coverage = state.structureCoverage?.coverage;
   const sequenceSummary = materializedSequenceAlignment();
-  el.molstarMeta.textContent = coverage
-    ? `${activeChainKey()} | profile ${profile.profile_id} | target chain alignment crop displayed with reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel(profile.profile_id)}.`
-    : `${activeChainKey()} | profile ${profile.profile_id} | ${activeResidues().length} residues in active profile.`;
+  const sequenceLength = activeStrand()?.sequence?.length;
+  el.molstarMeta.textContent = conciseMolstarMeta({
+    chainKey: activeChainKey(),
+    rangeLabel: sequenceLength ? `1–${sequenceLength}` : "",
+    summary: sequenceSummary,
+    coverage,
+  });
   el.stats.innerHTML = [
     metric("profiles loaded", state.profiles.length),
-    metric("sequence match", `${sequenceSummary.matchedResidues}/${sequenceSummary.profileResidues}`),
     metric("atom_site obs", coverage?.profileResidues ? `${coverage.resolvedResidues}/${coverage.profileResidues}` : "n/a"),
-    metric("LSS status", lssContext?.lssStatus || "not materialized"),
-    metric("LSS evaluable", lssContext ? `${lssContext.pairedEvaluable} paired / ${lssContext.unpairedEvaluable} unpaired` : "not materialized"),
-    metric("loop recall", formatDmsLoopRecall(dmsLoopRecall)),
     metric("mapped bases", normalized.mappedCount),
     metric("white bases", normalized.whiteCount),
     metric("positive bases", normalized.positiveCount),
-    metric("P95 cap", normalized.cap.toFixed(4)),
+    metric("Normal value", normalized.cap.toFixed(4)),
   ].join("");
   updateView();
   renderTrackRail();
@@ -2739,13 +2828,24 @@ function installExternalProfileBridge() {
   window.__annojoinExternalProfileBridgeInstalled = true;
   window.addEventListener("message", (event) => {
     const payload = event?.data;
-    if (!payload || payload.type !== "annojoin:set-profile") return;
+    if (!payload) return;
+    if (payload.type === "annojoin:download-profile") {
+      downloadSelectedProfile();
+      return;
+    }
+    if (payload.type === "annojoin:download-3d") {
+      void downloadSelected3d();
+      return;
+    }
+    if (payload.type !== "annojoin:set-profile") return;
     void renderProfileById(payload.profileId);
   });
 }
 
 function updateView() {
-  el.caption.textContent = "VARNA layout with active profile coloring.";
+  document.querySelector(".swatch-empty + span")?.replaceChildren("No data (missing, unmapped, or non-positive)");
+  document.querySelector(".swatch-gradient + span")?.replaceChildren("Reactivity: low → high");
+  el.caption.textContent = "Colors show the selected profile's reactivity.";
 }
 
 async function init() {
@@ -2827,11 +2927,12 @@ async function init() {
   state.techniqueByProfile = joinTechniqueByProfile(evidenceRows, config.chainId);
   state.evidenceRows = evidenceRows;
   const strand = activeStrand() || caseData.strands[0];
-  state.viewport = { start: 1, end: Math.min(strand.sequence.length, TRACK_DEFAULT_SPAN) };
+  state.viewport = { start: 1, end: strand.sequence.length };
   el.select.innerHTML = buildProfileSelectMarkup(state.profiles);
   mountProfileDropdown();
-  mountTechniqueFilter();
-  el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
+  if (el.status) {
+    el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
+  }
   const requestedProfileId = state.requestedProfileId || initialProfileIdFromLocation();
   const requestedIndex = profileIndexForId(requestedProfileId);
   const initialIndex = requestedIndex >= 0 ? requestedIndex : await richestProfileIndex();
@@ -2846,10 +2947,10 @@ el.select.addEventListener("change", () => {
   refreshProfileDropdownTrigger();
   void renderProfile(Number(el.select.value));
 });
-el.zoomIn.addEventListener("click", () => zoomTrack(1));
-el.zoomOut.addEventListener("click", () => zoomTrack(-1));
-el.panLeft.addEventListener("click", () => panTrack(-1));
-el.panRight.addEventListener("click", () => panTrack(1));
+el.zoomIn?.addEventListener("click", () => zoomTrack(1));
+el.zoomOut?.addEventListener("click", () => zoomTrack(-1));
+el.panLeft?.addEventListener("click", () => panTrack(-1));
+el.panRight?.addEventListener("click", () => panTrack(1));
 if (el.viewportSlider) {
   el.viewportSlider.addEventListener("input", () => {
     const span = state.viewport.end - state.viewport.start + 1;
@@ -2858,7 +2959,7 @@ if (el.viewportSlider) {
     setViewport(nextStart, nextStart + span - 1);
   });
 }
-el.resetView.addEventListener("click", () => {
+el.resetView?.addEventListener("click", () => {
   const strand = activeStrand();
   if (!strand) return;
   const view = defaultViewport(strand.sequence.length, state.lastRender?.normalized);
@@ -2871,5 +2972,5 @@ if (el.varnaZoomReset) el.varnaZoomReset.addEventListener("click", () => setVarn
 installExternalProfileBridge();
 
 init().catch((error) => {
-  el.status.textContent = "asset load failed";
+  if (el.status) el.status.textContent = "asset load failed";
 });

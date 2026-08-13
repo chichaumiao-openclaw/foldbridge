@@ -93,17 +93,15 @@ function pickBestEvidence(rows, defaultEvidenceId) {
 
 // DOM bootstrap (browser only). Pure helpers above are referenced here.
 if (typeof document !== "undefined") {
-  // Inject the shared site nav header. Runs before the bootstrap parse below so the nav
-  // appears even if the case bootstrap is missing. case-shell.js is a static parse-time
-  // classic script, so document.currentScript is valid here; dynamic import keeps this
-  // classic script module-safe without requiring regenerated HTML.
+  // Add the portal header to top-level entry detail pages. The shared module
+  // deliberately skips framed chain workbenches, so nested pages stay chrome-free.
   (function () {
     try {
       var self = document.currentScript;
       var selfSrc = self && self.src ? self.src : "";
       import(new URL("site-nav.js", selfSrc).href).catch(function () {});
     } catch (err) {
-      /* nav is non-critical; never block the case shell */
+      /* navigation is non-critical; never block the case shell */
     }
   })();
 
@@ -112,6 +110,32 @@ if (typeof document !== "undefined") {
     throw new Error("family case bootstrap missing");
   }
   const bootstrap = JSON.parse(bootstrapNode.textContent);
+  const hero = document.querySelector(".hero");
+  const caseId = String(bootstrap.caseId || "").trim();
+  if (hero && caseId && !hero.querySelector(".fb-entry-return-link")) {
+    const link = document.createElement("a");
+    link.className = "fb-entry-return-link";
+    const marker = window.location.pathname.search(/\/(?:rmdb|rasp)-v3\/cases\//i);
+    const siteRoot = marker >= 0 ? window.location.pathname.slice(0, marker + 1) : "/";
+    link.href = `${siteRoot}#entry?pdbId=${encodeURIComponent(caseId)}`;
+    link.textContent = "Back to Entry table";
+    link.setAttribute("aria-label", `Return to the Entry table filtered to ${caseId}`);
+    link.addEventListener("click", (event) => {
+      const referrer = document.referrer || "";
+      let cameFromEntry = false;
+      try {
+        const referrerUrl = new URL(referrer, window.location.href);
+        cameFromEntry = referrerUrl.origin === window.location.origin;
+      } catch (_error) {
+        cameFromEntry = false;
+      }
+      if (cameFromEntry && window.history.length > 1) {
+        event.preventDefault();
+        window.history.back();
+      }
+    });
+    hero.insertBefore(link, hero.firstChild);
+  }
   const state = {
     activeChainId: bootstrap.defaultChainId,
     selectedEvidenceId: bootstrap.defaultEvidenceId || "",
@@ -119,6 +143,112 @@ if (typeof document !== "undefined") {
 
   const chainButtons = [...document.querySelectorAll("[data-chain-id]")];
   const frame = document.getElementById("chainFrame");
+
+  function downloadTextFile(filename, text, mime = "text/plain;charset=utf-8") {
+    const blob = new Blob([text], { type: mime });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+  }
+
+  function htmlEscape(value) {
+    return String(value ?? "")
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#39;");
+  }
+
+  function mountDownloadActions() {
+    if (!hero || hero.querySelector(".fb-download-actions")) return;
+    const actions = document.createElement("div");
+    actions.className = "fb-download-actions";
+    const button = (label, title) => {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.className = "fb-download-button";
+      item.textContent = label;
+      item.title = title;
+      actions.appendChild(item);
+      return item;
+    };
+    const entryButton = button("Download entry", "Download an HTML summary and JSON data for this entry");
+    const profileButton = button("Download profile", "Download the currently selected profile as CSV");
+    const structureButton = button("Download 3D structure", "Download the target-chain mmCIF and reactivity color map");
+    entryButton.addEventListener("click", () => {
+      const payload = {
+        downloadType: "foldbridge-entry",
+        generatedAt: new Date().toISOString(),
+        caseId: bootstrap.caseId || "",
+        caseKey: bootstrap.caseKey || "",
+        defaultChainId: bootstrap.defaultChainId || "",
+        evidenceChainMap: bootstrap.evidenceChainMap || {},
+        evidenceRows: bootstrap.evidenceRows || [],
+        sourcePage: window.location.href,
+      };
+      downloadTextFile(
+        `foldbridge-entry-${String(bootstrap.caseId || "case").replace(/[^A-Za-z0-9._-]+/g, "_")}.json`,
+        JSON.stringify(payload, null, 2),
+        "application/json;charset=utf-8"
+      );
+      const tableRows = (bootstrap.evidenceRows || []).map((row) => `<tr>
+        <td>${htmlEscape(row.family)}</td>
+        <td>${htmlEscape(row.technology)}</td>
+        <td>${htmlEscape(tierDisplay(row.lssTierCalibrated).label)}</td>
+        <td>${htmlEscape(row.profileKey || row.trackProfileId || "")}</td>
+      </tr>`).join("");
+      const pageHtml = `<!doctype html><html lang="en"><meta charset="utf-8"><title>${htmlEscape(bootstrap.caseKey || bootstrap.caseId || "FoldBridge entry")}</title><style>body{font:16px Arial,sans-serif;max-width:1100px;margin:40px auto;color:#111}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid #ddd}</style><h1>${htmlEscape(document.querySelector(".hero h1")?.textContent || bootstrap.caseId || "FoldBridge entry")}</h1><p>${htmlEscape(bootstrap.caseKey || "")}</p><h2>Evidence</h2><table><thead><tr><th>Family</th><th>Technology</th><th>Tier</th><th>Profile</th></tr></thead><tbody>${tableRows}</tbody></table><p>Interactive profile and 3D files are available from the detail page downloads.</p></html>`;
+      downloadTextFile(
+        `foldbridge-entry-${String(bootstrap.caseId || "case").replace(/[^A-Za-z0-9._-]+/g, "_")}.html`,
+        pageHtml,
+        "text/html;charset=utf-8"
+      );
+    });
+    profileButton.addEventListener("click", () => {
+      frame?.contentWindow?.postMessage({ type: "annojoin:download-profile" }, window.location.origin);
+    });
+    structureButton.addEventListener("click", () => {
+      frame?.contentWindow?.postMessage({ type: "annojoin:download-3d" }, window.location.origin);
+    });
+    const heading = hero.querySelector("h1");
+    if (heading) {
+      const titleRow = document.createElement("div");
+      titleRow.className = "fb-hero-title-row";
+      heading.parentNode.insertBefore(titleRow, heading);
+      titleRow.append(heading, actions);
+    } else {
+      hero.insertBefore(actions, hero.firstChild);
+    }
+  }
+  mountDownloadActions();
+
+  function setWorkbenchFrameHeight(height) {
+    const nextHeight = Number(height);
+    if (!frame || !Number.isFinite(nextHeight) || nextHeight <= 0) return;
+    frame.style.height = `${Math.ceil(nextHeight)}px`;
+  }
+
+  if (typeof window !== "undefined") {
+    window.addEventListener("message", (event) => {
+      if (event.source !== frame?.contentWindow) return;
+      if (event.data?.type !== "foldbridge-workbench-height") return;
+      setWorkbenchFrameHeight(event.data.height);
+    });
+  }
+
+  frame?.addEventListener("load", () => {
+    try {
+      setWorkbenchFrameHeight(frame.contentDocument?.documentElement?.scrollHeight);
+    } catch (error) {
+      /* The child also reports its height after asynchronous content renders. */
+    }
+  });
 
   function evidenceById(evidenceId) {
     return bootstrap.evidenceRows.find((row) => row.evidenceId === evidenceId) || null;
@@ -160,69 +290,12 @@ if (typeof document !== "undefined") {
     const rows = bootstrap.evidenceRows;
     if (!rows || rows.length === 0) return;
 
-    const best = pickBestEvidence(rows, bootstrap.defaultEvidenceId);
-    const famCounts = familyCounts(rows);
+    document.querySelector(".hero .meta")?.remove();
 
-    // Hero tier badge inserted after the subtitle <p>.
-    const hero = document.querySelector(".hero");
-    if (hero && best) {
-      const bd = tierDisplay(best.lssTierCalibrated);
-      const badge = el("span", `fb-tier-badge tone-${bd.tone}`, `${best.family} · ${bd.label}`);
-      const subtitle = hero.querySelector("p");
-      if (subtitle) subtitle.insertAdjacentElement("afterend", badge);
-      else hero.appendChild(badge);
-    }
-
-    // In-place .meta replacement with derived chips.
-    const metaNode = document.querySelector(".hero .meta");
-    if (metaNode) {
-      metaNode.replaceChildren();
-      metaNode.appendChild(el("span", "chip", `chains ${distinctChains(rows)}`));
-      metaNode.appendChild(el("span", "chip", `profiles ${rows.length}`));
-      const fams = Object.keys(famCounts).sort().join("·");
-      metaNode.appendChild(el("span", "chip", `families ${fams}`));
-    }
-
-    // ENRICHMENT_SCOREBOARD
-    const scoreboard = el("section", "fb-scoreboard");
-    scoreboard.appendChild(el("h2", null, "Confidence scoreboard"));
-
-    const famRow = el("div", "fb-fam-row");
-    for (const f of Object.keys(famCounts).sort()) {
-      famRow.appendChild(el("span", "fb-fam", `${f} · ${familyLabel(f)} ×${famCounts[f]}`));
-    }
-    scoreboard.appendChild(famRow);
-
-    const tCounts = tierCounts(rows);
-    const tierRow = el("div", "fb-tier-row");
-    const tierTokens = Object.keys(tCounts).sort((a, b) => {
-      const ia = TIER_ORDER.indexOf(a);
-      const ib = TIER_ORDER.indexOf(b);
-      const ra = ia === -1 ? TIER_ORDER.length : ia;
-      const rb = ib === -1 ? TIER_ORDER.length : ib;
-      if (ra !== rb) return ra - rb;
-      return a < b ? -1 : a > b ? 1 : 0;
-    });
-    for (const token of tierTokens) {
-      const td = tierDisplay(token);
-      tierRow.appendChild(el("span", `fb-tpill tone-${td.tone}`, `${td.label} ${tCounts[token]}`));
-    }
-    scoreboard.appendChild(tierRow);
-
-    if (best) {
-      const bd = tierDisplay(best.lssTierCalibrated);
-      const bestBox = el("div", "fb-best");
-      const metricLabel = best.directionalMetricLabel || "metric";
-      bestBox.appendChild(el("div", null,
-        `${best.technology} — ${metricLabel} ${fmtMetric(best.aucDirectional)} · p ${fmtP(best.aucEmpiricalPValue)} · n ${fmtCount(best.nEvaluable)} · ${bd.label}`));
-      if (bd.meaning) bestBox.appendChild(el("div", null, bd.meaning));
-      scoreboard.appendChild(bestBox);
-    }
-
-    // ENRICHMENT_TABLE
-    const details = el("details", "fb-evtable");
-    details.appendChild(el("summary", null,
-      `Show all ${rows.length} evidence ${rows.length === 1 ? "row" : "rows"}`));
+    // Evidence stays visible; scroll the table after ten rows instead of hiding it.
+    const evidenceTable = el("section", "fb-evtable");
+    const scroll = el("div", "fb-evidence-scroll");
+    scroll.setAttribute("aria-label", "Evidence rows");
     const table = el("table");
     const thead = el("thead");
     const headRow = el("tr");
@@ -238,10 +311,8 @@ if (typeof document !== "undefined") {
       tr.dataset.evidenceId = row.evidenceId;
       tr.appendChild(el("td", null, row.family));
       tr.appendChild(el("td", null, row.technology));
-      const tierTd = el("td");
       const rd = tierDisplay(row.lssTierCalibrated);
-      tierTd.appendChild(el("span", `fb-tpill tone-${rd.tone}`, rd.label));
-      tr.appendChild(tierTd);
+      tr.appendChild(el("td", null, rd.label));
       tr.appendChild(el("td", null, fmtMetric(row.aucDirectional)));
       tr.appendChild(el("td", null, fmtP(row.aucEmpiricalPValue)));
       tr.appendChild(el("td", null, fmtCount(row.nEvaluable)));
@@ -250,12 +321,12 @@ if (typeof document !== "undefined") {
       tbody.appendChild(tr);
     }
     table.appendChild(tbody);
-    details.appendChild(table);
+    scroll.appendChild(table);
+    evidenceTable.appendChild(scroll);
 
     // Mount before the .layout section.
     const wrapper = el("div", "fb-enrichment");
-    wrapper.appendChild(scoreboard);
-    wrapper.appendChild(details);
+    wrapper.appendChild(evidenceTable);
     const layout = document.querySelector(".layout");
     if (layout && layout.parentNode) layout.parentNode.insertBefore(wrapper, layout);
   }

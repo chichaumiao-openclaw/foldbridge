@@ -1,75 +1,104 @@
 {
-  "schema_version": "help.v1",
+  "schema_version": "help.v2",
   "hero": {
     "kicker": "Help · FoldBridge",
-    "title": "How to use FoldBridge",
-    "summary": "A practical guide to navigating the portal: finding entries, reading the master table, exploring a detail page, and interpreting the confidence labels. For the science behind the data and how confidence is computed, see the About page.",
-    "detail": "This page answers \u201chow do I use this site\u201d. If you want the methodology \u2014 data sources, how structural truth is derived, and how tiers are earned \u2014 the About page carries the full write-up."
+    "title": "Help",
+    "summary": "A practical guide to finding RNA entries, following probing-to-structure links, and downloading the data you need.",
+    "detail": "Start with the Entry table, then use the detail page to compare the profile, secondary structure, and tertiary structure views."
   },
   "sections": [
     {
-      "id": "navigate",
-      "title": "Finding your way around",
-      "kind": "table",
-      "items": [
-        { "term": "Entry", "body": "The master table of structure-linked PDB entries. Start here to browse, filter and search all published entries, then open any row to its detail page." },
-        { "term": "Probing", "body": "The science library: explainer articles on each probing technology, grouped into six mechanism families, plus a 34-technology comparison table and a glossary." },
-        { "term": "Stats", "body": "A build-time snapshot of what the database links \u2014 entry counts, probe technologies, RNA biology coverage and how confidence distributes across recall tiers." },
-        { "term": "Search", "body": "Site-wide search across probing articles and PDB cases. Use it when you know a molecule, PDB id or technology name." },
-        { "term": "About", "body": "What FoldBridge is and the full methodology: data sources, how the structural truth (paired state / SASA / contacts) is computed, and how confidence is calibrated." }
-      ]
-    },
-    {
-      "id": "master-table",
-      "title": "Reading the Entry (master) table",
-      "kind": "table",
-      "items": [
-        { "term": "One row = one display entry", "body": "Each row summarises a set of published PDB chains that share the same biological molecule within one structure. When a PDB has both RMDB and RASP sources, they are merged into one row while links back to each source case are preserved." },
-        { "term": "Confidence distribution column", "body": "A case-level summary of measurement families (A\u2013F) and recall tiers present across the entry's chains \u2014 not a single best-profile score. Family C is an exploratory hint and should be re-checked against the route assets." },
-        { "term": "Filtering and grouping", "body": "Narrow the table by the available filters and group by year or category. Only structures with generated detail-page assets are listed \u2014 the published allowlist." },
-        { "term": "\u201cnot active\u201d", "body": "A RASP entry marked not active has no scorable reactivity signal. This is a property of the data, not a negative confidence result." }
-      ]
-    },
-    {
-      "id": "detail-page",
-      "title": "Exploring a detail page",
-      "kind": "table",
-      "items": [
-        { "term": "Profile selector", "body": "Pick which reactivity profile to view. Profiles are grouped by measurement family; profiles without a family appear under \u201cUnassigned family\u201d so every loaded profile stays selectable." },
-        { "term": "1D track rail", "body": "Per-residue tracks aligned to the PDB chain: profile position, sequence, PDB alignment, structure state, coordinates, targetability, reactivity, DBN bridge and interaction endpoints." },
-        { "term": "2D secondary structure", "body": "A VARNA diagram of the chain, colored by the same reactivity scale as the 1D and 3D views. The view auto-fits the whole molecule." },
-        { "term": "3D structure", "body": "A Mol* viewer of the target chain, colored by reactivity. Click a residue in the 1D or 2D view to focus the 3D camera on it; hovering the 3D structure highlights the matching 1D / 2D position." },
-        { "term": "Linked views", "body": "The 1D, 2D and 3D panels are linked: selecting a residue in one highlights it in the others, so the same nucleotide is traceable across all three representations." }
-      ]
-    },
-    {
-      "id": "confidence-quickread",
-      "title": "Reading a confidence label at a glance",
+      "id": "about",
+      "title": "About FoldBridge",
       "kind": "prose",
-      "body": "Every confidence label is two words: a measurement family (A\u2013F) and a calibrated recall tier. The family tells you which physical quantity the experiment measured \u2014 it is not a quality grade, and A is not \u201cbetter\u201d than D. The tier tells you how reliably that evidence recovers the deposited structure after a permutation test. Read it as family + tier: all of the strength lives in the tier. STRONG and MODERATE are supported; WEAK / DISCORDANT / UNDERPOWERED / NOT_SUPPORTED each flag a specific limitation. The About page has the full definitions of every family and tier."
+      "body": "FoldBridge connects residue-level RNA chemical-probing profiles from RMDB and RASP to experimentally resolved PDB chains. Each Entry keeps the source signal, sequence mapping, structure state, and confidence evidence together so you can move from an observed probing signal to the structure it maps onto."
     },
     {
-      "id": "tiers-quickref",
-      "title": "Recall tiers, in one line each",
-      "kind": "table",
+      "id": "contact",
+      "title": "How to contact us",
+      "kind": "prose",
+      "body": "For questions about an Entry, profile, mapping, or confidence label, please include the PDB ID, chain, profile name, and the page URL. The project repository and current site address are available in the footer."
+    },
+    {
+      "id": "usage",
+      "title": "Usage",
+      "kind": "guide",
       "items": [
-        { "term": "STRONG", "body": "Permutation-calibrated and passing every gate \u2014 the evidence strongly supports the structure." },
-        { "term": "MODERATE", "body": "Passes the relaxed gates \u2014 the evidence supports the structure reasonably well (MODERATE_CANDIDATE when uncalibrated)." },
-        { "term": "WEAK", "body": "The statistic clears its bar but a secondary gate (self-containment / conflict / sample size) does not." },
-        { "term": "DISCORDANT", "body": "The probing signal disagrees in direction with the structural truth and needs review." },
-        { "term": "UNDERPOWERED", "body": "Too little data to draw a conclusion (fewer than 15 evaluable, or under 5 paired / unpaired residues)." },
-        { "term": "NOT_SUPPORTED", "body": "Not significant under the permutation test \u2014 a high-looking score no better than chance once labels are shuffled." }
+        {
+          "term": "1) Find an Entry",
+          "body": "Open the Entry table to search by molecule name, PDB ID, probing technology, RNA family, motif, or structure class. Use the grouping controls to narrow a large result set.",
+          "route": "#entry",
+          "linkLabel": "Open the Entry table"
+        },
+        {
+          "term": "2) Open the detail page",
+          "body": "Select a row to open the structure-linked Entry page. The top table records the source family and profile, while the Profile panel shows the currently selected signal.",
+          "route": "#entry",
+          "linkLabel": "Choose an Entry"
+        },
+        {
+          "term": "3) Read the confidence label",
+          "body": "The measurement family A–F identifies what was measured; the recall tier describes how strongly the signal agrees with the deposited structure. The family is not a quality ranking."
+        }
       ]
     },
     {
-      "id": "faq",
-      "title": "Common questions",
-      "kind": "table",
+      "id": "interactive",
+      "title": "Interactive visualisation",
+      "kind": "visuals",
       "items": [
-        { "term": "Why is the 3D view mostly one color?", "body": "The default profile may be sparse. Use the profile selector to pick a richer profile; residues without reactivity data are shown in neutral grey by design (no color extrapolation)." },
-        { "term": "Why does an entry show no STRONG tier?", "body": "STRONG requires a passed permutation test plus quality gates. Most entries honestly do not reach it; the tier reflects the evidence, not a site limitation." },
-        { "term": "Where do the structures load from?", "body": "Tertiary structures are fetched from the RCSB PDB at view time; the portal itself stores the probing signal, alignments and confidence, not the full coordinate files." },
-        { "term": "A threshold looks arbitrary \u2014 is it published?", "body": "Often not. Only RL-Seq's Spearman cut-points are literature-set; most thresholds are operating values pending calibration, labelled truthfully in the registry. See the About page's threshold-honesty statement." }
+        {
+          "term": "1D and 2D views",
+          "body": "The 1D alignment and 2D VARNA view use the same profile colors. Select a nucleotide to keep the position traceable across the aligned sequence and secondary structure.",
+          "image": "./src/assets/generated/home-scroll-story/1ob5-2d.svg",
+          "alt": "FoldBridge 2D RNA secondary structure example"
+        },
+        {
+          "term": "3D structure view",
+          "body": "The Mol* viewer colors the target chain with the active profile. Use the viewer controls to rotate, reset, and inspect the mapped residue in its tertiary context.",
+          "image": "./src/assets/generated/home-scroll-story/1ob5-3d.png",
+          "alt": "FoldBridge 3D RNA structure example"
+        }
+      ]
+    },
+    {
+      "id": "downloads",
+      "title": "Download channels",
+      "kind": "guide",
+      "items": [
+        {
+          "term": "1) Download the Entry",
+          "body": "The Entry button exports a compact JSON metadata file and an HTML summary of the current structure-linked record."
+        },
+        {
+          "term": "2) Download the profile",
+          "body": "The Profile button exports one CSV row per mapped position plus a JSON color map for the active profile."
+        },
+        {
+          "term": "3) Download the 3D structure",
+          "body": "The 3D button exports the target-chain and full-structure mmCIF files together with the profile reactivity-color map.",
+          "route": "#download",
+          "linkLabel": "Open the Download center"
+        }
+      ]
+    },
+    {
+      "id": "feedback",
+      "title": "Feedback channels",
+      "kind": "guide",
+      "items": [
+        {
+          "term": "1) Report a data issue",
+          "body": "Tell us which PDB ID, chain, profile, or residue is affected and describe what looks wrong. A screenshot or downloaded CSV is helpful."
+        },
+        {
+          "term": "2) Suggest an improvement",
+          "body": "For interface or visualization ideas, include the workflow you were trying to complete and the point where the page became unclear."
+        },
+        {
+          "term": "3) Include reproducible context",
+          "body": "Please share the page URL, selected profile, and any filter settings so we can reproduce the same view."
+        }
       ]
     }
   ],

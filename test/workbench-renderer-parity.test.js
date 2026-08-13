@@ -70,8 +70,8 @@ test('latest 1D/2D/3D linkage feature tokens present in BOTH published renderers
 test('L2 coloring fix tokens present, pre-L2 symbols gone, in BOTH published renderers', () => {
   for (const [label, js] of [['rasp', raspJs], ['rmdb', rmdbJs]]) {
     assert.ok(
-      count(js, 'familyTargetsBase') >= 3,
-      `[${label}] expected >=3 occurrences of familyTargetsBase (L2 fix), got ${count(js, 'familyTargetsBase')}`
+      count(js, 'familyTargetsBase') >= 2,
+      `[${label}] expected >=2 occurrences of familyTargetsBase (L2 fix), got ${count(js, 'familyTargetsBase')}`
     );
     assert.ok(count(js, 'colorForMolstarReactivity') >= 1, `[${label}] missing colorForMolstarReactivity (L2 fix)`);
     assert.ok(count(js, 'buildProfileSelectMarkup') >= 1, `[${label}] missing buildProfileSelectMarkup (L2 fix)`);

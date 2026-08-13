@@ -281,9 +281,12 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
         <p class="technology-intro technology-intro-secondary">Browse by mechanism family first, then open any method to enter its full reading page.</p>
       </div>
     </section>
-    ${extraSectionsHtml || ''}
-    <section class="card bundle-wide-card probing-family-collection" aria-label="Probing mechanism families">
-      ${familySections}
+    <section class="card bundle-wide-card probing-overview-card" aria-label="Probing mechanism families and methods">
+      ${extraSectionsHtml || ''}
+      <div class="probing-overview-divider" aria-hidden="true"></div>
+      <div class="probing-family-collection">
+        ${familySections}
+      </div>
     </section>
   </main>`;
 }

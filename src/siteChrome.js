@@ -21,7 +21,7 @@ const PRIMARY_NAV_ITEMS = [
   { route: 'probing', label: 'Probing', activeRoutes: ['probing', 'detail'] },
   { route: 'stats', label: 'Stats', activeRoutes: ['stats'] },
   { route: 'download', label: 'Download', activeRoutes: ['download'] },
-  { route: 'about', label: 'About', activeRoutes: ['about'] }
+  { route: 'about', label: 'Help', activeRoutes: ['about'] }
 ];
 
 export function renderPrimaryNav(activeRoute = 'home') {
@@ -406,6 +406,51 @@ function renderHelpMemberRole(role) {
   return `${prefix}<a class="help-member-link" href="${aboutText(role.url)}" target="_blank" rel="noopener noreferrer">${organization}</a>`;
 }
 
+function renderHelpGuide(section) {
+  const items = Array.isArray(section.items) ? section.items : [];
+  return `<div class="help-guide-steps">
+    ${items.map((item, index) => `<article class="help-guide-step">
+      <div class="help-guide-step-number">${index + 1})</div>
+      <div>
+        <h3>${aboutText(item.term || item.title).replace(/^\d+\)\s*/, '')}</h3>
+        <p>${aboutText(item.body)}</p>
+        ${item.route ? `<a class="help-guide-link" href="${aboutText(item.route)}">${aboutText(item.linkLabel || 'Open this page')} →</a>` : ''}
+      </div>
+    </article>`).join('')}
+  </div>`;
+}
+
+function renderHelpVisuals(section) {
+  const items = Array.isArray(section.items) ? section.items : [];
+  return `<div class="help-visual-grid">
+    ${items.map((item, index) => `<article class="help-visual-card">
+      <div class="help-visual-card-heading">
+        <span>${index + 1}</span>
+        <h3>${aboutText(item.term || item.title)}</h3>
+      </div>
+      ${item.image ? `<figure><img src="${aboutText(item.image)}" alt="${aboutText(item.alt || item.term || item.title)}" loading="lazy"></figure>` : ''}
+      <p>${aboutText(item.body)}</p>
+    </article>`).join('')}
+  </div>`;
+}
+
+function renderHelpSection(section) {
+  let inner = '';
+  switch (section.kind) {
+    case 'guide': inner = renderHelpGuide(section); break;
+    case 'visuals': inner = renderHelpVisuals(section); break;
+    case 'cards': inner = renderAboutCards(section); break;
+    case 'table': inner = renderAboutTable(section); break;
+    case 'prose':
+    default: inner = renderAboutProse(section); break;
+  }
+  const id = section.id ? ` id="help-${aboutText(section.id)}"` : '';
+  return `<section class="help-guide-section"${id}>
+      <header class="help-guide-section-header"><h2>${aboutText(section.title)}</h2></header>
+      <div class="help-guide-section-body">${inner}</div>
+    </section>`;
+}
+
 export function renderHelpPage(content) {
   if (!content || typeof content !== 'object') {
     return `<section class="card bundle-wide-card about-section">
@@ -415,15 +460,15 @@ export function renderHelpPage(content) {
   }
   const hero = content.hero || {};
   const sections = Array.isArray(content.sections) ? content.sections : [];
-  const heroHtml = `<section class="about-hero">
+  const heroHtml = `<section class="help-guide-hero">
       ${hero.kicker ? `<p class="about-hero-kicker">${aboutText(hero.kicker)}</p>` : ''}
       <h1>${aboutText(hero.title) || 'Help'}</h1>
       ${hero.summary ? `<p class="about-hero-summary">${aboutText(hero.summary)}</p>` : ''}
       ${hero.detail ? `<p class="about-hero-detail">${aboutText(hero.detail)}</p>` : ''}
     </section>`;
-  const sectionsHtml = sections.map(renderAboutSection).join('\n    ');
+  const sectionsHtml = sections.map(renderHelpSection).join('\n    ');
   const members = Array.isArray(content.group_members) ? content.group_members : [];
-  const membersHtml = members.length > 0 ? `<section class="card bundle-wide-card help-group-members" aria-labelledby="help-group-members-title">
+  const membersHtml = members.length > 0 ? `<section class="help-guide-section help-group-members" aria-labelledby="help-group-members-title">
       <div class="help-group-members-heading">
         <h2 id="help-group-members-title">Group Members</h2>
       </div>
@@ -441,13 +486,15 @@ export function renderHelpPage(content) {
               ${member.role ? `<p class="help-member-role">${renderHelpMemberRole(member.role)}</p>` : ''}
               <div class="help-member-details">${details.map((detail) => `<p>${renderHelpMemberDetail(detail)}</p>`).join('')}</div>
             </div>
-          </article>`;
+            </article>`;
         }).join('')}
       </div>
     </section>` : '';
-  return `${heroHtml}
+  return `<div class="help-page-shell">
+    ${heroHtml}
     ${sectionsHtml}
-    ${membersHtml}`;
+    ${membersHtml}
+  </div>`;
 }
 
 // === STATS PAGE (W-B 在此追加 renderStatsPage) ===
@@ -590,17 +637,13 @@ export function renderStatsPage(stats) {
         ${statsMetricCard(stats.families, 'Measurement families')}
         ${statsMetricCard(stats.articles, 'Probing articles')}
       </div>
-      <p class="stats-footnote">An entry is a set of published PDB chains that share the same biological molecule name within one structure
-        (${statsNumber(stats.probing_entries)} entries across ${statsNumber(stats.pdb_total)} structures); ${statsNumber(stats.strong_entries)} of the
-        high-confidence entries reach STRONG. Published PDB count is the build-time allowlist: only structures with generated detail-page assets are counted.
-        Source: ${prov.pdb_total || 'published allowlist'}.</p>
+      <p class="stats-summary">Each entry groups PDB chains with the same biological-molecule name within one structure.</p>
 
       <div class="stats-section">
         <h2>LSS calibrated recall tiers</h2>
         <p class="stats-section-lede">Each published entry that carries a localized-signal-support (LSS) calibration earns a recall tier after a permutation test.
           Distribution across ${statsNumber(stats.lss_calibrated_entries ?? tierTotal)} calibrated entries:</p>
         ${renderStatsTierChart(tier)}
-        <p class="stats-footnote">Source: ${prov.tier || 'per-entry LSS recall tier from confidenceDisplayLabel'}.</p>
       </div>
 
       <div class="stats-section">
@@ -609,7 +652,6 @@ export function renderStatsPage(stats) {
           structural classification across ${statsNumber(rnaClassCount)} RNA classes; ${statsNumber(bio.distinct_families)} distinct RNA families
           and ${statsNumber(bio.probe_technologies_present)} probe technologies appear in total.</p>
         ${renderStatsRnaClassChart(bio.structure_classes)}
-        <p class="stats-footnote">Source: ${prov.rna_biology || 'PDB Rfam annotation over published entries (pending/unannotated excluded)'}.</p>
       </div>
 
       <div class="stats-section">
@@ -617,7 +659,6 @@ export function renderStatsPage(stats) {
         <p class="stats-section-lede">Solvent-accessibility footprinting probes (Family D) report on backbone exposure.
           ${statsNumber(sasa.entries)} published entries were measured with a SASA-based technology, by probe:</p>
         ${renderStatsSasaCoverage(sasa)}
-        <p class="stats-footnote">Source: ${prov.sasa_probe_coverage || 'published-entry assayFamilies (RL-Seq / Lead-seq / icLASER / HRF)'}.</p>
       </div>
 
       <div class="stats-section">
@@ -629,7 +670,6 @@ export function renderStatsPage(stats) {
           <li><strong>${statsNumber(tb.LITERATURE_INFORMED)}</strong> literature-informed</li>
           <li><strong>${statsNumber(tb.OPERATING_VALUE_PENDING_CALIBRATION)}</strong> operating value pending calibration</li>
         </ul>
-        <p class="stats-footnote">Source: ${prov.technologies || 'probe technology registry'}.</p>
       </div>
     </section>`;
 }
@@ -646,12 +686,13 @@ function escapeProbingHtml(value) {
 }
 
 // 机制家族索引：6 个家族卡片，每张链回 #probing 总览的对应家族锚点。
-export function renderProbingFamilyIndex(families) {
+export function renderProbingFamilyIndex(families, { embedded = false } = {}) {
   const list = Array.isArray(families) ? families : [];
   if (!list.length) {
-    return `<section class="card bundle-wide-card probing-family-index probing-family-index--empty">
+    const emptyTag = embedded ? 'div' : 'section';
+    return `<${emptyTag} class="${embedded ? 'probing-family-index probing-family-index--embedded' : 'card bundle-wide-card probing-family-index'} probing-family-index--empty">
       <p class="probing-hub-empty">Mechanism families are not available yet.</p>
-    </section>`;
+    </${emptyTag}>`;
   }
   const visibleFamilies = list.filter((fam) => fam.id !== 'inference');
   const cards = visibleFamilies.map((fam) => {
@@ -678,12 +719,16 @@ export function renderProbingFamilyIndex(families) {
         <p class="probing-family-card-summary">${escapeProbingHtml(summary)}</p>
       </a>`;
   }).join('');
-  return `<section class="card bundle-wide-card probing-family-index" aria-label="Probing mechanism families">
+  const tag = embedded ? 'div' : 'section';
+  const className = embedded
+    ? 'probing-family-index probing-family-index--embedded'
+    : 'card bundle-wide-card probing-family-index';
+  return `<${tag} class="${className}" aria-label="Probing mechanism families">
       <div class="probing-hub-heading">
         <h2>Five mechanism families</h2>
       </div>
       <div class="probing-family-grid">${cards}</div>
-    </section>`;
+    </${tag}>`;
 }
 
 // 34 行技术对照表：可按列排序（data-sort），无 JS 时仍可读（默认 registry 顺序）。

@@ -195,30 +195,36 @@ button:focus-visible {
 .track-panel {
   margin-top: 12px;
 }
+.track-panel .panel-head h2 {
+  color: #000000;
+  font-size: 16px;
+  font-weight: 400;
+}
 .track-viewport-controls {
   display: grid;
   gap: 8px;
   margin-bottom: 12px;
 }
 .track-viewport {
-  height: 408px;
-  overflow: hidden;
+  height: 182px;
+  overflow-x: auto;
+  overflow-y: hidden;
   background: #fff;
 }
 .track-viewport svg {
-  width: 100%;
+  width: auto;
   height: 100%;
-  min-width: 0;
+  min-width: 100%;
 }
 .rmdb-heatmap-panel {
-  margin-top: 12px;
+  margin-top: var(--module-rule-gap, 50px);
 }
 .rmdb-heatmap-controls {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 11px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 0;
   background: #fbfcfd;
   color: var(--muted);
   font-size: 12px;
@@ -244,7 +250,7 @@ button:focus-visible {
   padding: 8px 11px;
   color: var(--muted);
   font-size: 12px;
-  border-bottom: 1px solid var(--line);
+  border-bottom: 0;
   background: #fff;
 }
 .rmdb-heatmap-gradient {
@@ -310,7 +316,7 @@ button:focus-visible {
 .viewer {
   margin-top: 0;
   padding: 12px;
-  overflow-x: auto;
+  overflow: visible;
 }
 .viewer[hidden] { display: none; }
 .varna-zoom-controls {
@@ -336,15 +342,15 @@ button:focus-visible {
 }
 .varna-viewport {
   width: 100%;
-  height: clamp(280px, 38vw, 520px);
-  border: 1px solid var(--line);
+  height: auto;
+  border: 1px solid #d8dee5;
   background: #fff;
-  overflow: auto;
+  overflow: visible;
 }
 .varna-frame svg {
   width: 100%;
   min-width: 0;
-  height: 100%;
+  height: auto;
   min-height: 0;
 }
 svg {
@@ -373,6 +379,9 @@ svg {
   min-height: 404px;
   background: #fbfcfd;
 }
+.view3d-body > #molstar-status {
+  display: none;
+}
 .molstar-split {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
@@ -382,11 +391,12 @@ svg {
   min-width: 0;
 }
 .molstar-label {
-  margin-bottom: 6px;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
+  margin-bottom: 2px;
+  color: #000000;
+  font-size: 1.08rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
 }
 .molstar-label-row {
   display: flex;
@@ -416,7 +426,7 @@ svg {
   contain: layout paint;
   isolation: isolate;
   height: 404px;
-  border: 1px solid var(--line);
+  border: 1px solid #d8dee5 !important;
   background: #fff;
   overflow: hidden;
 }
@@ -429,6 +439,7 @@ svg {
   height: 100% !important;
   min-height: 0 !important;
   z-index: 1;
+  border: 0 !important;
 }
 .molstar-host canvas {
   width: 100% !important;
@@ -437,9 +448,10 @@ svg {
 }
 .molstar-meta {
   margin-top: 9px;
-  color: var(--muted);
-  font-size: 12px;
-  line-height: 1.45;
+  color: #000000;
+  font-size: 1.08rem;
+  font-weight: 400;
+  line-height: 1.55;
 }
 .legend {
   display: flex;
@@ -471,7 +483,7 @@ svg {
   margin-top: 12px;
 }
 .linked-inspector {
-  min-height: 158px;
+  min-height: 0;
   padding: 12px;
 }
 .inspector-grid {
@@ -594,8 +606,8 @@ pre {
 .profile-dropdown-trigger:hover,
 .profile-dropdown-trigger[aria-expanded="true"],
 .profile-dropdown-trigger:focus-visible {
-  border-color: var(--accent);
-  outline: 2px solid var(--accent);
+  border-color: #edc457;
+  outline: 2px solid #edc457;
   outline-offset: 1px;
 }
 .profile-dropdown-text {
@@ -636,7 +648,84 @@ pre {
 .profile-dropdown-list li[aria-selected="true"] {
   background: var(--family-unassigned-bg);
   outline: none;
-  box-shadow: inset 0 0 0 1px var(--accent);
+  box-shadow: inset 0 0 0 1px #edc457;
+}
+
+/* Keep the profile control aligned with the gold section rules used below. */
+.workbench-shell .controls > div:first-child {
+  border-top: 1px solid #edc457;
+  padding-top: 16px;
+}
+
+/* Present profile metrics as one quiet data strip instead of six separate cards. */
+.workbench-shell .stats {
+  gap: 0;
+}
+.workbench-shell .stats .metric {
+  min-height: 56px;
+  padding: 0 16px;
+  border: 0;
+  border-right: 1px solid #d8dee5;
+  background: transparent;
+}
+.workbench-shell .stats .metric:first-child {
+  padding-left: 0;
+}
+.workbench-shell .stats .metric:last-child {
+  padding-right: 0;
+  border-right: 0;
+}
+
+/* Workbench copy follows the detail page's body-text style. */
+.workbench-shell {
+  --module-rule-gap: 50px;
+  color: #000000;
+  font-size: 1.08rem;
+  font-weight: 400;
+}
+.workbench-shell :is(
+  h1, h2, h3, p, label, select, button, option, summary,
+  .sub, .profile-meta, .profile-meta b, .metric, .metric b, .metric span,
+  .panel-head span, .rmdb-heatmap-controls, .rmdb-heatmap-meta,
+  .view-caption, .legend, .inspector-grid dt, .inspector-grid dd,
+  .profile-dropdown-trigger, .profile-dropdown-list li, .family-badge
+) {
+  color: #000000;
+  font-size: 1.08rem;
+  font-weight: 400;
+}
+
+/* Keep the detail page as one continuous white surface: section rules, not cards. */
+.workbench-shell .panel {
+  border: 0;
+  border-top: 1px solid #edc457;
+  background: transparent;
+}
+.workbench-shell .panel-head {
+  min-height: 0;
+  padding: 16px 0 12px;
+  border-bottom: 0;
+  background: transparent;
+}
+.workbench-shell .track-panel {
+  margin-top: var(--module-rule-gap);
+}
+.workbench-shell .view-grid {
+  margin-top: var(--module-rule-gap);
+}
+.workbench-shell .inspector-panel {
+  margin-top: var(--module-rule-gap);
+}
+.workbench-shell header {
+  border-bottom-color: #edc457;
+}
+/* Detail-section labels use the small-heading weight; control values remain body text. */
+.workbench-shell .controls > div > label,
+.workbench-shell .panel-head h2 {
+  font-weight: 700;
+}
+.workbench-shell .controls > div > label :is(select, .profile-dropdown, .profile-dropdown *) {
+  font-weight: 400;
 }
 .profile-dropdown-list li.filtered-out { display: none; }
 
