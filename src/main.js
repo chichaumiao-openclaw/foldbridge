@@ -35,6 +35,7 @@ import { createAboutContentStore } from './aboutContentStore.js';
 import { createHelpContentStore } from './helpContentStore.js';
 import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
 import { createSiteStatsStore } from './siteStatsStore.js';import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
+import { createPdbCitationStore } from './pdbCitationStore.js';
 import {
   buildAtlasSearchState
 } from './annojoinAtlasData.js';
@@ -83,12 +84,14 @@ let aboutContentState = null; // null=未加载, 'loading', 或 about-content.js
 const helpContentStore = createHelpContentStore({ assetBase: './src/' });
 let helpContentState = null; // null=未加载, 'loading', 'error', 或 help-content.json 对象
 const siteStatsStore = createSiteStatsStore();
+const pdbCitationStore = createPdbCitationStore();
 let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
 const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
 let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
 let annojoinDetailRouteIndexState = null; // null=未加载, 'loading', 'error', 或 detail-route-index.json
 const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'error' | generated case asset
 const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
+const annojoinPdbCitationState = new Map(); // pdbId -> 'loading' | 'unavailable' | primary citation
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
 let siteStatsState = null; // null=未加载, 'loading', 'error', 或 stats.json
 let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
@@ -1996,6 +1999,15 @@ async function loadAnnojointCaseConfidence(caseKey, caseAsset) {
   if (route === 'annojoin-case') render({ preserveScroll: true });
 }
 
+async function loadAnnojointPdbCitation(pdbId) {
+  const normalizedPdbId = String(pdbId || '').trim().toUpperCase();
+  if (!normalizedPdbId || annojoinPdbCitationState.get(normalizedPdbId) === 'loading') return;
+  annojoinPdbCitationState.set(normalizedPdbId, 'loading');
+  const citation = await pdbCitationStore.loadPrimaryCitation(normalizedPdbId);
+  annojoinPdbCitationState.set(normalizedPdbId, citation || 'unavailable');
+  if (route === 'annojoin-case') render({ preserveScroll: true });
+}
+
 // alignment 分页导航：保留已加载的 detail/profiles/reactivity，只换 alignment 页，避免整页 loading 闪烁。
 async function loadAlignmentForCase(pdbId, page) {
   pdbCaseAlignmentPageByPdb.set(pdbId, page);
@@ -2155,10 +2167,17 @@ function annojoinCasePage() {
   if (detailState && typeof detailState === 'object' && !confidenceState) {
     loadAnnojointCaseConfidence(caseKey, detailState);
   }
+  const pdbId = String(detailState?.case?.pdbId || caseId || '').trim().toUpperCase();
+  const citationState = pdbId ? annojoinPdbCitationState.get(pdbId) : null;
+  if (detailState && typeof detailState === 'object' && !citationState) {
+    loadAnnojointPdbCitation(pdbId);
+  }
   return renderAnnojointCasePage({
     caseAsset: detailState && typeof detailState === 'object' ? detailState : null,
     confidenceBundle: confidenceState && typeof confidenceState === 'object' ? confidenceState : null,
     confidenceStatus: confidenceState || 'idle',
+    pdbCitation: citationState && typeof citationState === 'object' ? citationState : null,
+    pdbCitationStatus: citationState || 'idle',
     caseId,
     caseKey,
     headerHtml: renderBundleHeader()
@@ -2201,7 +2220,7 @@ function clearAnnojointAtlasFilters() {
 }
 
 function toggleAnnojointAtlasTechnique(kind, value) {
-  // kind = 'techniqueFamilies' | 'techniqueNames'; value = the family id or technique name.
+  // kind = 'techniqueFamilies' | 'techniqueNames'; value = the Probing category id or technique name.
   const parsed = parseHashRoute(window.location.hash);
   const params = parsed.params;
   const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
@@ -2361,7 +2380,7 @@ function downloadPage() {
   <main class="page-download" aria-label="Download">
     <section class="card bundle-wide-card download-page-card">
       <header class="page-card-heading">
-        <h1>Download center</h1>
+        <h1>Download</h1>
         <p class="download-page-intro">Download the data behind FoldBridge, or open an Entry detail page for a focused export of one profile and its mapped structure.</p>
       </header>
 

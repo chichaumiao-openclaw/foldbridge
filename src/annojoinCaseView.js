@@ -183,12 +183,77 @@ function renderChainIdentityPanel(chainIdentities) {
   </section>`;
 }
 
+function citationJournalLine(citation = {}) {
+  const journal = text(citation.journal);
+  const volume = text(citation.volume);
+  const first = text(citation.pageFirst);
+  const last = text(citation.pageLast);
+  const pages = first && last ? `${first}–${last}` : first || last;
+  const issue = [journal, volume].filter(Boolean).join(' ');
+  const publication = [issue, pages].filter(Boolean).join(', ');
+  return citation.year && publication ? `${publication} (${citation.year})` : publication || citation.year;
+}
+
+function citationHref(citation = {}, pdbId = '') {
+  const doi = text(citation.doi);
+  if (doi) return `https://doi.org/${encodeURIComponent(doi).replace(/%2F/g, '/')}`;
+  const pubmedId = text(citation.pubmedId);
+  if (pubmedId) return `https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(pubmedId)}/`;
+  return `https://www.rcsb.org/structure/${encodeURIComponent(text(pdbId).toUpperCase())}`;
+}
+
+function renderCitationLink(href, label) {
+  return `<a href="${escapeHtml(href)}" target="_blank" rel="noreferrer">${escapeHtml(label)}</a>`;
+}
+
+function renderPdbReferencePanel({ citation, status, pdbId }) {
+  const normalizedPdbId = text(pdbId).toUpperCase();
+  const rcsbHref = `https://www.rcsb.org/structure/${encodeURIComponent(normalizedPdbId)}`;
+  let body;
+
+  if (citation) {
+    const titleHref = citationHref(citation, normalizedPdbId);
+    const authors = citation.authors?.length ? citation.authors.join('; ') : '';
+    const journalLine = citationJournalLine(citation);
+    const links = [
+      citation.pubmedId
+        ? renderCitationLink(`https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(citation.pubmedId)}/`, `PubMed ${citation.pubmedId}`)
+        : '',
+      citation.doi
+        ? renderCitationLink(`https://doi.org/${encodeURIComponent(citation.doi).replace(/%2F/g, '/')}`, `DOI ${citation.doi}`)
+        : '',
+      renderCitationLink(rcsbHref, `View ${normalizedPdbId} in PDB`),
+    ].filter(Boolean).join('');
+    body = `<article class="annojoin-reference-citation">
+      <h3><a href="${escapeHtml(titleHref)}" target="_blank" rel="noreferrer">${escapeHtml(citation.title)}</a></h3>
+      ${authors ? `<p class="annojoin-reference-authors">${escapeHtml(authors)}</p>` : ''}
+      ${journalLine ? `<p class="annojoin-reference-journal">${escapeHtml(journalLine)}</p>` : ''}
+      <div class="annojoin-reference-links">${links}</div>
+    </article>`;
+  } else if (status === 'loading' || status === 'idle') {
+    body = `<p class="annojoin-case-copy">Loading the primary literature record for PDB ${escapeHtml(normalizedPdbId)}…</p>`;
+  } else {
+    body = `<p class="annojoin-case-copy">The PDB primary literature record is unavailable for this entry. ${renderCitationLink(rcsbHref, `View ${normalizedPdbId} in PDB`)}</p>`;
+  }
+
+  return `<section class="annojoin-case-panel annojoin-case-reference">
+    <div class="annojoin-case-panel-head">
+      <p class="technology-kicker">PDB primary literature</p>
+      <h2>Reference</h2>
+      <span>${escapeHtml(normalizedPdbId)}</span>
+    </div>
+    ${body}
+  </section>`;
+}
+
 export function renderAnnojointCasePage({
   caseAsset,
   caseId,
   caseKey,
   confidenceBundle = null,
   confidenceStatus = 'idle',
+  pdbCitation = null,
+  pdbCitationStatus = 'idle',
   headerHtml = '',
 } = {}) {
   const selectedCaseId = caseAsset?.case?.caseId || caseId || '10ZT';
@@ -216,6 +281,7 @@ export function renderAnnojointCasePage({
   } : null;
 
   const chainIdentityPanel = renderChainIdentityPanel(caseAsset.case?.chainIdentities);
+  const pdbId = caseAsset.case?.pdbId || selectedCaseId;
 
   return `${headerHtml}
     <main class="page-annojoin-case">
@@ -280,6 +346,8 @@ export function renderAnnojointCasePage({
         </section>
       </aside>
     </section>
+
+    ${renderPdbReferencePanel({ citation: pdbCitation, status: pdbCitationStatus, pdbId })}
 
     ${bootstrap ? `<script id="annojoin-case-bootstrap" type="application/json">${jsonForScript(bootstrap)}</script>` : ''}
   </main>`;

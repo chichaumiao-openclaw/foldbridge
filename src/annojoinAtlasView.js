@@ -385,7 +385,7 @@ const COLUMN_HELP = {
   pdbId: 'RCSB Protein Data Bank identifier for the deposited structure.',
   chains: 'RNA chain identifiers carrying chemical-probing evidence in this case.',
   profileCount: 'Number of source chemical-probing signal records (profiles) mapped onto this structure.',
-  techniqueFamilies: 'Chemical-probing technique families (A–D) contributing evidence; hover a badge for full technique names.',
+  techniqueFamilies: 'One or more of the five Probing-page categories contributing evidence; hover a badge for full technique names.',
   confidenceDisplayLabel: 'Case-level distribution of confidence-relevant annotation labels, not a single best-profile score.'
 };
 
@@ -522,7 +522,7 @@ function renderFilterChip(removeKey, label) {
 }
 
 function renderTechniqueFilterControls(cases = [], filters = {}) {
-  const model = buildMechanismFilterModel(cases);
+  const model = buildMechanismFilterModel();
   if (!model.families.length) return '';
   const selectedFamilies = new Set(filters.techniqueFamilies || []);
   const selectedNames = new Set(filters.techniqueNames || []);
@@ -548,7 +548,7 @@ function renderTechniqueFilterControls(cases = [], filters = {}) {
       <div>
         <strong>Filter by probing technique</strong>
       </div>
-      <span class="mini-note">All families and methods are shown</span>
+      <span class="mini-note">All five categories and their methods are shown</span>
     </div>
     <div class="annojoin-technique-family-list">${familyBlocks}</div>
   </section>`;
@@ -562,7 +562,8 @@ function renderActiveConditionChips(filters = {}, query = '') {
     if (value) chips.push(renderFilterChip(key, value));
   }
   for (const fam of filters.techniqueFamilies || []) {
-    chips.push(renderFilterChip(`techniqueFamilies:${fam}`, `Family ${fam}`));
+    const label = MECHANISM_FAMILIES.find((family) => family.id === fam)?.label || fam;
+    chips.push(renderFilterChip(`techniqueFamilies:${fam}`, label));
   }
   for (const name of filters.techniqueNames || []) {
     chips.push(renderFilterChip(`techniqueNames:${name}`, name));

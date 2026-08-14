@@ -338,6 +338,12 @@ function renderAboutProse(section) {
   return `<p class="about-prose">${aboutText(section.body)}</p>`;
 }
 
+function renderHelpContact(section) {
+  const email = aboutText(section.email);
+  if (!email) return renderAboutProse(section);
+  return `<p class="about-prose">${aboutText(section.body)} <a class="help-contact-link" href="mailto:${email}">${email}</a>.</p>`;
+}
+
 function renderAboutTable(section) {
   const rows = (section.items || []).map((item) => `
         <dt>${aboutText(item.term)}</dt>
@@ -434,18 +440,49 @@ function renderHelpVisuals(section) {
   </div>`;
 }
 
+function renderHelpUsage(section) {
+  const items = Array.isArray(section.items) ? section.items : [];
+  return `<div class="help-usage-flow">
+    ${items.map((item, index) => `<article class="help-usage-step">
+      <div class="help-usage-copy">
+        <span class="help-usage-step-number">${index + 1}</span>
+        <div>
+          <h3>${aboutText(item.title || item.term || `Step ${index + 1}`)}</h3>
+          ${item.body ? `<p>${aboutText(item.body)}</p>` : ''}
+        </div>
+      </div>
+      ${item.image ? `<figure class="help-usage-screenshot"><img src="${aboutText(item.image)}" alt="${aboutText(item.alt || item.title || `Usage step ${index + 1}`)}" loading="lazy"></figure>` : ''}
+    </article>`).join('')}
+  </div>`;
+}
+
+function renderHelpFeedback(section) {
+  const route = section.route ? aboutText(section.route) : '#help-contact';
+  const label = aboutText(section.linkLabel || 'Submit feedback');
+  const externalAttributes = /^https?:\/\//.test(route) ? ' target="_blank" rel="noopener noreferrer"' : '';
+  return `<div class="help-feedback">
+      <p>${aboutText(section.body)}</p>
+      <a class="help-feedback-button" href="${route}"${externalAttributes}>${label}</a>
+    </div>`;
+}
+
 function renderHelpSection(section) {
   let inner = '';
   switch (section.kind) {
     case 'guide': inner = renderHelpGuide(section); break;
     case 'visuals': inner = renderHelpVisuals(section); break;
+    case 'usage': inner = renderHelpUsage(section); break;
+    case 'feedback': inner = renderHelpFeedback(section); break;
     case 'cards': inner = renderAboutCards(section); break;
     case 'table': inner = renderAboutTable(section); break;
     case 'prose':
-    default: inner = renderAboutProse(section); break;
+    default: inner = section.id === 'contact' ? renderHelpContact(section) : renderAboutProse(section); break;
   }
   const id = section.id ? ` id="help-${aboutText(section.id)}"` : '';
-  return `<section class="help-guide-section"${id}>
+  const className = section.kind === 'usage'
+    ? 'help-guide-section help-guide-section--workflow'
+    : 'help-guide-section';
+  return `<section class="${className}"${id}>
       <header class="help-guide-section-header"><h2>${aboutText(section.title)}</h2></header>
       <div class="help-guide-section-body">${inner}</div>
     </section>`;
@@ -460,13 +497,16 @@ export function renderHelpPage(content) {
   }
   const hero = content.hero || {};
   const sections = Array.isArray(content.sections) ? content.sections : [];
+  const contactSection = sections.find((section) => section?.id === 'contact');
+  const nonContactSections = sections.filter((section) => section?.id !== 'contact');
   const heroHtml = `<section class="help-guide-hero">
       ${hero.kicker ? `<p class="about-hero-kicker">${aboutText(hero.kicker)}</p>` : ''}
       <h1>${aboutText(hero.title) || 'Help'}</h1>
       ${hero.summary ? `<p class="about-hero-summary">${aboutText(hero.summary)}</p>` : ''}
       ${hero.detail ? `<p class="about-hero-detail">${aboutText(hero.detail)}</p>` : ''}
     </section>`;
-  const sectionsHtml = sections.map(renderHelpSection).join('\n    ');
+  const sectionsHtml = nonContactSections.map(renderHelpSection).join('\n    ');
+  const contactHtml = contactSection ? renderHelpSection(contactSection) : '';
   const members = Array.isArray(content.group_members) ? content.group_members : [];
   const membersHtml = members.length > 0 ? `<section class="help-guide-section help-group-members" aria-labelledby="help-group-members-title">
       <div class="help-group-members-heading">
@@ -493,6 +533,7 @@ export function renderHelpPage(content) {
   return `<div class="help-page-shell">
     ${heroHtml}
     ${sectionsHtml}
+    ${contactHtml}
     ${membersHtml}
   </div>`;
 }
@@ -506,91 +547,44 @@ function statsNumber(value) {
   return n.toLocaleString('en-US');
 }
 
-// LSS 召回层级展示顺序 + 色（强→弱），色用 design token。
-const STATS_TIER_ORDER = [
-  { key: 'STRONG', label: 'STRONG', fill: 'var(--accent)' },
-  { key: 'MODERATE', label: 'MODERATE', fill: 'var(--primary)' },
-  { key: 'WEAK', label: 'WEAK', fill: 'var(--accentSoft)' },
-  { key: 'DISCORDANT', label: 'DISCORDANT', fill: 'var(--warning, #C9772E)' },
-  { key: 'UNDERPOWERED', label: 'UNDERPOWERED', fill: 'var(--textMuted)' },
-  { key: 'NOT_SUPPORTED', label: 'NOT_SUPPORTED', fill: 'var(--border)' }
+// RNA 链 partition 分布：竖向比例条，颜色与图例顺序固定，方便跨次构建比较。
+const RNA_CHAIN_PARTITION_COLORS = [
+  '#D5A52B', '#E6BF4D', '#C9864F', '#AAB75D', '#789B72', '#D1A667',
+  '#B87983', '#839F8A', '#C9AE4B', '#B87859', '#9AA565', '#B89B70'
 ];
+const RNA_CHAIN_PARTITION_LABELS = {
+  other_RNA: 'other_<wbr>RNA',
+  ribozyme: 'ribo<wbr>zyme',
+  riboswitch: 'ribo<wbr>switch',
+  snRNA: 'sn<wbr>RNA',
+  aptamer: 'apt<wbr>amer',
+  synthetic_RNA: 'synth<wbr>etic_<wbr>RNA',
+  SRP_RNA: 'SRP_<wbr>RNA',
+  designed_RNA: 'desi<wbr>gned_<wbr>RNA'
+};
 
-// LSS tier 分布横向柱状图（内联 SVG，无图表库）。每行 = 一个 tier 标签 + 比例条 + 计数。
-function renderStatsTierChart(tierDistribution = {}) {
-  const rows = STATS_TIER_ORDER.map((t) => ({ ...t, count: Number(tierDistribution[t.key]) || 0 }));
-  const total = rows.reduce((sum, r) => sum + r.count, 0);
-  const maxCount = rows.reduce((m, r) => Math.max(m, r.count), 0) || 1;
-  const rowH = 30;
-  const gap = 10;
-  const labelW = 132;
-  const barMaxW = 300;
-  const valueW = 84;
-  const width = labelW + barMaxW + valueW;
-  const height = rows.length * (rowH + gap);
-  const bars = rows.map((r, i) => {
-    const y = i * (rowH + gap);
-    const w = Math.max(2, Math.round((r.count / maxCount) * barMaxW));
-    const pct = total ? `${((r.count / total) * 100).toFixed(1)}%` : '0%';
-    return `<g transform="translate(0,${y})">
-        <text x="${labelW - 8}" y="${rowH / 2 + 4}" text-anchor="end" class="stats-tier-label">${r.label}</text>
-        <rect x="${labelW}" y="2" width="${w}" height="${rowH - 4}" rx="4" fill="${r.fill}"><title>${r.label}: ${statsNumber(r.count)} segments (${pct})</title></rect>
-        <text x="${labelW + w + 8}" y="${rowH / 2 + 4}" class="stats-tier-value">${statsNumber(r.count)}</text>
-      </g>`;
-  }).join('\n      ');
-  return `<svg class="stats-tier-chart" viewBox="0 0 ${width} ${height}" role="img" aria-label="LSS calibrated recall tier distribution across ${statsNumber(total)} segments">
-      ${bars}
-    </svg>`;
-}
-
-// Family D SASA panel 已退役（其 SASA-present/fallback 是全量跑 segment 级口径，
-// 无法在 entry 口径派生）。改用 renderStatsSasaCoverage：从已发布 entry 的
-// assayFamilies 统计 SASA-based footprinting 探针（RL-Seq/Lead-seq/icLASER/HRF）覆盖。
-function renderStatsSasaCoverage(coverage) {
-  if (!coverage || typeof coverage !== 'object') {
-    return `<p class="stats-empty">SASA-based probing coverage not available.</p>`;
+function renderStatsRnaChainChart(partitions) {
+  if (!partitions || typeof partitions !== 'object') {
+    return `<p class="stats-empty">RNA chain distribution not available.</p>`;
   }
-  const techs = coverage.technologies && typeof coverage.technologies === 'object' ? coverage.technologies : {};
-  const rows = Object.entries(techs)
-    .map(([name, count]) => ({ name, count: Number(count) || 0 }))
-    .sort((a, b) => b.count - a.count);
-  if (!rows.length) return `<p class="stats-empty">SASA-based probing coverage not available.</p>`;
-  const maxCount = rows.reduce((m, r) => Math.max(m, r.count), 0) || 1;
-  const bars = rows.map((r) => {
-    const pct = Math.max(2, Math.round((r.count / maxCount) * 100));
-    return `<li class="stats-coverage-row">
-        <span class="stats-coverage-label">${r.name}</span>
-        <span class="stats-coverage-track"><span class="stats-coverage-fill" style="width:${pct}%"></span></span>
-        <span class="stats-coverage-value">${statsNumber(r.count)}</span>
-      </li>`;
-  }).join('\n      ');
-  return `<ul class="stats-coverage-list" role="img" aria-label="SASA-based probing coverage across ${statsNumber(coverage.entries)} entries">
-      ${bars}
-    </ul>`;
-}
-
-// RNA 结构类型分布（生物学口径）：横向比例条，按 entry 数排序。
-function renderStatsRnaClassChart(structureClasses) {
-  if (!structureClasses || typeof structureClasses !== 'object') {
-    return `<p class="stats-empty">RNA structural classification not available.</p>`;
-  }
-  const rows = Object.entries(structureClasses)
-    .map(([name, count]) => ({ name, count: Number(count) || 0 }))
+  const rows = Object.entries(partitions)
+    .map(([name, count], index) => ({ name, count: Number(count) || 0, color: RNA_CHAIN_PARTITION_COLORS[index % RNA_CHAIN_PARTITION_COLORS.length] }))
     .filter((r) => r.count > 0)
     .sort((a, b) => b.count - a.count);
-  if (!rows.length) return `<p class="stats-empty">RNA structural classification not available.</p>`;
+  if (!rows.length) return `<p class="stats-empty">RNA chain distribution not available.</p>`;
   const total = rows.reduce((sum, r) => sum + r.count, 0);
   const maxCount = rows.reduce((m, r) => Math.max(m, r.count), 0) || 1;
   const bars = rows.map((r) => {
-    const width = Math.max(2, Math.round((r.count / maxCount) * 100));
+    const height = Math.max(2, Math.round((r.count / maxCount) * 100));
     const pct = total ? `${((r.count / total) * 100).toFixed(1)}%` : '0%';
-    return `<li class="stats-coverage-row">
-        <span class="stats-coverage-label">${r.name}</span>
-        <span class="stats-coverage-track"><span class="stats-coverage-fill" style="width:${width}%"><span class="stats-coverage-seg-title">${pct}</span></span></span>
-        <span class="stats-coverage-value">${statsNumber(r.count)}</span>
+    const label = RNA_CHAIN_PARTITION_LABELS[r.name] || r.name.replaceAll('_', '_<wbr>');
+    return `<li class="stats-rna-chain-column" style="--stats-rna-fill:${r.color}">
+        <span class="stats-rna-chain-value">${statsNumber(r.count)}</span>
+        <span class="stats-rna-chain-track"><span class="stats-rna-chain-fill" style="height:${height}%"><span class="stats-rna-chain-pct">${pct}</span></span></span>
+        <span class="stats-rna-chain-label" title="${r.name}">${label}</span>
       </li>`;
   }).join('\n      ');
-  return `<ul class="stats-coverage-list" role="img" aria-label="RNA structural class distribution across ${statsNumber(total)} classified entries">
+  return `<ul class="stats-rna-chain-list" role="img" aria-label="RNA chain distribution across ${statsNumber(total)} chains">
       ${bars}
     </ul>`;
 }
@@ -614,15 +608,7 @@ export function renderStatsPage(stats) {
       <p class="stats-empty">Statistics are still loading. If this persists, the stats asset may not be built yet.</p>
     </section>`;
   }
-  const prov = stats.provenance || {};
-  const tierSource = prov.tier_source || prov.tier || 'run-record';
-  const tier = stats.tier_distribution || {};
-  const tierTotal = STATS_TIER_ORDER.reduce((sum, t) => sum + (Number(tier[t.key]) || 0), 0);
-  const tb = stats.technology_threshold_basis || {};
-  const bio = stats.rna_biology || {};
-  const sasa = stats.sasa_probe_coverage || {};
-  const rnaClassCount = bio.structure_classes && typeof bio.structure_classes === 'object'
-    ? Object.keys(bio.structure_classes).length : 0;
+  const rnaChainPartitions = stats.rna_chain_partitions || {};
 
   return `<section class="card bundle-wide-card stats-page" data-pdb-total="${Number(stats.pdb_total) || 0}">
       <header class="stats-head">
@@ -639,38 +625,13 @@ export function renderStatsPage(stats) {
       </div>
       <p class="stats-summary">Each entry groups PDB chains with the same biological-molecule name within one structure.</p>
 
-      <div class="stats-section">
-        <h2>LSS calibrated recall tiers</h2>
-        <p class="stats-section-lede">Each published entry that carries a localized-signal-support (LSS) calibration earns a recall tier after a permutation test.
-          Distribution across ${statsNumber(stats.lss_calibrated_entries ?? tierTotal)} calibrated entries:</p>
-        ${renderStatsTierChart(tier)}
-      </div>
+      <section class="stats-section stats-rna-types">
+        <h2>RNA types</h2>
+        <p class="stats-section-lede">RNA chains are partitioned across 12 annotated types, for a total of
+          ${statsNumber(Object.values(rnaChainPartitions).reduce((sum, count) => sum + (Number(count) || 0), 0))} chains.</p>
+        ${renderStatsRnaChainChart(rnaChainPartitions)}
+      </section>
 
-      <div class="stats-section">
-        <h2>RNA biology</h2>
-        <p class="stats-section-lede">What kinds of RNA the published entries cover. ${statsNumber(bio.classified_entries)} entries carry a
-          structural classification across ${statsNumber(rnaClassCount)} RNA classes; ${statsNumber(bio.distinct_families)} distinct RNA families
-          and ${statsNumber(bio.probe_technologies_present)} probe technologies appear in total.</p>
-        ${renderStatsRnaClassChart(bio.structure_classes)}
-      </div>
-
-      <div class="stats-section">
-        <h2>SASA-based probing coverage</h2>
-        <p class="stats-section-lede">Solvent-accessibility footprinting probes (Family D) report on backbone exposure.
-          ${statsNumber(sasa.entries)} published entries were measured with a SASA-based technology, by probe:</p>
-        ${renderStatsSasaCoverage(sasa)}
-      </div>
-
-      <div class="stats-section">
-        <h2>Technology threshold basis</h2>
-        <p class="stats-section-lede">Honesty on thresholds: only a minority of the ${statsNumber(stats.technologies)} probe
-          technologies have literature-published cut-points; most use operating values pending calibration.</p>
-        <ul class="stats-threshold-list">
-          <li><strong>${statsNumber(tb.LITERATURE_SUPPORTED)}</strong> literature-supported</li>
-          <li><strong>${statsNumber(tb.LITERATURE_INFORMED)}</strong> literature-informed</li>
-          <li><strong>${statsNumber(tb.OPERATING_VALUE_PENDING_CALIBRATION)}</strong> operating value pending calibration</li>
-        </ul>
-      </div>
     </section>`;
 }
 

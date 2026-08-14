@@ -100,11 +100,27 @@ test('annojoin case page uses the curated preQ₁ aptamer name for 2L1V', () => 
       },
       summary: { profileCount: 1 }
     },
-    confidenceStatus: 'ready'
+    confidenceStatus: 'ready',
+    pdbCitationStatus: 'ready',
+    pdbCitation: {
+      title: 'Structural Insights into Riboswitch Control of the Biosynthesis of Queuosine',
+      authors: ['Kang, M.', 'Peterson, R.D.', 'Feigon, J.'],
+      journal: 'Mol Cell',
+      volume: '33',
+      pageFirst: '784',
+      pageLast: '790',
+      year: '2009',
+      pubmedId: '19285444',
+      doi: '10.1016/j.molcel.2009.02.019',
+    },
   });
 
   assert.match(html, /<h1>preQ₁ riboswitch aptamer domain \(36 nt\)<\/h1>/);
   assert.doesNotMatch(html, /<h1>36-MER<\/h1>/);
+  assert.match(html, /<h2>Reference<\/h2>/);
+  assert.match(html, /Kang, M\.; Peterson, R\.D\.; Feigon, J\./);
+  assert.match(html, /PubMed 19285444/);
+  assert.match(html, /10\.1016\/j\.molcel\.2009\.02\.019/);
 });
 
 test('annojoin case page stays honest when calibrated confidence sidecars are absent', () => {

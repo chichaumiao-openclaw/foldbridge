@@ -716,6 +716,37 @@ pre {
 .workbench-shell .inspector-panel {
   margin-top: var(--module-rule-gap);
 }
+.workbench-shell .pdb-primary-reference {
+  margin-top: var(--module-rule-gap);
+}
+.workbench-shell .pdb-primary-reference-citation {
+  display: grid;
+  gap: 8px;
+  max-width: 920px;
+}
+.workbench-shell .pdb-primary-reference-citation h3,
+.workbench-shell .pdb-primary-reference-citation p,
+.workbench-shell .pdb-primary-reference-unavailable {
+  margin: 0;
+}
+.workbench-shell .pdb-primary-reference-citation h3 {
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.workbench-shell .pdb-primary-reference-citation h3 a,
+.workbench-shell .pdb-primary-reference-links a,
+.workbench-shell .pdb-primary-reference-unavailable a {
+  color: #000;
+  text-decoration-color: #edc457;
+  text-underline-offset: 3px;
+}
+.workbench-shell .pdb-primary-reference-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-top: 2px;
+}
 .workbench-shell header {
   border-bottom-color: #edc457;
 }

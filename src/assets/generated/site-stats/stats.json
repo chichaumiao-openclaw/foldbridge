@@ -8,41 +8,35 @@
   "families": 5,
   "technologies": 26,
   "articles": 26,
-  "lss_calibrated_entries": 1671,
-  "tier_distribution": {
-    "STRONG": 91,
-    "MODERATE": 280,
-    "WEAK": 847,
-    "DISCORDANT": 340,
-    "UNDERPOWERED": 56,
-    "NOT_SUPPORTED": 57
+  "pdb_tier_distribution": {
+    "high": 2689,
+    "low": 1210,
+    "not_supported": 1422
   },
-  "sasa_probe_coverage": {
-    "entries": 1247,
-    "technologies": {
-      "Lead-seq": 729,
-      "RL-Seq": 478,
-      "icLASER": 518
-    }
+  "rna_chain_partitions": {
+    "rRNA": 8794,
+    "tRNA": 3763,
+    "other_RNA": 1629,
+    "mRNA": 1544,
+    "ribozyme": 493,
+    "riboswitch": 492,
+    "snRNA": 489,
+    "viral": 304,
+    "aptamer": 128,
+    "synthetic_RNA": 92,
+    "SRP_RNA": 75,
+    "designed_RNA": 34
   },
-  "rna_biology": {
-    "structure_classes": {
-      "designed_RNA": 4,
-      "rRNA": 89,
-      "ribozyme": 25,
-      "tRNA": 129,
-      "other_RNA": 70,
-      "mRNA": 6,
-      "SRP_RNA": 9,
-      "viral_genomic_RNA": 40,
-      "riboswitch": 44,
-      "aptamer": 9,
-      "synthetic_RNA": 3,
-      "snRNA": 13
-    },
-    "classified_entries": 441,
-    "distinct_families": 339,
-    "probe_technologies_present": 24
+  "data_source_distribution": {
+    "rasp": 3904,
+    "rmdb": 760
+  },
+  "measurement_family_distribution": {
+    "base_specific": 2202,
+    "shape_flexibility": 2027,
+    "enzymatic_cleavage": 711,
+    "solvent_accessibility": 1073,
+    "contact_mapping": 0
   },
   "technology_threshold_basis": {
     "LITERATURE_SUPPORTED": 1,
@@ -56,11 +50,10 @@
     "strong_entries": "entry caliber: 176 entries (RMDB 82 + RASP 94) with ≥1 constituent chain at STRONG",
     "source_cases": "visible-caliber sum of sourceCaseCount over published-allowlist-filtered displayCases (NOT totalSourceCaseCount)",
     "total_raw": "internal metadata only — pre-filter raw displayCase count (3401); never rendered as a user-facing number",
-    "tier": "entry caliber: per-entry LSS recall tier parsed from confidenceDisplayLabel over published RASP entries",
-    "tier_source": "published-entry confidenceDisplayLabel",
-    "lss_calibrated_entries": "published entries carrying an LSS calibrated recall tier (RASP line); RMDB-line entries use FEC claim-ceiling labels and are not tiered here",
-    "sasa_probe_coverage": "entry caliber: published entries whose assayFamilies include a SASA-based footprinting probe (RL-Seq / Lead-seq / icLASER / HRF)",
-    "rna_biology": "entry caliber: structureClass / rnaFamily / assayFamilies over published entries (PDB Rfam annotation; pending/unannotated values excluded)",
+    "pdb_tier_distribution": "PDB-ID caliber: each PDB takes the strongest tier among its chains (high 2,689; low 1,210; not supported 1,422; total 5,321)",
+    "rna_chain_partitions": "chain caliber: annotated RNA partition counts supplied with the Statistics-page source table (total 17,837 chains)",
+    "data_source_distribution": "entry caliber: chemical probing entries from RASP (3,904) and RMDB (760); total 4,664",
+    "measurement_family_distribution": "published-PDB-entry caliber: entries containing each technique family A–E; categories can overlap within one entry",
     "technologies": "curated chemical-probing methods shown on the Statistics page (26)",
     "families": "curated measurement families shown on the Statistics page (A–E)",
     "articles": "probing-articles/index.json article_count"

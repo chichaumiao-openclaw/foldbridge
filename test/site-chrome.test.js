@@ -155,10 +155,115 @@ const SAMPLE_HELP = {
 
 test('help page renders hero title and sections', () => {
   const html = renderHelpPage(SAMPLE_HELP);
+  assert.match(html, /class="help-page-shell"/);
   assert.match(html, /How to use FoldBridge/);
   assert.match(html, /Finding your way around/);
   assert.match(html, /The master table\./);
   assert.match(html, /Family plus tier\./);
+});
+
+test('help page renders a screenshot-led usage flow', () => {
+  const html = renderHelpPage({
+    hero: { title: 'Help' },
+    sections: [{
+      id: 'usage',
+      title: 'Search channels',
+      kind: 'usage',
+      items: [{
+        title: 'Open Search',
+        body: 'Choose Search in the navigation bar.',
+        image: './src/assets/guide/help-usage-open-search.png',
+        alt: 'Search help'
+      }]
+    }]
+  });
+  assert.match(html, /class="help-usage-flow"/);
+  assert.match(html, /help-guide-section--workflow/);
+  assert.match(html, /class="help-usage-step"/);
+  assert.match(html, /help-usage-open-search\.png/);
+  assert.match(html, /alt="Search help"/);
+});
+
+test('help page renders an interactive-visualisation workflow', () => {
+  const html = renderHelpPage({
+    hero: { title: 'Help' },
+    sections: [{
+      id: 'interactive',
+      title: 'Interactive visualisation',
+      kind: 'usage',
+      items: [{
+        title: 'Explore the 3D structure',
+        image: './src/assets/guide/help-interactive-3d-structure.png',
+        alt: '3D structure viewer'
+      }]
+    }]
+  });
+  assert.match(html, /Interactive visualisation/);
+  assert.match(html, /help-interactive-3d-structure\.png/);
+  assert.match(html, /alt="3D structure viewer"/);
+});
+
+test('help page places the contact section directly above group members', () => {
+  const html = renderHelpPage({
+    hero: { title: 'Help' },
+    sections: [
+      { id: 'usage', title: 'Usage', kind: 'prose', body: 'Use the database.' },
+      { id: 'contact', title: 'How to contact us', kind: 'prose', body: 'Please reach out to the group members below.' }
+    ],
+    group_members: [{ initials: 'FB', name: 'FoldBridge Team', details: [] }]
+  });
+  const contactIndex = html.indexOf('How to contact us');
+  const membersIndex = html.indexOf('Group Members');
+  assert.ok(contactIndex > html.indexOf('Usage'));
+  assert.ok(contactIndex < membersIndex);
+  assert.match(html, /Please reach out to the group members below\./);
+});
+
+test('help contact section renders a mailto link when a contact email is provided', () => {
+  const html = renderHelpPage({
+    hero: { title: 'Help' },
+    sections: [{
+      id: 'contact',
+      title: 'How to contact us',
+      kind: 'prose',
+      body: 'For any inquiries, please reach out to',
+      email: 'hu_linyan@gzlab.ac.cn',
+    }],
+  });
+  assert.match(html, /href="mailto:hu_linyan@gzlab\.ac\.cn"/);
+  assert.match(html, />hu_linyan@gzlab\.ac\.cn<\/a>/);
+});
+
+test('help page renders a dedicated feedback call to action', () => {
+  const html = renderHelpPage({
+    hero: { title: 'Help' },
+    sections: [{
+      id: 'feedback',
+      title: 'How to make a feedback',
+      kind: 'feedback',
+      body: 'We welcome your feedback.',
+      route: '#help-contact',
+      linkLabel: 'Submit feedback'
+    }]
+  });
+  assert.match(html, /How to make a feedback/);
+  assert.match(html, /class="help-feedback"/);
+  assert.match(html, /class="help-feedback-button" href="#help-contact">Submit feedback/);
+});
+
+test('help page opens an external feedback spreadsheet in a new tab', () => {
+  const html = renderHelpPage({
+    hero: { title: 'Help' },
+    sections: [{
+      id: 'feedback',
+      title: 'How to make a feedback',
+      kind: 'feedback',
+      body: 'We welcome your feedback.',
+      route: 'https://docs.google.com/spreadsheets/d/example/edit',
+      linkLabel: 'Submit feedback'
+    }]
+  });
+  assert.match(html, /href="https:\/\/docs\.google\.com\/spreadsheets\/d\/example\/edit" target="_blank" rel="noopener noreferrer">Submit feedback/);
 });
 
 test('help page falls back to a minimal shell with an H1 when content is missing', () => {

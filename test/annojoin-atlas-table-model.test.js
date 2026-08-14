@@ -68,7 +68,7 @@ test('table has 6 columns in the redesigned order', () => {
 test('probing profiles + technique labels are set', () => {
   const byId = new Map(ANNOJOIN_TABLE_COLUMNS.map((c) => [c.id, c.label]));
   assert.equal(byId.get('profileCount'), 'Probing profiles');
-  assert.equal(byId.get('techniqueFamilies'), 'Technique');
+  assert.equal(byId.get('techniqueFamilies'), 'Probing category');
 });
 
 test('table model omits derived/internal columns', () => {

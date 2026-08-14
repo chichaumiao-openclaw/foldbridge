@@ -1189,60 +1189,60 @@ test('normalizeCase passes through techniqueFamilies and techniqueNames', () => 
   const state = buildAtlasSearchState({
     displayCases: [{
       pdb_id: '1GID',
-      techniqueFamilies: ['A', 'B'],
+      techniqueFamilies: ['dms', 'shape'],
       techniqueNames: ['2A3', 'DMS']
     }]
   }, {});
-  assert.deepEqual(state.cases[0].techniqueFamilies, ['A', 'B']);
+  assert.deepEqual(state.cases[0].techniqueFamilies, ['dms', 'shape']);
   assert.deepEqual(state.cases[0].techniqueNames, ['2A3', 'DMS']);
 });
 
 test('filterCases matches on techniqueFamilies (two-level filter)', () => {
   const state = buildAtlasSearchState({
     displayCases: [
-      { pdb_id: '1GID', techniqueFamilies: ['A', 'B'], techniqueNames: ['2A3', 'DMS'] },
-      { pdb_id: '1P5P', techniqueFamilies: ['C'], techniqueNames: ['PARS'] }
+      { pdb_id: '1GID', techniqueFamilies: ['dms', 'shape'], techniqueNames: ['2A3', 'DMS'] },
+      { pdb_id: '1P5P', techniqueFamilies: ['cleavage'], techniqueNames: ['PARS'] }
     ]
-  }, { techniqueFamilies: ['C'] });
+  }, { techniqueFamilies: ['cleavage'] });
   assert.deepEqual(state.cases.map((c) => c.pdbId), ['1P5P']);
 });
 
 test('filterCases cross-level OR: family + technique', () => {
   const state = buildAtlasSearchState({
     displayCases: [
-      { pdb_id: '1GID', techniqueFamilies: ['A', 'B'], techniqueNames: ['2A3', 'DMS'] },
-      { pdb_id: '1P5P', techniqueFamilies: ['C'], techniqueNames: ['PARS'] }
+      { pdb_id: '1GID', techniqueFamilies: ['dms', 'shape'], techniqueNames: ['2A3', 'DMS'] },
+      { pdb_id: '1P5P', techniqueFamilies: ['cleavage'], techniqueNames: ['PARS'] }
     ]
-  }, { techniqueFamilies: ['B'], techniqueNames: ['PARS'] });
+  }, { techniqueFamilies: ['shape'], techniqueNames: ['PARS'] });
   assert.deepEqual(state.cases.map((c) => c.pdbId).sort(), ['1GID', '1P5P']);
 });
 
-test('entry page renders the five probing mechanism families', () => {
+test('entry page renders all five probing categories', () => {
   const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({
     displayCases: [
-      { pdb_id: '1GID', techniqueFamilies: ['A', 'B'], techniqueNames: ['2A3', 'DMS'] },
-      { pdb_id: '1P5P', techniqueFamilies: ['C'], techniqueNames: ['PARS'] }
+      { pdb_id: '1GID', techniqueFamilies: ['dms', 'shape'], techniqueNames: ['2A3', 'DMS'] },
+      { pdb_id: '1P5P', techniqueFamilies: ['cleavage'], techniqueNames: ['PARS'] }
     ]
   }, {}) });
   assert.match(html, /data-technique-family="dms"/);
   assert.match(html, /data-technique-family="cleavage"/);
   assert.match(html, /data-technique-family="interaction"/);
   assert.match(html, /data-technique-name="PARS"/);
-  assert.match(html, /All families and methods are shown/);
+  assert.match(html, /All five categories and their methods are shown/);
   assert.doesNotMatch(html, /<details class="annojoin-technique-family-group"/);
-  assert.match(html, /annojoin-family-badge-dms">DMS-based<\/span>/);
-  assert.match(html, />RNA–RNA interaction mapping<\/span>/);
-  assert.doesNotMatch(html, /DMS-based methods/);
+  assert.match(html, /annojoin-family-badge-dms">DMS-based methods<\/span>/);
+  assert.match(html, />RNA–RNA interaction mapping methods<\/span>/);
+  assert.doesNotMatch(html, /Family A/);
   assert.doesNotMatch(html, /annojoin-technique-family-label/);
 });
 
-test('technique filter chips are built from the full universe, not the filtered subset', () => {
+test('technique filter controls retain all five categories after filtering', () => {
   const state = buildAtlasSearchState({
     displayCases: [
-      { pdb_id: '1GID', techniqueFamilies: ['A'], techniqueNames: ['DMS'] },
-      { pdb_id: '1P5P', techniqueFamilies: ['C'], techniqueNames: ['PARS'] }
+      { pdb_id: '1GID', techniqueFamilies: ['dms'], techniqueNames: ['DMS'] },
+      { pdb_id: '1P5P', techniqueFamilies: ['cleavage'], techniqueNames: ['PARS'] }
     ]
-  }, { techniqueFamilies: ['A'] });
+  }, { techniqueFamilies: ['dms'] });
   const html = renderAnnojointAtlasPage({ state });
   assert.match(html, /data-technique-family="interaction"/);
   assert.match(html, /data-technique-name="PARS"/);
@@ -1250,7 +1250,7 @@ test('technique filter chips are built from the full universe, not the filtered 
 
 test('technique column renders colored family badges with hover names', () => {
   const html = renderAnnojointAtlasPage({ state: buildAtlasSearchState({
-    displayCases: [{ pdb_id: '1GID', techniqueFamilies: ['A', 'B'], techniqueNames: ['2A3', 'DMS'] }]
+    displayCases: [{ pdb_id: '1GID', techniqueFamilies: ['dms', 'shape'], techniqueNames: ['2A3', 'DMS'] }]
   }, {}) });
   assert.match(html, /annojoin-family-badge-dms/);
   assert.doesNotMatch(html, /annojoin-family-badge-[ABC]/);

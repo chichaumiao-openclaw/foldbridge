@@ -2,7 +2,7 @@
 // 覆盖 atlas index.json 的 displayCase 行。
 //
 // 纯函数：applyCaseTechniques(index, techniquesByCaseKey, opts) 不做 IO，可被测试直接 import。
-// 只追加两个新键 techniqueNames/techniqueFamilies，绝不触碰既有字段（如 profileCount）。
+// 只追加技术名称、Probing 五类和原始测量家族，绝不触碰既有字段（如 profileCount）。
 // 幂等 pure-append（§2.4）。match key = sourceKeysFor(row)（镜像 profile-count overlay）。
 
 function sortedUnique(list) {
@@ -27,8 +27,10 @@ export function applyCaseTechniques(index = {}, techniquesByCaseKey = new Map(),
     if (!present.length) continue;
     const families = present.flatMap((k) => map.get(k).families || []);
     const names = present.flatMap((k) => map.get(k).names || []);
+    const measurementFamilies = present.flatMap((k) => map.get(k).measurementFamilies || []);
     displayCase.techniqueFamilies = sortedUnique(families);
     displayCase.techniqueNames = sortedUnique(names);
+    displayCase.measurementFamilies = sortedUnique(measurementFamilies);
     patchedCount += 1;
   }
   if (opts.returnStats) return { index, patchedCount };

@@ -2848,6 +2848,71 @@ function updateView() {
   el.caption.textContent = "Colors show the selected profile's reactivity.";
 }
 
+function referenceJournalLine(citation) {
+  const pages = citation.pageFirst && citation.pageLast
+    ? `${citation.pageFirst}–${citation.pageLast}`
+    : citation.pageFirst || citation.pageLast || "";
+  const issue = [citation.journal, citation.volume].filter(Boolean).join(" ");
+  const publication = [issue, pages].filter(Boolean).join(", ");
+  return citation.year && publication ? `${publication} (${citation.year})` : publication || citation.year || "";
+}
+
+function externalReferenceLink(href, label) {
+  return `<a href="${escapeHtml(href)}" target="_blank" rel="noreferrer">${escapeHtml(label)}</a>`;
+}
+
+function mountPrimaryReference(citation = null) {
+  const pdbId = String(config.caseId || "").trim().toUpperCase();
+  if (!pdbId || document.querySelector(".pdb-primary-reference")) return;
+  const panel = document.createElement("section");
+  panel.className = "panel pdb-primary-reference";
+  const rcsbHref = `https://www.rcsb.org/structure/${encodeURIComponent(pdbId)}`;
+
+  let body;
+  if (citation?.title) {
+    const doi = String(citation.doi || "").trim();
+    const pubmedId = String(citation.pubmedId || "").trim();
+    const titleHref = doi
+      ? `https://doi.org/${encodeURIComponent(doi).replace(/%2F/g, "/")}`
+      : pubmedId
+        ? `https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(pubmedId)}/`
+        : rcsbHref;
+    const links = [
+      pubmedId ? externalReferenceLink(`https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(pubmedId)}/`, `PubMed ${pubmedId}`) : "",
+      doi ? externalReferenceLink(`https://doi.org/${encodeURIComponent(doi).replace(/%2F/g, "/")}`, `DOI ${doi}`) : "",
+      externalReferenceLink(rcsbHref, `View ${pdbId} in PDB`),
+    ].filter(Boolean).join("");
+    body = `<article class="pdb-primary-reference-citation">
+      <h3><a href="${escapeHtml(titleHref)}" target="_blank" rel="noreferrer">${escapeHtml(citation.title)}</a></h3>
+      ${Array.isArray(citation.authors) && citation.authors.length ? `<p>${escapeHtml(citation.authors.join("; "))}</p>` : ""}
+      ${referenceJournalLine(citation) ? `<p>${escapeHtml(referenceJournalLine(citation))}</p>` : ""}
+      <div class="pdb-primary-reference-links">${links}</div>
+    </article>`;
+  } else {
+    body = `<p class="pdb-primary-reference-unavailable">The PDB primary literature record is unavailable for this entry. ${externalReferenceLink(rcsbHref, `View ${pdbId} in PDB`)}</p>`;
+  }
+
+  panel.innerHTML = `<div class="panel-head">
+    <h2>Reference</h2>
+    <span>PDB ${escapeHtml(pdbId)}</span>
+  </div>${body}`;
+  document.querySelector(".inspector-panel")?.insertAdjacentElement("afterend", panel);
+  reportEmbeddedPageHeight();
+}
+
+async function loadPrimaryReference() {
+  const pdbId = String(config.caseId || "").trim().toUpperCase();
+  if (!pdbId) return;
+  try {
+    const indexUrl = new URL("../../../src/assets/generated/pdb-primary-citations/index.json", import.meta.url);
+    const response = await fetch(indexUrl);
+    const index = response?.ok ? await response.json() : null;
+    mountPrimaryReference(index?.citations?.[pdbId] || null);
+  } catch (_error) {
+    mountPrimaryReference(null);
+  }
+}
+
 async function init() {
   const started = performance.now();
   const linkedViewPromise = linkedViewBundleUrl
@@ -2970,6 +3035,7 @@ if (el.varnaZoomOut) el.varnaZoomOut.addEventListener("click", () => zoomVarna(-
 if (el.varnaZoomReset) el.varnaZoomReset.addEventListener("click", () => setVarnaZoom(1));
 
 installExternalProfileBridge();
+void loadPrimaryReference();
 
 init().catch((error) => {
   if (el.status) el.status.textContent = "asset load failed";

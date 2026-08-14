@@ -11,6 +11,7 @@
     "build:rmdb-cases": "node scripts/build-rmdb-cases.mjs",
     "build:family-detail-titles": "node scripts/sync-family-detail-titles.mjs",
     "build:probing-articles": "node scripts/build-probing-articles.mjs",
+    "build:pdb-citations": "node scripts/build-pdb-primary-citations.mjs",
     "build:search-docs": "node scripts/build-search-docs.mjs",
     "build:search-index": "pagefind --site dist/search-docs --output-path dist/pagefind",
     "build:site": "npm run build:static && npm run build:search-docs && npm run build:search-index",

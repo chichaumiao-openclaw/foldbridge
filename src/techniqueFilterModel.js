@@ -1,35 +1,38 @@
-const ALLOWED_FAMILIES = ['A', 'B', 'C', 'D'];
-
 export const MECHANISM_FAMILIES = [
   {
     id: 'dms',
-    label: 'DMS-based',
+    label: 'DMS-based methods',
     shortLabel: 'DMS',
-    techniques: ['DMS', 'DMS-seq', 'Structure-seq', 'Structure-seq2', 'Mod-seq', 'DMS-MaPseq', 'DIM-2P-seq']
+    techniques: ['DMS', 'DMS-seq', 'Structure-seq', 'Structure-seq2', 'Mod-seq', 'DMS-MaPseq', 'DIM-2P-seq', 'tNet-MaPseq'],
+    filterTechniques: ['DMS', 'DMS-seq', 'Structure-seq', 'Structure-seq2', 'Mod-seq', 'DMS-MaPseq', 'DIM-2P-seq']
   },
   {
     id: 'shape',
-    label: 'SHAPE-based',
+    label: 'SHAPE-based methods',
     shortLabel: 'SHAPE',
-    techniques: ['SHAPE', 'SHAPE-Seq', 'SHAPE-MaP', 'icSHAPE', 'icSHAPE-MaP', 'NAI-MaP', 'smartSHAPE']
+    techniques: ['SHAPE', 'SHAPE-Seq', 'SHAPE-MaP', '1M7', 'BzCN', '2A3', 'NAI-MaP', 'icSHAPE', 'icSHAPE-MaP', 'smartSHAPE', 'ChemModSeq', 'Cotranscriptional_SHAPE-seq', 'Nuc-SHAPE-Structure-Seq'],
+    filterTechniques: ['SHAPE', 'SHAPE-Seq', 'SHAPE-MaP', 'icSHAPE', 'icSHAPE-MaP', 'NAI-MaP', 'smartSHAPE']
   },
   {
     id: 'cleavage',
-    label: 'Cleavage-based',
+    label: 'Cleavage-based methods',
     shortLabel: 'Cleavage',
-    techniques: ['PARS', 'PARTE', 'HRF-seq']
+    techniques: ['PARS', 'PARTE', 'HRF-seq', 'Lead-seq', 'RL-Seq', 'tNet-RNase-seq'],
+    filterTechniques: ['PARS', 'PARTE', 'HRF-seq']
   },
   {
     id: 'nucleotide',
-    label: 'Nucleotide-specific probing',
+    label: 'Nucleotide-specific chemical probing methods',
     shortLabel: 'Nucleotide-specific',
-    techniques: ['Keth-seq', 'EDC probing', 'LASER-seq']
+    techniques: ['Keth-seq', 'EDC probing', 'LASER-seq', 'icLASER'],
+    filterTechniques: ['Keth-seq', 'EDC probing', 'LASER-seq']
   },
   {
     id: 'interaction',
-    label: 'RNA–RNA interaction mapping',
+    label: 'RNA–RNA interaction mapping methods',
     shortLabel: 'RNA–RNA interaction',
-    techniques: ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES']
+    techniques: ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES'],
+    filterTechniques: ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES']
   }
 ];
 
@@ -49,6 +52,7 @@ for (const family of MECHANISM_FAMILIES) {
 // Existing atlas rows contain a few historical spellings that belong to one
 // of the five probing-page families but are not displayed as separate options.
 const TECHNIQUE_ALIASES = {
+  structureseq: 'Structure-seq',
   cotranscriptionalshapeseq: 'SHAPE-Seq',
   nucshapestructureseq: 'SHAPE-Seq',
   iclaser: 'LASER-seq'
@@ -73,18 +77,21 @@ export function canonicalTechniqueName(name = '') {
 
 export function mechanismFamiliesForRow(row = {}) {
   const familyIds = new Set();
+  for (const id of row.techniqueFamilies || []) {
+    if (MECHANISM_FAMILY_BY_ID.has(id)) familyIds.add(id);
+  }
   for (const name of row.techniqueNames || []) {
     const family = mechanismFamilyForTechnique(name);
     if (family) familyIds.add(family.id);
   }
-  return [...familyIds];
+  return MECHANISM_FAMILIES.map((family) => family.id).filter((id) => familyIds.has(id));
 }
 
 export function buildMechanismFilterModel() {
   return {
     families: MECHANISM_FAMILIES.map((family) => ({
       ...family,
-      techniques: [...family.techniques]
+      techniques: [...family.filterTechniques]
     }))
   };
 }
@@ -92,20 +99,20 @@ export function buildMechanismFilterModel() {
 export function buildTechniqueFilterModel(cases = []) {
   const byFamily = new Map();
   for (const row of cases) {
-    const fams = row.techniqueFamilies || [];
+    const fams = mechanismFamiliesForRow(row);
     const names = row.techniqueNames || [];
     for (const fam of fams) {
-      if (!ALLOWED_FAMILIES.includes(fam)) continue;
       if (!byFamily.has(fam)) byFamily.set(fam, new Set());
     }
     for (const fam of fams) {
-      if (!ALLOWED_FAMILIES.includes(fam)) continue;
-      for (const name of names) byFamily.get(fam).add(name);
+      for (const name of names) {
+        if (mechanismFamilyForTechnique(name)?.id === fam) byFamily.get(fam).add(name);
+      }
     }
   }
-  const families = [...byFamily.keys()].sort().map((id) => ({
-    id,
-    techniques: [...byFamily.get(id)].sort()
+  const families = MECHANISM_FAMILIES.filter((family) => byFamily.has(family.id)).map((family) => ({
+    id: family.id,
+    techniques: [...byFamily.get(family.id)].sort()
   }));
   return { families };
 }

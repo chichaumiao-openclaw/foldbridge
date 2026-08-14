@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 // build-annojoin-atlas-technique-enrichment.mjs — 用 case 详情页的权威技术信息
 // （confidence-evidence.json 的 rows[].technology / rows[].family）覆盖 atlas index.json
-// 的 displayCase 行，追加 techniqueNames / techniqueFamilies。
+// 的 displayCase 行。techniqueFamilies 使用 Probing 页的五类；原始 A–F 测量家族
+// 单独存为 measurementFamilies，避免混用两种分类口径。
 //
 // 权威源 = evidence（rows[].technology / rows[].family），绝不使用 assayFamilies
 // 或 token 反解码。
@@ -21,6 +22,7 @@ import { readdirSync, existsSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { applyCaseTechniques } from './lib/annojoin-atlas-technique-overlay.mjs';
+import { mechanismFamiliesForRow } from '../src/techniqueFilterModel.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -43,16 +45,21 @@ function parseArgs(argv) {
   return args;
 }
 
-// 从单个 confidence-evidence.json 聚合 distinct 排序的 technology/family 集合。
+// 从单个 confidence-evidence.json 聚合技术名称、Probing 五类和原始 A–F 测量家族。
 // 缺 technology 或 family 的行按防御性方式跳过对应字段。
 export function aggregateEvidenceTechniques(evidenceJson) {
   const names = new Set();
-  const families = new Set();
+  const measurementFamilies = new Set();
   for (const row of (evidenceJson && evidenceJson.rows) || []) {
     if (row.technology) names.add(row.technology);
-    if (row.family) families.add(row.family);
+    if (row.family) measurementFamilies.add(row.family);
   }
-  return { names: [...names].sort(), families: [...families].sort() };
+  const sortedNames = [...names].sort();
+  return {
+    names: sortedNames,
+    families: mechanismFamiliesForRow({ techniqueNames: sortedNames }),
+    measurementFamilies: [...measurementFamilies].sort()
+  };
 }
 
 // 扫描发布准备目录，返回 Map<atlasCaseKey, {names, families}>。

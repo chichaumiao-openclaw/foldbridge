@@ -5,9 +5,8 @@
 // 本脚本对 annojoin-atlas/index.json 的 displayCases 套白名单得到 pdb_total==2386，
 // 同时保留 total_raw（index.totalCaseCount）供脚注；页面只展示 2386，不展示 3401。
 //
-// 全部统计口径 = entry（已发布白名单过滤后的 kept 集），不再用全量跑的 segment 级常量。
-// LSS tier 分布、SASA 探针覆盖、RNA 生物学分类都从 kept 的 per-entry 字段真实派生，
-// 与页面其它 entry 口径数字一致。
+// 已发布 entry 相关统计均从白名单过滤后的 kept 集派生；PDB tier 和 RNA chain
+// partition 则使用 Stats 页提供的聚合源表，避免混淆它们与 entry 口径数字。
 //
 // 纯 ESM：deriveStats 为纯函数（可被测试 import 而不触发写文件）；
 // CLI 执行体用 import.meta.url 守卫包裹。
@@ -19,78 +18,56 @@ import {
   parsePublishedCaseKeyAllowlist
 } from './lib/annojoin-atlas-published-allowlist.mjs';
 
-// LSS 召回层级键（强→弱）。保证页面始终拿到全部 6 个键（缺失=0），SVG 不出现 undefined。
-const TIER_KEYS = ['STRONG', 'MODERATE', 'WEAK', 'DISCORDANT', 'UNDERPOWERED', 'NOT_SUPPORTED'];
+// RNA chain partitions supplied with the Stats-page source table. This is a chain-level
+// distribution, intentionally distinct from the page's entry-level PDB statistics.
+const RNA_CHAIN_PARTITIONS = {
+  rRNA: 8794,
+  tRNA: 3763,
+  other_RNA: 1629,
+  mRNA: 1544,
+  ribozyme: 493,
+  riboswitch: 492,
+  snRNA: 489,
+  viral: 304,
+  aptamer: 128,
+  synthetic_RNA: 92,
+  SRP_RNA: 75,
+  designed_RNA: 34
+};
 
-// Family D（溶剂可及性）探针技术 —— 这些 assay 走 SASA 参考主路径。
-// 见 MEMORY：RL-Seq/Lead-seq/icLASER/HRF = SASA-based footprinting。
-const SASA_PROBE_TECHS = ['RL-Seq', 'Lead-seq', 'icLASER', 'HRF'];
+// PDB tier 分布（按 pdb_id 聚合，每个 PDB 取其全链中的最高 tier），来自 Stats 页源表。
+const PDB_TIER_DISTRIBUTION = {
+  high: 2689,
+  low: 1210,
+  not_supported: 1422
+};
 
-// structureClass / rnaFamily 噪声值（未注释占位、UUID、pending 分组）→ 生物学统计中剔除。
-const BIO_NOISE = /^pending|^urs|^pdbmol_|^pdbreg_|未注释/i;
+const DATA_SOURCE_DISTRIBUTION = {
+  rasp: 3904,
+  rmdb: 760
+};
 
-function emptyTierCounts() {
-  return TIER_KEYS.reduce((acc, k) => { acc[k] = 0; return acc; }, {});
-}
+const MEASUREMENT_FAMILY_KEYS = {
+  A: 'base_specific',
+  B: 'shape_flexibility',
+  C: 'enzymatic_cleavage',
+  D: 'solvent_accessibility',
+  E: 'contact_mapping'
+};
 
-// entry 口径 LSS tier 分布：从每个 entry 的 confidenceDisplayLabel 解析代表层级
-// （如 "A WEAK"/"B STRONG"/"D MODERATE"）。只有携带 LSS 校准的 entry（RASP 线）命中；
-// RMDB 线用 FEC claim-ceiling 标签（无 tier 词），不计入 tier 图。
-function deriveEntryTierDistribution(kept = []) {
-  const counts = emptyTierCounts();
-  let calibratedEntries = 0;
-  for (const c of kept) {
-    const label = String(c.confidenceDisplayLabel || '').toUpperCase();
-    for (const k of TIER_KEYS) {
-      if (label.includes(k)) { counts[k] += 1; calibratedEntries += 1; break; }
+function deriveMeasurementFamilyDistribution(kept = []) {
+  const counts = Object.values(MEASUREMENT_FAMILY_KEYS)
+    .reduce((result, key) => ({ ...result, [key]: 0 }), {});
+  for (const entry of kept) {
+    const families = new Set(Array.isArray(entry.measurementFamilies)
+      ? entry.measurementFamilies
+      : (Array.isArray(entry.techniqueFamilies) ? entry.techniqueFamilies : []));
+    for (const family of families) {
+      const key = MEASUREMENT_FAMILY_KEYS[family];
+      if (key) counts[key] += 1;
     }
   }
-  return { counts, calibratedEntries };
-}
-
-// SASA 探针覆盖（替代旧 Family D SASA segment 面板）：统计有多少 entry 用到
-// SASA-based footprinting 技术，并按技术细分。entry 的 assayFamilies 列携带技术名。
-function deriveSasaProbeCoverage(kept = []) {
-  const technologies = {};
-  let entries = 0;
-  for (const c of kept) {
-    const assays = Array.isArray(c.assayFamilies) ? c.assayFamilies : [];
-    let hit = false;
-    for (const t of SASA_PROBE_TECHS) {
-      if (assays.includes(t)) { technologies[t] = (technologies[t] || 0) + 1; hit = true; }
-    }
-    if (hit) entries += 1;
-  }
-  return { entries, technologies };
-}
-
-// RNA 生物学口径：结构类型分布（tRNA/rRNA/riboswitch…）、细分 family 数、探针技术种类数。
-// 全部从 kept 的 per-entry 注释字段派生，噪声/未注释值剔除。
-function deriveRnaBiology(kept = []) {
-  const structureClasses = {};
-  const families = new Set();
-  const technologies = new Set();
-  let classifiedEntries = 0;
-  for (const c of kept) {
-    const sc = c.structureClass;
-    if (sc && !BIO_NOISE.test(sc)) {
-      structureClasses[sc] = (structureClasses[sc] || 0) + 1;
-      classifiedEntries += 1;
-    }
-    const fam = c.rnaFamily;
-    if (fam && !BIO_NOISE.test(fam) && fam !== 'gRNAde designed RNA molecule') {
-      families.add(fam);
-    }
-    for (const a of (Array.isArray(c.assayFamilies) ? c.assayFamilies : [])) {
-      if (a && a !== 'None' && a !== 'rmdb_chemical_probing') technologies.add(a);
-    }
-  }
-  return {
-    structure_classes: structureClasses,
-    classified_entries: classifiedEntries,
-    distinct_families: families.size,
-    probe_technologies_present: technologies.size
-  };
+  return counts;
 }
 
 /**
@@ -109,10 +86,7 @@ export function deriveStats({ index = {}, allowlistTsv = '' } = {}) {
   const pdbTotal = kept.length;
   const totalRaw = Number.isFinite(index.totalCaseCount) ? index.totalCaseCount : displayCases.length;
   const sourceCases = kept.reduce((sum, c) => sum + (Number(c.sourceCaseCount) || 0), 0);
-
-  const { counts: tierDistribution, calibratedEntries } = deriveEntryTierDistribution(kept);
-  const sasaProbeCoverage = deriveSasaProbeCoverage(kept);
-  const rnaBiology = deriveRnaBiology(kept);
+  const measurementFamilyDistribution = deriveMeasurementFamilyDistribution(kept);
 
   return {
     pdb_total: pdbTotal,
@@ -124,10 +98,10 @@ export function deriveStats({ index = {}, allowlistTsv = '' } = {}) {
     families: 5,
     technologies: 26,
     articles: 26,
-    lss_calibrated_entries: calibratedEntries,
-    tier_distribution: tierDistribution,
-    sasa_probe_coverage: sasaProbeCoverage,
-    rna_biology: rnaBiology,
+    pdb_tier_distribution: PDB_TIER_DISTRIBUTION,
+    rna_chain_partitions: RNA_CHAIN_PARTITIONS,
+    data_source_distribution: DATA_SOURCE_DISTRIBUTION,
+    measurement_family_distribution: measurementFamilyDistribution,
     technology_threshold_basis: {
       LITERATURE_SUPPORTED: 1,
       LITERATURE_INFORMED: 10,
@@ -140,11 +114,10 @@ export function deriveStats({ index = {}, allowlistTsv = '' } = {}) {
       strong_entries: 'entry caliber: 176 entries (RMDB 82 + RASP 94) with ≥1 constituent chain at STRONG',
       source_cases: 'visible-caliber sum of sourceCaseCount over published-allowlist-filtered displayCases (NOT totalSourceCaseCount)',
       total_raw: `internal metadata only — pre-filter raw displayCase count (${totalRaw}); never rendered as a user-facing number`,
-      tier: 'entry caliber: per-entry LSS recall tier parsed from confidenceDisplayLabel over published RASP entries',
-      tier_source: 'published-entry confidenceDisplayLabel',
-      lss_calibrated_entries: 'published entries carrying an LSS calibrated recall tier (RASP line); RMDB-line entries use FEC claim-ceiling labels and are not tiered here',
-      sasa_probe_coverage: 'entry caliber: published entries whose assayFamilies include a SASA-based footprinting probe (RL-Seq / Lead-seq / icLASER / HRF)',
-      rna_biology: 'entry caliber: structureClass / rnaFamily / assayFamilies over published entries (PDB Rfam annotation; pending/unannotated values excluded)',
+      pdb_tier_distribution: 'PDB-ID caliber: each PDB takes the strongest tier among its chains (high 2,689; low 1,210; not supported 1,422; total 5,321)',
+      rna_chain_partitions: 'chain caliber: annotated RNA partition counts supplied with the Statistics-page source table (total 17,837 chains)',
+      data_source_distribution: 'entry caliber: chemical probing entries from RASP (3,904) and RMDB (760); total 4,664',
+      measurement_family_distribution: 'published-PDB-entry caliber: entries containing each technique family A–E; categories can overlap within one entry',
       technologies: 'curated chemical-probing methods shown on the Statistics page (26)',
       families: 'curated measurement families shown on the Statistics page (A–E)',
       articles: 'probing-articles/index.json article_count'
@@ -181,5 +154,5 @@ if (import.meta.url === `file://${process.argv[1]}`) {
   const outPath = path.join(outDir, 'stats.json');
   fs.writeFileSync(outPath, `${JSON.stringify(stats, null, 2)}\n`, 'utf8');
   process.stdout.write(`[build-site-stats] wrote ${outPath}\n`);
-  process.stdout.write(`[build-site-stats] pdb_total=${stats.pdb_total} lss_calibrated_entries=${stats.lss_calibrated_entries}\n`);
+  process.stdout.write(`[build-site-stats] pdb_total=${stats.pdb_total} pdb_tier_total=${Object.values(stats.pdb_tier_distribution).reduce((sum, value) => sum + value, 0)}\n`);
 }
