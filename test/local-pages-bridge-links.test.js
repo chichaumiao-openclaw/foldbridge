@@ -6,7 +6,7 @@ import {
   resolveLocalPagesBridgeDetailHref
 } from '../src/localPagesBridgeLinks.js';
 
-test('local pages bridge resolver upgrades unique cases and routes duplicates to selector pages', () => {
+test('local pages bridge resolver upgrades cases via a flat per-lane lookup', () => {
   const originalOrigin = LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl;
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = 'https://pages.example.test';
   assert.equal(
@@ -17,13 +17,8 @@ test('local pages bridge resolver upgrades unique cases and routes duplicates to
     resolveLocalPagesBridgeDetailHref({ assetFamily: 'RASP2PDB', caseId: '10FZ' }),
     'https://pages.example.test/rasp/family-d/current/cases/RASP2PDB%3A10FZ/index.html'
   );
-  assert.equal(
-    resolveLocalPagesBridgeDetailHref({ atlasCaseKey: 'RASP2PDB:8EWB', assetFamily: 'RASP2PDB' }),
-    'https://pages.example.test/selector/rasp/RASP2PDB%3A8EWB/index.html'
-  );
   assert.equal(hasLocalPagesBridgeDetailPage('RMDB2PDB:10ZT'), true);
   assert.equal(hasLocalPagesBridgeDetailPage('RASP2PDB:10FZ'), true);
-  assert.equal(hasLocalPagesBridgeDetailPage('RASP2PDB:8EWB'), true);
   assert.equal(resolveLocalPagesBridgeDetailHref('RASP2PDB:10ZT'), '');
   LOCAL_PAGES_BRIDGE_MANIFEST.originBaseUrl = originalOrigin;
 });
