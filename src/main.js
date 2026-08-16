@@ -51,6 +51,8 @@ import {
   sortAnnojointCases
 } from './annojoinAtlasTableModel.js';
 import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
+import { normalizeEntryRows } from './entryTable.js';
+import { renderEntryTablePage } from './entryTableView.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
 import {
   initAnnojointCasePage,
@@ -97,6 +99,7 @@ let siteStatsState = null; // null=未加载, 'loading', 'error', 或 stats.json
 let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
 let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
+let entryTableState = null; // null=未加载, 'loading', 'error', 或归一化后的 rows 数组
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let pdbCaseConfidenceFilter = 'all';
@@ -1924,6 +1927,31 @@ async function loadProbingArticleDetail(slug) {
   if (route === 'detail' || route === 'probing') render({ preserveScroll: true });
 }
 
+async function loadEntryTable() {
+  if (entryTableState === 'loading') return;
+  entryTableState = 'loading';
+  try {
+    const response = await fetch('./src/assets/generated/entry-table/entry-table.json');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    entryTableState = normalizeEntryRows(await response.json());
+  } catch (err) {
+    console.error('[main] 加载 entry 表失败', err);
+    entryTableState = 'error';
+  }
+  if (route === 'entry') render({ preserveScroll: true });
+}
+
+function entryTablePage() {
+  if (!entryTableState || entryTableState === 'loading') {
+    if (entryTableState !== 'loading') loadEntryTable();
+    return renderEntryTablePage({ rows: null, statusMessage: { tone: 'loading', text: 'Loading the entry table…' } });
+  }
+  if (entryTableState === 'error') {
+    return renderEntryTablePage({ rows: null, statusMessage: { tone: 'error', text: 'The entry table could not be loaded. Refresh to try again.' } });
+  }
+  return renderEntryTablePage({ rows: entryTableState });
+}
+
 async function loadAnnojointAtlasIndex() {
   if (annojoinAtlasIndexState === 'loading') return;
   annojoinAtlasIndexState = 'loading';
@@ -3027,7 +3055,7 @@ function annojoinConfidencePage() {
 function pageFor(name) {
   const safeRoute = normalizeRoute(name);
   if (safeRoute === 'browse') return browsePage();
-  if (safeRoute === 'entry') return annojoinAtlasPage();
+  if (safeRoute === 'entry') return entryTablePage();
   if (safeRoute === 'sequence') return annojoinAtlasPage();
   if (safeRoute === 'structure') return structurePage();
   if (safeRoute === 'pdb-case') return pdbCasePage();
