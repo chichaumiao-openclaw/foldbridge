@@ -547,8 +547,8 @@ test('confidence panel never surfaces the legacy ANNOCONFIDENCE coverage_topolog
     selectedField: 'confidenceDisplayLabel'
   });
 
-  // Line 1 (LSS recall tier) label is shown, legacy file pointer is suppressed.
-  assert.match(html, /B MODERATE/);
+  // Confidence column is removed from the table, so the label no longer appears;
+  // the point of this test is that the legacy file pointer is never leaked.
   assert.doesNotMatch(html, /coverage_topology_annotation\.tsv/);
   assert.doesNotMatch(html, /see ANNOCONFIDENCE/);
 });
@@ -631,9 +631,9 @@ test('atlas page renders case-level display fields and profile/confidence semant
   assert.doesNotMatch(html, /<th>Biological molecule<\/th>/);
   assert.doesNotMatch(html, /<th>PDB molecule<\/th>/);
   assert.doesNotMatch(html, /<th>Probe family<\/th>/);
-  assert.match(html, /<th>Confidence/);
+  assert.doesNotMatch(html, /<th>Confidence/);
   assert.match(html, /16S ribosomal RNA/);
-  assert.match(html, /B_CONTEXT_STRATIFIED \(1\); C_EXPLORATORY_HINT \(2\)/);
+  assert.doesNotMatch(html, /B_CONTEXT_STRATIFIED \(1\); C_EXPLORATORY_HINT \(2\)/);
   assert.match(html, /3 profiles/);
   assert.match(html, /profile preview, not a representative profile/);
   assert.match(html, /MPNN-fixbb designed RNA molecule/);
@@ -664,7 +664,7 @@ test('atlas page expands singleton-child parent groups with one click', () => {
   });
 
   assert.match(html, /Molecule name/);
-  assert.match(html, /<th>Confidence/);
+  assert.doesNotMatch(html, /<th>Confidence/);
   assert.match(html, /data-annojoin-group-state="expanded"/);
   assert.doesNotMatch(html, /annojoin-child-group-row/);
   assert.match(html, /class="annojoin-case-row is-in-expanded-group"/);

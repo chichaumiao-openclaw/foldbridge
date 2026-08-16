@@ -58,11 +58,15 @@ const rows = [
   }
 ];
 
-test('table has 6 columns in the redesigned order', () => {
+test('table has 5 columns in the redesigned order (Confidence removed)', () => {
   assert.deepEqual(
     ANNOJOIN_TABLE_COLUMNS.map((c) => c.id),
-    ['moleculeName', 'pdbId', 'chains', 'profileCount', 'techniqueFamilies', 'confidenceDisplayLabel']
+    ['moleculeName', 'pdbId', 'chains', 'profileCount', 'techniqueFamilies']
   );
+});
+
+test('table model no longer exposes the Confidence column', () => {
+  assert.equal(ANNOJOIN_TABLE_COLUMNS.some((column) => column.id === 'confidenceDisplayLabel'), false);
 });
 
 test('probing profiles + technique labels are set', () => {

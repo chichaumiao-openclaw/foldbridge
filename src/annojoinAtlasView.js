@@ -385,8 +385,7 @@ const COLUMN_HELP = {
   pdbId: 'RCSB Protein Data Bank identifier for the deposited structure.',
   chains: 'RNA chain identifiers carrying chemical-probing evidence in this case.',
   profileCount: 'Number of source chemical-probing signal records (profiles) mapped onto this structure.',
-  techniqueFamilies: 'One or more of the five Probing-page categories contributing evidence; hover a badge for full technique names.',
-  confidenceDisplayLabel: 'Case-level distribution of confidence-relevant annotation labels, not a single best-profile score.'
+  techniqueFamilies: 'One or more of the five Probing-page categories contributing evidence; hover a badge for full technique names.'
 };
 
 function renderConfidencePanel(row) {

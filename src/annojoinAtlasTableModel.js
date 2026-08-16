@@ -5,8 +5,7 @@ export const ANNOJOIN_TABLE_COLUMNS = [
   { id: 'pdbId', label: 'PDB' },
   { id: 'chains', label: 'Chains' },
   { id: 'profileCount', label: 'Probing profiles' },
-  { id: 'techniqueFamilies', label: 'Probing category' },
-  { id: 'confidenceDisplayLabel', label: 'Confidence' }
+  { id: 'techniqueFamilies', label: 'Probing category' }
 ];
 
 function cleanLabel(value) {
