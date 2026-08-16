@@ -3055,7 +3055,7 @@ function annojoinConfidencePage() {
 function pageFor(name) {
   const safeRoute = normalizeRoute(name);
   if (safeRoute === 'browse') return browsePage();
-  if (safeRoute === 'entry') return entryTablePage();
+  if (safeRoute === 'entry') return annojoinAtlasPage();
   if (safeRoute === 'sequence') return annojoinAtlasPage();
   if (safeRoute === 'structure') return structurePage();
   if (safeRoute === 'pdb-case') return pdbCasePage();
