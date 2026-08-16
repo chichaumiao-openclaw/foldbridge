@@ -2602,6 +2602,73 @@ tbody tr:hover {
   padding: 28px 12px;
 }
 
+/* Entry 浏览入口页（entryTableView.js 产出的 entry-table-page 一套类名）。
+   复用 browse 页金色表格视觉，但为 8 列改自适应布局，避免 7 列固定宽错位。 */
+.entry-table-page {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+}
+
+.entry-table-hero {
+  margin-bottom: 20px;
+}
+
+.entry-table-hero h1 {
+  margin: 0 0 8px;
+  font-size: 1.9rem;
+  color: var(--textStrong, #2b220f);
+}
+
+.entry-table-intro {
+  margin: 0 0 6px;
+  color: var(--textMuted);
+  max-width: 760px;
+}
+
+.entry-table-count {
+  margin: 0;
+  font-weight: 600;
+  color: var(--textStrong, #3a2f10);
+}
+
+.entry-table-page .entry-table {
+  min-width: 980px;
+  table-layout: auto;
+}
+
+.entry-table-page .entry-table thead th {
+  padding: 12px 14px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.entry-table-page .entry-table tbody td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(227, 191, 92, 0.18);
+  vertical-align: top;
+}
+
+.entry-table-link {
+  color: #b5851a;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.entry-table-link:hover {
+  text-decoration: underline;
+}
+
+.entry-table-status {
+  text-align: center;
+  color: var(--textMuted);
+  padding: 28px 12px;
+}
+
+.entry-table-status.error {
+  color: #b3261e;
+}
+
 .entry-sequence {
   display: inline-block;
   max-width: 100%;
