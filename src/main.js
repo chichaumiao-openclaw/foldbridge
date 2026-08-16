@@ -47,6 +47,8 @@ import {
   sortAnnojointCases
 } from './annojoinAtlasTableModel.js';
 import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
+import { normalizeEntryRows } from './entryTable.js';
+import { renderEntryTablePage } from './entryTableView.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
 import {
   initAnnojointCasePage,
@@ -81,6 +83,7 @@ const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'er
 const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
+let entryTableState = null; // null=未加载, 'loading', 'error', 或归一化后的 rows 数组
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let pdbCaseConfidenceFilter = 'all';
 let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
@@ -1582,7 +1585,7 @@ function renderTechnologyOverviewPage() {
       <div class="technology-hero-copy">
         <p class="technology-kicker">technology atlas</p>
         <h1>Technology Categories</h1>
-        <p class="technology-intro">This page is now organized as a method directory: 5 large technology modules first, then concrete techniques inside each module. Every technique name below opens its own child page.</p>
+        <p class="technology-intro">This page is now organized as a method directory: ${technologyCategories.length} large technology modules first, then concrete techniques inside each module. Every technique name below opens its own child page.</p>
         <p class="technology-intro technology-intro-secondary">That gives you the exact structure you described: users first browse by category, then click into a specific method page for principle, workflow, strengths, caveats, and references.</p>
         <div class="technology-chip-row">${categoryChips}</div>
       </div>
@@ -1938,6 +1941,31 @@ async function loadProbingArticleDetail(slug) {
     probingArticleDetailState.set(slug, 'error');
   }
   if (route === 'detail' || route === 'probing') render({ preserveScroll: true });
+}
+
+async function loadEntryTable() {
+  if (entryTableState === 'loading') return;
+  entryTableState = 'loading';
+  try {
+    const response = await fetch('./src/assets/generated/entry-table/entry-table.json');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    entryTableState = normalizeEntryRows(await response.json());
+  } catch (err) {
+    console.error('[main] 加载 entry 表失败', err);
+    entryTableState = 'error';
+  }
+  if (route === 'entry') render({ preserveScroll: true });
+}
+
+function entryTablePage() {
+  if (!entryTableState || entryTableState === 'loading') {
+    if (entryTableState !== 'loading') loadEntryTable();
+    return renderEntryTablePage({ rows: null, statusMessage: { tone: 'loading', text: 'Loading the entry table…' } });
+  }
+  if (entryTableState === 'error') {
+    return renderEntryTablePage({ rows: null, statusMessage: { tone: 'error', text: 'The entry table could not be loaded. Refresh to try again.' } });
+  }
+  return renderEntryTablePage({ rows: entryTableState });
 }
 
 async function loadAnnojointAtlasIndex() {
@@ -2868,7 +2896,7 @@ function annojoinConfidencePage() {
 function pageFor(name) {
   const safeRoute = normalizeRoute(name);
   if (safeRoute === 'browse') return browsePage();
-  if (safeRoute === 'entry') return annojoinAtlasPage();
+  if (safeRoute === 'entry') return entryTablePage();
   if (safeRoute === 'sequence') return annojoinAtlasPage();
   if (safeRoute === 'structure') return structurePage();
   if (safeRoute === 'pdb-case') return pdbCasePage();
