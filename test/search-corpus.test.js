@@ -32,6 +32,17 @@ test('search corpus exposes probing-article and pdb-case docs, no dead routes', 
   assert.ok(!docs.some((doc) => doc.href.startsWith('#pdb-case')));
 });
 
+test('search corpus assigns unique ids to case-sensitive chain identities', () => {
+  const docs = buildSearchDocuments();
+  assert.equal(new Set(docs.map((doc) => doc.id)).size, docs.length);
+
+  const upperChain = docs.find((doc) => doc.href.includes('caseKey=ENTRY%3A10PX%3A1A'));
+  const lowerChain = docs.find((doc) => doc.href.includes('caseKey=ENTRY%3A10PX%3A1a'));
+  assert.ok(upperChain);
+  assert.ok(lowerChain);
+  assert.notEqual(upperChain.id, lowerChain.id);
+});
+
 test('renderSearchDocumentHtml writes Pagefind metadata and filters', () => {
   const doc = buildSearchDocuments().find((item) => item.href.includes('caseId=10FZ'));
   const html = renderSearchDocumentHtml(doc);
