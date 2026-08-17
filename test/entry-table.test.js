@@ -31,25 +31,24 @@ test('normalizeEntryRows tolerates missing/empty payload', () => {
   assert.deepEqual(normalizeEntryRows({ rows: 'nope' }), []);
 });
 
-test('entryCaseHref joins base + pdb + chain (auth)', () => {
+test('entryCaseHref points to static case page with chain query', () => {
   const row = { pdbId: '7SYS', auth: 'z', chainKey: 'I[z]' };
-  assert.equal(entryCaseHref('#case', row), '#case?pdb=7SYS&chain=z');
+  assert.equal(
+    entryCaseHref('./public/entry-cases', row),
+    './public/entry-cases/cases/7SYS/index.html?chain=z'
+  );
 });
 
-test('entryCaseHref url-encodes pdb and chain (URLSearchParams form, round-trips via router)', () => {
+test('entryCaseHref url-encodes pdb path segment and chain query', () => {
   const row = { pdbId: 'A B', auth: 'a/b', chainKey: 'x' };
-  // URLSearchParams 用 '+' 编码空格、'%2F' 编码斜杠；router 的 parseHashRoute
-  // 用同一个 URLSearchParams 解析，能正确往返回 'A B' / 'a/b'。
-  const href = entryCaseHref('#case', row);
-  assert.equal(href, '#case?pdb=A+B&chain=a%2Fb');
-  const parsed = new URLSearchParams(href.split('?')[1]);
-  assert.equal(parsed.get('pdb'), 'A B');
-  assert.equal(parsed.get('chain'), 'a/b');
+  const href = entryCaseHref('./base', row);
+  // PDB 进路径段用 encodeURIComponent（空格→%20）；chain 用 URLSearchParams（/→%2F）
+  assert.equal(href, './base/cases/A%20B/index.html?chain=a%2Fb');
 });
 
 test('entryCaseHref returns empty string when pdb or auth missing', () => {
-  assert.equal(entryCaseHref('#case', { pdbId: '', auth: 'A' }), '');
-  assert.equal(entryCaseHref('#case', { pdbId: '7SYS', auth: '' }), '');
+  assert.equal(entryCaseHref('./base', { pdbId: '', auth: 'A' }), '');
+  assert.equal(entryCaseHref('./base', { pdbId: '7SYS', auth: '' }), '');
 });
 
 test('ENTRY_TABLE_COLUMNS is the frozen display column order', () => {

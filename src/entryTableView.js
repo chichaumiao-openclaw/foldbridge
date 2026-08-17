@@ -1,5 +1,5 @@
 // entry 浏览入口表的视图层：纯函数，输入归一化行 → 输出 HTML 字符串。
-// 无 DOM 副作用、无 fetch。跳转链接由 entryCaseHref 生成（base 占位）。
+// 无 DOM 副作用、无 fetch。跳转链接由 entryCaseHref 生成，指向静态 case 页树。
 
 import { ENTRY_TABLE_COLUMNS, entryCaseHref } from './entryTable.js';
 
@@ -34,7 +34,7 @@ function renderRow(row, caseBase) {
 }
 
 // 主渲染。rows=null → loading/error 态由 statusMessage 承载。
-export function renderEntryTablePage({ rows, caseBase = '#pdb-case', statusMessage = null } = {}) {
+export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', statusMessage = null } = {}) {
   const head = ENTRY_TABLE_COLUMNS
     .map((col) => `<th scope="col">${escapeHtml(col.label)}</th>`)
     .join('');

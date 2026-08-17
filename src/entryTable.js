@@ -1,6 +1,6 @@
 // entry 浏览入口表：纯数据/纯函数层（无 DOM、无 fetch）。
 // 读 build-entry-table.py 产出的 entry-table.json（pdb_id x chain 粒度），
-// 归一化为视图行，并按 base + pdb + chain 拼 case page 跳转链接（URL 规则占位）。
+// 归一化为视图行，并拼指向静态 case 页 cases/<PDB>/index.html?chain=<auth> 的跳转链接。
 
 // 展示列顺序（源自论文 Fig 2C：molecule / PDB / chain / profiles / technique /
 // confidence / class / source）。锁死列序。
@@ -35,15 +35,13 @@ export function normalizeEntryRows(payload) {
   }));
 }
 
-// 按 base + pdb + chain 拼 case page 链接。chain 参数用 auth（对齐 case page
-// chains/<auth> 命名）。base 为占位常量，case page 机制就位后再定最终值。
-// pdb 或 auth 缺失 → 返回空串（该行不可跳转，由视图层降级处理）。
+// entry 行 → 静态 case 页链接。PDB 进路径段（对齐 render shell 输出 cases/<PDB>/），
+// chain(auth) 作 query（对齐 bundle chains/<auth>）。pdb 或 auth 缺失 → 空串（不可跳）。
 export function entryCaseHref(base, row) {
   const pdb = text(row && row.pdbId);
   const chain = text(row && row.auth);
   if (!pdb || !chain) return '';
   const params = new URLSearchParams();
-  params.set('pdb', pdb);
   params.set('chain', chain);
-  return `${base}?${params.toString()}`;
+  return `${base}/cases/${encodeURIComponent(pdb)}/index.html?${params.toString()}`;
 }
