@@ -17,13 +17,22 @@ function cellValue(row, columnId) {
   return escapeHtml(row[columnId] ?? '');
 }
 
-function renderRow(row, caseBase) {
+// 把 missingPdbs 入参（Set | Array | null/undefined）归一为 Set。
+function toMissingSet(missingPdbs) {
+  if (missingPdbs instanceof Set) return missingPdbs;
+  if (Array.isArray(missingPdbs)) return new Set(missingPdbs);
+  return new Set();
+}
+
+function renderRow(row, caseBase, missingSet) {
   const href = entryCaseHref(caseBase, row);
+  // 缺页降级：命中缺页集合（逐字节精确，不折叠大小写）则强制纯文本，不渲染死链 <a>。
+  const isMissing = missingSet.has(row.pdbId);
   const cells = ENTRY_TABLE_COLUMNS.map((col) => {
     if (col.id === 'pdbId') {
-      // PDB 列作为跳转入口：有链接则渲染 <a>，否则纯文本（占位不可跳）。
+      // PDB 列作为跳转入口：有链接且非缺页则渲染 <a>，否则纯文本（占位不可跳）。
       const label = escapeHtml(row.pdbId);
-      const inner = href
+      const inner = href && !isMissing
         ? `<a class="entry-table-link" href="${escapeHtml(href)}">${label}</a>`
         : label;
       return `<td>${inner}</td>`;
@@ -34,7 +43,9 @@ function renderRow(row, caseBase) {
 }
 
 // 主渲染。rows=null → loading/error 态由 statusMessage 承载。
-export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', statusMessage = null } = {}) {
+// missingPdbs（Set 或 Array，缺省空集合）：命中的 PDB 行降级为纯文本，不渲染死链。
+export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', statusMessage = null, missingPdbs = null } = {}) {
+  const missingSet = toMissingSet(missingPdbs);
   const head = ENTRY_TABLE_COLUMNS
     .map((col) => `<th scope="col">${escapeHtml(col.label)}</th>`)
     .join('');
@@ -45,7 +56,7 @@ export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', 
   } else if (!rows || rows.length === 0) {
     body = `<tr><td class="entry-table-status" colspan="${ENTRY_TABLE_COLUMNS.length}">No entries.</td></tr>`;
   } else {
-    body = rows.map((row) => renderRow(row, caseBase)).join('');
+    body = rows.map((row) => renderRow(row, caseBase, missingSet)).join('');
   }
 
   const count = Array.isArray(rows) ? rows.length : 0;
