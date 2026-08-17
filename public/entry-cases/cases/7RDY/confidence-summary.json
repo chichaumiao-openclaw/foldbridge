@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7RDY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 416,
+  "defaultEvidenceId": "annojoin:7RDY:confidence:A:data-rna-structures/SRSBCV_DMS_0004.rdat#25986",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 207,
+    "B": 209
+  },
+  "generatedAt": "2026-08-17T12:33:28.063985Z",
+  "materializedEvidenceCount": 416,
+  "pdbId": "7RDY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 20,
+    "NOT_SUPPORTED": 396
+  },
+  "totalEvidenceCount": 416
+}

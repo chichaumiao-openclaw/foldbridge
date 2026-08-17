@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7SFR",
+  "biologicalMoleculeName": "7SFR",
+  "caseId": "7SFR",
+  "caseKey": "7SFR",
+  "chains": [
+    "A",
+    "B",
+    "a"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7SFR",
+  "profileCount": 3895
+}

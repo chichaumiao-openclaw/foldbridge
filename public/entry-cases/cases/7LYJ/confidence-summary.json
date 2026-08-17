@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7LYJ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3608,
+  "defaultEvidenceId": "annojoin:7LYJ:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#19726",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1795,
+    "B": 1813
+  },
+  "generatedAt": "2026-08-17T11:17:37.724985Z",
+  "materializedEvidenceCount": 3608,
+  "pdbId": "7LYJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 3608
+  },
+  "totalEvidenceCount": 3608
+}

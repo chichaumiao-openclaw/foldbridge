@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1N78",
+  "biologicalMoleculeName": "1N78",
+  "caseId": "1N78",
+  "caseKey": "1N78",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1N78",
+  "profileCount": 2
+}

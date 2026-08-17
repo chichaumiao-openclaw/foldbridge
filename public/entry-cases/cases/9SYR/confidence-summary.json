@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9SYR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6906,
+  "defaultEvidenceId": "annojoin:9SYR:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3433,
+    "B": 3473
+  },
+  "generatedAt": "2026-08-17T12:21:44.256242Z",
+  "materializedEvidenceCount": 6906,
+  "pdbId": "9SYR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 6906
+  },
+  "totalEvidenceCount": 6906
+}

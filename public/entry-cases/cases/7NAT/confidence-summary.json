@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7NAT",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5010,
+  "defaultEvidenceId": "annojoin:7NAT:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11407",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2233,
+    "B": 2777
+  },
+  "generatedAt": "2026-08-17T11:50:10.561022Z",
+  "materializedEvidenceCount": 5010,
+  "pdbId": "7NAT",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 547,
+    "LOW": 1465,
+    "NOT_SUPPORTED": 2998
+  },
+  "totalEvidenceCount": 5010
+}

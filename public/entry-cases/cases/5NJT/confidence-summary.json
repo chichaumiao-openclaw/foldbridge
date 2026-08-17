@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5NJT",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7578,
+  "defaultEvidenceId": "annojoin:5NJT:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#13956",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3788,
+    "B": 3790
+  },
+  "generatedAt": "2026-08-17T11:43:36.994359Z",
+  "materializedEvidenceCount": 7578,
+  "pdbId": "5NJT",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 106,
+    "LOW": 1753,
+    "NOT_SUPPORTED": 5719
+  },
+  "totalEvidenceCount": 7578
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8HKU",
+  "biologicalMoleculeName": "8HKU",
+  "caseId": "8HKU",
+  "caseKey": "8HKU",
+  "chains": [
+    "A23S",
+    "A5S"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8HKU",
+  "profileCount": 384
+}

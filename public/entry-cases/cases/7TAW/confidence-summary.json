@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7TAW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 12,
+  "defaultEvidenceId": "annojoin:7TAW:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#4226",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 6
+  },
+  "generatedAt": "2026-08-17T12:52:51.132170Z",
+  "materializedEvidenceCount": 12,
+  "pdbId": "7TAW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 4,
+    "NOT_SUPPORTED": 8
+  },
+  "totalEvidenceCount": 12
+}

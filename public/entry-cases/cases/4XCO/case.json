@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4XCO",
+  "biologicalMoleculeName": "4XCO",
+  "caseId": "4XCO",
+  "caseKey": "4XCO",
+  "chains": [
+    "E",
+    "M"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4XCO",
+  "profileCount": 64
+}

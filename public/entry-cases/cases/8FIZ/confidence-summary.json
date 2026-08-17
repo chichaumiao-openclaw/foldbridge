@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8FIZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19133,
+  "defaultEvidenceId": "annojoin:8FIZ:confidence:B:data-general/PTCWT_1M7_0001.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9049,
+    "B": 10084
+  },
+  "generatedAt": "2026-08-17T12:52:51.132170Z",
+  "materializedEvidenceCount": 19133,
+  "pdbId": "8FIZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 19133
+  },
+  "totalEvidenceCount": 19133
+}

@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7OIB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 264,
+  "defaultEvidenceId": "annojoin:7OIB:confidence:A:data-eterna/OK2TST_DMS_0000.rdat#108397",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 132,
+    "B": 132
+  },
+  "generatedAt": "2026-08-17T11:40:49.272122Z",
+  "materializedEvidenceCount": 264,
+  "pdbId": "7OIB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 32,
+    "NOT_SUPPORTED": 232
+  },
+  "totalEvidenceCount": 264
+}

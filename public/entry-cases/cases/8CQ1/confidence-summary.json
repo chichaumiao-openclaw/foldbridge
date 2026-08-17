@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8CQ1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 201,
+  "defaultEvidenceId": "annojoin:8CQ1:confidence:B:data-eterna/SHAPE_RYOS_0620.rdat#538",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 99,
+    "B": 102
+  },
+  "generatedAt": "2026-08-17T13:04:21.164543Z",
+  "materializedEvidenceCount": 201,
+  "pdbId": "8CQ1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 201
+  },
+  "totalEvidenceCount": 201
+}

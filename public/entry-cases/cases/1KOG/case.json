@@ -1,0 +1,20 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1KOG",
+  "biologicalMoleculeName": "1KOG",
+  "caseId": "1KOG",
+  "caseKey": "1KOG",
+  "chains": [
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N",
+    "O",
+    "P"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1KOG",
+  "profileCount": 2
+}

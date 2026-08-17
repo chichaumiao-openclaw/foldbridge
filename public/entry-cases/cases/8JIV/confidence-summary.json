@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8JIV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4819,
+  "defaultEvidenceId": "annojoin:8JIV:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#1349",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2409,
+    "B": 2410
+  },
+  "generatedAt": "2026-08-17T11:55:01.373656Z",
+  "materializedEvidenceCount": 4819,
+  "pdbId": "8JIV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4819
+  },
+  "totalEvidenceCount": 4819
+}

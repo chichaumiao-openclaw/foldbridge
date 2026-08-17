@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6CAR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1059,
+  "defaultEvidenceId": "annojoin:6CAR:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#892",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 529,
+    "B": 530
+  },
+  "generatedAt": "2026-08-17T11:11:01.230105Z",
+  "materializedEvidenceCount": 1059,
+  "pdbId": "6CAR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 8,
+    "LOW": 116,
+    "NOT_SUPPORTED": 935
+  },
+  "totalEvidenceCount": 1059
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4ZC7",
+  "biologicalMoleculeName": "4ZC7",
+  "caseId": "4ZC7",
+  "caseKey": "4ZC7",
+  "chains": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "4ZC7",
+  "profileCount": 22
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8IFE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5854,
+  "defaultEvidenceId": "annojoin:8IFE:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2925,
+    "B": 2929
+  },
+  "generatedAt": "2026-08-17T12:24:04.370987Z",
+  "materializedEvidenceCount": 5854,
+  "pdbId": "8IFE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5854
+  },
+  "totalEvidenceCount": 5854
+}

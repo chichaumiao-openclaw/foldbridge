@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9LE3",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 48,
+  "defaultEvidenceId": "annojoin:9LE3:confidence:B:data-eterna/OK3TST_2A3_0000.rdat#15786",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 24,
+    "B": 24
+  },
+  "generatedAt": "2026-08-17T12:06:34.860817Z",
+  "materializedEvidenceCount": 48,
+  "pdbId": "9LE3",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 7,
+    "LOW": 5,
+    "NOT_SUPPORTED": 36
+  },
+  "totalEvidenceCount": 48
+}

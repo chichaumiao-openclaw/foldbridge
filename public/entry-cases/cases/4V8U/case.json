@@ -1,0 +1,20 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4V8U",
+  "biologicalMoleculeName": "4V8U",
+  "caseId": "4V8U",
+  "caseKey": "4V8U",
+  "chains": [
+    "AA",
+    "AV",
+    "BA",
+    "BB",
+    "CA",
+    "CV",
+    "DA",
+    "DB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4V8U",
+  "profileCount": 1547
+}

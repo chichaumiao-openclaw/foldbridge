@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "8ZCY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8,
+  "defaultEvidenceId": "annojoin:8ZCY:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#13040",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 4
+  },
+  "generatedAt": "2026-08-17T12:40:31.784927Z",
+  "materializedEvidenceCount": 8,
+  "pdbId": "8ZCY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 5,
+    "NOT_SUPPORTED": 3
+  },
+  "totalEvidenceCount": 8
+}

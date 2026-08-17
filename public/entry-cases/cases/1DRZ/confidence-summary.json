@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1DRZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5821,
+  "defaultEvidenceId": "annojoin:1DRZ:confidence:B:data-eterna/ETERNA_P90_0001.rdat#1475",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2765,
+    "B": 3056
+  },
+  "generatedAt": "2026-08-17T12:46:07.647795Z",
+  "materializedEvidenceCount": 5821,
+  "pdbId": "1DRZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5821
+  },
+  "totalEvidenceCount": 5821
+}

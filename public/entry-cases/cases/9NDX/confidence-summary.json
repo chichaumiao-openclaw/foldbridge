@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9NDX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 28,
+  "defaultEvidenceId": "annojoin:9NDX:confidence:B:data-eterna/ETERNA_P50_0002.rdat#2426",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 12,
+    "B": 16
+  },
+  "generatedAt": "2026-08-17T11:02:24.167440Z",
+  "materializedEvidenceCount": 28,
+  "pdbId": "9NDX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 8,
+    "NOT_SUPPORTED": 20
+  },
+  "totalEvidenceCount": 28
+}

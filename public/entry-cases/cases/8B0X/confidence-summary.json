@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8B0X",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 15376,
+  "defaultEvidenceId": "annojoin:8B0X:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#274",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 7330,
+    "B": 8046
+  },
+  "generatedAt": "2026-08-17T10:56:06.713584Z",
+  "materializedEvidenceCount": 15376,
+  "pdbId": "8B0X",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 624,
+    "LOW": 2472,
+    "NOT_SUPPORTED": 12280
+  },
+  "totalEvidenceCount": 15376
+}

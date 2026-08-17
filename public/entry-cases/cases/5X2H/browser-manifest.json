@@ -1,0 +1,62 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "B": {
+      "case2dPath": "chains/B/case-2d-structure.json.gz",
+      "chainId": "B",
+      "chainRoot": "chains/B",
+      "linkedViewBundlePath": "chains/B/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/B/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/B/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "B",
+  "evidenceChainMap": {
+    "annojoin:5X2H:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#4224": "B",
+    "annojoin:5X2H:confidence:A:data-rna-structures/POS240_DMS_0000.rdat#1469": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#1035": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#1036": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#1052": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#1109": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#1111": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#1123": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#1225": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#1742": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#1978": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#2086": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#2468": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#2534": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#2568": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#2662": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#2968": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#316": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#3384": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#3510": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#359": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#3953": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#405": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#427": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#446": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#4489": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#464": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#5417": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#579": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#716": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#724": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#731": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#803": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#846": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#876": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#891": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#984": "B",
+    "annojoin:5X2H:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#985": "B",
+    "annojoin:5X2H:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#4224": "B",
+    "annojoin:5X2H:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1469": "B"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6M62",
+  "biologicalMoleculeName": "6M62",
+  "caseId": "6M62",
+  "caseKey": "6M62",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "6"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "6M62",
+  "profileCount": 4146
+}

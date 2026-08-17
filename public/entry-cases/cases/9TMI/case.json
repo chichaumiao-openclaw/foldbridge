@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9TMI",
+  "biologicalMoleculeName": "9TMI",
+  "caseId": "9TMI",
+  "caseKey": "9TMI",
+  "chains": [
+    "A",
+    "Y",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "9TMI",
+  "profileCount": 19228
+}

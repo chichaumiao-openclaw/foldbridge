@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "5UK4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1392,
+  "defaultEvidenceId": "annojoin:5UK4:confidence:B:data-eterna/ETERNA_R81_0000.rdat#400",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 380,
+    "B": 1012
+  },
+  "generatedAt": "2026-08-17T11:02:07.037170Z",
+  "materializedEvidenceCount": 1392,
+  "pdbId": "5UK4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 149,
+    "NOT_SUPPORTED": 1243
+  },
+  "totalEvidenceCount": 1392
+}

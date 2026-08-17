@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8UQM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19171,
+  "defaultEvidenceId": "annojoin:8UQM:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#19987",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9068,
+    "B": 10103
+  },
+  "generatedAt": "2026-08-17T11:50:10.561022Z",
+  "materializedEvidenceCount": 19171,
+  "pdbId": "8UQM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 678,
+    "LOW": 4210,
+    "NOT_SUPPORTED": 14283
+  },
+  "totalEvidenceCount": 19171
+}

@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8QBL",
+  "biologicalMoleculeName": "8QBL",
+  "caseId": "8QBL",
+  "caseKey": "8QBL",
+  "chains": [
+    "C",
+    "M",
+    "O",
+    "R",
+    "W",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "8QBL",
+  "profileCount": 2
+}

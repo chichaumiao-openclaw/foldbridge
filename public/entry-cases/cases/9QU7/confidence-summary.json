@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9QU7",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 356,
+  "defaultEvidenceId": "annojoin:9QU7:confidence:A:data-rna-structures/PKBLNG_DMS_0000.rdat#50",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 178,
+    "B": 178
+  },
+  "generatedAt": "2026-08-17T12:32:49.372981Z",
+  "materializedEvidenceCount": 356,
+  "pdbId": "9QU7",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 7,
+    "NOT_SUPPORTED": 349
+  },
+  "totalEvidenceCount": 356
+}

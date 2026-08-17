@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5J88",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1802,
+  "defaultEvidenceId": "annojoin:5J88:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#1922",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 718,
+    "B": 1084
+  },
+  "generatedAt": "2026-08-17T11:09:30.598638Z",
+  "materializedEvidenceCount": 1802,
+  "pdbId": "5J88",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 1802
+  },
+  "totalEvidenceCount": 1802
+}

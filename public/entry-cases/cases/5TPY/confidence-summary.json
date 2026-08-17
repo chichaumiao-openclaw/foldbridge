@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5TPY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 235,
+  "defaultEvidenceId": "annojoin:5TPY:confidence:B:data-puzzle/RNAPZ18_1M7_0000.rdat#46",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 153,
+    "B": 82
+  },
+  "generatedAt": "2026-08-17T12:17:42.743368Z",
+  "materializedEvidenceCount": 235,
+  "pdbId": "5TPY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 74,
+    "LOW": 140,
+    "NOT_SUPPORTED": 21
+  },
+  "totalEvidenceCount": 235
+}

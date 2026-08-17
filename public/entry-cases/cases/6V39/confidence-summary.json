@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6V39",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1776,
+  "defaultEvidenceId": "annojoin:6V39:confidence:B:data-general/ARCHII_2A3_0000.rdat#23246",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 887,
+    "B": 889
+  },
+  "generatedAt": "2026-08-17T12:58:31.235657Z",
+  "materializedEvidenceCount": 1776,
+  "pdbId": "6V39",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 3,
+    "NOT_SUPPORTED": 1771
+  },
+  "totalEvidenceCount": 1776
+}

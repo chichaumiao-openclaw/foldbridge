@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5KPS",
+  "biologicalMoleculeName": "5KPS",
+  "caseId": "5KPS",
+  "caseKey": "5KPS",
+  "chains": [
+    "27",
+    "28",
+    "29",
+    "31",
+    "32"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "5KPS",
+  "profileCount": 821
+}

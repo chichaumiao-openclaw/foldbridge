@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8JDK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5290,
+  "defaultEvidenceId": "annojoin:8JDK:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#42972",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2643,
+    "B": 2647
+  },
+  "generatedAt": "2026-08-17T11:37:53.237503Z",
+  "materializedEvidenceCount": 5290,
+  "pdbId": "8JDK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 65,
+    "LOW": 775,
+    "NOT_SUPPORTED": 4450
+  },
+  "totalEvidenceCount": 5290
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8AYE",
+  "biologicalMoleculeName": "8AYE",
+  "caseId": "8AYE",
+  "caseKey": "8AYE",
+  "chains": [
+    "A",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8AYE",
+  "profileCount": 16387
+}

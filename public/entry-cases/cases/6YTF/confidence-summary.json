@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6YTF",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1108,
+  "defaultEvidenceId": "annojoin:6YTF:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#19998",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 553,
+    "B": 555
+  },
+  "generatedAt": "2026-08-17T12:52:15.874142Z",
+  "materializedEvidenceCount": 1108,
+  "pdbId": "6YTF",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 15,
+    "LOW": 214,
+    "NOT_SUPPORTED": 879
+  },
+  "totalEvidenceCount": 1108
+}

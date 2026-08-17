@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7PJS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18801,
+  "defaultEvidenceId": "annojoin:7PJS:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#42120",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8902,
+    "B": 9899
+  },
+  "generatedAt": "2026-08-17T11:40:49.272122Z",
+  "materializedEvidenceCount": 18801,
+  "pdbId": "7PJS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 954,
+    "LOW": 3311,
+    "NOT_SUPPORTED": 14536
+  },
+  "totalEvidenceCount": 18801
+}

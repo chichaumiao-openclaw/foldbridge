@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7QEP",
+  "biologicalMoleculeName": "7QEP",
+  "caseId": "7QEP",
+  "caseKey": "7QEP",
+  "chains": [
+    "1",
+    "2",
+    "3"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7QEP",
+  "profileCount": 790
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8Y5Q",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19157,
+  "defaultEvidenceId": "annojoin:8Y5Q:confidence:B:data-general/P50LIB_2A3_0000.rdat#1537",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9079,
+    "B": 10078
+  },
+  "generatedAt": "2026-08-17T13:04:21.164543Z",
+  "materializedEvidenceCount": 19157,
+  "pdbId": "8Y5Q",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 500,
+    "LOW": 6030,
+    "NOT_SUPPORTED": 12627
+  },
+  "totalEvidenceCount": 19157
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "3PTX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3024,
+  "defaultEvidenceId": "annojoin:3PTX:confidence:B:data-eterna/OK3TST_2A3_0003.rdat#25165",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1075,
+    "B": 1949
+  },
+  "generatedAt": "2026-08-17T12:00:38.806516Z",
+  "materializedEvidenceCount": 3024,
+  "pdbId": "3PTX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 3024
+  },
+  "totalEvidenceCount": 3024
+}

@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5GAK",
+  "biologicalMoleculeName": "5GAK",
+  "caseId": "5GAK",
+  "caseKey": "5GAK",
+  "chains": [
+    "1",
+    "3",
+    "4",
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5GAK",
+  "profileCount": 3994
+}

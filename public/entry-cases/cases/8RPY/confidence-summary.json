@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8RPY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 14002,
+  "defaultEvidenceId": "annojoin:8RPY:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#99152",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6774,
+    "B": 7228
+  },
+  "generatedAt": "2026-08-17T11:47:57.668894Z",
+  "materializedEvidenceCount": 14002,
+  "pdbId": "8RPY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 294,
+    "LOW": 2741,
+    "NOT_SUPPORTED": 10967
+  },
+  "totalEvidenceCount": 14002
+}

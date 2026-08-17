@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8P60",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1848,
+  "defaultEvidenceId": "annojoin:8P60:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#2774",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 924,
+    "B": 924
+  },
+  "generatedAt": "2026-08-17T13:14:39.572696Z",
+  "materializedEvidenceCount": 1848,
+  "pdbId": "8P60",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 1848
+  },
+  "totalEvidenceCount": 1848
+}

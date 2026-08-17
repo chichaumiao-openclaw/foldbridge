@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4WCE",
+  "biologicalMoleculeName": "4WCE",
+  "caseId": "4WCE",
+  "caseKey": "4WCE",
+  "chains": [
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "4WCE",
+  "profileCount": 3994
+}

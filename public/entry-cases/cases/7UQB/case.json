@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7UQB",
+  "biologicalMoleculeName": "7UQB",
+  "caseId": "7UQB",
+  "caseKey": "7UQB",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7UQB",
+  "profileCount": 4638
+}

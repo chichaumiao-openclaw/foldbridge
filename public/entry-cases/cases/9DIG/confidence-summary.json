@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9DIG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 278,
+  "defaultEvidenceId": "annojoin:9DIG:confidence:B:data-eterna/OK7BLIB_2A3_0000.rdat#3633",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 124,
+    "B": 154
+  },
+  "generatedAt": "2026-08-17T11:09:41.751286Z",
+  "materializedEvidenceCount": 278,
+  "pdbId": "9DIG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 20,
+    "NOT_SUPPORTED": 256
+  },
+  "totalEvidenceCount": 278
+}

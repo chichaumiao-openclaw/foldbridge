@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3G9C",
+  "biologicalMoleculeName": "3G9C",
+  "caseId": "3G9C",
+  "caseKey": "3G9C",
+  "chains": [
+    "P",
+    "Q",
+    "R",
+    "S"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "3G9C",
+  "profileCount": 23
+}

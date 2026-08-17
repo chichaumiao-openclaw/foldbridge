@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6SZS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18146,
+  "defaultEvidenceId": "annojoin:6SZS:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#39692",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8557,
+    "B": 9589
+  },
+  "generatedAt": "2026-08-17T11:52:21.352142Z",
+  "materializedEvidenceCount": 18146,
+  "pdbId": "6SZS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 664,
+    "LOW": 3629,
+    "NOT_SUPPORTED": 13853
+  },
+  "totalEvidenceCount": 18146
+}

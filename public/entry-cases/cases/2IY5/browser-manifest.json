@@ -1,0 +1,28 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "T": {
+      "case2dPath": "chains/T/case-2d-structure.json.gz",
+      "chainId": "T",
+      "chainRoot": "chains/T",
+      "linkedViewBundlePath": "chains/T/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/T/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/T/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "T",
+  "evidenceChainMap": {
+    "annojoin:2IY5:confidence:A:data-general/ARCHII_DMS_0000.rdat#17953": "T",
+    "annojoin:2IY5:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#12353": "T",
+    "annojoin:2IY5:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#6449": "T",
+    "annojoin:2IY5:confidence:B:data-general/ARCHII_2A3_0000.rdat#17953": "T",
+    "annojoin:2IY5:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12353": "T",
+    "annojoin:2IY5:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#6449": "T"
+  }
+}

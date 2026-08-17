@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5FVC",
+  "biologicalMoleculeName": "5FVC",
+  "caseId": "5FVC",
+  "caseKey": "5FVC",
+  "chains": [
+    "K"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "5FVC",
+  "profileCount": 128
+}

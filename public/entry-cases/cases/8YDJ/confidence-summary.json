@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8YDJ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19381,
+  "defaultEvidenceId": "annojoin:8YDJ:confidence:B:data-general/P50LIB_2A3_0000.rdat#1537",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9113,
+    "B": 10268
+  },
+  "generatedAt": "2026-08-17T12:39:28.893021Z",
+  "materializedEvidenceCount": 19381,
+  "pdbId": "8YDJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 524,
+    "LOW": 6018,
+    "NOT_SUPPORTED": 12839
+  },
+  "totalEvidenceCount": 19381
+}

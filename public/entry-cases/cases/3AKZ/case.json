@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3AKZ",
+  "biologicalMoleculeName": "3AKZ",
+  "caseId": "3AKZ",
+  "caseKey": "3AKZ",
+  "chains": [
+    "E",
+    "F",
+    "G",
+    "H"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "3AKZ",
+  "profileCount": 2
+}

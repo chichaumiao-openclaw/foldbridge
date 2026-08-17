@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5GM6",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 222,
+  "defaultEvidenceId": "annojoin:5GM6:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#9265",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 111,
+    "B": 111
+  },
+  "generatedAt": "2026-08-17T13:15:46.196997Z",
+  "materializedEvidenceCount": 222,
+  "pdbId": "5GM6",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 31,
+    "NOT_SUPPORTED": 189
+  },
+  "totalEvidenceCount": 222
+}

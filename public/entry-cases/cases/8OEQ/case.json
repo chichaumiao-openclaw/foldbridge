@@ -1,0 +1,20 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8OEQ",
+  "biologicalMoleculeName": "8OEQ",
+  "caseId": "8OEQ",
+  "caseKey": "8OEQ",
+  "chains": [
+    "1",
+    "3",
+    "4",
+    "AS",
+    "AT",
+    "AU",
+    "B",
+    "CM"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8OEQ",
+  "profileCount": 9962
+}

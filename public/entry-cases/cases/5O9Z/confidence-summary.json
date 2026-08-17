@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5O9Z",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 312,
+  "defaultEvidenceId": "annojoin:5O9Z:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#37701",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 154,
+    "B": 158
+  },
+  "generatedAt": "2026-08-17T11:02:10.009471Z",
+  "materializedEvidenceCount": 312,
+  "pdbId": "5O9Z",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 7,
+    "LOW": 77,
+    "NOT_SUPPORTED": 228
+  },
+  "totalEvidenceCount": 312
+}

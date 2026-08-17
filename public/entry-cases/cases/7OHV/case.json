@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7OHV",
+  "biologicalMoleculeName": "7OHV",
+  "caseId": "7OHV",
+  "caseKey": "7OHV",
+  "chains": [
+    "1",
+    "2",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7OHV",
+  "profileCount": 4590
+}

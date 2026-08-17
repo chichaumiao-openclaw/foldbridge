@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9RFW",
+  "biologicalMoleculeName": "9RFW",
+  "caseId": "9RFW",
+  "caseKey": "9RFW",
+  "chains": [
+    "Y",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "9RFW",
+  "profileCount": 14167
+}

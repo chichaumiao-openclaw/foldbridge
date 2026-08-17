@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6LU8",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1736,
+  "defaultEvidenceId": "annojoin:6LU8:confidence:A:data-general/ARCHII_DMS_0000.rdat#22846",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 868,
+    "B": 868
+  },
+  "generatedAt": "2026-08-17T11:21:04.164187Z",
+  "materializedEvidenceCount": 1736,
+  "pdbId": "6LU8",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 44,
+    "LOW": 398,
+    "NOT_SUPPORTED": 1294
+  },
+  "totalEvidenceCount": 1736
+}

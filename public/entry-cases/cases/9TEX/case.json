@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9TEX",
+  "biologicalMoleculeName": "9TEX",
+  "caseId": "9TEX",
+  "caseKey": "9TEX",
+  "chains": [
+    "A",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "9TEX",
+  "profileCount": 19229
+}

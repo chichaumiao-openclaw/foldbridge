@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8UYM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2664,
+  "defaultEvidenceId": "annojoin:8UYM:confidence:B:data-rna-structures/M2SL5_2A3_0000.rdat#1000",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1332,
+    "B": 1332
+  },
+  "generatedAt": "2026-08-17T12:46:13.329069Z",
+  "materializedEvidenceCount": 2664,
+  "pdbId": "8UYM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2664
+  },
+  "totalEvidenceCount": 2664
+}

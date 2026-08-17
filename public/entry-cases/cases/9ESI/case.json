@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9ESI",
+  "biologicalMoleculeName": "9ESI",
+  "caseId": "9ESI",
+  "caseKey": "9ESI",
+  "chains": [
+    "2",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "9ESI",
+  "profileCount": 170
+}

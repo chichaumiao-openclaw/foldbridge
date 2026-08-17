@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6S05",
+  "biologicalMoleculeName": "6S05",
+  "caseId": "6S05",
+  "caseKey": "6S05",
+  "chains": [
+    "A",
+    "x",
+    "y"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "6S05",
+  "profileCount": 4290
+}

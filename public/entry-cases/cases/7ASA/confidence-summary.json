@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7ASA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5294,
+  "defaultEvidenceId": "annojoin:7ASA:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#27213",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2646,
+    "B": 2648
+  },
+  "generatedAt": "2026-08-17T13:10:54.484222Z",
+  "materializedEvidenceCount": 5294,
+  "pdbId": "7ASA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 63,
+    "LOW": 161,
+    "NOT_SUPPORTED": 5070
+  },
+  "totalEvidenceCount": 5294
+}

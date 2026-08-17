@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "8FZR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5,
+  "defaultEvidenceId": "annojoin:8FZR:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#2978",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T11:26:25.684564Z",
+  "materializedEvidenceCount": 5,
+  "pdbId": "8FZR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 3,
+    "NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 5
+}

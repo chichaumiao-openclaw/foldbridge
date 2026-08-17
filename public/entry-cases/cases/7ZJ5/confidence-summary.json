@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7ZJ5",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 50,
+  "defaultEvidenceId": "annojoin:7ZJ5:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#13279",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 25,
+    "B": 25
+  },
+  "generatedAt": "2026-08-17T12:18:57.850374Z",
+  "materializedEvidenceCount": 50,
+  "pdbId": "7ZJ5",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 10,
+    "LOW": 15,
+    "NOT_SUPPORTED": 25
+  },
+  "totalEvidenceCount": 50
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8ONY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2850,
+  "defaultEvidenceId": "annojoin:8ONY:confidence:B:data-rna-structures/RFMREP_2A3_0001.rdat#8644",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1425,
+    "B": 1425
+  },
+  "generatedAt": "2026-08-17T11:36:33.593526Z",
+  "materializedEvidenceCount": 2850,
+  "pdbId": "8ONY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 40,
+    "NOT_SUPPORTED": 2809
+  },
+  "totalEvidenceCount": 2850
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9GUT",
+  "biologicalMoleculeName": "9GUT",
+  "caseId": "9GUT",
+  "caseKey": "9GUT",
+  "chains": [
+    "A",
+    "W"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "9GUT",
+  "profileCount": 4492
+}

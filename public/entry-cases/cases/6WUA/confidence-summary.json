@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6WUA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2214,
+  "defaultEvidenceId": "annojoin:6WUA:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#42774",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1107,
+    "B": 1107
+  },
+  "generatedAt": "2026-08-17T11:02:24.167440Z",
+  "materializedEvidenceCount": 2214,
+  "pdbId": "6WUA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 5,
+    "LOW": 197,
+    "NOT_SUPPORTED": 2012
+  },
+  "totalEvidenceCount": 2214
+}

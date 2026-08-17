@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1NJO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1540,
+  "defaultEvidenceId": "annojoin:1NJO:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#1751",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 770,
+    "B": 770
+  },
+  "generatedAt": "2026-08-17T12:11:32.389421Z",
+  "materializedEvidenceCount": 1540,
+  "pdbId": "1NJO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 55,
+    "LOW": 632,
+    "NOT_SUPPORTED": 853
+  },
+  "totalEvidenceCount": 1540
+}

@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9KDT",
+  "biologicalMoleculeName": "9KDT",
+  "caseId": "9KDT",
+  "caseKey": "9KDT",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "S2",
+    "S6",
+    "S7"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9KDT",
+  "profileCount": 7260
+}

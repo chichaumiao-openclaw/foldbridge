@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9RJA",
+  "biologicalMoleculeName": "9RJA",
+  "caseId": "9RJA",
+  "caseKey": "9RJA",
+  "chains": [
+    "A",
+    "Y",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "9RJA",
+  "profileCount": 19237
+}

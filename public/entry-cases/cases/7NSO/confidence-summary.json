@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7NSO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18932,
+  "defaultEvidenceId": "annojoin:7NSO:confidence:B:data-eterna/ETERNA_R74_0000.rdat#878",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8948,
+    "B": 9984
+  },
+  "generatedAt": "2026-08-17T11:36:33.593526Z",
+  "materializedEvidenceCount": 18932,
+  "pdbId": "7NSO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 625,
+    "LOW": 2592,
+    "NOT_SUPPORTED": 15715
+  },
+  "totalEvidenceCount": 18932
+}

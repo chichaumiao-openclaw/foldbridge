@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8UQM",
+  "biologicalMoleculeName": "8UQM",
+  "caseId": "8UQM",
+  "caseKey": "8UQM",
+  "chains": [
+    "7",
+    "A",
+    "B",
+    "D",
+    "a",
+    "d"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8UQM",
+  "profileCount": 19167
+}

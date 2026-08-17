@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8AUV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3572,
+  "defaultEvidenceId": "annojoin:8AUV:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#6562",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1786,
+    "B": 1786
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 3572,
+  "pdbId": "8AUV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 81,
+    "LOW": 604,
+    "NOT_SUPPORTED": 2887
+  },
+  "totalEvidenceCount": 3572
+}

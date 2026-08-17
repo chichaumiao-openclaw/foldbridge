@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7TOS",
+  "biologicalMoleculeName": "7TOS",
+  "caseId": "7TOS",
+  "caseKey": "7TOS",
+  "chains": [
+    "16S",
+    "23S",
+    "5S"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "7TOS",
+  "profileCount": 18786
+}

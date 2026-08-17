@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7ASM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4058,
+  "defaultEvidenceId": "annojoin:7ASM:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#81880",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2028,
+    "B": 2030
+  },
+  "generatedAt": "2026-08-17T12:24:04.370987Z",
+  "materializedEvidenceCount": 4058,
+  "pdbId": "7ASM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 141,
+    "LOW": 1220,
+    "NOT_SUPPORTED": 2697
+  },
+  "totalEvidenceCount": 4058
+}

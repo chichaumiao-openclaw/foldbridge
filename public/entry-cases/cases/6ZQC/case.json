@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6ZQC",
+  "biologicalMoleculeName": "6ZQC",
+  "caseId": "6ZQC",
+  "caseKey": "6ZQC",
+  "chains": [
+    "D2",
+    "D3",
+    "D4"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6ZQC",
+  "profileCount": 5484
+}

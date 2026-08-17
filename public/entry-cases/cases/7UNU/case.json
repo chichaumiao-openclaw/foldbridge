@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7UNU",
+  "biologicalMoleculeName": "7UNU",
+  "caseId": "7UNU",
+  "caseKey": "7UNU",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "v"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7UNU",
+  "profileCount": 2692
+}

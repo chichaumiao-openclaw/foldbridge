@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8BQD",
+  "biologicalMoleculeName": "8BQD",
+  "caseId": "8BQD",
+  "caseKey": "8BQD",
+  "chains": [
+    "2",
+    "BQ",
+    "BR",
+    "BS"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8BQD",
+  "profileCount": 9636
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5VYC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 11832,
+  "defaultEvidenceId": "annojoin:5VYC:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12069",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5904,
+    "B": 5928
+  },
+  "generatedAt": "2026-08-17T12:42:08.809790Z",
+  "materializedEvidenceCount": 11832,
+  "pdbId": "5VYC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 11832
+  },
+  "totalEvidenceCount": 11832
+}

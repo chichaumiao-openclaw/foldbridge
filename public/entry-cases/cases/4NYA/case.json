@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4NYA",
+  "biologicalMoleculeName": "4NYA",
+  "caseId": "4NYA",
+  "caseKey": "4NYA",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "4NYA",
+  "profileCount": 510
+}

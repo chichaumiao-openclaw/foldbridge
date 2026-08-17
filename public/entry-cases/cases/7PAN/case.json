@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7PAN",
+  "biologicalMoleculeName": "7PAN",
+  "caseId": "7PAN",
+  "caseKey": "7PAN",
+  "chains": [
+    "3",
+    "4",
+    "5",
+    "7",
+    "8"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7PAN",
+  "profileCount": 803
+}

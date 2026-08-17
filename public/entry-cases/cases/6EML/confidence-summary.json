@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6EML",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4224,
+  "defaultEvidenceId": "annojoin:6EML:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#216",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2112,
+    "B": 2112
+  },
+  "generatedAt": "2026-08-17T11:55:49.970020Z",
+  "materializedEvidenceCount": 4224,
+  "pdbId": "6EML",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 65,
+    "LOW": 1097,
+    "NOT_SUPPORTED": 3062
+  },
+  "totalEvidenceCount": 4224
+}

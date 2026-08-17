@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4M6D",
+  "biologicalMoleculeName": "4M6D",
+  "caseId": "4M6D",
+  "caseKey": "4M6D",
+  "chains": [
+    "B",
+    "D",
+    "F",
+    "H",
+    "J",
+    "L"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "4M6D",
+  "profileCount": 4
+}

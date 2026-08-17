@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7ZRS",
+  "biologicalMoleculeName": "7ZRS",
+  "caseId": "7ZRS",
+  "caseKey": "7ZRS",
+  "chains": [
+    "2",
+    "3",
+    "4",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7ZRS",
+  "profileCount": 9516
+}

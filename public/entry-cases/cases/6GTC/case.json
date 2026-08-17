@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6GTC",
+  "biologicalMoleculeName": "6GTC",
+  "caseId": "6GTC",
+  "caseKey": "6GTC",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6GTC",
+  "profileCount": 4
+}

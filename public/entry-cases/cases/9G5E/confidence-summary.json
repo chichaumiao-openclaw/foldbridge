@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9G5E",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 240,
+  "defaultEvidenceId": "annojoin:9G5E:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#17012",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 120,
+    "B": 120
+  },
+  "generatedAt": "2026-08-17T12:37:01.878381Z",
+  "materializedEvidenceCount": 240,
+  "pdbId": "9G5E",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 39,
+    "NOT_SUPPORTED": 200
+  },
+  "totalEvidenceCount": 240
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8OLY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 178,
+  "defaultEvidenceId": "annojoin:8OLY:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#3363",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 89,
+    "B": 89
+  },
+  "generatedAt": "2026-08-17T11:21:04.164187Z",
+  "materializedEvidenceCount": 178,
+  "pdbId": "8OLY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 10,
+    "LOW": 41,
+    "NOT_SUPPORTED": 127
+  },
+  "totalEvidenceCount": 178
+}

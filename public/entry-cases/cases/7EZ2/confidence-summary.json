@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7EZ2",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5094,
+  "defaultEvidenceId": "annojoin:7EZ2:confidence:A:data-rna-structures/TRP4P6_C7X_0000.rdat#2",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3769,
+    "B": 1325
+  },
+  "generatedAt": "2026-08-17T12:58:49.317723Z",
+  "materializedEvidenceCount": 5094,
+  "pdbId": "7EZ2",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 9,
+    "LOW": 880,
+    "NOT_SUPPORTED": 4205
+  },
+  "totalEvidenceCount": 5094
+}

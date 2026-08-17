@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9B4Z",
+  "biologicalMoleculeName": "9B4Z",
+  "caseId": "9B4Z",
+  "caseKey": "9B4Z",
+  "chains": [
+    "AA",
+    "AW",
+    "AX",
+    "AY",
+    "BA",
+    "BB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9B4Z",
+  "profileCount": 19238
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7SUK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5576,
+  "defaultEvidenceId": "annojoin:7SUK:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#4296",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2788,
+    "B": 2788
+  },
+  "generatedAt": "2026-08-17T11:49:23.675092Z",
+  "materializedEvidenceCount": 5576,
+  "pdbId": "7SUK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 4,
+    "LOW": 687,
+    "NOT_SUPPORTED": 4885
+  },
+  "totalEvidenceCount": 5576
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9N5T",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4094,
+  "defaultEvidenceId": "annojoin:9N5T:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#3807",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2046,
+    "B": 2048
+  },
+  "generatedAt": "2026-08-17T12:58:49.317723Z",
+  "materializedEvidenceCount": 4094,
+  "pdbId": "9N5T",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 109,
+    "LOW": 889,
+    "NOT_SUPPORTED": 3096
+  },
+  "totalEvidenceCount": 4094
+}

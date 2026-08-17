@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7OE1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5050,
+  "defaultEvidenceId": "annojoin:7OE1:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#81874",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2253,
+    "B": 2797
+  },
+  "generatedAt": "2026-08-17T11:36:33.593526Z",
+  "materializedEvidenceCount": 5050,
+  "pdbId": "7OE1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 143,
+    "LOW": 1503,
+    "NOT_SUPPORTED": 3404
+  },
+  "totalEvidenceCount": 5050
+}

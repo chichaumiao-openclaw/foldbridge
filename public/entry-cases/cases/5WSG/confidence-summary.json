@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "5WSG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 222,
+  "defaultEvidenceId": "annojoin:5WSG:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#32086",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 111,
+    "B": 111
+  },
+  "generatedAt": "2026-08-17T12:39:28.893021Z",
+  "materializedEvidenceCount": 222,
+  "pdbId": "5WSG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 17,
+    "NOT_SUPPORTED": 205
+  },
+  "totalEvidenceCount": 222
+}

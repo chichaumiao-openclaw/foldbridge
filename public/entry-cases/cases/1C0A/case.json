@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1C0A",
+  "biologicalMoleculeName": "1C0A",
+  "caseId": "1C0A",
+  "caseKey": "1C0A",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1C0A",
+  "profileCount": 6
+}

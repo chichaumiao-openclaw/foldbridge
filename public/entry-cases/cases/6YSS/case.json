@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6YSS",
+  "biologicalMoleculeName": "6YSS",
+  "caseId": "6YSS",
+  "caseKey": "6YSS",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "w"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "6YSS",
+  "profileCount": 18606
+}

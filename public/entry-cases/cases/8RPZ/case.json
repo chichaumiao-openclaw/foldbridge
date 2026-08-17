@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8RPZ",
+  "biologicalMoleculeName": "8RPZ",
+  "caseId": "8RPZ",
+  "caseKey": "8RPZ",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8RPZ",
+  "profileCount": 14002
+}

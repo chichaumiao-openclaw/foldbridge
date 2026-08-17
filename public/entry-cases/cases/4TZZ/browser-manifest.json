@@ -1,0 +1,124 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "B": {
+      "case2dPath": "chains/B/case-2d-structure.json.gz",
+      "chainId": "B",
+      "chainRoot": "chains/B",
+      "linkedViewBundlePath": "chains/B/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/B/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/B/varna-template.svg.gz"
+    },
+    "C": {
+      "case2dPath": "chains/C/case-2d-structure.json.gz",
+      "chainId": "C",
+      "chainRoot": "chains/C",
+      "linkedViewBundlePath": "chains/C/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/C/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/C/varna-template.svg.gz"
+    },
+    "E": {
+      "case2dPath": "chains/E/case-2d-structure.json.gz",
+      "chainId": "E",
+      "chainRoot": "chains/E",
+      "linkedViewBundlePath": "chains/E/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/E/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/E/varna-template.svg.gz"
+    },
+    "F": {
+      "case2dPath": "chains/F/case-2d-structure.json.gz",
+      "chainId": "F",
+      "chainRoot": "chains/F",
+      "linkedViewBundlePath": "chains/F/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/F/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/F/varna-template.svg.gz"
+    },
+    "H": {
+      "case2dPath": "chains/H/case-2d-structure.json.gz",
+      "chainId": "H",
+      "chainRoot": "chains/H",
+      "linkedViewBundlePath": "chains/H/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/H/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/H/varna-template.svg.gz"
+    },
+    "I": {
+      "case2dPath": "chains/I/case-2d-structure.json.gz",
+      "chainId": "I",
+      "chainRoot": "chains/I",
+      "linkedViewBundlePath": "chains/I/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/I/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/I/varna-template.svg.gz"
+    },
+    "K": {
+      "case2dPath": "chains/K/case-2d-structure.json.gz",
+      "chainId": "K",
+      "chainRoot": "chains/K",
+      "linkedViewBundlePath": "chains/K/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/K/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/K/varna-template.svg.gz"
+    },
+    "L": {
+      "case2dPath": "chains/L/case-2d-structure.json.gz",
+      "chainId": "L",
+      "chainRoot": "chains/L",
+      "linkedViewBundlePath": "chains/L/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/L/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/L/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "L",
+  "evidenceChainMap": {
+    "annojoin:4TZZ:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#10577": "K",
+    "annojoin:4TZZ:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#84121": "K",
+    "annojoin:4TZZ:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#84204": "K",
+    "annojoin:4TZZ:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#84205": "K",
+    "annojoin:4TZZ:confidence:A:data-general/P90LIB_DMS_0000.rdat#1426": "K",
+    "annojoin:4TZZ:confidence:A:data-general/P90LIB_DMS_0000.rdat#1427": "K",
+    "annojoin:4TZZ:confidence:A:data-general/P90LIB_DMS_0000.rdat#1428": "K",
+    "annojoin:4TZZ:confidence:A:data-general/P90LIB_DMS_0001.rdat#1426": "K",
+    "annojoin:4TZZ:confidence:A:data-general/P90LIB_DMS_0001.rdat#1427": "K",
+    "annojoin:4TZZ:confidence:A:data-general/P90LIB_DMS_0001.rdat#1428": "K",
+    "annojoin:4TZZ:confidence:A:data-general/P90LIB_DMS_0002.rdat#1426": "K",
+    "annojoin:4TZZ:confidence:A:data-general/P90LIB_DMS_0002.rdat#1427": "K",
+    "annojoin:4TZZ:confidence:A:data-general/P90LIB_DMS_0002.rdat#1428": "K",
+    "annojoin:4TZZ:confidence:A:data-puzzle/RNAPZ10_STD_0001.rdat#3": "L",
+    "annojoin:4TZZ:confidence:A:data-puzzle/RNAPZ10_STD_0001.rdat#4": "L",
+    "annojoin:4TZZ:confidence:A:data-puzzle/RNAPZ10_STD_0001.rdat#5": "L",
+    "annojoin:4TZZ:confidence:A:data-puzzle/RNAPZ10_STD_0001.rdat#6": "L",
+    "annojoin:4TZZ:confidence:A:data-puzzle/RNAPZ10_STD_0002.rdat#3": "K",
+    "annojoin:4TZZ:confidence:A:data-puzzle/RNAPZ10_STD_0002.rdat#4": "K",
+    "annojoin:4TZZ:confidence:A:data-puzzle/RNAPZ10_STD_0002.rdat#5": "K",
+    "annojoin:4TZZ:confidence:A:data-puzzle/RNAPZ10_STD_0002.rdat#6": "K",
+    "annojoin:4TZZ:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#7473": "K",
+    "annojoin:4TZZ:confidence:B:data-eterna/ETERNA_P90_0001.rdat#1303": "K",
+    "annojoin:4TZZ:confidence:B:data-eterna/ETERNA_P90_0001.rdat#1304": "K",
+    "annojoin:4TZZ:confidence:B:data-eterna/ETERNA_P90_0001.rdat#1305": "K",
+    "annojoin:4TZZ:confidence:B:data-eterna/ETERNA_P90_0002.rdat#1303": "K",
+    "annojoin:4TZZ:confidence:B:data-eterna/ETERNA_P90_0002.rdat#1304": "K",
+    "annojoin:4TZZ:confidence:B:data-eterna/ETERNA_P90_0002.rdat#1305": "K",
+    "annojoin:4TZZ:confidence:B:data-eterna/OK1LIB_2A3_0000.rdat#10577": "K",
+    "annojoin:4TZZ:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#84121": "K",
+    "annojoin:4TZZ:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#84204": "K",
+    "annojoin:4TZZ:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#84205": "K",
+    "annojoin:4TZZ:confidence:B:data-general/P90LIB_2A3_0000.rdat#1426": "K",
+    "annojoin:4TZZ:confidence:B:data-general/P90LIB_2A3_0000.rdat#1427": "K",
+    "annojoin:4TZZ:confidence:B:data-general/P90LIB_2A3_0000.rdat#1428": "K",
+    "annojoin:4TZZ:confidence:B:data-general/P90LIB_2A3_0001.rdat#1426": "K",
+    "annojoin:4TZZ:confidence:B:data-general/P90LIB_2A3_0001.rdat#1427": "K",
+    "annojoin:4TZZ:confidence:B:data-general/P90LIB_2A3_0001.rdat#1428": "K",
+    "annojoin:4TZZ:confidence:B:data-general/P90LIB_2A3_0002.rdat#1426": "K",
+    "annojoin:4TZZ:confidence:B:data-general/P90LIB_2A3_0002.rdat#1427": "K",
+    "annojoin:4TZZ:confidence:B:data-general/P90LIB_2A3_0002.rdat#1428": "K",
+    "annojoin:4TZZ:confidence:B:data-puzzle/RNAPZ10_STD_0001.rdat#1": "L",
+    "annojoin:4TZZ:confidence:B:data-puzzle/RNAPZ10_STD_0001.rdat#2": "L",
+    "annojoin:4TZZ:confidence:B:data-puzzle/RNAPZ10_STD_0002.rdat#1": "K",
+    "annojoin:4TZZ:confidence:B:data-puzzle/RNAPZ10_STD_0002.rdat#2": "K",
+    "annojoin:4TZZ:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#7473": "K"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9RW4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 40,
+  "defaultEvidenceId": "annojoin:9RW4:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#35981",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 20,
+    "B": 20
+  },
+  "generatedAt": "2026-08-17T13:10:50.762864Z",
+  "materializedEvidenceCount": 40,
+  "pdbId": "9RW4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 20,
+    "NOT_SUPPORTED": 20
+  },
+  "totalEvidenceCount": 40
+}

@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8G5Y",
+  "biologicalMoleculeName": "8G5Y",
+  "caseId": "8G5Y",
+  "caseKey": "8G5Y",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "Pt",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8G5Y",
+  "profileCount": 4986
+}

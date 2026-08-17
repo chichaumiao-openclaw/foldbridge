@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8C91",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7525,
+  "defaultEvidenceId": "annojoin:8C91:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#34710",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3681,
+    "B": 3844
+  },
+  "generatedAt": "2026-08-17T12:30:27.895034Z",
+  "materializedEvidenceCount": 7525,
+  "pdbId": "8C91",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 261,
+    "LOW": 1154,
+    "NOT_SUPPORTED": 6110
+  },
+  "totalEvidenceCount": 7525
+}

@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8IE3",
+  "biologicalMoleculeName": "8IE3",
+  "caseId": "8IE3",
+  "caseKey": "8IE3",
+  "chains": [
+    "2",
+    "5",
+    "8"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8IE3",
+  "profileCount": 2762
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8Y0W",
+  "biologicalMoleculeName": "8Y0W",
+  "caseId": "8Y0W",
+  "caseKey": "8Y0W",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8Y0W",
+  "profileCount": 7372
+}

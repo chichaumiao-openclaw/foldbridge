@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8ZH3",
+  "biologicalMoleculeName": "8ZH3",
+  "caseId": "8ZH3",
+  "caseKey": "8ZH3",
+  "chains": [
+    "LA",
+    "LB",
+    "LC",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8ZH3",
+  "profileCount": 10036
+}

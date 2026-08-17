@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9NDW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 28,
+  "defaultEvidenceId": "annojoin:9NDW:confidence:B:data-general/P50LIB_2A3_0001.rdat#2495",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 12,
+    "B": 16
+  },
+  "generatedAt": "2026-08-17T11:02:10.009471Z",
+  "materializedEvidenceCount": 28,
+  "pdbId": "9NDW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 12,
+    "NOT_SUPPORTED": 16
+  },
+  "totalEvidenceCount": 28
+}

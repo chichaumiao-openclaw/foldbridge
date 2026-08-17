@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "4KVB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 50,
+  "defaultEvidenceId": "annojoin:4KVB:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#16215",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 25,
+    "B": 25
+  },
+  "generatedAt": "2026-08-17T12:39:26.743394Z",
+  "materializedEvidenceCount": 50,
+  "pdbId": "4KVB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 3,
+    "NOT_SUPPORTED": 47
+  },
+  "totalEvidenceCount": 50
+}

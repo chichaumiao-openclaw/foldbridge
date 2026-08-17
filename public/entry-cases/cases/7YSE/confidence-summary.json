@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7YSE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8,
+  "defaultEvidenceId": "annojoin:7YSE:confidence:A:data-general/ARCHII_DMS_0000.rdat#17983",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 4
+  },
+  "generatedAt": "2026-08-17T12:52:08.699221Z",
+  "materializedEvidenceCount": 8,
+  "pdbId": "7YSE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 5
+  },
+  "totalEvidenceCount": 8
+}

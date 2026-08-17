@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3JCN",
+  "biologicalMoleculeName": "3JCN",
+  "caseId": "3JCN",
+  "caseKey": "3JCN",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "v"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "3JCN",
+  "profileCount": 454
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6JFU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:6JFU:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#11695",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "6JFU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 6
+  },
+  "totalEvidenceCount": 6
+}

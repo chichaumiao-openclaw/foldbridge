@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7NHL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6044,
+  "defaultEvidenceId": "annojoin:7NHL:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#48835",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3021,
+    "B": 3023
+  },
+  "generatedAt": "2026-08-17T11:42:15.821771Z",
+  "materializedEvidenceCount": 6044,
+  "pdbId": "7NHL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 232,
+    "LOW": 1281,
+    "NOT_SUPPORTED": 4531
+  },
+  "totalEvidenceCount": 6044
+}

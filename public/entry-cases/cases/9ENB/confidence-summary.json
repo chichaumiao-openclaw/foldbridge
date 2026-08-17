@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9ENB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 28,
+  "defaultEvidenceId": "annojoin:9ENB:confidence:A:data-general/ARCHII_DMS_0000.rdat#18261",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 14,
+    "B": 14
+  },
+  "generatedAt": "2026-08-17T11:55:49.970020Z",
+  "materializedEvidenceCount": 28,
+  "pdbId": "9ENB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 12,
+    "NOT_SUPPORTED": 16
+  },
+  "totalEvidenceCount": 28
+}

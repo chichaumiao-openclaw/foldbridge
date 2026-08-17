@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "6XMF",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:6XMF:confidence:A:data-rna-structures/POS240_DMS_0000.rdat#1443",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T11:02:24.167440Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "6XMF",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 4
+}

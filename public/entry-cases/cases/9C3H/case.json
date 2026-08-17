@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9C3H",
+  "biologicalMoleculeName": "9C3H",
+  "caseId": "9C3H",
+  "caseKey": "9C3H",
+  "chains": [
+    "L1",
+    "L5",
+    "L9",
+    "S2",
+    "S4"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9C3H",
+  "profileCount": 6840
+}

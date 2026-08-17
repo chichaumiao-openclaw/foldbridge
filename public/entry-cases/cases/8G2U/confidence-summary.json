@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8G2U",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18257,
+  "defaultEvidenceId": "annojoin:8G2U:confidence:A:data-general/P90LIB_DMS_0002.rdat#1117",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8681,
+    "B": 9576
+  },
+  "generatedAt": "2026-08-17T13:15:46.196997Z",
+  "materializedEvidenceCount": 18257,
+  "pdbId": "8G2U",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 685,
+    "LOW": 3039,
+    "NOT_SUPPORTED": 14533
+  },
+  "totalEvidenceCount": 18257
+}

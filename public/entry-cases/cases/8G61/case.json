@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8G61",
+  "biologicalMoleculeName": "8G61",
+  "caseId": "8G61",
+  "caseKey": "8G61",
+  "chains": [
+    "At",
+    "L5",
+    "L7",
+    "L8",
+    "Pt",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8G61",
+  "profileCount": 5015
+}

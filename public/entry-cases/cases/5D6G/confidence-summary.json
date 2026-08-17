@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5D6G",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 85,
+  "defaultEvidenceId": "annojoin:5D6G:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#9420",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 42,
+    "B": 43
+  },
+  "generatedAt": "2026-08-17T11:26:25.684564Z",
+  "materializedEvidenceCount": 85,
+  "pdbId": "5D6G",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 85
+  },
+  "totalEvidenceCount": 85
+}

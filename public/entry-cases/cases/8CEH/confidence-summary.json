@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8CEH",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 11024,
+  "defaultEvidenceId": "annojoin:8CEH:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#2782",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5462,
+    "B": 5562
+  },
+  "generatedAt": "2026-08-17T11:54:01.693681Z",
+  "materializedEvidenceCount": 11024,
+  "pdbId": "8CEH",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 101,
+    "LOW": 959,
+    "NOT_SUPPORTED": 9964
+  },
+  "totalEvidenceCount": 11024
+}

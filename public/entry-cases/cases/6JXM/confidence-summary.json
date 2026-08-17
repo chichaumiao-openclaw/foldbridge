@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6JXM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2,
+  "defaultEvidenceId": "annojoin:6JXM:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11740",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1,
+    "B": 1
+  },
+  "generatedAt": "2026-08-17T12:19:44.171112Z",
+  "materializedEvidenceCount": 2,
+  "pdbId": "6JXM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 2
+}

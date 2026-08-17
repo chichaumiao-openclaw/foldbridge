@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8YOP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7236,
+  "defaultEvidenceId": "annojoin:8YOP:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3616,
+    "B": 3620
+  },
+  "generatedAt": "2026-08-17T12:37:01.878381Z",
+  "materializedEvidenceCount": 7236,
+  "pdbId": "8YOP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 7236
+  },
+  "totalEvidenceCount": 7236
+}

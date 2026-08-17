@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8HKY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 903,
+  "defaultEvidenceId": "annojoin:8HKY:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11145",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 450,
+    "B": 453
+  },
+  "generatedAt": "2026-08-17T12:27:03.069804Z",
+  "materializedEvidenceCount": 903,
+  "pdbId": "8HKY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 903
+  },
+  "totalEvidenceCount": 903
+}

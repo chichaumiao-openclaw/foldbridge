@@ -1,0 +1,62 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "A": {
+      "case2dPath": "chains/A/case-2d-structure.json.gz",
+      "chainId": "A",
+      "chainRoot": "chains/A",
+      "linkedViewBundlePath": "chains/A/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A",
+  "evidenceChainMap": {
+    "annojoin:9K9G:confidence:A:data-eterna/OK2TST_DMS_0000.rdat#95793": "A",
+    "annojoin:9K9G:confidence:A:data-general/ARCHII_DMS_0000.rdat#8750": "A",
+    "annojoin:9K9G:confidence:A:data-general/ARCHII_DMS_0000.rdat#8751": "A",
+    "annojoin:9K9G:confidence:A:data-general/ARCHII_DMS_0000.rdat#8752": "A",
+    "annojoin:9K9G:confidence:A:data-general/ARCHII_DMS_0000.rdat#8753": "A",
+    "annojoin:9K9G:confidence:A:data-general/ARCHII_DMS_0000.rdat#8754": "A",
+    "annojoin:9K9G:confidence:A:data-general/ARCHII_DMS_0000.rdat#8755": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/POS240_DMS_0000.rdat#1220": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7928": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7929": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7930": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7931": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7932": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7933": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7952": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7953": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7954": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7955": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7956": "A",
+    "annojoin:9K9G:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#7957": "A",
+    "annojoin:9K9G:confidence:B:data-eterna/OK2TST_2A3_0000.rdat#95793": "A",
+    "annojoin:9K9G:confidence:B:data-general/ARCHII_2A3_0000.rdat#8750": "A",
+    "annojoin:9K9G:confidence:B:data-general/ARCHII_2A3_0000.rdat#8751": "A",
+    "annojoin:9K9G:confidence:B:data-general/ARCHII_2A3_0000.rdat#8752": "A",
+    "annojoin:9K9G:confidence:B:data-general/ARCHII_2A3_0000.rdat#8753": "A",
+    "annojoin:9K9G:confidence:B:data-general/ARCHII_2A3_0000.rdat#8754": "A",
+    "annojoin:9K9G:confidence:B:data-general/ARCHII_2A3_0000.rdat#8755": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1220": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7928": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7929": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7930": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7931": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7932": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7933": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7952": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7953": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7954": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7955": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7956": "A",
+    "annojoin:9K9G:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#7957": "A"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6NUO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5470,
+  "defaultEvidenceId": "annojoin:6NUO:confidence:B:data-eterna/OK3TST_2A3_0003.rdat#64335",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2734,
+    "B": 2736
+  },
+  "generatedAt": "2026-08-17T11:32:33.512835Z",
+  "materializedEvidenceCount": 5470,
+  "pdbId": "6NUO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5470
+  },
+  "totalEvidenceCount": 5470
+}

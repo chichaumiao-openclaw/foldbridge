@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6MPI",
+  "biologicalMoleculeName": "6MPI",
+  "caseId": "6MPI",
+  "caseKey": "6MPI",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "6MPI",
+  "profileCount": 1025
+}

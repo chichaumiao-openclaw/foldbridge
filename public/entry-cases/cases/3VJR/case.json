@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3VJR",
+  "biologicalMoleculeName": "3VJR",
+  "caseId": "3VJR",
+  "caseKey": "3VJR",
+  "chains": [
+    "B",
+    "D"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "3VJR",
+  "profileCount": 4
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9IMK",
+  "biologicalMoleculeName": "9IMK",
+  "caseId": "9IMK",
+  "caseKey": "9IMK",
+  "chains": [
+    "O",
+    "P",
+    "Q",
+    "R"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "9IMK",
+  "profileCount": 60
+}

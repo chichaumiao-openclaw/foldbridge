@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9ZBQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5094,
+  "defaultEvidenceId": "annojoin:9ZBQ:confidence:A:data-rna-structures/HC16APO_DMS_0000.rdat#181",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3769,
+    "B": 1325
+  },
+  "generatedAt": "2026-08-17T12:18:57.850374Z",
+  "materializedEvidenceCount": 5094,
+  "pdbId": "9ZBQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 4,
+    "LOW": 1597,
+    "NOT_SUPPORTED": 3493
+  },
+  "totalEvidenceCount": 5094
+}

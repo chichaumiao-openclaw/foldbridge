@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3OTO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 42,
+  "defaultEvidenceId": "annojoin:3OTO:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#16215",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 21,
+    "B": 21
+  },
+  "generatedAt": "2026-08-17T12:52:08.699221Z",
+  "materializedEvidenceCount": 42,
+  "pdbId": "3OTO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 2,
+    "NOT_SUPPORTED": 40
+  },
+  "totalEvidenceCount": 42
+}

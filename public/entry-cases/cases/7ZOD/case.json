@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7ZOD",
+  "biologicalMoleculeName": "7ZOD",
+  "caseId": "7ZOD",
+  "caseKey": "7ZOD",
+  "chains": [
+    "a",
+    "b",
+    "v"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "7ZOD",
+  "profileCount": 11161
+}

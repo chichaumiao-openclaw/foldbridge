@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7TDC",
+  "biologicalMoleculeName": "7TDC",
+  "caseId": "7TDC",
+  "caseKey": "7TDC",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "7TDC",
+  "profileCount": 510
+}

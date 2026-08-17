@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3JQ4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1548,
+  "defaultEvidenceId": "annojoin:3JQ4:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#81707",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 774,
+    "B": 774
+  },
+  "generatedAt": "2026-08-17T11:32:33.512835Z",
+  "materializedEvidenceCount": 1548,
+  "pdbId": "3JQ4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 85,
+    "LOW": 559,
+    "NOT_SUPPORTED": 904
+  },
+  "totalEvidenceCount": 1548
+}

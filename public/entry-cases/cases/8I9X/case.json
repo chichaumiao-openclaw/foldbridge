@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8I9X",
+  "biologicalMoleculeName": "8I9X",
+  "caseId": "8I9X",
+  "caseKey": "8I9X",
+  "chains": [
+    "C1",
+    "C2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8I9X",
+  "profileCount": 3800
+}

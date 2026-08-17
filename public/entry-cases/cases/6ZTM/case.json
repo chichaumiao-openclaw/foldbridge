@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6ZTM",
+  "biologicalMoleculeName": "6ZTM",
+  "caseId": "6ZTM",
+  "caseKey": "6ZTM",
+  "chains": [
+    "AA",
+    "AW",
+    "AX",
+    "BA",
+    "BB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6ZTM",
+  "profileCount": 18664
+}

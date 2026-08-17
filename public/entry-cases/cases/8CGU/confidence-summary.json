@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8CGU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 12484,
+  "defaultEvidenceId": "annojoin:8CGU:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#7452",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5889,
+    "B": 6595
+  },
+  "generatedAt": "2026-08-17T11:43:36.994359Z",
+  "materializedEvidenceCount": 12484,
+  "pdbId": "8CGU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 453,
+    "LOW": 568,
+    "NOT_SUPPORTED": 11463
+  },
+  "totalEvidenceCount": 12484
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3CCR",
+  "biologicalMoleculeName": "3CCR",
+  "caseId": "3CCR",
+  "caseKey": "3CCR",
+  "chains": [
+    "0",
+    "9"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "3CCR",
+  "profileCount": 1950
+}

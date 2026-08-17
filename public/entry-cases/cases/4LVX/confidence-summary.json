@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4LVX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1009,
+  "defaultEvidenceId": "annojoin:4LVX:confidence:B:data-eterna/OK45LIB_2A3_0000.rdat#2886",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 383,
+    "B": 626
+  },
+  "generatedAt": "2026-08-17T12:28:01.660367Z",
+  "materializedEvidenceCount": 1009,
+  "pdbId": "4LVX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 282,
+    "LOW": 212,
+    "NOT_SUPPORTED": 515
+  },
+  "totalEvidenceCount": 1009
+}

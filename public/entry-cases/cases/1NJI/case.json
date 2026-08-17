@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1NJI",
+  "biologicalMoleculeName": "1NJI",
+  "caseId": "1NJI",
+  "caseKey": "1NJI",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "1NJI",
+  "profileCount": 1934
+}

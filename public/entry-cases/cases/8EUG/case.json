@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8EUG",
+  "biologicalMoleculeName": "8EUG",
+  "caseId": "8EUG",
+  "caseKey": "8EUG",
+  "chains": [
+    "1",
+    "2",
+    "9"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8EUG",
+  "profileCount": 4044
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7DVQ",
+  "biologicalMoleculeName": "7DVQ",
+  "caseId": "7DVQ",
+  "caseKey": "7DVQ",
+  "chains": [
+    "B",
+    "F",
+    "G",
+    "H"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7DVQ",
+  "profileCount": 152
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8EYQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5064,
+  "defaultEvidenceId": "annojoin:8EYQ:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#19987",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2260,
+    "B": 2804
+  },
+  "generatedAt": "2026-08-17T13:14:41.178795Z",
+  "materializedEvidenceCount": 5064,
+  "pdbId": "8EYQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 456,
+    "LOW": 1743,
+    "NOT_SUPPORTED": 2865
+  },
+  "totalEvidenceCount": 5064
+}

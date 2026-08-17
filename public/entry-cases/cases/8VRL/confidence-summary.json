@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8VRL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2824,
+  "defaultEvidenceId": "annojoin:8VRL:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#525",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1412,
+    "B": 1412
+  },
+  "generatedAt": "2026-08-17T12:58:49.317723Z",
+  "materializedEvidenceCount": 2824,
+  "pdbId": "8VRL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 110,
+    "LOW": 932,
+    "NOT_SUPPORTED": 1782
+  },
+  "totalEvidenceCount": 2824
+}

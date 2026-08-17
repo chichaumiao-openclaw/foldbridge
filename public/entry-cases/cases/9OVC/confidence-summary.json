@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9OVC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1184,
+  "defaultEvidenceId": "annojoin:9OVC:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#32181",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 991,
+    "B": 193
+  },
+  "generatedAt": "2026-08-17T11:43:43.312761Z",
+  "materializedEvidenceCount": 1184,
+  "pdbId": "9OVC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 752,
+    "LOW": 232,
+    "NOT_SUPPORTED": 200
+  },
+  "totalEvidenceCount": 1184
+}

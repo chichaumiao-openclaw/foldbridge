@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6XJZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:6XJZ:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#15986",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T11:30:17.681519Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "6XJZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4
+  },
+  "totalEvidenceCount": 4
+}

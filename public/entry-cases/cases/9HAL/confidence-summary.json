@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9HAL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7538,
+  "defaultEvidenceId": "annojoin:9HAL:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#86",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3687,
+    "B": 3851
+  },
+  "generatedAt": "2026-08-17T12:42:08.809790Z",
+  "materializedEvidenceCount": 7538,
+  "pdbId": "9HAL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 33,
+    "LOW": 219,
+    "NOT_SUPPORTED": 7286
+  },
+  "totalEvidenceCount": 7538
+}

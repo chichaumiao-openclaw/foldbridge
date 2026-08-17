@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7YGA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5094,
+  "defaultEvidenceId": "annojoin:7YGA:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#281",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3769,
+    "B": 1325
+  },
+  "generatedAt": "2026-08-17T11:29:37.042961Z",
+  "materializedEvidenceCount": 5094,
+  "pdbId": "7YGA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 8,
+    "LOW": 1018,
+    "NOT_SUPPORTED": 4068
+  },
+  "totalEvidenceCount": 5094
+}

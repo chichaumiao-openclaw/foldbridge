@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8FZD",
+  "biologicalMoleculeName": "8FZD",
+  "caseId": "8FZD",
+  "caseKey": "8FZD",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "x"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8FZD",
+  "profileCount": 17636
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8CDL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10992,
+  "defaultEvidenceId": "annojoin:8CDL:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#1968",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5446,
+    "B": 5546
+  },
+  "generatedAt": "2026-08-17T12:39:28.893021Z",
+  "materializedEvidenceCount": 10992,
+  "pdbId": "8CDL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 96,
+    "LOW": 973,
+    "NOT_SUPPORTED": 9923
+  },
+  "totalEvidenceCount": 10992
+}

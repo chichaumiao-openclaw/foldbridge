@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6ZOK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2428,
+  "defaultEvidenceId": "annojoin:6ZOK:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#6592",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1212,
+    "B": 1216
+  },
+  "generatedAt": "2026-08-17T12:06:34.860817Z",
+  "materializedEvidenceCount": 2428,
+  "pdbId": "6ZOK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 13,
+    "LOW": 244,
+    "NOT_SUPPORTED": 2171
+  },
+  "totalEvidenceCount": 2428
+}

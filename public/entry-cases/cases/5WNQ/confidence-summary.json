@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5WNQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1139,
+  "defaultEvidenceId": "annojoin:5WNQ:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#54667",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 569,
+    "B": 570
+  },
+  "generatedAt": "2026-08-17T10:56:06.713584Z",
+  "materializedEvidenceCount": 1139,
+  "pdbId": "5WNQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 110,
+    "NOT_SUPPORTED": 1026
+  },
+  "totalEvidenceCount": 1139
+}

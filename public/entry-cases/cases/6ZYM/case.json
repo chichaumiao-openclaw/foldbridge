@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6ZYM",
+  "biologicalMoleculeName": "6ZYM",
+  "caseId": "6ZYM",
+  "caseKey": "6ZYM",
+  "chains": [
+    "2",
+    "5",
+    "6",
+    "Y",
+    "Z"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "6ZYM",
+  "profileCount": 284
+}

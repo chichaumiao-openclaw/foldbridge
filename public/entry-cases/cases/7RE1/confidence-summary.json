@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7RE1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 416,
+  "defaultEvidenceId": "annojoin:7RE1:confidence:A:data-general/P50LIB_DMS_0000.rdat#1925",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 207,
+    "B": 209
+  },
+  "generatedAt": "2026-08-17T12:58:49.317723Z",
+  "materializedEvidenceCount": 416,
+  "pdbId": "7RE1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 416
+  },
+  "totalEvidenceCount": 416
+}

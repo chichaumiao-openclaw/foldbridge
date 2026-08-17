@@ -1,0 +1,36 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "X": {
+      "case2dPath": "chains/X/case-2d-structure.json.gz",
+      "chainId": "X",
+      "chainRoot": "chains/X",
+      "linkedViewBundlePath": "chains/X/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/X/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/X/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "X",
+  "evidenceChainMap": {
+    "annojoin:8PTX:confidence:A:data-general/ARCHII_DMS_0000.rdat#18256": "X",
+    "annojoin:8PTX:confidence:A:data-general/ARCHII_DMS_0000.rdat#18257": "X",
+    "annojoin:8PTX:confidence:A:data-general/ARCHII_DMS_0000.rdat#18258": "X",
+    "annojoin:8PTX:confidence:A:data-general/ARCHII_DMS_0000.rdat#18259": "X",
+    "annojoin:8PTX:confidence:A:data-general/ARCHII_DMS_0000.rdat#18260": "X",
+    "annojoin:8PTX:confidence:A:data-general/ARCHII_DMS_0000.rdat#18261": "X",
+    "annojoin:8PTX:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#652": "X",
+    "annojoin:8PTX:confidence:B:data-general/ARCHII_2A3_0000.rdat#18256": "X",
+    "annojoin:8PTX:confidence:B:data-general/ARCHII_2A3_0000.rdat#18257": "X",
+    "annojoin:8PTX:confidence:B:data-general/ARCHII_2A3_0000.rdat#18258": "X",
+    "annojoin:8PTX:confidence:B:data-general/ARCHII_2A3_0000.rdat#18259": "X",
+    "annojoin:8PTX:confidence:B:data-general/ARCHII_2A3_0000.rdat#18260": "X",
+    "annojoin:8PTX:confidence:B:data-general/ARCHII_2A3_0000.rdat#18261": "X",
+    "annojoin:8PTX:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#652": "X"
+  }
+}

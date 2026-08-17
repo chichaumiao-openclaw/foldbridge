@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9HM4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 22,
+  "defaultEvidenceId": "annojoin:9HM4:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12062",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 11,
+    "B": 11
+  },
+  "generatedAt": "2026-08-17T12:46:07.647795Z",
+  "materializedEvidenceCount": 22,
+  "pdbId": "9HM4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 5,
+    "NOT_SUPPORTED": 17
+  },
+  "totalEvidenceCount": 22
+}

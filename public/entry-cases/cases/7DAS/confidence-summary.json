@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7DAS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 38,
+  "defaultEvidenceId": "annojoin:7DAS:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1475",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 19,
+    "B": 19
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 38,
+  "pdbId": "7DAS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 38
+  },
+  "totalEvidenceCount": 38
+}

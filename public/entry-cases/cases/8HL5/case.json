@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8HL5",
+  "biologicalMoleculeName": "8HL5",
+  "caseId": "8HL5",
+  "caseKey": "8HL5",
+  "chains": [
+    "A16S",
+    "A23S",
+    "A5S",
+    "AATN",
+    "APTN"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8HL5",
+  "profileCount": 833
+}

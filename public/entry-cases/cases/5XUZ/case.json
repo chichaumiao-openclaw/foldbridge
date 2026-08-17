@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5XUZ",
+  "biologicalMoleculeName": "5XUZ",
+  "caseId": "5XUZ",
+  "caseKey": "5XUZ",
+  "chains": [
+    "B",
+    "F"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "5XUZ",
+  "profileCount": 2
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9NRI",
+  "biologicalMoleculeName": "9NRI",
+  "caseId": "9NRI",
+  "caseKey": "9NRI",
+  "chains": [
+    "BA",
+    "BB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9NRI",
+  "profileCount": 350
+}

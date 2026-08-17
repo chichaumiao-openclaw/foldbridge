@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9GUS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4488,
+  "defaultEvidenceId": "annojoin:9GUS:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#12818",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2105,
+    "B": 2383
+  },
+  "generatedAt": "2026-08-17T12:00:38.806516Z",
+  "materializedEvidenceCount": 4488,
+  "pdbId": "9GUS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 317,
+    "LOW": 1036,
+    "NOT_SUPPORTED": 3135
+  },
+  "totalEvidenceCount": 4488
+}

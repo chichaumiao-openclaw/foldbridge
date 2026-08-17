@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5UNE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 36,
+  "defaultEvidenceId": "annojoin:5UNE:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#35148",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 18,
+    "B": 18
+  },
+  "generatedAt": "2026-08-17T11:15:08.119192Z",
+  "materializedEvidenceCount": 36,
+  "pdbId": "5UNE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 36
+  },
+  "totalEvidenceCount": 36
+}

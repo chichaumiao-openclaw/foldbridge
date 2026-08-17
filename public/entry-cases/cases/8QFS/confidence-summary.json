@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "8QFS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 35,
+  "defaultEvidenceId": "annojoin:8QFS:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#52052",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 17,
+    "B": 18
+  },
+  "generatedAt": "2026-08-17T12:17:42.743368Z",
+  "materializedEvidenceCount": 35,
+  "pdbId": "8QFS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 10,
+    "NOT_SUPPORTED": 25
+  },
+  "totalEvidenceCount": 35
+}

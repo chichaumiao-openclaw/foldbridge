@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4JNG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 342,
+  "defaultEvidenceId": "annojoin:4JNG:confidence:A:data-eterna/ETERNA_R69_0001.rdat#3359",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 92,
+    "B": 250
+  },
+  "generatedAt": "2026-08-17T11:50:10.561022Z",
+  "materializedEvidenceCount": 342,
+  "pdbId": "4JNG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 342
+  },
+  "totalEvidenceCount": 342
+}

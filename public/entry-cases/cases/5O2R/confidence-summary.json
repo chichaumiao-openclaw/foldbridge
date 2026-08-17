@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5O2R",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4684,
+  "defaultEvidenceId": "annojoin:5O2R:confidence:B:data-rna-structures/M2PK50_2A3_0000.rdat#2139",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2065,
+    "B": 2619
+  },
+  "generatedAt": "2026-08-17T12:17:42.743368Z",
+  "materializedEvidenceCount": 4684,
+  "pdbId": "5O2R",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 288,
+    "LOW": 1112,
+    "NOT_SUPPORTED": 3284
+  },
+  "totalEvidenceCount": 4684
+}

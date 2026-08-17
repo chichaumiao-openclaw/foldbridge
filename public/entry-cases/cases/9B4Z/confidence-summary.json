@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9B4Z",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19253,
+  "defaultEvidenceId": "annojoin:9B4Z:confidence:B:data-general/PTCWT_1M7_0001.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9105,
+    "B": 10148
+  },
+  "generatedAt": "2026-08-17T12:27:03.069804Z",
+  "materializedEvidenceCount": 19253,
+  "pdbId": "9B4Z",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 19253
+  },
+  "totalEvidenceCount": 19253
+}

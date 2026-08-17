@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1SZ1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2924,
+  "defaultEvidenceId": "annojoin:1SZ1:confidence:B:data-rna-structures/TRNAPH_DCP_0000.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1366,
+    "B": 1558
+  },
+  "generatedAt": "2026-08-17T12:24:04.370987Z",
+  "materializedEvidenceCount": 2924,
+  "pdbId": "1SZ1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 248,
+    "LOW": 538,
+    "NOT_SUPPORTED": 2138
+  },
+  "totalEvidenceCount": 2924
+}

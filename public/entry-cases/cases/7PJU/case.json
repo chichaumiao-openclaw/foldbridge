@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7PJU",
+  "biologicalMoleculeName": "7PJU",
+  "caseId": "7PJU",
+  "caseKey": "7PJU",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "v",
+    "w"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7PJU",
+  "profileCount": 18797
+}

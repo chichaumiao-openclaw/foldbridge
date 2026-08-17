@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8OVJ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1152,
+  "defaultEvidenceId": "annojoin:8OVJ:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#16130",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 576,
+    "B": 576
+  },
+  "generatedAt": "2026-08-17T12:21:44.256242Z",
+  "materializedEvidenceCount": 1152,
+  "pdbId": "8OVJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 10,
+    "LOW": 130,
+    "NOT_SUPPORTED": 1012
+  },
+  "totalEvidenceCount": 1152
+}

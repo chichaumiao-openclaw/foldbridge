@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7WAZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:7WAZ:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12055",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T10:56:12.942573Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "7WAZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 2,
+    "NOT_SUPPORTED": 4
+  },
+  "totalEvidenceCount": 6
+}

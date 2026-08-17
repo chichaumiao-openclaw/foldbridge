@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "3LQX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 182,
+  "defaultEvidenceId": "annojoin:3LQX:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12357",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 89,
+    "B": 93
+  },
+  "generatedAt": "2026-08-17T12:58:31.235657Z",
+  "materializedEvidenceCount": 182,
+  "pdbId": "3LQX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 182
+  },
+  "totalEvidenceCount": 182
+}

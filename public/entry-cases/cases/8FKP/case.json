@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8FKP",
+  "biologicalMoleculeName": "8FKP",
+  "caseId": "8FKP",
+  "caseKey": "8FKP",
+  "chains": [
+    "L1",
+    "L2",
+    "L3"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8FKP",
+  "profileCount": 2352
+}

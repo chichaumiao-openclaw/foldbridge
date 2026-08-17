@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9QEH",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4112,
+  "defaultEvidenceId": "annojoin:9QEH:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#10725",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2055,
+    "B": 2057
+  },
+  "generatedAt": "2026-08-17T11:02:27.253733Z",
+  "materializedEvidenceCount": 4112,
+  "pdbId": "9QEH",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 164,
+    "LOW": 904,
+    "NOT_SUPPORTED": 3044
+  },
+  "totalEvidenceCount": 4112
+}

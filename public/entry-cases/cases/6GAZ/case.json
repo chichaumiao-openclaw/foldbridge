@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6GAZ",
+  "biologicalMoleculeName": "6GAZ",
+  "caseId": "6GAZ",
+  "caseKey": "6GAZ",
+  "chains": [
+    "AA",
+    "AV",
+    "AX"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6GAZ",
+  "profileCount": 274
+}

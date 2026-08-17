@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9WNR",
+  "biologicalMoleculeName": "9WNR",
+  "caseId": "9WNR",
+  "caseKey": "9WNR",
+  "chains": [
+    "A",
+    "X",
+    "Y",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "9WNR",
+  "profileCount": 19138
+}

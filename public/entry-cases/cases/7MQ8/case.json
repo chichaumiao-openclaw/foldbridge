@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7MQ8",
+  "biologicalMoleculeName": "7MQ8",
+  "caseId": "7MQ8",
+  "caseKey": "7MQ8",
+  "chains": [
+    "L0",
+    "L1",
+    "L2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "7MQ8",
+  "profileCount": 2898
+}

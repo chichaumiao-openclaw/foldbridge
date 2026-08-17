@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8Y38",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6092,
+  "defaultEvidenceId": "annojoin:8Y38:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#81396",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3045,
+    "B": 3047
+  },
+  "generatedAt": "2026-08-17T10:56:11.497087Z",
+  "materializedEvidenceCount": 6092,
+  "pdbId": "8Y38",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 91,
+    "LOW": 1247,
+    "NOT_SUPPORTED": 4754
+  },
+  "totalEvidenceCount": 6092
+}

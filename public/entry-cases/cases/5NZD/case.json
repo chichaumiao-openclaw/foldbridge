@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5NZD",
+  "biologicalMoleculeName": "5NZD",
+  "caseId": "5NZD",
+  "caseKey": "5NZD",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5NZD",
+  "profileCount": 262
+}

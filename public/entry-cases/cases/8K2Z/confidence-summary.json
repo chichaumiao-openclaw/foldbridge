@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8K2Z",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 12,
+  "defaultEvidenceId": "annojoin:8K2Z:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#31774",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 6
+  },
+  "generatedAt": "2026-08-17T12:39:26.743394Z",
+  "materializedEvidenceCount": 12,
+  "pdbId": "8K2Z",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 5,
+    "NOT_SUPPORTED": 6
+  },
+  "totalEvidenceCount": 12
+}

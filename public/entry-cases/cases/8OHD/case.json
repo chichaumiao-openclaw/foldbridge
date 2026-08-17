@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8OHD",
+  "biologicalMoleculeName": "8OHD",
+  "caseId": "8OHD",
+  "caseKey": "8OHD",
+  "chains": [
+    "5",
+    "7",
+    "8"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8OHD",
+  "profileCount": 2978
+}

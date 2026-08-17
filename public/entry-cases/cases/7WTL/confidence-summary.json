@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7WTL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4720,
+  "defaultEvidenceId": "annojoin:7WTL:confidence:B:data-eterna/OK3TST_2A3_0000.rdat#43463",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2360,
+    "B": 2360
+  },
+  "generatedAt": "2026-08-17T12:52:15.874142Z",
+  "materializedEvidenceCount": 4720,
+  "pdbId": "7WTL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4720
+  },
+  "totalEvidenceCount": 4720
+}

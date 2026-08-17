@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "6LNB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:6LNB:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#11745",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T11:36:33.593526Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "6LNB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 4,
+    "NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 6
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7PUB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 866,
+  "defaultEvidenceId": "annojoin:7PUB:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11645",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 433,
+    "B": 433
+  },
+  "generatedAt": "2026-08-17T13:10:54.484222Z",
+  "materializedEvidenceCount": 866,
+  "pdbId": "7PUB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 866
+  },
+  "totalEvidenceCount": 866
+}

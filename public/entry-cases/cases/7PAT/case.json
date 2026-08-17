@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7PAT",
+  "biologicalMoleculeName": "7PAT",
+  "caseId": "7PAT",
+  "caseKey": "7PAT",
+  "chains": [
+    "3",
+    "4"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7PAT",
+  "profileCount": 537
+}

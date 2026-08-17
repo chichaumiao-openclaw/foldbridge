@@ -1,0 +1,36 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "I": {
+      "case2dPath": "chains/I/case-2d-structure.json.gz",
+      "chainId": "I",
+      "chainRoot": "chains/I",
+      "linkedViewBundlePath": "chains/I/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/I/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/I/varna-template.svg.gz"
+    },
+    "J": {
+      "case2dPath": "chains/J/case-2d-structure.json.gz",
+      "chainId": "J",
+      "chainRoot": "chains/J",
+      "linkedViewBundlePath": "chains/J/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/J/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/J/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "J",
+  "evidenceChainMap": {
+    "annojoin:6IFY:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#11712": "I",
+    "annojoin:6IFY:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#11731": "J",
+    "annojoin:6IFY:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#11733": "I",
+    "annojoin:6IFY:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11712": "I",
+    "annojoin:6IFY:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11731": "J",
+    "annojoin:6IFY:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11733": "I"
+  }
+}

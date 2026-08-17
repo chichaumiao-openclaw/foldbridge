@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9ZE3",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 299,
+  "defaultEvidenceId": "annojoin:9ZE3:confidence:B:data-eterna/ETERNA_R81_0001.rdat#390",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 71,
+    "B": 228
+  },
+  "generatedAt": "2026-08-17T12:58:31.235657Z",
+  "materializedEvidenceCount": 299,
+  "pdbId": "9ZE3",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 41,
+    "NOT_SUPPORTED": 258
+  },
+  "totalEvidenceCount": 299
+}

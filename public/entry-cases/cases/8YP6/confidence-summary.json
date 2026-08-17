@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8YP6",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1209,
+  "defaultEvidenceId": "annojoin:8YP6:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#74543",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 604,
+    "B": 605
+  },
+  "generatedAt": "2026-08-17T13:10:54.484222Z",
+  "materializedEvidenceCount": 1209,
+  "pdbId": "8YP6",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 5,
+    "LOW": 179,
+    "NOT_SUPPORTED": 1025
+  },
+  "totalEvidenceCount": 1209
+}

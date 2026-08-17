@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7U4A",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 231,
+  "defaultEvidenceId": "annojoin:7U4A:confidence:B:data-puzzle/RNAPZ18_1M7_0000.rdat#59",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 151,
+    "B": 80
+  },
+  "generatedAt": "2026-08-17T10:56:12.942573Z",
+  "materializedEvidenceCount": 231,
+  "pdbId": "7U4A",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 69,
+    "LOW": 145,
+    "NOT_SUPPORTED": 17
+  },
+  "totalEvidenceCount": 231
+}

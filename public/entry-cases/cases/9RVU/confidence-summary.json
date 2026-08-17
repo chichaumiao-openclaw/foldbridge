@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9RVU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8980,
+  "defaultEvidenceId": "annojoin:9RVU:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1396",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4489,
+    "B": 4491
+  },
+  "generatedAt": "2026-08-17T12:12:25.241356Z",
+  "materializedEvidenceCount": 8980,
+  "pdbId": "9RVU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 8980
+  },
+  "totalEvidenceCount": 8980
+}

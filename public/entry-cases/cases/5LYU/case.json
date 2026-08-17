@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5LYU",
+  "biologicalMoleculeName": "5LYU",
+  "caseId": "5LYU",
+  "caseKey": "5LYU",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "5LYU",
+  "profileCount": 245
+}

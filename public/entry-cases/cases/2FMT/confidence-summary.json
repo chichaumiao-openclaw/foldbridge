@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2FMT",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8,
+  "defaultEvidenceId": "annojoin:2FMT:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#2278",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 4
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 8,
+  "pdbId": "2FMT",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 3,
+    "NOT_SUPPORTED": 5
+  },
+  "totalEvidenceCount": 8
+}

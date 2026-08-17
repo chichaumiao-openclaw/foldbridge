@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7XNY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4402,
+  "defaultEvidenceId": "annojoin:7XNY:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2199,
+    "B": 2203
+  },
+  "generatedAt": "2026-08-17T11:02:24.167440Z",
+  "materializedEvidenceCount": 4402,
+  "pdbId": "7XNY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4402
+  },
+  "totalEvidenceCount": 4402
+}

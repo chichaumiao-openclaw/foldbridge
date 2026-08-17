@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8CDR",
+  "biologicalMoleculeName": "8CDR",
+  "caseId": "8CDR",
+  "caseKey": "8CDR",
+  "chains": [
+    "AA",
+    "BB",
+    "Bb",
+    "CC",
+    "Cc",
+    "c"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8CDR",
+  "profileCount": 11004
+}

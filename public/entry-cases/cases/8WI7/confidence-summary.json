@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8WI7",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4053,
+  "defaultEvidenceId": "annojoin:8WI7:confidence:B:data-eterna/OK1LIB_2A3_0000.rdat#74747",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2026,
+    "B": 2027
+  },
+  "generatedAt": "2026-08-17T12:33:28.063985Z",
+  "materializedEvidenceCount": 4053,
+  "pdbId": "8WI7",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 198,
+    "LOW": 1288,
+    "NOT_SUPPORTED": 2567
+  },
+  "totalEvidenceCount": 4053
+}

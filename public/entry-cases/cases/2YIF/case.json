@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2YIF",
+  "biologicalMoleculeName": "2YIF",
+  "caseId": "2YIF",
+  "caseKey": "2YIF",
+  "chains": [
+    "X",
+    "Z"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "2YIF",
+  "profileCount": 22
+}

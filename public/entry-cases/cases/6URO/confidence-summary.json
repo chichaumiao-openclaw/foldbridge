@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6URO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2,
+  "defaultEvidenceId": "annojoin:6URO:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#4868",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1,
+    "B": 1
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 2,
+  "pdbId": "6URO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 2
+}

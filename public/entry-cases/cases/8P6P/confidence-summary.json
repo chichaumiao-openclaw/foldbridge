@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8P6P",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 817,
+  "defaultEvidenceId": "annojoin:8P6P:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#901",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 408,
+    "B": 409
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 817,
+  "pdbId": "8P6P",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 7,
+    "LOW": 95,
+    "NOT_SUPPORTED": 715
+  },
+  "totalEvidenceCount": 817
+}

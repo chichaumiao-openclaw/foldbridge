@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9HA3",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7538,
+  "defaultEvidenceId": "annojoin:9HA3:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#333",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3687,
+    "B": 3851
+  },
+  "generatedAt": "2026-08-17T10:56:07.108683Z",
+  "materializedEvidenceCount": 7538,
+  "pdbId": "9HA3",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 85,
+    "LOW": 1189,
+    "NOT_SUPPORTED": 6264
+  },
+  "totalEvidenceCount": 7538
+}

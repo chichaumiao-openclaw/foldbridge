@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7AAV",
+  "biologicalMoleculeName": "7AAV",
+  "caseId": "7AAV",
+  "caseKey": "7AAV",
+  "chains": [
+    "2",
+    "5",
+    "6",
+    "Z"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7AAV",
+  "profileCount": 274
+}

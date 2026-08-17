@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6QIK",
+  "biologicalMoleculeName": "6QIK",
+  "caseId": "6QIK",
+  "caseKey": "6QIK",
+  "chains": [
+    "A",
+    "x",
+    "y"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "6QIK",
+  "profileCount": 4248
+}

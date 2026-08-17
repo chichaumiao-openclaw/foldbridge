@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6G51",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2098,
+  "defaultEvidenceId": "annojoin:6G51:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12069",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1047,
+    "B": 1051
+  },
+  "generatedAt": "2026-08-17T12:12:38.856048Z",
+  "materializedEvidenceCount": 2098,
+  "pdbId": "6G51",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2098
+  },
+  "totalEvidenceCount": 2098
+}

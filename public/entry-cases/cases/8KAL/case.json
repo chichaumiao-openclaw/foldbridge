@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8KAL",
+  "biologicalMoleculeName": "8KAL",
+  "caseId": "8KAL",
+  "caseKey": "8KAL",
+  "chains": [
+    "A",
+    "E"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8KAL",
+  "profileCount": 1872
+}

@@ -1,0 +1,38 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "R": {
+      "case2dPath": "chains/R/case-2d-structure.json.gz",
+      "chainId": "R",
+      "chainRoot": "chains/R",
+      "linkedViewBundlePath": "chains/R/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/R/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/R/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "R",
+  "evidenceChainMap": {
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0000.rdat#1335": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0000.rdat#1344": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0000.rdat#1347": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0000.rdat#398": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0000.rdat#407": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0000.rdat#410": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0001.rdat#1335": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0001.rdat#1344": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0001.rdat#1347": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0001.rdat#398": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0001.rdat#407": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/ETERNA_R81_0001.rdat#410": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/SHAPE_RYOS_0620.rdat#1363": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/SHAPE_RYOS_0620.rdat#144": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/SHAPE_RYOS_0620.rdat#145": "R",
+    "annojoin:9ZE0:confidence:B:data-eterna/SHAPE_RYOS_0620.rdat#2281": "R"
+  }
+}

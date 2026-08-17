@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2R8S",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4774,
+  "defaultEvidenceId": "annojoin:2R8S:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#6380",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3609,
+    "B": 1165
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 4774,
+  "pdbId": "2R8S",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 184,
+    "NOT_SUPPORTED": 4588
+  },
+  "totalEvidenceCount": 4774
+}
