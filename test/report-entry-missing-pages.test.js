@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { computeMissing } from '../scripts/report-entry-missing-pages.mjs';
+import { computeMissing, toMissingPagesJson } from '../scripts/report-entry-missing-pages.mjs';
 
 test('computeMissing lists entry PDBs with no built page', () => {
   const entryRows = [
@@ -52,4 +52,33 @@ test('computeMissing uses exact-match membership (no case folding)', () => {
   const built = new Set(['10FZ']); // only upper-case is built
   const missing = computeMissing(entryRows, built);
   assert.deepEqual(missing.map(m => m.pdbId), ['10fz']); // lower-case is still missing
+});
+
+test('toMissingPagesJson produces the frontend fetch payload', () => {
+  const missing = [
+    { pdbId: '10PX', chainCount: 14 },
+    { pdbId: '11DG', chainCount: 4 }
+  ];
+  const json = toMissingPagesJson(missing);
+  assert.equal(json.schemaVersion, 'entry-missing-pages.v1');
+  assert.equal(json.missingCount, 2);
+  assert.deepEqual(json.missingPdbs, ['10PX', '11DG']);
+});
+
+test('toMissingPagesJson keeps pdbId ascending order and pure ids', () => {
+  const missing = [
+    { pdbId: 'A', chainCount: 1 },
+    { pdbId: 'B', chainCount: 2 },
+    { pdbId: 'C', chainCount: 3 }
+  ];
+  const json = toMissingPagesJson(missing);
+  assert.deepEqual(json.missingPdbs, ['A', 'B', 'C']);
+  assert.equal(json.missingCount, 3);
+});
+
+test('toMissingPagesJson handles empty missing list', () => {
+  const json = toMissingPagesJson([]);
+  assert.equal(json.schemaVersion, 'entry-missing-pages.v1');
+  assert.equal(json.missingCount, 0);
+  assert.deepEqual(json.missingPdbs, []);
 });

@@ -36,13 +36,25 @@ export function computeMissing(entryRows, builtPdbSet) {
   return missing;
 }
 
+// 纯函数：把 computeMissing 结果转成前端可 fetch 的小 JSON 对象（不碰文件系统）。
+// missingPdbs 保持 computeMissing 给的升序、逐字节 pdbId（不折叠大小写）。
+export function toMissingPagesJson(missing) {
+  const missingPdbs = missing.map((m) => m.pdbId);
+  return {
+    schemaVersion: 'entry-missing-pages.v1',
+    missingCount: missingPdbs.length,
+    missingPdbs
+  };
+}
+
 function parseArgs(argv) {
-  const args = { entryTable: '', buildReport: '', out: '' };
+  const args = { entryTable: '', buildReport: '', out: '', outJson: '' };
   for (let i = 0; i < argv.length; i += 1) {
     const flag = argv[i];
     if (flag === '--entry-table') args.entryTable = argv[++i] || '';
     else if (flag === '--build-report') args.buildReport = argv[++i] || '';
     else if (flag === '--out') args.out = argv[++i] || '';
+    else if (flag === '--out-json') args.outJson = argv[++i] || '';
   }
   return args;
 }
@@ -68,6 +80,11 @@ async function main() {
   }
   await mkdir(path.dirname(args.out), { recursive: true });
   await writeFile(args.out, `${lines.join('\n')}\n`, 'utf8');
+
+  if (args.outJson) {
+    await mkdir(path.dirname(args.outJson), { recursive: true });
+    await writeFile(args.outJson, `${JSON.stringify(toMissingPagesJson(missing), null, 2)}\n`, 'utf8');
+  }
 
   process.stdout.write(`missing\t${missing.length}\n`);
 }
