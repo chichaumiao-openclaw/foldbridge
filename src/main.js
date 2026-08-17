@@ -96,6 +96,7 @@ let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 stor
 let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
 let entryTableState = null; // null=未加载, 'loading', 'error', 或归一化后的 rows 数组
+let entryMissingPdbsState = new Set(); // 缺页 PDB 集合（降级：命中行只渲染纯文本，不渲染死链）；fetch 失败降级为空集合
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let pdbCaseConfidenceFilter = 'all';
@@ -1920,6 +1921,16 @@ async function loadEntryTable() {
     console.error('[main] 加载 entry 表失败', err);
     entryTableState = 'error';
   }
+  // 缺页清单：fetch 失败/不存在时降级为空集合（所有行照常可跳，回到旧行为），不阻断表加载。
+  try {
+    const missingResponse = await fetch('./src/assets/generated/entry-table/entry-missing-pages.json');
+    if (!missingResponse.ok) throw new Error(`HTTP ${missingResponse.status}`);
+    const payload = await missingResponse.json();
+    entryMissingPdbsState = new Set(Array.isArray(payload.missingPdbs) ? payload.missingPdbs : []);
+  } catch (err) {
+    console.error('[main] 加载 entry 缺页清单失败（降级为空集合）', err);
+    entryMissingPdbsState = new Set();
+  }
   if (route === 'entry') render({ preserveScroll: true });
 }
 
@@ -1931,7 +1942,7 @@ function entryTablePage() {
   if (entryTableState === 'error') {
     return renderEntryTablePage({ rows: null, statusMessage: { tone: 'error', text: 'The entry table could not be loaded. Refresh to try again.' } });
   }
-  return renderEntryTablePage({ rows: entryTableState });
+  return renderEntryTablePage({ rows: entryTableState, missingPdbs: entryMissingPdbsState });
 }
 
 async function loadAnnojointAtlasIndex() {
