@@ -8,16 +8,14 @@
 
 - 恢复 `#help` 作为唯一正式 Help 页面和导航目标。
 - 将现有 Help 使用指南与 About 方法学内容合并为一个连续页面。
-- 让旧 `#about` 链接继续可用，并解析到新的 Help 页面。
 - 保留现有 Help 截图、联系、反馈和团队信息。
 
 ## 路由设计
 
 - `help` 加回允许路由集合。
-- `about` 作为兼容别名归一化为 `help`。
 - 主导航 Help 使用 `data-route="help"`，Help 活跃态对应 `help`。
 - 页面分发只保留 `helpPage()`；不再通过名为 `aboutPage()` 的函数渲染 Help。
-- 旧 `#about` 和正式 `#help` 最终都渲染同一页面，不产生两个并行内容入口。
+- `about` 不保留路由或跳转逻辑，按普通未知路由处理。
 
 ## 内容与页面结构
 
@@ -53,7 +51,7 @@ About 中与 Help 的简短产品介绍重复的部分不重复增加第二个 H
 
 ## 测试
 
-- 路由测试断言 `help` 保持为 `help`，`#about` 兼容解析为 `help`。
+- 路由测试断言 `help` 保持为 `help`，`about` 不再是支持的路由。
 - 导航测试断言 Help 指向 `data-route="help"`，不再指向 `about`。
 - Help 渲染测试覆盖合并后的 About 方法学章节及 ANNOJOIN pipeline SVG。
 - 现有 Help 使用流程、反馈、联系和团队渲染测试保持通过。
@@ -68,4 +66,4 @@ About 中与 Help 的简短产品介绍重复的部分不重复增加第二个 H
 
 ## 发布
 
-验证通过后仅提交本次相关文件，推送 `release-public`，由现有 GitHub Actions 流程重建 `public`。发布后核对远端 `release-public` 和 `public` 提交，以及正式站点的 `#help` / `#about` 路由行为。
+验证通过后仅提交本次相关文件，推送 `release-public`，由现有 GitHub Actions 流程重建 `public`。发布后核对远端 `release-public` 和 `public` 提交，以及正式站点的 `#help` 路由行为。

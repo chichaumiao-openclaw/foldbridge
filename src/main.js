@@ -16,7 +16,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderAboutPage, renderHelpPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -31,7 +31,6 @@ import { downloadRowsAsCsv } from './modules.js';
 import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
 import { createProbingArticleStore } from './probingArticleStore.js';
-import { createAboutContentStore } from './aboutContentStore.js';
 import { createHelpContentStore } from './helpContentStore.js';
 import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
 import { createSiteStatsStore } from './siteStatsStore.js';import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
@@ -80,9 +79,6 @@ const pdbCaseStore = createCaseStore();
 const annojoinAtlasStore = createAnnojointAtlasStore();
 const probingArticleStore = createProbingArticleStore();
 const homeScrollStoryStore = createHomeScrollStoryStore();
-// About 页策展内容（about-content.json 在 ./src/assets/data/ 下，store 自带 'assets/data/' 后缀）。
-const aboutContentStore = createAboutContentStore({ assetBase: './src/' });
-let aboutContentState = null; // null=未加载, 'loading', 或 about-content.json 对象
 const helpContentStore = createHelpContentStore({ assetBase: './src/' });
 let helpContentState = null; // null=未加载, 'loading', 'error', 或 help-content.json 对象
 const siteStatsStore = createSiteStatsStore();
@@ -1831,20 +1827,6 @@ async function loadProbingArticleIndex() {
   if (route === 'detail' || route === 'probing' || route === 'home') render({ preserveScroll: true });
 }
 
-async function loadAboutContent() {
-  if (aboutContentState === 'loading') return;
-  aboutContentState = 'loading';
-  try {
-    // loadContent 失败时返回 null（store 不抛）；null 视为终态 'error'，
-    // 避免 aboutPage() 因 peek() 仍 miss 而无限重试 fetch+render（与 probing 同款 'error' 终态）。
-    aboutContentState = (await aboutContentStore.loadContent()) || 'error';
-  } catch (err) {
-    console.error('[main] 加载 About 内容失败', err);
-    aboutContentState = 'error';
-  }
-  if (route === 'about') render({ preserveScroll: true });
-}
-
 async function loadHelpContent() {
   if (helpContentState === 'loading') return;
   helpContentState = 'loading';
@@ -2548,7 +2530,7 @@ function publicationsPage() {
   </main>`;
 }
 
-function aboutPage() {
+function helpPage() {
   const helpCached = helpContentStore.peek();
   if (!helpCached && helpContentState !== 'loading' && helpContentState !== 'error') loadHelpContent();
   return `${renderBundleHeader()}<main class="page-detail">${renderHelpPage(helpCached)}</main>`;
@@ -3069,7 +3051,7 @@ function pageFor(name) {
   if (safeRoute === 'download-structures') return downloadStructuresPage();
   if (safeRoute === 'detail') return detailPage();
   if (safeRoute === 'publications') return publicationsPage();
-  if (safeRoute === 'about') return aboutPage();
+  if (safeRoute === 'help') return helpPage();
   if (safeRoute === 'stats') return statsPage();
   if (safeRoute === 'sequence-detail') return sequenceDetailPage();
   return homePage();

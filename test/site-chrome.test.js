@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { renderPrimaryNav } from '../src/siteChrome.js';
 
 test('primary nav exposes the launch routes incl. Stats/Help/Download', () => {
@@ -8,14 +9,15 @@ test('primary nav exposes the launch routes incl. Stats/Help/Download', () => {
     assert.match(html, new RegExp(`>${label}</button>`), `missing nav button: ${label}`);
   }
   assert.match(html, /data-route="stats"[^>]*>Stats<\/button>/);
-  assert.match(html, /data-route="about"[^>]*>Help<\/button>/);
+  assert.match(html, /data-route="help"[^>]*>Help<\/button>/);
+  assert.doesNotMatch(html, /data-route="about"/);
   assert.doesNotMatch(html, />About<\/button>/);
 });
 
-test('legacy help route marks Help active', () => {
-  const html = renderPrimaryNav('about');
-  assert.match(html, /class="nav-btn active"\s+data-route="about"/);
-  assert.doesNotMatch(html, /data-route="help"/);
+test('Help route marks the canonical Help nav item active', () => {
+  const html = renderPrimaryNav('help');
+  assert.match(html, /class="nav-btn active"\s+data-route="help"/);
+  assert.doesNotMatch(html, /data-route="about"/);
 });
 
 test('download route marks Download active', () => {
@@ -50,7 +52,7 @@ test('entry detail routes keep the Entry tab active', () => {
 test('primary nav order is Home Entry Search Probing Stats Download Help', () => {
   const html = renderPrimaryNav('home');
   const labels = [...html.matchAll(/data-route="([a-z-]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(labels, ['home', 'entry', 'search', 'probing', 'stats', 'download', 'about']);
+  assert.deepEqual(labels, ['home', 'entry', 'search', 'probing', 'stats', 'download', 'help']);
 });
 
 import { renderHomeHero, HOME_METRICS } from '../src/siteChrome.js';
@@ -143,7 +145,9 @@ test('empty input returns a placeholder shell with no slides', () => {
   assert.match(html, /home-probing-carousel/);
 });
 
-import { renderHelpPage, renderAboutPage } from '../src/siteChrome.js';
+import { renderHelpPage } from '../src/siteChrome.js';
+
+const PUBLISHED_HELP = JSON.parse(fs.readFileSync(new URL('../src/assets/data/help-content.json', import.meta.url), 'utf8'));
 
 const SAMPLE_HELP = {
   hero: { kicker: 'Help · FoldBridge', title: 'How to use FoldBridge', summary: 'A practical guide.', detail: 'Usage, not methodology.' },
@@ -160,6 +164,28 @@ test('help page renders hero title and sections', () => {
   assert.match(html, /Finding your way around/);
   assert.match(html, /The master table\./);
   assert.match(html, /Family plus tier\./);
+});
+
+test('published Help content merges usage, methodology, contact, and group members in order', () => {
+  const html = renderHelpPage(PUBLISHED_HELP);
+  const orderedHeadings = [
+    'About FoldBridge',
+    'Search channels',
+    'Interactive visualisation',
+    'Data sources',
+    'ANNOJOIN pipeline',
+    'Confidence labels',
+    'How to make a feedback',
+    'How to contact us',
+    'Group Members'
+  ];
+  let previousIndex = -1;
+  for (const heading of orderedHeadings) {
+    const index = html.indexOf(heading);
+    assert.ok(index > previousIndex, `${heading} is missing or out of order`);
+    previousIndex = index;
+  }
+  assert.match(html, /<svg[^>]*aria-label="ANNOJOIN pipeline"/);
 });
 
 test('help page renders a screenshot-led usage flow', () => {
@@ -270,11 +296,4 @@ test('help page falls back to a minimal shell with an H1 when content is missing
   const html = renderHelpPage(null);
   assert.match(html, /<h1>Help<\/h1>/);
   assert.doesNotMatch(html, /undefined/);
-});
-
-test('help page is distinct from about page for the same-shaped input', () => {
-  const helpHtml = renderHelpPage(SAMPLE_HELP);
-  const aboutHtml = renderAboutPage(null);
-  assert.match(helpHtml, /How to use FoldBridge/);
-  assert.doesNotMatch(aboutHtml, /How to use FoldBridge/);
 });
