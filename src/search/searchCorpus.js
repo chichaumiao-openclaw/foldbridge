@@ -23,8 +23,10 @@ function cleanToken(value) {
 }
 
 function caseDocId(caseKey, caseId) {
-  const raw = String(caseKey || caseId || '').trim().toLowerCase();
-  return `pdb-case-${raw.replace(/[^0-9a-z]+/g, '-').replace(/^-+|-+$/g, '')}`;
+  const raw = String(caseKey || caseId || '').trim();
+  const slug = raw.toLowerCase().replace(/[^0-9a-z]+/g, '-').replace(/^-+|-+$/g, '');
+  const identity = Buffer.from(raw, 'utf8').toString('hex');
+  return `pdb-case-${slug}-${identity}`;
 }
 
 // 详情链接走站内 hash 路由 #annojoin-case。Atlas case 资产对每个 displayCase 都存在

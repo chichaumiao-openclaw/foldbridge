@@ -9,14 +9,16 @@ test('normalizeRoute accepts supported routes only', () => {
   assert.equal(normalizeRoute('pdb-case'), 'pdb-case');
   assert.equal(normalizeRoute('annojoin-case'), 'annojoin-case');
   assert.equal(normalizeRoute('annojoin-confidence'), 'annojoin-confidence');
-  assert.equal(normalizeRoute('help'), 'about');
+  assert.equal(normalizeRoute('help'), 'help');
+  assert.equal(normalizeRoute('about'), 'home');
   assert.equal(normalizeRoute('unknown'), 'home');
 });
 
 test('routeFromHash parses url hash safely', () => {
   assert.equal(routeFromHash('#browse'), 'browse');
   assert.equal(routeFromHash('#DETAIL'), 'detail');
-  assert.equal(routeFromHash('#help'), 'about');
+  assert.equal(routeFromHash('#help'), 'help');
+  assert.equal(routeFromHash('#about'), 'home');
   assert.equal(routeFromHash(''), 'home');
   assert.equal(routeFromHash('#not-a-route'), 'home');
 });

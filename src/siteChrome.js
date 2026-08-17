@@ -21,7 +21,7 @@ const PRIMARY_NAV_ITEMS = [
   { route: 'probing', label: 'Probing', activeRoutes: ['probing', 'detail'] },
   { route: 'stats', label: 'Stats', activeRoutes: ['stats'] },
   { route: 'download', label: 'Download', activeRoutes: ['download'] },
-  { route: 'about', label: 'Help', activeRoutes: ['about'] }
+  { route: 'help', label: 'Help', activeRoutes: ['help'] }
 ];
 
 export function renderPrimaryNav(activeRoute = 'home') {
@@ -474,6 +474,7 @@ function renderHelpSection(section) {
     case 'usage': inner = renderHelpUsage(section); break;
     case 'feedback': inner = renderHelpFeedback(section); break;
     case 'cards': inner = renderAboutCards(section); break;
+    case 'pipeline': inner = renderAboutPipeline(section); break;
     case 'table': inner = renderAboutTable(section); break;
     case 'prose':
     default: inner = section.id === 'contact' ? renderHelpContact(section) : renderAboutProse(section); break;

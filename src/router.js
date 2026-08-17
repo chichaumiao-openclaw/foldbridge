@@ -5,7 +5,7 @@ const ALLOWED_ROUTES = new Set([
   'sequence',
   'structure',
   'probing',
-  'about',
+  'help',
   'stats',
   'download',
   'search',
@@ -23,7 +23,6 @@ const ALLOWED_ROUTES = new Set([
 export function normalizeRoute(value) {
   if (typeof value !== 'string') return 'home';
   const lowered = value.trim().toLowerCase();
-  if (lowered === 'help') return 'about';
   return ALLOWED_ROUTES.has(lowered) ? lowered : 'home';
 }
 
