@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9R9O",
+  "biologicalMoleculeName": "9R9O",
+  "caseId": "9R9O",
+  "caseKey": "9R9O",
+  "chains": [
+    "6",
+    "C1",
+    "C2",
+    "C3",
+    "C4"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "9R9O",
+  "profileCount": 10042
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9TMI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19228,
+  "defaultEvidenceId": "annojoin:9TMI:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#39692",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9094,
+    "B": 10134
+  },
+  "generatedAt": "2026-08-17T12:40:31.784927Z",
+  "materializedEvidenceCount": 19228,
+  "pdbId": "9TMI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 602,
+    "LOW": 2859,
+    "NOT_SUPPORTED": 15767
+  },
+  "totalEvidenceCount": 19228
+}

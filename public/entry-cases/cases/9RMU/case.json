@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9RMU",
+  "biologicalMoleculeName": "9RMU",
+  "caseId": "9RMU",
+  "caseKey": "9RMU",
+  "chains": [
+    "I",
+    "J",
+    "i",
+    "j"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "9RMU",
+  "profileCount": 1826
+}
