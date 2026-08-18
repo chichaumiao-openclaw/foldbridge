@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1P9X",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1540,
+  "defaultEvidenceId": "annojoin:1P9X:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#76012",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 770,
+    "B": 770
+  },
+  "generatedAt": "2026-08-17T12:28:01.660367Z",
+  "materializedEvidenceCount": 1540,
+  "pdbId": "1P9X",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 67,
+    "LOW": 566,
+    "NOT_SUPPORTED": 907
+  },
+  "totalEvidenceCount": 1540
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3J9Y",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 501,
+  "defaultEvidenceId": "annojoin:3J9Y:confidence:B:data-rna-structures/M2PK50_2A3_0000.rdat#39671",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 249,
+    "B": 252
+  },
+  "generatedAt": "2026-08-17T13:13:20.457130Z",
+  "materializedEvidenceCount": 501,
+  "pdbId": "3J9Y",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 62,
+    "LOW": 84,
+    "NOT_SUPPORTED": 355
+  },
+  "totalEvidenceCount": 501
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1YMO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2574,
+  "defaultEvidenceId": "annojoin:1YMO:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#17148",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1281,
+    "B": 1293
+  },
+  "generatedAt": "2026-08-17T12:46:13.329069Z",
+  "materializedEvidenceCount": 2574,
+  "pdbId": "1YMO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 329,
+    "LOW": 1204,
+    "NOT_SUPPORTED": 1041
+  },
+  "totalEvidenceCount": 2574
+}

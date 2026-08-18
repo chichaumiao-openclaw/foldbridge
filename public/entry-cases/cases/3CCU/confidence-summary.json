@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3CCU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1950,
+  "defaultEvidenceId": "annojoin:3CCU:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#23552",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 975,
+    "B": 975
+  },
+  "generatedAt": "2026-08-17T12:46:13.329069Z",
+  "materializedEvidenceCount": 1950,
+  "pdbId": "3CCU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 169,
+    "LOW": 592,
+    "NOT_SUPPORTED": 1189
+  },
+  "totalEvidenceCount": 1950
+}

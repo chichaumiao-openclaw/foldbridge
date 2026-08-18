@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2CZJ",
+  "biologicalMoleculeName": "2CZJ",
+  "caseId": "2CZJ",
+  "caseKey": "2CZJ",
+  "chains": [
+    "B",
+    "D",
+    "F",
+    "H"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "2CZJ",
+  "profileCount": 2
+}

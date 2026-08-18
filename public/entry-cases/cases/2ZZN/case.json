@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2ZZN",
+  "biologicalMoleculeName": "2ZZN",
+  "caseId": "2ZZN",
+  "caseKey": "2ZZN",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "2ZZN",
+  "profileCount": 2
+}

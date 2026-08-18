@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1Z2J",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 58,
+  "defaultEvidenceId": "annojoin:1Z2J:confidence:A:data-eterna/OK3TST_DMS_0001.rdat#40010",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 29,
+    "B": 29
+  },
+  "generatedAt": "2026-08-17T12:33:28.063985Z",
+  "materializedEvidenceCount": 58,
+  "pdbId": "1Z2J",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 58
+  },
+  "totalEvidenceCount": 58
+}

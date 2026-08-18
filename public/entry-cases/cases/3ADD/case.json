@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3ADD",
+  "biologicalMoleculeName": "3ADD",
+  "caseId": "3ADD",
+  "caseKey": "3ADD",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "3ADD",
+  "profileCount": 2
+}

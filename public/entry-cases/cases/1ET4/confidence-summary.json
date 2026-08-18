@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1ET4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 130,
+  "defaultEvidenceId": "annojoin:1ET4:confidence:B:data-eterna/ETERNA_R87_0000.rdat#1412",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 45,
+    "B": 85
+  },
+  "generatedAt": "2026-08-17T12:39:28.893021Z",
+  "materializedEvidenceCount": 130,
+  "pdbId": "1ET4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 130
+  },
+  "totalEvidenceCount": 130
+}

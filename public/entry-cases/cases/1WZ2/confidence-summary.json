@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1WZ2",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 28,
+  "defaultEvidenceId": "annojoin:1WZ2:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#6436",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 14,
+    "B": 14
+  },
+  "generatedAt": "2026-08-17T11:02:07.037170Z",
+  "materializedEvidenceCount": 28,
+  "pdbId": "1WZ2",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 28
+  },
+  "totalEvidenceCount": 28
+}

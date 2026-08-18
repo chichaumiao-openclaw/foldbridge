@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "22TU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3572,
+  "defaultEvidenceId": "annojoin:22TU:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1784,
+    "B": 1788
+  },
+  "generatedAt": "2026-08-17T12:58:32.114596Z",
+  "materializedEvidenceCount": 3572,
+  "pdbId": "22TU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 3572
+  },
+  "totalEvidenceCount": 3572
+}

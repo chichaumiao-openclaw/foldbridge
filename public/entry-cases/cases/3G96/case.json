@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3G96",
+  "biologicalMoleculeName": "3G96",
+  "caseId": "3G96",
+  "caseKey": "3G96",
+  "chains": [
+    "P",
+    "Q",
+    "R",
+    "S"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "3G96",
+  "profileCount": 23
+}

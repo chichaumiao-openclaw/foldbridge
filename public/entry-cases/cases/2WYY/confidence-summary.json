@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2WYY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 696,
+  "defaultEvidenceId": "annojoin:2WYY:confidence:B:data-eterna/ETERNA_R69_0001.rdat#3360",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 190,
+    "B": 506
+  },
+  "generatedAt": "2026-08-17T11:55:49.970020Z",
+  "materializedEvidenceCount": 696,
+  "pdbId": "2WYY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 17,
+    "LOW": 87,
+    "NOT_SUPPORTED": 592
+  },
+  "totalEvidenceCount": 696
+}

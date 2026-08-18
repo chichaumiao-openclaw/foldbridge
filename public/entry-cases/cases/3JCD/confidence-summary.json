@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3JCD",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 413,
+  "defaultEvidenceId": "annojoin:3JCD:confidence:B:data-rna-structures/5SRRNA_1M7_0005.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 144,
+    "B": 269
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 413,
+  "pdbId": "3JCD",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 10,
+    "LOW": 152,
+    "NOT_SUPPORTED": 251
+  },
+  "totalEvidenceCount": 413
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2CSX",
+  "biologicalMoleculeName": "2CSX",
+  "caseId": "2CSX",
+  "caseKey": "2CSX",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "2CSX",
+  "profileCount": 2
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3LA5",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3700,
+  "defaultEvidenceId": "annojoin:3LA5:confidence:B:data-riboswitches/ADDSCHW_1M7_0000.rdat#25",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 36,
+    "B": 3664
+  },
+  "generatedAt": "2026-08-17T13:13:20.457130Z",
+  "materializedEvidenceCount": 3700,
+  "pdbId": "3LA5",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 188,
+    "LOW": 2460,
+    "NOT_SUPPORTED": 1052
+  },
+  "totalEvidenceCount": 3700
+}

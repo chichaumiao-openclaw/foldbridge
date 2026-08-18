@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1EFW",
+  "biologicalMoleculeName": "1EFW",
+  "caseId": "1EFW",
+  "caseKey": "1EFW",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "1EFW",
+  "profileCount": 6
+}

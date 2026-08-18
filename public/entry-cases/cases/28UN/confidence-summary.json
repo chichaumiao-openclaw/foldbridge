@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "28UN",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 469,
+  "defaultEvidenceId": "annojoin:28UN:confidence:B:data-rna-structures/5SRRNA_DCP_0000.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 169,
+    "B": 300
+  },
+  "generatedAt": "2026-08-17T11:42:15.821771Z",
+  "materializedEvidenceCount": 469,
+  "pdbId": "28UN",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 30,
+    "LOW": 111,
+    "NOT_SUPPORTED": 328
+  },
+  "totalEvidenceCount": 469
+}

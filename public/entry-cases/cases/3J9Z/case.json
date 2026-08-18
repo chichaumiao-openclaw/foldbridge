@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3J9Z",
+  "biologicalMoleculeName": "3J9Z",
+  "caseId": "3J9Z",
+  "caseKey": "3J9Z",
+  "chains": [
+    "LA",
+    "LB",
+    "S6",
+    "SA"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "3J9Z",
+  "profileCount": 454
+}

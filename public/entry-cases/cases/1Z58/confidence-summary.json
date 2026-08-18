@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1Z58",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1540,
+  "defaultEvidenceId": "annojoin:1Z58:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#1760",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 770,
+    "B": 770
+  },
+  "generatedAt": "2026-08-17T11:43:43.312761Z",
+  "materializedEvidenceCount": 1540,
+  "pdbId": "1Z58",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 84,
+    "LOW": 510,
+    "NOT_SUPPORTED": 946
+  },
+  "totalEvidenceCount": 1540
+}

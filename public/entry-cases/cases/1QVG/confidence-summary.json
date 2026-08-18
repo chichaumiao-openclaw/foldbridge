@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1QVG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1934,
+  "defaultEvidenceId": "annojoin:1QVG:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12292",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 967,
+    "B": 967
+  },
+  "generatedAt": "2026-08-17T11:15:08.471806Z",
+  "materializedEvidenceCount": 1934,
+  "pdbId": "1QVG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 66,
+    "LOW": 489,
+    "NOT_SUPPORTED": 1379
+  },
+  "totalEvidenceCount": 1934
+}

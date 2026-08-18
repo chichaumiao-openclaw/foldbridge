@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2DR2",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 14,
+  "defaultEvidenceId": "annojoin:2DR2:confidence:B:data-general/ARCHII_2A3_0000.rdat#18271",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 7,
+    "B": 7
+  },
+  "generatedAt": "2026-08-17T11:43:43.312761Z",
+  "materializedEvidenceCount": 14,
+  "pdbId": "2DR2",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 13,
+    "NOT_SUPPORTED": 1
+  },
+  "totalEvidenceCount": 14
+}

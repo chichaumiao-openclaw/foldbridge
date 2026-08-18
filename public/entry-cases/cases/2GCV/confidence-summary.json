@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2GCV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 218,
+  "defaultEvidenceId": "annojoin:2GCV:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#32655",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 107,
+    "B": 111
+  },
+  "generatedAt": "2026-08-17T10:56:11.497087Z",
+  "materializedEvidenceCount": 218,
+  "pdbId": "2GCV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 48,
+    "NOT_SUPPORTED": 170
+  },
+  "totalEvidenceCount": 218
+}

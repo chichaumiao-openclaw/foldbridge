@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "1P5M",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5,
+  "defaultEvidenceId": "annojoin:1P5M:confidence:B:data-eterna/ETERNA_R00_0002.rdat#15565",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T13:10:50.762864Z",
+  "materializedEvidenceCount": 5,
+  "pdbId": "1P5M",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "NOT_SUPPORTED": 3
+  },
+  "totalEvidenceCount": 5
+}
