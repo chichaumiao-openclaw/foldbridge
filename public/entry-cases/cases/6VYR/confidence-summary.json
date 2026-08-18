@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6VYR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18234,
+  "defaultEvidenceId": "annojoin:6VYR:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#10769",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8601,
+    "B": 9633
+  },
+  "generatedAt": "2026-08-17T11:18:34.916425Z",
+  "materializedEvidenceCount": 18234,
+  "pdbId": "6VYR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 728,
+    "LOW": 3753,
+    "NOT_SUPPORTED": 13753
+  },
+  "totalEvidenceCount": 18234
+}

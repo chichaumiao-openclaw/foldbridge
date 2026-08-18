@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6VMI",
+  "biologicalMoleculeName": "6VMI",
+  "caseId": "6VMI",
+  "caseKey": "6VMI",
+  "chains": [
+    "A",
+    "AA",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "6VMI",
+  "profileCount": 510
+}

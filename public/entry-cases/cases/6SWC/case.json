@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6SWC",
+  "biologicalMoleculeName": "6SWC",
+  "caseId": "6SWC",
+  "caseKey": "6SWC",
+  "chains": [
+    "2",
+    "4"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "6SWC",
+  "profileCount": 1198
+}

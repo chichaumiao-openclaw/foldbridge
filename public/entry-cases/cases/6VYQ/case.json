@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6VYQ",
+  "biologicalMoleculeName": "6VYQ",
+  "caseId": "6VYQ",
+  "caseKey": "6VYQ",
+  "chains": [
+    "A",
+    "B",
+    "D",
+    "a",
+    "d"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "6VYQ",
+  "profileCount": 18266
+}
