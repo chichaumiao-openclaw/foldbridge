@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4UJC",
+  "biologicalMoleculeName": "4UJC",
+  "caseId": "4UJC",
+  "caseKey": "4UJC",
+  "chains": [
+    "A2",
+    "A3",
+    "A4",
+    "AC",
+    "C1"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4UJC",
+  "profileCount": 5316
+}

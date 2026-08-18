@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4D5L",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1940,
+  "defaultEvidenceId": "annojoin:4D5L:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#6582",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 968,
+    "B": 972
+  },
+  "generatedAt": "2026-08-17T10:56:07.108683Z",
+  "materializedEvidenceCount": 1940,
+  "pdbId": "4D5L",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 363,
+    "NOT_SUPPORTED": 1574
+  },
+  "totalEvidenceCount": 1940
+}

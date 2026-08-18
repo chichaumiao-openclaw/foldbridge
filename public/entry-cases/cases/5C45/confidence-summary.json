@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5C45",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 30,
+  "defaultEvidenceId": "annojoin:5C45:confidence:A:data-rna-structures/M2RFPK_DMS_0000.rdat#9170",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 15,
+    "B": 15
+  },
+  "generatedAt": "2026-08-17T13:10:54.484222Z",
+  "materializedEvidenceCount": 30,
+  "pdbId": "5C45",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 30
+  },
+  "totalEvidenceCount": 30
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5DAR",
+  "biologicalMoleculeName": "5DAR",
+  "caseId": "5DAR",
+  "caseKey": "5DAR",
+  "chains": [
+    "A",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "5DAR",
+  "profileCount": 85
+}

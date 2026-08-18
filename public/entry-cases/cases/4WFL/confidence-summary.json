@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "4WFL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 256,
+  "defaultEvidenceId": "annojoin:4WFL:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#9391",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 128,
+    "B": 128
+  },
+  "generatedAt": "2026-08-17T13:13:20.457130Z",
+  "materializedEvidenceCount": 256,
+  "pdbId": "4WFL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 1,
+    "NOT_SUPPORTED": 255
+  },
+  "totalEvidenceCount": 256
+}

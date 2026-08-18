@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4CXG",
+  "biologicalMoleculeName": "4CXG",
+  "caseId": "4CXG",
+  "caseKey": "4CXG",
+  "chains": [
+    "1",
+    "2",
+    "Y",
+    "a"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "4CXG",
+  "profileCount": 434
+}

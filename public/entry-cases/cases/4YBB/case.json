@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4YBB",
+  "biologicalMoleculeName": "4YBB",
+  "caseId": "4YBB",
+  "caseKey": "4YBB",
+  "chains": [
+    "AA",
+    "BA",
+    "CA",
+    "CB",
+    "DA",
+    "DB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4YBB",
+  "profileCount": 513
+}

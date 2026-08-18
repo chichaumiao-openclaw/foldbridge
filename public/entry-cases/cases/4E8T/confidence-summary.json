@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "4E8T",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 178,
+  "defaultEvidenceId": "annojoin:4E8T:confidence:B:data-rna-structures/SHPKNT_2A3_0000.rdat#52",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 89,
+    "B": 89
+  },
+  "generatedAt": "2026-08-17T13:04:20.107274Z",
+  "materializedEvidenceCount": 178,
+  "pdbId": "4E8T",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 24,
+    "NOT_SUPPORTED": 154
+  },
+  "totalEvidenceCount": 178
+}

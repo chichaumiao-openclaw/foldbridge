@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5ADY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 499,
+  "defaultEvidenceId": "annojoin:5ADY:confidence:B:data-rna-structures/5SRRNA_SHP_0002.rdat#118",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 168,
+    "B": 331
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 499,
+  "pdbId": "5ADY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 8,
+    "LOW": 147,
+    "NOT_SUPPORTED": 344
+  },
+  "totalEvidenceCount": 499
+}

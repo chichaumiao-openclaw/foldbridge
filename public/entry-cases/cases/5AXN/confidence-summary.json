@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5AXN",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1264,
+  "defaultEvidenceId": "annojoin:5AXN:confidence:B:data-rna-structures/TRNAPH_SHP_0002.rdat#31",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 584,
+    "B": 680
+  },
+  "generatedAt": "2026-08-17T12:46:07.647795Z",
+  "materializedEvidenceCount": 1264,
+  "pdbId": "5AXN",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 98,
+    "LOW": 627,
+    "NOT_SUPPORTED": 539
+  },
+  "totalEvidenceCount": 1264
+}

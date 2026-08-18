@@ -1,0 +1,20 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4XEJ",
+  "biologicalMoleculeName": "4XEJ",
+  "caseId": "4XEJ",
+  "caseKey": "4XEJ",
+  "chains": [
+    "A16S",
+    "A23S",
+    "A5S",
+    "AIRE",
+    "B16S",
+    "B23S",
+    "B5S",
+    "BIRE"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4XEJ",
+  "profileCount": 2670
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4YY3",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1101,
+  "defaultEvidenceId": "annojoin:4YY3:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#77151",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 550,
+    "B": 551
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 1101,
+  "pdbId": "4YY3",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 67,
+    "NOT_SUPPORTED": 1033
+  },
+  "totalEvidenceCount": 1101
+}

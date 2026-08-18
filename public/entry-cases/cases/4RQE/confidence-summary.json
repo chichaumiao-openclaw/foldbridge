@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "4RQE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 32,
+  "defaultEvidenceId": "annojoin:4RQE:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#83919",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 16,
+    "B": 16
+  },
+  "generatedAt": "2026-08-17T11:42:15.821771Z",
+  "materializedEvidenceCount": 32,
+  "pdbId": "4RQE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 6,
+    "NOT_SUPPORTED": 26
+  },
+  "totalEvidenceCount": 32
+}

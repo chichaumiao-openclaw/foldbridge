@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4XEJ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5316,
+  "defaultEvidenceId": "annojoin:4XEJ:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1414",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2652,
+    "B": 2664
+  },
+  "generatedAt": "2026-08-17T11:02:07.037170Z",
+  "materializedEvidenceCount": 5316,
+  "pdbId": "4XEJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5316
+  },
+  "totalEvidenceCount": 5316
+}
