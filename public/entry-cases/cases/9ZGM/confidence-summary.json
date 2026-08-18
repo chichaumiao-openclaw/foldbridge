@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9ZGM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1184,
+  "defaultEvidenceId": "annojoin:9ZGM:confidence:A:data-rna-structures/RNASEP_DMS_0000.rdat#198",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 991,
+    "B": 193
+  },
+  "generatedAt": "2026-08-17T12:39:28.893021Z",
+  "materializedEvidenceCount": 1184,
+  "pdbId": "9ZGM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 758,
+    "LOW": 234,
+    "NOT_SUPPORTED": 192
+  },
+  "totalEvidenceCount": 1184
+}

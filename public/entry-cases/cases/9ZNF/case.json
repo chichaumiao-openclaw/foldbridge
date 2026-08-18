@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9ZNF",
+  "biologicalMoleculeName": "9ZNF",
+  "caseId": "9ZNF",
+  "caseKey": "9ZNF",
+  "chains": [
+    "1",
+    "2",
+    "3"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "9ZNF",
+  "profileCount": 1140
+}

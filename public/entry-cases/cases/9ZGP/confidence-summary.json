@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9ZGP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1184,
+  "defaultEvidenceId": "annojoin:9ZGP:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#4798",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 991,
+    "B": 193
+  },
+  "generatedAt": "2026-08-17T11:30:17.681519Z",
+  "materializedEvidenceCount": 1184,
+  "pdbId": "9ZGP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 844,
+    "LOW": 142,
+    "NOT_SUPPORTED": 198
+  },
+  "totalEvidenceCount": 1184
+}

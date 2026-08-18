@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9ZC6",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5094,
+  "defaultEvidenceId": "annojoin:9ZC6:confidence:A:data-rna-structures/TRP4P6_R1J_0001.rdat#16",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3769,
+    "B": 1325
+  },
+  "generatedAt": "2026-08-17T11:02:10.009471Z",
+  "materializedEvidenceCount": 5094,
+  "pdbId": "9ZC6",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 48,
+    "LOW": 1034,
+    "NOT_SUPPORTED": 4012
+  },
+  "totalEvidenceCount": 5094
+}
