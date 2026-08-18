@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6ZMI",
+  "biologicalMoleculeName": "6ZMI",
+  "caseId": "6ZMI",
+  "caseKey": "6ZMI",
+  "chains": [
+    "CC",
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6ZMI",
+  "profileCount": 4388
+}

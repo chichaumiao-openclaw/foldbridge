@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6YLX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4438,
+  "defaultEvidenceId": "annojoin:6YLX:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#367",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2217,
+    "B": 2221
+  },
+  "generatedAt": "2026-08-17T11:21:04.164187Z",
+  "materializedEvidenceCount": 4438,
+  "pdbId": "6YLX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 47,
+    "LOW": 1070,
+    "NOT_SUPPORTED": 3321
+  },
+  "totalEvidenceCount": 4438
+}

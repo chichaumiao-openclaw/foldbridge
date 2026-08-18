@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6ZTN",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18699,
+  "defaultEvidenceId": "annojoin:6ZTN:confidence:B:data-general/PTCWT_1M7_0001.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8835,
+    "B": 9864
+  },
+  "generatedAt": "2026-08-17T11:02:07.037170Z",
+  "materializedEvidenceCount": 18699,
+  "pdbId": "6ZTN",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 18699
+  },
+  "totalEvidenceCount": 18699
+}
