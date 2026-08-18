@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6WD1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 17930,
+  "defaultEvidenceId": "annojoin:6WD1:confidence:B:data-general/P50LIB_2A3_0003.rdat#352",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8530,
+    "B": 9400
+  },
+  "generatedAt": "2026-08-17T11:36:33.593526Z",
+  "materializedEvidenceCount": 17930,
+  "pdbId": "6WD1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 501,
+    "LOW": 3797,
+    "NOT_SUPPORTED": 13632
+  },
+  "totalEvidenceCount": 17930
+}
