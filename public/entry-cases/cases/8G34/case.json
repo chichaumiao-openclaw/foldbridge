@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8G34",
+  "biologicalMoleculeName": "8G34",
+  "caseId": "8G34",
+  "caseKey": "8G34",
+  "chains": [
+    "A",
+    "B",
+    "v"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8G34",
+  "profileCount": 18151
+}

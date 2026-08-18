@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8G31",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18257,
+  "defaultEvidenceId": "annojoin:8G31:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#4999",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8681,
+    "B": 9576
+  },
+  "generatedAt": "2026-08-17T12:27:03.069804Z",
+  "materializedEvidenceCount": 18257,
+  "pdbId": "8G31",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 355,
+    "LOW": 3037,
+    "NOT_SUPPORTED": 14865
+  },
+  "totalEvidenceCount": 18257
+}
