@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8RUI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 178,
+  "defaultEvidenceId": "annojoin:8RUI:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#3363",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 89,
+    "B": 89
+  },
+  "generatedAt": "2026-08-17T12:46:12.664339Z",
+  "materializedEvidenceCount": 178,
+  "pdbId": "8RUI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 59,
+    "NOT_SUPPORTED": 117
+  },
+  "totalEvidenceCount": 178
+}

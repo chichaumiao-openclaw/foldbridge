@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8URX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19176,
+  "defaultEvidenceId": "annojoin:8URX:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#19987",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9069,
+    "B": 10107
+  },
+  "generatedAt": "2026-08-17T11:40:49.272122Z",
+  "materializedEvidenceCount": 19176,
+  "pdbId": "8URX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 679,
+    "LOW": 4211,
+    "NOT_SUPPORTED": 14286
+  },
+  "totalEvidenceCount": 19176
+}

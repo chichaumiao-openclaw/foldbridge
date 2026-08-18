@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8RWG",
+  "biologicalMoleculeName": "8RWG",
+  "caseId": "8RWG",
+  "caseKey": "8RWG",
+  "chains": [
+    "A",
+    "B",
+    "C"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8RWG",
+  "profileCount": 2698
+}

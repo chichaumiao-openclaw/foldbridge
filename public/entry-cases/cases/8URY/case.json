@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8URY",
+  "biologicalMoleculeName": "8URY",
+  "caseId": "8URY",
+  "caseKey": "8URY",
+  "chains": [
+    "7",
+    "A",
+    "B",
+    "D",
+    "a",
+    "d"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8URY",
+  "profileCount": 19172
+}

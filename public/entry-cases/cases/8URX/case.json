@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8URX",
+  "biologicalMoleculeName": "8URX",
+  "caseId": "8URX",
+  "caseKey": "8URX",
+  "chains": [
+    "7",
+    "A",
+    "B",
+    "D",
+    "a",
+    "d"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8URX",
+  "profileCount": 19172
+}
