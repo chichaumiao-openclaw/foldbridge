@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7ZUX",
+  "biologicalMoleculeName": "7ZUX",
+  "caseId": "7ZUX",
+  "caseKey": "7ZUX",
+  "chains": [
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "7ZUX",
+  "profileCount": 9490
+}

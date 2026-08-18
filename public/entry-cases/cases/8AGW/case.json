@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8AGW",
+  "biologicalMoleculeName": "8AGW",
+  "caseId": "8AGW",
+  "caseKey": "8AGW",
+  "chains": [
+    "f",
+    "h",
+    "i",
+    "x",
+    "y"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8AGW",
+  "profileCount": 4242
+}

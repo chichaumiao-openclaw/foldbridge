@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7ZHG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1198,
+  "defaultEvidenceId": "annojoin:7ZHG:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#4267",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 599,
+    "B": 599
+  },
+  "generatedAt": "2026-08-17T11:40:49.272122Z",
+  "materializedEvidenceCount": 1198,
+  "pdbId": "7ZHG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 4,
+    "LOW": 135,
+    "NOT_SUPPORTED": 1059
+  },
+  "totalEvidenceCount": 1198
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7ZUX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 9490,
+  "defaultEvidenceId": "annojoin:7ZUX:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#7544",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4743,
+    "B": 4747
+  },
+  "generatedAt": "2026-08-17T12:18:57.850374Z",
+  "materializedEvidenceCount": 9490,
+  "pdbId": "7ZUX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 215,
+    "LOW": 2254,
+    "NOT_SUPPORTED": 7021
+  },
+  "totalEvidenceCount": 9490
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8AYE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 16387,
+  "defaultEvidenceId": "annojoin:8AYE:confidence:B:data-general/P90LIB_2A3_0001.rdat#1613",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 7697,
+    "B": 8690
+  },
+  "generatedAt": "2026-08-17T12:12:25.241356Z",
+  "materializedEvidenceCount": 16387,
+  "pdbId": "8AYE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 898,
+    "LOW": 2452,
+    "NOT_SUPPORTED": 13037
+  },
+  "totalEvidenceCount": 16387
+}

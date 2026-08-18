@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8AXF",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 342,
+  "defaultEvidenceId": "annojoin:8AXF:confidence:A:data-eterna/ETERNA_R69_0001.rdat#3359",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 92,
+    "B": 250
+  },
+  "generatedAt": "2026-08-17T12:52:51.132170Z",
+  "materializedEvidenceCount": 342,
+  "pdbId": "8AXF",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 342
+  },
+  "totalEvidenceCount": 342
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7ZOD",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 11161,
+  "defaultEvidenceId": "annojoin:7ZOD:confidence:A:data-general/P90LIB_DMS_0002.rdat#1102",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5358,
+    "B": 5803
+  },
+  "generatedAt": "2026-08-17T11:24:40.294608Z",
+  "materializedEvidenceCount": 11161,
+  "pdbId": "7ZOD",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 259,
+    "LOW": 1844,
+    "NOT_SUPPORTED": 9058
+  },
+  "totalEvidenceCount": 11161
+}
