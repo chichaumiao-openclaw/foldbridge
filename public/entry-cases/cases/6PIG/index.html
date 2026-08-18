@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>6PIG case page</title>
+  <link rel="stylesheet" href="../../__entry_v3_site__/case-shell.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>6PIG</h1>
+      <p>6PIG</p>
+      <div class="meta">
+        <span class="chip">source MERGED</span>
+        <span class="chip">families A,B</span>
+        <span class="chip">default chain 1</span>
+        <span class="chip">chains 1</span>
+      </div>
+    </section>
+    <section class="layout">
+      <aside class="panel">
+        <h2>Chains</h2>
+        <div class="chain-list"><button class="chain-btn is-active" type="button" data-chain-id="1">
+  <strong>1</strong>
+  <span class="mini">chains/1/index.html</span>
+</button></div>
+      </aside>
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">1</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/1/index.html?profileId=data-rna-structures/PDB130_2A3_0000.rdat#11746"
+          loading="lazy"
+          title="6PIG chain page"
+        ></iframe>
+      </section>
+    </section>
+  </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "6PIG", "caseKey": "6PIG", "defaultChainId": "1", "defaultEvidenceId": "annojoin:6PIG:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11746", "chainPageById": {"1": "chains/1/index.html"}, "evidenceChainMap": {"annojoin:6PIG:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#11746": "1", "annojoin:6PIG:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11746": "1"}, "evidenceRows": [{"aucDirectional": 0.5891148325358851, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "1", "conflictFraction": 0.22727272727272727, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:6PIG:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11746", "family": "B", "lssTierCalibrated": "LOW", "lssTierUncalibrated": "", "nEvaluable": 60, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-rna-structures/PDB130_2A3_0000.rdat#11746", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "", "sourceLane": "rmdb", "technology": "2A3", "trackProfileId": "data-rna-structures/PDB130_2A3_0000.rdat#11746"}, {"aucDirectional": 0.5733333333333334, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "1", "conflictFraction": 0.2, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:6PIG:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#11746", "family": "A", "lssTierCalibrated": "LOW", "lssTierUncalibrated": "", "nEvaluable": 25, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-rna-structures/PDB130_DMS_0000.rdat#11746", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "", "sourceLane": "rmdb", "technology": "DMS", "trackProfileId": "data-rna-structures/PDB130_DMS_0000.rdat#11746"}]}</script>
+  <script src="../../__entry_v3_site__/case-shell.js"></script>
+</body>
+</html>

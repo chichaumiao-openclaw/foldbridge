@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6PC6",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8531,
+  "defaultEvidenceId": "annojoin:6PC6:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#1871",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4124,
+    "B": 4407
+  },
+  "generatedAt": "2026-08-17T13:04:21.164543Z",
+  "materializedEvidenceCount": 8531,
+  "pdbId": "6PC6",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 37,
+    "LOW": 687,
+    "NOT_SUPPORTED": 7807
+  },
+  "totalEvidenceCount": 8531
+}

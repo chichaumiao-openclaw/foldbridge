@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6LVR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2924,
+  "defaultEvidenceId": "annojoin:6LVR:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#36191",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1366,
+    "B": 1558
+  },
+  "generatedAt": "2026-08-17T11:55:01.373656Z",
+  "materializedEvidenceCount": 2924,
+  "pdbId": "6LVR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 352,
+    "LOW": 1164,
+    "NOT_SUPPORTED": 1408
+  },
+  "totalEvidenceCount": 2924
+}

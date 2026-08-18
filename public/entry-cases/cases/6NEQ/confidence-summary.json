@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6NEQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 230,
+  "defaultEvidenceId": "annojoin:6NEQ:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#11929",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 115,
+    "B": 115
+  },
+  "generatedAt": "2026-08-17T12:52:51.132170Z",
+  "materializedEvidenceCount": 230,
+  "pdbId": "6NEQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 45,
+    "NOT_SUPPORTED": 183
+  },
+  "totalEvidenceCount": 230
+}
