@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8YDH",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19224,
+  "defaultEvidenceId": "annojoin:8YDH:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#3830",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9112,
+    "B": 10112
+  },
+  "generatedAt": "2026-08-17T11:46:44.778261Z",
+  "materializedEvidenceCount": 19224,
+  "pdbId": "8YDH",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 574,
+    "LOW": 4323,
+    "NOT_SUPPORTED": 14327
+  },
+  "totalEvidenceCount": 19224
+}

@@ -1,0 +1,19 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8YDF",
+  "biologicalMoleculeName": "8YDF",
+  "caseId": "8YDF",
+  "caseKey": "8YDF",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8YDF",
+  "profileCount": 19381
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8YUQ",
+  "biologicalMoleculeName": "8YUQ",
+  "caseId": "8YUQ",
+  "caseKey": "8YUQ",
+  "chains": [
+    "A",
+    "V",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8YUQ",
+  "profileCount": 19223
+}

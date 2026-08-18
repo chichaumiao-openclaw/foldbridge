@@ -1,0 +1,19 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8YDI",
+  "biologicalMoleculeName": "8YDI",
+  "caseId": "8YDI",
+  "caseKey": "8YDI",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8YDI",
+  "profileCount": 19381
+}

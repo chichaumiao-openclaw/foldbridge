@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8YDF",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19409,
+  "defaultEvidenceId": "annojoin:8YDF:confidence:B:data-eterna/ETERNA_R81_0000.rdat#1326",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9127,
+    "B": 10282
+  },
+  "generatedAt": "2026-08-17T11:23:26.778754Z",
+  "materializedEvidenceCount": 19409,
+  "pdbId": "8YDF",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 611,
+    "LOW": 4349,
+    "NOT_SUPPORTED": 14449
+  },
+  "totalEvidenceCount": 19409
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8YUR",
+  "biologicalMoleculeName": "8YUR",
+  "caseId": "8YUR",
+  "caseKey": "8YUR",
+  "chains": [
+    "A",
+    "V",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8YUR",
+  "profileCount": 19223
+}
