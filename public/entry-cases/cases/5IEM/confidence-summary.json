@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5IEM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 245,
+  "defaultEvidenceId": "annojoin:5IEM:confidence:B:data-puzzle/RNAPZ11_1M7_0004.rdat#49",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 242
+  },
+  "generatedAt": "2026-08-17T11:37:53.577227Z",
+  "materializedEvidenceCount": 245,
+  "pdbId": "5IEM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 245
+  },
+  "totalEvidenceCount": 245
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5H5U",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 730,
+  "defaultEvidenceId": "annojoin:5H5U:confidence:B:data-rna-structures/5SRRNA_DCP_0000.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 276,
+    "B": 454
+  },
+  "generatedAt": "2026-08-17T11:46:44.778261Z",
+  "materializedEvidenceCount": 730,
+  "pdbId": "5H5U",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 37,
+    "LOW": 150,
+    "NOT_SUPPORTED": 543
+  },
+  "totalEvidenceCount": 730
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5KPS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 821,
+  "defaultEvidenceId": "annojoin:5KPS:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#1929",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 402,
+    "B": 419
+  },
+  "generatedAt": "2026-08-17T12:18:57.850374Z",
+  "materializedEvidenceCount": 821,
+  "pdbId": "5KPS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 821
+  },
+  "totalEvidenceCount": 821
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5NWY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4679,
+  "defaultEvidenceId": "annojoin:5NWY:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#5668",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1983,
+    "B": 2696
+  },
+  "generatedAt": "2026-08-17T11:12:44.783572Z",
+  "materializedEvidenceCount": 4679,
+  "pdbId": "5NWY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 155,
+    "LOW": 1170,
+    "NOT_SUPPORTED": 3354
+  },
+  "totalEvidenceCount": 4679
+}

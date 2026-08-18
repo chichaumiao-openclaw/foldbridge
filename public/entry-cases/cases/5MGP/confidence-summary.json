@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5MGP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4607,
+  "defaultEvidenceId": "annojoin:5MGP:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#3439",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2027,
+    "B": 2580
+  },
+  "generatedAt": "2026-08-17T11:02:07.037170Z",
+  "materializedEvidenceCount": 4607,
+  "pdbId": "5MGP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 95,
+    "LOW": 994,
+    "NOT_SUPPORTED": 3518
+  },
+  "totalEvidenceCount": 4607
+}

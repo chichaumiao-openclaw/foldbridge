@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5GAK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3994,
+  "defaultEvidenceId": "annojoin:5GAK:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#10977",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1995,
+    "B": 1999
+  },
+  "generatedAt": "2026-08-17T11:15:08.119192Z",
+  "materializedEvidenceCount": 3994,
+  "pdbId": "5GAK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 96,
+    "LOW": 1443,
+    "NOT_SUPPORTED": 2455
+  },
+  "totalEvidenceCount": 3994
+}

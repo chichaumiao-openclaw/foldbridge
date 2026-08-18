@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5JUS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8281,
+  "defaultEvidenceId": "annojoin:5JUS:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#35092",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4133,
+    "B": 4148
+  },
+  "generatedAt": "2026-08-17T12:52:13.016002Z",
+  "materializedEvidenceCount": 8281,
+  "pdbId": "5JUS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 189,
+    "LOW": 2286,
+    "NOT_SUPPORTED": 5806
+  },
+  "totalEvidenceCount": 8281
+}
