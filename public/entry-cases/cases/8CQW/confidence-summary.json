@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8CQW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19796,
+  "defaultEvidenceId": "annojoin:8CQW:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#6599",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9896,
+    "B": 9900
+  },
+  "generatedAt": "2026-08-17T11:36:33.593526Z",
+  "materializedEvidenceCount": 19796,
+  "pdbId": "8CQW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 181,
+    "LOW": 1906,
+    "NOT_SUPPORTED": 17709
+  },
+  "totalEvidenceCount": 19796
+}

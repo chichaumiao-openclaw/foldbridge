@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8CVM",
+  "biologicalMoleculeName": "8CVM",
+  "caseId": "8CVM",
+  "caseKey": "8CVM",
+  "chains": [
+    "C",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8CVM",
+  "profileCount": 1636
+}
