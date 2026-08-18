@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8JA0",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:8JA0:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#11696",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T11:02:10.009471Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "8JA0",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4
+  },
+  "totalEvidenceCount": 4
+}

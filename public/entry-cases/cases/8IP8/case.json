@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8IP8",
+  "biologicalMoleculeName": "8IP8",
+  "caseId": "8IP8",
+  "caseKey": "8IP8",
+  "chains": [
+    "RB",
+    "SB",
+    "TB",
+    "aa",
+    "cl"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8IP8",
+  "profileCount": 8055
+}

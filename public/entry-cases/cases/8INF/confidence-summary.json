@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8INF",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2858,
+  "defaultEvidenceId": "annojoin:8INF:confidence:A:data-general/ARCHII_DMS_0000.rdat#7536",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1429,
+    "B": 1429
+  },
+  "generatedAt": "2026-08-17T11:43:43.312761Z",
+  "materializedEvidenceCount": 2858,
+  "pdbId": "8INF",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 76,
+    "LOW": 853,
+    "NOT_SUPPORTED": 1929
+  },
+  "totalEvidenceCount": 2858
+}

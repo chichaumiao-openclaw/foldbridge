@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8GLP",
+  "biologicalMoleculeName": "8GLP",
+  "caseId": "8GLP",
+  "caseKey": "8GLP",
+  "chains": [
+    "L5",
+    "L7",
+    "L8",
+    "Pt",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8GLP",
+  "profileCount": 5042
+}

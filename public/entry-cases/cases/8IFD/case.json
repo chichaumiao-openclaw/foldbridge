@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8IFD",
+  "biologicalMoleculeName": "8IFD",
+  "caseId": "8IFD",
+  "caseKey": "8IFD",
+  "chains": [
+    "1A",
+    "1B",
+    "1C",
+    "2m"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8IFD",
+  "profileCount": 5850
+}
