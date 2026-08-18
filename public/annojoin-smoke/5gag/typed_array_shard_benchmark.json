@@ -1,0 +1,11 @@
+{
+  "profile_count": 27,
+  "strand_length": 113,
+  "raw_bytes": 12204,
+  "gzip_bytes": 7428,
+  "compression_ratio": 1.643,
+  "first_profile_cap": 9.54800009727478,
+  "first_profile_white_count": 57,
+  "first_profile_capped_count": 3,
+  "decode_and_check_ms": 3.884
+}

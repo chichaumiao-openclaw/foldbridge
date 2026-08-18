@@ -1,0 +1,70 @@
+{
+  "browser": {
+    "engine": "chromium",
+    "headless": true,
+    "mcp_image": "mcp/playwright:latest",
+    "mcp_server_version": "1.61.0-alpha-1778188671000",
+    "url": "http://host.docker.internal:8765/index.html"
+  },
+  "console": {
+    "errors": [
+      "favicon.ico 404"
+    ],
+    "warnings": []
+  },
+  "first_profile_render": {
+    "circle_count": 113,
+    "colored_count": 56,
+    "decompression_stream_available": true,
+    "has_red": true,
+    "has_yellow": true,
+    "log": {
+      "capped_count": 3,
+      "elapsed_ms": 13.8,
+      "p95_positive_cap": 9.54800009727478,
+      "pair_id": "5GAG:sequence_000008",
+      "profile_id": "data-rna-structures/SRPECLI_DMS_0001.rdat#DATA:262",
+      "render_strand_id": "strand_1",
+      "shard_decode_mode": "gzip",
+      "shard_gzip_bytes": 7428,
+      "shard_id": "shard_000000",
+      "shard_raw_bytes": 12204,
+      "unmapped_count": 3
+    },
+    "profile_options": 27,
+    "status": "loaded profile index for 27 profiles in 11.3 ms",
+    "svg_height": 420,
+    "svg_present": true,
+    "svg_width": 1576,
+    "white_count": 57
+  },
+  "network_requests": [
+    {
+      "status": 200,
+      "url": "http://host.docker.internal:8765/index.html"
+    },
+    {
+      "status": 200,
+      "url": "http://host.docker.internal:8765/assets/case_2d_structure_5gag.json"
+    },
+    {
+      "status": 200,
+      "url": "http://host.docker.internal:8765/assets/profile_index_5gag_reference_mapped.json"
+    },
+    {
+      "status": 200,
+      "url": "http://host.docker.internal:8765/assets/profile_shard_000000_meta.json"
+    },
+    {
+      "status": 200,
+      "url": "http://host.docker.internal:8765/assets/profile_shard_000000_f32.bin.gz"
+    }
+  ],
+  "profile_benchmark": {
+    "benchmark_profiles": 27,
+    "generated_svg_bytes": 639063,
+    "mean_ms_per_profile": 0.23,
+    "total_ms": 6.2
+  },
+  "screenshot": "annojoin_5gag_playwright_smoke.png"
+}

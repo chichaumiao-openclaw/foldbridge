@@ -1,0 +1,26 @@
+{
+  "base_url": "http://127.0.0.1:8765/",
+  "note": "curl static fetch check against local http.server; times are local transfer wall times, not browser render timings.",
+  "results": {
+    "index_html": {
+      "http_code": 200,
+      "size_download": 14241,
+      "time_total_s": 0.102709
+    },
+    "profile_index": {
+      "http_code": 200,
+      "size_download": 12174,
+      "time_total_s": 0.002643
+    },
+    "profile_shard_meta": {
+      "http_code": 200,
+      "size_download": 347,
+      "time_total_s": 0.001737
+    },
+    "profile_shard_gzip": {
+      "http_code": 200,
+      "size_download": 7428,
+      "time_total_s": 0.002794
+    }
+  }
+}

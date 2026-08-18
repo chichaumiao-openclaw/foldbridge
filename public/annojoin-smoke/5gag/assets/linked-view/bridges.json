@@ -1,0 +1,59 @@
+{
+  "bridges": [
+    {
+      "bridgeKey": "5GAG|bridge|dbn-stem-1",
+      "caseId": "5GAG",
+      "confidence": 1.0,
+      "interactionKeys": [
+        "5GAG|bp|52|57",
+        "5GAG|bp|51|58",
+        "5GAG|bp|50|59",
+        "5GAG|bp|45|64",
+        "5GAG|bp|44|65",
+        "5GAG|bp|43|66",
+        "5GAG|bp|38|68",
+        "5GAG|bp|37|69",
+        "5GAG|bp|36|70",
+        "5GAG|bp|35|71",
+        "5GAG|bp|34|72",
+        "5GAG|bp|33|73",
+        "5GAG|bp|32|74"
+      ],
+      "metadata": {
+        "pairCount": 13,
+        "renderStrandId": "strand_1"
+      },
+      "residueKeys": [
+        "5GAG|chain|strand_1|52",
+        "5GAG|chain|strand_1|57",
+        "5GAG|chain|strand_1|51",
+        "5GAG|chain|strand_1|58",
+        "5GAG|chain|strand_1|50",
+        "5GAG|chain|strand_1|59",
+        "5GAG|chain|strand_1|45",
+        "5GAG|chain|strand_1|64",
+        "5GAG|chain|strand_1|44",
+        "5GAG|chain|strand_1|65",
+        "5GAG|chain|strand_1|43",
+        "5GAG|chain|strand_1|66",
+        "5GAG|chain|strand_1|38",
+        "5GAG|chain|strand_1|68",
+        "5GAG|chain|strand_1|37",
+        "5GAG|chain|strand_1|69",
+        "5GAG|chain|strand_1|36",
+        "5GAG|chain|strand_1|70",
+        "5GAG|chain|strand_1|35",
+        "5GAG|chain|strand_1|71",
+        "5GAG|chain|strand_1|34",
+        "5GAG|chain|strand_1|72",
+        "5GAG|chain|strand_1|33",
+        "5GAG|chain|strand_1|73",
+        "5GAG|chain|strand_1|32",
+        "5GAG|chain|strand_1|74"
+      ],
+      "source": "RNApdbee/RNAView DBN"
+    }
+  ],
+  "caseId": "5GAG",
+  "protocolVersion": "linked-view-v0.1"
+}

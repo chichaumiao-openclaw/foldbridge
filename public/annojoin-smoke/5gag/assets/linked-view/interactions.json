@@ -1,0 +1,294 @@
+{
+  "caseId": "5GAG",
+  "edges": [
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|52|57",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|52",
+      "residueB": "5GAG|chain|strand_1|57"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|51|58",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|51",
+      "residueB": "5GAG|chain|strand_1|58"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|50|59",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|50",
+      "residueB": "5GAG|chain|strand_1|59"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|45|64",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|45",
+      "residueB": "5GAG|chain|strand_1|64"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|44|65",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|44",
+      "residueB": "5GAG|chain|strand_1|65"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|43|66",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|43",
+      "residueB": "5GAG|chain|strand_1|66"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|38|68",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|38",
+      "residueB": "5GAG|chain|strand_1|68"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|37|69",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|37",
+      "residueB": "5GAG|chain|strand_1|69"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|36|70",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|36",
+      "residueB": "5GAG|chain|strand_1|70"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|35|71",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|35",
+      "residueB": "5GAG|chain|strand_1|71"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|34|72",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|34",
+      "residueB": "5GAG|chain|strand_1|72"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|33|73",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|33",
+      "residueB": "5GAG|chain|strand_1|73"
+    },
+    {
+      "caseId": "5GAG",
+      "directionality": "undirected",
+      "interactionKey": "5GAG|bp|32|74",
+      "kind": "base_pair",
+      "normalizedGeometry": {
+        "renderStrandId": "strand_1",
+        "source": "dotbracket"
+      },
+      "residueA": "5GAG|chain|strand_1|32",
+      "residueB": "5GAG|chain|strand_1|74"
+    }
+  ],
+  "evidence": [
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|52|57",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|52|57",
+      "rawAnnotation": "52-57",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|51|58",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|51|58",
+      "rawAnnotation": "51-58",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|50|59",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|50|59",
+      "rawAnnotation": "50-59",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|45|64",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|45|64",
+      "rawAnnotation": "45-64",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|44|65",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|44|65",
+      "rawAnnotation": "44-65",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|43|66",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|43|66",
+      "rawAnnotation": "43-66",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|38|68",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|38|68",
+      "rawAnnotation": "38-68",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|37|69",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|37|69",
+      "rawAnnotation": "37-69",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|36|70",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|36|70",
+      "rawAnnotation": "36-70",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|35|71",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|35|71",
+      "rawAnnotation": "35-71",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|34|72",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|34|72",
+      "rawAnnotation": "34-72",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|33|73",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|33|73",
+      "rawAnnotation": "33-73",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    },
+    {
+      "basis": "DBN pair extracted from 5gag.dbn strand_1",
+      "confidence": 1.0,
+      "evidenceKey": "5GAG|evidence|dbn|32|74",
+      "interactionClass": "dotbracket_pair",
+      "interactionKey": "5GAG|bp|32|74",
+      "rawAnnotation": "32-74",
+      "source": "RNApdbee/RNAView",
+      "sourceVersion": "5gag-smoke-20260618"
+    }
+  ],
+  "protocolVersion": "linked-view-v0.1"
+}
