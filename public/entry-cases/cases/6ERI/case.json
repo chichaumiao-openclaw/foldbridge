@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6ERI",
+  "biologicalMoleculeName": "6ERI",
+  "caseId": "6ERI",
+  "caseKey": "6ERI",
+  "chains": [
+    "AA",
+    "AB",
+    "BA"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6ERI",
+  "profileCount": 1220
+}

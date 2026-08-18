@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6LQP",
+  "biologicalMoleculeName": "6LQP",
+  "caseId": "6LQP",
+  "caseKey": "6LQP",
+  "chains": [
+    "3A",
+    "5A",
+    "SA"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6LQP",
+  "profileCount": 5144
+}

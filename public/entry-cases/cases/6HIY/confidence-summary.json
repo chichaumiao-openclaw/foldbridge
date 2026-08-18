@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6HIY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 860,
+  "defaultEvidenceId": "annojoin:6HIY:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11645",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 430,
+    "B": 430
+  },
+  "generatedAt": "2026-08-17T11:12:44.783572Z",
+  "materializedEvidenceCount": 860,
+  "pdbId": "6HIY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 860
+  },
+  "totalEvidenceCount": 860
+}

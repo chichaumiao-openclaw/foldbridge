@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6GXM",
+  "biologicalMoleculeName": "6GXM",
+  "caseId": "6GXM",
+  "caseKey": "6GXM",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "x"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "6GXM",
+  "profileCount": 10698
+}

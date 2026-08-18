@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6DVK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7442,
+  "defaultEvidenceId": "annojoin:6DVK:confidence:B:data-rna-structures/15KLIB_2A3_0000.rdat#94",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3720,
+    "B": 3722
+  },
+  "generatedAt": "2026-08-17T10:56:12.942573Z",
+  "materializedEvidenceCount": 7442,
+  "pdbId": "6DVK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1872,
+    "LOW": 2435,
+    "NOT_SUPPORTED": 3135
+  },
+  "totalEvidenceCount": 7442
+}

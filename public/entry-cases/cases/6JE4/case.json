@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6JE4",
+  "biologicalMoleculeName": "6JE4",
+  "caseId": "6JE4",
+  "caseKey": "6JE4",
+  "chains": [
+    "B",
+    "F",
+    "L",
+    "P"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "6JE4",
+  "profileCount": 6
+}

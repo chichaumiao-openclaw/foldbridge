@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6LQR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5144,
+  "defaultEvidenceId": "annojoin:6LQR:confidence:B:data-eterna/OK3TST_2A3_0000.rdat#43463",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2572,
+    "B": 2572
+  },
+  "generatedAt": "2026-08-17T12:39:28.893021Z",
+  "materializedEvidenceCount": 5144,
+  "pdbId": "6LQR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5144
+  },
+  "totalEvidenceCount": 5144
+}
