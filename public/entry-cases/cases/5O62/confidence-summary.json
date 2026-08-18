@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5O62",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 524,
+  "defaultEvidenceId": "annojoin:5O62:confidence:A:data-rna-structures/M2PK50_DMS_0000.rdat#32139",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 256,
+    "B": 268
+  },
+  "generatedAt": "2026-08-17T12:46:13.329069Z",
+  "materializedEvidenceCount": 524,
+  "pdbId": "5O62",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 19,
+    "LOW": 175,
+    "NOT_SUPPORTED": 330
+  },
+  "totalEvidenceCount": 524
+}

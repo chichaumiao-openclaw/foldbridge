@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5ZEB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4033,
+  "defaultEvidenceId": "annojoin:5ZEB:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#81357",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2016,
+    "B": 2017
+  },
+  "generatedAt": "2026-08-17T12:27:03.069804Z",
+  "materializedEvidenceCount": 4033,
+  "pdbId": "5ZEB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 242,
+    "LOW": 1197,
+    "NOT_SUPPORTED": 2594
+  },
+  "totalEvidenceCount": 4033
+}

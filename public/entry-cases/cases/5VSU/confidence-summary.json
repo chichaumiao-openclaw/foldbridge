@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "5VSU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10,
+  "defaultEvidenceId": "annojoin:5VSU:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#4248",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5,
+    "B": 5
+  },
+  "generatedAt": "2026-08-17T12:58:32.114596Z",
+  "materializedEvidenceCount": 10,
+  "pdbId": "5VSU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 5,
+    "NOT_SUPPORTED": 5
+  },
+  "totalEvidenceCount": 10
+}

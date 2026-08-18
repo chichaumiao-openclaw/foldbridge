@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5WLC",
+  "biologicalMoleculeName": "5WLC",
+  "caseId": "5WLC",
+  "caseKey": "5WLC",
+  "chains": [
+    "L0",
+    "L1",
+    "L2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "5WLC",
+  "profileCount": 5100
+}

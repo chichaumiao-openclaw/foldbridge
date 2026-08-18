@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6CAP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1059,
+  "defaultEvidenceId": "annojoin:6CAP:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#84194",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 529,
+    "B": 530
+  },
+  "generatedAt": "2026-08-17T11:26:25.684564Z",
+  "materializedEvidenceCount": 1059,
+  "pdbId": "6CAP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 95,
+    "NOT_SUPPORTED": 961
+  },
+  "totalEvidenceCount": 1059
+}
