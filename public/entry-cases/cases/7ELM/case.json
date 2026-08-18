@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7ELM",
+  "biologicalMoleculeName": "7ELM",
+  "caseId": "7ELM",
+  "caseKey": "7ELM",
+  "chains": [
+    "J",
+    "T"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "7ELM",
+  "profileCount": 8
+}

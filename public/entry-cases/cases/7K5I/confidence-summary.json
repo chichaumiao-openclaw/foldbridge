@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7K5I",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2486,
+  "defaultEvidenceId": "annojoin:7K5I:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#362",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1241,
+    "B": 1245
+  },
+  "generatedAt": "2026-08-17T12:28:01.660367Z",
+  "materializedEvidenceCount": 2486,
+  "pdbId": "7K5I",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 15,
+    "LOW": 308,
+    "NOT_SUPPORTED": 2163
+  },
+  "totalEvidenceCount": 2486
+}

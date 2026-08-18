@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7JRT",
+  "biologicalMoleculeName": "7JRT",
+  "caseId": "7JRT",
+  "caseKey": "7JRT",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7JRT",
+  "profileCount": 68
+}

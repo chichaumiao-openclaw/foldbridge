@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7JSZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18449,
+  "defaultEvidenceId": "annojoin:7JSZ:confidence:B:data-rna-structures/M2PK50_2A3_0000.rdat#39671",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8729,
+    "B": 9720
+  },
+  "generatedAt": "2026-08-17T11:54:01.693681Z",
+  "materializedEvidenceCount": 18449,
+  "pdbId": "7JSZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 667,
+    "LOW": 4123,
+    "NOT_SUPPORTED": 13659
+  },
+  "totalEvidenceCount": 18449
+}

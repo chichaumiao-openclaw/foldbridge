@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7ELH",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2240,
+  "defaultEvidenceId": "annojoin:7ELH:confidence:B:data-eterna/ETERNA_R69_0001.rdat#121",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 736,
+    "B": 1504
+  },
+  "generatedAt": "2026-08-17T11:52:21.352142Z",
+  "materializedEvidenceCount": 2240,
+  "pdbId": "7ELH",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 110,
+    "NOT_SUPPORTED": 2127
+  },
+  "totalEvidenceCount": 2240
+}

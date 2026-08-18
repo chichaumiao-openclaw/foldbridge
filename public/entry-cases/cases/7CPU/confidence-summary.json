@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7CPU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4284,
+  "defaultEvidenceId": "annojoin:7CPU:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2129,
+    "B": 2155
+  },
+  "generatedAt": "2026-08-17T11:32:33.512835Z",
+  "materializedEvidenceCount": 4284,
+  "pdbId": "7CPU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4284
+  },
+  "totalEvidenceCount": 4284
+}
