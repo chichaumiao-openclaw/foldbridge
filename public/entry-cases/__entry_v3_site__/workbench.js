@@ -1,3 +1,42 @@
+import "./site-nav.js";
+import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter } from "./workbench-pure.mjs";
+
+function removeRetiredWorkbenchPanels() {
+  document.querySelector("#molstar-full-host")?.closest(".molstar-view")?.remove();
+  document.querySelector("#molstarFullMeta")?.remove();
+  document.querySelectorAll(".debug-panel").forEach((panel) => panel.remove());
+  document.querySelector("#assetStatus")?.remove();
+  document.querySelector("#profileMeta")?.remove();
+  document.querySelectorAll(".technique-filter").forEach((filter) => filter.remove());
+  document.querySelector(".workbench-shell > header")?.remove();
+  document.querySelector(".track-panel .panel-head h2")?.replaceChildren("sequence mapping");
+  document.querySelector("#trackStatus")?.remove();
+  document.querySelector(".track-viewport-controls")?.remove();
+}
+
+removeRetiredWorkbenchPanels();
+
+function reportEmbeddedPageHeight() {
+  if (window.parent === window) return;
+  const root = document.querySelector(".workbench-shell");
+  const visibleChildren = root
+    ? [...root.children].filter((child) => getComputedStyle(child).display !== "none")
+    : [];
+  const lastChild = visibleChildren.at(-1);
+  const rootStyle = root ? getComputedStyle(root) : null;
+  const height = root && lastChild && rootStyle
+    ? Math.ceil(lastChild.getBoundingClientRect().bottom + window.scrollY + (parseFloat(rootStyle.paddingBottom) || 0))
+    : Math.max(document.documentElement.scrollHeight, document.body?.scrollHeight || 0);
+  window.parent.postMessage({ type: "foldbridge-workbench-height", height }, window.location.origin);
+}
+
+if (window.parent !== window && typeof ResizeObserver !== "undefined") {
+  const reportHeightSoon = () => requestAnimationFrame(reportEmbeddedPageHeight);
+  new ResizeObserver(reportHeightSoon).observe(document.body);
+  window.addEventListener("load", reportHeightSoon, { once: true });
+  reportHeightSoon();
+}
+
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const caseUrl = config.caseUrl || "./case-2d-structure.json";
 const profileIndexUrl = config.profileIndexUrl || "./profiles/profile-index.json";
@@ -19,6 +58,7 @@ const linkedViewUrls = {
 const state = {
   caseData: null,
   profileIndex: null,
+  techniqueByProfile: new Map(),
   linkedView: null,
   residueByKey: new Map(),
   residueByStrandPosition: new Map(),
@@ -47,6 +87,9 @@ const state = {
   molstarCroppedUrl: null,
   molstarBridgeInstalled: false,
   requestedProfileId: "",
+  rmdbHeatmapRequestId: 0,
+  rmdbHeatmapMatrix: null,
+  rmdbHeatmapFilename: "",
 };
 
 const el = {
@@ -68,8 +111,6 @@ const el = {
   varnaZoomOut: document.querySelector("#varna-zoom-out"),
   varnaZoomReset: document.querySelector("#varna-zoom-reset"),
   varnaZoomStatus: document.querySelector("#varna-zoom-status"),
-  profilePair: document.querySelector("#profilePair"),
-  profileId: document.querySelector("#profileId"),
   caption: document.querySelector("#viewCaption"),
   inspector: document.querySelector("#linked-inspector"),
   inspectorStatus: document.querySelector("#inspectorStatus"),
@@ -78,6 +119,14 @@ const el = {
   molstarSelectionStatus: document.querySelector("#molstar-selection-status"),
   molstarMeta: document.querySelector("#molstarMeta"),
   tip: document.querySelector("#tip"),
+  rmdbHeatmapPanel: null,
+  rmdbHeatmapStatus: null,
+  rmdbHeatmapMeta: null,
+  rmdbHeatmapScroll: null,
+  rmdbHeatmapStage: null,
+  rmdbHeatmapCanvas: null,
+  rmdbHeatmapTip: null,
+  rmdbHeatmapRangeSelect: null,
 };
 
 function escapeHtml(value) {
@@ -89,8 +138,147 @@ function escapeHtml(value) {
     .replaceAll("'", "&#39;");
 }
 
+function safeDownloadStem(value, fallback = "foldbridge") {
+  return String(value || fallback).replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^_+|_+$/g, "") || fallback;
+}
+
+function downloadBlob(blob, filename) {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function downloadText(filename, text, mime = "text/plain;charset=utf-8") {
+  downloadBlob(new Blob([text], { type: mime }), filename);
+}
+
+function csvField(value) {
+  const text = value === null || value === undefined ? "" : String(value);
+  return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+}
+
+function selectedProfileCsv() {
+  const profile = state.lastRender?.profile;
+  const normalized = state.lastRender?.normalized;
+  const strand = activeStrand();
+  if (!profile || !normalized || !strand) return null;
+  const columns = [
+    "position", "profile_base", "raw_value", "normalized_value", "reactivity_color",
+    "structure_state", "residue_key", "pdb_base", "sequence_match",
+    "coordinate_status", "pdb_label_asym_id", "pdb_label_seq_id", "pdb_auth_asym_id", "pdb_auth_seq_id",
+  ];
+  const rows = [columns.join(",")];
+  for (let position = 1; position <= strand.sequence.length; position += 1) {
+    const residue = residueForPosition(position, strand);
+    const row = normalized.byPosition.get(position) || {};
+    const pdb = state.pdbResidueByKey.get(residue.residueKey) || {};
+    rows.push([
+      position,
+      residue.parentBase || strand.sequence[position - 1] || "",
+      Number.isFinite(row.raw) ? row.raw : "",
+      Number.isFinite(row.norm) ? row.norm : "",
+      row.color || "",
+      secondaryStructureStateForPosition(position, strand),
+      residue.residueKey,
+      residue.compId || "",
+      alignmentStateForResidue(residue.residueKey),
+      pdb.coordinateStatus || "unavailable",
+      pdb.labelAsymId || "",
+      pdb.labelSeqId || "",
+      pdb.authAsymId || "",
+      pdb.authSeqId || "",
+    ].map(csvField).join(","));
+  }
+  return rows.join("\n");
+}
+
+function selectedProfileColorMap() {
+  const profile = state.lastRender?.profile;
+  const normalized = state.lastRender?.normalized;
+  const strand = activeStrand();
+  if (!profile || !normalized || !strand) return null;
+  return {
+    downloadType: "foldbridge-profile-color-map",
+    generatedAt: new Date().toISOString(),
+    caseId: state.caseData?.case_id || config.caseId || "",
+    chain: activeChainKey(),
+    profileId: profile.profile_id || "",
+    positions: Array.from({ length: strand.sequence.length }, (_, index) => {
+      const position = index + 1;
+      const residue = residueForPosition(position, strand);
+      const row = normalized.byPosition.get(position) || {};
+      const pdb = state.pdbResidueByKey.get(residue.residueKey) || {};
+      return {
+        position,
+        base: residue.parentBase || strand.sequence[index] || "",
+        rawValue: Number.isFinite(row.raw) ? row.raw : null,
+        normalizedValue: Number.isFinite(row.norm) ? row.norm : null,
+        color: row.color || "#ffffff",
+        residueKey: residue.residueKey,
+        coordinateStatus: pdb.coordinateStatus || "unavailable",
+      };
+    }),
+  };
+}
+
+function downloadSelectedProfile() {
+  const profile = state.lastRender?.profile;
+  const csv = selectedProfileCsv();
+  if (!profile || !csv) return;
+  const stem = safeDownloadStem(profile.profile_id, "profile");
+  downloadText(`${stem}.csv`, csv, "text/csv;charset=utf-8");
+}
+
+async function downloadSelected3d() {
+  const profile = state.lastRender?.profile;
+  if (!profile) return;
+  try {
+    const sourceCif = await loadStructureSourceForMolstar();
+    if (!state.molstarCroppedUrl) {
+      await prepareClientAlignmentCroppedCif(sourceCif);
+    }
+    const response = await fetch(state.molstarCroppedUrl);
+    if (!response.ok) throw new Error(`target structure unavailable (${response.status})`);
+    const cifBlob = await response.blob();
+    const stem = safeDownloadStem(profile.profile_id, "profile");
+    downloadBlob(cifBlob, `${stem}-target-chain.cif`);
+    const sourceBuffer = await fetchArrayBufferOrThrow(sourceCif.sourceUrl);
+    const sourceDecoded = String(sourceCif.sourceUrl).endsWith(".gz")
+      ? await decodeGzipArrayBuffer(sourceBuffer)
+      : sourceBuffer;
+    downloadBlob(new Blob([sourceDecoded], { type: "chemical/x-mmcif" }), `${stem}-full-structure.cif`);
+    const colorMap = selectedProfileColorMap();
+    if (colorMap) downloadText(`${stem}-reactivity-colors.json`, JSON.stringify(colorMap, null, 2), "application/json;charset=utf-8");
+  } catch (error) {
+    if (el.molstarStatus) el.molstarStatus.textContent = `3D download unavailable: ${error.message || error}`;
+  }
+}
+
 function resolveAssetUrl(href, baseUrl = window.location.href) {
   return new URL(href, new URL(baseUrl, window.location.href)).href;
+}
+
+// Case pages no longer bundle a verbatim RCSB mmCIF mirror (structure.cif.gz);
+// that pushed the static artifact past the 1 GB GitHub Pages cap. When the
+// linked-view coverage points at the removed local mirror, resolve the source
+// structure to RCSB's gzipped-text download instead, keyed by the PDB id
+// (coverage.caseId). The ".gz" suffix is preserved so the existing
+// fetch -> DecompressionStream -> text-crop -> reactivity-coloring pipeline is
+// byte-for-byte unchanged. Already-absolute hrefs (e.g. the 5gag smoke demo)
+// pass through untouched.
+function resolveStructureSourceHref(href, caseId) {
+  const original = String(href || "");
+  if (/^https?:\/\//i.test(original)) return original;
+  if (!/structure\.cif(\.gz)?$/i.test(original)) return original;
+  const pdbId = String(caseId || "").trim().toUpperCase();
+  if (!pdbId) return original;
+  const gz = /\.gz$/i.test(original) ? ".gz" : "";
+  return `https://files.rcsb.org/download/${pdbId}.cif${gz}`;
 }
 
 function percentile(values, q) {
@@ -120,6 +308,464 @@ function colorForBase(base) {
     U: "#b279a2",
     T: "#b279a2",
   }[String(base || "N").toUpperCase()] || "#d8dee4";
+}
+
+function rmdbRdatFilename(profile) {
+  const profileId = String(profile?.profile_id || "");
+  const match = profileId.match(/([^/\\]+\.rdat)(?:#\d+)?$/i);
+  const filename = match?.[1]?.trim() || "";
+  return /^(?!\.\.?(?:\.rdat)?$)[^/\\]+\.rdat$/i.test(filename) ? filename : "";
+}
+
+function rmdbRdatUrl(filename) {
+  // The static build copies src/ beside public/, so this remains valid both
+  // from the source tree and from dist/public/rmdb-v3/.../chains/<chain>/.
+  return resolveAssetUrl(`../../../../../../src/assets/data/rmdb-puzzle/${encodeURIComponent(filename)}`);
+}
+
+function rmdbRdatUrls(filename) {
+  const urls = [];
+  if (window.location.origin && window.location.origin !== "null") {
+    urls.push(`${window.location.origin}/api/rmdb/rdat/${encodeURIComponent(filename)}`);
+  }
+  urls.push(rmdbRdatUrl(filename));
+  return [...new Set(urls)];
+}
+
+async function fetchRmdbRdatText(filename) {
+  let lastError = null;
+  for (const url of rmdbRdatUrls(filename)) {
+    try {
+      return await fetchTextMaybeGzip(url);
+    } catch (error) {
+      lastError = error;
+    }
+  }
+  throw lastError || new Error(`RDAT unavailable: ${filename}`);
+}
+
+function parseRmdbRdat(text) {
+  const lines = String(text || "").split(/\r?\n/);
+  let sequence = "";
+  let offset = 0;
+  let seqpos = [];
+  const annotations = new Map();
+  const reactivityRows = [];
+  const errorRows = new Map();
+
+  for (const line of lines) {
+    if (/^SEQUENCE(?:\s+|\s*:)/i.test(line)) {
+      sequence = line.replace(/^SEQUENCE\s*:?\s*/i, "").replace(/\s+/g, "").trim();
+      continue;
+    }
+    const offsetMatch = line.match(/^OFFSET\s+(\d+)/i);
+    if (offsetMatch) {
+      offset = Number(offsetMatch[1]);
+      continue;
+    }
+    if (/^SEQPOS(?:\s+|\s*:)/i.test(line)) {
+      const body = line.replace(/^SEQPOS\s*:?\s*/i, "").trim();
+      seqpos = body.split(/\s+/).map((token) => {
+        const match = token.match(/-?\d+$/);
+        return match ? Number(match[0]) : null;
+      }).filter((value) => Number.isFinite(value));
+      continue;
+    }
+    const annotationMatch = line.match(/^ANNOTATION_DATA\s*:\s*(\d+)\s*(.*)$/i);
+    if (annotationMatch) {
+      const rowNumber = Number(annotationMatch[1]);
+      const raw = annotationMatch[2].trim();
+      const mutation = raw.match(/(?:^|\s)mutation:([^\s]+)/i)?.[1];
+      const chemical = raw.match(/(?:^|\s)chemical:([^\s]+)/i)?.[1];
+      const recordId = raw.match(/(?:^|\s)Eterna:id:([^\s]+)/i)?.[1]
+        || raw.match(/(?:^|\s)ID:([^\s]+)/i)?.[1];
+      const designName = raw.match(/(?:^|\s)Eterna:design_name:([^\t]+)/i)?.[1]?.trim();
+      const experimentName = raw.match(/(?:^|\s)name:([^\s]+)/i)?.[1];
+      const sequenceLabel = raw.match(/(?:^|\s)sequence:([^\s]+)/i)?.[1] || "";
+      annotations.set(rowNumber, {
+        label: mutation || chemical || recordId || designName || experimentName || raw || `row ${rowNumber}`,
+        raw,
+        warning: /warning:/i.test(raw),
+        sequence: sequenceLabel,
+      });
+      continue;
+    }
+    const errorMatch = line.match(/^REACTIVITY_ERROR\s*:\s*(\d+)\s*(.*)$/i);
+    if (errorMatch) {
+      const rowNumber = Number(errorMatch[1]);
+      errorRows.set(rowNumber, errorMatch[2].trim().split(/\s+/).map((value) => {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : null;
+      }));
+      continue;
+    }
+    const reactivityMatch = line.match(/^REACTIVITY\s*:\s*(\d+)\s*(.*)$/i);
+    if (reactivityMatch) {
+      const rowNumber = Number(reactivityMatch[1]);
+      const values = reactivityMatch[2].trim().split(/\s+/).map((value) => {
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : null;
+      });
+      reactivityRows.push({ rowNumber, values });
+    }
+  }
+
+  reactivityRows.sort((a, b) => a.rowNumber - b.rowNumber);
+  const columns = seqpos.length
+    ? seqpos
+    : Array.from({ length: Math.max(0, ...reactivityRows.map((row) => row.values.length)) }, (_, idx) => idx + 1);
+  const rows = reactivityRows.map((row, idx) => {
+    const annotation = annotations.get(row.rowNumber) || annotations.get(idx + 1) || {};
+    return {
+      rowNumber: row.rowNumber,
+      label: annotation.label || `row ${row.rowNumber}`,
+      rawAnnotation: annotation.raw || "",
+      warning: Boolean(annotation.warning),
+      sequence: annotation.sequence || "",
+      error: errorRows.get(row.rowNumber) || errorRows.get(idx + 1) || [],
+      values: row.values,
+    };
+  });
+  const positiveValues = rows.flatMap((row) => row.values).filter((value) => Number.isFinite(value) && value > 0);
+  const cleanSequence = sequence.replace(/\s+/g, "");
+  const colLabelDetails = columns.map((position) => {
+    const raw = String(position);
+    const sequenceIndex = position - offset - 1;
+    const base = cleanSequence[sequenceIndex] || "";
+    return {
+      raw,
+      base: /^[AUGCT]$/i.test(base) ? (base.toUpperCase() === "T" ? "U" : base.toUpperCase()) : "",
+      position: raw,
+      display: base ? `${base.toUpperCase() === "T" ? "U" : base.toUpperCase()}${raw}` : raw,
+    };
+  });
+  return {
+    sequence,
+    offset,
+    columns,
+    colLabelDetails,
+    rows,
+    positiveCap: percentile(positiveValues, 0.95),
+  };
+}
+
+function ensureRmdbHeatmapPanel() {
+  if (el.rmdbHeatmapPanel) return true;
+  const trackPanel = el.track?.closest(".track-panel");
+  if (!trackPanel) return false;
+  const panel = document.createElement("section");
+  panel.className = "panel rmdb-heatmap-panel";
+  panel.id = "rmdb-heatmap-panel";
+  panel.hidden = true;
+  panel.innerHTML = `
+    <div class="panel-head">
+      <h2>RMDB raw reactivity heatmap</h2>
+      <span id="rmdbHeatmapStatus">not loaded</span>
+    </div>
+    <div class="rmdb-heatmap-controls" id="rmdbHeatmapControls" hidden>
+      <label for="rmdbHeatmapRangeSelect">Rows</label>
+      <select id="rmdbHeatmapRangeSelect" aria-label="Select experiment row range"></select>
+    </div>
+    <div class="rmdb-heatmap-meta" id="rmdbHeatmapMeta"></div>
+    <div class="rmdb-heatmap-scroll" id="rmdbHeatmapScroll">
+      <div class="rmdb-heatmap-stage" id="rmdbHeatmapStage">
+        <canvas id="rmdbHeatmapCanvas" role="img" aria-label="RMDB raw reactivity heatmap"></canvas>
+        <div class="rmdb-heatmap-tip" id="rmdbHeatmapTip" hidden></div>
+      </div>
+    </div>`;
+  trackPanel.insertAdjacentElement("afterend", panel);
+  el.rmdbHeatmapPanel = panel;
+  el.rmdbHeatmapStatus = panel.querySelector("#rmdbHeatmapStatus");
+  el.rmdbHeatmapMeta = panel.querySelector("#rmdbHeatmapMeta");
+  el.rmdbHeatmapScroll = panel.querySelector("#rmdbHeatmapScroll");
+  el.rmdbHeatmapStage = panel.querySelector("#rmdbHeatmapStage");
+  el.rmdbHeatmapCanvas = panel.querySelector("#rmdbHeatmapCanvas");
+  el.rmdbHeatmapTip = panel.querySelector("#rmdbHeatmapTip");
+  el.rmdbHeatmapRangeSelect = panel.querySelector("#rmdbHeatmapRangeSelect");
+  el.rmdbHeatmapRangeSelect.addEventListener("change", () => {
+    renderSelectedRmdbHeatmapRange();
+  });
+  return true;
+}
+
+function formatRmdbHeatmapLabel(label) {
+  if (!label) return "";
+  const match = String(label).match(/^([AUGC])(\d+)([AUGC])$/i);
+  return match ? `${match[1].toUpperCase()}${match[2]}${match[3].toUpperCase()}` : String(label);
+}
+
+function rmdbHeatmapCellBase(row, columnIndex, columnCount, fallback = "") {
+  const rowSequence = String(row?.sequence || "").replace(/\s+/g, "");
+  const candidate = rowSequence.length === columnCount ? rowSequence[columnIndex] : fallback;
+  const base = candidate || fallback;
+  if (!/^[AUGCT]$/i.test(base)) return "";
+  return base.toUpperCase() === "T" ? "U" : base.toUpperCase();
+}
+
+function renderRmdbHeatmapCanvas(matrix, sourceRows = matrix.rows) {
+  const canvas = el.rmdbHeatmapCanvas;
+  const stage = el.rmdbHeatmapStage;
+  if (!canvas || !stage) return { rawRows: sourceRows.length, displayRows: 0, downsampled: false };
+  const labelGap = 10;
+  const leftLabelBand = 28;
+  const rightLabelBand = 108;
+  const topLabelBand = 58;
+  const bottomLabelBand = 28;
+  const rawRows = sourceRows.length;
+  const cols = matrix.columns.length;
+  const hostWidth = Math.floor(el.rmdbHeatmapScroll?.getBoundingClientRect().width || el.rmdbHeatmapScroll?.clientWidth || 0);
+  const availableWidth = Math.max(620, hostWidth - 12);
+  const cellSize = Math.min(16, Math.max(8, Math.floor((availableWidth - leftLabelBand - rightLabelBand) / Math.max(cols, 1))));
+  // Keep every RDAT experiment row in the matrix. The scroll container below
+  // provides vertical navigation when the full matrix is taller than the card.
+  const displayRows = sourceRows.map((row, index) => ({
+    ...row,
+    rawStart: Number.isFinite(row.rowNumber) ? row.rowNumber : index + 1,
+    rawEnd: Number.isFinite(row.rowNumber) ? row.rowNumber : index + 1,
+  }));
+  const rows = displayRows.length;
+  const width = leftLabelBand + cols * cellSize + rightLabelBand;
+  const height = topLabelBand + rows * cellSize + bottomLabelBand;
+  const requestedDpr = Math.min(2, Math.max(1, window.devicePixelRatio || 1));
+  // A tall RDAT file can exceed the browser's maximum backing-store
+  // dimension at devicePixelRatio 2. Lower only the internal bitmap scale;
+  // the CSS size remains unchanged, so every row is still displayed.
+  const maxCanvasDimension = 32000;
+  const dpr = Math.min(requestedDpr, maxCanvasDimension / Math.max(width, height));
+  canvas.width = Math.max(1, Math.round(width * dpr));
+  canvas.height = Math.max(1, Math.round(height * dpr));
+  canvas.style.width = `${width}px`;
+  canvas.style.height = `${height}px`;
+  stage.style.width = `${width}px`;
+  stage.style.height = `${height}px`;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) throw new Error("Canvas unavailable");
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const flatValues = displayRows.flatMap((row) => row.values).filter((value) => Number.isFinite(value));
+  // Avoid Math.max(...flatValues): large RDAT files can contain thousands of
+  // rows and expanding the full matrix into call arguments overflows the JS
+  // call stack before the canvas is even painted.
+  const maxValue = flatValues.reduce((max, value) => Math.max(max, value), 1);
+  const font = `${Math.max(10, cellSize - 2)}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
+  const monoFont = `${Math.max(10, cellSize - 2)}px Menlo, Consolas, monospace`;
+  const baseColors = { A: "#ff8c42", U: "#4b9cff", G: "#ff5a36", C: "#4dbb63" };
+  const reactivityColorStops = [
+    [0.000, [255, 255, 255]],
+    [0.018, [255, 255, 255]],
+    [0.040, [255, 242, 0]],
+    [0.140, [255, 191, 0]],
+    [0.380, [240, 126, 44]],
+    [0.700, [219, 53, 37]],
+    [1.000, [198, 0, 0]],
+  ];
+  const reactivityColor = (normalized) => {
+    const value = Math.max(0, Math.min(1, normalized));
+    const upperIndex = reactivityColorStops.findIndex(([position]) => value <= position);
+    const upper = reactivityColorStops[upperIndex < 0 ? reactivityColorStops.length - 1 : upperIndex];
+    const lower = reactivityColorStops[Math.max(0, upperIndex - 1)];
+    const span = upper[0] - lower[0];
+    const fraction = span ? (value - lower[0]) / span : 0;
+    const rgb = lower[1].map((channel, index) => Math.round(channel + (upper[1][index] - channel) * fraction));
+    return `rgb(${rgb.join(", ")})`;
+  };
+
+  function paint(activeCell = null) {
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+
+    for (let rowIndex = 0; rowIndex < rows; rowIndex += 1) {
+      const row = displayRows[rowIndex];
+      const y = topLabelBand + rowIndex * cellSize;
+      ctx.fillStyle = "#69d9ca";
+      ctx.font = `italic ${Math.max(10, cellSize - 1)}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.fillText(String(row.rawStart ?? rowIndex + 1), leftLabelBand - labelGap, y + cellSize / 2);
+
+      ctx.fillStyle = row.warning ? "#9a5b16" : "#101010";
+      ctx.font = font;
+      ctx.textAlign = "left";
+      ctx.fillText(formatRmdbHeatmapLabel(row.label), leftLabelBand + cols * cellSize + labelGap, y + cellSize / 2);
+
+      for (let columnIndex = 0; columnIndex < cols; columnIndex += 1) {
+        const x = leftLabelBand + columnIndex * cellSize;
+        const value = row.values[columnIndex];
+        const normalized = Number.isFinite(value) ? Math.max(0, Math.min(1, value / maxValue)) : 0;
+        ctx.fillStyle = Number.isFinite(value) ? reactivityColor(normalized) : "#f2f2f2";
+        ctx.fillRect(x, y, cellSize, cellSize);
+        ctx.strokeStyle = "#202020";
+        ctx.lineWidth = 1;
+        ctx.strokeRect(x + 0.5, y + 0.5, cellSize, cellSize);
+      }
+    }
+
+    for (let columnIndex = 0; columnIndex < cols; columnIndex += 1) {
+      const x = leftLabelBand + columnIndex * cellSize + cellSize / 2;
+      const label = matrix.colLabelDetails?.[columnIndex] || {
+        base: "",
+        position: matrix.columns[columnIndex],
+        display: matrix.columns[columnIndex],
+      };
+      const base = rmdbHeatmapCellBase(displayRows[0], columnIndex, cols, label.base || "");
+      const position = label.position || matrix.columns[columnIndex];
+
+      ctx.save();
+      ctx.translate(x, topLabelBand - labelGap);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.font = monoFont;
+      ctx.fillStyle = baseColors[base] || "#101010";
+      ctx.fillText(base, 0, 0);
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(x, topLabelBand - labelGap - 16);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.font = font;
+      ctx.fillStyle = "#101010";
+      ctx.fillText(String(position), 0, 0);
+      ctx.restore();
+
+      ctx.save();
+      ctx.translate(x, height - bottomLabelBand + labelGap);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.font = `italic ${Math.max(9, cellSize - 3)}px system-ui, -apple-system, BlinkMacSystemFont, sans-serif`;
+      ctx.fillStyle = "#7fe5d9";
+      ctx.fillText(String(columnIndex + 1), 0, 0);
+      ctx.restore();
+    }
+
+    if (activeCell) {
+      const { row, col } = activeCell;
+      const x = leftLabelBand + col * cellSize;
+      const y = topLabelBand + row * cellSize;
+      ctx.strokeStyle = "#b892ff";
+      ctx.lineWidth = 2;
+      ctx.strokeRect(x + 1, y + 1, cellSize - 2, cellSize - 2);
+      ctx.strokeStyle = "rgba(184, 146, 255, 0.65)";
+      ctx.beginPath();
+      ctx.moveTo(leftLabelBand, y + cellSize / 2);
+      ctx.lineTo(leftLabelBand + cols * cellSize, y + cellSize / 2);
+      ctx.moveTo(x + cellSize / 2, topLabelBand);
+      ctx.lineTo(x + cellSize / 2, topLabelBand + rows * cellSize);
+      ctx.stroke();
+    }
+  }
+
+  paint();
+  canvas.onmousemove = (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const col = Math.floor((x - leftLabelBand) / cellSize);
+    const rowIndex = Math.floor((y - topLabelBand) / cellSize);
+    if (col < 0 || col >= cols || rowIndex < 0 || rowIndex >= rows) {
+      el.rmdbHeatmapTip.hidden = true;
+      paint();
+      return;
+    }
+
+    const row = displayRows[rowIndex];
+    const label = matrix.colLabelDetails?.[col] || {};
+    const value = row.values[col];
+    const error = row.error?.[col];
+    const base = rmdbHeatmapCellBase(row, col, cols, label.base || "");
+    const rowLabel = formatRmdbHeatmapLabel(row.label);
+    const rowTitle = row.rawEnd > row.rawStart
+      ? `${row.rawStart}–${row.rawEnd} (binned)`
+      : `${row.rawStart}: ${rowLabel}`;
+    el.rmdbHeatmapTip.innerHTML = `
+      <div><span>ROW</span><strong>${escapeHtml(rowTitle)}</strong></div>
+      <div><span>COLUMN</span><strong>${col + 1}: ${escapeHtml(label.display || matrix.columns[col])}</strong></div>
+      <div><span>SEQUENCE</span><strong>${escapeHtml(base || "—")}</strong></div>
+      <div><span>REACTIVITY</span><strong>${Number.isFinite(value) ? value.toFixed(3) : "—"}</strong></div>
+      <div><span>ERROR</span><strong>${Number.isFinite(error) ? error.toFixed(3) : "—"}</strong></div>
+    `;
+    el.rmdbHeatmapTip.hidden = false;
+    const tooltipWidth = 210;
+    const tooltipHeight = 150;
+    const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
+    const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+    const left = Math.min(event.clientX + 22, viewportWidth - tooltipWidth - 16);
+    const top = Math.min(event.clientY + 22, viewportHeight - tooltipHeight - 16);
+    el.rmdbHeatmapTip.style.left = `${Math.max(12, left)}px`;
+    el.rmdbHeatmapTip.style.top = `${Math.max(12, top)}px`;
+    paint({ row: rowIndex, col });
+  };
+  canvas.onmouseleave = () => {
+    el.rmdbHeatmapTip.hidden = true;
+    paint();
+  };
+  return { rawRows, displayRows: rows, downsampled: rawRows > rows };
+}
+
+function populateRmdbHeatmapRangeSelect(matrix) {
+  const select = el.rmdbHeatmapRangeSelect;
+  const controls = select?.closest(".rmdb-heatmap-controls");
+  if (!select || !controls) return;
+  select.replaceChildren();
+  const fragment = document.createDocumentFragment();
+  const pageSize = 100;
+  for (let start = 0; start < matrix.rows.length; start += pageSize) {
+    const end = Math.min(start + pageSize, matrix.rows.length);
+    const option = document.createElement("option");
+    option.value = String(start);
+    option.textContent = `Rows ${start + 1}–${end}`;
+    fragment.append(option);
+  }
+  select.append(fragment);
+  select.value = "0";
+  controls.hidden = matrix.rows.length <= pageSize;
+}
+
+function renderSelectedRmdbHeatmapRange() {
+  const matrix = state.rmdbHeatmapMatrix;
+  const filename = state.rmdbHeatmapFilename;
+  const select = el.rmdbHeatmapRangeSelect;
+  if (!matrix || !filename || !select) return;
+  const start = Math.max(0, Number(select.value) || 0);
+  const end = Math.min(start + 100, matrix.rows.length);
+  const view = renderRmdbHeatmapCanvas(matrix, matrix.rows.slice(start, end));
+  el.rmdbHeatmapStatus.textContent = `rows ${start + 1}–${end} of ${matrix.rows.length} × ${matrix.columns.length} positions`;
+  el.rmdbHeatmapMeta.innerHTML = `<span>raw RDAT experiments · white–yellow–red reactivity</span><span>· ${escapeHtml(filename)} · rows ${start + 1}–${end} shown · hover a cell for row, column, sequence, reactivity and error</span>`;
+  return view;
+}
+
+async function renderRmdbHeatmap(profile) {
+  if (!ensureRmdbHeatmapPanel()) return;
+  const requestId = ++state.rmdbHeatmapRequestId;
+  const filename = rmdbRdatFilename(profile);
+  if (!filename) {
+    el.rmdbHeatmapPanel.hidden = true;
+    return;
+  }
+  el.rmdbHeatmapPanel.hidden = false;
+  el.rmdbHeatmapStatus.textContent = `loading ${filename}`;
+  el.rmdbHeatmapMeta.textContent = "Loading raw ANNOTATION_DATA × SEQPOS reactivity matrix…";
+  try {
+    const text = await fetchRmdbRdatText(filename);
+    if (requestId !== state.rmdbHeatmapRequestId) return;
+    const matrix = parseRmdbRdat(text);
+    if (!matrix.rows.length || !matrix.columns.length) throw new Error("RDAT has no reactivity matrix");
+    state.rmdbHeatmapMatrix = matrix;
+    state.rmdbHeatmapFilename = filename;
+    populateRmdbHeatmapRangeSelect(matrix);
+    renderSelectedRmdbHeatmapRange();
+  } catch (error) {
+    if (requestId !== state.rmdbHeatmapRequestId) return;
+    state.rmdbHeatmapMatrix = null;
+    state.rmdbHeatmapFilename = "";
+    const controls = el.rmdbHeatmapRangeSelect?.closest(".rmdb-heatmap-controls");
+    if (controls) controls.hidden = true;
+    el.rmdbHeatmapStatus.textContent = "RDAT unavailable";
+    el.rmdbHeatmapMeta.textContent = `Could not load ${filename}: ${error.message || error}`;
+  }
 }
 
 const coordinateResolvedStyle = { fill: "#e3f1fb", stroke: "#3f7da8" };
@@ -192,6 +838,17 @@ function atomSiteCoverageStatusLabel(coverage = state.structureCoverage?.coverag
   return coverage.profileResidues
     ? `atom_site coordinates observed ${coverage.resolvedResidues}/${coverage.profileResidues} (${coverage.resolvedProfileRangeLabel || "no resolved range"}; not a sequence-alignment count)`
     : "atom_site coordinate coverage unavailable";
+}
+
+function conciseMolstarMeta({ chainKey = "", rangeLabel = "", summary = {}, coverage = {} } = {}) {
+  const chain = String(chainKey || "").split("|").at(-1) || "—";
+  const profileCount = Number(summary.profileResidues || coverage.profileResidues) || 0;
+  const sequenceMatch = profileCount ? `${summary.matchedResidues || 0}/${profileCount}` : "n/a";
+  const coordinates = coverage.profileResidues
+    ? `${coverage.resolvedResidues}/${coverage.profileResidues}`
+    : "n/a";
+  const range = rangeLabel || (profileCount ? `1–${profileCount}` : "target");
+  return `Chain ${chain} · structure positions ${range} · profile–PDB sequence match ${sequenceMatch} · coordinates available ${coordinates} · colors show current profile reactivity.`;
 }
 
 function sequenceOnlyCoordinateNote() {
@@ -452,9 +1109,13 @@ function positionFromResidueKey(residueKey) {
   return Number.isFinite(position) ? position : null;
 }
 
-function assayStateForBase(base) {
-  const normalizedBase = String(base || "N").toUpperCase();
-  return normalizedBase === "A" || normalizedBase === "C" ? "applicable" : "not_applicable";
+function familyTargetsBase(family, base) {
+  const normalizedFamily = String(family || "").toUpperCase();
+  if (normalizedFamily === "A") {
+    const normalizedBase = String(base || "N").toUpperCase();
+    return normalizedBase === "A" || normalizedBase === "C" ? "applicable" : "not_applicable";
+  }
+  return "applicable";
 }
 
 function pairPartnersForPosition(position, strand = activeStrand()) {
@@ -597,7 +1258,7 @@ function getResidueDetails(residueKey) {
     color: value.color || "#ffffff",
     joinStatus: join.status,
     joinKey,
-    assayState: assayStateForBase(profileBase),
+    assayState: familyTargetsBase(lssContext?.family || "", profileBase),
     pdbResidue: pdbLabel,
     coordinateStatus,
     coordinateMeaning: coordinateObserved ? "resolved_atom_site_coordinate" : "sequence_only_no_atom_site_coordinate",
@@ -652,11 +1313,14 @@ function applyLinkedHover(residueKey, origin = "preview") {
 // Hover never moves the camera (focus stays a click affordance).
 function applyMolstarHoverHighlight(_residueKey) {
   const viewer = state.molstarViewer;
-  if (!viewer?.visual) return;
+  // viewer.visual.highlight/clearHighlight deref this.plugin asynchronously; skip
+  // until the underlying plugin is initialized to avoid unhandled rejections.
+  if (!viewer?.plugin || !viewer?.visual) return;
   const targetKey = state.hoveredResidueKey || state.selectedResidueKey;
   if (!targetKey) {
     if (typeof viewer.visual.clearHighlight === "function") {
-      viewer.visual.clearHighlight();
+      const r = viewer.visual.clearHighlight();
+      if (r && typeof r.catch === "function") r.catch(() => {});
     }
     return;
   }
@@ -665,17 +1329,19 @@ function applyMolstarHoverHighlight(_residueKey) {
     .find((entry) => entry.residue_key === targetKey);
   if (!item) {
     if (typeof viewer.visual.clearHighlight === "function") {
-      viewer.visual.clearHighlight();
+      const r = viewer.visual.clearHighlight();
+      if (r && typeof r.catch === "function") r.catch(() => {});
     }
     return;
   }
-  viewer.visual.highlight({
+  const highlightResult = viewer.visual.highlight({
     data: [{
       struct_asym_id: item.struct_asym_id,
       start_residue_number: item.start_residue_number,
       end_residue_number: item.end_residue_number,
     }],
   });
+  if (highlightResult && typeof highlightResult.catch === "function") highlightResult.catch(() => {});
 }
 
 function applyMolstarHover(residueKey, event = null) {
@@ -744,7 +1410,8 @@ async function loadStructureSourceForMolstar() {
   }
   const range = alignmentCropRange(coverage);
   const structureCoverageUrl = state.structureCoverageUrl || linkedViewUrls.structureCoverage;
-  const resolvedSourceUrl = resolveAssetUrl(coverage.sourceStructure.href, structureCoverageUrl);
+  const sourceHref = resolveStructureSourceHref(coverage.sourceStructure.href, coverage.caseId);
+  const resolvedSourceUrl = resolveAssetUrl(sourceHref, structureCoverageUrl);
   return {
     chainKey: coverage.activeChainKey,
     mode: "source-structure",
@@ -931,7 +1598,7 @@ async function prepareClientAlignmentCroppedCif(sourceCif) {
   };
 }
 
-function colorForMolstarDmsReactivity(row, residueKey, selectedKey = state.selectedResidueKey) {
+function colorForMolstarReactivity(row, residueKey, selectedKey = state.selectedResidueKey) {
   if (residueKey && residueKey === selectedKey) return RESIDUE_STATE_COLORS.selected.molstarRgb;
   return hexToRgb(row?.color || "#ffffff");
 }
@@ -959,12 +1626,12 @@ function buildMolstarTargetDisplayPayload(profileId = activeProfileId(), selecte
       struct_asym_id: locator.label_asym_id || locator.auth_asym_id || residue.labelAsymId,
       start_residue_number: residueNumber,
       end_residue_number: residueNumber,
-      color: colorForMolstarDmsReactivity(row, residueKey, selectedKey),
+      color: colorForMolstarReactivity(row, residueKey, selectedKey),
       profile_id: profileId,
       residue_key: residueKey,
       chain_key: residue.chainKey,
       dms_fill: row?.color || "#ffffff",
-      colorSource: residueKey === selectedKey ? "SELECTED" : "DMS_REACTIVITY_FILL",
+      colorSource: residueKey === selectedKey ? "SELECTED" : "REACTIVITY_FILL",
       visual_state: visualStateForResidue(residueKey, selectedKey),
     }];
   });
@@ -975,7 +1642,7 @@ function updateMolstarTargetDisplayDataset(payload, selectedKey = state.selected
   const residue52 = payload.find((item) => item.residue_key === selectedKey) || payload[0] || null;
   el.molstarHost.dataset.targetDisplayMode = "alignment_cropped_target_chain";
   el.molstarHost.dataset.targetDisplayResidues = String(payload.length);
-  el.molstarHost.dataset.targetDisplayColorSource = "DMS_REACTIVITY_FILL";
+  el.molstarHost.dataset.targetDisplayColorSource = "REACTIVITY_FILL";
   el.molstarHost.dataset.targetDisplayContext = "alignment-cropped target chain";
   el.molstarHost.dataset.targetDisplaySelected = selectedKey || "";
   el.molstarHost.dataset.targetDisplayPreview52 = JSON.stringify(residue52 ? {
@@ -995,18 +1662,26 @@ function applyMolstarTargetDisplay(residueKey = state.selectedResidueKey, attemp
   const payload = buildMolstarTargetDisplayPayload(activeProfileId(), residueKey);
   updateMolstarTargetDisplayDataset(payload, residueKey);
   const viewer = state.molstarViewer;
-  if (!viewer?.visual?.select || !state.lastRender) {
+  // pdbe-molstar exposes viewer.visual.* on the prototype before the underlying
+  // Mol* plugin finishes initializing. Calling them while viewer.plugin is still
+  // undefined throws asynchronously ("can't access property 'commands'/'managers',
+  // this.plugin is undefined") and escapes this try/catch as an unhandled rejection.
+  // Wait for viewer.plugin to exist before issuing any visual command.
+  if (!viewer?.plugin || !viewer?.visual?.select || !state.lastRender) {
     if (attempt < 8) {
       window.setTimeout(() => applyMolstarTargetDisplay(residueKey, attempt + 1), 250);
     }
     return;
   }
   try {
-    viewer.visual.select({
+    const selectResult = viewer.visual.select({
       data: payload,
       // alignment-cropped target chain: dim non-selected target atoms without labeling them unaligned.
       nonSelectedColor: MOLSTAR_CONTEXT_COLOR,
     });
+    // visual.select is async; swallow a late rejection (e.g. plugin torn down
+    // mid-call) so it never surfaces as an uncaught promise rejection.
+    if (selectResult && typeof selectResult.catch === "function") selectResult.catch(() => {});
     focusMolstarOnSelection(viewer, payload, residueKey);
   } catch (_error) {
     if (attempt < 8) {
@@ -1021,20 +1696,25 @@ function applyMolstarTargetDisplay(residueKey = state.selectedResidueKey, attemp
 // viewer parked on a previously clicked 3D residue. Clearing the selection resets
 // the camera to the full cropped chain.
 function focusMolstarOnSelection(viewer, payload, residueKey) {
+  // Guard against the same uninitialized-plugin race as applyMolstarTargetDisplay:
+  // viewer.visual.reset/focus dereference this.plugin asynchronously.
+  if (!viewer?.plugin) return;
   if (!residueKey) {
     if (typeof viewer.visual?.reset === "function") {
-      viewer.visual.reset({ camera: true });
+      const resetResult = viewer.visual.reset({ camera: true });
+      if (resetResult && typeof resetResult.catch === "function") resetResult.catch(() => {});
     }
     return;
   }
   if (typeof viewer.visual?.focus !== "function") return;
   const selectedItem = payload.find((item) => item.residue_key === residueKey);
   if (!selectedItem) return;
-  viewer.visual.focus([{
+  const focusResult = viewer.visual.focus([{
     struct_asym_id: selectedItem.struct_asym_id,
     start_residue_number: selectedItem.start_residue_number,
     end_residue_number: selectedItem.end_residue_number,
   }]);
+  if (focusResult && typeof focusResult.catch === "function") focusResult.catch(() => {});
 }
 
 function buildMolstarSelectionPayload(profileId = activeProfileId(), selectedKey = state.selectedResidueKey) {
@@ -1071,8 +1751,8 @@ function trackHoverText(trackKind, details) {
     pdb_polymer_alignment: `PDB polymer alignment ${details.position}: profile ${details.profileBase} -> PDB ${details.pdbBase} (${details.sequenceMatch})`,
     structure_state: `Structure state ${details.position}: ${details.structureState}`,
     pdb_residue: `3D coords ${details.position}: ${details.coordinateStatus}`,
-    dms_targetability: `DMS targetability ${details.position}: ${details.assayState}`,
-    profile_value: `DMS reactivity ${details.position}: raw=${details.raw === null ? "missing" : details.raw.toFixed(6)} norm=${details.norm.toFixed(3)}`,
+    dms_targetability: `targetability ${details.position}: ${details.assayState}`,
+    profile_value: `reactivity ${details.position}: raw=${details.raw === null ? "missing" : details.raw.toFixed(6)} norm=${details.norm.toFixed(3)}`,
     bridge_membership: `DBN bridge ${details.position}: ${details.bridgeMembership}`,
     observed_mask: `3D coordinates ${details.position}: ${details.coordinateStatus}`,
     fec_lss_confidence: `FEC/LSS ${details.position}: ${details.fecLssConfidence}`,
@@ -1232,13 +1912,13 @@ function renderTrackRail() {
   const strand = activeStrand();
   const normalized = state.lastRender?.normalized;
   if (!strand || !normalized) return;
-  state.viewport = clampViewport(state.viewport.start, state.viewport.end, strand.sequence.length);
+  state.viewport = { start: 1, end: strand.sequence.length };
   const { start, end } = state.viewport;
   const positions = Array.from({ length: end - start + 1 }, (_, idx) => start + idx);
-  const width = 1120;
-  const height = 354;
-  const left = 112;
+  const height = 182;
+  const left = 210;
   const right = 18;
+  const width = Math.max(1120, left + right + positions.length * 24);
   const usable = width - left - right;
   const xFor = (position) => left + ((position - start + 0.5) / positions.length) * usable;
   const cellW = Math.max(4, usable / positions.length - 1);
@@ -1247,20 +1927,17 @@ function renderTrackRail() {
     ["Profile/RMDB seq", 52],
     ["PDB polymer alignment", 84],
     ["Structure state", 116],
-    ["3D coords", 148],
-    ["DMS targetability", 180],
-    ["DMS reactivity", 212],
-    ["DBN bridge", 244],
-    ["3D coordinates", 276],
-    ["Interactions", 308],
+    ["reactivity", 148],
   ];
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
   svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  svg.setAttribute("width", String(width));
+  svg.setAttribute("height", String(height));
   svg.setAttribute("role", "img");
   svg.setAttribute("aria-label", "1D residue track rail");
   svg.appendChild(createSvgNode(svg, "rect", { x: 0, y: 0, width, height, fill: "#ffffff" }));
   for (const [label, y] of rows) {
-    const text = createSvgNode(svg, "text", { x: 10, y: y + 4, "font-size": 12, fill: "#5b6670" });
+    const text = createSvgNode(svg, "text", { x: 2, y: y + 6, "font-size": "1.08rem", "font-weight": 400, fill: "#000000" });
     text.textContent = label;
     svg.appendChild(text);
     svg.appendChild(createSvgNode(svg, "line", { x1: left, x2: width - right, y1: y, y2: y, stroke: "#e3e7ec", "stroke-width": 1 }));
@@ -1275,15 +1952,9 @@ function renderTrackRail() {
     const alignmentState = alignmentStateForResidue(residueKey);
     const row = normalized.byPosition.get(position) || {};
     const color = row.color || "#ffffff";
-    const bridgeMembership = state.bridgeByResidueKey.get(residueKey) || [];
-    const interactionEndpoints = state.interactionsByResidueKey.get(residueKey) || [];
-    const pdbResidue = state.pdbResidueByKey.get(residueKey);
-    const observed = pdbResidue?.coordinateStatus === "resolved";
-    const coordinateStyle = observed ? coordinateResolvedStyle : coordinateSequenceOnlyStyle;
-    const coordinateMeaning = observed ? "resolved_atom_site_coordinate" : "sequence_only_no_atom_site_coordinate";
     if (position === 1 || position % 10 === 0 || position === strand.sequence.length) {
       svg.appendChild(createSvgNode(svg, "line", { x1: x, x2: x, y1: 15, y2: 30, stroke: "#7c8792", "stroke-width": 0.8 }));
-      const tick = createSvgNode(svg, "text", { x, y: 12, "font-size": 10, "text-anchor": "middle", fill: "#39434d" });
+      const tick = createSvgNode(svg, "text", { x, y: 14, "font-size": "1.08rem", "font-weight": 400, "text-anchor": "middle", fill: "#000000" });
       tick.textContent = String(position);
       svg.appendChild(tick);
     }
@@ -1338,83 +2009,18 @@ function renderTrackRail() {
       svg.appendChild(stateTick);
     }
 
-    const pdbCell = createSvgNode(svg, "rect", {
-      x: x - cellW / 2,
-      y: 136,
-      width: cellW,
-      height: 24,
-      fill: coordinateStyle.fill,
-      stroke: coordinateStyle.stroke,
-      "stroke-width": observed ? 0.7 : 0.4,
-      rx: 1,
-      "data-pdb-residue": pdbResidue ? `${pdbResidue.pdbStrandId}:${pdbResidue.labelSeqId}` : "",
-      "data-coordinate-status": pdbResidue?.coordinateStatus || "unavailable",
-      "data-coordinate-meaning": coordinateMeaning,
-    });
-    wireTrackMark(pdbCell, residueKey, "pdb_residue", handlePdbResidueTrackEvent);
-    svg.appendChild(pdbCell);
-    if (position === 1 || position % 10 === 0 || position === strand.sequence.length || position === state.structureCoverage?.coverage?.firstResolvedProfilePosition || position === state.structureCoverage?.coverage?.lastResolvedProfilePosition) {
-      const pdbTick = createSvgNode(svg, "text", { x, y: 152, "font-size": 8.5, "text-anchor": "middle", fill: observed ? "#164b6c" : "#7b858e", "pointer-events": "none" });
-      pdbTick.textContent = pdbResidue ? String(pdbResidue.labelSeqId) : "-";
-      svg.appendChild(pdbTick);
-    }
-
-    const targetable = assayStateForBase(profileBase) === "applicable";
-    const targetability = createSvgNode(svg, "rect", {
-      x: x - cellW / 2,
-      y: 172,
-      width: cellW,
-      height: 16,
-      fill: targetable ? "#dceccf" : "#f4f5f6",
-      stroke: targetable ? "#5d8a45" : "#c8cdd2",
-      "stroke-width": 0.5,
-      rx: 1,
-      "data-assay-state": targetable ? "applicable" : "not_applicable",
-    });
-    wireTrackMark(targetability, residueKey, "dms_targetability", handleTargetabilityTrackEvent);
-    svg.appendChild(targetability);
-
-    const profileRect = createSvgNode(svg, "rect", { x: x - cellW / 2, y: 200, width: cellW, height: 24, fill: color, stroke: "#aeb7c1", "stroke-width": 0.5, rx: 1 });
+    const profileRect = createSvgNode(svg, "rect", { x: x - cellW / 2, y: 136, width: cellW, height: 24, fill: color, stroke: "#aeb7c1", "stroke-width": 0.5, rx: 1 });
     wireTrackMark(profileRect, residueKey, "profile_value", (event, key) => selectResidue(key, "1d:profile_value"));
     svg.appendChild(profileRect);
     if (row.norm > 0) {
       const barH = Math.max(1, Math.round(row.norm * 21));
-      svg.appendChild(createSvgNode(svg, "rect", { x: x - 2, y: 223 - barH, width: 4, height: barH, fill: "#17212b", opacity: 0.35 }));
-    }
-
-    if (bridgeMembership.length) {
-      const bridge = createSvgNode(svg, "rect", { x: x - cellW / 2, y: 236, width: cellW, height: 16, fill: "#2c7a7b", stroke: "#195d5e", "stroke-width": 0.5, rx: 1 });
-      wireTrackMark(bridge, residueKey, "bridge_membership", handleBridgeTrackEvent);
-      svg.appendChild(bridge);
-    } else {
-      const bridgeEmpty = createSvgNode(svg, "rect", { x: x - cellW / 2, y: 240, width: cellW, height: 8, fill: "#eef3f2", stroke: "#d5dfdd", "stroke-width": 0.4, rx: 1 });
-      wireTrackMark(bridgeEmpty, residueKey, "bridge_membership", handleBridgeTrackEvent);
-      svg.appendChild(bridgeEmpty);
-    }
-
-    const obs = createSvgNode(svg, "circle", { cx: x, cy: 276, r: observed ? 4.2 : 3.4, fill: observed ? "#1f2933" : coordinateSequenceOnlyStyle.fill, stroke: observed ? "#1f2933" : coordinateSequenceOnlyStyle.stroke, "stroke-width": observed ? 0.8 : 1.2, "data-coordinate-status": pdbResidue?.coordinateStatus || "unavailable", "data-coordinate-meaning": coordinateMeaning });
-    wireTrackMark(obs, residueKey, "observed_mask", handleObservedTrackEvent);
-    svg.appendChild(obs);
-
-    if (interactionEndpoints.length) {
-      const dot = createSvgNode(svg, "circle", { cx: x, cy: 308, r: 4.2, fill: "#1f78b4", stroke: "#0f3f60", "stroke-width": 0.6 });
-      wireTrackMark(dot, residueKey, "interaction_endpoint_occupancy", handleInteractionTrackEvent);
-      svg.appendChild(dot);
-    } else {
-      const dot = createSvgNode(svg, "circle", { cx: x, cy: 308, r: 2.2, fill: "#ffffff", stroke: "#aab5bf", "stroke-width": 0.8 });
-      wireTrackMark(dot, residueKey, "interaction_endpoint_occupancy", handleInteractionTrackEvent);
-      svg.appendChild(dot);
+      svg.appendChild(createSvgNode(svg, "rect", { x: x - 2, y: 159 - barH, width: 4, height: barH, fill: "#17212b", opacity: 0.35 }));
     }
   }
   el.track.replaceChildren(svg);
-  el.viewportStatus.textContent = `${start}-${end} / ${strand.sequence.length}`;
+  if (el.viewportStatus) el.viewportStatus.textContent = `${start}-${end} / ${strand.sequence.length}`;
   syncViewportSlider(start, end, strand.sequence.length);
   recolorVarnaViewportLink();
-  const coverage = state.structureCoverage?.coverage;
-  const sequenceSummary = materializedSequenceAlignment();
-  el.trackStatus.textContent = coverage
-    ? `${positions.length} residues visible | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)} | ${lssContextLabel()}`
-    : `${positions.length} residues visible | ${sequenceAgreementStatusLabel(sequenceSummary)}`;
   applyLinkedHover(state.hoveredResidueKey);
   applyLinkedSelection(state.selectedResidueKey);
 }
@@ -1743,7 +2349,7 @@ function setMolstarStructureDataset(host, structure, sourceKind) {
 async function initMolstarViewer() {
   if (state.molstarViewer || !el.molstarHost) return;
   el.molstarStatus.textContent = `loading Mol* from ${sourceStructureUrl}`;
-  el.molstarMeta.textContent = `${activeChainKey()} will use a target chain alignment crop.`;
+  el.molstarMeta.textContent = "Loading target chain structure…";
   try {
     const sourceCif = await loadStructureSourceForMolstar();
     const croppedCif = await prepareClientAlignmentCroppedCif(sourceCif);
@@ -1751,9 +2357,12 @@ async function initMolstarViewer() {
     installMolstarEventBridge({ events: null }, el.molstarHost);
     const coverage = state.structureCoverage?.coverage;
     const sequenceSummary = materializedSequenceAlignment();
-    el.molstarMeta.textContent = coverage
-      ? `${croppedCif.chainKey} | ${croppedCif.mode} | target chain alignment crop from ${croppedCif.alignmentRange.label}; auth_asym_id=${croppedCif.authAsymId} label_asym_id=${croppedCif.labelAsymId}; ${croppedCif.croppedAtomSiteRows} atom_site rows kept; displayed with DMS reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel()}.`
-      : `${croppedCif.chainKey} | ${croppedCif.mode} | auth_asym_id=${croppedCif.authAsymId} label_asym_id=${croppedCif.labelAsymId}.`;
+    el.molstarMeta.textContent = conciseMolstarMeta({
+      chainKey: croppedCif.chainKey,
+      rangeLabel: croppedCif.alignmentRange.label,
+      summary: sequenceSummary,
+      coverage,
+    });
     await loadPdbeMolstarAssets();
     const croppedViewer = new window.PDBeMolstarPlugin();
     state.molstarViewer = croppedViewer;
@@ -1807,33 +2416,28 @@ async function renderProfile(index) {
   state.lastRender = { profile, normalized, shard, elapsed, dmsLoopRecall };
   state.requestedProfileId = profile.profile_id || "";
   el.select.value = String(index);
-  const initialView = defaultViewport(strand.sequence.length, normalized);
-  state.viewport = clampViewport(initialView.start, initialView.end, strand.sequence.length);
-  el.profilePair.textContent = profile.pair_id;
-  el.profileId.textContent = profile.profile_id;
-  el.profilePair.title = profile.pair_id;
-  el.profileId.title = profile.profile_id;
+  state.viewport = { start: 1, end: strand.sequence.length };
   el.molstarHost.setAttribute("data-structure-chain-key", activeChainKey());
   const coverage = state.structureCoverage?.coverage;
   const sequenceSummary = materializedSequenceAlignment();
-  el.molstarMeta.textContent = coverage
-    ? `${activeChainKey()} | profile ${profile.profile_id} | target chain alignment crop displayed with DMS reactivity colors | ${sequenceAgreementStatusLabel(sequenceSummary)} | ${atomSiteCoverageStatusLabel(coverage)}; ${sequenceOnlyCoordinateNote()}; ${lssContextLabel(profile.profile_id)}.`
-    : `${activeChainKey()} | profile ${profile.profile_id} | ${activeResidues().length} residues in active profile.`;
+  const sequenceLength = activeStrand()?.sequence?.length;
+  el.molstarMeta.textContent = conciseMolstarMeta({
+    chainKey: activeChainKey(),
+    rangeLabel: sequenceLength ? `1–${sequenceLength}` : "",
+    summary: sequenceSummary,
+    coverage,
+  });
   el.stats.innerHTML = [
-    metric("update ms", elapsed.toFixed(2)),
     metric("profiles loaded", state.profiles.length),
-    metric("sequence match", `${sequenceSummary.matchedResidues}/${sequenceSummary.profileResidues}`),
     metric("atom_site obs", coverage?.profileResidues ? `${coverage.resolvedResidues}/${coverage.profileResidues}` : "n/a"),
-    metric("LSS status", lssContext?.lssStatus || "not materialized"),
-    metric("LSS evaluable", lssContext ? `${lssContext.pairedEvaluable} paired / ${lssContext.unpairedEvaluable} unpaired` : "not materialized"),
-    metric("DMS loop recall", formatDmsLoopRecall(dmsLoopRecall)),
     metric("mapped bases", normalized.mappedCount),
     metric("white bases", normalized.whiteCount),
     metric("positive bases", normalized.positiveCount),
-    metric("P95 cap", normalized.cap.toFixed(4)),
+    metric("Normal value", normalized.cap.toFixed(4)),
   ].join("");
   updateView();
   renderTrackRail();
+  void renderRmdbHeatmap(profile);
   renderInspector(state.selectedResidueKey);
   applyMolstarTargetDisplay(state.selectedResidueKey);
 }
@@ -1842,6 +2446,364 @@ function profileIndexForId(profileId) {
   const normalized = String(profileId || "").trim();
   if (!normalized) return -1;
   return state.profiles.findIndex((profile) => profile.profile_id === normalized);
+}
+
+const PROFILE_FAMILY_ORDER = ["A", "B", "C", "D", "E", "F"];
+
+// Build the profile <select> markup grouped by Family. Profiles with a non-empty
+// lssContext family are grouped first, sorted by PROFILE_FAMILY_ORDER; profiles
+// without a family follow under an "Unassigned family" group so every loaded
+// profile stays selectable. Each <option> keeps its original state.profiles index
+// so the underlying profile_id<->row mapping stays intact. If no profile carries a
+// family, fall back to a flat list of all profiles.
+function buildProfileSelectMarkup(profiles) {
+  const list = Array.isArray(profiles) ? profiles : [];
+  const withFamily = [];
+  const withoutFamily = [];
+  list.forEach((profile, idx) => {
+    const family = lssContextForProfile(profile.profile_id)?.family;
+    if (family) withFamily.push({ profile, idx, family: String(family).toUpperCase() });
+    else withoutFamily.push({ profile, idx });
+  });
+  const optionFor = (entry) => {
+    const tech = state.techniqueByProfile?.get(entry.profile.profile_id) || {};
+    const techName = tech.technology || "—";
+    const fam = tech.family || entry.family || "";
+    const famSuffix = fam ? ` · Family ${fam}` : "";
+    return `<option value="${entry.idx}">${escapeHtml(`${entry.profile.pair_id} | ${techName}${famSuffix}`)}</option>`;
+  };
+  // No family signal anywhere: keep the original flat list of every profile.
+  if (!withFamily.length) {
+    return list.map((profile, idx) => optionFor({ profile, idx })).join("");
+  }
+  const families = Array.from(new Set(withFamily.map((entry) => entry.family)));
+  families.sort((a, b) => {
+    const ai = PROFILE_FAMILY_ORDER.indexOf(a);
+    const bi = PROFILE_FAMILY_ORDER.indexOf(b);
+    const ar = ai === -1 ? PROFILE_FAMILY_ORDER.length : ai;
+    const br = bi === -1 ? PROFILE_FAMILY_ORDER.length : bi;
+    if (ar !== br) return ar - br;
+    return a.localeCompare(b);
+  });
+  const familyGroups = families
+    .map((family) => {
+      const options = withFamily
+        .filter((entry) => entry.family === family)
+        .map(optionFor)
+        .join("");
+      return `<optgroup label="${escapeHtml(`Family ${family}`)}">${options}</optgroup>`;
+    })
+    .join("");
+  // Family-less profiles still belong in the dropdown: hiding them dropped the
+  // option count well below the loaded profile count (e.g. 2L1V loads 52 but
+  // only 2 carry a family). Surface them under a catch-all group so every
+  // profile stays selectable while the family grouping above is preserved.
+  const otherGroup = withoutFamily.length
+    ? `<optgroup label="Unassigned family">${withoutFamily.map(optionFor).join("")}</optgroup>`
+    : "";
+  return `${familyGroups}${otherGroup}`;
+}
+
+// Resolve the family letter for a profile: prefer the joined technique family
+// (case confidence-evidence), fall back to the lssContext family. Returns "".
+function familyForProfile(profileId) {
+  const joined = state.techniqueByProfile?.get(profileId)?.family;
+  if (joined) return String(joined).toUpperCase();
+  const ctx = lssContextForProfile(profileId)?.family;
+  return ctx ? String(ctx).toUpperCase() : "";
+}
+
+// Technique display name for a profile; "—" when unknown.
+function techniqueForProfile(profileId) {
+  return state.techniqueByProfile?.get(profileId)?.technology || "—";
+}
+
+// Human label for a profile option (used as the truncated trigger/list text).
+function profileOptionLabel(profile) {
+  const tech = techniqueForProfile(profile.profile_id);
+  const fam = familyForProfile(profile.profile_id);
+  const famSuffix = fam ? ` · Family ${fam}` : "";
+  return `${profile.pair_id} | ${tech}${famSuffix}`;
+}
+
+// Module-level refresh hook so renderProfile/change can re-sync the trigger label
+// with the native <select>'s current value. No-op until the dropdown is mounted.
+let refreshProfileDropdownTrigger = () => {};
+
+// Module-level hook so the technique chip filter can gray/hide non-hit profiles
+// in the self-built dropdown. No-op until the dropdown is mounted.
+let applyProfileDropdownFilter = () => {};
+
+// Build a self-contained colored family-badge dropdown as a sibling of the native
+// <select>, which stays in the DOM (hidden) as the source of truth + fallback.
+// DOM-only + defensive: returns early if the select is missing or no profiles.
+function mountProfileDropdown() {
+  const select = el.select;
+  if (!select || !Array.isArray(state.profiles) || !state.profiles.length) return;
+  // Avoid double-mount if init runs more than once.
+  if (select.parentElement?.querySelector(".profile-dropdown")) return;
+
+  const root = document.createElement("div");
+  root.className = "profile-dropdown";
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.className = "profile-dropdown-trigger";
+  trigger.setAttribute("aria-haspopup", "listbox");
+  trigger.setAttribute("aria-expanded", "false");
+  const list = document.createElement("ul");
+  list.className = "profile-dropdown-list";
+  list.setAttribute("role", "listbox");
+  list.hidden = true;
+  root.append(trigger, list);
+
+  const currentIndex = () => {
+    const idx = Number(select.value);
+    return Number.isInteger(idx) && idx >= 0 ? idx : 0;
+  };
+  // Populate the floating listbox once; each <li> mirrors a native option index.
+  state.profiles.forEach((profile, idx) => {
+    const li = document.createElement("li");
+    li.setAttribute("role", "option");
+    li.dataset.index = String(idx);
+    li.tabIndex = -1;
+    const fam = familyForProfile(profile.profile_id);
+    const label = profileOptionLabel(profile);
+    li.title = label;
+    li.innerHTML = `${familyBadgeMarkup(fam)}<span class="profile-dropdown-text">${escapeHtml(label)}</span>`;
+    list.appendChild(li);
+  });
+
+  const items = () => Array.from(list.querySelectorAll("li[role='option']"));
+  const visibleItems = () => items().filter((li) => !li.classList.contains("filtered-out"));
+
+  const refreshTrigger = () => {
+    const idx = currentIndex();
+    const profile = state.profiles[idx];
+    if (!profile) return;
+    const fam = familyForProfile(profile.profile_id);
+    const label = profileOptionLabel(profile);
+    trigger.title = label;
+    trigger.innerHTML = `${familyBadgeMarkup(fam)}<span class="profile-dropdown-text">${escapeHtml(label)}</span>`;
+    items().forEach((li) => {
+      const selected = Number(li.dataset.index) === idx;
+      li.setAttribute("aria-selected", selected ? "true" : "false");
+      li.classList.toggle("active", selected);
+    });
+  };
+
+  const closeList = (focusTrigger = false) => {
+    list.hidden = true;
+    trigger.setAttribute("aria-expanded", "false");
+    if (focusTrigger) trigger.focus();
+  };
+  const openList = () => {
+    list.hidden = false;
+    trigger.setAttribute("aria-expanded", "true");
+    const active = visibleItems().find((li) => Number(li.dataset.index) === currentIndex());
+    (active || visibleItems()[0])?.focus();
+  };
+  const selectIndex = (idx) => {
+    select.value = String(idx);
+    // change listener runs synchronously and refreshes the trigger for us.
+    select.dispatchEvent(new Event("change"));
+    closeList(true);
+  };
+  trigger.addEventListener("click", () => {
+    if (list.hidden) openList();
+    else closeList();
+  });
+  list.addEventListener("click", (event) => {
+    const li = event.target.closest("li[role='option']");
+    if (!li) return;
+    selectIndex(Number(li.dataset.index));
+  });
+  list.addEventListener("keydown", (event) => {
+    const all = visibleItems();
+    const focused = document.activeElement?.closest?.("li[role='option']");
+    const pos = focused ? all.indexOf(focused) : -1;
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      (all[pos + 1] || all[0])?.focus();
+    } else if (event.key === "ArrowUp") {
+      event.preventDefault();
+      (all[pos - 1] || all[all.length - 1])?.focus();
+    } else if (event.key === "Enter") {
+      event.preventDefault();
+      if (focused) selectIndex(Number(focused.dataset.index));
+    } else if (event.key === "Escape") {
+      event.preventDefault();
+      closeList(true);
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (!root.contains(event.target)) closeList();
+  });
+
+  // Mount as sibling, then hide the native select (kept as source-of-truth +
+  // fallback). Hide only AFTER the dropdown is in the DOM.
+  // Gray/hide <li> items whose profile is NOT in the given hit set of
+  // profileIds. Empty/null hitIds = show all (no active filter). Defensive:
+  // never throws if state.profiles is missing.
+  const applyFilter = (hitIds) => {
+    const filtering = !!(hitIds && hitIds.size);
+    items().forEach((li) => {
+      const idx = Number(li.dataset.index);
+      const pid = state.profiles?.[idx]?.profile_id;
+      const hidden = filtering && pid != null && !hitIds.has(String(pid));
+      li.classList.toggle("filtered-out", hidden);
+      if (hidden) li.setAttribute("aria-hidden", "true");
+      else li.removeAttribute("aria-hidden");
+    });
+  };
+
+  select.insertAdjacentElement("afterend", root);
+  select.hidden = true;
+  refreshTrigger();
+  refreshProfileDropdownTrigger = refreshTrigger;
+  applyProfileDropdownFilter = applyFilter;
+}
+
+// Two-level technique chip filter above the profile control. First level = one
+// colored family chip per family; toggling a family chip both toggles the family
+// into the selection AND expands/collapses that family's technique chips (second
+// level). Cross-level OR union: a profile is a hit if its family is selected OR
+// its technology is selected. Empty selection = show all. DOM-only + defensive.
+function mountTechniqueFilter() {
+  const select = el.select;
+  if (!select || !Array.isArray(state.evidenceRows) || !state.evidenceRows.length) return;
+  // Avoid double-mount if init runs more than once.
+  if (select.closest(".controls")?.querySelector(".technique-filter")) return;
+
+  const model = buildTechniqueFilterModel(state.evidenceRows, config.chainId);
+  if (!model.families.length) return;
+
+  const selection = { families: new Set(), techniques: new Set() };
+
+  const container = document.createElement("div");
+  container.className = "technique-filter";
+  const famRow = document.createElement("div");
+  famRow.className = "technique-chip-row";
+  const subLevel = document.createElement("div");
+  subLevel.className = "technique-chip-sublevel";
+  container.append(famRow, subLevel);
+
+  const refilter = () => {
+    applyProfileDropdownFilter(applyTechniqueFilter(model, selection));
+  };
+
+  model.families.forEach((fam) => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "technique-chip";
+    chip.dataset.family = fam;
+    chip.setAttribute("aria-pressed", "false");
+    chip.innerHTML = familyBadgeMarkup(fam);
+    chip.addEventListener("click", () => {
+      const on = !selection.families.has(fam);
+      chip.setAttribute("aria-pressed", on ? "true" : "false");
+      if (on) {
+        selection.families.add(fam);
+        appendTechniqueChips(fam);
+      } else {
+        selection.families.delete(fam);
+        removeTechniqueChips(fam);
+      }
+      refilter();
+    });
+    famRow.appendChild(chip);
+  });
+
+  function appendTechniqueChips(fam) {
+    const techs = model.techniquesByFamily.get(fam) || [];
+    const group = document.createElement("div");
+    group.className = "technique-chip-group";
+    group.dataset.family = fam;
+    techs.forEach((tech) => {
+      const chip = document.createElement("button");
+      chip.type = "button";
+      chip.className = "technique-chip technique-chip-sub";
+      chip.dataset.technique = tech;
+      chip.dataset.family = fam;
+      chip.setAttribute("aria-pressed", "false");
+      chip.textContent = tech;
+      chip.addEventListener("click", () => {
+        const on = !selection.techniques.has(tech);
+        chip.setAttribute("aria-pressed", on ? "true" : "false");
+        if (on) selection.techniques.add(tech);
+        else selection.techniques.delete(tech);
+        refilter();
+      });
+      group.appendChild(chip);
+    });
+    subLevel.appendChild(group);
+  }
+
+  function removeTechniqueChips(fam) {
+    const group = subLevel.querySelector(`.technique-chip-group[data-family="${fam}"]`);
+    if (group) {
+      group.querySelectorAll(".technique-chip-sub").forEach((chip) => {
+        selection.techniques.delete(chip.dataset.technique);
+      });
+      group.remove();
+    }
+  }
+
+  // Insert directly above the profile control (the <label> wrapping the select),
+  // falling back to before the dropdown/select itself if no wrapping label.
+  const anchor = select.closest("label") || select.parentElement || select;
+  anchor.insertAdjacentElement("beforebegin", container);
+}
+
+// Choose the default profile by reactivity signal richness rather than the raw
+// first profile: some cases (e.g. 1GTN) list a sparse profile first, so the 3D
+// view opens almost entirely white. Pure helper takes per-profile positive-value
+// counts and returns the richest index; ties resolve to the lowest index so the
+// pick stays stable, and an empty/absent set falls back to 0.
+function pickRichestProfileIndex(positiveCounts) {
+  if (!Array.isArray(positiveCounts) || !positiveCounts.length) return 0;
+  let best = 0;
+  let bestCount = -1;
+  for (let idx = 0; idx < positiveCounts.length; idx += 1) {
+    const count = Number(positiveCounts[idx]) || 0;
+    if (count > bestCount) {
+      bestCount = count;
+      best = idx;
+    }
+  }
+  return best;
+}
+
+async function richestProfileIndex() {
+  const profiles = state.profiles || [];
+  if (profiles.length <= 1) return 0;
+  // Narrow the candidate set to profiles that carry an lssContext family (the
+  // ones visible in the grouped dropdown). Map the richest pick back to its
+  // original state.profiles index. If no profile has a family, fall back to the
+  // full-list logic so init never stalls on an empty candidate set.
+  const familyCandidates = [];
+  profiles.forEach((profile, idx) => {
+    if (lssContextForProfile(profile.profile_id)?.family) familyCandidates.push({ profile, idx });
+  });
+  const candidates = familyCandidates.length
+    ? familyCandidates
+    : profiles.map((profile, idx) => ({ profile, idx }));
+  if (candidates.length === 1) return candidates[0].idx;
+  const positiveCounts = [];
+  for (const { profile } of candidates) {
+    let positives = 0;
+    try {
+      const shard = await loadShard(profile.shard_id);
+      const values = profileValues(profile, shard);
+      for (let idx = 0; idx < values.length; idx += 1) {
+        const value = values[idx];
+        if (Number.isFinite(value) && value > 0) positives += 1;
+      }
+    } catch (_error) {
+      positives = 0; // unreadable shard contributes no signal; never blocks init
+    }
+    positiveCounts.push(positives);
+  }
+  return candidates[pickRichestProfileIndex(positiveCounts)].idx;
 }
 
 function initialProfileIdFromLocation() {
@@ -1866,13 +2828,89 @@ function installExternalProfileBridge() {
   window.__annojoinExternalProfileBridgeInstalled = true;
   window.addEventListener("message", (event) => {
     const payload = event?.data;
-    if (!payload || payload.type !== "annojoin:set-profile") return;
+    if (!payload) return;
+    if (payload.type === "annojoin:download-profile") {
+      downloadSelectedProfile();
+      return;
+    }
+    if (payload.type === "annojoin:download-3d") {
+      void downloadSelected3d();
+      return;
+    }
+    if (payload.type !== "annojoin:set-profile") return;
     void renderProfileById(payload.profileId);
   });
 }
 
 function updateView() {
-  el.caption.textContent = "VARNA layout with active profile coloring.";
+  document.querySelector(".swatch-empty + span")?.replaceChildren("No data (missing, unmapped, or non-positive)");
+  document.querySelector(".swatch-gradient + span")?.replaceChildren("Reactivity: low → high");
+  el.caption.textContent = "Colors show the selected profile's reactivity.";
+}
+
+function referenceJournalLine(citation) {
+  const pages = citation.pageFirst && citation.pageLast
+    ? `${citation.pageFirst}–${citation.pageLast}`
+    : citation.pageFirst || citation.pageLast || "";
+  const issue = [citation.journal, citation.volume].filter(Boolean).join(" ");
+  const publication = [issue, pages].filter(Boolean).join(", ");
+  return citation.year && publication ? `${publication} (${citation.year})` : publication || citation.year || "";
+}
+
+function externalReferenceLink(href, label) {
+  return `<a href="${escapeHtml(href)}" target="_blank" rel="noreferrer">${escapeHtml(label)}</a>`;
+}
+
+function mountPrimaryReference(citation = null) {
+  const pdbId = String(config.caseId || "").trim().toUpperCase();
+  if (!pdbId || document.querySelector(".pdb-primary-reference")) return;
+  const panel = document.createElement("section");
+  panel.className = "panel pdb-primary-reference";
+  const rcsbHref = `https://www.rcsb.org/structure/${encodeURIComponent(pdbId)}`;
+
+  let body;
+  if (citation?.title) {
+    const doi = String(citation.doi || "").trim();
+    const pubmedId = String(citation.pubmedId || "").trim();
+    const titleHref = doi
+      ? `https://doi.org/${encodeURIComponent(doi).replace(/%2F/g, "/")}`
+      : pubmedId
+        ? `https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(pubmedId)}/`
+        : rcsbHref;
+    const links = [
+      pubmedId ? externalReferenceLink(`https://pubmed.ncbi.nlm.nih.gov/${encodeURIComponent(pubmedId)}/`, `PubMed ${pubmedId}`) : "",
+      doi ? externalReferenceLink(`https://doi.org/${encodeURIComponent(doi).replace(/%2F/g, "/")}`, `DOI ${doi}`) : "",
+      externalReferenceLink(rcsbHref, `View ${pdbId} in PDB`),
+    ].filter(Boolean).join("");
+    body = `<article class="pdb-primary-reference-citation">
+      <h3><a href="${escapeHtml(titleHref)}" target="_blank" rel="noreferrer">${escapeHtml(citation.title)}</a></h3>
+      ${Array.isArray(citation.authors) && citation.authors.length ? `<p>${escapeHtml(citation.authors.join("; "))}</p>` : ""}
+      ${referenceJournalLine(citation) ? `<p>${escapeHtml(referenceJournalLine(citation))}</p>` : ""}
+      <div class="pdb-primary-reference-links">${links}</div>
+    </article>`;
+  } else {
+    body = `<p class="pdb-primary-reference-unavailable">The PDB primary literature record is unavailable for this entry. ${externalReferenceLink(rcsbHref, `View ${pdbId} in PDB`)}</p>`;
+  }
+
+  panel.innerHTML = `<div class="panel-head">
+    <h2>Reference</h2>
+    <span>PDB ${escapeHtml(pdbId)}</span>
+  </div>${body}`;
+  document.querySelector(".inspector-panel")?.insertAdjacentElement("afterend", panel);
+  reportEmbeddedPageHeight();
+}
+
+async function loadPrimaryReference() {
+  const pdbId = String(config.caseId || "").trim().toUpperCase();
+  if (!pdbId) return;
+  try {
+    const indexUrl = new URL("../../../src/assets/generated/pdb-primary-citations/index.json", import.meta.url);
+    const response = await fetch(indexUrl);
+    const index = response?.ok ? await response.json() : null;
+    mountPrimaryReference(index?.citations?.[pdbId] || null);
+  } catch (_error) {
+    mountPrimaryReference(null);
+  }
 }
 
 async function init() {
@@ -1925,11 +2963,13 @@ async function init() {
     profileIndex,
     varnaTemplate,
     linkedView,
+    confidenceEvidence,
   ] = await Promise.all([
     fetchJsonMaybeGzip(caseUrl),
     fetchJsonMaybeGzip(profileIndexUrl),
     fetchTextMaybeGzip(varnaTemplateUrl),
     linkedViewPromise,
+    fetchJsonMaybeGzip("../../confidence-evidence.json").catch(() => null),
   ]);
   const {
     residueIndex,
@@ -1948,24 +2988,34 @@ async function init() {
   installLinkedViewIndexes(state.linkedView);
   state.varnaTemplate = varnaTemplate;
   state.profiles = profileIndex.profiles;
+  const evidenceRows = confidenceEvidence?.rows || [];
+  state.techniqueByProfile = joinTechniqueByProfile(evidenceRows, config.chainId);
+  state.evidenceRows = evidenceRows;
   const strand = activeStrand() || caseData.strands[0];
-  state.viewport = { start: 1, end: Math.min(strand.sequence.length, TRACK_DEFAULT_SPAN) };
-  el.select.innerHTML = state.profiles.map((profile, idx) => {
-    const label = `${profile.pair_id} | ${profile.profile_id}`;
-    return `<option value="${idx}">${label}</option>`;
-  }).join("");
-  el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
-  const initialProfileId = state.requestedProfileId || initialProfileIdFromLocation();
-  const initialIndex = Math.max(0, profileIndexForId(initialProfileId));
+  state.viewport = { start: 1, end: strand.sequence.length };
+  el.select.innerHTML = buildProfileSelectMarkup(state.profiles);
+  mountProfileDropdown();
+  if (el.status) {
+    el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
+  }
+  const requestedProfileId = state.requestedProfileId || initialProfileIdFromLocation();
+  const requestedIndex = profileIndexForId(requestedProfileId);
+  const initialIndex = requestedIndex >= 0 ? requestedIndex : await richestProfileIndex();
   await renderProfile(initialIndex);
+  // renderProfile sets el.select.value without dispatching change, so re-sync the
+  // custom dropdown trigger to the initially rendered profile. No-op if unmounted.
+  refreshProfileDropdownTrigger();
   initMolstarViewer();
 }
 
-el.select.addEventListener("change", () => void renderProfile(Number(el.select.value)));
-el.zoomIn.addEventListener("click", () => zoomTrack(1));
-el.zoomOut.addEventListener("click", () => zoomTrack(-1));
-el.panLeft.addEventListener("click", () => panTrack(-1));
-el.panRight.addEventListener("click", () => panTrack(1));
+el.select.addEventListener("change", () => {
+  refreshProfileDropdownTrigger();
+  void renderProfile(Number(el.select.value));
+});
+el.zoomIn?.addEventListener("click", () => zoomTrack(1));
+el.zoomOut?.addEventListener("click", () => zoomTrack(-1));
+el.panLeft?.addEventListener("click", () => panTrack(-1));
+el.panRight?.addEventListener("click", () => panTrack(1));
 if (el.viewportSlider) {
   el.viewportSlider.addEventListener("input", () => {
     const span = state.viewport.end - state.viewport.start + 1;
@@ -1974,7 +3024,7 @@ if (el.viewportSlider) {
     setViewport(nextStart, nextStart + span - 1);
   });
 }
-el.resetView.addEventListener("click", () => {
+el.resetView?.addEventListener("click", () => {
   const strand = activeStrand();
   if (!strand) return;
   const view = defaultViewport(strand.sequence.length, state.lastRender?.normalized);
@@ -1985,7 +3035,8 @@ if (el.varnaZoomOut) el.varnaZoomOut.addEventListener("click", () => zoomVarna(-
 if (el.varnaZoomReset) el.varnaZoomReset.addEventListener("click", () => setVarnaZoom(1));
 
 installExternalProfileBridge();
+void loadPrimaryReference();
 
 init().catch((error) => {
-  el.status.textContent = "asset load failed";
+  if (el.status) el.status.textContent = "asset load failed";
 });
