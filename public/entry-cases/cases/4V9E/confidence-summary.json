@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4V9E",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1986,
+  "defaultEvidenceId": "annojoin:4V9E:confidence:A:data-eterna/ETERNA_R69_0001.rdat#3359",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 522,
+    "B": 1464
+  },
+  "generatedAt": "2026-08-17T13:04:20.107274Z",
+  "materializedEvidenceCount": 1986,
+  "pdbId": "4V9E",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 1986
+  },
+  "totalEvidenceCount": 1986
+}
