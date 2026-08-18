@@ -1,0 +1,20 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8PNN",
+  "biologicalMoleculeName": "8PNN",
+  "caseId": "8PNN",
+  "caseKey": "8PNN",
+  "chains": [
+    "1",
+    "3",
+    "4",
+    "A",
+    "AR",
+    "AS",
+    "AT",
+    "sR"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8PNN",
+  "profileCount": 10012
+}

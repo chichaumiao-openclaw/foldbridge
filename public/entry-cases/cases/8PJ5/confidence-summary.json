@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8PJ5",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3448,
+  "defaultEvidenceId": "annojoin:8PJ5:confidence:B:data-eterna/ETERNA_R86_0000.rdat#2471",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1687,
+    "B": 1761
+  },
+  "generatedAt": "2026-08-17T13:04:21.164543Z",
+  "materializedEvidenceCount": 3448,
+  "pdbId": "8PJ5",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 35,
+    "LOW": 474,
+    "NOT_SUPPORTED": 2939
+  },
+  "totalEvidenceCount": 3448
+}

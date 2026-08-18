@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8PVA",
+  "biologicalMoleculeName": "8PVA",
+  "caseId": "8PVA",
+  "caseKey": "8PVA",
+  "chains": [
+    "A",
+    "Y",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8PVA",
+  "profileCount": 19229
+}
