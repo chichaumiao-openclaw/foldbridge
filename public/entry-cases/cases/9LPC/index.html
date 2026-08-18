@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>9LPC case page</title>
+  <link rel="stylesheet" href="../../__entry_v3_site__/case-shell.css">
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <h1>9LPC</h1>
+      <p>9LPC</p>
+      <div class="meta">
+        <span class="chip">source MERGED</span>
+        <span class="chip">families A,B</span>
+        <span class="chip">default chain D</span>
+        <span class="chip">chains 2</span>
+      </div>
+    </section>
+    <section class="layout">
+      <aside class="panel">
+        <h2>Chains</h2>
+        <div class="chain-list"><button class="chain-btn" type="button" data-chain-id="C">
+  <strong>C</strong>
+  <span class="mini">chains/C/index.html</span>
+</button><button class="chain-btn is-active" type="button" data-chain-id="D">
+  <strong>D</strong>
+  <span class="mini">chains/D/index.html</span>
+</button></div>
+      </aside>
+      <section class="viewer">
+        <div class="panel">
+          <h2>Chain</h2>
+          <div class="mini">current chain: <span id="chainStatus">D</span></div>
+        </div>
+        <iframe
+          id="chainFrame"
+          class="viewer-frame"
+          src="chains/D/index.html?profileId=data-rna-structures/PDB130_2A3_0000.rdat#9396"
+          loading="lazy"
+          title="9LPC chain page"
+        ></iframe>
+      </section>
+    </section>
+  </main>
+  <script id="family-case-bootstrap" type="application/json">{"caseId": "9LPC", "caseKey": "9LPC", "defaultChainId": "D", "defaultEvidenceId": "annojoin:9LPC:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#9396", "chainPageById": {"C": "chains/C/index.html", "D": "chains/D/index.html"}, "evidenceChainMap": {"annojoin:9LPC:confidence:A:data-general/ARCHII_DMS_0000.rdat#18217": "D", "annojoin:9LPC:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#9396": "D", "annojoin:9LPC:confidence:B:data-general/ARCHII_2A3_0000.rdat#18217": "D", "annojoin:9LPC:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#9396": "D"}, "evidenceRows": [{"aucDirectional": 0.7071759259259259, "aucEffectSizeZ": null, "aucEmpiricalPValue": 0.051007188124100405, "bridgeStatus": "bridge_missing", "chain": "D", "conflictFraction": 0.125, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:9LPC:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#9396", "family": "B", "lssTierCalibrated": "LOW", "lssTierUncalibrated": "", "nEvaluable": 75, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-rna-structures/PDB130_2A3_0000.rdat#9396", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "", "sourceLane": "rmdb", "technology": "2A3", "trackProfileId": "data-rna-structures/PDB130_2A3_0000.rdat#9396"}, {"aucDirectional": 0.680976430976431, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "C", "conflictFraction": 0.21212121212121213, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:9LPC:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#9396", "family": "B", "lssTierCalibrated": "LOW", "lssTierUncalibrated": "", "nEvaluable": 75, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-rna-structures/PDB130_2A3_0000.rdat#9396", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": true, "signalDirection": "", "sourceLane": "rmdb", "technology": "2A3", "trackProfileId": "data-rna-structures/PDB130_2A3_0000.rdat#9396"}, {"aucDirectional": 0.6318681318681318, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "D", "conflictFraction": 0.2857142857142857, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:9LPC:confidence:A:data-general/ARCHII_DMS_0000.rdat#18217", "family": "A", "lssTierCalibrated": "LOW", "lssTierUncalibrated": "", "nEvaluable": 34, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-general/ARCHII_DMS_0000.rdat#18217", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "", "sourceLane": "rmdb", "technology": "DMS", "trackProfileId": "data-general/ARCHII_DMS_0000.rdat#18217"}, {"aucDirectional": 0.5952380952380952, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "D", "conflictFraction": 0.2857142857142857, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:9LPC:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#9396", "family": "A", "lssTierCalibrated": "LOW", "lssTierUncalibrated": "", "nEvaluable": 34, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-rna-structures/PDB130_DMS_0000.rdat#9396", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "", "sourceLane": "rmdb", "technology": "DMS", "trackProfileId": "data-rna-structures/PDB130_DMS_0000.rdat#9396"}, {"aucDirectional": 0.6323302469135802, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "D", "conflictFraction": 0.9791666666666666, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:9LPC:confidence:B:data-general/ARCHII_2A3_0000.rdat#18217", "family": "B", "lssTierCalibrated": "NOT_SUPPORTED", "lssTierUncalibrated": "", "nEvaluable": 75, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-general/ARCHII_2A3_0000.rdat#18217", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "", "sourceLane": "rmdb", "technology": "2A3", "trackProfileId": "data-general/ARCHII_2A3_0000.rdat#18217"}, {"aucDirectional": 0.5993265993265994, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "C", "conflictFraction": 0.9848484848484849, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:9LPC:confidence:B:data-general/ARCHII_2A3_0000.rdat#18217", "family": "B", "lssTierCalibrated": "NOT_SUPPORTED", "lssTierUncalibrated": "", "nEvaluable": 75, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-general/ARCHII_2A3_0000.rdat#18217", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "", "sourceLane": "rmdb", "technology": "2A3", "trackProfileId": "data-general/ARCHII_2A3_0000.rdat#18217"}, {"aucDirectional": 0.5458333333333333, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "C", "conflictFraction": 0.36666666666666664, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:9LPC:confidence:A:data-general/ARCHII_DMS_0000.rdat#18217", "family": "A", "lssTierCalibrated": "NOT_SUPPORTED", "lssTierUncalibrated": "", "nEvaluable": 34, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-general/ARCHII_DMS_0000.rdat#18217", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "", "sourceLane": "rmdb", "technology": "DMS", "trackProfileId": "data-general/ARCHII_DMS_0000.rdat#18217"}, {"aucDirectional": 0.49583333333333335, "aucEffectSizeZ": null, "aucEmpiricalPValue": null, "bridgeStatus": "bridge_missing", "chain": "C", "conflictFraction": 0.26666666666666666, "directionalMetricKind": "auc_unpaired_vs_paired", "directionalMetricLabel": "AUC unpaired vs paired", "evidenceId": "annojoin:9LPC:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#9396", "family": "A", "lssTierCalibrated": "NOT_SUPPORTED", "lssTierUncalibrated": "", "nEvaluable": 34, "pairId": "", "pairSegmentId": "", "partnerInsideFraction": null, "profileKey": "data-rna-structures/PDB130_DMS_0000.rdat#9396", "recallPath": "", "sasaReferenceStatus": "", "selectedByDefault": false, "signalDirection": "", "sourceLane": "rmdb", "technology": "DMS", "trackProfileId": "data-rna-structures/PDB130_DMS_0000.rdat#9396"}]}</script>
+  <script src="../../__entry_v3_site__/case-shell.js"></script>
+</body>
+</html>

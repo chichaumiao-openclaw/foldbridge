@@ -1,0 +1,40 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "B": {
+      "case2dPath": "chains/B/case-2d-structure.json.gz",
+      "chainId": "B",
+      "chainRoot": "chains/B",
+      "linkedViewBundlePath": "chains/B/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/B/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/B/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "B",
+  "evidenceChainMap": {
+    "annojoin:9J5O:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#10574": "B",
+    "annojoin:9J5O:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#83974": "B",
+    "annojoin:9J5O:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#84201": "B",
+    "annojoin:9J5O:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#84203": "B",
+    "annojoin:9J5O:confidence:A:data-eterna/OK2TST_DMS_0000.rdat#70303": "B",
+    "annojoin:9J5O:confidence:A:data-general/ARCHII_DMS_0000.rdat#17928": "B",
+    "annojoin:9J5O:confidence:A:data-general/ARCHII_DMS_0000.rdat#17930": "B",
+    "annojoin:9J5O:confidence:A:data-general/ARCHII_DMS_0000.rdat#17931": "B",
+    "annojoin:9J5O:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#8471": "B",
+    "annojoin:9J5O:confidence:B:data-eterna/OK1LIB_2A3_0000.rdat#10574": "B",
+    "annojoin:9J5O:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#83974": "B",
+    "annojoin:9J5O:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#84201": "B",
+    "annojoin:9J5O:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#84203": "B",
+    "annojoin:9J5O:confidence:B:data-eterna/OK2TST_2A3_0000.rdat#70303": "B",
+    "annojoin:9J5O:confidence:B:data-general/ARCHII_2A3_0000.rdat#17928": "B",
+    "annojoin:9J5O:confidence:B:data-general/ARCHII_2A3_0000.rdat#17930": "B",
+    "annojoin:9J5O:confidence:B:data-general/ARCHII_2A3_0000.rdat#17931": "B",
+    "annojoin:9J5O:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#8471": "B"
+  }
+}

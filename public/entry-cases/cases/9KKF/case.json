@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9KKF",
+  "biologicalMoleculeName": "9KKF",
+  "caseId": "9KKF",
+  "caseKey": "9KKF",
+  "chains": [
+    "S2",
+    "zz"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9KKF",
+  "profileCount": 5472
+}

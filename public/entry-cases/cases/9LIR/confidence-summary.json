@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9LIR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 44,
+  "defaultEvidenceId": "annojoin:9LIR:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#13218",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 22,
+    "B": 22
+  },
+  "generatedAt": "2026-08-17T12:52:13.016002Z",
+  "materializedEvidenceCount": 44,
+  "pdbId": "9LIR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 12,
+    "NOT_SUPPORTED": 29
+  },
+  "totalEvidenceCount": 44
+}

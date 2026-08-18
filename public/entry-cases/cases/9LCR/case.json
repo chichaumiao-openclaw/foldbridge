@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9LCR",
+  "biologicalMoleculeName": "9LCR",
+  "caseId": "9LCR",
+  "caseKey": "9LCR",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "9LCR",
+  "profileCount": 12
+}

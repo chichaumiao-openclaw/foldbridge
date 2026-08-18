@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9LPC",
+  "biologicalMoleculeName": "9LPC",
+  "caseId": "9LPC",
+  "caseKey": "9LPC",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "9LPC",
+  "profileCount": 4
+}
