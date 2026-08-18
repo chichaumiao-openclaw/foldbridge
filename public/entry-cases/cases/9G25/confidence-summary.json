@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9G25",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5832,
+  "defaultEvidenceId": "annojoin:9G25:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#5074",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2916,
+    "B": 2916
+  },
+  "generatedAt": "2026-08-17T12:52:13.016002Z",
+  "materializedEvidenceCount": 5832,
+  "pdbId": "9G25",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 10,
+    "LOW": 273,
+    "NOT_SUPPORTED": 5549
+  },
+  "totalEvidenceCount": 5832
+}

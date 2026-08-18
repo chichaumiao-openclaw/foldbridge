@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9ENE",
+  "biologicalMoleculeName": "9ENE",
+  "caseId": "9ENE",
+  "caseKey": "9ENE",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "9ENE",
+  "profileCount": 2
+}

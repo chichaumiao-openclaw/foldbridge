@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9GHB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19110,
+  "defaultEvidenceId": "annojoin:9GHB:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#901",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9037,
+    "B": 10073
+  },
+  "generatedAt": "2026-08-17T12:46:07.647795Z",
+  "materializedEvidenceCount": 19110,
+  "pdbId": "9GHB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 586,
+    "LOW": 1814,
+    "NOT_SUPPORTED": 16710
+  },
+  "totalEvidenceCount": 19110
+}

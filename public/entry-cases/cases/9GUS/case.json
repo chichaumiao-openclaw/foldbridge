@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9GUS",
+  "biologicalMoleculeName": "9GUS",
+  "caseId": "9GUS",
+  "caseKey": "9GUS",
+  "chains": [
+    "A",
+    "W"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "9GUS",
+  "profileCount": 4488
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9FNY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2436,
+  "defaultEvidenceId": "annojoin:9FNY:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#11332",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1218,
+    "B": 1218
+  },
+  "generatedAt": "2026-08-17T11:43:36.994359Z",
+  "materializedEvidenceCount": 2436,
+  "pdbId": "9FNY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2436
+  },
+  "totalEvidenceCount": 2436
+}

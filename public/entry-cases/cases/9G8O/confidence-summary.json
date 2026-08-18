@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9G8O",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4214,
+  "defaultEvidenceId": "annojoin:9G8O:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#2393",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2085,
+    "B": 2129
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 4214,
+  "pdbId": "9G8O",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 20,
+    "NOT_SUPPORTED": 4194
+  },
+  "totalEvidenceCount": 4214
+}

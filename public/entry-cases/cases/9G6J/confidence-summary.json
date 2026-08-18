@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9G6J",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10018,
+  "defaultEvidenceId": "annojoin:9G6J:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#7544",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5008,
+    "B": 5010
+  },
+  "generatedAt": "2026-08-17T12:27:03.069804Z",
+  "materializedEvidenceCount": 10018,
+  "pdbId": "9G6J",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 133,
+    "LOW": 1953,
+    "NOT_SUPPORTED": 7932
+  },
+  "totalEvidenceCount": 10018
+}

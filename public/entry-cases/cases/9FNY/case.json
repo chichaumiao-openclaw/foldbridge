@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9FNY",
+  "biologicalMoleculeName": "9FNY",
+  "caseId": "9FNY",
+  "caseKey": "9FNY",
+  "chains": [
+    "AA",
+    "BA"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9FNY",
+  "profileCount": 1218
+}

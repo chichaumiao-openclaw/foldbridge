@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9EHR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18,
+  "defaultEvidenceId": "annojoin:9EHR:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#24564",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9,
+    "B": 9
+  },
+  "generatedAt": "2026-08-17T11:06:33.567203Z",
+  "materializedEvidenceCount": 18,
+  "pdbId": "9EHR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 1,
+    "NOT_SUPPORTED": 17
+  },
+  "totalEvidenceCount": 18
+}

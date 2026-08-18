@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9EWW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10,
+  "defaultEvidenceId": "annojoin:9EWW:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#67623",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5,
+    "B": 5
+  },
+  "generatedAt": "2026-08-17T11:55:49.970020Z",
+  "materializedEvidenceCount": 10,
+  "pdbId": "9EWW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 10
+  },
+  "totalEvidenceCount": 10
+}
