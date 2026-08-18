@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7OYA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3504,
+  "defaultEvidenceId": "annojoin:7OYA:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1752,
+    "B": 1752
+  },
+  "generatedAt": "2026-08-17T13:04:20.107274Z",
+  "materializedEvidenceCount": 3504,
+  "pdbId": "7OYA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 3504
+  },
+  "totalEvidenceCount": 3504
+}
