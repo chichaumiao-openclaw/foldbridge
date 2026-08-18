@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7BV8",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 13707,
+  "defaultEvidenceId": "annojoin:7BV8:confidence:A:data-general/P90LIB_DMS_0002.rdat#1111",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6608,
+    "B": 7099
+  },
+  "generatedAt": "2026-08-17T13:04:20.107274Z",
+  "materializedEvidenceCount": 13707,
+  "pdbId": "7BV8",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 327,
+    "LOW": 2581,
+    "NOT_SUPPORTED": 10799
+  },
+  "totalEvidenceCount": 13707
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6ZXF",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2496,
+  "defaultEvidenceId": "annojoin:6ZXF:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#15210",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1246,
+    "B": 1250
+  },
+  "generatedAt": "2026-08-17T12:58:32.114596Z",
+  "materializedEvidenceCount": 2496,
+  "pdbId": "6ZXF",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 9,
+    "LOW": 382,
+    "NOT_SUPPORTED": 2105
+  },
+  "totalEvidenceCount": 2496
+}

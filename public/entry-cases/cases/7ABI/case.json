@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7ABI",
+  "biologicalMoleculeName": "7ABI",
+  "caseId": "7ABI",
+  "caseKey": "7ABI",
+  "chains": [
+    "2",
+    "5",
+    "6",
+    "Z"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7ABI",
+  "profileCount": 274
+}

@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7AZY",
+  "biologicalMoleculeName": "7AZY",
+  "caseId": "7AZY",
+  "caseKey": "7AZY",
+  "chains": [
+    "E",
+    "F",
+    "G"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7AZY",
+  "profileCount": 4352
+}
