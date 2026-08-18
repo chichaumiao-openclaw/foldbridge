@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8V9K",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4076,
+  "defaultEvidenceId": "annojoin:8V9K:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#81810",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2037,
+    "B": 2039
+  },
+  "generatedAt": "2026-08-17T11:17:37.724985Z",
+  "materializedEvidenceCount": 4076,
+  "pdbId": "8V9K",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 79,
+    "LOW": 949,
+    "NOT_SUPPORTED": 3048
+  },
+  "totalEvidenceCount": 4076
+}

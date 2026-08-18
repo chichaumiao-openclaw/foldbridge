@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8VOS",
+  "biologicalMoleculeName": "8VOS",
+  "caseId": "8VOS",
+  "caseKey": "8VOS",
+  "chains": [
+    "7",
+    "A",
+    "B",
+    "D",
+    "a",
+    "d"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8VOS",
+  "profileCount": 19530
+}

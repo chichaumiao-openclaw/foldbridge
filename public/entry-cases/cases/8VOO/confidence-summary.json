@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8VOO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19532,
+  "defaultEvidenceId": "annojoin:8VOO:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#19987",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9169,
+    "B": 10363
+  },
+  "generatedAt": "2026-08-17T12:46:13.329069Z",
+  "materializedEvidenceCount": 19532,
+  "pdbId": "8VOO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 692,
+    "LOW": 4206,
+    "NOT_SUPPORTED": 14634
+  },
+  "totalEvidenceCount": 19532
+}

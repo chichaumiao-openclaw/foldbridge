@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8VM8",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 580,
+  "defaultEvidenceId": "annojoin:8VM8:confidence:A:data-rna-structures/15KREP_DMS_0001.rdat#27341",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 290,
+    "B": 290
+  },
+  "generatedAt": "2026-08-17T12:52:51.132170Z",
+  "materializedEvidenceCount": 580,
+  "pdbId": "8VM8",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 133,
+    "LOW": 86,
+    "NOT_SUPPORTED": 361
+  },
+  "totalEvidenceCount": 580
+}

@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8VL1",
+  "biologicalMoleculeName": "8VL1",
+  "caseId": "8VL1",
+  "caseKey": "8VL1",
+  "chains": [
+    "7",
+    "A",
+    "B",
+    "D",
+    "a",
+    "d"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8VL1",
+  "profileCount": 19517
+}

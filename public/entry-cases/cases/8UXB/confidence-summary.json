@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8UXB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19032,
+  "defaultEvidenceId": "annojoin:8UXB:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#34710",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9017,
+    "B": 10015
+  },
+  "generatedAt": "2026-08-17T12:52:13.016002Z",
+  "materializedEvidenceCount": 19032,
+  "pdbId": "8UXB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 613,
+    "LOW": 3875,
+    "NOT_SUPPORTED": 14544
+  },
+  "totalEvidenceCount": 19032
+}

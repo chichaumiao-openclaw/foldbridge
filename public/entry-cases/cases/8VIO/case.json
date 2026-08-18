@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8VIO",
+  "biologicalMoleculeName": "8VIO",
+  "caseId": "8VIO",
+  "caseKey": "8VIO",
+  "chains": [
+    "5",
+    "A",
+    "B",
+    "a"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8VIO",
+  "profileCount": 4079
+}
