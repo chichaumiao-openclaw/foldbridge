@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7QIY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3488,
+  "defaultEvidenceId": "annojoin:7QIY:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#59959",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1744,
+    "B": 1744
+  },
+  "generatedAt": "2026-08-17T12:00:38.806516Z",
+  "materializedEvidenceCount": 3488,
+  "pdbId": "7QIY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 33,
+    "LOW": 575,
+    "NOT_SUPPORTED": 2880
+  },
+  "totalEvidenceCount": 3488
+}

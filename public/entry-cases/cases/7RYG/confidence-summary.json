@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7RYG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1900,
+  "defaultEvidenceId": "annojoin:7RYG:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#42449",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 948,
+    "B": 952
+  },
+  "generatedAt": "2026-08-17T12:18:57.850374Z",
+  "materializedEvidenceCount": 1900,
+  "pdbId": "7RYG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 90,
+    "LOW": 594,
+    "NOT_SUPPORTED": 1216
+  },
+  "totalEvidenceCount": 1900
+}

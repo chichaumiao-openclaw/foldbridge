@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7QGR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 19129,
+  "defaultEvidenceId": "annojoin:7QGR:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#5668",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9046,
+    "B": 10083
+  },
+  "generatedAt": "2026-08-17T12:30:27.895034Z",
+  "materializedEvidenceCount": 19129,
+  "pdbId": "7QGR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 359,
+    "LOW": 3520,
+    "NOT_SUPPORTED": 15250
+  },
+  "totalEvidenceCount": 19129
+}

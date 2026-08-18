@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7RR5",
+  "biologicalMoleculeName": "7RR5",
+  "caseId": "7RR5",
+  "caseKey": "7RR5",
+  "chains": [
+    "A",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "P"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7RR5",
+  "profileCount": 9308
+}

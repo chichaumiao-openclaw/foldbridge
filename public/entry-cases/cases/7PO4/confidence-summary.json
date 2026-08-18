@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7PO4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 264,
+  "defaultEvidenceId": "annojoin:7PO4:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#6828",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 132,
+    "B": 132
+  },
+  "generatedAt": "2026-08-17T12:46:07.647795Z",
+  "materializedEvidenceCount": 264,
+  "pdbId": "7PO4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 4,
+    "NOT_SUPPORTED": 260
+  },
+  "totalEvidenceCount": 264
+}

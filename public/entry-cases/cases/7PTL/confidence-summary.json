@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7PTL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 120,
+  "defaultEvidenceId": "annojoin:7PTL:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#6154",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 60,
+    "B": 60
+  },
+  "generatedAt": "2026-08-17T11:49:23.675092Z",
+  "materializedEvidenceCount": 120,
+  "pdbId": "7PTL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 33,
+    "LOW": 7,
+    "NOT_SUPPORTED": 80
+  },
+  "totalEvidenceCount": 120
+}
