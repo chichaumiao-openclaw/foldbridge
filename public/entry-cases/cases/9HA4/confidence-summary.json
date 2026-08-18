@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9HA4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 14091,
+  "defaultEvidenceId": "annojoin:9HA4:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#75589",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6799,
+    "B": 7292
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 14091,
+  "pdbId": "9HA4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 247,
+    "LOW": 3722,
+    "NOT_SUPPORTED": 10122
+  },
+  "totalEvidenceCount": 14091
+}
