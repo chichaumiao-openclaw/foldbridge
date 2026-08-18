@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7UNV",
+  "biologicalMoleculeName": "7UNV",
+  "caseId": "7UNV",
+  "caseKey": "7UNV",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "v"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "7UNV",
+  "profileCount": 2692
+}

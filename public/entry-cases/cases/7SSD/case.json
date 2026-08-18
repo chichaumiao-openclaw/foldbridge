@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7SSD",
+  "biologicalMoleculeName": "7SSD",
+  "caseId": "7SSD",
+  "caseKey": "7SSD",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "7SSD",
+  "profileCount": 18796
+}

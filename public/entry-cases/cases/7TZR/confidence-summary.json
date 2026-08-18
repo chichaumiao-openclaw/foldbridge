@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7TZR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1020,
+  "defaultEvidenceId": "annojoin:7TZR:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#4810",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 990,
+    "B": 30
+  },
+  "generatedAt": "2026-08-17T10:56:07.108683Z",
+  "materializedEvidenceCount": 1020,
+  "pdbId": "7TZR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 5,
+    "NOT_SUPPORTED": 1015
+  },
+  "totalEvidenceCount": 1020
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7TRE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1052,
+  "defaultEvidenceId": "annojoin:7TRE:confidence:B:data-general/ARCHII_2A3_0000.rdat#19380",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 344,
+    "B": 708
+  },
+  "generatedAt": "2026-08-17T11:42:15.821771Z",
+  "materializedEvidenceCount": 1052,
+  "pdbId": "7TRE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 353,
+    "NOT_SUPPORTED": 696
+  },
+  "totalEvidenceCount": 1052
+}

@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7SS9",
+  "biologicalMoleculeName": "7SS9",
+  "caseId": "7SS9",
+  "caseKey": "7SS9",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5",
+    "6"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "7SS9",
+  "profileCount": 18796
+}

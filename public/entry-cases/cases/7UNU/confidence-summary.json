@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7UNU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2692,
+  "defaultEvidenceId": "annojoin:7UNU:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#42503",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1344,
+    "B": 1348
+  },
+  "generatedAt": "2026-08-17T12:37:01.878381Z",
+  "materializedEvidenceCount": 2692,
+  "pdbId": "7UNU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 181,
+    "LOW": 817,
+    "NOT_SUPPORTED": 1694
+  },
+  "totalEvidenceCount": 2692
+}

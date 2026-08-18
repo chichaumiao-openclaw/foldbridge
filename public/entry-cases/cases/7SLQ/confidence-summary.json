@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7SLQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18,
+  "defaultEvidenceId": "annojoin:7SLQ:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#13689",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9,
+    "B": 9
+  },
+  "generatedAt": "2026-08-17T12:46:12.664339Z",
+  "materializedEvidenceCount": 18,
+  "pdbId": "7SLQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 18
+  },
+  "totalEvidenceCount": 18
+}
