@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8XT1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 264,
+  "defaultEvidenceId": "annojoin:8XT1:confidence:B:data-eterna/OK3TST_2A3_0000.rdat#63204",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 132,
+    "B": 132
+  },
+  "generatedAt": "2026-08-17T11:46:44.778261Z",
+  "materializedEvidenceCount": 264,
+  "pdbId": "8XT1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 264
+  },
+  "totalEvidenceCount": 264
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8VWQ",
+  "biologicalMoleculeName": "8VWQ",
+  "caseId": "8VWQ",
+  "caseKey": "8VWQ",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "5"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "8VWQ",
+  "profileCount": 17291
+}
