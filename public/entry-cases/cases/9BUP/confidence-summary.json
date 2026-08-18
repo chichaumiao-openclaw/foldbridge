@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9BUP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2083,
+  "defaultEvidenceId": "annojoin:9BUP:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12144",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1041,
+    "B": 1042
+  },
+  "generatedAt": "2026-08-17T13:10:50.762864Z",
+  "materializedEvidenceCount": 2083,
+  "pdbId": "9BUP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2083
+  },
+  "totalEvidenceCount": 2083
+}

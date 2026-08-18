@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "9DTR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 222,
+  "defaultEvidenceId": "annojoin:9DTR:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#32086",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 111,
+    "B": 111
+  },
+  "generatedAt": "2026-08-17T13:05:06.246706Z",
+  "materializedEvidenceCount": 222,
+  "pdbId": "9DTR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 16,
+    "NOT_SUPPORTED": 206
+  },
+  "totalEvidenceCount": 222
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "8ZGY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10036,
+  "defaultEvidenceId": "annojoin:8ZGY:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1396",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5016,
+    "B": 5020
+  },
+  "generatedAt": "2026-08-17T11:52:21.352142Z",
+  "materializedEvidenceCount": 10036,
+  "pdbId": "8ZGY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 10036
+  },
+  "totalEvidenceCount": 10036
+}

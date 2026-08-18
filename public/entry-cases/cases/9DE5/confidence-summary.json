@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9DE5",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4568,
+  "defaultEvidenceId": "annojoin:9DE5:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24452",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4460,
+    "B": 108
+  },
+  "generatedAt": "2026-08-17T11:06:33.567203Z",
+  "materializedEvidenceCount": 4568,
+  "pdbId": "9DE5",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 5,
+    "LOW": 47,
+    "NOT_SUPPORTED": 4516
+  },
+  "totalEvidenceCount": 4568
+}

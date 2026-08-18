@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9D9P",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6296,
+  "defaultEvidenceId": "annojoin:9D9P:confidence:B:data-rna-structures/15KREP_2A3_0001.rdat#38276",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3148,
+    "B": 3148
+  },
+  "generatedAt": "2026-08-17T10:56:07.108683Z",
+  "materializedEvidenceCount": 6296,
+  "pdbId": "9D9P",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 6296
+  },
+  "totalEvidenceCount": 6296
+}

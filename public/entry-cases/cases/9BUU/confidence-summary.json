@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9BUU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2046,
+  "defaultEvidenceId": "annojoin:9BUU:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12144",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1023,
+    "B": 1023
+  },
+  "generatedAt": "2026-08-17T11:34:49.607826Z",
+  "materializedEvidenceCount": 2046,
+  "pdbId": "9BUU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2046
+  },
+  "totalEvidenceCount": 2046
+}
