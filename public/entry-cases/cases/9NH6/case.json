@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9NH6",
+  "biologicalMoleculeName": "9NH6",
+  "caseId": "9NH6",
+  "caseKey": "9NH6",
+  "chains": [
+    "Y",
+    "Z"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9NH6",
+  "profileCount": 8
+}

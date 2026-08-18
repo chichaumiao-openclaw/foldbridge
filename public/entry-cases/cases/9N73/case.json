@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9N73",
+  "biologicalMoleculeName": "9N73",
+  "caseId": "9N73",
+  "caseKey": "9N73",
+  "chains": [
+    "L0",
+    "L1",
+    "L2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9N73",
+  "profileCount": 5994
+}

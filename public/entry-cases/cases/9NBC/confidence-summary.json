@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9NBC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 14,
+  "defaultEvidenceId": "annojoin:9NBC:confidence:B:data-eterna/ETERNA_P50_0001.rdat#2426",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 8
+  },
+  "generatedAt": "2026-08-17T12:29:17.501284Z",
+  "materializedEvidenceCount": 14,
+  "pdbId": "9NBC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 14
+  },
+  "totalEvidenceCount": 14
+}

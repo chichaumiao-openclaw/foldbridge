@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9QAX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1052,
+  "defaultEvidenceId": "annojoin:9QAX:confidence:B:data-general/ARCHII_2A3_0000.rdat#20711",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 344,
+    "B": 708
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 1052,
+  "pdbId": "9QAX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 23,
+    "LOW": 318,
+    "NOT_SUPPORTED": 711
+  },
+  "totalEvidenceCount": 1052
+}

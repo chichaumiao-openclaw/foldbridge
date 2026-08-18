@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9QLO",
+  "biologicalMoleculeName": "9QLO",
+  "caseId": "9QLO",
+  "caseKey": "9QLO",
+  "chains": [
+    "CP",
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "9QLO",
+  "profileCount": 7554
+}

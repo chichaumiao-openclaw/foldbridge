@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9NAK",
+  "biologicalMoleculeName": "9NAK",
+  "caseId": "9NAK",
+  "caseKey": "9NAK",
+  "chains": [
+    "A",
+    "C"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "9NAK",
+  "profileCount": 37
+}

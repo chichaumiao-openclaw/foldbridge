@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9N73",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5994,
+  "defaultEvidenceId": "annojoin:9N73:confidence:B:data-eterna/OK3TST_2A3_0000.rdat#43463",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2997,
+    "B": 2997
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 5994,
+  "pdbId": "9N73",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5994
+  },
+  "totalEvidenceCount": 5994
+}

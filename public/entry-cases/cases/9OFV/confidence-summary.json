@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "9OFV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4490,
+  "defaultEvidenceId": "annojoin:9OFV:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#73739",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2243,
+    "B": 2247
+  },
+  "generatedAt": "2026-08-17T11:18:34.916425Z",
+  "materializedEvidenceCount": 4490,
+  "pdbId": "9OFV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 84,
+    "LOW": 964,
+    "NOT_SUPPORTED": 3442
+  },
+  "totalEvidenceCount": 4490
+}

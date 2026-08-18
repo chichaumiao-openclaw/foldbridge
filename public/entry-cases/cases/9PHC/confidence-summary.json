@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "9PHC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4138,
+  "defaultEvidenceId": "annojoin:9PHC:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1396",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2068,
+    "B": 2070
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 4138,
+  "pdbId": "9PHC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4138
+  },
+  "totalEvidenceCount": 4138
+}

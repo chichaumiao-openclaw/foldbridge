@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "9NLS",
+  "biologicalMoleculeName": "9NLS",
+  "caseId": "9NLS",
+  "caseKey": "9NLS",
+  "chains": [
+    "R1",
+    "R2",
+    "R3",
+    "T"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "9NLS",
+  "profileCount": 19147
+}
