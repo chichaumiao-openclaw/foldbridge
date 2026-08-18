@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7OH3",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4602,
+  "defaultEvidenceId": "annojoin:7OH3:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#26714",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2299,
+    "B": 2303
+  },
+  "generatedAt": "2026-08-17T11:37:53.577227Z",
+  "materializedEvidenceCount": 4602,
+  "pdbId": "7OH3",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 66,
+    "LOW": 1334,
+    "NOT_SUPPORTED": 3202
+  },
+  "totalEvidenceCount": 4602
+}

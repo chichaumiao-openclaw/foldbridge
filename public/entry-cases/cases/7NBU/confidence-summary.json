@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7NBU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 16749,
+  "defaultEvidenceId": "annojoin:7NBU:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#86653",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 7908,
+    "B": 8841
+  },
+  "generatedAt": "2026-08-17T11:02:10.009471Z",
+  "materializedEvidenceCount": 16749,
+  "pdbId": "7NBU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 534,
+    "LOW": 2874,
+    "NOT_SUPPORTED": 13341
+  },
+  "totalEvidenceCount": 16749
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7ODE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7351,
+  "defaultEvidenceId": "annojoin:7ODE:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#1871",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3594,
+    "B": 3757
+  },
+  "generatedAt": "2026-08-17T11:32:33.512835Z",
+  "materializedEvidenceCount": 7351,
+  "pdbId": "7ODE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 153,
+    "LOW": 1185,
+    "NOT_SUPPORTED": 6013
+  },
+  "totalEvidenceCount": 7351
+}
