@@ -166,12 +166,15 @@ test('help page renders hero title and sections', () => {
   assert.match(html, /Family plus tier\./);
 });
 
-test('published Help content merges usage, contact, and group members in order', () => {
+test('published Help content merges usage, methodology, contact, and group members in order', () => {
   const html = renderHelpPage(PUBLISHED_HELP);
   const orderedHeadings = [
     'About FoldBridge',
     'Search channels',
     'Interactive visualisation',
+    'Data sources',
+    'ANNOJOIN pipeline',
+    'Confidence labels',
     'How to make a feedback',
     'How to contact us',
     'Group Members'
@@ -182,6 +185,7 @@ test('published Help content merges usage, contact, and group members in order',
     assert.ok(index > previousIndex, `${heading} is missing or out of order`);
     previousIndex = index;
   }
+  assert.match(html, /<svg[^>]*aria-label="ANNOJOIN pipeline"/);
 });
 
 test('help page renders a screenshot-led usage flow', () => {
