@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8OIP",
+  "biologicalMoleculeName": "8OIP",
+  "caseId": "8OIP",
+  "caseKey": "8OIP",
+  "chains": [
+    "AA",
+    "AG"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "8OIP",
+  "profileCount": 264
+}

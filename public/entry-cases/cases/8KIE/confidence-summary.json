@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "8KIE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7530,
+  "defaultEvidenceId": "annojoin:8KIE:confidence:B:data-eterna/ETERNA_P90_0002.rdat#974",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3684,
+    "B": 3846
+  },
+  "generatedAt": "2026-08-17T11:42:15.821771Z",
+  "materializedEvidenceCount": 7530,
+  "pdbId": "8KIE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 6,
+    "LOW": 270,
+    "NOT_SUPPORTED": 7254
+  },
+  "totalEvidenceCount": 7530
+}

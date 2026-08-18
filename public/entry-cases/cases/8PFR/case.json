@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "8PFR",
+  "biologicalMoleculeName": "8PFR",
+  "caseId": "8PFR",
+  "caseKey": "8PFR",
+  "chains": [
+    "A",
+    "LD",
+    "LE"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "8PFR",
+  "profileCount": 4922
+}
