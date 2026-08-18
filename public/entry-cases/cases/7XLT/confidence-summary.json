@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7XLT",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2,
+  "defaultEvidenceId": "annojoin:7XLT:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#13333",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1,
+    "B": 1
+  },
+  "generatedAt": "2026-08-17T12:42:08.809790Z",
+  "materializedEvidenceCount": 2,
+  "pdbId": "7XLT",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 2
+}

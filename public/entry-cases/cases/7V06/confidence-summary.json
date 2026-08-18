@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7V06",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 16,
+  "defaultEvidenceId": "annojoin:7V06:confidence:A:data-rna-structures/VIRWIN_DMS_0000.rdat#42023",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8,
+    "B": 8
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 16,
+  "pdbId": "7V06",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 16
+  },
+  "totalEvidenceCount": 16
+}

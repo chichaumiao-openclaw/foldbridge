@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7UTN",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 44,
+  "defaultEvidenceId": "annojoin:7UTN:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#13080",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 22,
+    "B": 22
+  },
+  "generatedAt": "2026-08-17T13:10:54.484222Z",
+  "materializedEvidenceCount": 44,
+  "pdbId": "7UTN",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 11,
+    "NOT_SUPPORTED": 31
+  },
+  "totalEvidenceCount": 44
+}

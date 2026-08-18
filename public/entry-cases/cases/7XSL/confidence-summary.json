@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7XSL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5094,
+  "defaultEvidenceId": "annojoin:7XSL:confidence:B:data-rna-structures/HC16M2R_1M7_0002.rdat#7",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3769,
+    "B": 1325
+  },
+  "generatedAt": "2026-08-17T12:04:11.962344Z",
+  "materializedEvidenceCount": 5094,
+  "pdbId": "7XSL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 16,
+    "LOW": 1464,
+    "NOT_SUPPORTED": 3614
+  },
+  "totalEvidenceCount": 5094
+}

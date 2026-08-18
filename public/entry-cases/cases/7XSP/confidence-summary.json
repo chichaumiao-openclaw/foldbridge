@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "7XSP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10,
+  "defaultEvidenceId": "annojoin:7XSP:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#13369",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5,
+    "B": 5
+  },
+  "generatedAt": "2026-08-17T12:58:31.235657Z",
+  "materializedEvidenceCount": 10,
+  "pdbId": "7XSP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 1,
+    "NOT_SUPPORTED": 9
+  },
+  "totalEvidenceCount": 10
+}

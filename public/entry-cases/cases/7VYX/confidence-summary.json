@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "7VYX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8,
+  "defaultEvidenceId": "annojoin:7VYX:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1452",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 4
+  },
+  "generatedAt": "2026-08-17T11:40:49.272122Z",
+  "materializedEvidenceCount": 8,
+  "pdbId": "7VYX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 3,
+    "NOT_SUPPORTED": 4
+  },
+  "totalEvidenceCount": 8
+}

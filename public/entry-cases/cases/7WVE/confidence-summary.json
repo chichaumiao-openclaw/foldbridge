@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "7WVE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 128,
+  "defaultEvidenceId": "annojoin:7WVE:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#13357",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 124
+  },
+  "generatedAt": "2026-08-17T11:06:33.567203Z",
+  "materializedEvidenceCount": 128,
+  "pdbId": "7WVE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 128
+  },
+  "totalEvidenceCount": 128
+}

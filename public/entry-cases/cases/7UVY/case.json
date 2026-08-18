@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "7UVY",
+  "biologicalMoleculeName": "7UVY",
+  "caseId": "7UVY",
+  "caseKey": "7UVY",
+  "chains": [
+    "A",
+    "B",
+    "a"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "7UVY",
+  "profileCount": 1906
+}
