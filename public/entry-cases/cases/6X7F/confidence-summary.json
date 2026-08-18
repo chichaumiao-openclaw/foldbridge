@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6X7F",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18666,
+  "defaultEvidenceId": "annojoin:6X7F:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#10769",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8816,
+    "B": 9850
+  },
+  "generatedAt": "2026-08-17T12:46:07.647795Z",
+  "materializedEvidenceCount": 18666,
+  "pdbId": "6X7F",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 749,
+    "LOW": 3833,
+    "NOT_SUPPORTED": 14084
+  },
+  "totalEvidenceCount": 18666
+}

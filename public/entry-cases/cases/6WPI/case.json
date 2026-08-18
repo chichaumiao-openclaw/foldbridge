@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6WPI",
+  "biologicalMoleculeName": "6WPI",
+  "caseId": "6WPI",
+  "caseKey": "6WPI",
+  "chains": [
+    "B",
+    "C"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6WPI",
+  "profileCount": 2
+}

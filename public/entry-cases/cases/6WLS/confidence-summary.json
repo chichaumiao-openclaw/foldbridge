@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6WLS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5094,
+  "defaultEvidenceId": "annojoin:6WLS:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#3878",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3769,
+    "B": 1325
+  },
+  "generatedAt": "2026-08-17T12:21:44.256242Z",
+  "materializedEvidenceCount": 5094,
+  "pdbId": "6WLS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 10,
+    "LOW": 949,
+    "NOT_SUPPORTED": 4135
+  },
+  "totalEvidenceCount": 5094
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6WLU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 630,
+  "defaultEvidenceId": "annojoin:6WLU:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#15802",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 617,
+    "B": 13
+  },
+  "generatedAt": "2026-08-17T11:02:24.167440Z",
+  "materializedEvidenceCount": 630,
+  "pdbId": "6WLU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 630
+  },
+  "totalEvidenceCount": 630
+}
