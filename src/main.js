@@ -3065,12 +3065,9 @@ function entryCasePage() {
       <p><a class="download-outline-btn" href="#entry">Back to the table</a></p></section></main>`;
   }
   const src = `${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/index.html`;
+  // 无 bar、无外站链接：iframe 直接夹在主站 header(nav) 与 footer 之间，
+  // case 页内部的 site-nav.js 有 iframe 守卫（self!==top 不注入），不会重复渲染头。
   return `<main class="entry-case-embed">
-    <div class="entry-case-embed-bar">
-      <a class="download-outline-btn" href="#entry">← Back to the table</a>
-      <span class="entry-case-embed-pdb">${escapeHtml(safePdb)}</span>
-      <a class="download-outline-btn" href="${src}" target="_blank" rel="noopener">Open in new tab ↗</a>
-    </div>
     <iframe class="entry-case-embed-frame" src="${src}" title="${escapeHtml(safePdb)} case page"
       loading="lazy" referrerpolicy="no-referrer"></iframe>
   </main>`;
