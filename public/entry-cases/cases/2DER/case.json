@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2DER",
+  "biologicalMoleculeName": "2DER",
+  "caseId": "2DER",
+  "caseKey": "2DER",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "2DER",
+  "profileCount": 22
+}

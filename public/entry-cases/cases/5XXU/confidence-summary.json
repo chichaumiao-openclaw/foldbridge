@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5XXU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2912,
+  "defaultEvidenceId": "annojoin:5XXU:confidence:A:data-rna-structures/RFMREP_DMS_0001.rdat#6582",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1456,
+    "B": 1456
+  },
+  "generatedAt": "2026-08-17T13:13:20.457130Z",
+  "materializedEvidenceCount": 2912,
+  "pdbId": "5XXU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 29,
+    "LOW": 510,
+    "NOT_SUPPORTED": 2373
+  },
+  "totalEvidenceCount": 2912
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2N8V",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18,
+  "defaultEvidenceId": "annojoin:2N8V:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1513",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9,
+    "B": 9
+  },
+  "generatedAt": "2026-08-17T12:58:31.235657Z",
+  "materializedEvidenceCount": 18,
+  "pdbId": "2N8V",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 5,
+    "NOT_SUPPORTED": 11
+  },
+  "totalEvidenceCount": 18
+}

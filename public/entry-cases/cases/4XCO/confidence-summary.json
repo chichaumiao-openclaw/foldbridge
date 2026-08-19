@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4XCO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 128,
+  "defaultEvidenceId": "annojoin:4XCO:confidence:B:data-general/ARCHII_2A3_0000.rdat#2318",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 64,
+    "B": 64
+  },
+  "generatedAt": "2026-08-17T12:12:38.856048Z",
+  "materializedEvidenceCount": 128,
+  "pdbId": "4XCO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 128
+  },
+  "totalEvidenceCount": 128
+}

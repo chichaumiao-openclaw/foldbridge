@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1VBX",
+  "biologicalMoleculeName": "1VBX",
+  "caseId": "1VBX",
+  "caseKey": "1VBX",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1VBX",
+  "profileCount": 5931
+}

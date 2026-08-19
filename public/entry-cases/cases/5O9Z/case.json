@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5O9Z",
+  "biologicalMoleculeName": "5O9Z",
+  "caseId": "5O9Z",
+  "caseKey": "5O9Z",
+  "chains": [
+    "2",
+    "4",
+    "5",
+    "6",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5O9Z",
+  "profileCount": 312
+}

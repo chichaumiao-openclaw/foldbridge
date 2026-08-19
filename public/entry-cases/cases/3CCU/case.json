@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3CCU",
+  "biologicalMoleculeName": "3CCU",
+  "caseId": "3CCU",
+  "caseKey": "3CCU",
+  "chains": [
+    "0",
+    "9"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "3CCU",
+  "profileCount": 1950
+}

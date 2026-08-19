@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "30QZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 419,
+  "defaultEvidenceId": "annojoin:30QZ:confidence:B:data-rna-structures/5SRRNA_DCP_0000.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 147,
+    "B": 272
+  },
+  "generatedAt": "2026-08-17T12:52:15.874142Z",
+  "materializedEvidenceCount": 419,
+  "pdbId": "30QZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 42,
+    "LOW": 111,
+    "NOT_SUPPORTED": 266
+  },
+  "totalEvidenceCount": 419
+}

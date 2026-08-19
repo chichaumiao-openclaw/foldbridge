@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5U9F",
+  "biologicalMoleculeName": "5U9F",
+  "caseId": "5U9F",
+  "caseKey": "5U9F",
+  "chains": [
+    "01",
+    "02",
+    "A",
+    "W",
+    "X"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5U9F",
+  "profileCount": 4361
+}

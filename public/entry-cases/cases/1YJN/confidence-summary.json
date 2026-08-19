@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1YJN",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1950,
+  "defaultEvidenceId": "annojoin:1YJN:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#27423",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 975,
+    "B": 975
+  },
+  "generatedAt": "2026-08-17T10:56:12.942573Z",
+  "materializedEvidenceCount": 1950,
+  "pdbId": "1YJN",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 166,
+    "LOW": 617,
+    "NOT_SUPPORTED": 1167
+  },
+  "totalEvidenceCount": 1950
+}

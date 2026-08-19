@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4V5V",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 512,
+  "defaultEvidenceId": "annojoin:4V5V:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#13357",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 16,
+    "B": 496
+  },
+  "generatedAt": "2026-08-17T13:10:54.484222Z",
+  "materializedEvidenceCount": 512,
+  "pdbId": "4V5V",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 512
+  },
+  "totalEvidenceCount": 512
+}

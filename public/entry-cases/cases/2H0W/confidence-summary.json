@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2H0W",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 218,
+  "defaultEvidenceId": "annojoin:2H0W:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#32627",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 107,
+    "B": 111
+  },
+  "generatedAt": "2026-08-17T12:30:27.895034Z",
+  "materializedEvidenceCount": 218,
+  "pdbId": "2H0W",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 50,
+    "NOT_SUPPORTED": 168
+  },
+  "totalEvidenceCount": 218
+}

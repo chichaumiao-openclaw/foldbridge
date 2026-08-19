@@ -1,0 +1,65 @@
+{
+  "protocolVersion": "linked-view-v0.1",
+  "caseId": "5GAG",
+  "activeChainKey": "5GAG|chain|strand_1",
+  "sourceStructure": {
+    "href": "https://files.rcsb.org/download/5GAG.cif",
+    "format": "mmcif",
+    "inspectionDate": "2026-06-25",
+    "atomSiteRows": 94030
+  },
+  "polymerChain": {
+    "displayName": "5GAG PDB strand 1 / E. coli SRP 4.5S RNA",
+    "pdbStrandId": "1",
+    "label_asym_id": "A",
+    "auth_asym_id": "1",
+    "sequence": "GGGGGCUCUGUUGGUUCUCCCGCAACGCUACUCUGUUUACCAGGUCAGGUCCGGAAGGAAGCAGCCAAGGCAGAUGACGCGUGUGCCGGGAUGUAGCUGGCAGGGCCCCCACC",
+    "sequenceSource": "_entity_poly.pdbx_seq_one_letter_code / _pdbx_poly_seq_scheme",
+    "profileStart": 1,
+    "profileEnd": 113
+  },
+  "atomSiteFilter": {
+    "label_asym_id": "A",
+    "auth_asym_id": "1"
+  },
+  "sequenceAlignment": {
+    "profileResidues": 113,
+    "pdbPolymerResidues": 113,
+    "matchedResidues": 113,
+    "mismatchedResidues": 0,
+    "status": "full_profile_to_pdb_polymer_sequence_match"
+  },
+  "coverage": {
+    "profileResidues": 113,
+    "resolvedResidues": 43,
+    "fraction": 0.380531,
+    "firstResolvedProfilePosition": 32,
+    "lastResolvedProfilePosition": 74,
+    "resolvedProfileRangeLabel": "32-74"
+  },
+  "ranges": [
+    {
+      "profileStart": 1,
+      "profileEnd": 31,
+      "coordinateStatus": "unresolved",
+      "reason": "PDB polymer sequence exists, but current RCSB atom_site has no coordinates for this profile interval."
+    },
+    {
+      "profileStart": 32,
+      "profileEnd": 74,
+      "coordinateStatus": "resolved",
+      "label_asym_id": "A",
+      "auth_asym_id": "1",
+      "label_seq_start": 32,
+      "label_seq_end": 74,
+      "auth_seq_start": 32,
+      "auth_seq_end": 74
+    },
+    {
+      "profileStart": 75,
+      "profileEnd": 113,
+      "coordinateStatus": "unresolved",
+      "reason": "PDB polymer sequence exists, but current RCSB atom_site has no coordinates for this profile interval."
+    }
+  ]
+}

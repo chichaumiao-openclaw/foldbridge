@@ -1,0 +1,58 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "1": {
+      "case2dPath": "chains/1/case-2d-structure.json.gz",
+      "chainId": "1",
+      "chainRoot": "chains/1",
+      "linkedViewBundlePath": "chains/1/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/1/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/1/varna-template.svg.gz"
+    },
+    "3": {
+      "case2dPath": "chains/3/case-2d-structure.json.gz",
+      "chainId": "3",
+      "chainRoot": "chains/3",
+      "linkedViewBundlePath": "chains/3/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/3/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/3/varna-template.svg.gz"
+    },
+    "4": {
+      "case2dPath": "chains/4/case-2d-structure.json.gz",
+      "chainId": "4",
+      "chainRoot": "chains/4",
+      "linkedViewBundlePath": "chains/4/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/4/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/4/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "4",
+  "evidenceChainMap": {
+    "annojoin:5XY3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#3049": "1",
+    "annojoin:5XY3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#4236": "3",
+    "annojoin:5XY3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#554": "1",
+    "annojoin:5XY3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#555": "1",
+    "annojoin:5XY3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#556": "1",
+    "annojoin:5XY3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#557": "1",
+    "annojoin:5XY3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#8655": "4",
+    "annojoin:5XY3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#8656": "4",
+    "annojoin:5XY3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#8657": "4",
+    "annojoin:5XY3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#8658": "4",
+    "annojoin:5XY3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#3049": "1",
+    "annojoin:5XY3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#4236": "3",
+    "annojoin:5XY3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#554": "1",
+    "annojoin:5XY3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#555": "1",
+    "annojoin:5XY3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#556": "1",
+    "annojoin:5XY3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#557": "1",
+    "annojoin:5XY3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#8655": "4",
+    "annojoin:5XY3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#8656": "4",
+    "annojoin:5XY3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#8657": "4",
+    "annojoin:5XY3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#8658": "4"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4V5A",
+  "biologicalMoleculeName": "4V5A",
+  "caseId": "4V5A",
+  "caseKey": "4V5A",
+  "chains": [
+    "AA",
+    "BA",
+    "BB",
+    "CA",
+    "DA",
+    "DB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4V5A",
+  "profileCount": 286
+}

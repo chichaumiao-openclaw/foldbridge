@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1DRZ",
+  "biologicalMoleculeName": "1DRZ",
+  "caseId": "1DRZ",
+  "caseKey": "1DRZ",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1DRZ",
+  "profileCount": 5821
+}

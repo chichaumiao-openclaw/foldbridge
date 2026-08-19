@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2DEU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 44,
+  "defaultEvidenceId": "annojoin:2DEU:confidence:B:data-eterna/OK2TST_2A3_0000.rdat#23141",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 22,
+    "B": 22
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 44,
+  "pdbId": "2DEU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 22,
+    "NOT_SUPPORTED": 22
+  },
+  "totalEvidenceCount": 44
+}

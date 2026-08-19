@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3IZY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1462,
+  "defaultEvidenceId": "annojoin:3IZY:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#34215",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 683,
+    "B": 779
+  },
+  "generatedAt": "2026-08-17T11:52:21.352142Z",
+  "materializedEvidenceCount": 1462,
+  "pdbId": "3IZY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 520,
+    "NOT_SUPPORTED": 942
+  },
+  "totalEvidenceCount": 1462
+}

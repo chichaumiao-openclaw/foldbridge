@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5DDO",
+  "biologicalMoleculeName": "5DDO",
+  "caseId": "5DDO",
+  "caseKey": "5DDO",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5DDO",
+  "profileCount": 264
+}

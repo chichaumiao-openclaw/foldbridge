@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5DDR",
+  "biologicalMoleculeName": "5DDR",
+  "caseId": "5DDR",
+  "caseKey": "5DDR",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5DDR",
+  "profileCount": 264
+}

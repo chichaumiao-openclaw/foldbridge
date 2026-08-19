@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2AZX",
+  "biologicalMoleculeName": "2AZX",
+  "caseId": "2AZX",
+  "caseKey": "2AZX",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "2AZX",
+  "profileCount": 14
+}

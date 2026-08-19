@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3KFU",
+  "biologicalMoleculeName": "3KFU",
+  "caseId": "3KFU",
+  "caseKey": "3KFU",
+  "chains": [
+    "K",
+    "L",
+    "M",
+    "N"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "3KFU",
+  "profileCount": 4
+}

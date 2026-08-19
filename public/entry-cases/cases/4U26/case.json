@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4U26",
+  "biologicalMoleculeName": "4U26",
+  "caseId": "4U26",
+  "caseKey": "4U26",
+  "chains": [
+    "AA",
+    "CA"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4U26",
+  "profileCount": 19
+}

@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5L3P",
+  "biologicalMoleculeName": "5L3P",
+  "caseId": "5L3P",
+  "caseKey": "5L3P",
+  "chains": [
+    "A",
+    "B",
+    "a",
+    "x",
+    "y"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5L3P",
+  "profileCount": 831
+}

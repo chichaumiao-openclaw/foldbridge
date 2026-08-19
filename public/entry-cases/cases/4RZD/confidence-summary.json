@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4RZD",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1898,
+  "defaultEvidenceId": "annojoin:4RZD:confidence:B:data-eterna/OK3TST_2A3_0000.rdat#3207",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 838,
+    "B": 1060
+  },
+  "generatedAt": "2026-08-17T11:11:01.230105Z",
+  "materializedEvidenceCount": 1898,
+  "pdbId": "4RZD",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 209,
+    "LOW": 460,
+    "NOT_SUPPORTED": 1229
+  },
+  "totalEvidenceCount": 1898
+}

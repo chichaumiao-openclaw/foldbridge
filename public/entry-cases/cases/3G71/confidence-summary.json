@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3G71",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1956,
+  "defaultEvidenceId": "annojoin:3G71:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#49486",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 978,
+    "B": 978
+  },
+  "generatedAt": "2026-08-17T11:17:37.724985Z",
+  "materializedEvidenceCount": 1956,
+  "pdbId": "3G71",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 170,
+    "LOW": 568,
+    "NOT_SUPPORTED": 1218
+  },
+  "totalEvidenceCount": 1956
+}

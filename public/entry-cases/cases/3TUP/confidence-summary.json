@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3TUP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:3TUP:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#6449",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T11:23:26.778754Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "3TUP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 5,
+    "NOT_SUPPORTED": 1
+  },
+  "totalEvidenceCount": 6
+}

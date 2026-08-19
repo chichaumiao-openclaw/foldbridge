@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5WT1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:5WT1:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#4220",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T10:56:07.108683Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "5WT1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4
+  },
+  "totalEvidenceCount": 4
+}

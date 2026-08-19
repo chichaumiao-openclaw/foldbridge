@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5XBL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1863,
+  "defaultEvidenceId": "annojoin:5XBL:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#9427",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 21,
+    "B": 1842
+  },
+  "generatedAt": "2026-08-17T11:29:37.042961Z",
+  "materializedEvidenceCount": 1863,
+  "pdbId": "5XBL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 58,
+    "NOT_SUPPORTED": 1804
+  },
+  "totalEvidenceCount": 1863
+}

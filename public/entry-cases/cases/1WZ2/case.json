@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1WZ2",
+  "biologicalMoleculeName": "1WZ2",
+  "caseId": "1WZ2",
+  "caseKey": "1WZ2",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1WZ2",
+  "profileCount": 14
+}

@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "1NBS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 546,
+  "defaultEvidenceId": "annojoin:1NBS:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1403",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8,
+    "B": 538
+  },
+  "generatedAt": "2026-08-17T11:55:49.970020Z",
+  "materializedEvidenceCount": 546,
+  "pdbId": "1NBS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 121,
+    "NOT_SUPPORTED": 425
+  },
+  "totalEvidenceCount": 546
+}

@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3G8S",
+  "biologicalMoleculeName": "3G8S",
+  "caseId": "3G8S",
+  "caseKey": "3G8S",
+  "chains": [
+    "P",
+    "Q",
+    "R",
+    "S"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "3G8S",
+  "profileCount": 23
+}

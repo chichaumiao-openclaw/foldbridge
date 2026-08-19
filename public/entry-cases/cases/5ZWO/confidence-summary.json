@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5ZWO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 222,
+  "defaultEvidenceId": "annojoin:5ZWO:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#2061",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 111,
+    "B": 111
+  },
+  "generatedAt": "2026-08-17T12:27:03.069804Z",
+  "materializedEvidenceCount": 222,
+  "pdbId": "5ZWO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 4,
+    "LOW": 38,
+    "NOT_SUPPORTED": 180
+  },
+  "totalEvidenceCount": 222
+}

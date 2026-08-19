@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "2PXT",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 178,
+  "defaultEvidenceId": "annojoin:2PXT:confidence:B:data-eterna/ETERNA_P90_0001.rdat#1233",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 87,
+    "B": 91
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 178,
+  "pdbId": "2PXT",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 178
+  },
+  "totalEvidenceCount": 178
+}

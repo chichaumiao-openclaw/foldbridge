@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3RG5",
+  "biologicalMoleculeName": "3RG5",
+  "caseId": "3RG5",
+  "caseKey": "3RG5",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "3RG5",
+  "profileCount": 16
+}

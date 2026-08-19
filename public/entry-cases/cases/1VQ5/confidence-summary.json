@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1VQ5",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1934,
+  "defaultEvidenceId": "annojoin:1VQ5:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#64970",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 967,
+    "B": 967
+  },
+  "generatedAt": "2026-08-17T12:52:15.874142Z",
+  "materializedEvidenceCount": 1934,
+  "pdbId": "1VQ5",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 55,
+    "LOW": 418,
+    "NOT_SUPPORTED": 1461
+  },
+  "totalEvidenceCount": 1934
+}

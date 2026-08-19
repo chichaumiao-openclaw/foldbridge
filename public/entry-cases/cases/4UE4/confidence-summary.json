@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "4UE4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 588,
+  "defaultEvidenceId": "annojoin:4UE4:confidence:B:data-general/ARCHII_2A3_0000.rdat#726",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 294,
+    "B": 294
+  },
+  "generatedAt": "2026-08-17T12:58:30.448085Z",
+  "materializedEvidenceCount": 588,
+  "pdbId": "4UE4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 27,
+    "NOT_SUPPORTED": 561
+  },
+  "totalEvidenceCount": 588
+}

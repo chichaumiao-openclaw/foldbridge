@@ -1,0 +1,9 @@
+{
+  "protocolVersion": "linked-view-v0.1",
+  "caseId": "5GAG",
+  "status": "not_materialized",
+  "sourceDataPath": "not_materialized",
+  "matchPolicy": "profile_id_pair_id_pair_segment_id_exact",
+  "records": [],
+  "note": "raw alignment/BLAST coverage is not materialized for this smoke asset; this is not FEC semantic coverage. Do not derive RMDB query coverage or PDB reference sequence coverage from FEC semantic coverage fields such as construct_coverage, subject_coverage, profile_axis_coverage, coverage_topology_annotation.tsv, or structure-coverage atom_site coverage."
+}

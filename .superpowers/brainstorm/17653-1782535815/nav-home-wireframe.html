@@ -1,0 +1,77 @@
+<h2>导航 + 首页布局线框图</h2>
+<p class="subtitle">提案：导航 9 → 5，首页 = 真实指标 + 三模块引导卡。看一下结构对不对。</p>
+
+<div class="section">
+  <span class="label">① 顶部导航（5 项）</span>
+  <div class="mockup">
+    <div class="mockup-header">主导航条（移除 Browse / Structure / Download / PDB Cases）</div>
+    <div class="mockup-body">
+      <div class="mock-nav" style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+        <strong style="background:#caa14a;color:#1a1a1a;padding:4px 10px;border-radius:6px">FB FoldBridge</strong>
+        <span style="background:#2f6df6;color:#fff;padding:4px 14px;border-radius:6px">Home</span>
+        <span style="padding:4px 14px;border:1px solid #888;border-radius:6px">Entry</span>
+        <span style="padding:4px 14px;border:1px solid #888;border-radius:6px">Probing</span>
+        <span style="padding:4px 14px;border:1px solid #888;border-radius:6px">Search</span>
+        <span style="padding:4px 14px;border:1px solid #888;border-radius:6px">Help</span>
+        <span style="margin-left:auto;opacity:.55;font-size:.85em">🔍 Search FoldBridge · ☾ mode</span>
+      </div>
+      <p style="font-size:.8em;opacity:.6;margin:8px 0 0">Sequence 改名 <b>Entry</b>（= ANNOJOIN Atlas 总表）。PDB Cases 不再是顶层入口，改为 Entry 表里的一列。</p>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <span class="label">② 首页 Hero（真实指标）</span>
+  <div class="mockup">
+    <div class="mockup-header">Hero 区</div>
+    <div class="mockup-body" style="display:flex;gap:16px">
+      <div style="flex:1.4">
+        <p style="opacity:.6;font-size:.8em;letter-spacing:.1em">RNA DATABASE BUNDLE</p>
+        <h3 style="margin:4px 0">FoldBridge Database Portal</h3>
+        <p style="opacity:.8;font-size:.9em">Links RNA chemical probing data with experimentally resolved tertiary structures.</p>
+        <div style="display:flex;gap:10px;margin-top:12px">
+          <span style="background:#caa14a;color:#1a1a1a;padding:8px 16px;border-radius:8px;font-weight:600">Browse Entry table →</span>
+          <span style="border:1px solid #888;padding:8px 16px;border-radius:8px">Explore probing methods</span>
+        </div>
+        <p style="font-size:.75em;opacity:.55;margin-top:6px">CTA 改指向 #sequence(Entry) 与 #probing，不再指向被移除的路由。</p>
+      </div>
+      <div style="flex:1;display:grid;grid-template-columns:1fr 1fr;gap:8px">
+        <div class="placeholder" style="padding:8px"><b>3,610</b><br><span style="font-size:.75em">structure-linked records</span></div>
+        <div class="placeholder" style="padding:8px"><b>4,070</b><br><span style="font-size:.75em">source cases</span></div>
+        <div class="placeholder" style="padding:8px"><b>27</b><br><span style="font-size:.75em">probing methods</span></div>
+        <div class="placeholder" style="padding:8px"><b>6</b><br><span style="font-size:.75em">mechanism families</span></div>
+      </div>
+    </div>
+  </div>
+  <p style="font-size:.8em;opacity:.65">真实数字来自已生成资产：Atlas displayCases 3610 / source cases 4070（RMDB 1126 + RASP 2944）/ 探针文章 27 篇 / 6 家族。占位的 <code>xx</code> 和 <code>Release 0.1</code> 全部替换或移除。</p>
+</div>
+
+<div class="section">
+  <span class="label">③ 首页三模块引导卡</span>
+  <div class="cards" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+    <div class="card">
+      <div class="card-image placeholder" style="height:60px;display:flex;align-items:center;justify-content:center">⊞ table</div>
+      <div class="card-body"><h3>Entry table</h3><p style="font-size:.85em">3,610 structure-linked PDB entries. 搜索、分组、导出。→ #sequence</p></div>
+    </div>
+    <div class="card">
+      <div class="card-image placeholder" style="height:60px;display:flex;align-items:center;justify-content:center">📖 27 articles</div>
+      <div class="card-body"><h3>Probing methods</h3><p style="font-size:.85em">27 篇探针技术科普，按 6 个机制家族组织。→ #probing</p></div>
+    </div>
+    <div class="card">
+      <div class="card-image placeholder" style="height:60px;display:flex;align-items:center;justify-content:center">🔍 search</div>
+      <div class="card-body"><h3>Search</h3><p style="font-size:.85em">全站搜索探针文章与 PDB case。→ #search</p></div>
+    </div>
+  </div>
+</div>
+
+<h3>这个导航结构 + 首页布局，方向对吗？</h3>
+<div class="options">
+  <div class="option" data-choice="approve" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content"><h3>对，就按这个走</h3><p>5 项导航 + Hero 真实指标 + 三模块引导卡</p></div>
+  </div>
+  <div class="option" data-choice="tweak" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content"><h3>方向对，但有调整</h3><p>在终端里说明要改哪里（指标项、卡片数量、文案等）</p></div>
+  </div>
+</div>

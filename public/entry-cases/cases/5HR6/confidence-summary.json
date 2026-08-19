@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5HR6",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 44,
+  "defaultEvidenceId": "annojoin:5HR6:confidence:B:data-eterna/OK2TST_2A3_0000.rdat#23141",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 22,
+    "B": 22
+  },
+  "generatedAt": "2026-08-17T12:18:57.850374Z",
+  "materializedEvidenceCount": 44,
+  "pdbId": "5HR6",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 24,
+    "NOT_SUPPORTED": 17
+  },
+  "totalEvidenceCount": 44
+}

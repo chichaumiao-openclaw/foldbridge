@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1GAX",
+  "biologicalMoleculeName": "1GAX",
+  "caseId": "1GAX",
+  "caseKey": "1GAX",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1GAX",
+  "profileCount": 2
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5NZ3",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 524,
+  "defaultEvidenceId": "annojoin:5NZ3:confidence:A:data-rna-structures/M2PK50_DMS_0000.rdat#43315",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 256,
+    "B": 268
+  },
+  "generatedAt": "2026-08-17T13:04:21.288699Z",
+  "materializedEvidenceCount": 524,
+  "pdbId": "5NZ3",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 36,
+    "LOW": 151,
+    "NOT_SUPPORTED": 337
+  },
+  "totalEvidenceCount": 524
+}

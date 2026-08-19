@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3DHS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1096,
+  "defaultEvidenceId": "annojoin:3DHS:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#5676",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 947,
+    "B": 149
+  },
+  "generatedAt": "2026-08-17T11:20:56.972842Z",
+  "materializedEvidenceCount": 1096,
+  "pdbId": "3DHS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 241,
+    "LOW": 621,
+    "NOT_SUPPORTED": 234
+  },
+  "totalEvidenceCount": 1096
+}

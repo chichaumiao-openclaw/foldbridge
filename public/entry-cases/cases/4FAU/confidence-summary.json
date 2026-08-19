@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4FAU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 178,
+  "defaultEvidenceId": "annojoin:4FAU:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#3338",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 89,
+    "B": 89
+  },
+  "generatedAt": "2026-08-17T12:52:15.874142Z",
+  "materializedEvidenceCount": 178,
+  "pdbId": "4FAU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 7,
+    "NOT_SUPPORTED": 170
+  },
+  "totalEvidenceCount": 178
+}

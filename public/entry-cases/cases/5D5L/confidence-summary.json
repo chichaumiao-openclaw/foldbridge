@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5D5L",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4016,
+  "defaultEvidenceId": "annojoin:5D5L:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#54164",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1996,
+    "B": 2020
+  },
+  "generatedAt": "2026-08-17T11:23:26.778754Z",
+  "materializedEvidenceCount": 4016,
+  "pdbId": "5D5L",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 258,
+    "LOW": 787,
+    "NOT_SUPPORTED": 2971
+  },
+  "totalEvidenceCount": 4016
+}

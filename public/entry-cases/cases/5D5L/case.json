@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5D5L",
+  "biologicalMoleculeName": "5D5L",
+  "caseId": "5D5L",
+  "caseKey": "5D5L",
+  "chains": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5D5L",
+  "profileCount": 1004
+}

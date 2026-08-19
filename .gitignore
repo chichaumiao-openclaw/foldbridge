@@ -4,13 +4,19 @@
 .bundle/
 .jekyll-cache/
 _site/
-dist/
-singlecell-viewer/dist/
 vendor/
 
 node_modules/
-singlecell-viewer/node_modules/
+.npm-cache/
+dist/
 
-local_archive/
+.env
+
+.worktrees/
 
 *.log
+
+# Local preview and bridge leftovers not intended for GitHub release.
+.superpowers/
+src/assets/generated/v3-case-pages/
+src/assets/generated/rasp_family_bridge_pages_manifest.js

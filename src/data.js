@@ -1,36 +1,36 @@
-export const DATA_VERSION = '2026-03-07.example-mvp.v2';
+export const DATA_VERSION = '2026-06-16.generated-rmdb-cases.v1';
 export const DETERMINISTIC_SEED = 20260307;
 
 export const portalMetrics = [
   { label: 'Total records', value: '312,540' },
   { label: 'Data types', value: '8' },
-  { label: 'Cells profiled', value: '26.1M' },
+  { label: 'Reactivity profiles', value: '26.1K' },
   { label: 'Publications', value: '2,318' }
 ];
 
 export const dataTypeCards = [
-  { name: 'scRNA-seq', desc: 'Single-cell transcriptome', count: '9.8M cells' },
-  { name: 'snRNA-seq', desc: 'Single-nucleus RNA', count: '6.4M nuclei' },
-  { name: 'scATAC-seq', desc: 'Chromatin accessibility', count: '3.2M cells' },
-  { name: 'Spatial', desc: 'Spatial transcriptomics', count: '1,840 slides' }
+  { name: 'SHAPE-MaP', desc: 'Mutational profiling reactivity', count: '9.8K profiles' },
+  { name: 'DMS-MaPseq', desc: 'Base accessibility probing', count: '6.4K profiles' },
+  { name: 'RDAT', desc: 'Chemical probing experiments', count: '3.2K files' },
+  { name: 'PDB/mmCIF', desc: 'Resolved RNA structures', count: '1,840 structures' }
 ];
 
 export const stageDiseaseCards = [
-  { name: 'Embryonic', count: '4.2M cells' },
-  { name: 'Fetal', count: '7.1M cells' },
-  { name: 'Postnatal', count: '8.0M cells' },
-  { name: 'Adult', count: '6.8M cells' }
+  { name: 'Aptamer', count: '4.2K records' },
+  { name: 'Riboswitch', count: '7.1K records' },
+  { name: 'Viral RNA', count: '8.0K records' },
+  { name: 'Ribozyme', count: '6.8K records' }
 ];
 
 export const featuredRecords = [
   {
-    id: 'BRAIN-HUM-0021',
-    title: 'Human cortical excitatory neuron atlas slice',
+    id: 'FB-RDAT-0021',
+    title: 'RNA Puzzle reactivity profile linked to tertiary structure',
     confidence: 'high'
   },
   {
-    id: 'LUNG-DEV-0142',
-    title: 'Fetal lung epithelial lineage trajectory map',
+    id: 'FB-PDB-0142',
+    title: 'Riboswitch structure with ligand-bound probing evidence',
     confidence: 'high'
   },
   {
@@ -61,12 +61,12 @@ export const siteSummaries = [
 export const recentPublications = [
   {
     doi: '10.1038/s41593-026-01421-3',
-    title: 'Cross-stage single-cell atlas of human cortical development',
+    title: 'Chemical probing atlas of structured RNA regulatory elements',
     year: 2026
   },
   {
     doi: '10.1016/j.cell.2026.02.019',
-    title: 'Multi-omics map of human lung developmental transitions',
+    title: 'Structure-aware integration of RNA probing experiments',
     year: 2026
   },
   {
@@ -78,16 +78,16 @@ export const recentPublications = [
 
 export const browseRows = [
   {
-    id: 'BRAIN-NEU-001',
-    name: 'Excitatory neuron cluster map',
-    species: 'H. sapiens',
+    id: 'PDBCASE-5KPY',
+    name: '5-hydroxytryptophan RNA aptamer case',
+    species: 'Synthetic RNA',
     ligand: 'N/A',
     evidence: 'High'
   },
   {
-    id: 'LUNG-DEV-088',
-    name: 'AT2 progenitor trajectory branch',
-    species: 'H. sapiens',
+    id: 'PDBCASE-4L81',
+    name: 'SAM-I/IV riboswitch aptamer case',
+    species: 'Synthetic RNA',
     ligand: 'N/A',
     evidence: 'High'
   },
@@ -154,23 +154,23 @@ export const aptamerMultiSelectRows = [
 ];
 
 export const detailRecord = {
-  id: 'BRAIN-NEU-001',
-  name: 'Excitatory neuron cluster map',
+  id: 'FB-RNA-001',
+  name: 'RNA probing-to-structure evidence map',
   status: 'reviewed',
   organism: 'Homo sapiens',
-  family: 'Single-cell transcriptomic atlas',
+  family: 'RNA chemical probing and structure bridge',
   updated: '2026-03-07',
-  sequenceLength: 0,
-  genomicContext: 'Cortical development cohort integration (v2.1)'
+  sequenceLength: 76,
+  genomicContext: 'Curated RDAT and PDB evidence integration'
 };
 
 export const detailEvidenceRows = [
-  { method: 'scRNA-seq integration', metric: 'batch-mixing score', score: '0.91' },
-  { method: 'Trajectory inference', metric: 'stability', score: '0.87' }
+  { method: 'SHAPE-MaP', metric: 'reactivity agreement', score: '0.91' },
+  { method: 'PDB projection', metric: 'residue coverage', score: '0.87' }
 ];
 
 export const provenanceHistory = [
-  '2026-02-01 imported from brain cohort release v1.8',
-  '2026-02-20 QC/annotation harmonization complete',
+  '2026-02-01 imported from FoldBridge candidate release v1.8',
+  '2026-02-20 probing and structure mapping harmonization complete',
   '2026-03-07 unified template validation complete'
 ];

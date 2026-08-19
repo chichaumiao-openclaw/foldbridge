@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4UJE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3728,
+  "defaultEvidenceId": "annojoin:4UJE:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1073",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1862,
+    "B": 1866
+  },
+  "generatedAt": "2026-08-17T12:46:07.647795Z",
+  "materializedEvidenceCount": 3728,
+  "pdbId": "4UJE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 3728
+  },
+  "totalEvidenceCount": 3728
+}

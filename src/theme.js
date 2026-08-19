@@ -30,15 +30,34 @@ const COMMON = {
 };
 
 export const themeTokens = {
-  blue: {
-    label: 'Scientific Green',
+  ribocentre: {
+    label: 'RiboCentre Blue',
+    light: {
+      primary: '#1D4ED8',
+      primaryHover: '#1E40AF',
+      primarySoft: '#DBEAFE',
+      accent: '#0891B2',
+      accentSoft: '#CFFAFE',
+      border: 'rgba(224, 174, 36, 0.68)'
+    },
+    dark: {
+      primary: '#93C5FD',
+      primaryHover: '#BFDBFE',
+      primarySoft: 'rgba(147, 197, 253, 0.14)',
+      accent: '#67E8F9',
+      accentSoft: '#164E63',
+      border: 'rgba(224, 174, 36, 0.68)'
+    }
+  },
+  riboswitch: {
+    label: 'Riboswitch Teal-Green',
     light: {
       primary: '#174B3A',
       primaryHover: '#123B2E',
       primarySoft: '#E4EFE8',
       accent: '#2F8F6B',
       accentSoft: '#C7E36B',
-      border: '#D6E0D8'
+      border: 'rgba(224, 174, 36, 0.68)'
     },
     dark: {
       primary: '#7dd4aa',
@@ -46,70 +65,32 @@ export const themeTokens = {
       primarySoft: 'rgba(125, 212, 170, 0.14)',
       accent: '#63cfa0',
       accentSoft: '#d9e99d',
-      border: '#2c3a34'
-    },
-  },
-  ribocentre: {
-    label: 'RiboCentre Teal',
-    light: {
-      primary: '#0F766E',
-      primaryHover: '#115E59',
-      primarySoft: '#F0FDFA',
-      accent: '#0D9488',
-      accentSoft: '#99F6E4',
-      border: '#CCFBF1'
-    },
-    dark: {
-      primary: '#2DD4BF',
-      primaryHover: '#5EEAD4',
-      primarySoft: 'rgba(45, 212, 191, 0.14)',
-      accent: '#14B8A6',
-      accentSoft: '#99F6E4',
-      border: '#115E59'
-    }
-  },
-  riboswitch: {
-    label: 'Riboswitch Purple',
-    light: {
-      primary: '#6D28D9',
-      primaryHover: '#5B21B6',
-      primarySoft: '#F5F3FF',
-      accent: '#7C3AED',
-      accentSoft: '#DDD6FE',
-      border: '#EDE9FE'
-    },
-    dark: {
-      primary: '#A78BFA',
-      primaryHover: '#C4B5FD',
-      primarySoft: 'rgba(167, 139, 250, 0.14)',
-      accent: '#8B5CF6',
-      accentSoft: '#DDD6FE',
-      border: '#4C1D95'
+      border: 'rgba(224, 174, 36, 0.68)'
     }
   },
   aptamer: {
-    label: 'Aptamer Amber',
+    label: 'Aptamer Purple-Indigo',
     light: {
-      primary: '#B45309',
-      primaryHover: '#92400E',
-      primarySoft: '#FFFBEB',
-      accent: '#D97706',
-      accentSoft: '#FDE68A',
-      border: '#FEF3C7'
+      primary: '#6D28D9',
+      primaryHover: '#5B21B6',
+      primarySoft: '#EDE9FE',
+      accent: '#C026D3',
+      accentSoft: '#FAE8FF',
+      border: 'rgba(224, 174, 36, 0.68)'
     },
     dark: {
-      primary: '#FBBF24',
-      primaryHover: '#FCD34D',
-      primarySoft: 'rgba(251, 191, 36, 0.14)',
-      accent: '#F59E0B',
-      accentSoft: '#FDE68A',
-      border: '#78350F'
+      primary: '#C4B5FD',
+      primaryHover: '#DDD6FE',
+      primarySoft: 'rgba(196, 181, 253, 0.14)',
+      accent: '#F0ABFC',
+      accentSoft: '#581C87',
+      border: 'rgba(224, 174, 36, 0.68)'
     }
   }
 };
 
 export function cssVarsFor(themeKey, mode = 'light') {
-  const theme = themeTokens[themeKey] ?? themeTokens.blue;
+  const theme = themeTokens[themeKey] ?? themeTokens.ribocentre;
   const safeMode = mode === 'dark' ? 'dark' : 'light';
   const merged = { ...COMMON[safeMode], ...theme[safeMode] };
   const entries = Object.entries(merged).map(([k, v]) => `--${k}: ${v};`);

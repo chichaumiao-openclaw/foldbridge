@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5JUO",
+  "biologicalMoleculeName": "5JUO",
+  "caseId": "5JUO",
+  "caseKey": "5JUO",
+  "chains": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "EC"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5JUO",
+  "profileCount": 8279
+}

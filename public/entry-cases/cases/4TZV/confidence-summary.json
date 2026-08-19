@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "4TZV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 46,
+  "defaultEvidenceId": "annojoin:4TZV:confidence:A:data-puzzle/RNAPZ10_STD_0001.rdat#4",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 22,
+    "B": 24
+  },
+  "generatedAt": "2026-08-17T11:59:32.100172Z",
+  "materializedEvidenceCount": 46,
+  "pdbId": "4TZV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 6,
+    "NOT_SUPPORTED": 40
+  },
+  "totalEvidenceCount": 46
+}

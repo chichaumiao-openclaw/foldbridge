@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3CCM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1930,
+  "defaultEvidenceId": "annojoin:3CCM:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#23552",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 965,
+    "B": 965
+  },
+  "generatedAt": "2026-08-17T12:58:49.317723Z",
+  "materializedEvidenceCount": 1930,
+  "pdbId": "3CCM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 151,
+    "LOW": 585,
+    "NOT_SUPPORTED": 1194
+  },
+  "totalEvidenceCount": 1930
+}

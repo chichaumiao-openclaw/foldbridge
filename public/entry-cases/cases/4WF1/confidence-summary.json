@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4WF1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 286,
+  "defaultEvidenceId": "annojoin:4WF1:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#1922",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 104,
+    "B": 182
+  },
+  "generatedAt": "2026-08-17T11:21:04.164187Z",
+  "materializedEvidenceCount": 286,
+  "pdbId": "4WF1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 286
+  },
+  "totalEvidenceCount": 286
+}

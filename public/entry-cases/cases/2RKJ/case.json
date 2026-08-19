@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2RKJ",
+  "biologicalMoleculeName": "2RKJ",
+  "caseId": "2RKJ",
+  "caseKey": "2RKJ",
+  "chains": [
+    "C",
+    "G",
+    "K",
+    "O"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "2RKJ",
+  "profileCount": 44
+}

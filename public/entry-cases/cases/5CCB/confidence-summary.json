@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5CCB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 288,
+  "defaultEvidenceId": "annojoin:5CCB:confidence:B:data-eterna/ETERNA_P90_0002.rdat#1679",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 141,
+    "B": 147
+  },
+  "generatedAt": "2026-08-17T12:58:30.448085Z",
+  "materializedEvidenceCount": 288,
+  "pdbId": "5CCB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 5,
+    "LOW": 37,
+    "NOT_SUPPORTED": 246
+  },
+  "totalEvidenceCount": 288
+}

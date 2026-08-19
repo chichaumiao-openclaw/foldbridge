@@ -39,17 +39,7 @@ export function renderProvenanceHistory() {
   return `<section class="card"><h3>C-PROV-002 Provenance History</h3><ol>${items}</ol></section>`;
 }
 
-function getGithubPagesBasePath() {
-  const host = window.location.hostname;
-  if (!host.endsWith('github.io')) return '';
-  const parts = window.location.pathname.split('/').filter(Boolean);
-  return parts.length ? `/${parts[0]}` : '';
-}
-
 export function renderVisualizationShowcase() {
-  const basePath = getGithubPagesBasePath();
-  const singleCellUrl = `${basePath}/singlecell-viewer/dist/`;
-
   return `
   <section class="card">
     <h2>Visualization Module Showcase (example page)</h2>
@@ -160,17 +150,6 @@ export function renderVisualizationShowcase() {
       <div id="forna-status" class="mini-note">Forna loading…</div>
     </article>
 
-    <article class="card viz-card" id="V-SC-001">
-      <h3>Single-cell Embedding (UMAP/t-SNE)</h3>
-      <p>Embedded local single-cell viewer:</p>
-      <p><a href="${singleCellUrl}" target="_blank" rel="noopener noreferrer">Open in new tab ↗</a></p>
-      <iframe
-        title="Single-cell viewer"
-        src="${singleCellUrl}"
-        class="umap-embed"
-        loading="lazy"
-      ></iframe>
-    </article>
   </section>`;
 }
 
@@ -230,7 +209,7 @@ export function initHeaderSearch() {
       ? matched
           .slice(0, 8)
           .map(
-            (row) => `<a class="search-result-item" href="#detail"><strong>${row.aptamerName}</strong> · ${row.category} · ${row.year} <span>${row.pdbId}</span></a>`
+            (row) => `<a class="search-result-item" href="#probing"><strong>${row.aptamerName}</strong> · ${row.category} · ${row.year} <span>${row.pdbId}</span></a>`
           )
           .join('')
       : '<div class="search-result-item muted">No results found.</div>';
@@ -549,26 +528,6 @@ function applyMolstarColoring(viewer, sequence, seedLabel, chainId = 'A', attemp
   }, attempt === 0 ? 450 : 250);
 }
 
-function focusMolstarChain(viewer, chainId, color = { r: 20, g: 128, b: 96 }, attempt = 0) {
-  if (!viewer?.visual?.select || !chainId) return;
-
-  window.setTimeout(() => {
-    try {
-      if (viewer.visual.clearSelection) {
-        viewer.visual.clearSelection();
-      }
-      viewer.visual.select({
-        data: [{ struct_asym_id: chainId, color }],
-        nonSelectedColor: { r: 255, g: 255, b: 255 }
-      });
-    } catch (_error) {
-      if (attempt < 8) {
-        focusMolstarChain(viewer, chainId, color, attempt + 1);
-      }
-    }
-  }, attempt === 0 ? 450 : 250);
-}
-
 async function loadFornaAssets() {
   if (!document.getElementById('forna-css')) {
     const css = document.createElement('link');
@@ -614,272 +573,6 @@ async function loadFornaAssets() {
   }
 }
 
-function tokenizeCifRow(row) {
-  const tokens = [];
-  let current = '';
-  let quote = '';
-
-  for (let index = 0; index < row.length; index += 1) {
-    const char = row[index];
-
-    if (quote) {
-      current += char;
-      if (char === quote) {
-        quote = '';
-      }
-      continue;
-    }
-
-    if (char === '"' || char === "'") {
-      quote = char;
-      current += char;
-      continue;
-    }
-
-    if (/\s/.test(char)) {
-      if (current) {
-        tokens.push(current);
-        current = '';
-      }
-      continue;
-    }
-
-    current += char;
-  }
-
-  if (current) tokens.push(current);
-  return tokens;
-}
-
-function filterCifLoopByChain(lines, startIndex, headers, chainId) {
-  const atomAuthIndex = headers.indexOf('_atom_site.auth_asym_id');
-  const atomLabelIndex = headers.indexOf('_atom_site.label_asym_id');
-  const anisotropAuthIndex = headers.indexOf('_atom_site_anisotrop.pdbx_auth_asym_id');
-  const anisotropLabelIndex = headers.indexOf('_atom_site_anisotrop.pdbx_label_asym_id');
-  const chainIndex = Math.max(atomAuthIndex, atomLabelIndex, anisotropAuthIndex, anisotropLabelIndex);
-
-  if (chainIndex < 0) return { nextIndex: startIndex, keptLines: null };
-
-  const preferredIndices = [atomAuthIndex, atomLabelIndex, anisotropAuthIndex, anisotropLabelIndex].filter((index) => index >= 0);
-  const keptLines = [];
-  let index = startIndex;
-
-  while (index < lines.length) {
-    const line = lines[index];
-    const trimmed = line.trim();
-    if (!trimmed) {
-      keptLines.push(line);
-      index += 1;
-      continue;
-    }
-    if (trimmed === '#' || trimmed === 'loop_' || trimmed.startsWith('_')) break;
-
-    const tokens = tokenizeCifRow(line);
-    const keepLine = preferredIndices.some((tokenIndex) => {
-      const token = tokens[tokenIndex];
-      return token === chainId;
-    });
-
-    if (keepLine) keptLines.push(line);
-    index += 1;
-  }
-
-  return { nextIndex: index, keptLines };
-}
-
-function filterCifToChain(text, chainId) {
-  if (!chainId) return text;
-
-  const lines = String(text || '').split(/\r?\n/);
-  const output = [];
-
-  for (let index = 0; index < lines.length; index += 1) {
-    const line = lines[index];
-    output.push(line);
-
-    if (line.trim() !== 'loop_') continue;
-
-    const headers = [];
-    let headerIndex = index + 1;
-    while (headerIndex < lines.length && lines[headerIndex].trim().startsWith('_')) {
-      headers.push(lines[headerIndex].trim());
-      output.push(lines[headerIndex]);
-      headerIndex += 1;
-    }
-
-    const firstHeader = headers[0] || '';
-    const isAtomLoop = firstHeader.startsWith('_atom_site.');
-    const isAnisotropLoop = firstHeader.startsWith('_atom_site_anisotrop.');
-    if (!isAtomLoop && !isAnisotropLoop) {
-      index = headerIndex - 1;
-      continue;
-    }
-
-    const { nextIndex, keptLines } = filterCifLoopByChain(lines, headerIndex, headers, chainId);
-    if (keptLines) output.push(...keptLines);
-    index = nextIndex - 1;
-  }
-
-  return output.join('\n');
-}
-
-function parseCifAssemblyIdForChain(text, chainId) {
-  if (!chainId) return '';
-
-  const lines = String(text || '').split(/\r?\n/);
-  for (let index = 0; index < lines.length; index += 1) {
-    if (lines[index].trim() !== 'loop_') continue;
-
-    const headers = [];
-    let headerIndex = index + 1;
-    while (headerIndex < lines.length && lines[headerIndex].trim().startsWith('_')) {
-      headers.push(lines[headerIndex].trim());
-      headerIndex += 1;
-    }
-
-    if (
-      headers[0] !== '_pdbx_struct_assembly_gen.assembly_id' ||
-      headers[1] !== '_pdbx_struct_assembly_gen.oper_expression' ||
-      headers[2] !== '_pdbx_struct_assembly_gen.asym_id_list'
-    ) {
-      index = headerIndex - 1;
-      continue;
-    }
-
-    for (let rowIndex = headerIndex; rowIndex < lines.length; rowIndex += 1) {
-      const trimmed = lines[rowIndex].trim();
-      if (!trimmed) continue;
-      if (trimmed === '#' || trimmed === 'loop_' || trimmed.startsWith('_')) {
-        index = rowIndex - 1;
-        break;
-      }
-
-      const tokens = tokenizeCifRow(lines[rowIndex]);
-      const assemblyId = tokens[0] || '';
-      const asymIdList = tokens[2] || '';
-      const asymIds = asymIdList.split(',').map((value) => value.trim());
-      if (asymIds.includes(chainId)) {
-        return assemblyId;
-      }
-    }
-  }
-
-  return '';
-}
-
-async function resolveRenderableStructureSource(structureUrl, structureFormat, structureLabel, structureChain = '') {
-  if (!structureUrl || structureUrl.startsWith('./')) {
-    return { url: structureUrl, format: structureFormat, usedFallback: false, assemblyId: '' };
-  }
-
-  try {
-    const response = await fetch(structureUrl);
-    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    const text = await response.text();
-    if (/^Error:/i.test(text.trim())) {
-      throw new Error(text.trim());
-    }
-    const filteredText = structureFormat === 'cif' ? filterCifToChain(text, structureChain) : text;
-    return {
-      url: `data:text/plain;charset=utf-8,${encodeURIComponent(filteredText)}`,
-      format: structureFormat,
-      usedFallback: false,
-      assemblyId: ''
-    };
-  } catch (_error) {
-    const fallbackUrl = `https://files.rcsb.org/download/${encodeURIComponent(String(structureLabel || '').toUpperCase())}.cif`;
-    try {
-      const fallbackResponse = await fetch(fallbackUrl);
-      if (!fallbackResponse.ok) throw new Error(`HTTP ${fallbackResponse.status}`);
-      const fallbackText = await fallbackResponse.text();
-      const assemblyId = parseCifAssemblyIdForChain(fallbackText, structureChain);
-      return {
-        url: `data:text/plain;charset=utf-8,${encodeURIComponent(fallbackText)}`,
-        format: 'cif',
-        usedFallback: true,
-        assemblyId
-      };
-    } catch (_fallbackError) {
-      return {
-        url: fallbackUrl,
-        format: 'cif',
-        usedFallback: true,
-        assemblyId: ''
-      };
-    }
-  }
-}
-
-function buildFornaCustomColorsText(sequence) {
-  const nucleotideColors = {
-    A: '#68AF31',
-    U: '#18529A',
-    G: '#C06D23',
-    C: '#DA4E6D'
-  };
-
-  return sequence
-    .split('')
-    .map((base, index) => {
-      const color = nucleotideColors[base];
-      return color ? `${index + 1}:${color}` : '';
-    })
-    .filter(Boolean)
-    .join(' ');
-}
-
-function parseRdatSecondaryConfig(text, fallbackSequence = '') {
-  let sequence = normalizeRnaSequence(fallbackSequence);
-  let structure = '';
-
-  text.split(/\r?\n/).forEach((rawLine) => {
-    const line = rawLine.trim();
-    if (!line) return;
-    if (line.startsWith('SEQUENCE')) {
-      sequence = normalizeRnaSequence(line.replace(/^SEQUENCE\s+/, ''));
-    } else if (line.startsWith('STRUCTURE')) {
-      structure = line.replace(/^STRUCTURE\s+/, '').replace(/\s+/g, '').trim();
-    }
-  });
-
-  if (!sequence || !structure || sequence.length !== structure.length) {
-    return null;
-  }
-
-  return { sequence, structure };
-}
-
-function syncStructureDetailSecondaryText(structure = '') {
-  const block = document.getElementById('structure-detail-sequence-structure-block');
-  const code = document.getElementById('structure-detail-sequence-structure');
-  if (!block || !code) return;
-
-  const sequence = String(code.dataset.sequence || '').replace(/\s+/g, '').trim();
-  const cleanStructure = String(structure).replace(/\s+/g, '').trim();
-  const chunkSize = Math.max(1, Number(code.dataset.chunkSize) || 120);
-  if (!cleanStructure || !sequence || cleanStructure.length !== sequence.length) {
-    block.hidden = true;
-    code.innerHTML = '';
-    return;
-  }
-
-  const rows = [];
-  for (let index = 0; index < cleanStructure.length; index += chunkSize) {
-    rows.push(cleanStructure.slice(index, index + chunkSize));
-  }
-
-  block.hidden = false;
-  code.innerHTML = rows
-    .map((row) => {
-      const chars = row
-        .split('')
-        .map((structureChar) => `<span class="case-sequence-structure-char">${structureChar}</span>`)
-        .join('');
-      return `<span class="case-sequence-row case-sequence-structure-row">${chars}</span>`;
-    })
-    .join('');
-}
-
 export async function initSecondaryStructureModule() {
   const status = document.getElementById('forna-status');
   const host = document.getElementById('custom_colors');
@@ -905,88 +598,6 @@ export async function initSecondaryStructureModule() {
     status.textContent = 'Forna secondary structure loaded.';
   } catch (_e) {
     status.textContent = 'Forna failed to load (remote scripts blocked).';
-  }
-}
-
-export async function initStructureDetailSecondaryForna() {
-  const status = document.getElementById('structure-detail-forna-status');
-  const host = document.getElementById('structure-detail-forna-host');
-  const code = document.getElementById('structure-detail-sequence-structure');
-  if (!status || !host) return;
-
-  const foldBridgeId = host.dataset.foldbridgeId || 'this RDAT record';
-  const directStructure = host.dataset.structure || '';
-  const directSequence = host.dataset.sequence || '';
-  const cleanDirectSequence = normalizeRnaSequence(directSequence);
-  const cleanDirectStructure = directStructure.replace(/\s+/g, '').trim();
-
-  if (cleanDirectStructure && cleanDirectSequence && cleanDirectStructure.length === cleanDirectSequence.length) {
-    try {
-      await loadFornaAssets();
-      host.innerHTML = '';
-      const container = new window.fornac.FornaContainer('#structure-detail-forna-host', {
-        applyForce: 1,
-        editable: false,
-        initialSize: [640, 420]
-      });
-
-      if (code) code.dataset.sequence = cleanDirectSequence;
-      syncStructureDetailSecondaryText(cleanDirectStructure);
-
-      container.addRNA(cleanDirectStructure, {
-        sequence: cleanDirectSequence,
-        structure: cleanDirectStructure
-      });
-      container.addCustomColorsText(buildFornaCustomColorsText(cleanDirectSequence));
-      status.hidden = true;
-      status.textContent = '';
-      return;
-    } catch (_error) {
-      host.innerHTML = '';
-      status.hidden = false;
-      status.textContent = 'Forna failed to load for this record.';
-      return;
-    }
-  }
-
-  const rdatUrl = host.dataset.rdatUrl;
-  const fallbackSequence = host.dataset.sequence || '';
-  if (!rdatUrl) return;
-
-  try {
-    const response = await fetch(rdatUrl);
-    if (!response.ok) throw new Error('Failed to load RDAT');
-    const text = await response.text();
-    const config = parseRdatSecondaryConfig(text, fallbackSequence);
-
-    if (!config) {
-      syncStructureDetailSecondaryText('');
-      host.innerHTML = '';
-      status.textContent = `Secondary structure unavailable for ${foldBridgeId} in the current RDAT.`;
-      return;
-    }
-    if (code) code.dataset.sequence = config.sequence;
-    host.dataset.sequence = config.sequence;
-    host.dataset.structure = config.structure;
-    syncStructureDetailSecondaryText(config.structure);
-
-    await loadFornaAssets();
-    host.innerHTML = '';
-    const container = new window.fornac.FornaContainer('#structure-detail-forna-host', {
-      applyForce: 1,
-      editable: false,
-      initialSize: [640, 420]
-    });
-
-    container.addRNA(config.structure, config);
-    container.addCustomColorsText(buildFornaCustomColorsText(config.sequence));
-    status.hidden = true;
-    status.textContent = '';
-  } catch (_error) {
-    syncStructureDetailSecondaryText('');
-    host.innerHTML = '';
-    status.hidden = false;
-    status.textContent = 'Forna failed to load for this RDAT record.';
   }
 }
 
@@ -1066,67 +677,6 @@ export async function initSequenceDetailMolstar() {
     status.textContent = `Interactive Mol* view loaded from ${structureLabel} with random segmented coloring.`;
   } catch (_e) {
     status.textContent = '3D viewer unavailable right now.';
-  }
-}
-
-export async function initStructureDetailMolstar() {
-  const container = document.getElementById('structure-detail-molstar');
-  const status = document.getElementById('structure-detail-molstar-status');
-  if (!container || !status) return;
-
-  const structureUrl = container.dataset.structureUrl;
-  const structureFormat = container.dataset.structureFormat || 'cif';
-  const structureLabel = container.dataset.structureLabel || 'PDB structure';
-  const structureChain = container.dataset.structureChain || '';
-  if (!structureUrl) return;
-
-  try {
-    await loadMolstarAssets();
-    const source = await resolveRenderableStructureSource(structureUrl, structureFormat, structureLabel, structureChain);
-    const viewer = new window.PDBeMolstarPlugin();
-    viewer.render(container, {
-      customData: { url: source.url, format: source.format },
-      ...(source.assemblyId ? { assemblyId: source.assemblyId } : {}),
-      expanded: false,
-      hideControls: true,
-      bgColor: { r: 255, g: 255, b: 255 }
-    });
-
-    status.textContent = `Interactive Mol* view loaded from ${structureLabel}.`;
-  } catch (_e) {
-    status.textContent = '3D viewer unavailable right now.';
-  }
-}
-
-export async function initPredictedStructureDetailMolstar() {
-  const container = document.getElementById('predicted-structure-detail-molstar');
-  const status = document.getElementById('predicted-structure-detail-molstar-status');
-  if (!container || !status) return;
-
-  const structureUrl = container.dataset.structureUrl;
-  const structureFormat = container.dataset.structureFormat || 'pdb';
-  const structureLabel = container.dataset.structureLabel || 'predicted structure';
-  const sequence = container.dataset.structureSequence || '';
-  const structureSource = container.dataset.structureSource || 'local-fallback';
-  if (!structureUrl) return;
-
-  try {
-    await loadMolstarAssets();
-    const viewer = new window.PDBeMolstarPlugin();
-    viewer.render(container, {
-      customData: { url: structureUrl, format: structureFormat },
-      expanded: false,
-      hideControls: true,
-      bgColor: { r: 255, g: 255, b: 255 }
-    });
-    applyMolstarColoring(viewer, sequence, structureLabel);
-
-    status.textContent =
-      structureSource === 'rnacomposer'
-        ? `RNAComposer predicted 3D model loaded from ${structureLabel}.`
-        : `Predicted 3D fallback model loaded from ${structureLabel}.`;
-  } catch (_e) {
-    status.textContent = 'Predicted 3D viewer unavailable right now.';
   }
 }
 
@@ -1286,178 +836,45 @@ export async function initHomeStructureShowcase() {
   );
 }
 
-function parseRdatMatrix(text, targetSequence = '') {
+function parseRdatMatrix(text) {
   const lines = text.split(/\r?\n/);
   const rowLabels = [];
   const reactivityRows = [];
   const errorRows = [];
-  const annotationLabels = [];
-  const annotationTypes = [];
-  const annotationSequences = [];
   let colLabels = [];
-  let sourceSequence = '';
-  let sourceOffset = 0;
-
-  const parseRdatValueFields = (input) => {
-    const payload = String(input ?? '').trim();
-    if (!payload) return [];
-    if (payload.includes('\t')) {
-      return payload.split('\t').filter(Boolean);
-    }
-    return payload.split(/\s+/).filter(Boolean);
-  };
 
   for (const rawLine of lines) {
     const line = rawLine.trimEnd();
     if (!line) continue;
 
-    if (line.startsWith('SEQUENCE ')) {
-      sourceSequence = line.replace(/^SEQUENCE\s+/, '').trim();
-    } else if (line.startsWith('OFFSET ')) {
-      const parsedOffset = Number.parseInt(line.replace(/^OFFSET\s+/, '').trim(), 10);
-      sourceOffset = Number.isFinite(parsedOffset) ? parsedOffset : 0;
-    } else if (line.startsWith('ANNOTATION_DATA:')) {
+    if (line.startsWith('ANNOTATION_DATA:')) {
       const [, indexPart = ''] = line.split(':');
       const cols = line.split('\t').filter(Boolean);
       const mutationCol = cols.find((entry) => entry.startsWith('mutation:'));
-      const chemicalCol = cols.find((entry) => entry.startsWith('chemical:'));
-      const seqCol = cols.find((entry) => entry.startsWith('sequence:'));
       const index = Number(indexPart.split(/\s+/)[0]);
-      annotationLabels[index - 1] = mutationCol
-        ? mutationCol.replace('mutation:', '')
-        : chemicalCol
-          ? chemicalCol.replace('chemical:', '')
-          : cols.slice(1).join(' | ') || `Row ${index}`;
-      annotationTypes[index - 1] = 'REACTIVITY';
-      if (seqCol) {
-        annotationSequences[index - 1] = seqCol.replace('sequence:', '');
-      }
-    } else if (line.startsWith('DATA_ANNOTATION:')) {
-      const [, indexPart = ''] = line.split(':');
-      const cols = line.split('\t').filter(Boolean);
-      const index = Number(indexPart.split(/\s+/)[0]);
-      const datatypeCol = cols.find((entry) => entry.startsWith('datatype:')) || '';
-      const idCol = cols.find((entry) => entry.startsWith('ID:'));
-      const mutationCol = cols.find((entry) => entry.startsWith('mutation:'));
-      const chemicalCol = cols.find((entry) => entry.startsWith('chemical:'));
-      const modifierCol = cols.find((entry) => entry.startsWith('modifier:'));
-      const seqCol = cols.find((entry) => entry.startsWith('sequence:'));
-      const datatype = datatypeCol.replace('datatype:', '');
-      annotationTypes[index - 1] = datatype;
-      annotationLabels[index - 1] = mutationCol
-        ? mutationCol.replace('mutation:', '')
-        : chemicalCol
-          ? chemicalCol.replace('chemical:', '')
-          : idCol
-            ? idCol.replace('ID:', '')
-            : modifierCol
-              ? modifierCol.replace('modifier:', '')
-              : cols.slice(1).join(' | ') || `Row ${index}`;
-      if (seqCol) {
-        annotationSequences[index - 1] = seqCol.replace('sequence:', '');
-      }
+      rowLabels[index - 1] = mutationCol ? mutationCol.replace('mutation:', '') : `Row ${index}`;
     } else if (line.startsWith('SEQPOS')) {
-      colLabels = parseRdatValueFields(line.replace(/^SEQPOS\b/, ''));
+      colLabels = line.split('\t').slice(1).filter(Boolean);
     } else if (line.startsWith('REACTIVITY_ERROR:')) {
       const [, indexPart = ''] = line.split(':');
       const index = Number(indexPart.split(/\s+/)[0]);
-      errorRows[index - 1] = parseRdatValueFields(line.replace(/^REACTIVITY_ERROR:\d+\s*/, ''))
-        .map((value) => Number.parseFloat(value));
-    } else if (line.startsWith('REACTIVITY:')) {
-      const [, indexPart = ''] = line.split(':');
-      const index = Number(indexPart.split(/\s+/)[0]);
-      rowLabels[index - 1] = annotationLabels[index - 1] || `Row ${index}`;
-      reactivityRows[index - 1] = parseRdatValueFields(line.replace(/^REACTIVITY:\d+\s*/, ''))
-        .map((value) => Number.parseFloat(value));
-    } else if (line.startsWith('DATA:')) {
-      const [, indexPart = ''] = line.split(':');
-      const index = Number(indexPart.split(/\s+/)[0]);
-      const values = line
+      errorRows[index - 1] = line
         .split('\t')
         .slice(1)
         .filter(Boolean)
         .map((value) => Number.parseFloat(value));
-      const annotationType = String(annotationTypes[index - 1] || '').toUpperCase();
-      const label = annotationLabels[index - 1] || `Row ${index}`;
-
-      if (annotationType.startsWith('REACTIVITY_ERROR')) {
-        errorRows.push(values);
-      } else if (annotationType.startsWith('REACTIVITY')) {
-        rowLabels.push(label);
-        reactivityRows.push(values);
-      }
+    } else if (line.startsWith('REACTIVITY:')) {
+      const [, indexPart = ''] = line.split(':');
+      const index = Number(indexPart.split(/\s+/)[0]);
+      reactivityRows[index - 1] = line
+        .split('\t')
+        .slice(1)
+        .filter(Boolean)
+        .map((value) => Number.parseFloat(value));
     }
   }
 
-  let compactRows = reactivityRows
-    .map((values, index) => ({
-      label: rowLabels[index] || `Row ${index + 1}`,
-      values,
-      error: errorRows[index],
-      sequence: annotationSequences[index] || ''
-    }))
-    .filter((entry) => Array.isArray(entry.values) && entry.values.length);
-
-  if (targetSequence) {
-    const normTarget = String(targetSequence).toUpperCase().replace(/T/g, 'U').replace(/[^AUGC]/g, '');
-    if (normTarget) {
-      const filtered = compactRows.filter((entry) => {
-        const normSeq = String(entry.sequence).toUpperCase().replace(/T/g, 'U').replace(/[^AUGC]/g, '');
-        return normSeq && (normSeq.includes(normTarget) || normTarget.includes(normSeq));
-      });
-      if (filtered.length > 0) {
-        compactRows = filtered;
-      }
-    }
-  }
-
-  const cleanSequence = sourceSequence.replace(/\s+/g, '');
-  const normalizeBase = (base) => {
-    const upper = String(base ?? '').toUpperCase();
-    if (upper === 'T') return 'U';
-    return ['A', 'U', 'G', 'C'].includes(upper) ? upper : '';
-  };
-  const colLabelDetails = colLabels.map((label) => {
-    const raw = String(label ?? '').trim();
-    const embeddedBaseMatch = raw.match(/^([AUGCTaugct])(-?\d+)$/);
-    if (embeddedBaseMatch) {
-      const [, baseText, positionText] = embeddedBaseMatch;
-      const base = normalizeBase(baseText);
-      return {
-        raw,
-        base,
-        position: positionText,
-        display: base ? `${base}${positionText}` : raw
-      };
-    }
-
-    const numericPosition = Number.parseInt(raw, 10);
-    if (Number.isFinite(numericPosition) && cleanSequence) {
-      const sequenceIndex = numericPosition - sourceOffset - 1;
-      const base = normalizeBase(cleanSequence[sequenceIndex] || '');
-      return {
-        raw,
-        base,
-        position: raw,
-        display: base ? `${base}${raw}` : raw
-      };
-    }
-
-    return {
-      raw,
-      base: '',
-      position: raw,
-      display: raw
-    };
-  });
-
-  return {
-    rowLabels: compactRows.map((entry) => entry.label),
-    colLabels,
-    colLabelDetails,
-    reactivityRows: compactRows.map((entry) => entry.values),
-    errorRows: compactRows.map((entry) => entry.error || [])
-  };
+  return { rowLabels, colLabels, reactivityRows, errorRows };
 }
 
 function formatHeatmapLabel(label) {
@@ -1473,28 +890,23 @@ export async function initSequenceDetailSecondaryHeatmap() {
   if (!host || !status) return;
 
   const rdatUrl = host.dataset.rdatUrl;
-  const targetSequence = host.dataset.sequence || '';
   if (!rdatUrl) return;
 
-  await renderRdatHeatmap(host, status, rdatUrl, targetSequence);
-}
-
-async function renderRdatHeatmap(host, status, rdatUrl, targetSequence = '') {
   try {
     const response = await fetch(rdatUrl);
     if (!response.ok) throw new Error('Failed to load RDAT');
     const text = await response.text();
-    const parsed = parseRdatMatrix(text, targetSequence);
+    const parsed = parseRdatMatrix(text);
     const labelGap = 10;
     const leftLabelBand = 28;
-    const rightLabelBand = 108;
+    const rightLabelBand = 64;
     const topLabelBand = 58;
     const bottomLabelBand = 28;
     const rows = parsed.reactivityRows.length;
     const cols = parsed.colLabels.length;
     const hostWidth = Math.floor(host.getBoundingClientRect().width || host.clientWidth || 0);
-    const availableWidth = Math.max(620, hostWidth - 12);
-    const cellSize = Math.min(16, Math.max(8, Math.floor((availableWidth - leftLabelBand - rightLabelBand) / cols)));
+    const availableWidth = Math.min(760, Math.max(620, hostWidth - 28));
+    const cellSize = Math.min(12, Math.max(8, Math.floor((availableWidth - leftLabelBand - rightLabelBand) / cols)));
     const width = leftLabelBand + cols * cellSize + rightLabelBand;
     const height = topLabelBand + rows * cellSize + bottomLabelBand;
 
@@ -1502,21 +914,16 @@ async function renderRdatHeatmap(host, status, rdatUrl, targetSequence = '') {
       <div class="sequence-secondary-heatmap-scroll">
         <div class="sequence-secondary-heatmap-stage">
           <canvas class="sequence-secondary-heatmap-canvas"></canvas>
+          <div class="sequence-secondary-heatmap-tooltip" hidden></div>
         </div>
       </div>
     `;
 
     const canvas = host.querySelector('canvas');
+    const tooltip = host.querySelector('.sequence-secondary-heatmap-tooltip');
     const stage = host.querySelector('.sequence-secondary-heatmap-stage');
     const ctx = canvas?.getContext('2d');
-    if (!ctx || !stage) throw new Error('Canvas unavailable');
-    let tooltip = document.querySelector('.sequence-secondary-heatmap-tooltip');
-    if (!tooltip) {
-      tooltip = document.createElement('div');
-      tooltip.className = 'sequence-secondary-heatmap-tooltip';
-      tooltip.hidden = true;
-      document.body.appendChild(tooltip);
-    }
+    if (!ctx || !tooltip || !stage) throw new Error('Canvas unavailable');
     const dpr = window.devicePixelRatio || 1;
     canvas.width = Math.round(width * dpr);
     canvas.height = Math.round(height * dpr);
@@ -1561,13 +968,10 @@ async function renderRdatHeatmap(host, status, rdatUrl, targetSequence = '') {
 
       for (let col = 0; col < cols; col += 1) {
         const x = leftLabelBand + col * cellSize + cellSize / 2;
-        const label = parsed.colLabelDetails?.[col] || {
-          base: '',
-          position: parsed.colLabels[col],
-          display: parsed.colLabels[col]
-        };
-        const nt = label.base || '';
-        const pos = label.position || parsed.colLabels[col];
+        const label = parsed.colLabels[col];
+        const base = label.match(/^([AUGC])(\d+)$/);
+        const nt = base?.[1] ?? '';
+        const pos = base?.[2] ?? label;
 
         ctx.save();
         ctx.translate(x, topLabelBand - labelGap);
@@ -1636,8 +1040,8 @@ async function renderRdatHeatmap(host, status, rdatUrl, targetSequence = '') {
       paint(activeCell);
 
       const rowLabel = formatHeatmapLabel(parsed.rowLabels[row]);
-      const colLabel = parsed.colLabelDetails?.[col]?.display || formatHeatmapLabel(parsed.colLabels[col]);
-      const base = parsed.colLabelDetails?.[col]?.base || '';
+      const colLabel = formatHeatmapLabel(parsed.colLabels[col]);
+      const base = colLabel.match(/^([AUGC])\d+$/)?.[1] ?? '';
       const value = parsed.reactivityRows[row]?.[col];
       const error = parsed.errorRows[row]?.[col];
 
@@ -1649,14 +1053,8 @@ async function renderRdatHeatmap(host, status, rdatUrl, targetSequence = '') {
         <div><span>ERROR</span><strong>${Number.isFinite(error) ? error.toFixed(3) : '—'}</strong></div>
       `;
       tooltip.hidden = false;
-      const tooltipWidth = 210;
-      const tooltipHeight = 150;
-      const viewportWidth = window.innerWidth || document.documentElement.clientWidth || 0;
-      const viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
-      const left = Math.min(event.clientX + 22, viewportWidth - tooltipWidth - 16);
-      const top = Math.min(event.clientY + 22, viewportHeight - tooltipHeight - 16);
-      tooltip.style.left = `${Math.max(12, left)}px`;
-      tooltip.style.top = `${Math.max(12, top)}px`;
+      tooltip.style.left = `${Math.min(x + 22, width - 210)}px`;
+      tooltip.style.top = `${Math.min(y + 22, height - 150)}px`;
     });
 
     stage.addEventListener('mouseleave', () => {
@@ -1664,36 +1062,10 @@ async function renderRdatHeatmap(host, status, rdatUrl, targetSequence = '') {
       paint();
     });
 
-    status.hidden = true;
-    status.textContent = '';
+    status.textContent = 'Hover any cell to inspect mutation, position, reactivity, and error.';
   } catch (_error) {
-    status.hidden = false;
     status.textContent = 'Heatmap data could not be loaded.';
   }
-}
-
-export async function initStructureDetailSecondaryHeatmap() {
-  const host = document.getElementById('structure-detail-heatmap');
-  const status = document.getElementById('structure-detail-heatmap-status');
-  if (!host || !status) return;
-
-  const rdatUrl = host.dataset.rdatUrl;
-  const targetSequence = host.dataset.sequence || '';
-  if (!rdatUrl) return;
-
-  await renderRdatHeatmap(host, status, rdatUrl, targetSequence);
-}
-
-export async function initBrowseDetailSecondaryHeatmap() {
-  const host = document.getElementById('browse-detail-heatmap');
-  const status = document.getElementById('browse-detail-heatmap-status');
-  if (!host || !status) return;
-
-  const rdatUrl = host.dataset.rdatUrl;
-  const targetSequence = host.dataset.sequence || '';
-  if (!rdatUrl) return;
-
-  await renderRdatHeatmap(host, status, rdatUrl, targetSequence);
 }
 
 export function downloadRowsAsCsv(rows, filename = 'sequences.csv') {

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1EXD",
+  "biologicalMoleculeName": "1EXD",
+  "caseId": "1EXD",
+  "caseKey": "1EXD",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1EXD",
+  "profileCount": 8
+}

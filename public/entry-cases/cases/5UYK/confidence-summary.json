@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5UYK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4961,
+  "defaultEvidenceId": "annojoin:5UYK:confidence:B:data-general/P50LIB_2A3_0001.rdat#2206",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2202,
+    "B": 2759
+  },
+  "generatedAt": "2026-08-17T12:18:57.850374Z",
+  "materializedEvidenceCount": 4961,
+  "pdbId": "5UYK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 209,
+    "LOW": 1207,
+    "NOT_SUPPORTED": 3545
+  },
+  "totalEvidenceCount": 4961
+}

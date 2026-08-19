@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6CAO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1175,
+  "defaultEvidenceId": "annojoin:6CAO:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#77151",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 587,
+    "B": 588
+  },
+  "generatedAt": "2026-08-17T12:33:28.063985Z",
+  "materializedEvidenceCount": 1175,
+  "pdbId": "6CAO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 83,
+    "NOT_SUPPORTED": 1091
+  },
+  "totalEvidenceCount": 1175
+}

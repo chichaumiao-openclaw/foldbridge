@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3CME",
+  "biologicalMoleculeName": "3CME",
+  "caseId": "3CME",
+  "caseKey": "3CME",
+  "chains": [
+    "0",
+    "9"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "3CME",
+  "profileCount": 1956
+}

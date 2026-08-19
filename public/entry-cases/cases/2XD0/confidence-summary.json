@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2XD0",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 948,
+  "defaultEvidenceId": "annojoin:2XD0:confidence:A:data-rna-structures/POS240_DMS_0000.rdat#1485",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 456,
+    "B": 492
+  },
+  "generatedAt": "2026-08-17T12:29:17.501284Z",
+  "materializedEvidenceCount": 948,
+  "pdbId": "2XD0",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 232,
+    "NOT_SUPPORTED": 716
+  },
+  "totalEvidenceCount": 948
+}

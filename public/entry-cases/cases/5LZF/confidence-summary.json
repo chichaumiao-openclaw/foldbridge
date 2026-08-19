@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5LZF",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1630,
+  "defaultEvidenceId": "annojoin:5LZF:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#2627",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 589,
+    "B": 1041
+  },
+  "generatedAt": "2026-08-17T11:37:53.237503Z",
+  "materializedEvidenceCount": 1630,
+  "pdbId": "5LZF",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 120,
+    "LOW": 393,
+    "NOT_SUPPORTED": 1117
+  },
+  "totalEvidenceCount": 1630
+}

@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5NPM",
+  "biologicalMoleculeName": "5NPM",
+  "caseId": "5NPM",
+  "caseKey": "5NPM",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "5NPM",
+  "profileCount": 2
+}

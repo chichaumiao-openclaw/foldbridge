@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "2DXI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:2DXI:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#6457",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T11:55:01.373656Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "2DXI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4
+  },
+  "totalEvidenceCount": 4
+}

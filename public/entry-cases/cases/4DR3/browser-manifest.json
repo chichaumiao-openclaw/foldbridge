@@ -1,0 +1,48 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "A": {
+      "case2dPath": "chains/A/case-2d-structure.json.gz",
+      "chainId": "A",
+      "chainRoot": "chains/A",
+      "linkedViewBundlePath": "chains/A/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A",
+  "evidenceChainMap": {
+    "annojoin:4DR3:confidence:A:data-eterna/OK3TST_DMS_0001.rdat#23401": "A",
+    "annojoin:4DR3:confidence:A:data-eterna/OK3TST_DMS_0001.rdat#23404": "A",
+    "annojoin:4DR3:confidence:A:data-eterna/OK3TST_DMS_0001.rdat#24731": "A",
+    "annojoin:4DR3:confidence:A:data-eterna/OK3TST_DMS_0001.rdat#24733": "A",
+    "annojoin:4DR3:confidence:A:data-eterna/OK3TST_DMS_0001.rdat#26472": "A",
+    "annojoin:4DR3:confidence:A:data-eterna/OK3TST_DMS_0001.rdat#26474": "A",
+    "annojoin:4DR3:confidence:A:data-eterna/OK3TST_DMS_0001.rdat#59278": "A",
+    "annojoin:4DR3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#16212": "A",
+    "annojoin:4DR3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#16213": "A",
+    "annojoin:4DR3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#16214": "A",
+    "annojoin:4DR3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#16215": "A",
+    "annojoin:4DR3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#16216": "A",
+    "annojoin:4DR3:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#7352": "A",
+    "annojoin:4DR3:confidence:B:data-eterna/OK3TST_2A3_0001.rdat#23401": "A",
+    "annojoin:4DR3:confidence:B:data-eterna/OK3TST_2A3_0001.rdat#23404": "A",
+    "annojoin:4DR3:confidence:B:data-eterna/OK3TST_2A3_0001.rdat#24731": "A",
+    "annojoin:4DR3:confidence:B:data-eterna/OK3TST_2A3_0001.rdat#24733": "A",
+    "annojoin:4DR3:confidence:B:data-eterna/OK3TST_2A3_0001.rdat#26472": "A",
+    "annojoin:4DR3:confidence:B:data-eterna/OK3TST_2A3_0001.rdat#26474": "A",
+    "annojoin:4DR3:confidence:B:data-eterna/OK3TST_2A3_0001.rdat#59278": "A",
+    "annojoin:4DR3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#16212": "A",
+    "annojoin:4DR3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#16213": "A",
+    "annojoin:4DR3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#16214": "A",
+    "annojoin:4DR3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#16215": "A",
+    "annojoin:4DR3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#16216": "A",
+    "annojoin:4DR3:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#7352": "A"
+  }
+}

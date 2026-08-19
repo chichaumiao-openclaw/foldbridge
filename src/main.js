@@ -1,12 +1,5 @@
 import { cssVarsFor, themeTokens } from './theme.js';
-import { caseManifest } from './generated/caseManifest.js';
-import {
-  predictedStructureIds as generatedPredictedStructureIds,
-  rnaComposerPredictedStructureIds as generatedRnaComposerPredictedStructureIds
-} from './generated/predictedStructureManifest.js';
-import { reactivityGuidedStructurePredictions as generatedReactivityGuidedStructurePredictions } from './generated/reactivityGuidedStructureManifest.js';
-import { localRmdbRecords } from './generated/localRmdbManifest.js';
-import { rmdbPdbBlastRows } from './generated/rmdbPdbBlastRows.js';
+import { renderBundleHeader as renderSharedBundleHeader, renderGlobalNav } from './portalChrome.js';
 import {
   renderGlobalSearch,
   renderFacetPanel,
@@ -21,13 +14,9 @@ import {
   initMolstarModule,
   initHomeStructureShowcase,
   initSequenceDetailMolstar,
-  initSequenceDetailSecondaryHeatmap,
-  initStructureDetailSecondaryForna,
-  initStructureDetailSecondaryHeatmap,
-  initBrowseDetailSecondaryHeatmap,
-  initStructureDetailMolstar,
-  initPredictedStructureDetailMolstar
+  initSequenceDetailSecondaryHeatmap
 } from './modules.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -37,172 +26,85 @@ import {
   siteSummaries,
   stageDiseaseCards
 } from './data.js';
-import { normalizeRoute, routeFromHash } from './router.js';
+import { normalizeRoute, parseHashRoute, routeFromHash } from './router.js';
 import { downloadRowsAsCsv } from './modules.js';
+import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
+import { createCaseStore } from './rmdbCaseStore.js';
+import { createProbingArticleStore } from './probingArticleStore.js';
+import { createHelpContentStore } from './helpContentStore.js';
+import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
+import { createSiteStatsStore } from './siteStatsStore.js';import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
+import { createPdbCitationStore } from './pdbCitationStore.js';
+import {
+  buildAtlasSearchState
+} from './annojoinAtlasData.js';
+import { renderAnnojointAtlasPage } from './annojoinAtlasView.js';
+import { bindAnnojointAtlasTable } from './annojoinAtlasController.js';
+import {
+  annojoinExportRow,
+  buildAnnojointTableGroups,
+  isAnnojointSearchActive,
+  rowCaseId,
+  rowCaseKey,
+  searchAnnojointRows,
+  sortAnnojointCases
+} from './annojoinAtlasTableModel.js';
+import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
+import { normalizeEntryRows } from './entryTable.js';
+import { renderEntryTablePage } from './entryTableView.js';
+import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
+import {
+  initAnnojointCasePage,
+  renderAnnojointCasePage
+} from './annojoinCaseView.js';
+import {
+  buildSearchHash,
+  createSearchService,
+  filtersFromSearchParams,
+  searchParamsFromHash
+} from './search/searchService.js';
 let sequenceRows = [];
 let browseEntryRows = [];
-let structureEntryRows = [];
 let selectedBrowseIds = new Set();
-let selectedStructureIds = new Set();
-let browseCurrentPage = 1;
-let case3dRows = [];
-let case3dCurrentPage = 1;
-let structureCurrentPage = 1;
-let caseDetailSequencePage = 1;
-let activeCaseDetailId = null;
 let selectedSequenceIds = new Set();
+let selectedAnnojointCaseIds = new Set();
+let expandedAnnojointGroupIds = new Set();
+let uncappedAnnojointGroupIds = new Set();
+let annojoinGroupsDefaultedExpanded = false;
 let sequenceSearchQuery = '';
-let advancedSearchQuery = '';
-let advancedSearchSort = 'relevance';
-let advancedSearchView = 'list';
-let advancedSearchFiltersOpen = false;
-let advancedSearchSpecies = 'all';
-let advancedSearchDiscoveryYear = 'all';
-let advancedSearchPdbId = 'all';
-const BROWSE_PAGE_SIZE = 10;
-const CASE3D_PAGE_SIZE = 10;
-const CASE_DETAIL_SEQUENCE_PAGE_SIZE = 10;
-const CASE_BUNDLE_ROOT = 'rmdb_pdb_sequence_cases_rasp_params_besthit_20260610';
-const caseDetailCache = new Map();
-const caseDetailLoading = new Set();
-let homeActiveSpecies = '';
-let homeActiveYear = '';
-let homeTablePage = 1;
+// RMDB→PDB case 资产懒加载层与浏览器侧渲染缓存。
+// store 命中内存缓存避免重复 fetch；下面三类 state 缓存“已加载”结果，
+// 让同步的 pageFor()/render() 路径命中即渲染数据，未命中则渲染 loading 占位并触发后台加载。
+const pdbCaseStore = createCaseStore();
+const annojoinAtlasStore = createAnnojointAtlasStore();
+const probingArticleStore = createProbingArticleStore();
+const homeScrollStoryStore = createHomeScrollStoryStore();
+const helpContentStore = createHelpContentStore({ assetBase: './src/' });
+let helpContentState = null; // null=未加载, 'loading', 'error', 或 help-content.json 对象
+const siteStatsStore = createSiteStatsStore();
+const pdbCitationStore = createPdbCitationStore();
+let pdbCaseIndexState = null; // null=未加载, 'loading', 'error', 或 { cases: [...] }
+const pdbCaseDetailState = new Map(); // pdbId -> 'loading' | 'error' | { detail, profiles, alignmentPage, reactivitySummary }
+let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
+let annojoinDetailRouteIndexState = null; // null=未加载, 'loading', 'error', 或 detail-route-index.json
+const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'error' | generated case asset
+const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
+const annojoinPdbCitationState = new Map(); // pdbId -> 'loading' | 'unavailable' | primary citation
+let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
+let siteStatsState = null; // null=未加载, 'loading', 'error', 或 stats.json
+let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
+let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
+const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
+let entryTableState = null; // null=未加载, 'loading', 'error', 或归一化后的 rows 数组
+let entryMissingPdbsState = new Set(); // 缺页 PDB 集合（降级：命中行只渲染纯文本，不渲染死链）；fetch 失败降级为空集合
+let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
+let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
+let pdbCaseConfidenceFilter = 'all';
+let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
 let homeDashboardFilters = {
   years: [],
   categories: []
 };
-const homeBundleSites = [
-  {
-    name: 'Ribocentre',
-    short: 'RC',
-    tone: 'blue',
-    summary: 'Curated structured RNA entries, sequence annotations, and evidence-backed reference records.',
-    tag: 'External portal',
-    accent: 'core repository',
-    topLabel: 'Ribozyme database',
-    href: 'https://www.ribocentre.org/',
-    action: { label: 'Open site', href: 'https://www.ribocentre.org/' }
-  },
-  {
-    name: 'Switch',
-    short: 'RS',
-    tone: 'green',
-    summary: 'Ligand-responsive riboswitch modules, families, and responsive motif collections for comparison.',
-    tag: 'External portal',
-    accent: 'switch systems',
-    topLabel: 'Riboswitch database',
-    href: 'https://riboswitch.ribocentre.org/',
-    action: { label: 'Open site', href: 'https://riboswitch.ribocentre.org/' }
-  },
-  {
-    name: 'Aptamer',
-    short: 'RA',
-    tone: 'violet',
-    summary: 'Aptamer sequences, assay metadata, target classes, and structural evidence in one entrance.',
-    tag: 'External portal',
-    accent: 'aptamer discovery',
-    topLabel: 'Aptamer database',
-    href: 'https://aptamer.ribocentre.org/',
-    action: { label: 'Open site', href: 'https://aptamer.ribocentre.org/' }
-  },
-  {
-    name: 'GlycoRNA',
-    short: 'GR',
-    tone: 'blue',
-    summary: 'GlycoRNA-focused records and reference content for glycosylated RNA exploration.',
-    tag: 'External portal',
-    accent: 'glycoRNA resource',
-    topLabel: 'GlycoRNA database',
-    href: 'http://www.glycornadb.com',
-    action: { label: 'Open site', href: 'http://www.glycornadb.com' }
-  },
-  {
-    name: 'FoldBridge',
-    short: 'FB',
-    tone: 'gold',
-    summary: 'A structure bridge for folding, visualization, and comparative RNA exploration workflows.',
-    tag: 'Current database',
-    accent: 'folding workspace',
-    topLabel: 'Probing-to-structure bridge',
-    href: null,
-    action: { label: 'Stay here', route: 'home' }
-  }
-];
-
-const case10fzSummary = {
-  pdbId: '10FZ',
-  pdbReferenceId: '10FZ_A',
-  candidatePairRows: 9,
-  rmdbUniqueSequenceCount: 5,
-  rmdbProfileCount: 9,
-  alignmentRows: 436,
-  pdbAxisReactivityRows: 838,
-  projectionStatus: 'pass',
-  projectionMethod: 'rmdb_sequence_position_to_blast_gapped_subject_position_v0',
-  scientificScope: 'sequence alignment projection to a PDB reference axis',
-  sourceNote:
-    'RMDB best-hit sequence pairs were aligned to the 10FZ reference sequence and their per-base reactivity values were projected onto the PDB reference axis. This package does not claim a native 2D map layer or direct structural proof.',
-  blastThresholds: {
-    evalue: '1e-10',
-    percIdentityMin: '90%',
-    strand: 'plus',
-    maxHsps: '1'
-  }
-};
-
-const case10fzMatchedSequences = [
-  {
-    bundleSequenceId: 'top_x_279::seq_e29cf7af54a9ec85',
-    sourceFile: 'data-rna-structures/PDB130_2A3_0000.rdat',
-    sequenceLength: 207,
-    identityFraction: '1.00',
-    queryCoverage: '0.628',
-    pdbCoverage: '0.084'
-  },
-  {
-    bundleSequenceId: 'top_x_279::seq_c25f07344fe9e9f4',
-    sourceFile: 'data-rna-structures/PDB130_DMS_0000.rdat',
-    sequenceLength: 207,
-    identityFraction: '1.00',
-    queryCoverage: '0.628',
-    pdbCoverage: '0.084'
-  },
-  {
-    bundleSequenceId: 'top_x_279::seq_76782c154e2f23b4',
-    sourceFile: 'data-eterna/OK2TRN_2A3_0000.rdat',
-    sequenceLength: 177,
-    identityFraction: '1.00',
-    queryCoverage: '0.576',
-    pdbCoverage: '0.066'
-  },
-  {
-    bundleSequenceId: 'top_x_279::seq_3d84d5079bda7b01',
-    sourceFile: 'data-eterna/RYOS2_1M7_0000.rdat',
-    sequenceLength: 130,
-    identityFraction: '1.00',
-    queryCoverage: '0.669',
-    pdbCoverage: '0.056'
-  },
-  {
-    bundleSequenceId: 'nonpuzzle_fail_rescue::seq_c58e83f86f91235f',
-    sourceFile: 'data-eterna/ETERNA_R74_0000.rdat',
-    sequenceLength: 107,
-    identityFraction: '1.00',
-    queryCoverage: '0.589',
-    pdbCoverage: '0.041'
-  }
-];
-
-const case10fzReactivityPreview = [
-  { pdbPos: 1, pdbBase: 'A', source: 'PDB130_DMS_0000', rmdbPos: 27, reactivity: '0.2489', error: '0.1505' },
-  { pdbPos: 1, pdbBase: 'A', source: 'PDB130_2A3_0000', rmdbPos: 27, reactivity: '0.0059', error: '0.0279' },
-  { pdbPos: 1, pdbBase: 'A', source: 'RYOS2_1M7_0000', rmdbPos: 5, reactivity: '0.7695', error: '0.1191' },
-  { pdbPos: 2, pdbBase: 'A', source: 'RYOS2_MG50_0000', rmdbPos: 6, reactivity: '1.2238', error: '0.1945' },
-  { pdbPos: 3, pdbBase: 'A', source: 'OK2TRN_DMS_0000', rmdbPos: 27, reactivity: '1.2304', error: '0.0981' },
-  { pdbPos: 4, pdbBase: 'U', source: 'OK2TRN_2A3_0000', rmdbPos: 28, reactivity: '1.9489', error: '0.1257' }
-];
-
 const technologyCategories = [
   {
     id: 'shape-based-probing',
@@ -255,48 +157,44 @@ function createTechnologyMethod({
   strengths,
   caveats,
   workflow,
-  workflowIntro,
   foldbridgeUse,
-  references,
-  literatureHighlights
+  references
 }) {
   return {
     slug,
     title,
     category,
-    subtitle: subtitle ?? `A specialized ${title} sequencing workflow for RNA structure and accessibility profiling within the ${category} family.`,
-    reagent: reagent ?? 'Selective chemical modification or structure-specific enzymatic cleavage agents',
-    readout: readout ?? 'Next-generation sequencing counts of single-nucleotide termination or mutation events',
-    bestFor: bestFor ?? `High-resolution secondary-structure modeling using ${category} techniques`,
-    whatItReads: whatItReads ?? 'Base accessibility, ribose backbone flexibility, or protection from chemical or enzymatic modifiers',
+    subtitle: subtitle ?? `${title} within the ${category} family.`,
+    reagent: reagent ?? 'See protocol-specific chemistry and library design',
+    readout: readout ?? 'Sequencing-derived structure or accessibility signal',
+    bestFor: bestFor ?? `Browsing ${category} workflows and expanding into a dedicated child page later`,
+    whatItReads: whatItReads ?? 'Local RNA accessibility, flexibility, or protection signatures',
     outputs: outputs ?? [
-      `Quantitative ${title} reactivity or accessibility profile at single-nucleotide resolution`,
-      'Secondary structure prediction constraints for folding algorithms',
-      'Comparative structural profiles across different cellular states or temperatures'
+      `${title} reactivity or cleavage profiles`,
+      'Condition-to-condition comparison tables',
+      'Structure interpretation summaries'
     ],
     strengths: strengths ?? [
-      'Provides high-resolution structural constraints for secondary-structure modeling',
-      `Enables comparative analysis of RNA conformations within the ${category} module`,
-      'Scales efficiently from targeted transcripts to genome-wide structure profiling'
+      `Fits naturally inside the ${category} module`,
+      'Provides a clear child-page entry for future expansion',
+      'Can later hold figures, protocols, examples, and references'
     ],
     caveats: caveats ?? [
-      'Requires optimized reaction conditions to avoid RNA degradation or over-digestion',
-      'Reactivity reflects population-average conformations rather than single structural states',
-      'Best interpreted in conjunction with complementary thermodynamic or tertiary structural data'
+      'This page is currently a technology placeholder rather than a full protocol review',
+      'Final interpretation depends on the exact experimental implementation',
+      'Best understood together with complementary structural evidence'
     ],
     workflow: workflow ?? [
-      `Prepare the RNA targets in native or modified folding conditions`,
-      `Perform the chemical or enzymatic probing reaction using specialized modifiers`,
-      'Extract the probed RNA and perform reverse transcription to capture modification/cleavage signals',
-      'Sequence the library and calculate reactivity scores for secondary structure constraint modeling'
+      `Introduce the core idea behind ${title}`,
+      'Explain the chemistry or enzymatic logic used by the method',
+      'Summarize how the sequencing readout is generated',
+      'Show how the output is interpreted in structure analysis'
     ],
-    workflowIntro: workflowIntro ?? `The ${title} method follows a standard four-stage structure probing pipeline: RNA folding preparation, chemical/enzymatic modification, reverse transcription signal capture, and sequencing data processing to output base accessibility profiles.`,
-    foldbridgeUse: foldbridgeUse ?? `FoldBridge integrates ${title} accessibility data as experimental constraints for secondary structure modeling, linking nucleotide-level flexibility measurements with predicted tertiary structures.`,
+    foldbridgeUse: foldbridgeUse ?? `FoldBridge can use ${title} as a dedicated child page under ${category}, so users can browse by category first and then drill into method-specific details.`,
     references: references ?? [
-      'Spitale RC et al. Structural imprints in vivo decode RNA regulatory mechanisms. Nature. 2015.',
-      'Siegfried NA et al. RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP). Nat Methods. 2014.'
-    ],
-    literatureHighlights: literatureHighlights ?? []
+      `${title} primary reference placeholder for project curation.`,
+      `${category} overview reference placeholder for project curation.`
+    ]
   };
 }
 
@@ -310,27 +208,6 @@ const technologyMethods = [
     readout: 'Sequencing counts from single- and double-strand cleavage products',
     bestFor: 'Transcriptome-scale secondary-structure profiling in vitro',
     whatItReads: 'Relative single-stranded versus double-stranded enzyme accessibility',
-    outputs: [
-      'Genome-scale single-strand versus double-strand cleavage scores',
-      'Transcript-level secondary-structure profiles under in vitro conditions',
-      'Comparative structural maps across transcripts or transcript regions'
-    ],
-    strengths: [
-      'Well suited to transcriptome-scale in vitro structure profiling',
-      'Directly contrasts single-strand and double-strand nuclease sensitivities',
-      'Useful for broad structural landscape mapping before targeted follow-up experiments'
-    ],
-    caveats: [
-      'Profiles are generated in vitro and may not fully capture cellular remodeling or protein-bound states',
-      'Interpretation depends on enzyme specificity, digestion conditions, and library normalization',
-      'Cleavage-based approaches can be less informative for fast dynamics than chemistry-based flexibility readouts'
-    ],
-    workflowIntro: 'PARS combines parallel nuclease digestion with deep sequencing to compare single-stranded and double-stranded accessibility across many RNAs at once.',
-    literatureHighlights: [
-      'The foundational PARS study showed that parallel treatment with structure-specific nucleases can generate transcriptome-wide secondary-structure maps in yeast.',
-      'Later transcriptome-wide studies extended the same logic to mammalian systems and highlighted widespread structural variation across RNA regions and biological contexts.',
-      'PARS is especially useful when the goal is broad structural landscape mapping rather than live-cell probing of RNA dynamics.'
-    ],
     references: [
       'Kertesz M et al. Genome-wide measurement of RNA secondary structure in yeast. Nature. 2010.',
       'Wan Y et al. Landscape and variation of RNA secondary structure across the human transcriptome. Nature. 2014.'
@@ -365,128 +242,17 @@ const technologyMethods = [
     readout: 'Reverse-transcription stop signatures at modified bases',
     bestFor: 'Transcriptome-wide accessibility mapping under native-like conditions',
     whatItReads: 'Exposure of A and C bases that are not base-paired or are locally accessible',
-    outputs: [
-      'Transcriptome-wide DMS accessibility profiles at A and C residues',
-      'Condition-specific maps of local RNA unfolding or protection in vivo',
-      'Comparative datasets linking translation, RNA-binding, and structural accessibility'
-    ],
-    strengths: [
-      'Native in vivo readout of base accessibility in cellular RNA populations',
-      'Strong for identifying actively unfolded or remodeled RNA regions across transcripts',
-      'Integrates naturally with transcriptome-scale regulatory analysis'
-    ],
-    caveats: [
-      'DMS primarily reports on accessible A and C residues rather than all nucleotide positions',
-      'RT-stop based readouts can miss some events relative to mutational-profiling implementations',
-      'Signals reflect both structure and cellular context, including protein occupancy and translation'
-    ],
-    workflowIntro: 'DMS-seq uses dimethyl sulfate to methylate exposed adenines and cytosines in RNA, then captures those modification events through sequencing-based reverse-transcription stops.',
-    literatureHighlights: [
-      'The foundational DMS-seq work showed that many mRNA structures are actively unfolded in vivo, particularly by translating ribosomes.',
-      'Subsequent studies used in-cell accessibility maps to connect RNA structure with regulatory logic, including protein binding and post-transcriptional control.',
-      'DMS-seq established base-accessibility profiling as a practical transcriptome-wide strategy for studying RNA structure inside cells.'
-    ],
     references: [
       'Rouskin S et al. Genome-wide probing of RNA structure reveals active unfolding of mRNA structures in vivo. Nature. 2014.',
       'Spitale RC et al. Structural imprints in vivo decode RNA regulatory mechanisms. Nature. 2015.'
     ]
   }),
-  createTechnologyMethod({
-    slug: 'structure-seq',
-    title: 'Structure-seq',
-    category: 'DMS-based probing',
-    subtitle: 'In vivo DMS-guided structure sequencing across cellular transcriptomes.',
-    reagent: 'Dimethyl sulfate in living cells',
-    readout: 'Reverse-transcription stops at modified accessible bases',
-    bestFor: 'Genome-wide RNA secondary-structure profiling in living cells and whole transcriptomes',
-    whatItReads: 'In-cell accessibility of Watson-Crick faces at reactive adenines and cytosines',
-    outputs: [
-      'In vivo transcriptome-wide structure profiles',
-      'Condition-aware accessibility maps for structured RNAs and mRNAs',
-      'Structural features that can be integrated with regulation, stress, or developmental state'
-    ],
-    strengths: [
-      'Captures RNA structure directly in living cells rather than only after extraction',
-      'Adapted for large-scale transcriptome profiling with biological context preserved',
-      'Useful for comparing structural regulation across conditions or species'
-    ],
-    caveats: [
-      'Like related DMS-based methods, it is limited to reactive base types and does not directly report every nucleotide',
-      'Library quality and reverse-transcription behavior strongly affect signal interpretation',
-      'Observed accessibility can reflect both RNA folding and protein or ribosome occupancy'
-    ],
-    workflowIntro: 'Structure-seq applies in vivo DMS modification, enriches the resulting reverse-transcription stop information by sequencing, and reconstructs transcriptome-scale accessibility patterns under native cellular conditions.',
-    literatureHighlights: [
-      'The foundational Structure-seq study demonstrated that transcriptome-wide in vivo RNA structure profiling could reveal regulatory features not evident from sequence alone.',
-      'Structure-seq helped establish that cellular RNA folding should be measured in context, because living systems reshape accessibility through translation, binding partners, and condition-specific remodeling.',
-      'It became one of the central DMS-based frameworks for large-scale in vivo RNA secondary-structure analysis.'
-    ],
-    references: [
-      'Ding Y et al. In vivo genome-wide profiling of RNA secondary structure reveals novel regulatory features. Nature. 2014.'
-    ]
-  }),
-  createTechnologyMethod({
-    slug: 'structure-seq-cap',
-    title: 'Structure-Seq',
-    category: 'DMS-based probing',
-    subtitle: 'Capitalized naming variant often used in literature and figure labels.',
-    reagent: 'Dimethyl sulfate in living cells',
-    readout: 'Reverse-transcription stops at modified accessible bases',
-    bestFor: 'Genome-wide RNA secondary-structure profiling in living cells and whole transcriptomes',
-    whatItReads: 'In-cell accessibility of Watson-Crick faces at reactive adenines and cytosines',
-    outputs: [
-      'In vivo transcriptome-wide structure profiles',
-      'Condition-aware accessibility maps for structured RNAs and mRNAs',
-      'Structural features that can be integrated with regulation, stress, or developmental state'
-    ],
-    strengths: [
-      'Captures RNA structure directly in living cells rather than only after extraction',
-      'Adapted for large-scale transcriptome profiling with biological context preserved',
-      'Useful for comparing structural regulation across conditions or species'
-    ],
-    caveats: [
-      'Like related DMS-based methods, it is limited to reactive base types and does not directly report every nucleotide',
-      'Library quality and reverse-transcription behavior strongly affect signal interpretation',
-      'Observed accessibility can reflect both RNA folding and protein or ribosome occupancy'
-    ],
-    workflowIntro: 'Structure-Seq is the same method family as Structure-seq; this page preserves the capitalization variant commonly used in figures and method listings.',
-    literatureHighlights: [
-      'The foundational Structure-seq study demonstrated that transcriptome-wide in vivo RNA structure profiling could reveal regulatory features not evident from sequence alone.',
-      'Structure-seq helped establish that cellular RNA folding should be measured in context, because living systems reshape accessibility through translation, binding partners, and condition-specific remodeling.',
-      'It became one of the central DMS-based frameworks for large-scale in vivo RNA secondary-structure analysis.'
-    ],
-    references: [
-      'Ding Y et al. In vivo genome-wide profiling of RNA secondary structure reveals novel regulatory features. Nature. 2014.'
-    ]
-  }),
-  createTechnologyMethod({ 
-    slug: 'structure-seq2', 
-    title: 'Structure-seq2', 
-    category: 'DMS-based probing', 
-    subtitle: 'Updated Structure-seq workflow with improved transcriptome-scale handling.',
-    references: ['Ritchey LE et al. Structure-seq2: sensitive and accurate genome-wide profiling of RNA structure in vivo. Nucleic Acids Res. 2017.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'cirs-seq', 
-    title: 'CIRS-seq', 
-    category: 'DMS-based probing', 
-    subtitle: 'Chemical inference of RNA structures by sequencing.',
-    references: ['Incarnato D et al. Genome-wide profiling of mouse RNA secondary structures reveals key features of the mammalian transcriptome. Genome Biol. 2014.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'mod-seq', 
-    title: 'Mod-seq', 
-    category: 'DMS-based probing', 
-    subtitle: 'Modification sequencing workflow for RNA chemical probing readouts.',
-    references: ['Talkish J et al. Mod-seq: high-throughput sequencing for chemical probing of RNA structure. RNA. 2014.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'dim-2p-seq', 
-    title: 'DIM-2P-seq', 
-    category: 'DMS-based probing', 
-    subtitle: 'DMS-family sequencing workflow for differential structural profiling.',
-    references: ['Tomezsko PJ et al. Determination of RNA structural ensembles in living cells using DIM-2P-seq. Nat Methods. 2020.']
-  }),
+  createTechnologyMethod({ slug: 'structure-seq', title: 'Structure-seq', category: 'DMS-based probing', subtitle: 'In vivo DMS-guided structure sequencing across cellular transcriptomes.' }),
+  createTechnologyMethod({ slug: 'structure-seq-cap', title: 'Structure-Seq', category: 'DMS-based probing', subtitle: 'Capitalized naming variant often used in literature and figure labels.' }),
+  createTechnologyMethod({ slug: 'structure-seq2', title: 'Structure-seq2', category: 'DMS-based probing', subtitle: 'Updated Structure-seq workflow with improved transcriptome-scale handling.' }),
+  createTechnologyMethod({ slug: 'cirs-seq', title: 'CIRS-seq', category: 'DMS-based probing', subtitle: 'Chemical inference of RNA structures by sequencing.' }),
+  createTechnologyMethod({ slug: 'mod-seq', title: 'Mod-seq', category: 'DMS-based probing', subtitle: 'Modification sequencing workflow for RNA chemical probing readouts.' }),
+  createTechnologyMethod({ slug: 'dim-2p-seq', title: 'DIM-2P-seq', category: 'DMS-based probing', subtitle: 'DMS-family sequencing workflow for differential structural profiling.' }),
   createTechnologyMethod({
     slug: 'dms-mapseq',
     title: 'DMS-MaPseq',
@@ -496,46 +262,13 @@ const technologyMethods = [
     readout: 'Mutation frequencies induced at modified A/C sites',
     bestFor: 'Robust in vivo probing with improved event capture through mutational profiling',
     whatItReads: 'Base accessibility encoded as mutation signatures instead of only RT stops',
-    outputs: [
-      'Per-base mutation-frequency maps reporting DMS accessibility',
-      'Targeted or transcriptome-scale structure datasets with improved event capture',
-      'Mutation-based profiles suited to comparative or multiplexed analysis'
-    ],
-    strengths: [
-      'Captures modification events as mutations rather than relying only on reverse-transcription termination',
-      'Works well for targeted and large-scale in vivo DMS probing workflows',
-      'Improves quantitative event recovery for many RNAs and experimental designs'
-    ],
-    caveats: [
-      'Interpretation still depends on DMS reactivity constraints and mutational-profiling calibration',
-      'Mutation calling, background subtraction, and coverage thresholds matter substantially',
-      'Accessibility signals remain shaped by cellular binding partners and translation state'
-    ],
-    workflowIntro: 'DMS-MaPseq couples DMS modification with mutational profiling reverse transcription so that chemical adducts are read out as sequence changes instead of primarily as stops.',
-    literatureHighlights: [
-      'DMS-MaPseq showed that mutational profiling can recover DMS accessibility information with a more tolerant and information-rich readout than classic stop-based approaches.',
-      'The method helped standardize DMS probing workflows that scale from individual RNAs to transcriptome-wide analysis.',
-      'Its main contribution was methodological: it made DMS-based structure probing more quantitative and broadly deployable in sequencing workflows.'
-    ],
     references: [
       'Zubradt M et al. DMS-MaPseq for genome-wide or targeted RNA structure probing in vivo. Nat Methods. 2017.',
       'Busan S, Weeks KM. Accurate detection of chemical modifications in RNA by mutational profiling. Example overview reference.'
     ]
   }),
-  createTechnologyMethod({ 
-    slug: 'rapid-mapseq', 
-    title: 'RAPiD-MaPseq', 
-    category: 'DMS-based probing', 
-    subtitle: 'Fast DMS-family mutational profiling workflow for comparative structure analysis.',
-    references: ['Zubradt M et al. DMS-MaPseq for genome-wide or targeted RNA structure probing in vivo. Nat Methods. 2017.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'tnet-mapseq', 
-    title: 'tNet-MaPseq', 
-    category: 'DMS-based probing', 
-    subtitle: 'Network-scale MaPseq-style DMS analysis across transcript sets.',
-    references: ['Zubradt M et al. Widespread influence of 3′-end structures on mammalian mRNA processing and stability. Cell. 2017.']
-  }),
+  createTechnologyMethod({ slug: 'rapid-mapseq', title: 'RAPiD-MaPseq', category: 'DMS-based probing', subtitle: 'Fast DMS-family mutational profiling workflow for comparative structure analysis.' }),
+  createTechnologyMethod({ slug: 'tnet-mapseq', title: 'tNet-MaPseq', category: 'DMS-based probing', subtitle: 'Network-scale MaPseq-style DMS analysis across transcript sets.' }),
   createTechnologyMethod({
     slug: 'shape',
     title: 'SHAPE',
@@ -545,217 +278,24 @@ const technologyMethods = [
     readout: 'Stops, mutations, or normalized SHAPE reactivity',
     bestFor: 'General secondary-structure modeling across diverse RNAs',
     whatItReads: 'Local nucleotide flexibility at the ribose 2\'-hydroxyl',
-    outputs: [
-      'Per-nucleotide SHAPE reactivity profiles',
-      'Secondary-structure models constrained by experimental probing',
-      'Comparative maps across ligand, mutant, or time-resolved conditions'
-    ],
-    strengths: [
-      'Largely base-agnostic readout because modification occurs at the ribose 2\'-hydroxyl rather than a specific nucleobase',
-      'Single-nucleotide resolution that can be folded directly into secondary-structure prediction pipelines',
-      'Adaptable to focused RNAs, long viral genomes, and sequencing-based extensions such as SHAPE-Seq and SHAPE-MaP'
-    ],
-    caveats: [
-      'SHAPE reactivity reports local flexibility, not base pairing alone, so tertiary contacts and dynamics can complicate interpretation',
-      'Secondary-structure inference improves with SHAPE constraints but is not always unique; confidence estimates and orthogonal validation still matter',
-      'Signal quality depends on reagent choice, reverse-transcription chemistry, normalization, and experimental context'
-    ],
-    workflow: [
-      'Fold or prepare the RNA under the experimental condition of interest and split modified versus no-reagent control samples',
-      'Treat the RNA with a SHAPE reagent such as NMIA, 1M7, or NAI so flexible nucleotides preferentially acquire 2\'-O adducts',
-      'Read out modification events by primer extension or mutational profiling, then normalize the signal to obtain per-nucleotide reactivities',
-      'Use the reactivity profile to guide structure modeling, compare conditions, and prioritize regions for mechanistic follow-up'
-    ],
-    workflowIntro: 'In practice, a SHAPE experiment moves from controlled RNA preparation to selective 2\'-hydroxyl acylation, then to signal readout and computational interpretation. The workflow below matches the way the foundational SHAPE papers describe the method.',
-    foldbridgeUse: 'FoldBridge can present SHAPE as a core entry point for RNA chemical probing because the method links experimental flexibility measurements to practical secondary-structure modeling. A strong detail page should explain the chemistry, what the signal means biologically, and where SHAPE works especially well versus where complementary data are still needed.',
-    literatureHighlights: [
-      'The original SHAPE papers established that acylation of the ribose 2\'-hydroxyl can report nucleotide-by-nucleotide flexibility with broad applicability across RNA sequences and folds.',
-      'Follow-up reagent development introduced faster chemistries such as 1M7, which improved temporal resolution and made dynamic or complex RNAs easier to probe reproducibly.',
-      'Large-scale applications showed SHAPE could move beyond small model RNAs, including whole-genome structural mapping of HIV-1 and later sequencing-based implementations.',
-      'Benchmarking studies also showed an important limitation: SHAPE-guided models are powerful but not automatically definitive, so helix-level confidence and orthogonal validation remain good practice.'
-    ],
     references: [
-      'Merino EJ, Wilkinson KA, Coughlan JL, Weeks KM. RNA structure analysis at single nucleotide resolution by selective 2\'-hydroxyl acylation and primer extension (SHAPE). J Am Chem Soc. 2005.',
-      'Mortimer SA, Weeks KM. A fast-acting reagent for accurate analysis of RNA secondary and tertiary structure by SHAPE chemistry. J Am Chem Soc. 2008.',
-      'Deigan KE, Li TW, Mathews DH, Weeks KM. Accurate SHAPE-directed RNA structure determination. Proc Natl Acad Sci U S A. 2009.',
-      'Watts JM, Dang KK, Gorelick RJ, et al. Architecture and secondary structure of an entire HIV-1 RNA genome. Nature. 2009.',
-      'Kladwang W, VanLang CC, Cordero P, Das R. Understanding the errors of SHAPE-directed RNA structure modeling. Biochemistry. 2011.',
-      'Lucks JB, Mortimer SA, Trapnell C, et al. Multiplexed RNA structure characterization with selective 2\'-hydroxyl acylation analyzed by primer extension sequencing (SHAPE-Seq). Proc Natl Acad Sci U S A. 2011.',
-      'Siegfried NA, Busan S, Rice GM, Nelson JAE, Weeks KM. RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP). Nat Methods. 2014.'
+      'Weeks KM. Advances in RNA structure analysis by chemical probing. Curr Opin Struct Biol. 2010.',
+      'Mortimer SA, Weeks KM. Time-resolved RNA SHAPE chemistry. Example overview reference.'
     ]
   }),
-  createTechnologyMethod({
-    slug: 'shape-seq',
-    title: 'SHAPE-seq',
-    category: 'SHAPE-based probing',
-    subtitle: 'Sequencing-enabled SHAPE workflow for high-throughput RNA structure analysis.',
-    reagent: 'SHAPE reagents such as 1M7 followed by sequencing library preparation',
-    readout: 'Sequencing-based quantification of SHAPE-induced reverse-transcription events',
-    bestFor: 'High-throughput structure analysis of many RNAs or designed RNA libraries',
-    whatItReads: 'Per-nucleotide backbone flexibility encoded through SHAPE chemistry and sequencing',
-    outputs: [
-      'Sequencing-based SHAPE reactivity profiles',
-      'Parallel structural measurements across many RNAs or conditions',
-      'Data suitable for constrained structure modeling and design analysis'
-    ],
-    strengths: [
-      'Brings SHAPE chemistry into scalable sequencing workflows',
-      'Useful for multiplexed experiments and synthetic or designed RNA sets',
-      'Retains the structural interpretability of SHAPE while increasing throughput'
-    ],
-    caveats: [
-      'Library construction and normalization can introduce additional technical variance',
-      'Readout still reflects flexibility rather than base pairing alone',
-      'Coverage depth can limit confidence for low-abundance or long targets'
-    ],
-    workflowIntro: 'SHAPE-seq integrates classic SHAPE chemistry with sequencing so that many RNAs can be profiled in parallel instead of one by one.',
-    literatureHighlights: [
-      'SHAPE-seq showed that SHAPE chemistry could be coupled to sequencing without losing its value for structure inference.',
-      'The method was especially important for scaling RNA structure analysis to multiplexed libraries and many experimental conditions.',
-      'It helped bridge small-scale biochemical probing and broader comparative RNA analysis workflows.'
-    ],
-    references: [
-      'Lucks JB et al. Multiplexed RNA structure characterization with selective 2\'-hydroxyl acylation analyzed by primer extension sequencing (SHAPE-Seq). Proc Natl Acad Sci U S A. 2011.'
-    ]
-  }),
-  createTechnologyMethod({
-    slug: 'shape-map',
-    title: 'SHAPE-MaP',
-    category: 'SHAPE-based probing',
-    subtitle: 'Mutational profiling implementation of SHAPE reactivity measurement.',
-    reagent: 'SHAPE chemistry with mutational profiling reverse transcription',
-    readout: 'Mutation frequencies induced by SHAPE adducts during reverse transcription',
-    bestFor: 'Accurate and scalable SHAPE-guided structure analysis with sequencing readout',
-    whatItReads: 'RNA backbone flexibility captured as mutation signatures rather than only extension stops',
-    outputs: [
-      'Mutation-based SHAPE reactivity profiles',
-      'High-confidence datasets for motif discovery and constrained folding',
-      'Comparative structure maps across conditions, mutants, or long RNAs'
-    ],
-    strengths: [
-      'More information-rich readout than stop-only SHAPE approaches',
-      'Strong fit for long RNAs, complex motifs, and sequencing-based comparative studies',
-      'Widely used bridge between classical SHAPE chemistry and modern RNA informatics'
-    ],
-    caveats: [
-      'Mutation calling and background correction are central to data quality',
-      'Interpretation still depends on appropriate normalization and structural modeling',
-      'Signal remains sensitive to protocol details such as RT conditions and reagent handling'
-    ],
-    workflowIntro: 'SHAPE-MaP replaces a purely stop-based SHAPE readout with mutational profiling, allowing SHAPE adducts to be recorded as sequence changes during reverse transcription.',
-    literatureHighlights: [
-      'SHAPE-MaP demonstrated that mutational profiling could substantially strengthen SHAPE-based structure analysis and motif discovery.',
-      'The method became a key platform for applying SHAPE chemistry to long, structured, and information-dense RNAs.',
-      'It is now one of the most influential sequencing-based descendants of the original SHAPE framework.'
-    ],
-    references: [
-      'Siegfried NA, Busan S, Rice GM, Nelson JAE, Weeks KM. RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP). Nat Methods. 2014.'
-    ]
-  }),
-  createTechnologyMethod({ 
-    slug: 'nai-map', 
-    title: 'NAI-MaP', 
-    category: 'SHAPE-based probing', 
-    subtitle: 'NAI-based mutational profiling for structure probing in native-like settings.',
-    references: ['Siegfried NA, Busan S, Rice GM, Nelson JAE, Weeks KM. RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP). Nat Methods. 2014.']
-  }),
-  createTechnologyMethod({
-    slug: 'icshape',
-    title: 'icSHAPE',
-    category: 'SHAPE-based probing',
-    subtitle: 'In vivo click SHAPE workflow for transcriptome-wide structure profiling.',
-    reagent: 'Cell-permeable SHAPE reagent with click-enrichment workflow',
-    readout: 'Transcriptome-wide SHAPE accessibility after in-cell modification and enrichment',
-    bestFor: 'Large-scale in vivo RNA structure profiling with cellular context preserved',
-    whatItReads: 'In-cell nucleotide flexibility and accessibility across the transcriptome',
-    outputs: [
-      'Transcriptome-wide in vivo SHAPE profiles',
-      'Structure maps linked to RNA processing, localization, or protein binding',
-      'Comparative accessibility datasets across cellular compartments or states'
-    ],
-    strengths: [
-      'Extends SHAPE-style probing into living cells at transcriptome scale',
-      'Provides a direct route to studying structure in regulatory cellular contexts',
-      'Useful for connecting RNA structure with functional genomic features'
-    ],
-    caveats: [
-      'Signal interpretation still requires care because accessibility reflects both folding and molecular environment',
-      'Enrichment and library preparation add complexity beyond classic focused SHAPE experiments',
-      'Transcript abundance and recovery biases can affect apparent coverage across RNAs'
-    ],
-    workflowIntro: 'icSHAPE brings SHAPE-like chemistry into living cells and combines it with enrichment and sequencing to profile RNA structure transcriptome-wide in vivo.',
-    literatureHighlights: [
-      'The foundational icSHAPE paper showed that transcriptome-wide in vivo SHAPE-style structure profiling can reveal regulatory structure signatures not visible in sequence alone.',
-      'It helped establish a framework for comparing RNA structure across cellular regions and biological states.',
-      'icSHAPE is especially influential because it pushed backbone-flexibility probing from targeted RNAs into systems-scale cellular analysis.'
-    ],
-    references: [
-      'Spitale RC et al. Structural imprints in vivo decode RNA regulatory mechanisms. Nature. 2015.'
-    ]
-  }),
-  createTechnologyMethod({ 
-    slug: 'icshape-map', 
-    title: 'icSHAPE-MaP', 
-    category: 'SHAPE-based probing', 
-    subtitle: 'Combined icSHAPE and MaP-style workflow for in-cell structure analysis.',
-    references: ['Spitale RC et al. Structural imprints in vivo decode RNA regulatory mechanisms. Nature. 2015.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'smartshape', 
-    title: 'smartSHAPE', 
-    category: 'SHAPE-based probing', 
-    subtitle: 'SHAPE workflow optimized for richer transcriptome-scale structure interpretation.',
-    references: ['Flynn RA et al. Transcriptome-wide modeling of RNA structure in living cells. Nat Commun. 2016.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'cotranscriptional-shape-seq', 
-    title: 'Cotranscriptional SHAPE-seq', 
-    category: 'SHAPE-based probing', 
-    subtitle: 'SHAPE-seq workflow designed to monitor cotranscriptional folding.',
-    references: ['Watters KE et al. Cotranscriptional folding of a riboswitch at nucleotide resolution. Nat Struct Mol Biol. 2016.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'nuc-shape-structure-seq', 
-    title: 'Nuc-SHAPE-Structure-Seq', 
-    category: 'SHAPE-based probing', 
-    subtitle: 'SHAPE-family sequencing method focused on nuclear RNA structure landscapes.',
-    references: ['Ding Y et al. In vivo genome-wide profiling of RNA secondary structure. Nature. 2014.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'chemmodseq', 
-    title: 'ChemModSeq', 
-    category: 'SHAPE-based probing', 
-    subtitle: 'Chemical modification sequencing workflow within the SHAPE-family module.',
-    references: ['Talkish J et al. Mod-seq: high-throughput sequencing for chemical probing of RNA structure. RNA. 2014.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'keth-seq', 
-    title: 'Keth-seq', 
-    category: 'Guanine-specific probing', 
-    subtitle: 'Guanine-focused sequencing method for specialized probing readout.',
-    references: ['Weng X et al. Keth-seq for transcriptome-wide RNA structure mapping. Nat Commun. 2020.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'lead-seq', 
-    title: 'Lead-seq', 
-    category: 'Cleavage / footprinting', 
-    subtitle: 'Lead-dependent cleavage sequencing for RNA structure readout.',
-    references: ['Twittenhoff C et al. Lead-seq: transcriptome-wide structure probing using lead(II) ions. Nucleic Acids Res. 2020.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'rl-seq', 
-    title: 'RL-seq', 
-    category: 'Cleavage / footprinting', 
-    subtitle: 'Cleavage-oriented sequencing workflow for structural accessibility analysis.',
-    references: ['Siegfried NA et al. RNA motif discovery by SHAPE and mutational profiling (SHAPE-MaP). Nat Methods. 2014.']
-  }),
-  createTechnologyMethod({ 
-    slug: 'iclaser', 
-    title: 'icLASER', 
-    category: 'RNA-protein interaction related', 
-    subtitle: 'In-cell probing method linked to solvent accessibility and RNA-protein interaction context.',
-    references: ['Feng C et al. Light-activated chemical probing of nucleobase solvent accessibility inside cells. Nat Chem Biol. 2018.']
-  })
+  createTechnologyMethod({ slug: 'shape-seq', title: 'SHAPE-seq', category: 'SHAPE-based probing', subtitle: 'Sequencing-enabled SHAPE workflow for high-throughput RNA structure analysis.' }),
+  createTechnologyMethod({ slug: 'shape-map', title: 'SHAPE-MaP', category: 'SHAPE-based probing', subtitle: 'Mutational profiling implementation of SHAPE reactivity measurement.' }),
+  createTechnologyMethod({ slug: 'nai-map', title: 'NAI-MaP', category: 'SHAPE-based probing', subtitle: 'NAI-based mutational profiling for structure probing in native-like settings.' }),
+  createTechnologyMethod({ slug: 'icshape', title: 'icSHAPE', category: 'SHAPE-based probing', subtitle: 'In vivo click SHAPE workflow for transcriptome-wide structure profiling.' }),
+  createTechnologyMethod({ slug: 'icshape-map', title: 'icSHAPE-MaP', category: 'SHAPE-based probing', subtitle: 'Combined icSHAPE and MaP-style workflow for in-cell structure analysis.' }),
+  createTechnologyMethod({ slug: 'smartshape', title: 'smartSHAPE', category: 'SHAPE-based probing', subtitle: 'SHAPE workflow optimized for richer transcriptome-scale structure interpretation.' }),
+  createTechnologyMethod({ slug: 'cotranscriptional-shape-seq', title: 'Cotranscriptional SHAPE-seq', category: 'SHAPE-based probing', subtitle: 'SHAPE-seq workflow designed to monitor cotranscriptional folding.' }),
+  createTechnologyMethod({ slug: 'nuc-shape-structure-seq', title: 'Nuc-SHAPE-Structure-Seq', category: 'SHAPE-based probing', subtitle: 'SHAPE-family sequencing method focused on nuclear RNA structure landscapes.' }),
+  createTechnologyMethod({ slug: 'chemmodseq', title: 'ChemModSeq', category: 'SHAPE-based probing', subtitle: 'Chemical modification sequencing workflow within the SHAPE-family module.' }),
+  createTechnologyMethod({ slug: 'keth-seq', title: 'Keth-seq', category: 'Guanine-specific probing', subtitle: 'Guanine-focused sequencing method for specialized probing readout.' }),
+  createTechnologyMethod({ slug: 'lead-seq', title: 'Lead-seq', category: 'Cleavage / footprinting', subtitle: 'Lead-dependent cleavage sequencing for RNA structure readout.' }),
+  createTechnologyMethod({ slug: 'rl-seq', title: 'RL-seq', category: 'Cleavage / footprinting', subtitle: 'Cleavage-oriented sequencing workflow for structural accessibility analysis.' }),
+  createTechnologyMethod({ slug: 'iclaser', title: 'icLASER', category: 'RNA-protein interaction related', subtitle: 'In-cell probing method linked to solvent accessibility and RNA-protein interaction context.' })
 ];
 
 function subNav() {
@@ -782,9 +322,9 @@ function subNav() {
       </button>
 
       <button
-        class="nav-btn ${isRouteActive('browse', 'browse-detail') ? 'active' : ''}"
+        class="nav-btn ${isRouteActive('browse') ? 'active' : ''}"
         data-route="browse"
-        aria-current="${isRouteActive('browse', 'browse-detail') ? 'page' : 'false'}"
+        aria-current="${isRouteActive('browse') ? 'page' : 'false'}"
       >
         Browse
       </button>
@@ -863,63 +403,26 @@ function getTechnologySlugFromHash() {
   return params.get('tech');
 }
 
-function escapeHtml(value) {
-  return String(value ?? '')
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function getProbingTechnologySlug(value) {
-  const normalized = String(value ?? '')
-    .trim()
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '');
-
-  if (!normalized) return '';
-
-  const directSlugMatch = technologyMethods.find(
-    (method) => method.slug.replace(/[^a-z0-9]+/g, '') === normalized
-  );
-  if (directSlugMatch) return directSlugMatch.slug;
-
-  const probingSlugByLabel = {
-    shape: 'shape',
-    '1m7': 'shape',
-    nmia: 'shape',
-    bzcn: 'shape',
-    dms: 'dms-seq',
-    nai: 'nai-map',
-    pars: 'pars',
-    parte: 'parte'
+function getEntryCaseParamsFromHash() {
+  const hash = window.location.hash || '';
+  const [, queryString = ''] = hash.split('?');
+  const params = new URLSearchParams(queryString);
+  return {
+    pdb: params.get('pdb'),
+    chain: params.get('chain')
   };
-
-  return probingSlugByLabel[normalized] || '';
 }
 
-function getProbingDetailUrl(value) {
-  const slug = getProbingTechnologySlug(value);
-  return slug ? `#detail?tech=${encodeURIComponent(slug)}` : '';
-}
-
-function getCaseIdFromHash() {
+function getPdbCaseParamsFromHash() {
   const hash = window.location.hash || '';
   const [, queryString = ''] = hash.split('?');
   const params = new URLSearchParams(queryString);
-  return params.get('case');
-}
-
-function getStructureRecordIdFromHash() {
-  const hash = window.location.hash || '';
-  const [, queryString = ''] = hash.split('?');
-  const params = new URLSearchParams(queryString);
-  return params.get('foldBridgeId');
-}
-
-function trimSequenceLengthSuffix(sequenceText) {
-  return String(sequenceText ?? '').replace(/\s*\(\d+nt\)$/i, '').trim();
+  return {
+    pdbId: params.get('pdbId'),
+    pdbReferenceId: params.get('pdbReferenceId'),
+    bundleProfileId: params.get('bundleProfileId'),
+    rmdbUniqueId: params.get('rmdbUniqueId')
+  };
 }
 
 function getFilteredSequenceRows() {
@@ -939,75 +442,17 @@ function getFilteredSequenceRows() {
   );
 }
 
-function renderColoredSequence(sequence, { forceUppercaseDisplay = false } = {}) {
+function renderColoredSequence(sequence) {
   return String(sequence ?? '')
     .split('')
     .map((char) => {
       const upper = char.toUpperCase();
       if (!'AUGCT'.includes(upper)) return char;
       const cls = upper === 'T' ? 'nucleotide-u' : `nucleotide-${upper.toLowerCase()}`;
-      const displayChar = forceUppercaseDisplay ? upper : char;
-      const display = upper === 'T' ? 'U' : displayChar;
+      const display = upper === 'T' ? 'U' : char;
       return `<span class="sequence-nucleotide ${cls}">${display}</span>`;
     })
     .join('');
-}
-
-function renderFormattedDetailSequence(sequence, groupSize = 5, options = {}) {
-  const cleanSequence = String(sequence ?? '').replace(/\s+/g, '').trim();
-  if (!cleanSequence) return 'Sequence unavailable';
-
-  const safeGroupSize = Math.max(1, Number(groupSize) || 5);
-  const groups = [];
-  for (let index = 0; index < cleanSequence.length; index += safeGroupSize) {
-    groups.push(cleanSequence.slice(index, index + safeGroupSize));
-  }
-
-  const groupedMarkup = groups
-    .map((group) => `<span class="case-sequence-group">${renderColoredSequence(group, options)}</span>`)
-    .join('');
-
-  return `<span class="case-sequence-direction">5′-</span>${groupedMarkup}<span class="case-sequence-direction">-3′</span>`;
-}
-
-function splitTextIntoChunks(text, chunkSize = 120) {
-  const cleanText = String(text ?? '').replace(/\s+/g, '').trim();
-  if (!cleanText) return [];
-
-  const safeChunkSize = Math.max(1, Number(chunkSize) || 120);
-  const chunks = [];
-  for (let index = 0; index < cleanText.length; index += safeChunkSize) {
-    chunks.push(cleanText.slice(index, index + safeChunkSize));
-  }
-  return chunks;
-}
-
-function renderAlignedSequenceStructure(sequence, structure = '') {
-  const cleanSequence = String(sequence ?? '').replace(/\s+/g, '').trim();
-  const cleanStructure = String(structure ?? '').replace(/\s+/g, '').trim();
-  const chunkSize = 120;
-
-  if (!cleanSequence) return 'Sequence unavailable';
-  if (!cleanStructure || cleanStructure.length !== cleanSequence.length) {
-    return cleanStructure || '';
-  }
-
-  const chunks = splitTextIntoChunks(cleanStructure, chunkSize);
-  const chars = chunks
-    .map((chunk) => {
-      const chunkChars = chunk
-        .split('')
-        .map((structureChar) => `<span class="case-sequence-structure-char">${structureChar}</span>`)
-        .join('');
-      return `<span class="case-sequence-row case-sequence-structure-row">${chunkChars}</span>`;
-    })
-    .join('');
-
-  return `<span class="case-sequence-structure-wrap" aria-label="RNA secondary structure in dot-bracket notation">${chars}</span>`;
-}
-
-function sequenceHasLowercaseAnnotation(sequence) {
-  return /[a-z]/.test(String(sequence ?? ''));
 }
 
 function renderSequenceDetailTimeline() {
@@ -1164,7 +609,6 @@ function renderSequenceDetailSecondaryContent(row) {
           id="sequence-secondary-heatmap"
           class="sequence-secondary-heatmap-host"
           data-rdat-url="${rdatUrl}"
-          data-sequence="${(sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
         ></div>
       </section>
 
@@ -1274,15 +718,6 @@ function renderSequenceDetailReferenceContent(row) {
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gkae144" target="_blank" rel="noopener noreferrer">DOI: 10.1093/nar/gkae144</a>
           </div>
         </article>
-        <article class="sequence-detail-reference-item">
-          <h3>[2] RCSB PDB entry 8QO5: SARS-CoV-2 SL5 structure model.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/8QO5" target="_blank" rel="noopener noreferrer">RCSB: 8QO5</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb8QO5/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb8QO5/pdb</a>
-          </div>
-        </article>
       </div>
     </div>`;
   }
@@ -1307,15 +742,6 @@ function renderSequenceDetailReferenceContent(row) {
           <div class="sequence-detail-reference-links">
             <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/28092358/" target="_blank" rel="noopener noreferrer">PubMed: 28092358</a>
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/nchembio.2278" target="_blank" rel="noopener noreferrer">DOI: 10.1038/nchembio.2278</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item">
-          <h3>[3] RCSB PDB entry 5KPY: 5-HTP RNA aptamer structure.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5KPY" target="_blank" rel="noopener noreferrer">RCSB: 5KPY</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5KPY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5KPY/pdb</a>
           </div>
         </article>
       </div>
@@ -1344,15 +770,6 @@ function renderSequenceDetailReferenceContent(row) {
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/382183a0" target="_blank" rel="noopener noreferrer">DOI: 10.1038/382183a0</a>
           </div>
         </article>
-        <article class="sequence-detail-reference-item">
-          <h3>[3] RCSB PDB entry 1AM0: AMP-RNA aptamer complex.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/1AM0" target="_blank" rel="noopener noreferrer">RCSB: 1AM0</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb1AM0/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb1AM0/pdb</a>
-          </div>
-        </article>
       </div>
     </div>`;
   }
@@ -1379,15 +796,6 @@ function renderSequenceDetailReferenceContent(row) {
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1073/pnas.1312918111" target="_blank" rel="noopener noreferrer">DOI: 10.1073/pnas.1312918111</a>
           </div>
         </article>
-        <article class="sequence-detail-reference-item">
-          <h3>[3] RCSB PDB entry 4L81: SAM I/IV variant riboswitch aptamer domain.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4L81" target="_blank" rel="noopener noreferrer">RCSB: 4L81</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4L81/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4L81/pdb</a>
-          </div>
-        </article>
       </div>
     </div>`;
   }
@@ -1404,15 +812,6 @@ function renderSequenceDetailReferenceContent(row) {
             <a class="sequence-detail-reference-link" href="https://doi.org/10.1126/science.aah3963" target="_blank" rel="noopener noreferrer">DOI: 10.1126/science.aah3963</a>
           </div>
         </article>
-        <article class="sequence-detail-reference-item">
-          <h3>[2] RCSB PDB entry 5TPY: Crystal structure of an exonuclease resistant RNA from Zika virus.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5TPY" target="_blank" rel="noopener noreferrer">RCSB: 5TPY</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5TPY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5TPY/pdb</a>
-          </div>
-        </article>
       </div>
     </div>`;
   }
@@ -1420,988 +819,8 @@ function renderSequenceDetailReferenceContent(row) {
   return `<div class="sequence-detail-reference-card">
     <p>This tertiary structure is based on the PDB entry <strong>${row.pdbName ?? ''}</strong>.</p>
     <div class="sequence-detail-reference-links">
-      <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/${encodeURIComponent(row.pdbName ?? '')}" target="_blank" rel="noopener noreferrer">RCSB: ${row.pdbName ?? ''}</a>
-      <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb${encodeURIComponent(row.pdbName ?? '')}/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb${row.pdbName ?? ''}/pdb</a>
+      <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/${encodeURIComponent(row.pdbName ?? '')}" target="_blank" rel="noopener noreferrer">Open PDB Entry</a>
     </div>
-  </div>`;
-}
-
-function normalizeRecordTitle(value) {
-  return String(value ?? '')
-    .replace(/_/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function renderReferenceCard(items) {
-  return `<div class="sequence-detail-reference-card">
-    <div class="sequence-detail-reference-list">
-      ${items.join('')}
-    </div>
-  </div>`;
-}
-
-function renderReferenceItem({ index, title, authors, source, links }) {
-  return `<article class="sequence-detail-reference-item" id="reference-${index}">
-    <h3>[${index}] ${title}</h3>
-    <p class="sequence-detail-reference-authors">${authors}</p>
-    <p class="sequence-detail-reference-source">${source}</p>
-    <div class="sequence-detail-reference-links">
-      ${links.join('')}
-    </div>
-  </article>`;
-}
-
-function renderReferenceLink(label, href) {
-  return `<a class="sequence-detail-reference-link" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
-}
-
-function inferRmdbReferenceFamily(row) {
-  const id = String(row?.foldBridgeId ?? '');
-  if (!id.startsWith('RMDB_') && !id.startsWith('RASP_')) return '';
-  if (id.startsWith('RMDB_RNAPZ')) return 'rnaPuzzle';
-  if (/^(?:RMDB|RASP)_(?:ETERNA|OK7BLIB|PDB130|POS240|PSEUDOB|RSTRND)/.test(id)) return 'designLibrary';
-  if (/^RMDB_TRP4P6_/.test(id)) return 'p4p6';
-  if (id === 'RMDB_RNASEP_1M7_0001') return 'inCellShapeSeq';
-  if (id === 'RMDB_SRPECLI_BZCN_0001') return 'coTransShapeSeq';
-  if (/^(?:RMDB|RASP)_(?:CIDGMP|SAMRSW|TRNAPH)/.test(id)) return 'shapeSeq20';
-  if (id.startsWith('RASP_')) return 'raspGeneric';
-  return 'rmdbGeneric';
-}
-
-function renderGenericRmdbDescription(row) {
-  const title = normalizeRecordTitle(row?.name || row?.foldBridgeId || 'This RMDB entry');
-  const pdbId = String(row?.pdbName || row?.bestPdbId || '').toUpperCase();
-  const family = inferRmdbReferenceFamily(row);
-  const pdbClause = pdbId ? ` represented here by PDB entry ${pdbId}` : '';
-  const superScript = pdbId
-    ? `<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`
-    : `<sup><a href="/" data-scroll-target="references">[1]</a></sup>`;
-
-  if (family === 'rnaPuzzle') {
-    return `${title} is an RMDB record associated with an RNA-Puzzles community blind-prediction target. The bundled chemical mapping data provide an experimental constraint set or comparison point for a difficult tertiary fold, and FoldBridge links that record to the matched solved structure${pdbClause}.${superScript}`;
-  }
-
-  if (family === 'designLibrary') {
-    return `${title} is a pooled design or benchmark-library RMDB entry rather than a single classical biological transcript. Its RDAT package stores high-throughput chemical mapping data for representative synthetic or benchmark sequences, and FoldBridge uses the matched target to connect that screen to the resolved tertiary structure${pdbClause}.${superScript}`;
-  }
-
-  if (family === 'p4p6') {
-    return `${title} is a probing record for the Tetrahymena group I intron P4-P6 domain, a classic model system for RNA tertiary folding. Depending on the modifier used in this RMDB entry, the RDAT captures hydroxyl-radical, DMS, or CMCT accessibility across a construct that FoldBridge matches to the resolved P4-P6 architecture${pdbClause}.${superScript}`;
-  }
-
-  if (family === 'inCellShapeSeq') {
-    return `${title} is an in-cell SHAPE-Seq RMDB record measured directly in <em>E. coli</em>, giving a cellular reactivity snapshot for the specificity-region fragment shown on this page. FoldBridge pairs that endogenous probing profile with the matched tertiary-structure target${pdbClause}, so the entry can be read as a bridge between cellular accessibility and an experimentally resolved RNA fold.${superScript}`;
-  }
-
-  if (family === 'coTransShapeSeq') {
-    return `${title} is a cotranscriptional SHAPE-Seq RMDB record that emphasizes folding during transcription rather than after a separate refolding step. In FoldBridge, that pathway-sensitive chemical probing profile is linked to the matched resolved tertiary structure${pdbClause}, providing a useful comparison between kinetic accessibility and a structural endpoint.${superScript}`;
-  }
-
-  if (family === 'shapeSeq20') {
-    return `${title} is a SHAPE-Seq 2.0 probing entry archived in RMDB under the packaged buffer and ligand conditions. For these records the curated STRUCTURE field may be intentionally left undefined, so the page should be interpreted primarily as an experimental reactivity profile that FoldBridge connects to the matched tertiary structure${pdbClause}.${superScript}`;
-  }
-
-  if (family === 'raspGeneric') {
-    return `${title} is a transcript-level structure-probing record from RASP (RNA Atlas of Structure Probing), a curated repository of high-throughput transcriptome-wide RNA secondary structure profiles. FoldBridge links this experimental reactivity snapshot to the matched resolved tertiary structure${pdbClause}, bridging cellular or in vitro chemical accessibility with its spatial fold.${superScript}`;
-  }
-
-  return `${title} is an RMDB chemical probing record linked in FoldBridge to the matched tertiary structure${pdbClause}. This page is intended as a bridge between the archived RDAT experiment and the resolved or matched structural model used for comparison.${superScript}`;
-}
-
-function renderGenericRmdbReferenceContent(row) {
-  const pdbId = String(row?.pdbName || row?.bestPdbId || '').toUpperCase();
-  const family = inferRmdbReferenceFamily(row);
-  const pdbTitle = pdbId
-    ? `RCSB PDB entry ${pdbId}: matched tertiary-structure record used for this FoldBridge page.`
-    : '';
-  const pdbAuthors = 'RCSB Protein Data Bank structure record for the tertiary model linked to this RMDB entry.';
-  const pdbSource = 'RCSB PDB / wwPDB structure record';
-  const pdbLinks = [];
-  if (pdbId) {
-    pdbLinks.push(renderReferenceLink(`RCSB: ${pdbId}`, `https://www.rcsb.org/structure/${encodeURIComponent(pdbId)}`));
-    pdbLinks.push(renderReferenceLink(`PDB DOI: 10.2210/pdb${pdbId}/pdb`, `https://doi.org/10.2210/pdb${pdbId}/pdb`));
-  }
-
-  const templates = {
-    rnaPuzzle: {
-      title: 'RNA-Puzzles toolkit: a computational resource of RNA 3D structure benchmark datasets, structure manipulation, and evaluation tools.',
-      authors: 'Magnus M, Antczak M, Zok T, Wiedemann J, Lukasiak P, Cao Y, Bujnicki JM, Westhof E, Szachniuk M, Miao Z. (2016)',
-      source: 'Nucleic Acids Research 48(2):576-588',
-      pmid: '31799609',
-      doi: '10.1093/nar/gkz1108'
-    },
-    designLibrary: {
-      title: 'RNA design rules from a massive open laboratory.',
-      authors: 'Lee J, Kladwang W, Lee M, Cantu D, Azizyan M, Kim H, Limpaecher A, Yoon S, Treuille A, Das R, EteRNA Participants. (2014)',
-      source: 'Proceedings of the National Academy of Sciences 111(6):2122-2127',
-      pmid: '24469816',
-      doi: '10.1073/pnas.1313039111'
-    },
-    p4p6: {
-      title: 'Crystal structure of a group I ribozyme domain: principles of RNA packing.',
-      authors: 'Cate JH, Gooding AR, Podell E, Zhou K, Golden BL, Kundrot CE, Cech TR, Doudna JA. (1996)',
-      source: 'Science 273(5282):1678-1685',
-      pmid: '8781224',
-      doi: '10.1126/science.273.5282.1678'
-    },
-    inCellShapeSeq: {
-      title: 'Simultaneous Characterization of Cellular RNA Structure and Function with in-cell SHAPE-Seq.',
-      authors: 'Watters KE, Abbott TR, Lucks JB. (2016)',
-      source: 'Nucleic Acids Research 44(2):e12',
-      pmid: '26350218',
-      doi: '10.1093/nar/gkv879'
-    },
-    coTransShapeSeq: {
-      title: 'Cotranscriptional Folding of a Riboswitch at Nucleotide Resolution.',
-      authors: 'Watters KE, Strobel EJ, Yu AM, Lis JT, Lucks JB. (2016)',
-      source: 'Nature Structural & Molecular Biology 23(12):1124-1131',
-      pmid: '27798597',
-      doi: '10.1038/nsmb.3316'
-    },
-    shapeSeq20: {
-      title: 'SHAPE-Seq 2.0: systematic optimization and extension of high-throughput chemical probing of RNA secondary structure with next generation sequencing.',
-      authors: 'Loughrey D, Watters KE, Settle AH, Lucks JB. (2014)',
-      source: 'Nucleic Acids Research 42(21):e165',
-      pmid: '25303992',
-      doi: '10.1093/nar/gku909'
-    },
-    raspGeneric: {
-      title: 'RASP: an atlas of transcriptome-wide RNA secondary structure probing data.',
-      authors: 'Li P, Chang Y, Wei Y, Zhang Q, Zhao W, Zhang S, Zhang QC. (2021)',
-      source: 'Nucleic Acids Research 49(D1):D222-D231',
-      pmid: '33174984',
-      doi: '10.1093/nar/gkaa1052'
-    },
-    rmdbGeneric: {
-      title: 'Characterizing RNA structures in vitro and in vivo with selective 2\'-hydroxyl acylation analyzed by primer extension sequencing (SHAPE-Seq).',
-      authors: 'Watters KE, Yu AM, Strobel EJ, Settle AH, Lucks JB. (2016)',
-      source: 'Methods 103:34-48',
-      pmid: '27064082',
-      doi: '10.1016/j.ymeth.2016.04.002'
-    }
-  };
-
-  const template = templates[family] || templates.rmdbGeneric;
-  const items = [
-    renderReferenceItem({
-      index: 1,
-      title: template.title,
-      authors: template.authors,
-      source: template.source,
-      links: [
-        renderReferenceLink(`PubMed: ${template.pmid}`, `https://pubmed.ncbi.nlm.nih.gov/${template.pmid}/`),
-        renderReferenceLink(`DOI: ${template.doi}`, `https://doi.org/${template.doi}`)
-      ]
-    })
-  ];
-
-  if (pdbId) {
-    items.push(
-      renderReferenceItem({
-        index: 2,
-        title: pdbTitle,
-        authors: pdbAuthors,
-        source: pdbSource,
-        links: pdbLinks
-      })
-    );
-  }
-
-  return renderReferenceCard(items);
-}
-
-function renderStructureDetailDescription(row) {
-  if (row?.foldBridgeId === 'RMDB_ATTR03_DMS_0001') {
-    return `ATP-TTR 3 is a computer-designed ATP-binding RNA aptamer reported within the Ribosolve workflow for RNA-only three-dimensional structure determination. The apo-state ATP-TTR-3 model was resolved as PDB entry 6WLK and was used as part of a benchmark set for evaluating accelerated cryo-EM-guided RNA structure modeling and comparison across apo and ligand-bound states.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ18_1M7_0000') {
-    return `RNA Puzzle 18 corresponds to a Zika virus exonuclease-resistant RNA (xrRNA), a structured noncoding RNA element that promotes production of subgenomic flaviviral RNAs by blocking host exonuclease degradation. Its experimentally solved tertiary structure, represented by PDB entry 5TPY, revealed a compact multi-pseudoknot architecture that underlies exonuclease resistance and supports functional studies of flaviviral RNA biology.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_ATPCON_DMS_0001') {
-    return `ATP control is a compact ATP-binding RNA aptamer used as a reference system for RNA structure probing and tertiary-structure analysis. Its experimentally determined structure is represented by PDB entry 1AM0, which captures the AMP-bound aptamer fold and has been widely used as a benchmark for RNA folding, ligand recognition, and RNA design studies. In this context, the ATP control construct provides a small, well-characterized model for comparing chemical probing signals with an established tertiary architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_ADDSC_1M7_0007') {
-    return `add Adenine Riboswitch, <em>Vibrio vulnificus</em> is an adenine-sensing bacterial riboswitch aptamer profiled here by 1M7 SHAPE-Seq v2.0 under standard-state conditions. The RMDB record notes that all replicates were probed in the presence of 1 uM adenine, making this entry a ligand-bound probing snapshot that can be compared against the matched tertiary structure represented by PDB entry 1Y26. Together, the chemical probing profile and the crystallographic model provide a compact reference for adenine recognition and local fold organization in the <em>add</em> riboswitch family.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_GLYCFN_KNK_0001') {
-    return `glycine riboswitch, <em>Fusobacterium nucleatum</em> is a double glycine riboswitch construct used to test whether the inter-aptamer linker contains an additional structured element beyond the previously truncated core aptamers. In the packaged RDAT, this 205 nt RNA was profiled by multiple chemical probing conditions, and the lowercase flanking bases mark auxiliary sequence context included to preserve the native linker architecture. The matched tertiary structure, represented here by PDB entry 6WLM, makes this record a useful reference for comparing chemical reactivity with the kink-turn-containing linker model proposed for cooperative glycine sensing.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a>, <a href="/" data-scroll-target="references">[3]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_TPPSC_1M7_0005') {
-    return `TPP Riboswitch is an <em>E. coli</em> thiamine pyrophosphate (TPP) riboswitch construct profiled by SHAPE-Seq to measure how the ligand-sensing RNA folds across its aptamer and expression-platform regions. TPP riboswitches directly bind the coenzyme thiamine pyrophosphate and regulate bacterial gene expression through metabolite-dependent structural rearrangements, making this record a compact model for comparing chemical probing reactivity with a well-studied riboswitch architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a>, <a href="/" data-scroll-target="references">[3]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_SAMRSW_1M7_0001') {
-    return `SAM I riboswitch, <em>T. tengcongensis</em> is a SHAPE-Seq 2.0 1M7 probing record collected for a SAM-bound SAM-I riboswitch aptamer under the packaged ligand and buffer conditions. The bundled RDAT intentionally leaves the curated STRUCTURE field as all dots, so this entry is best interpreted as an experimental reactivity profile linked to the matched SAM-I riboswitch tertiary architecture represented here by PDB entry 4KQY. In FoldBridge, it serves as a probing-to-structure example for comparing ligand-dependent chemical reactivity with a well-characterized SAM-I riboswitch fold.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a>, <a href="/" data-scroll-target="references">[3]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_16SFWJ_1M7_0001') {
-    return `16S rRNA Four-Way Junction is a mutate-and-map 1M7 probing benchmark derived from a structured bacterial 16S ribosomal RNA junction domain. The packaged RDAT includes a curated dot-bracket annotation together with systematic single-nucleotide mutation measurements, making this entry a compact example of how perturbation-guided chemical mapping can sharpen secondary-structure inference in noncoding RNAs. In FoldBridge, the record links that benchmark probing dataset to a matched tertiary-structure fragment, providing a useful reference for comparing reactivity-guided modeling with an experimentally resolved RNA junction architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a>, <a href="/" data-scroll-target="references">[3]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_TRP4P6_HRF_0003') {
-    return `RMDB_TRP4P6_HRF_0003 is a hydroxyl-radical footprinting dataset for the P4-P6 domain of the <em>Tetrahymena</em> group I intron, one of the classic model RNAs for tertiary folding studies. The bundled RDAT contains a Mg<sup>2+</sup> titration series collected in a 2 M NaCl background, so the experimental signal can be read as a step-by-step view of which parts of P4-P6 become protected as the metal-ion core folds. FoldBridge links that footprinting series to the solved P4-P6 tertiary structure in PDB entry 1GID, making this page a straightforward comparison between folding-dependent protection and the final RNA architecture.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a>, <a href="/" data-scroll-target="references">[3]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ10_STD_0001') {
-    return `RNA Puzzle 10 corresponds to the T-box riboswitch stem I in complex with tRNA, a biological RNA-RNA complex structure. The tertiary structure is represented by PDB entry 4TZZ, which captures the complex containing a T-box Stem I RNA, its cognate tRNA-Gly, and the B. subtilis YbxF protein, revealing key tertiary contacts and molecular recognition mechanisms.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ11_STD_0002') {
-    return `RNA Puzzle 11 corresponds to a SAM-I/IV riboswitch variant, an engineered sequence used as a blind-prediction target in the RNA-Puzzles benchmark. The matched resolved structure, represented by PDB entry 5LYV, captures the riboswitch variant, providing a high-resolution model for comparing chemical probing reactivity with the target's folded conformation.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ14_HRF_0002') {
-    return `RNA Puzzle 14 corresponds to the L-glutamine riboswitch (bound or free form), a metabolite-sensing riboswitch that regulates bacterial gene expression. The matched resolved structure, represented here by PDB entry 5DDO, captures the glutamine-bound state and serves as a high-resolution target in the RNA-Puzzles benchmark.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ5_HRF_0001') {
-    return `RNA Puzzle 5 corresponds to the GIR1 lariat-capping ribozyme from the slime mold Didymium iridis. This catalytic RNA molecule forms a lariat junction to protect mature transcripts from exonucleolytic decay. Its experimentally solved structure, represented by PDB entry 4P8Z, serves as a major benchmark in the RNA-Puzzles project for assessing de novo RNA 3D structure prediction methods.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ6_STD_0001') {
-    return `RNA Puzzle 6 corresponds to the adenosylcobalamin (AdoCbl) riboswitch aptamer from Symbiobacterium thermophilum, a ligand-sensing RNA. The crystallographic target, represented by PDB entry 4GXY, captures the complex in its ligand-bound folded state and serves as a classic blind-prediction benchmark for RNA 3D modeling programs.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ7_1M7_0001') {
-    return `RNA Puzzle 7 corresponds to the Varkud satellite (VS) ribozyme G638A mutant from Neurospora mitochondria, a small catalytic RNA. Its experimentally solved structure, represented by PDB entry 4R4V, serves as a high-resolution target in the RNA-Puzzles benchmark for assessing structural modeling of complex catalytic folds.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ8_1M7_0001') {
-    return `RNA Puzzle 8 corresponds to a SAM-I/IV riboswitch aptamer domain, a metabolite-sensing RNA that regulates translation in response to S-adenosylmethionine. The crystallographic target, represented by PDB entry 4L81, captures the variant riboswitch fold and acts as a blind-prediction benchmark for de novo 3D modeling programs.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ9_1M7_0001') {
-    return `RNA Puzzle 9 corresponds to a 5-hydroxytryptophan RNA aptamer, a selectin biosensor designed to bind serotonin and related compounds. The crystal structure, represented by PDB entry 5KPY, serves as a high-resolution target in the RNA-Puzzles benchmark for assessing structural predictions of small-molecule binding pockets.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_ETERNA_R82_0000') {
-    return `EteRNA Cloud Lab corresponds to the Bacillus anthracis glmS ribozyme, a metabolite-responsive self-cleaving ribozyme that binds glucosamine 6-phosphate (Glc6P). The crystallographic structure, represented by PDB entry 3L3C, captures the active cofactor-bound state, providing a benchmark for high-throughput RNA design and modeling.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_CIDGMP_1M7_0001') {
-    return `cidGMP riboswitch, V. Cholerae corresponds to a cyclic di-GMP-I riboswitch aptamer from Vibrio cholerae bound to a linear dinucleotide analogue (GpG). The crystallographic structure, represented by PDB entry 3UCZ, serves as a high-resolution model for comparing chemical probing reactivity and investigating ligand selectivity.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_SRPECLI_BZCN_0001') {
-    return `SRP RNA, E. coli corresponds to the 4.5S signal recognition particle (SRP) RNA component from Escherichia coli, involved in co-translational protein targeting. The Cryo-EM structure, represented by PDB entry 5GAH, captures the translating ribosome with the bound SRP complex and serves as a structural model for co-translational accessibility.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNASEP_1M7_0001') {
-    return `RNase P specificity region, E. coli corresponds to the catalytic RNA component of Ribonuclease P from Escherichia coli, a ribozyme responsible for 5' maturation of precursor tRNAs. The Cryo-EM structure, represented by PDB entry 7UO5, captures the RNase P holoenzyme with precursor tRNA and Mg2+ ions, showing the dynamic active site details.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_TRP4P6_CMC_0001') {
-    return `RMDB_TRP4P6_CMC_0001 is a CMCT probing record for the Tetrahymena group I intron P4-P6 domain, a classic model system for studying RNA tertiary folding and ligand interactions. The experimental probing data is mapped to the Cryo-EM structure of the Tetrahymena group I intron, represented by PDB entry 8I7N, which captures the G264A mutant intron state.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_TRNAPH_1M7_0000') {
-    return `tRNAphe, E. coli corresponds to the phenylalanine transfer RNA (tRNA-Phe) from Escherichia coli, a key component of the translation machinery. The experimental chemical probing reactivity profile is matched to the resolved tRNA structure within the tuco-tuco ribosome complex, represented by PDB entry 9Y4G, providing a structural reference for tRNA conformation.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_TRP4P6_DMS_0014') {
-    return `RMDB_TRP4P6_DMS_0014 is a DMS probing record for the Tetrahymena group I intron P4-P6 domain. The experimental chemical probing reactivity profile is matched to the resolved structure of the Tetrahymena ribozyme containing 5-methyl-cytidine modifications, represented by PDB entry 9ZC6.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_SARS-CoV-2-SL5') {
-    return `RMDB_SARS-CoV-2-SL5 is a chemical probing record for the SARS-CoV-2 stem-loop 5 (SL5) domain within the 5' untranslated region of the viral genome. The experimental chemical probing reactivity profile is matched to the resolved structure of SL5, represented by PDB entry 8QO5, which captures the conserved Betacoronavirus RNA fold and dynamics.<sup><a href="/" data-scroll-target="references">[1]</a>, <a href="/" data-scroll-target="references">[2]</a></sup>`;
-  }
-
-  if (String(row?.foldBridgeId ?? '').startsWith('RMDB_') || String(row?.foldBridgeId ?? '').startsWith('RASP_')) {
-    return renderGenericRmdbDescription(row);
-  }
-
-  return `${row?.name || 'Untitled record'} is a probing-centered FoldBridge record with a matched tertiary-structure target.`;
-}
-
-function renderStructureDetailReferenceContent(row) {
-  if (row?.foldBridgeId === 'RMDB_ATTR03_DMS_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Accelerated cryo-EM-guided determination of three-dimensional RNA-only structures.</h3>
-          <p class="sequence-detail-reference-authors">Kappel K, Zhang K, Su Z, Watkins AM, Kladwang W, Li S, Pintilie G, Topkar VV, Rangan R, Zheludev IN, Yesselman JD, Chiu W, Das R. (2020)</p>
-          <p class="sequence-detail-reference-source">Nature Methods 17(7):699-707</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/32616928/" target="_blank" rel="noopener noreferrer">PubMed: 32616928</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/s41592-020-0878-9" target="_blank" rel="noopener noreferrer">DOI: 10.1038/s41592-020-0878-9</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 6WLK: Apo ATP-TTR-3 models, 10.0 Angstrom resolution.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the apo ATP-TTR-3 model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/6WLK" target="_blank" rel="noopener noreferrer">RCSB: 6WLK</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb6WLK/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb6WLK/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ18_1M7_0000') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Zika virus produces noncoding RNAs using a multi-pseudoknot structure that confounds a cellular exonuclease.</h3>
-          <p class="sequence-detail-reference-authors">Akiyama BM, Laurence HM, Massey AR, Costantino DA, Xie X, Yang Y, Shi PY, Nix JC, Beckham JD, Kieft JS. (2016)</p>
-          <p class="sequence-detail-reference-source">Science 354:1148-1152</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/27934765/" target="_blank" rel="noopener noreferrer">PubMed: 27934765</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1126/science.aah3963" target="_blank" rel="noopener noreferrer">DOI: 10.1126/science.aah3963</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 5TPY: Crystal structure of an exonuclease resistant RNA from Zika virus.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the Zika virus xrRNA model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5TPY" target="_blank" rel="noopener noreferrer">RCSB: 5TPY</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5TPY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5TPY/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_ATPCON_DMS_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Structural Basis of RNA Folding and Recognition in an AMP-RNA Aptamer Complex.</h3>
-          <p class="sequence-detail-reference-authors">Jiang F, Kumar RA, Jones RA, Patel DJ. (1996)</p>
-          <p class="sequence-detail-reference-source">Nature 382:183-186</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/8700212/" target="_blank" rel="noopener noreferrer">PubMed: 8700212</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/382183a0" target="_blank" rel="noopener noreferrer">DOI: 10.1038/382183a0</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] Computational design of three-dimensional RNA structure and function.</h3>
-          <p class="sequence-detail-reference-authors">Yesselman JD, Eiler D, Carlson ED, Gotrik MR, d'Aquino AE, Ooms AN, Kladwang W, Carlson PD, Shi X, Costantino DA, Herschlag D, Lucks JB, Jewett MC, Kieft JS, Das R. (2019)</p>
-          <p class="sequence-detail-reference-source">Nature Nanotechnology 14(9):866-873</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/31427748/" target="_blank" rel="noopener noreferrer">PubMed: 31427748</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/s41565-019-0517-8" target="_blank" rel="noopener noreferrer">DOI: 10.1038/s41565-019-0517-8</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-3">
-          <h3>[3] RCSB PDB entry 1AM0: AMP-RNA aptamer complex.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the AMP-bound aptamer linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/1AM0" target="_blank" rel="noopener noreferrer">RCSB: 1AM0</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb1AM0/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb1AM0/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_ADDSC_1M7_0007') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Structural Basis for Discriminative Regulation of Gene Expression by Adenine- and Guanine-Sensing mRNAs.</h3>
-          <p class="sequence-detail-reference-authors">Serganov A, Yuan YR, Pikovskaya O, Polonskaia A, Malinina L, Phan AT, Hobartner C, Micura R, Breaker RR, Patel DJ. (2004)</p>
-          <p class="sequence-detail-reference-source">Chemistry &amp; Biology 11(12):1729-1741</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/15610857/" target="_blank" rel="noopener noreferrer">PubMed: 15610857</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.chembiol.2004.11.004" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.chembiol.2004.11.004</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 1Y26: A-riboswitch-adenine complex.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the ligand-bound <em>Vibrio vulnificus</em> adenine riboswitch aptamer linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/1Y26" target="_blank" rel="noopener noreferrer">RCSB: 1Y26</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb1Y26/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb1Y26/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_GLYCFN_KNK_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Automated RNA structure prediction uncovers a missing link in double glycine riboswitches.</h3>
-          <p class="sequence-detail-reference-authors">Kladwang W, Chou FC, Das R. (2011)</p>
-          <p class="sequence-detail-reference-source">Journal of the American Chemical Society 134(3):1204-1212</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/22192063/" target="_blank" rel="noopener noreferrer">PubMed: 22192063</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1021/ja2093508" target="_blank" rel="noopener noreferrer">DOI: 10.1021/ja2093508</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] Structural insights into ligand recognition by a sensing domain of the cooperative glycine riboswitch.</h3>
-          <p class="sequence-detail-reference-authors">Huang L, Serganov A, Patel DJ. (2010)</p>
-          <p class="sequence-detail-reference-source">Molecular Cell 40(5):774-786</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/21145485/" target="_blank" rel="noopener noreferrer">PubMed: 21145485</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.molcel.2010.11.026" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.molcel.2010.11.026</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-3">
-          <h3>[3] RCSB PDB entry 6WLM: Glycine riboswitch with kink-turn containing linker.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the glycine riboswitch model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/6WLM" target="_blank" rel="noopener noreferrer">RCSB: 6WLM</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb6WLM/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb6WLM/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_TPPSC_1M7_0005') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Characterizing RNA structures in vitro and in vivo with selective 2'-hydroxyl acylation analyzed by primer extension sequencing (SHAPE-Seq).</h3>
-          <p class="sequence-detail-reference-authors">Watters KE, Yu AM, Strobel EJ, Settle AH, Lucks JB. (2016)</p>
-          <p class="sequence-detail-reference-source">Methods 103:34-48</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.ymeth.2016.04.002" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.ymeth.2016.04.002</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] Structural basis for gene regulation by a thiamine pyrophosphate-sensing riboswitch.</h3>
-          <p class="sequence-detail-reference-authors">Serganov A, Polonskaia A, Phan AT, Breaker RR, Patel DJ. (2006)</p>
-          <p class="sequence-detail-reference-source">Nature 441:1167-1171</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/16728979/" target="_blank" rel="noopener noreferrer">PubMed: 16728979</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/nature04740" target="_blank" rel="noopener noreferrer">DOI: 10.1038/nature04740</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-3">
-          <h3>[3] RCSB PDB entry 7TZS: Crystal structure of the E. coli thiamine pyrophosphate (TPP) riboswitch.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the thiamine pyrophosphate-sensing riboswitch model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/7TZS" target="_blank" rel="noopener noreferrer">RCSB: 7TZS</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb7TZS/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb7TZS/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_SAMRSW_1M7_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] SHAPE-Seq 2.0: systematic optimization and extension of high-throughput chemical probing of RNA secondary structure with next generation sequencing.</h3>
-          <p class="sequence-detail-reference-authors">Loughrey D, Watters KE, Settle AH, Lucks JB. (2014)</p>
-          <p class="sequence-detail-reference-source">Nucleic Acids Research 42(21):e165</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25303992/" target="_blank" rel="noopener noreferrer">PubMed: 25303992</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gku909" target="_blank" rel="noopener noreferrer">DOI: 10.1093/nar/gku909</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] SAM recognition and conformational switching mechanism in the Bacillus subtilis yitJ S box/SAM-I riboswitch.</h3>
-          <p class="sequence-detail-reference-authors">Lu C, Ding F, Chowdhury A, Pradhan V, Tomsic J, Holmes WM, Henkin TM, Ke A. (2010)</p>
-          <p class="sequence-detail-reference-source">Journal of Molecular Biology 404(5):803-818</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/20951706/" target="_blank" rel="noopener noreferrer">PubMed: 20951706</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.jmb.2010.09.059" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.jmb.2010.09.059</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-3">
-          <h3>[3] RCSB PDB entry 4KQY: Crystal structure of the SAM-I riboswitch aptamer domain.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the SAM-I riboswitch model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4KQY" target="_blank" rel="noopener noreferrer">RCSB: 4KQY</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4KQY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4KQY/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_16SFWJ_1M7_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] A two-dimensional mutate-and-map strategy for non-coding RNA structure.</h3>
-          <p class="sequence-detail-reference-authors">Kladwang W, VanLang CC, Cordero P, Das R. (2012)</p>
-          <p class="sequence-detail-reference-source">Nature Chemistry 3(12):954-962</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/22109276/" target="_blank" rel="noopener noreferrer">PubMed: 22109276</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/nchem.1176" target="_blank" rel="noopener noreferrer">DOI: 10.1038/nchem.1176</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] High-throughput mutate-map-rescue evaluates SHAPE-directed RNA structure and uncovers excited states.</h3>
-          <p class="sequence-detail-reference-authors">Tian S, Cordero P, Kladwang W, Das R. (2014)</p>
-          <p class="sequence-detail-reference-source">RNA 20(11):1815-1826</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25183835/" target="_blank" rel="noopener noreferrer">PubMed: 25183835</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.044321.114" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.044321.114</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-3">
-          <h3>[3] RCSB PDB entry 4YBB: Crystal structure of the E. coli 70S ribosome showing 16S rRNA.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the ribosome structure containing the 16S rRNA fragment linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4YBB" target="_blank" rel="noopener noreferrer">RCSB: 4YBB</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4YBB/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4YBB/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_TRP4P6_HRF_0003') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Determining the Mg2+ stoichiometry for folding an RNA's metal ion core.</h3>
-          <p class="sequence-detail-reference-authors">Das R, Travers KJ, Bai Y, Herschlag D. (2005)</p>
-          <p class="sequence-detail-reference-source">Journal of the American Chemical Society 127(23):8272-8273</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/15941263/" target="_blank" rel="noopener noreferrer">PubMed: 15941263</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1021/ja052131u" target="_blank" rel="noopener noreferrer">DOI: 10.1021/ja052131u</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] Crystal structure of a group I ribozyme domain: principles of RNA packing.</h3>
-          <p class="sequence-detail-reference-authors">Cate JH, Gooding AR, Podell E, Zhou K, Golden BL, Kundrot CE, Cech TR, Doudna JA. (1996)</p>
-          <p class="sequence-detail-reference-source">Science 273(5282):1678-1685</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/8781224/" target="_blank" rel="noopener noreferrer">PubMed: 8781224</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1126/science.273.5282.1678" target="_blank" rel="noopener noreferrer">DOI: 10.1126/science.273.5282.1678</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-3">
-          <h3>[3] RCSB PDB entry 1GID: P4-P6 domain of the <em>Tetrahymena</em> group I ribozyme.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the crystallographic P4-P6 domain linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/1GID" target="_blank" rel="noopener noreferrer">RCSB: 1GID</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb1GID/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb1GID/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ10_STD_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Dramatic Improvement of Crystals of Large RNAs by Cation Replacement and Dehydration.</h3>
-          <p class="sequence-detail-reference-authors">Zhang J, Ferré-D’Amaré AR. (2014)</p>
-          <p class="sequence-detail-reference-source">Structure 22(9):1363-1371</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25156430/" target="_blank" rel="noopener noreferrer">PubMed: 25156430</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.str.2014.07.011" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.str.2014.07.011</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 4TZZ: Ternary complex of T-box Stem I RNA, tRNA-Gly and YbxF protein.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the T-box-tRNA complex linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4TZZ" target="_blank" rel="noopener noreferrer">RCSB: 4TZZ</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4TZZ/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4TZZ/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ11_STD_0002') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] The crystal structure of the 5' functional domain of the transcription riboregulator 7SK.</h3>
-          <p class="sequence-detail-reference-authors">Martinez-Zapien D, Legrand P, McEwen AG, Pasquali S, Dock-Bregeon AC. (2017)</p>
-          <p class="sequence-detail-reference-source">Nucleic Acids Research 45(6):3535-3544</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/28087754/" target="_blank" rel="noopener noreferrer">PubMed: 28087754</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gkw1355" target="_blank" rel="noopener noreferrer">DOI: 10.1093/nar/gkw1355</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 5LYV: The crystal structure of the 5' functional domain of the transcription riboregulator 7SK.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the 7SK snRNA domain model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5LYV" target="_blank" rel="noopener noreferrer">RCSB: 5LYV</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5LYV/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5LYV/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ14_HRF_0002') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Structural and Dynamic Basis for Low-Affinity, High-Selectivity Binding of L-Glutamine by the Glutamine Riboswitch.</h3>
-          <p class="sequence-detail-reference-authors">Ren A, Xue Y, Peselis A, Serganov A, Al-Hashimi HM, Patel DJ. (2015)</p>
-          <p class="sequence-detail-reference-source">Cell Reports 13:1800-1813</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/26628365/" target="_blank" rel="noopener noreferrer">PubMed: 26628365</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1016/j.celrep.2015.10.062" target="_blank" rel="noopener noreferrer">DOI: 10.1016/j.celrep.2015.10.062</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 5DDO: Structure of the glutamine riboswitch bound to glutamine.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the glutamine riboswitch model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5DDO" target="_blank" rel="noopener noreferrer">RCSB: 5DDO</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5DDO/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5DDO/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ5_HRF_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] RNA-Puzzles Round II: assessment of RNA structure prediction programs applied to three large RNA structures.</h3>
-          <p class="sequence-detail-reference-authors">Miao Z, Adamiak RW, Blanchet MF, Boniecki M, Bujnicki JM, Chen SJ, ... Westhof E. (2015)</p>
-          <p class="sequence-detail-reference-source">RNA 21(6):1066-1084</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25904128/" target="_blank" rel="noopener noreferrer">PubMed: 25904128</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.049502.114" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.049502.114</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 4P8Z: Crystal structure of the GIR1 lariat-capping ribozyme.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the GIR1 lariat-capping ribozyme model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4P8Z" target="_blank" rel="noopener noreferrer">RCSB: 4P8Z</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4P8Z/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4P8Z/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ6_STD_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] RNA-Puzzles Round II: assessment of RNA structure prediction programs applied to three large RNA structures.</h3>
-          <p class="sequence-detail-reference-authors">Miao Z, Adamiak RW, Blanchet MF, Boniecki M, Bujnicki JM, Chen SJ, ... Westhof E. (2015)</p>
-          <p class="sequence-detail-reference-source">RNA 21(6):1066-1084</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25904128/" target="_blank" rel="noopener noreferrer">PubMed: 25904128</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.049502.114" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.049502.114</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 4GXY: Crystal structure of the Symbiobacterium thermophilum adenosylcobalamin riboswitch aptamer bound to cobalamin.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the cobalamin riboswitch model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4GXY" target="_blank" rel="noopener noreferrer">RCSB: 4GXY</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4GXY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4GXY/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ7_1M7_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] RNA-Puzzles Round II: assessment of RNA structure prediction programs applied to three large RNA structures.</h3>
-          <p class="sequence-detail-reference-authors">Miao Z, Adamiak RW, Blanchet MF, Boniecki M, Bujnicki JM, Chen SJ, ... Westhof E. (2015)</p>
-          <p class="sequence-detail-reference-source">RNA 21(6):1066-1084</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/25904128/" target="_blank" rel="noopener noreferrer">PubMed: 25904128</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.049502.114" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.049502.114</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 4R4V: Crystal structure of the Varkud satellite ribozyme mutant.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the VS ribozyme model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4R4V" target="_blank" rel="noopener noreferrer">RCSB: 4R4V</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4R4V/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4R4V/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ8_1M7_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] RNA-Puzzles Round III: 3D RNA structure prediction of five riboswitches and one ribozyme.</h3>
-          <p class="sequence-detail-reference-authors">Miao Z, Adamiak RW, Antczak M, Batey RT, Becka AJ, Biesiada M, Boniecki MJ, Bujnicki JM, ... Westhof E. (2017)</p>
-          <p class="sequence-detail-reference-source">RNA 23(5):655-672</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/28138060/" target="_blank" rel="noopener noreferrer">PubMed: 28138060</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.060368.116" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.060368.116</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 4L81: Structure of the SAM-I/IV riboswitch.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the SAM-I/IV riboswitch model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/4L81" target="_blank" rel="noopener noreferrer">RCSB: 4L81</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb4L81/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb4L81/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNAPZ9_1M7_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] RNA-Puzzles Round IV: 3D structure predictions of four ribozymes and two aptamers.</h3>
-          <p class="sequence-detail-reference-authors">Miao Z, Adamiak RW, Antczak M, Boniecki MJ, Bujnicki J, Chen SJ, Cheng CY, Cheng Y, Chou FC, Das R, Dokholyan NV, Ding F, Geniesse C, Jiang Y, Joshi A, Krokhotin A, Magnus M, Mailhot O, Major F, Mann TH, Piatkowski P, Pluta R, Popenda M, Sarzynska J, Sun L, Szachniuk M, Tian S, Wang J, Wang J, Watkins AM, Wiedemann J, Xiao Y, Xu X, Yesselman JD, Zhang D, Zhang Y, Zhang Z, Zhao C, Zhao P, Zhou Y, Zok T, Zyla A, Ren A, Batey RT, Golden BL, Huang L, Lilley DM, Liu Y, Patel DJ, Westhof E. (2020)</p>
-          <p class="sequence-detail-reference-source">RNA 26(8):982-995</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/32371455/" target="_blank" rel="noopener noreferrer">PubMed: 32371455</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1261/rna.075341.120" target="_blank" rel="noopener noreferrer">DOI: 10.1261/rna.075341.120</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 5KPY: 5-HTP RNA aptamer structure.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the 5-HTP RNA aptamer model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5KPY" target="_blank" rel="noopener noreferrer">RCSB: 5KPY</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5KPY/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5KPY/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_ETERNA_R82_0000') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Structural and chemical basis for glucosamine 6-phosphate binding and activation of the glmS ribozyme.</h3>
-          <p class="sequence-detail-reference-authors">Cochrane JC, Lipchock SV, Smith KD, Strobel SA. (2009)</p>
-          <p class="sequence-detail-reference-source">Biochemistry 48(15):3239-3246</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/19275185/" target="_blank" rel="noopener noreferrer">PubMed: 19275185</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1021/bi9001389" target="_blank" rel="noopener noreferrer">DOI: 10.1021/bi9001389</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 3L3C: Crystal structure of the Bacillus anthracis glmS ribozyme bound to Glc6P.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the glmS ribozyme model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/3L3C" target="_blank" rel="noopener noreferrer">RCSB: 3L3C</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb3L3C/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb3L3C/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_CIDGMP_1M7_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Structural and biochemical characterization of linear dinucleotide analogues bound to the c-di-GMP-I aptamer.</h3>
-          <p class="sequence-detail-reference-authors">Smith KD, Lipchock SV, Strobel SA. (2012)</p>
-          <p class="sequence-detail-reference-source">Biochemistry 51(10):2062-2070</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/22339598/" target="_blank" rel="noopener noreferrer">PubMed: 22339598</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1021/bi201736k" target="_blank" rel="noopener noreferrer">DOI: 10.1021/bi201736k</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 3UCZ: c-di-GMP-I riboswitch bound to the linear dinucleotide GpG.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the c-di-GMP-I riboswitch model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/3UCZ" target="_blank" rel="noopener noreferrer">RCSB: 3UCZ</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb3UCZ/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb3UCZ/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_SRPECLI_BZCN_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Structures of the E. coli translating ribosome with SRP and its receptor and with the translocon.</h3>
-          <p class="sequence-detail-reference-authors">Jomaa A, Boehringer D, Leibundgut M, Ban N. (2016)</p>
-          <p class="sequence-detail-reference-source">Nature Communications 7:10471</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/26829443/" target="_blank" rel="noopener noreferrer">PubMed: 26829443</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/ncomms10471" target="_blank" rel="noopener noreferrer">DOI: 10.1038/ncomms10471</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 5GAH: Cryo-EM structure of E. coli translating ribosome with SRP.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the SRP-containing ribosome model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/5GAH" target="_blank" rel="noopener noreferrer">RCSB: 5GAH</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb5GAH/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb5GAH/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_RNASEP_1M7_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Structural and mechanistic basis for recognition of alternative tRNA precursor substrates by bacterial ribonuclease P.</h3>
-          <p class="sequence-detail-reference-authors">Zhu J, Huang W, Zhao J, Huynh L, Taylor DJ, Harris ME. (2022)</p>
-          <p class="sequence-detail-reference-source">Nature Communications 13(1):5062</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/36038573/" target="_blank" rel="noopener noreferrer">PubMed: 36038573</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/s41467-022-32843-7" target="_blank" rel="noopener noreferrer">DOI: 10.1038/s41467-022-32843-7</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 7UO5: E. coli RNase P Holoenzyme with Mg2+.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the RNase P holoenzyme model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/7UO5" target="_blank" rel="noopener noreferrer">RCSB: 7UO5</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb7UO5/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb7UO5/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_TRP4P6_CMC_0001') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Cryo-EM reveals dynamics of Tetrahymena group I intron self-splicing.</h3>
-          <p class="sequence-detail-reference-authors">Luo B, Zhang C, Ling X, Mukherjee S, Jia G, Xie J, Jia X, Liu L, Baulin EF, Luo Y, Jiang L, Dong H, Wei X, Bujnicki JM, Su Z. (2023)</p>
-          <p class="sequence-detail-reference-source">Nature Catalysis 6:405–416</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/s41929-023-00934-3" target="_blank" rel="noopener noreferrer">DOI: 10.1038/s41929-023-00934-3</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 8I7N: Cryo-EM structure of the Tetrahymena group I intron in the Tet-S1 state.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the Tetrahymena intron model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/8I7N" target="_blank" rel="noopener noreferrer">RCSB: 8I7N</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb8I7N/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb8I7N/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_TRNAPH_1M7_0000') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Structures of naked mole-rat, tuco-tuco, and guinea pig ribosomes—is rRNA fragmentation linked to translational fidelity?</h3>
-          <p class="sequence-detail-reference-authors">Gutierrez-Vargas C, De S, Maji S, Liu Z, Ke Z, Niess M, Seluanov A, Gorbunova V, Frank J. (2026)</p>
-          <p class="sequence-detail-reference-source">Nucleic Acids Research</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/41603730/" target="_blank" rel="noopener noreferrer">PubMed: 41603730</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gkag006" target="_blank" rel="noopener noreferrer">DOI: 10.1093/nar/gkag006</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 9Y4G: Structure of tuco-tuco ribosome.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the ribosome-tRNA complex linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/9Y4G" target="_blank" rel="noopener noreferrer">RCSB: 9Y4G</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb9Y4G/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb9Y4G/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_TRP4P6_DMS_0014') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Base modifications shift tertiary structure and activity in synthetic RNA origami and a natural ribozyme.</h3>
-          <p class="sequence-detail-reference-authors">Yadav DK, Yang H, Lee S, McRae EKS. (2026)</p>
-          <p class="sequence-detail-reference-source">Nature Communications</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1038/s41467-026-72891-x" target="_blank" rel="noopener noreferrer">DOI: 10.1038/s41467-026-72891-x</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 9ZC6: Tetrahymena Ribozyme with 5-methyl-cytidine.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the modified Tetrahymena ribozyme linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/9ZC6" target="_blank" rel="noopener noreferrer">RCSB: 9ZC6</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb9ZC6/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb9ZC6/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (row?.foldBridgeId === 'RMDB_SARS-CoV-2-SL5') {
-    return `<div class="sequence-detail-reference-card">
-      <div class="sequence-detail-reference-list">
-        <article class="sequence-detail-reference-item" id="reference-1">
-          <h3>[1] Conserved structures and dynamics in 5'-proximal regions of Betacoronavirus RNA genomes.</h3>
-          <p class="sequence-detail-reference-authors">de Moura TR, Purta E, Bernat A, Martin-Cuevas EM, Kurkowska M, Baulin EF, Mukherjee S, Nowak J, Biela AP, Rawski M, Glatt S, Moreno-Herrero F, Bujnicki JM. (2024)</p>
-          <p class="sequence-detail-reference-source">Nucleic Acids Research 52:3419-3432</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://pubmed.ncbi.nlm.nih.gov/38426934/" target="_blank" rel="noopener noreferrer">PubMed: 38426934</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.1093/nar/gkae144" target="_blank" rel="noopener noreferrer">DOI: 10.1093/nar/gkae144</a>
-          </div>
-        </article>
-        <article class="sequence-detail-reference-item" id="reference-2">
-          <h3>[2] RCSB PDB entry 8QO5: SARS-CoV-2 SL5 structure model.</h3>
-          <p class="sequence-detail-reference-authors">RCSB Protein Data Bank structure record for the SARS-CoV-2 SL5 model linked to this FoldBridge entry.</p>
-          <p class="sequence-detail-reference-source">RCSB PDB / wwPDB structure record</p>
-          <div class="sequence-detail-reference-links">
-            <a class="sequence-detail-reference-link" href="https://www.rcsb.org/structure/8QO5" target="_blank" rel="noopener noreferrer">RCSB: 8QO5</a>
-            <a class="sequence-detail-reference-link" href="https://doi.org/10.2210/pdb8QO5/pdb" target="_blank" rel="noopener noreferrer">PDB DOI: 10.2210/pdb8QO5/pdb</a>
-          </div>
-        </article>
-      </div>
-    </div>`;
-  }
-
-  if (String(row?.foldBridgeId ?? '').startsWith('RMDB_') || String(row?.foldBridgeId ?? '').startsWith('RASP_')) {
-    return renderGenericRmdbReferenceContent(row);
-  }
-
-  return `<div class="sequence-detail-reference-card">
-    <p>No curated references are attached to this structure-linked record yet.</p>
   </div>`;
 }
 
@@ -2412,8 +831,8 @@ function sequenceDetailPage() {
     ?? sequenceRows.find((item) => item.pdbName === pdbName);
 
   if (!row) {
-    return `<main class="page-sequence-detail">
-      ${renderBundleHeader()}
+    return `${renderBundleHeader()}
+    <main class="page-sequence-detail">
       <section class="card">
         <h1>Sequence Not Found</h1>
         <p>No sequence record matched this link.</p>
@@ -2421,167 +840,8 @@ function sequenceDetailPage() {
     </main>`;
   }
 
-  const heatmapSection = showReactivityHeatmap
-    ? `<section class="sequence-detail-panel">
-        <h2>Reactivity Heatmap</h2>
-        <div class="sequence-detail-section-intro">
-          <p>${
-            isReactivityGuidedStructure
-              ? 'This heatmap is the starting point for this record because no curated dot-bracket annotation was packaged with the RDAT. The secondary-structure view below is estimated from these reactivity measurements.'
-              : 'This heatmap summarizes per-position chemical probing reactivity across the RDAT measurements, helping relate experimental signal to structural context.'
-          }</p>
-        </div>
-        <section class="sequence-secondary-card sequence-secondary-heatmap-card structure-detail-heatmap-card">
-          <div
-            id="structure-detail-heatmap"
-            class="sequence-secondary-heatmap-host"
-            data-rdat-url="${row.rdatPath}"
-            data-sequence="${(row.sourceSequence || row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-          ></div>
-          <p id="structure-detail-heatmap-status" class="mini-note" hidden></p>
-        </section>
-      </section>`
-    : '';
-
-  const secondaryStructureSection = hasSecondaryStructureConstraints
-    ? `<section class="sequence-detail-panel">
-        <h2>${isReactivityGuidedStructure ? 'Predicted Secondary Structure' : 'Secondary Structure'}</h2>
-        <div class="sequence-detail-section-intro">
-          <p>${
-            isReactivityGuidedStructure
-              ? 'This panel shows a local reactivity-guided secondary-structure estimate derived from the bundled RDAT measurements and rendered as an interactive 2D layout.'
-              : 'This panel shows the RNA secondary structure derived from the packaged dot-bracket annotation and rendered as an interactive 2D layout.'
-          }</p>
-        </div>
-        <section class="sequence-secondary-card sequence-secondary-forna-card">
-          <div class="sequence-detail-forna-copy">
-            <p class="sequence-detail-forna-title">RNA Secondary Structure Viewer (Forna)</p>
-            ${
-              isReactivityGuidedStructure
-                ? `<p class="mini-note">${predictedSecondaryStructure?.method || 'Reactivity-guided prediction.'}</p>
-                   <p class="mini-note">Use this as a working hypothesis rather than a final curated structure. High reactivity often suggests flexible or exposed positions, but it does not guarantee a unique fold.</p>`
-                : ''
-            }
-          </div>
-          <div class="sequence-detail-forna-frame">
-            <div
-              id="structure-detail-forna-host"
-              class="sequence-detail-forna-host"
-              data-rdat-url="${rdatDownloadPath(row.foldBridgeId)}"
-              data-foldbridge-id="${row.foldBridgeId}"
-              data-sequence="${(row.sourceSequence || row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-              data-structure="${detailSecondaryStructure || ''}"
-            ></div>
-          </div>
-          <div id="structure-detail-sequence-structure-block" class="sequence-detail-dot-bracket-block">
-            <p class="case-sequence-structure-label">Dot-bracket notation</p>
-            <code
-              id="structure-detail-sequence-structure"
-              class="case-sequence-structure"
-              data-sequence="${detailSequence || ''}"
-              data-chunk-size="120"
-            >${renderAlignedSequenceStructure(detailSequence, detailSecondaryStructure)}</code>
-          </div>
-          <p id="structure-detail-forna-status" class="sequence-detail-forna-note" hidden></p>
-        </section>
-      </section>`
-    : '';
-
-  const showPredictedStructureSection = hasUsablePredictedStructure(row?.foldBridgeId) || hasSecondaryStructureConstraints;
-  const showPredictedStructureViewer = hasUsablePredictedStructure(row?.foldBridgeId);
-  const tertiaryStructureSection =
-    hasSecondaryStructureConstraints && (showPredictedStructureSection || row.bestPdbId)
-      ? `<section class="sequence-detail-panel">
-          <h2>Tertiary Structure Comparison</h2>
-          <div class="sequence-detail-section-intro">
-            <p>${
-              (!isReactivityGuidedStructure || (row.bestPdbId && hasUsablePredictedStructure(row.foldBridgeId)))
-                ? 'Compare the secondary-structure-derived RNA model with the matched experimental PDB structure side by side.'
-                : 'Three-dimensional follow-up depends on whether a precomputed model is available. When no predicted 3D file has been generated yet, the 2D structure above should be treated as the current endpoint.'
-            }</p>
-          </div>
-          <div class="structure-detail-comparison-grid">
-            <section class="structure-detail-comparison-card">
-              <div class="structure-detail-comparison-copy">
-                <h3>Predicted 3D from dot-bracket</h3>
-              </div>
-              ${
-                showPredictedStructureViewer
-                  ? `<div class="sequence-detail-media">
-                      <div id="predicted-structure-detail-molstar-status" class="mini-note">Loading predicted 3D model…</div>
-                      <div
-                        id="predicted-structure-detail-molstar"
-                        class="sequence-detail-viewer"
-                        data-structure-url="${predictedStructurePath(row.foldBridgeId)}"
-                        data-structure-format="pdb"
-                        data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
-                        data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                        data-structure-source="rnacomposer"
-                      ></div>
-                    </div>`
-                  : `<div class="sequence-detail-media">
-                      <div class="mini-note">${
-                        unsupportedPredictedStructureIds.has(row?.foldBridgeId)
-                          ? 'RNAComposer prediction unavailable for this record.'
-                          : 'Predicted 3D model is not available yet for this record.'
-                      }</div>
-                      ${
-                        isReactivityGuidedStructure && !unsupportedPredictedStructureIds.has(row?.foldBridgeId)
-                          ? '<p class="mini-note">If we want a 3D view here, the next step is to run a dedicated generator such as RNAComposer or another RNA 3D modeling workflow from the predicted dot-bracket.</p>'
-                          : ''
-                      }
-                    </div>`
-              }
-            </section>
-            <section class="structure-detail-comparison-card">
-              <div class="structure-detail-comparison-copy">
-                <h3>Matched PDB tertiary structure</h3>
-              </div>
-              ${
-                row.bestPdbId
-                  ? `<div class="sequence-detail-media">
-                      <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
-                      <div
-                        id="structure-detail-molstar"
-                        class="sequence-detail-viewer"
-                        data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
-                        data-structure-format="cif"
-                        data-structure-label="${row.bestPdbId}"
-                        data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                        data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
-                      ></div>
-                    </div>`
-                  : `<div class="sequence-detail-placeholder">
-                      <p>No matched PDB structure is available for this record.</p>
-                    </div>`
-              }
-            </section>
-          </div>
-        </section>`
-      : row.bestPdbId
-        ? `<section class="sequence-detail-panel">
-            <h2>Tertiary Structure</h2>
-            <div class="sequence-detail-media">
-              <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
-              <div
-                id="structure-detail-molstar"
-                class="sequence-detail-viewer"
-                data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
-                data-structure-format="cif"
-                data-structure-label="${row.bestPdbId}"
-                data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
-              ></div>
-            </div>
-          </section>`
-        : '';
-
-  const structureWorkflowSections = isReactivityGuidedStructure
-    ? `${heatmapSection}${secondaryStructureSection}${tertiaryStructureSection}`
-    : `${secondaryStructureSection}${heatmapSection}${tertiaryStructureSection}`;
-
-  return `<main class="page-sequence-detail">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-sequence-detail">
     <section class="sequence-detail-card">
       <div class="sequence-detail-header">
         <a class="sequence-detail-back" href="#download-sequences">Back to sequence list</a>
@@ -2589,6 +849,7 @@ function sequenceDetailPage() {
           <div>
             <p class="sequence-detail-kicker">${row.category ?? 'RNA'} record</p>
             <h1>${row.sequenceName ?? ''}</h1>
+            <p>${row.aptamerName ?? ''}</p>
           </div>
           <dl class="sequence-detail-meta">
             <div><dt>PDB</dt><dd>${row.pdbName ?? 'N/A'}</dd></div>
@@ -2629,7 +890,6 @@ function sequenceDetailPage() {
         <h2>Reference</h2>
         ${renderSequenceDetailReferenceContent(row)}
       </section>
-      ${renderDetailPageFooterActions('Back to Sequence', 'sequence')}
     </section>
   </main>`;
 }
@@ -2714,650 +974,6 @@ function dataAssetPath(fileName) {
   return `./src/assets/data/rmdb-puzzle/${fileName}`;
 }
 
-function normalizeRdatAssetName(value) {
-  const fileName = String(value ?? '').trim().replace(/^.*\//, '');
-  if (!fileName) return '';
-  return fileName.endsWith('.rdat') ? fileName : `${fileName}.rdat`;
-}
-
-function normalizeStructureMatchLabel(value) {
-  return String(value ?? '')
-    .toLowerCase()
-    .replace(/&/g, ' and ')
-    .replace(/\([^)]*\)/g, ' ')
-    .replace(/_/g, ' ')
-    .replace(/,/g, ' ')
-    .replace(/\+/g, ' plus ')
-    .replace(/\bfree\b/g, ' ')
-    .replace(/\bbound\b/g, ' ')
-    .replace(/[^a-z0-9]+/g, ' ')
-    .replace(/\s+/g, ' ')
-    .trim();
-}
-
-function normalizeSpeciesLabel(value) {
-  const text = String(value ?? '').trim();
-  if (!text) return '';
-  const parts = text.split(/\s+/);
-  if (parts.length >= 2 && /\.$/.test(parts[0])) {
-    return `${parts[0]} ${parts[1].toLowerCase()}${parts.length > 2 ? ` ${parts.slice(2).join(' ')}` : ''}`;
-  }
-  return text;
-}
-
-function splitNameAndSpecies(value) {
-  const raw = String(value ?? '').trim();
-  if (!raw) return { name: '', species: '' };
-  const parts = raw.split(/\s*,\s*/);
-  if (parts.length < 2) return { name: raw, species: '' };
-  return {
-    name: parts[0].trim(),
-    species: normalizeSpeciesLabel(parts.slice(1).join(', '))
-  };
-}
-
-function parseScientificValue(value) {
-  const numeric = Number(value);
-  return Number.isFinite(numeric) ? numeric : Number.POSITIVE_INFINITY;
-}
-
-const preferredStructureRepresentativeIds = new Map([
-  ['rna puzzle 5', 'RMDB_RNAPZ5_HRF_0001'],
-  ['rna puzzle 6', 'RMDB_RNAPZ6_STD_0001'],
-  ['rna puzzle 11', 'RMDB_RNAPZ11_STD_0002'],
-  ['rna puzzle 14', 'RMDB_RNAPZ14_HRF_0002']
-]);
-
-const puzzleDiscoveryYears = new Map([
-  ['rna puzzle 5', '2015'],
-  ['rna puzzle 6', '2015'],
-  ['rna puzzle 7', '2015'],
-  ['rna puzzle 8', '2017'],
-  ['rna puzzle 9', '2020'],
-  ['rna puzzle 10', 'NA'],
-  ['rna puzzle 11', '2025'],
-  ['rna puzzle 14', '2017'],
-  ['rna puzzle 18', '2016']
-]);
-
-const predictedStructureIds = new Set(generatedPredictedStructureIds);
-
-const curatedStructureOverrides = new Map([
-  [
-    'RMDB_RNAPZ18_1M7_0000',
-    {
-      sourceStructure: '....(((((((((....)))).(((((((.[[[[..)))))))..)))))...]]]](((((....)))))',
-      species: 'Zika virus'
-    }
-  ],
-  [
-    'RMDB_ATTR03_DMS_0001',
-    {
-      discoveryYear: '2020',
-      species: 'Synthetic construct'
-    }
-  ],
-  [
-    'RMDB_ATPCON_DMS_0001',
-    {
-      discoveryYear: '1996',
-      species: 'Synthetic construct'
-    }
-  ],
-  [
-    'RMDB_ADDSC_1M7_0007',
-    {
-      discoveryYear: '2004'
-    }
-  ],
-  [
-    'RMDB_GLYCFN_KNK_0001',
-    {
-      discoveryYear: '2010'
-    }
-  ],
-  [
-    'RMDB_SARS-CoV-2-SL5',
-    {
-      discoveryYear: '2024',
-      species: 'SARS-CoV-2',
-      hasLocalRdat: false,
-      rdatPath: '',
-      sourceStructure: '......(((((.(((((....)))))..)))))...........(((((.....))))).((((.......))))........((((((((.((.((((.(((.....))).)))))).))))))))..((((((.....))))))...(((((((((((..(((((...(((.(((((((((((..((((((.(((((......)))))..))))))......)))(((((((.((......)))))))))(((....)))))))))))))).))))).))))...)))))))......'
-    }
-  ],
-  [
-    'RMDB_16SFWJ_1M7_0001',
-    {
-      discoveryYear: '2012',
-      species: 'Bacterial 16S rRNA'
-    }
-  ],
-  [
-    'RMDB_SAMRSW_1M7_0001',
-    {
-      discoveryYear: '2010'
-    }
-  ],
-  [
-    'RMDB_TRP4P6_CMC_0001',
-    {
-      discoveryYear: '2005'
-    }
-  ],
-  [
-    'RMDB_TRP4P6_DMS_0014',
-    {
-      discoveryYear: '2005'
-    }
-  ],
-  [
-    'RMDB_TRP4P6_HRF_0003',
-    {
-      discoveryYear: '2005'
-    }
-  ],
-  [
-    'RMDB_TPPSC_1M7_0005',
-    {
-      discoveryYear: '2016'
-    }
-  ],
-  [
-    'RMDB_RNAPZ10_STD_0001',
-    {
-      discoveryYear: '2014',
-      species: 'Bacillus subtilis'
-    }
-  ],
-  [
-    'RMDB_RNAPZ11_STD_0002',
-    {
-      discoveryYear: '2017',
-      species: 'Synthetic construct'
-    }
-  ],
-  [
-    'RMDB_RNAPZ14_HRF_0002',
-    {
-      discoveryYear: '2015',
-      species: 'Synthetic construct'
-    }
-  ],
-  [
-    'RMDB_RNAPZ5_HRF_0001',
-    {
-      discoveryYear: '2015',
-      species: 'Didymium iridis'
-    }
-  ],
-  [
-    'RMDB_RNAPZ6_STD_0001',
-    {
-      discoveryYear: '2015',
-      species: 'Symbiobacterium thermophilum'
-    }
-  ],
-  [
-    'RMDB_RNAPZ7_1M7_0001',
-    {
-      discoveryYear: '2015',
-      species: 'Neurospora crassa'
-    }
-  ],
-  [
-    'RMDB_RNAPZ8_1M7_0001',
-    {
-      discoveryYear: '2017',
-      species: 'Synthetic construct'
-    }
-  ],
-  [
-    'RMDB_RNAPZ9_1M7_0001',
-    {
-      discoveryYear: '2020',
-      species: 'Synthetic construct'
-    }
-  ],
-  [
-    'RMDB_ETERNA_R82_0000',
-    {
-      discoveryYear: '2009',
-      species: 'Bacillus anthracis'
-    }
-  ],
-  [
-    'RMDB_CIDGMP_1M7_0001',
-    {
-      discoveryYear: '2012',
-      species: 'Vibrio cholerae'
-    }
-  ],
-  [
-    'RMDB_SRPECLI_BZCN_0001',
-    {
-      discoveryYear: '2016',
-      species: 'Escherichia coli'
-    }
-  ],
-  [
-    'RMDB_RNASEP_1M7_0001',
-    {
-      discoveryYear: '2022',
-      species: 'Escherichia coli'
-    }
-  ],
-  [
-    'RMDB_TRNAPH_1M7_0000',
-    {
-      discoveryYear: '2026',
-      species: 'Escherichia coli'
-    }
-  ],
-  [
-    'RMDB_RSTRND_DMS_0000',
-    {
-      discoveryYear: '2023',
-      species: 'Synthetic construct'
-    }
-  ],
-  [
-    'RMDB_PSEUDOB_DMS_0000',
-    {
-      discoveryYear: '2023',
-      species: 'Synthetic construct'
-    }
-  ],
-  [
-    'RMDB_POS240_DMS_0000',
-    {
-      discoveryYear: '2023',
-      species: 'Synthetic construct'
-    }
-  ],
-  [
-    'RMDB_PDB130_2A3_0000',
-    {
-      discoveryYear: '2023',
-      species: 'Synthetic construct'
-    }
-  ],
-  [
-    'RMDB_OK7BLIB_2A3_0000',
-    {
-      discoveryYear: '2023',
-      species: 'Synthetic construct'
-    }
-  ]
-]);
-
-const reactivityGuidedStructurePredictions = new Map([
-  ...generatedReactivityGuidedStructurePredictions,
-  [
-    'RMDB_SAMRSW_1M7_0001',
-    {
-      structure: '..((((((((..(((((((.(.(((.....)))..))...))))(((.((((((.(.(((((.....)))))))))..))))))...))(..((((((...)..))))))..))))))))',
-      method: 'Local reactivity-guided estimate from the bundled 1M7 and nomod rows in SAMRSW_1M7_0001.rdat.'
-    }
-  ],
-  [
-    'RMDB_CIDGMP_1M7_0001',
-    {
-      structure: '.(((((((((...)(((...((((((....)))))))((((...))((.((((((..(((((....).))))))))..))))))).))).))(((...)))))))',
-      method: 'Local reactivity-guided estimate from the bundled 1M7 and nomod rows in CIDGMP_1M7_0001.rdat.'
-    }
-  ],
-  [
-    'RMDB_RNAPZ8_1M7_0001',
-    {
-      structure: '...((.(..((((....)))))).)(((((((.((((((((...)))).((.(((((....))))))))))).)))).).((((......))))))',
-      method: 'Local reactivity-guided estimate from the bundled RNAPZ8_1M7_0001.rdat measurements.'
-    }
-  ],
-  [
-    'RMDB_RNAPZ9_1M7_0001',
-    {
-      structure: '(((((((....)(.(((((..(...))))))).......((((((((.......))))).))..)))))))',
-      method: 'Local reactivity-guided estimate from the bundled RNAPZ9_1M7_0001.rdat measurements.'
-    }
-  ],
-  [
-    'RMDB_RNAPZ11_STD_0002',
-    {
-      structure: '((((((((((.(((((..(((((((....))).)))))))..))...))))))))))',
-      method: 'Reactivity-guided comparison workflow for the bundled RNAPZ11_STD_0002.rdat measurements.'
-    }
-  ],
-  [
-    'RMDB_RNAPZ14_HRF_0002',
-    {
-      structure: '(((((.(((((....)))))((....))((((((..........))))))....)))))))',
-      method: 'Reactivity-guided comparison workflow for the bundled RNAPZ14_HRF_0002.rdat measurements.'
-    }
-  ],
-  [
-    'RMDB_RNAPZ5_HRF_0001',
-    {
-      structure: '(((((..(((((..(((((((((.......)))))))))..((((.((((((((......(((((...((((((((((....))))....)).))))((....)).....[[[[[...))))).((((...))))))))))))....]]]]].((((....))))....))))...)))))..)))))',
-      method: 'Reactivity-guided comparison workflow for the bundled RNAPZ5_HRF_0001.rdat measurements.'
-    }
-  ]
-]);
-
-const rnaComposerPredictedStructureIds = new Set(generatedRnaComposerPredictedStructureIds);
-const forceReactivityGuidedWorkflowIds = new Set([
-  'RMDB_RNAPZ5_HRF_0001',
-  'RMDB_RNAPZ8_1M7_0001',
-  'RMDB_RNAPZ9_1M7_0001',
-  'RMDB_RNAPZ11_STD_0002',
-  'RMDB_RNAPZ14_HRF_0002'
-]);
-const unsupportedPredictedStructureIds = new Set([
-  'RMDB_OK7BLIB_2A3_0000'
-]);
-
-function hasUsablePredictedStructure(foldBridgeId) {
-  return rnaComposerPredictedStructureIds.has(foldBridgeId) && !unsupportedPredictedStructureIds.has(foldBridgeId);
-}
-
-function predictedStructureDescription(foldBridgeId) {
-  if (unsupportedPredictedStructureIds.has(foldBridgeId)) {
-    return 'RNAComposer could not produce a usable 3D model for this record, so FoldBridge does not display a local fallback structure here.';
-  }
-  if (rnaComposerPredictedStructureIds.has(foldBridgeId)) {
-    return 'This predicted 3D model is generated with RNAComposer from the RDAT sequence and available secondary-structure constraints, giving a more PDB-like atomic view for side-by-side comparison with the matched experimental structure below.';
-  }
-  return 'RNAComposer has not produced a 3D model for this record yet.';
-}
-
-function choosePreferredBlastHit(current, candidate) {
-  if (!current) return candidate;
-  const currentEvalue = parseScientificValue(current.evalue);
-  const candidateEvalue = parseScientificValue(candidate.evalue);
-  if (candidateEvalue !== currentEvalue) return candidateEvalue < currentEvalue ? candidate : current;
-  const currentBitscore = Number(current.bitscore) || 0;
-  const candidateBitscore = Number(candidate.bitscore) || 0;
-  if (candidateBitscore !== currentBitscore) return candidateBitscore > currentBitscore ? candidate : current;
-  const currentIdentity = Number(current.pident) || 0;
-  const candidateIdentity = Number(candidate.pident) || 0;
-  if (candidateIdentity !== currentIdentity) return candidateIdentity > currentIdentity ? candidate : current;
-  const currentCoverage = Number(current.qcovs) || 0;
-  const candidateCoverage = Number(candidate.qcovs) || 0;
-  if (candidateCoverage !== currentCoverage) return candidateCoverage > currentCoverage ? candidate : current;
-  return String(candidate.pdbId ?? '').localeCompare(String(current.pdbId ?? '')) < 0 ? candidate : current;
-}
-
-function buildBlastMatchIndex(rows) {
-  return rows.reduce((index, row) => {
-    const key = normalizeStructureMatchLabel(row.queryLabel);
-    if (!key) return index;
-    const entries = index.get(key) || [];
-    entries.push(row);
-    index.set(key, entries);
-    return index;
-  }, new Map());
-}
-
-const structureDatasetOrder = new Map([
-  ['puzzle', 0],
-  ['general', 1],
-  ['riboswitches', 2],
-  ['rna-structure', 3],
-  ['eterna', 4],
-  ['other', 5]
-]);
-
-function normalizeStructureDataset(value) {
-  const text = String(value ?? '').toLowerCase();
-  if (text.includes('puzzle')) return 'puzzle';
-  if (text.includes('general')) return 'general';
-  if (text.includes('riboswitch')) return 'riboswitches';
-  if (text.includes('rnastructure')) return 'rna-structure';
-  if (text.includes('eterna')) return 'eterna';
-  return 'other';
-}
-
-function compareStructureRows(a, b) {
-  const identityDiff = (Number(b.bestIdentity) || 0) - (Number(a.bestIdentity) || 0);
-  if (identityDiff !== 0) return identityDiff;
-  const coverageDiff = (Number(b.bestCoverage) || 0) - (Number(a.bestCoverage) || 0);
-  if (coverageDiff !== 0) return coverageDiff;
-  const evalueDiff = parseScientificValue(a.bestEvalue) - parseScientificValue(b.bestEvalue);
-  if (evalueDiff !== 0) return evalueDiff;
-  const nameDiff = (a.name || a.foldBridgeId).localeCompare(b.name || b.foldBridgeId);
-  if (nameDiff !== 0) return nameDiff;
-  return a.foldBridgeId.localeCompare(b.foldBridgeId);
-}
-
-function buildStructureEntryRows(rows) {
-  const grouped = new Map();
-
-  rows
-    .filter((row) => row.hasPdbMatch)
-    .forEach((row) => {
-      const groupKey = row.structureGroupKey || normalizeStructureMatchLabel(row.name) || row.foldBridgeId;
-      const existing = grouped.get(groupKey);
-
-      if (!existing) {
-        grouped.set(groupKey, {
-          representative: row,
-          relatedRecords: [row]
-        });
-        return;
-      }
-
-      existing.relatedRecords.push(row);
-
-      const current = existing.representative;
-      const currentEvalue = parseScientificValue(current.bestEvalue);
-      const candidateEvalue = parseScientificValue(row.bestEvalue);
-      if (candidateEvalue < currentEvalue) {
-        existing.representative = row;
-        return;
-      }
-
-      if (candidateEvalue === currentEvalue) {
-        const currentIdentity = Number(current.bestIdentity) || 0;
-        const candidateIdentity = Number(row.bestIdentity) || 0;
-        if (candidateIdentity > currentIdentity) {
-          existing.representative = row;
-          return;
-        }
-
-        if (candidateIdentity === currentIdentity) {
-          const currentCoverage = Number(current.bestCoverage) || 0;
-          const candidateCoverage = Number(row.bestCoverage) || 0;
-          if (candidateCoverage > currentCoverage) {
-            existing.representative = row;
-            return;
-          }
-
-          if (candidateCoverage === currentCoverage && row.foldBridgeId.localeCompare(current.foldBridgeId) < 0) {
-            existing.representative = row;
-          }
-        }
-      }
-    });
-
-  return [...grouped.entries()]
-    .map(([groupKey, { representative, relatedRecords }]) => {
-      const preferredId = preferredStructureRepresentativeIds.get(groupKey);
-      const sortedRelatedRecords = [...relatedRecords].sort(compareStructureRows);
-      const preferredRecord = preferredId
-        ? sortedRelatedRecords.find((record) => record.foldBridgeId === preferredId)
-        : null;
-      const finalRepresentative = preferredRecord || representative;
-
-      return {
-        ...finalRepresentative,
-        relatedRecords: sortedRelatedRecords,
-        relatedRecordCount: sortedRelatedRecords.length,
-        detailPage: `#structure-detail?foldBridgeId=${encodeURIComponent(finalRepresentative.foldBridgeId)}`
-      };
-    })
-    .sort((a, b) => {
-      const dotBracketDiff = Number(Boolean(String(b.sourceStructure || '').trim())) - Number(Boolean(String(a.sourceStructure || '').trim()));
-      if (dotBracketDiff !== 0) return dotBracketDiff;
-
-      const secondaryStructureDiff = Number(structureHasSecondaryStructure(b)) - Number(structureHasSecondaryStructure(a));
-      if (secondaryStructureDiff !== 0) return secondaryStructureDiff;
-
-      const datasetOrderDiff =
-        (structureDatasetOrder.get(a.structureDatasetGroup) ?? structureDatasetOrder.get('other')) -
-        (structureDatasetOrder.get(b.structureDatasetGroup) ?? structureDatasetOrder.get('other'));
-      if (datasetOrderDiff !== 0) return datasetOrderDiff;
-      return compareStructureRows(a, b);
-    });
-}
-
-function formatBlastPercent(value) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return 'N/A';
-  return `${numeric.toFixed(1)}%`;
-}
-
-function hasPairedSecondaryStructureText(structure) {
-  return /[()[\]{}<>]/.test(String(structure || ''));
-}
-
-function getPredictedSecondaryStructure(row) {
-  return reactivityGuidedStructurePredictions.get(row?.foldBridgeId) || null;
-}
-
-function usesReactivityGuidedWorkflow(row) {
-  const predicted = getPredictedSecondaryStructure(row);
-  if (!predicted) return false;
-  return (
-    forceReactivityGuidedWorkflowIds.has(row?.foldBridgeId)
-    || !hasPairedSecondaryStructureText(String(row?.sourceStructure || '').trim())
-  );
-}
-
-function getDisplaySecondaryStructure(row) {
-  const sourceStructure = String(row?.sourceStructure || '').trim();
-  if (usesReactivityGuidedWorkflow(row)) {
-    return getPredictedSecondaryStructure(row)?.structure || sourceStructure;
-  }
-  if (hasPairedSecondaryStructureText(sourceStructure)) return sourceStructure;
-  return getPredictedSecondaryStructure(row)?.structure || sourceStructure;
-}
-
-function structureHasSecondaryStructure(row) {
-  return hasPairedSecondaryStructureText(getDisplaySecondaryStructure(row));
-}
-
-function formatBlastEvalue(value) {
-  if (value === null || value === undefined || value === '') return 'N/A';
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return String(value);
-  if (numeric === 0) return '0.00';
-  if (/e/i.test(String(value)) || Math.abs(numeric) < 0.01 || Math.abs(numeric) >= 100) {
-    return numeric.toExponential(2).replace('e+', 'e');
-  }
-  return numeric.toFixed(2);
-}
-
-function normalizeSequenceForMetrics(sequence) {
-  return String(sequence ?? '')
-    .toUpperCase()
-    .replace(/T/g, 'U')
-    .replace(/[^AUGC]/g, '');
-}
-
-function parseStructurePairs(structure) {
-  const openToClose = { '(': ')', '[': ']', '{': '}', '<': '>' };
-  const closeToOpen = Object.fromEntries(Object.entries(openToClose).map(([open, close]) => [close, open]));
-  const stacks = Object.fromEntries(Object.keys(openToClose).map((key) => [key, []]));
-  const pairs = new Map();
-
-  String(structure ?? '')
-    .replace(/\s+/g, '')
-    .split('')
-    .forEach((char, index) => {
-      if (openToClose[char]) {
-        stacks[char].push(index);
-        return;
-      }
-      const opener = closeToOpen[char];
-      if (!opener || !stacks[opener].length) return;
-      const partner = stacks[opener].pop();
-      pairs.set(index, partner);
-      pairs.set(partner, index);
-    });
-
-  return pairs;
-}
-
-function countStructureStems(structure) {
-  const pairs = parseStructurePairs(structure);
-  const seen = new Set();
-  let stemCount = 0;
-
-  [...pairs.keys()]
-    .filter((index) => index < pairs.get(index))
-    .sort((a, b) => a - b)
-    .forEach((left) => {
-      if (seen.has(left)) return;
-      stemCount += 1;
-      let currentLeft = left;
-      let currentRight = pairs.get(left);
-      while (pairs.get(currentLeft) === currentRight) {
-        seen.add(currentLeft);
-        seen.add(currentRight);
-        currentLeft += 1;
-        currentRight -= 1;
-      }
-    });
-
-  return stemCount;
-}
-
-function parseSequenceLength(sequenceText) {
-  return normalizeSequenceForMetrics(sequenceText).length || 0;
-}
-
-function estimateGlobalFoldSimilarity(row, secondaryStructure) {
-  if (!hasUsablePredictedStructure(row?.foldBridgeId) || !structureHasSecondaryStructure(row)) {
-    return { label: 'Unavailable', note: 'Predicted 3D model or secondary-structure constraints are missing.' };
-  }
-
-  const identity = Number(row?.bestIdentity) || 0;
-  const coverage = Number(row?.bestCoverage) || 0;
-  const stemCount = countStructureStems(secondaryStructure);
-  const sequenceLength = parseSequenceLength(row?.sourceSequence || row?.sequence || '');
-
-  if (identity >= 95 && coverage >= 95 && stemCount >= 4 && sequenceLength >= 80) {
-    return { label: 'High', note: 'Estimated from very strong sequence match, full coverage, and a well-defined multi-stem fold.' };
-  }
-  if (identity >= 85 && coverage >= 80 && stemCount >= 3) {
-    return { label: 'Medium', note: 'Estimated from good sequence match and a secondary structure likely to preserve the global topology.' };
-  }
-  return { label: 'Exploratory', note: 'Use visual comparison only; the current constraints are weaker for claiming a shared global fold.' };
-}
-
-function applyCuratedStructureOverrides(row) {
-  if (!row?.foldBridgeId) return row;
-  const override = curatedStructureOverrides.get(row.foldBridgeId);
-  if (!override) return row;
-  return {
-    ...row,
-    ...override,
-    sourceStructure: override.sourceStructure ?? row.sourceStructure
-  };
-}
-
-function renderPdbExternalLink(pdbId) {
-  if (!pdbId) return 'N/A';
-  const safePdbId = encodeURIComponent(pdbId);
-  return `<a href="https://www.rcsb.org/structure/${safePdbId}" target="_blank" rel="noopener noreferrer" class="sequence-link pdb-external-link" title="Open in RCSB PDB">${pdbId}<span class="pdb-external-link-icon" aria-hidden="true">↗</span></a>`;
-}
-
-function summarizePdbMatch(row) {
-  if (!row.bestPdbId) return 'Not matched';
-  if (row.pdbIds.length <= 1) return row.bestPdbId;
-  return `${row.bestPdbId} (+${row.pdbIds.length - 1})`;
-}
-
 function parseCsv(text) {
   const rows = [];
   let current = '';
@@ -3404,583 +1020,44 @@ function parseCsv(text) {
   return rows;
 }
 
-function parseTsv(text) {
-  const lines = String(text ?? '')
-    .split(/\r?\n/)
-    .filter((line) => line.trim().length);
-  if (!lines.length) return [];
-  const headers = lines[0].split('\t');
-  return lines.slice(1).map((line) => {
-    const values = line.split('\t');
-    return Object.fromEntries(headers.map((header, index) => [header, values[index] ?? '']));
-  });
-}
-
-function trimRdatSuffix(value) {
-  return String(value ?? '').replace(/\.rdat$/i, '');
-}
-
-function inferFileCodeFromSourceFile(sourceFile) {
-  const tokens = trimRdatSuffix(sourceFile).split('_');
-  return tokens[1] || '';
-}
-
-function inferModifierFromSupplementRow(row) {
-  const annotation = String(row.source_sequence_type ?? '').toLowerCase();
-  if (annotation.includes('modifier:1m7')) return '1M7';
-  if (annotation.includes('mutation:wt')) return 'SHAPE';
-  if (annotation.includes('chemical:atp')) return 'ATP';
-
-  const fileCode = inferFileCodeFromSourceFile(row.source_file).toUpperCase();
-  if (['1M7', 'DMS', 'CMC', 'CMCT', 'HRF', 'NMD', 'ALG', 'STD'].includes(fileCode)) return fileCode;
-  return '';
-}
-
-function expandSpeciesAbbreviation(species) {
-  const clean = String(species || '').trim().replace(/_/g, ' ').toLowerCase();
-  const map = {
-    'pputida': 'Pseudomonas putida',
-    'p putida': 'Pseudomonas putida',
-    'e coli': 'Escherichia coli',
-    'b subtilis': 'Bacillus subtilis',
-    'o sativa': 'Oryza sativa',
-    'y pseudotuberculosis': 'Yersinia pseudotuberculosis',
-    'yeast': 'Saccharomyces cerevisiae',
-    'human': 'Homo sapiens',
-    'mouse': 'Mus musculus'
-  };
-  return map[clean] || species;
-}
-
-function formatRaspRecordName(sourceName, pdbId) {
-  const name = String(sourceName || '').trim();
-  const cleanPdb = String(pdbId || '').toLowerCase().replace(/_[a-z0-9]+$/i, '').trim();
-
-  // 1. Map raw coords or IDs to clean RNA names using matched PDB ID
-  const pdbToName = {
-    '1xjr': 'SARS-CoV-2 s2m element',
-    '7b9v': 'U6 snRNA',
-    '6spg': '5S rRNA',
-    '8t5h': '5S rRNA',
-    '8rgw': '16S rRNA',
-    '8rwg': '16S rRNA',
-    '9n2c': '16S rRNA',
-    '8buu': '16S rRNA',
-    '9ss6': '16S rRNA',
-    '7unw': '23S rRNA',
-    '7nbu': '23S rRNA',
-    '3j3w': '23S rRNA',
-    '8vsa': 'tmRNA',
-    '7uo5': 'tmRNA',
-    '7pnw': 'Mitochondrial 12S rRNA',
-    '7l08': 'Mitochondrial 12S rRNA',
-    '3jcr': '7SL RNA (SRP RNA)',
-    '8jiw': '18S rRNA',
-    '9evt': '18S rRNA',
-    '5x8r': '18S rRNA',
-    '9si0': '5.8S rRNA'
-  };
-
-  if (pdbToName[cleanPdb]) {
-    return pdbToName[cleanPdb];
-  }
-
-  // Handle specific tRNAs by locus/transcript name or PDB
-  const isTrna = 
-    /^[4689][a-z0-9]{3}/.test(cleanPdb) || 
-    /trna/i.test(name) ||
-    /RS02040|RS03150|RS03155|RS03315|RS03325|RS06225|RS08755|RS09650/i.test(name) ||
-    /EBT00049907297|EBT00049907359|EBT00049907667|2IZe0JzJzkFApyV|75SfIwioE-pBoQo|IlICJX4O9Pa4-Mj|W_9xYfxP6Mp8nHP|8XT3|8CBO|8RR3|8Z1G|6ZM6/i.test(name);
-
-  if (isTrna) {
-    if (/RS03315|5LZF|9LPC|8XT3/i.test(name)) return 'tRNA-Ala';
-    if (/RS03150|EBT00049907297|8Z1G/i.test(name)) return 'tRNA-Gly';
-    if (/RS02040|RS03155|RS08755|RS09650|EBT00049907359|EBT00049907667|75Sf|8RR3|1EFW/i.test(name)) return 'tRNA-Phe';
-    if (/RS03325|2IZe0J|9SLZ/i.test(name)) return 'tRNA-Thr';
-    if (/RS06225|9TEX/i.test(name)) return 'tRNA-Met';
-    if (/8CBO|6ZM6/i.test(name)) return 'tRNA-Asn';
-    return 'tRNA';
-  }
-
-  // 2. If it is a transcript name, strip prefix and format
-  let cleanName = name.replace(/^transcript:/i, '');
-  if (cleanName.endsWith('_rRNA') || cleanName.endsWith('_snRNA') || cleanName.endsWith('_snoRNA') || cleanName.endsWith('_ncRNA') || cleanName.endsWith('_tRNA')) {
-    if (cleanName === 'LSR1_snRNA') return 'LSR1 snRNA (U2 snRNA)';
-    if (cleanName === 'snR14_snRNA') return 'snR14 snRNA (U4 snRNA)';
-    if (cleanName === 'snR17a_snoRNA') return 'snR17a snoRNA (U3 snoRNA)';
-    if (cleanName === 'snR17b_snoRNA') return 'snR17b snoRNA (U3 snoRNA)';
-    if (cleanName === 'snR19_snRNA') return 'snR19 snRNA (U1 snRNA)';
-    if (cleanName === 'snR6-L_snRNA') return 'snR6-L snRNA (U6 snRNA)';
-    if (cleanName === 'snR7-L_snRNA') return 'snR7-L snRNA (U5 snRNA)';
-    if (cleanName === 'snR7-S_snRNA') return 'snR7-S snRNA (U5 snRNA)';
-
-    if (cleanName.startsWith('tA(AGC)D_')) return 'tRNA-Ala (tA(AGC)D)';
-    if (cleanName.startsWith('tA(UGC)A_')) return 'tRNA-Ala (tA(UGC)A)';
-    if (cleanName.startsWith('tC(GCA)B_')) return 'tRNA-Cys (tC(GCA)B)';
-    if (cleanName.startsWith('tD(GUC)B_')) return 'tRNA-Asp (tD(GUC)B)';
-    if (cleanName.startsWith('tG(GCC)C_')) return 'tRNA-Gly (tG(GCC)C)';
-    if (cleanName.startsWith('tM(CAU)C_')) return 'tRNA-Met (tM(CAU)C)';
-    if (cleanName.startsWith('tR(ACG)D_')) return 'tRNA-Arg (tR(ACG)D)';
-    if (cleanName.startsWith('tT(UGU)Q1_')) return 'tRNA-Thr (tT(UGU)Q1)';
-
-    return cleanName.replace(/_/g, ' ');
-  }
-
-  return cleanName;
-}
-
-function getPdbDiscoveryYear(pdbId) {
-  const clean = String(pdbId || '').toLowerCase().trim();
-  const map = {
-    '1xjr': '2004',
-    '1efw': '1996',
-    '3epl': '2008',
-    '3j3w': '2013',
-    '3jcr': '2016',
-    '486d': '1997',
-    '4wj4': '2015',
-    '4yye': '2015',
-    '5lzf': '2017',
-    '5x8r': '2017',
-    '5zwm': '2018',
-    '6ah3': '2018',
-    '6exn': '2018',
-    '6gsk': '2019',
-    '6spg': '2019',
-    '6w6v': '2020',
-    '6zm6': '2020',
-    '7b9v': '2021',
-    '7l08': '2020',
-    '7nbu': '2022',
-    '7pnw': '2022',
-    '7r81': '2022',
-    '7unw': '2022',
-    '7uo5': '2022',
-    '8asw': '2023',
-    '8buu': '2023',
-    '8cbo': '2023',
-    '8rgw': '2023',
-    '8rwg': '2023',
-    '8rr3': '2023',
-    '8s1u': '2023',
-    '8t5h': '2023',
-    '8uti': '2024',
-    '8v87': '2023',
-    '8vsa': '2023',
-    '8w2o': '2023',
-    '8xt3': '2024',
-    '8yus': '2024',
-    '8z1g': '2024',
-    '8ztv': '2024',
-    '8zyd': '2024',
-    '9bdp': '2024',
-    '9dtr': '2024',
-    '9evt': '2024',
-    '9g28': '2024',
-    '9hm5': '2024',
-    '9lpc': '2024',
-    '9n2c': '2024',
-    '9n78': '2024',
-    '9n7b': '2024',
-    '9si0': '2024',
-    '9slz': '2024',
-    '9ss6': '2025',
-    '9tex': '2025',
-    '9zxr': '2026'
-  };
-  if (map[clean]) return map[clean];
-
-  const first = clean.charAt(0);
-  if (first === '9') return '2024';
-  if (first === '8') return '2023';
-  if (first === '7') return '2021';
-  if (first === '6') return '2019';
-  if (first === '5') return '2016';
-  if (first === '4') return '2012';
-  if (first === '3') return '2008';
-  if (first === '2') return '2004';
-  if (first === '1') return '1998';
-  return '';
-}
-
-function buildSupplementStructureRows(rows, existingIds = new Set()) {
-  return rows
-    .map((row) => {
-      const explicitFoldBridgeId = String(row.foldbridge_id ?? row.foldBridgeId ?? '').trim();
-      const sourceStem = trimRdatSuffix(row.source_file || explicitFoldBridgeId.replace(/^(?:RMDB|RASP)_/, ''));
-      const foldBridgeId = explicitFoldBridgeId || (sourceStem ? `RMDB_${sourceStem}` : '');
-      if (!foldBridgeId || existingIds.has(foldBridgeId)) return null;
-
-      const sequenceLength = String(row.source_sequence_length ?? '').trim();
-      const sequenceText = String(row.source_sequence ?? '').trim();
-      const nameParts = splitNameAndSpecies(row.source_name || '');
-      const isRasp = foldBridgeId.startsWith('RASP_');
-
-      let nameVal = nameParts.name || row.source_name || '';
-      let speciesVal = nameParts.species || '';
-
-      if (isRasp) {
-        nameVal = formatRaspRecordName(row.source_name, row.pdb_id || row.bestPdbId);
-        if (!speciesVal && row.source_annotation_data_id) {
-          speciesVal = expandSpeciesAbbreviation(row.source_annotation_data_id);
-        }
-      }
-
-      const matchedPdb = row.pdb_id || row.bestPdbId || '';
-      const yearVal = matchedPdb ? getPdbDiscoveryYear(matchedPdb) : '';
-
-      return {
-        foldBridgeId,
-        name: nameVal,
-        species: speciesVal,
-        discoveryYear: yearVal,
-        sequence: sequenceText && sequenceLength ? `${sequenceText} (${sequenceLength}nt)` : sequenceText,
-        length: sequenceLength ? `${sequenceLength}nt` : '',
-        structureGroupKey: `${normalizeStructureMatchLabel(row.source_name || sourceStem)}::${sequenceLength || sourceStem}`,
-        fileCode: inferFileCodeFromSourceFile(row.source_file),
-        experimentType: '',
-        modifier: inferModifierFromSupplementRow(row),
-        hasPdbMatch: Boolean(row.pdb_id),
-        pdbMatchCount: row.pdb_id ? 1 : 0,
-        pdbIds: row.pdb_id ? [String(row.pdb_id).toUpperCase()] : [],
-        bestPdbId: row.pdb_id ? String(row.pdb_id).toUpperCase() : '',
-        bestSubjectId: row.sseqid || '',
-        bestEvalue: row.evalue || '',
-        bestIdentity: row.pident || '',
-        bestCoverage: row.qcovs || '',
-        structureDatasetGroup: normalizeStructureDataset(row.dataset),
-        rdatPath: normalizeRdatAssetName(row.source_file || sourceStem)
-          ? dataAssetPath(normalizeRdatAssetName(row.source_file || sourceStem))
-          : '',
-        hasLocalRdat: Boolean(normalizeRdatAssetName(row.source_file || sourceStem)),
-        sourceStructure: String(row.source_structure ?? '').trim(),
-        sourceSequence: sequenceText
-      };
-    })
-    .filter(Boolean);
-}
-
-function buildBrowseRowsFromLocalManifest(records, blastMatchIndex, existingIds = new Set()) {
-  return records
-    .map((record) => {
-      const foldBridgeId = String(record.foldBridgeId || '').trim();
-      if (!foldBridgeId || existingIds.has(foldBridgeId)) return null;
-
-      const matchKey = normalizeStructureMatchLabel(record.name || foldBridgeId);
-      const blastMatches = blastMatchIndex.get(matchKey) || [];
-      const bestMatch = blastMatches.reduce((best, candidate) => choosePreferredBlastHit(best, candidate), null);
-      const pdbIds = [...new Set(blastMatches.map((item) => item.pdbId).filter(Boolean))].sort();
-
-      return {
-        foldBridgeId,
-        name: record.name || foldBridgeId,
-        species: record.species || '',
-        discoveryYear: bestMatch?.pdbId ? getPdbDiscoveryYear(bestMatch.pdbId) : 'N/A',
-        sequence: record.sequence && record.length ? `${record.sequence} (${record.length.replace(/nt$/i, '')}nt)` : (record.sequence || ''),
-        length: record.length || '',
-        structureGroupKey: matchKey || foldBridgeId,
-        fileCode: record.fileCode || '',
-        experimentType: record.experimentType || '',
-        modifier: record.modifier || '',
-        hasPdbMatch: Boolean(bestMatch),
-        pdbMatchCount: blastMatches.length,
-        pdbIds,
-        bestPdbId: bestMatch?.pdbId || '',
-        bestSubjectId: bestMatch?.subjectId || '',
-        bestEvalue: bestMatch?.evalue || '',
-        bestIdentity: bestMatch?.pident || '',
-        bestCoverage: bestMatch?.qcovs || '',
-        structureDatasetGroup: record.structureDatasetGroup || 'other',
-        rdatPath: '',
-        hasLocalRdat: false,
-        sourceSequence: record.sequence || ''
-      };
-    })
-    .filter(Boolean);
-}
-
-function parseFasta(text) {
-  const records = [];
-  let current = null;
-
-  String(text ?? '')
-    .split(/\r?\n/)
-    .forEach((line) => {
-      const trimmed = line.trim();
-      if (!trimmed) return;
-      if (trimmed.startsWith('>')) {
-        if (current) {
-          current.sequence = current.sequence.join('');
-          current.length = current.sequence.length;
-          records.push(current);
-        }
-        const header = trimmed.slice(1).trim();
-        const [id = 'sequence'] = header.split(/\s+/);
-        current = {
-          id,
-          header,
-          sequence: []
-        };
-        return;
-      }
-
-      if (current) current.sequence.push(trimmed);
-    });
-
-  if (current) {
-    current.sequence = current.sequence.join('');
-    current.length = current.sequence.length;
-    records.push(current);
-  }
-
-  return records;
-}
-
-function humanizeCaseToken(value) {
-  return String(value ?? '')
-    .replace(/_/g, ' ')
-    .replace(/\b\w/g, (match) => match.toUpperCase());
-}
-
-function formatCaseBoolean(value) {
-  if (value === true) return 'Yes';
-  if (value === false) return 'No';
-  return 'Unknown';
-}
-
-function formatFractionPercent(value) {
-  const numeric = Number(value);
-  if (!Number.isFinite(numeric)) return 'N/A';
-  return `${(numeric * 100).toFixed(1)}%`;
-}
-
-function formatCaseDetailValue(value) {
-  if (value === null || value === undefined || value === '') return 'N/A';
-  if (typeof value === 'boolean') return formatCaseBoolean(value);
-  return String(value);
-}
-
-function caseBundleFilePath(caseId, fileName) {
-  return `./${CASE_BUNDLE_ROOT}/${encodeURIComponent(caseId)}/${fileName}`;
-}
-
-function chooseBetterAlignmentRow(current, candidate) {
-  if (!current) return candidate;
-  const currentBitscore = Number(current.bitscore) || 0;
-  const candidateBitscore = Number(candidate.bitscore) || 0;
-  if (candidateBitscore !== currentBitscore) return candidateBitscore > currentBitscore ? candidate : current;
-  const currentIdentity = Number(current.identity_fraction) || 0;
-  const candidateIdentity = Number(candidate.identity_fraction) || 0;
-  if (candidateIdentity !== currentIdentity) return candidateIdentity > currentIdentity ? candidate : current;
-  const currentCoverage = Number(current.rmdb_query_coverage) || 0;
-  const candidateCoverage = Number(candidate.rmdb_query_coverage) || 0;
-  return candidateCoverage > currentCoverage ? candidate : current;
-}
-
-function buildCaseDetailData(caseJson, pdbFastaText, rmdbFastaText, alignmentPairSummaryText) {
-  const pdbSequences = parseFasta(pdbFastaText);
-  const rmdbFastaRecords = parseFasta(rmdbFastaText);
-  const rmdbSequenceMap = new Map(rmdbFastaRecords.map((record) => [record.id, record]));
-  const alignmentRows = parseTsv(alignmentPairSummaryText);
-  const rmdbSummaryMap = new Map();
-
-  alignmentRows.forEach((row) => {
-    const rmdbUniqueId = row.rmdb_unique_id || row.source_sequence_id || 'unknown';
-    const existing = rmdbSummaryMap.get(rmdbUniqueId);
-    const bestRow = chooseBetterAlignmentRow(existing?.bestRow, row);
-    const sequence = row.rmdb_sequence || row.bundle_sequence || rmdbSequenceMap.get(rmdbUniqueId)?.sequence || '';
-    rmdbSummaryMap.set(rmdbUniqueId, {
-      rmdbUniqueId,
-      sequence,
-      length: sequence.length || Number(rmdbSequenceMap.get(rmdbUniqueId)?.length) || 0,
-      pairCount: (existing?.pairCount || 0) + 1,
-      bestRow
-    });
-  });
-
-  if (!rmdbSummaryMap.size) {
-    rmdbFastaRecords.forEach((record) => {
-      rmdbSummaryMap.set(record.id, {
-        rmdbUniqueId: record.id,
-        sequence: record.sequence,
-        length: record.length,
-        pairCount: 1,
-        bestRow: null
-      });
-    });
-  }
-
-  const rmdbSequences = [...rmdbSummaryMap.values()]
-    .map((item) => ({
-      rmdbUniqueId: item.rmdbUniqueId,
-      sequence: item.sequence,
-      length: item.length,
-      pairCount: item.pairCount,
-      pdbReferenceId: item.bestRow?.pdb_reference_id || '',
-      identityFraction: Number(item.bestRow?.identity_fraction || 0),
-      rmdbQueryCoverage: Number(item.bestRow?.rmdb_query_coverage || 0),
-      pdbSubjectCoverage: Number(item.bestRow?.pdb_subject_coverage || 0),
-      alignmentLength: Number(item.bestRow?.alignment_length || 0),
-      bitscore: Number(item.bestRow?.bitscore || 0)
-    }))
-    .sort((a, b) => {
-      if (b.pairCount !== a.pairCount) return b.pairCount - a.pairCount;
-      if (b.identityFraction !== a.identityFraction) return b.identityFraction - a.identityFraction;
-      if (b.length !== a.length) return b.length - a.length;
-      return a.rmdbUniqueId.localeCompare(b.rmdbUniqueId);
-    });
-
-  return {
-    pdbId: caseJson.pdb_id,
-    caseInfo: caseJson,
-    pdbSequences,
-    rmdbSequences
-  };
-}
-
-async function ensureCaseDetailLoaded(caseId) {
-  if (!caseId || caseDetailCache.has(caseId) || caseDetailLoading.has(caseId)) return;
-  caseDetailLoading.add(caseId);
-
-  try {
-    const [caseJsonResponse, pdbFastaResponse, rmdbFastaResponse, alignmentSummaryResponse] = await Promise.all([
-      fetch(caseBundleFilePath(caseId, 'case.json')),
-      fetch(caseBundleFilePath(caseId, 'pdb.fasta')),
-      fetch(caseBundleFilePath(caseId, 'rmdb.fasta')),
-      fetch(caseBundleFilePath(caseId, 'alignment_pair_summary.tsv'))
-    ]);
-
-    if (!caseJsonResponse.ok) throw new Error(`Failed to load case.json for ${caseId}`);
-    if (!pdbFastaResponse.ok) throw new Error(`Failed to load pdb.fasta for ${caseId}`);
-    if (!rmdbFastaResponse.ok) throw new Error(`Failed to load rmdb.fasta for ${caseId}`);
-    if (!alignmentSummaryResponse.ok) throw new Error(`Failed to load alignment_pair_summary.tsv for ${caseId}`);
-
-    const [caseJson, pdbFastaText, rmdbFastaText, alignmentSummaryText] = await Promise.all([
-      caseJsonResponse.json(),
-      pdbFastaResponse.text(),
-      rmdbFastaResponse.text(),
-      alignmentSummaryResponse.text()
-    ]);
-
-    caseDetailCache.set(caseId, buildCaseDetailData(caseJson, pdbFastaText, rmdbFastaText, alignmentSummaryText));
-  } catch (error) {
-    console.error(error);
-    caseDetailCache.set(caseId, {
-      error: true,
-      message: error instanceof Error ? error.message : 'Failed to load case detail'
-    });
-  } finally {
-    caseDetailLoading.delete(caseId);
-    if (route === 'case-detail' && getCaseIdFromHash() === caseId) {
-      render({ preserveScroll: true });
-    }
-  }
-}
-
 async function loadBrowseEntryRows() {
   try {
-    const [summaryResponse, supplementResponse, resultsResponse] = await Promise.all([
-      fetch(dataAssetPath('rdat_summary.csv')),
-      fetch(dataAssetPath('structure_page_supplement.tsv')),
-      fetch(dataAssetPath('structure_page_results.tsv'))
-    ]);
-    if (!summaryResponse.ok) throw new Error('Failed to load RDAT summary');
-    if (!supplementResponse.ok) throw new Error('Failed to load structure supplement');
-    if (!resultsResponse.ok) throw new Error('Failed to load structure results supplement');
-
-    const [summaryText, supplementText, resultsText] = await Promise.all([
-      summaryResponse.text(),
-      supplementResponse.text(),
-      resultsResponse.text()
-    ]);
-    const [header, ...records] = parseCsv(summaryText);
+    const response = await fetch(dataAssetPath('rdat_summary.csv'));
+    if (!response.ok) throw new Error('Failed to load RDAT summary');
+    const text = await response.text();
+    const [header, ...records] = parseCsv(text);
     if (!header?.length) {
       browseEntryRows = [];
       return;
     }
 
-    const blastMatchIndex = buildBlastMatchIndex(rmdbPdbBlastRows);
-
     browseEntryRows = records.map((record) => {
       const row = Object.fromEntries(header.map((key, index) => [key, record[index] ?? '']));
-      const matchKey = normalizeStructureMatchLabel(row.Name || '');
-      const nameParts = splitNameAndSpecies(row.Name || '');
-      const blastMatches = blastMatchIndex.get(matchKey) || [];
-      const bestMatch = blastMatches.reduce((best, candidate) => choosePreferredBlastHit(best, candidate), null);
-      const pdbIds = [...new Set(blastMatches.map((item) => item.pdbId).filter(Boolean))].sort();
       return {
         foldBridgeId: row['FoldBridge ID'] || '',
-        name: nameParts.name || row.Name || '',
-        species: nameParts.species || '',
-        discoveryYear: puzzleDiscoveryYears.get(matchKey) || 'N/A',
+        name: row.Name || '',
         sequence: row.Sequence || '',
         length: row.Length || '',
-        structureGroupKey: matchKey || row['FoldBridge ID'] || '',
         fileCode: row['File Code'] || '',
         experimentType: row['Experiment Type'] || '',
-        modifier: row.Modifier || '',
-        hasPdbMatch: Boolean(bestMatch),
-        pdbMatchCount: blastMatches.length,
-        pdbIds,
-        bestPdbId: bestMatch?.pdbId || '',
-        bestSubjectId: bestMatch?.subjectId || '',
-        bestEvalue: bestMatch?.evalue || '',
-        bestIdentity: bestMatch?.pident || '',
-        bestCoverage: bestMatch?.qcovs || '',
-        structureDatasetGroup: 'puzzle',
-        rdatPath: dataAssetPath(`${(row['FoldBridge ID'] || '').replace(/^RMDB_/, '')}.rdat`),
-        hasLocalRdat: true
+        modifier: row.Modifier || ''
       };
     });
-    const existingIds = new Set(browseEntryRows.map((row) => row.foldBridgeId).filter(Boolean));
-    const supplementRows = [
-      ...buildSupplementStructureRows(parseTsv(supplementText), existingIds),
-      ...buildSupplementStructureRows(parseTsv(resultsText), existingIds)
-    ];
-    const mergedIds = new Set([
-      ...existingIds,
-      ...supplementRows.map((row) => row.foldBridgeId).filter(Boolean)
-    ]);
-    const localRmdbRows = buildBrowseRowsFromLocalManifest(
-      Array.isArray(localRmdbRecords) ? localRmdbRecords : [],
-      blastMatchIndex,
-      mergedIds
-    );
-    browseEntryRows = [...browseEntryRows, ...supplementRows, ...localRmdbRows].map(applyCuratedStructureOverrides);
-    browseEntryRows.forEach((row, idx) => {
-      row.index = idx + 1;
-    });
-    structureEntryRows = buildStructureEntryRows(browseEntryRows);
   } catch (error) {
     console.error(error);
     browseEntryRows = [];
-    structureEntryRows = [];
   }
 }
 
-async function loadCase3dRows() {
-  case3dRows = Array.isArray(caseManifest) ? caseManifest : [];
-}
-
 function rdatDownloadPath(foldBridgeId) {
-  const row = browseEntryRows.find((item) => item.foldBridgeId === foldBridgeId);
-  return row?.rdatPath || '';
+  return dataAssetPath(`${foldBridgeId.replace(/^RMDB_/, '')}.rdat`);
 }
 
-function getBrowseRecordById(foldBridgeId) {
-  return browseEntryRows.find((item) => item.foldBridgeId === foldBridgeId) || null;
-}
-
-function getLocalRmdbRecordById(foldBridgeId) {
-  return (Array.isArray(localRmdbRecords) ? localRmdbRecords : []).find((item) => item.foldBridgeId === foldBridgeId) || null;
-}
-
-function downloadSelectedRdatFiles(selectedIds = [...selectedBrowseIds]) {
+function downloadSelectedRdatFiles() {
+  const selectedIds = [...selectedBrowseIds];
   selectedIds.forEach((foldBridgeId, index) => {
-    const downloadPath = rdatDownloadPath(foldBridgeId);
-    if (!downloadPath) return;
     const link = document.createElement('a');
-    link.href = downloadPath;
+    link.href = rdatDownloadPath(foldBridgeId);
     link.download = `${foldBridgeId.replace(/^RMDB_/, '')}.rdat`;
     link.style.display = 'none';
     document.body.appendChild(link);
@@ -4002,275 +1079,63 @@ function bindPseudoButton(element, handler) {
   });
 }
 
-function clampPage(value, totalPages) {
-  return Math.min(Math.max(value, 1), totalPages);
-}
-
-function scoreSearchRow(row, query) {
-  if (!query) return 0;
-  const terms = query.split(/\s+/).filter(Boolean);
-  const compact = (value) => String(value ?? '').toLowerCase().replace(/[^a-z0-9]+/g, '');
-  const haystacks = {
-    index: String(row.index ?? '').toLowerCase(),
-    foldBridgeId: String(row.foldBridgeId ?? '').toLowerCase(),
-    name: String(row.name ?? '').toLowerCase(),
-    sequence: String(row.sequence ?? '').toLowerCase(),
-    species: String(row.species ?? '').toLowerCase(),
-    year: String(row.discoveryYear ?? '').toLowerCase(),
-    bestPdbId: String(row.bestPdbId ?? '').toLowerCase(),
-    foldBridgeIdCompact: compact(row.foldBridgeId),
-    nameCompact: compact(row.name),
-    speciesCompact: compact(row.species),
-    yearCompact: compact(row.discoveryYear),
-    bestPdbIdCompact: compact(row.bestPdbId)
-  };
-
-  let matchedAllTerms = true;
-  const totalScore = terms.reduce((score, term) => {
-    const compactTerm = compact(term);
-
-    if (haystacks.index === term) return score + 200;
-    if (haystacks.foldBridgeId === term) return score + 160;
-    if (haystacks.bestPdbId === term) return score + 140;
-    if (haystacks.name === term) return score + 120;
-    if (haystacks.species === term) return score + 100;
-    if (haystacks.year === term) return score + 90;
-    if (compactTerm && haystacks.foldBridgeIdCompact === compactTerm) return score + 150;
-    if (compactTerm && haystacks.nameCompact === compactTerm) return score + 130;
-    if (compactTerm && haystacks.speciesCompact === compactTerm) return score + 110;
-    if (compactTerm && haystacks.bestPdbIdCompact === compactTerm) return score + 95;
-
-    if (haystacks.foldBridgeId.includes(term)) return score + 110;
-    if (haystacks.name.includes(term)) return score + 80;
-    if (haystacks.species.includes(term)) return score + 70;
-    if (haystacks.year.includes(term)) return score + 60;
-    if (haystacks.bestPdbId.includes(term)) return score + 50;
-    if (compactTerm && haystacks.foldBridgeIdCompact.includes(compactTerm)) return score + 100;
-    if (compactTerm && haystacks.nameCompact.includes(compactTerm)) return score + 85;
-    if (compactTerm && haystacks.speciesCompact.includes(compactTerm)) return score + 75;
-    if (compactTerm && haystacks.yearCompact.includes(compactTerm)) return score + 65;
-    if (compactTerm && haystacks.bestPdbIdCompact.includes(compactTerm)) return score + 55;
-    if (haystacks.sequence.includes(term)) return score + 18;
-
-    matchedAllTerms = false;
-    return score;
-  }, 0);
-
-  if (!matchedAllTerms) return 0;
-
-  const compactQuery = compact(query);
-  if (query && haystacks.name.includes(query)) return totalScore + 140;
-  if (query && haystacks.foldBridgeId.includes(query)) return totalScore + 130;
-  if (query && haystacks.species.includes(query)) return totalScore + 110;
-  if (compactQuery && haystacks.nameCompact.includes(compactQuery)) return totalScore + 145;
-  if (compactQuery && haystacks.foldBridgeIdCompact.includes(compactQuery)) return totalScore + 135;
-  if (compactQuery && haystacks.speciesCompact.includes(compactQuery)) return totalScore + 115;
-
-  return totalScore;
-}
-
-function getAdvancedSearchOptions() {
-  const species = [...new Set(structureEntryRows.map((row) => String(row.species || '').trim()).filter(Boolean))].sort((a, b) =>
-    a.localeCompare(b)
-  );
-  const discoveryYears = [...new Set(structureEntryRows.map((row) => String(row.discoveryYear || '').trim()).filter(Boolean))].sort((a, b) =>
-    Number(b) - Number(a) || a.localeCompare(b)
-  );
-  const pdbIds = [...new Set(structureEntryRows.map((row) => String(row.bestPdbId || '').trim()).filter(Boolean))].sort((a, b) =>
-    a.localeCompare(b)
-  );
-  return { species, discoveryYears, pdbIds };
-}
-
-function getAdvancedSearchRows() {
-  const query = advancedSearchQuery.trim().toLowerCase();
-  if (!query) return [];
-
-  const rows = structureEntryRows
-    .map((row) => ({
-      ...row,
-      numericYear: Number.parseInt(String(row.discoveryYear ?? ''), 10),
-      numericIdentity: Number(row.bestIdentity) || 0,
-      numericCoverage: Number(row.bestCoverage) || 0,
-      numericEvalue: parseScientificValue(row.bestEvalue),
-      relevanceScore: scoreSearchRow(row, query)
-    }))
-    .filter((row) => {
-      if (query && row.relevanceScore <= 0) return false;
-      if (advancedSearchSpecies !== 'all' && (row.species || '') !== advancedSearchSpecies) return false;
-      if (advancedSearchDiscoveryYear !== 'all' && String(row.discoveryYear || '') !== advancedSearchDiscoveryYear) return false;
-      if (advancedSearchPdbId !== 'all' && String(row.bestPdbId || '') !== advancedSearchPdbId) return false;
-      return true;
-    });
-
-  rows.sort((a, b) => {
-    if (advancedSearchSort === 'name') return a.name.localeCompare(b.name);
-    if (advancedSearchSort === 'species') return (a.species || '').localeCompare(b.species || '') || a.name.localeCompare(b.name);
-    if (advancedSearchSort === 'year') return (b.numericYear || 0) - (a.numericYear || 0) || a.name.localeCompare(b.name);
-    if (advancedSearchSort === 'pdb') return (a.bestPdbId || '').localeCompare(b.bestPdbId || '') || a.name.localeCompare(b.name);
-    if (advancedSearchSort === 'identity') return (b.numericIdentity || 0) - (a.numericIdentity || 0) || a.name.localeCompare(b.name);
-    if (advancedSearchSort === 'coverage') return (b.numericCoverage || 0) - (a.numericCoverage || 0) || a.name.localeCompare(b.name);
-    if (advancedSearchSort === 'evalue') return (a.numericEvalue || Number.POSITIVE_INFINITY) - (b.numericEvalue || Number.POSITIVE_INFINITY) || a.name.localeCompare(b.name);
-    return b.relevanceScore - a.relevanceScore || a.name.localeCompare(b.name);
-  });
-
-  return rows;
-}
-
-function renderAdvancedSearchFilterPills() {
-  const pills = [];
-  if (advancedSearchSpecies !== 'all') pills.push(`Species: ${advancedSearchSpecies}`);
-  if (advancedSearchDiscoveryYear !== 'all') pills.push(`Discovery Year: ${advancedSearchDiscoveryYear}`);
-  if (advancedSearchPdbId !== 'all') pills.push(`PDB ID: ${advancedSearchPdbId}`);
-  if (!pills.length) return '<span class="search-filter-empty">No active filters</span>';
-  return pills.map((pill) => `<span class="search-filter-pill">${pill}</span>`).join('');
-}
-
-function renderAdvancedSearchResults(rows) {
-  if (!advancedSearchQuery.trim()) {
-    return `<div class="search-empty-state">
-      <h3>No results yet</h3>
-      <p>Start typing a record name, sequence fragment, FoldBridge ID, species, year, or PDB ID to search the structure database.</p>
-    </div>`;
-  }
-
-  if (!rows.length) {
-    return `<div class="search-empty-state">
-      <h3>No matching records</h3>
-      <p>Try a different name, sequence fragment, FoldBridge ID, PDB ID, or relax the filters above.</p>
-    </div>`;
-  }
-
-  if (advancedSearchView === 'grid') {
-    return `<div class="search-card-grid">
-      ${rows
-        .map(
-          (row) => {
-            const detailUrl = `#structure-detail?foldBridgeId=${encodeURIComponent(row.foldBridgeId)}`;
-            return `<article class="search-result-card">
-              <div class="search-result-card-top">
-                <span class="search-record-id"><a href="${detailUrl}" class="sequence-link">${row.foldBridgeId}</a></span>
-                <span class="search-record-code">No. ${row.index}</span>
-              </div>
-              <h3>${row.name || 'Untitled record'}</h3>
-              <p class="search-result-sequence" title="${row.sequence || ''}">${row.sequence || 'Sequence unavailable'}</p>
-              <dl class="search-result-meta">
-                <div><dt>Species</dt><dd>${row.species || 'N/A'}</dd></div>
-                <div><dt>Discovery Year</dt><dd>${row.discoveryYear || 'N/A'}</dd></div>
-                <div><dt>PDB ID</dt><dd>${row.bestPdbId ? renderPdbExternalLink(row.bestPdbId) : 'N/A'}</dd></div>
-                <div><dt>E-value</dt><dd>${formatBlastEvalue(row.bestEvalue)}</dd></div>
-                <div><dt>Identity</dt><dd>${formatBlastPercent(row.bestIdentity)}</dd></div>
-                <div><dt>Coverage</dt><dd>${formatBlastPercent(row.bestCoverage)}</dd></div>
-              </dl>
-            </article>`;
-          }
-        )
-        .join('')}
-    </div>`;
-  }
-
-  return `<div class="search-table-wrap">
-    <table class="search-results-table case-detail-table">
-      <thead>
-        <tr>
-          <th>No.</th>
-          <th>FoldBridge ID</th>
-          <th>Name</th>
-          <th>Species</th>
-          <th>Discovery year</th>
-          <th>Sequence</th>
-          <th>PDB ID</th>
-          <th>E-value</th>
-          <th>Identity</th>
-          <th>Coverage</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows
-          .map(
-            (row) => {
-              const detailUrl = `#structure-detail?foldBridgeId=${encodeURIComponent(row.foldBridgeId)}`;
-              return `<tr>
-                <td class="structure-index-cell">${row.index}</td>
-                <td><a href="${detailUrl}" class="sequence-link">${row.foldBridgeId}</a></td>
-                <td><strong>${row.name || 'Untitled record'}</strong></td>
-                <td>${row.species || 'N/A'}</td>
-                <td>${row.discoveryYear || 'N/A'}</td>
-                <td><span class="search-sequence-inline" title="${row.sequence || ''}">${row.sequence || 'N/A'}</span></td>
-                <td>${renderPdbExternalLink(row.bestPdbId)}</td>
-                <td>${formatBlastEvalue(row.bestEvalue)}</td>
-                <td>${formatBlastPercent(row.bestIdentity)}</td>
-                <td>${formatBlastPercent(row.bestCoverage)}</td>
-              </tr>`;
-            }
-          )
-          .join('')}
-      </tbody>
-    </table>
-  </div>`;
-}
-
-function renderPageJumpControls(prefix, totalPages, currentPage) {
-  return `<div class="browse-page-jump">
-    <label class="browse-page-jump-label" for="${prefix}-page-input">Go to</label>
-    <input
-      id="${prefix}-page-input"
-      class="browse-page-jump-input"
-      type="number"
-      min="1"
-      max="${totalPages}"
-      step="1"
-      value="${currentPage}"
-      inputmode="numeric"
-    />
-    <button
-      id="${prefix}-page-go"
-      type="button"
-      class="download-outline-btn browse-page-jump-btn"
-    >
-      Go
-    </button>
-  </div>`;
-}
-
-function bindPageJump({ inputId, buttonId, totalPages, getCurrentPage, setCurrentPage }) {
-  const input = document.getElementById(inputId);
-  const button = document.getElementById(buttonId);
-  if (!input || !button) return;
-
-  const submit = () => {
-    const rawValue = Number.parseInt(input.value, 10);
-    const nextPage = clampPage(Number.isFinite(rawValue) ? rawValue : getCurrentPage(), totalPages());
-    if (nextPage === getCurrentPage()) {
-      input.value = String(nextPage);
-      return;
-    }
-    setCurrentPage(nextPage);
-    render({ preserveScroll: true });
-  };
-
-  button.addEventListener('click', submit);
-  input.addEventListener('keydown', (event) => {
-    if (event.key !== 'Enter') return;
-    event.preventDefault();
-    submit();
-  });
-  input.addEventListener('blur', () => {
-    const rawValue = Number.parseInt(input.value, 10);
-    input.value = String(clampPage(Number.isFinite(rawValue) ? rawValue : getCurrentPage(), totalPages()));
-  });
-}
-
 
 
 function downloadSequencesPage() {
-  const rows = `<tr><td colspan="10" class="entry-table-empty">Sequence records will be added here later.</td></tr>`;
+  const visibleRows = getFilteredSequenceRows();
+  const rows = visibleRows.map((row) => `
+    <tr>
+      <td>
+        <input
+          type="checkbox"
+          class="sequence-select"
+          data-sequence-id="${row.id}"
+          ${selectedSequenceIds.has(row.id) ? 'checked' : ''}
+        />
+      </td>
+      <td><a href="#sequence-detail?sequenceId=${encodeURIComponent(row.id ?? '')}" class="sequence-link">${row.sequenceName ?? ''}</a></td>
+      <td>${row.aptamerName ?? ''}</td>
+      <td>${row.article ?? ''}</td>
+      <td>${row.category ?? ''}</td>
+      <td>
+        <span class="sequence-preview" title="${row.type ?? ''}">
+          ${row.type ? `${row.type.slice(0, 10)}...` : ''}
+        </span>
+      </td>
+      <td>${row.chemicalProbing ?? ''}</td>
+      <td><a href="#pdb-case?pdbId=${encodeURIComponent(row.pdbName ?? '')}" class="sequence-link">${row.pdbName ?? ''}</a></td>
+      <td>${row.sequence ?? ''}</td>
+      <td>${row.confidence ?? ''}</td>
+    </tr>
+  `).join('');
 
-  return `<main class="page-download-sequences">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-download-sequences">
     <section class="card download-card">
-      <h1>Sequence</h1>
-      <p class="download-intro">This page is reserved for future curated sequence entries.</p>
+      <h1>Structures</h1>
+      <p class="download-intro">Select one or more rows below to download example structure records. Current data are demo entries copied from the first available record.</p>
+
+      <div class="download-toolbar browse-toolbar">
+        <input
+          id="sequence-search"
+          class="download-search"
+          type="search"
+          placeholder="Search..."
+          value="${sequenceSearchQuery.replace(/"/g, '&quot;')}"
+        />
+        <button id="export-selected-sequences" type="button" class="download-outline-btn" ${selectedSequenceIds.size ? '' : 'disabled'}>
+          Export Selected (${selectedSequenceIds.size})
+        </button>
+        <button id="export-all-sequences" type="button" class="download-outline-btn">
+          Export All Results
+        </button>
+        <button id="select-visible-sequences" type="button" class="download-outline-btn">
+          Select Current Page
+        </button>
+        <button id="clear-selected-sequences" type="button" class="download-outline-btn">
+          Clear Selection
+        </button>
+      </div>
 
       <div class="download-table-wrap">
       <table class="structure-table download-table">
@@ -4295,7 +1160,7 @@ function downloadSequencesPage() {
       </div>
 
       <div class="download-footnote">
-        <span>Showing 0 entries</span>
+        <span>Showing 1-${visibleRows.length} of ${visibleRows.length} entries</span>
       </div>
     </section>
   </main>`;
@@ -4305,13 +1170,24 @@ function downloadSequencesPage() {
 
 
 
-const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'download', 'search', 'help'];
+const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'about', 'stats', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case', 'annojoin-confidence'];
 let route = routeFromHash(window.location.hash);
-let theme = 'blue';
+let theme = 'ribocentre';
 let mode = localStorage.getItem('foldbridge-mode') === 'dark' ? 'dark' : 'light';
+const siteSearchService = createSearchService();
+const SAVED_SEARCHES_KEY = 'foldbridge.savedSearches';
 
 function isRouteActive(...names) {
   return names.includes(route);
+}
+
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }
 
 function setTheme(themeKey, modeKey) {
@@ -4327,15 +1203,7 @@ let isDownloadMenuOpen = false;
 let isSubnavMenuOpen = false;
 
 function nav() {
-  return `<header>
-    <div class="black-nav" aria-label="GZNL global navigation">
-      <a href="http://www.gznl.org/" target="_blank" rel="noopener noreferrer"><img src="./src/assets/header/home.svg" alt=""/>Home</a>
-      <a href="https://www.gznl.org/database/" target="_blank" rel="noopener noreferrer"><img src="./src/assets/header/database.svg" alt=""/>Database</a>
-      <a href="https://www.gznl.org/research/" target="_blank" rel="noopener noreferrer"><img src="./src/assets/header/research.svg" alt=""/>Research</a>
-      <a href="https://www.gznl.org/aboutus/" target="_blank" rel="noopener noreferrer"><img src="./src/assets/header/aboutus.svg" alt=""/>About us</a>
-      <a class="gznl-rdc-link" href="https://gzlab.ac.cn/" target="_blank" rel="noopener noreferrer"><img src="./src/assets/header/gznl2.svg" alt=""/>GZNL-RDC</a>
-    </div>
-  </header>`;
+  return `<header>${renderGlobalNav()}</header>`;
 }
 
 
@@ -4548,382 +1416,48 @@ function describeDonutArc(cx, cy, outerRadius, innerRadius, startAngle, endAngle
 }
 
 function homePage() {
-  const featuredNames = homeBundleSites.map((site, index) => {
-    const activeClass = site.href ? '' : 'active';
-    if (site.href) {
-      return `<a class="bundle-switch-pill tone-${site.tone} ${activeClass}" href="${site.href}" target="_blank" rel="noopener noreferrer">
-        <strong>${site.name}</strong>
-        <span>${site.topLabel ?? ''}</span>
-      </a>`;
-    }
-
-    return `<span class="bundle-switch-pill tone-${site.tone} ${activeClass}" aria-current="page">
-      <strong>${site.name}</strong>
-      <span>${site.topLabel ?? ''}</span>
-    </span>`;
-  }).join('');
-
-  // Calculate dynamic metrics from browseEntryRows
-  const totalSequences = browseEntryRows.length || 95;
-  const totalStructures = new Set(browseEntryRows.map(r => r.bestPdbId).filter(Boolean)).size || 102;
-  const totalSpecies = new Set(browseEntryRows.map(r => r.species).filter(Boolean)).size || 22;
-  const predictedCount = new Set(browseEntryRows.map(r => r.foldBridgeId).filter(id => hasUsablePredictedStructure(id))).size || 27;
-
-  // Species Distribution (All species)
-  const speciesCounts = {};
-  browseEntryRows.forEach(row => {
-    const sp = row.species || '';
-    if (!sp || sp === 'Unknown' || sp === 'N/A' || sp === 'NA') return;
-    speciesCounts[sp] = (speciesCounts[sp] || 0) + 1;
-  });
-
-  const donutPalette = [
-    '#e2a4f4', '#829fd9', '#78e08f', '#fad390', '#e55039',
-    '#f8c291', '#82ccdd', '#38ada9', '#f6b93b', '#ff9ff3',
-    '#feca57', '#ff6b6b', '#48dbfb', '#1dd1a1', '#a29bfe',
-    '#fd79a8', '#ffeaa7', '#fab1a0', '#74b9ff', '#0984e3',
-    '#00cec9', '#00b894'
-  ];
-
-  const speciesList = Object.entries(speciesCounts)
-    .sort((a, b) => b[1] - a[1]); // Sort descending
-  const totalSpeciesRecords = Object.values(speciesCounts).reduce((a, b) => a + b, 0);
-
-  let accumulatedPercent = 0;
-  const speciesSegments = speciesList.map(([name, count], index) => {
-    const percent = count / totalSpeciesRecords;
-    const strokeLength = 201.06 * percent;
-    const strokeOffset = -201.06 * accumulatedPercent;
-    accumulatedPercent += percent;
-    const color = donutPalette[index % donutPalette.length];
-    return {
-      name,
-      count,
-      percent,
-      color,
-      strokeLength,
-      strokeOffset
-    };
-  });
-
-  const donutCirclesMarkup = speciesSegments.map(seg => {
-    const isActive = homeActiveSpecies === seg.name ? 'is-active' : '';
-    return `<circle cx="50" cy="50" r="32" fill="transparent" stroke="${seg.color}" stroke-width="12" stroke-dasharray="${seg.strokeLength} 201.06" stroke-dashoffset="${seg.strokeOffset}" transform="rotate(-90 50 50)" class="donut-segment ${isActive}" data-filter-species="${seg.name}" title="${seg.name}: ${seg.count} records (${Math.round(seg.percent*100)}%)" />`;
-  }).join('');
-
-  const legendItemsMarkup = speciesSegments.map(seg => {
-    const isActive = homeActiveSpecies === seg.name ? 'is-active' : '';
-    return `
-      <div class="legend-item clickable-legend-item ${isActive}" data-filter-species="${seg.name}">
-        <span class="legend-color-box" style="background-color: ${seg.color}"></span>
-        <span class="legend-label">${seg.name}</span>
-        <span class="legend-count">${seg.count}</span>
-      </div>
-    `;
-  }).join('');
-
-  // Year Distribution (Only showing years with records)
-  const yearCounts = {};
-  browseEntryRows.forEach(row => {
-    const yStr = row.discoveryYear;
-    if (!yStr || yStr === 'N/A' || yStr === 'NA') return;
-    const y = parseInt(yStr, 10);
-    if (y >= 1996 && y <= 2026) {
-      yearCounts[y] = (yearCounts[y] || 0) + 1;
-    }
-  });
-
-  const yearCountsSorted = Object.entries(yearCounts)
-    .sort((a, b) => parseInt(a[0], 10) - parseInt(b[0], 10));
-
-  const maxYearRecords = Math.max(...Object.values(yearCounts), 1);
-  const yearBarsMarkup = yearCountsSorted.map(([year, count]) => {
-    const heightPercent = (count / maxYearRecords) * 100;
-    const isActive = String(homeActiveYear) === String(year) ? 'is-active' : '';
-    const barColor = parseInt(year) < 2000 ? '#e2a4f4' :
-                     parseInt(year) < 2010 ? '#fad390' :
-                     parseInt(year) < 2020 ? '#82ccdd' : '#78e08f';
-    
-    const showLabel = (parseInt(year) % 5 === 0) || year === yearCountsSorted[0][0] || year === yearCountsSorted[yearCountsSorted.length - 1][0];
-    const labelText = showLabel ? year : '';
-
-    return `
-      <div class="year-chart-column clickable-year-bar ${isActive}" data-filter-year="${year}" title="${year}: ${count} records">
-        <div class="year-chart-bar-track">
-          <div class="year-chart-bar-fill" style="height: ${heightPercent}%; background-color: ${barColor};"></div>
-        </div>
-        <span class="year-chart-label">${labelText}</span>
-      </div>
-    `;
-  }).join('');
-
-  // 1. Dynamic Table Filtering
-  let filteredStructureRows = structureEntryRows;
-  if (homeActiveSpecies) {
-    filteredStructureRows = filteredStructureRows.filter(r => r.species === homeActiveSpecies);
-  }
-  if (homeActiveYear) {
-    filteredStructureRows = filteredStructureRows.filter(r => String(r.discoveryYear) === String(homeActiveYear));
+  // 已加载则喂文章，否则空壳占位 + 触发懒加载（与 probing 路由同款）。
+  const articles = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
+    ? (probingArticleIndexState.articles || [])
+    : [];
+  if (probingArticleIndexState === null) {
+    loadProbingArticleIndex();
   }
 
-  // 2. Filter Badges Markup
-  let activeFiltersMarkup = '';
-  if (homeActiveSpecies || homeActiveYear) {
-    activeFiltersMarkup = `<div class="home-active-filters">
-      <span class="filters-label">Active Filters:</span>
-      <div class="filters-badges-wrap">
-        ${homeActiveSpecies ? `<span class="filter-badge" data-clear-filter="species" title="Clear species filter">${homeActiveSpecies} <span class="badge-close">×</span></span>` : ''}
-        ${homeActiveYear ? `<span class="filter-badge" data-clear-filter="year" title="Clear year filter">${homeActiveYear} <span class="badge-close">×</span></span>` : ''}
-        <button type="button" class="clear-all-btn" id="home-clear-all-filters">Clear All</button>
-      </div>
-    </div>`;
+  if (homeScrollStoryState === null) {
+    loadHomeScrollStory();
+  }
+  let scrollStoryHtml = '';
+  if (homeScrollStoryState && typeof homeScrollStoryState === 'object') {
+    const visitIndex = homeScrollVisitIndex;
+    const featured = pickFeaturedCase(homeScrollStoryState.cases || [], visitIndex);
+    scrollStoryHtml = renderHomeScrollStory(featured, { assetBase: homeScrollStoryStore.assetBase });
   }
 
-  // 3. Table Rows Pagination & Rendering
-  const homeTablePageSize = 10;
-  const totalHomePages = Math.max(1, Math.ceil(filteredStructureRows.length / homeTablePageSize));
-  if (homeTablePage > totalHomePages) homeTablePage = totalHomePages;
-  const homeStartIndex = (homeTablePage - 1) * homeTablePageSize;
-  const visibleHomeRows = filteredStructureRows.slice(homeStartIndex, homeStartIndex + homeTablePageSize);
+  const bundleHeader = renderBundleHeader();
 
-  const tableRowsMarkup = visibleHomeRows.length
-    ? visibleHomeRows.map((row, idx) => {
-        const globalIndex = homeStartIndex + idx + 1;
-        return `<tr>
-          <td class="structure-index-cell">${globalIndex}</td>
-          <td><a href="${row.detailPage}" class="sequence-link">${row.foldBridgeId}</a></td>
-          <td>${row.name || 'Untitled record'}</td>
-          <td>${row.species || 'N/A'}</td>
-          <td>${row.discoveryYear || 'N/A'}</td>
-          <td><span class="entry-sequence" title="${row.sequence || 'Sequence unavailable'}">${row.sequence || 'N/A'}</span></td>
-          <td>${renderPdbExternalLink(row.bestPdbId)}</td>
-          <td>${formatBlastEvalue(row.bestEvalue)}</td>
-          <td>${formatBlastPercent(row.bestIdentity)}</td>
-          <td>${formatBlastPercent(row.bestCoverage)}</td>
-        </tr>`;
-      }).join('')
-    : `<tr><td colspan="10" class="entry-table-empty">No structure matches match the active filters.</td></tr>`;
-
-  const paginationMarkup = totalHomePages > 1
-    ? `<div class="browse-pagination">
-        <div class="browse-pagination-info">
-          <span class="browse-pagination-status">Page ${homeTablePage} of ${totalHomePages}</span>
-        </div>
-        <div class="browse-pagination-controls">
-          <button type="button" class="browse-pagination-btn" id="home-page-prev" ${homeTablePage === 1 ? 'disabled' : ''}>Previous</button>
-          <button type="button" class="browse-pagination-btn" id="home-page-next" ${homeTablePage === totalHomePages ? 'disabled' : ''}>Next</button>
-        </div>
-      </div>`
-    : '';
-
-  const bundleHeader = renderBundleHeader(featuredNames);
-
-  return `<main class="page-home bundle-home-page">
+  return `${bundleHeader}
+  <main class="page-home bundle-home-page">
     <section class="bundle-home-shell">
-      ${bundleHeader}
-      <section class="bundle-hero-card bundle-wide-card">
-        <div class="bundle-hero-copy">
-          <p class="bundle-kicker">five database bundle</p>
-          <h2>FoldBridge Database Portal</h2>
-          <p class="bundle-hero-summary">
-            FoldBridge is a curated database that links RNA chemical probing data with experimentally resolved tertiary structures.
-          </p>
-          <p class="bundle-hero-detail">
-            By matching probing-derived RNA sequences to corresponding sequences in PDB entries, FoldBridge identifies high-confidence structure-linked records and integrates their secondary- and tertiary-structure information. The database is intended to support the analysis of relationships between RNA structural signals and 3D organization, and to facilitate improved RNA structure interpretation and prediction.
-          </p>
-          <div class="bundle-hero-actions">
-            <button type="button" class="bundle-hero-primary" data-route="download-sequences">Browse FoldBridge</button>
-            <button type="button" class="ghost" data-route="structure">Open structure hub</button>
-          </div>
-        </div>
-
-        <aside class="bundle-hero-metrics">
-          <article class="bundle-metric-card bundle-metric-large">
-            <p>current build</p>
-            <strong>Release 0.1</strong>
-            <span>4 aligned database entrances with a unified visual system</span>
-          </article>
-          <article class="bundle-metric-card">
-            <p>species</p>
-            <strong>${totalSpecies}</strong>
-            <span>Unique host organisms mapped</span>
-          </article>
-          <article class="bundle-metric-card">
-            <p>sequences</p>
-            <strong>${totalSequences}</strong>
-            <span>Chemical probing experimental rows</span>
-          </article>
-          <article class="bundle-metric-card">
-            <p>structures</p>
-            <strong>${totalStructures}</strong>
-            <span>Aligned tertiary structural targets</span>
-          </article>
-          <article class="bundle-metric-card">
-            <p>technology</p>
-            <strong>${predictedCount}</strong>
-            <span>Predicted 3D models integrated</span>
-          </article>
-        </aside>
-      </section>
-
-      <!-- Combined Statistics Card -->
-      <section class="card bundle-stats-section-combined">
-        <div class="combined-stats-header">
-          <h3>Database Statistics & Insights</h3>
-          <p>Explore the distribution of RNA families, species, and structural solved dates within FoldBridge. Click on any year bar or category segment to dynamically filter the structure table below.</p>
-        </div>
-        <div class="combined-stats-grid">
-          <!-- Left side: Year Distribution -->
-          <div class="combined-stats-column">
-            <div class="card-v2-header">
-              <h4>Year Distribution</h4>
-              <span class="card-v2-sub">Click bars for multi-selection</span>
-            </div>
-            <div class="year-chart-container">
-              <div class="year-chart-y-axis">
-                <span>${maxYearRecords}</span>
-                <span>${Math.round(maxYearRecords / 2)}</span>
-                <span>0</span>
-              </div>
-              <div class="year-chart-bars-wrap">
-                ${yearBarsMarkup}
-              </div>
-            </div>
-          </div>
-
-          <!-- Right side: Category Distribution -->
-          <div class="combined-stats-column">
-            <div class="card-v2-header">
-              <h4>Category Distribution</h4>
-              <span class="card-v2-sub">Click sectors for multi-selection</span>
-            </div>
-            <div class="donut-layout">
-              <div class="donut-chart-wrap">
-                <svg viewBox="0 0 100 100" class="donut-svg">
-                  ${donutCirclesMarkup}
-                  <!-- Inner circle hole and text in the center -->
-                  <circle cx="50" cy="50" r="23" fill="var(--panel-card-bg)" class="donut-center" />
-                  <text x="50" y="54" text-anchor="middle" class="donut-center-text">${totalSpeciesRecords}</text>
-                </svg>
-              </div>
-              <div class="donut-legend-wrap">
-                ${legendItemsMarkup}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Divider Line -->
-        <hr class="dashboard-section-divider" />
-
-        <!-- Linked Structure Matches Table -->
-        <div class="home-table-container">
-          <div class="home-table-header">
-            <div class="home-table-title-row">
-              <h3>Data Details</h3>
-              <span class="home-table-count">Showing <strong>${filteredStructureRows.length}</strong> records (out of ${structureEntryRows.length} total)</span>
-            </div>
-            ${activeFiltersMarkup}
-          </div>
-          <div class="entry-table-wrap">
-            <table class="entry-table case-detail-table">
-              <thead>
-                <tr>
-                  <th>No.</th>
-                  <th>FoldBridge ID</th>
-                  <th>Name</th>
-                  <th>Species</th>
-                  <th>Discovery year</th>
-                  <th>Sequence</th>
-                  <th>PDB ID</th>
-                  <th>E-value</th>
-                  <th>Identity</th>
-                  <th>Coverage</th>
-                </tr>
-              </thead>
-              <tbody>${tableRowsMarkup}</tbody>
-            </table>
-          </div>
-          ${paginationMarkup}
-        </div>
-      </section>
-
+      ${renderHomeHero()}
+      ${scrollStoryHtml}
+      ${renderHomeProbingCarousel(articles)}
+      ${renderHomeModuleCards()}
     </section>
   </main>`;
 }
 
-function renderBundleHeader(featuredNamesMarkup = null) {
-  const featuredNames = featuredNamesMarkup ?? homeBundleSites.map((site, index) => {
-    const activeClass = site.href ? '' : 'active';
-    if (site.href) {
-      return `<a class="bundle-switch-pill tone-${site.tone} ${activeClass}" href="${site.href}" target="_blank" rel="noopener noreferrer">
-        <strong>${site.name}</strong>
-        <span>${site.topLabel ?? ''}</span>
-      </a>`;
-    }
-
-    return `<span class="bundle-switch-pill tone-${site.tone} ${activeClass}" aria-current="page">
-      <strong>${site.name}</strong>
-      <span>${site.topLabel ?? ''}</span>
-    </span>`;
-  }).join('');
-
-  return `<header class="bundle-home-header">
-    <div class="bundle-home-header-inner">
-      <div class="bundle-home-brand-column">
-        <div class="bundle-home-brand">
-          <div class="bundle-home-mark">FB</div>
-          <div class="bundle-home-brand-copy">
-            <p class="bundle-home-bundle-label">FoldBridge axis</p>
-            <h1>FoldBridge</h1>
-            <span>FoldBridge is a curated database that links RNA chemical probing data with experimentally resolved tertiary structures.</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="bundle-home-nav-column">
-        <div class="bundle-home-topline">
-          <div class="bundle-home-bundle-block">
-            <p class="bundle-home-switch-label">RNA database bundle</p>
-            <div class="bundle-home-switches">
-              ${featuredNames}
-            </div>
-          </div>
-          <div class="bundle-home-meta">
-            <span class="bundle-home-domain">foldbridge.gznl.org</span>
-            <button type="button" class="mode-toggle" id="mode-toggle">
-              ${mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-            </button>
-          </div>
-        </div>
-
-        <nav class="bundle-home-route-nav" aria-label="Primary navigation">
-          <button type="button" class="nav-btn ${isRouteActive('home') ? 'active' : ''}" data-route="home">Home</button>
-          <button type="button" class="nav-btn ${isRouteActive('browse', 'browse-detail') ? 'active' : ''}" data-route="browse">Browse</button>
-          <button type="button" class="nav-btn ${isRouteActive('structure', 'download-structures') ? 'active' : ''}" data-route="structure">Structure</button>
-          <button type="button" class="nav-btn ${isRouteActive('probing', 'detail') ? 'active' : ''}" data-route="probing">Probing</button>
-          <button type="button" class="nav-btn ${isRouteActive('download') ? 'active' : ''}" data-route="download">Download</button>
-          <button type="button" class="nav-btn ${isRouteActive('search') ? 'active' : ''}" data-route="search">Search</button>
-          <button type="button" class="nav-btn ${isRouteActive('help') ? 'active' : ''}" data-route="help">Help</button>
-        </nav>
-      </div>
-    </div>
-  </header>`;
+function renderBundleHeader() {
+  return renderSharedBundleHeader({ mode, navHtml: renderPrimaryNav(route) });
 }
 
-function renderDetailPageFooterActions(backLabel = 'Back to Structure', backRoute = 'structure') {
-  return `<div class="detail-page-footer-actions" style="display: flex !important; justify-content: center !important; align-items: center !important; gap: 16px !important; margin-top: 40px !important; padding-top: 20px !important; width: 100% !important;">
-    <button type="button" class="footer-action-btn back-to-top-btn" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; height: 42px !important; width: 190px !important; padding: 0 !important; border-radius: 8px !important; font-size: 0.94rem !important; font-weight: 600 !important; cursor: pointer !important; border: none !important; white-space: nowrap !important; flex-shrink: 0 !important; box-shadow: none !important; background: rgba(184, 132, 14, 0.08) !important; color: #b8840e !important;"><svg class="footer-btn-icon" style="width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; max-width: 16px !important; max-height: 16px !important; stroke: currentColor !important; fill: none !important; margin: 0 !important; display: inline-block !important; flex-shrink: 0 !important; vertical-align: middle !important;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"></polyline></svg><span style="color: inherit !important; display: inline-block !important; margin: 0 !important; padding: 0 !important; font-weight: 600 !important;">Back to Top</span></button>
-    <button type="button" class="footer-action-btn back-to-structure-btn" data-route="${backRoute}" style="display: inline-flex !important; align-items: center !important; justify-content: center !important; gap: 8px !important; height: 42px !important; width: 190px !important; padding: 0 !important; border-radius: 8px !important; font-size: 0.94rem !important; font-weight: 600 !important; cursor: pointer !important; border: none !important; white-space: nowrap !important; flex-shrink: 0 !important; box-shadow: none !important; background: rgba(184, 132, 14, 0.08) !important; color: #b8840e !important;"><svg class="footer-btn-icon" style="width: 16px !important; height: 16px !important; min-width: 16px !important; min-height: 16px !important; max-width: 16px !important; max-height: 16px !important; stroke: currentColor !important; fill: none !important; margin: 0 !important; display: inline-block !important; flex-shrink: 0 !important; vertical-align: middle !important;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20M4 19.5A2.5 2.5 0 0 0 6.5 22H20M4 19.5v-13A2.5 2.5 0 0 1 6.5 4H20v18H6.5a2.5 2.5 0 0 1-2.5-2.5z"></path></svg><span style="color: inherit !important; display: inline-block !important; margin: 0 !important; padding: 0 !important; font-weight: 600 !important;">${backLabel}</span></button>
-  </div>`;
-}
 
 function renderTechnologyOverviewPage() {
   const categoryCards = technologyCategories.map((category) => {
     const methodsMarkup = category.methods
       .map((slug) => technologyMethods.find((method) => method.slug === slug))
       .filter(Boolean)
-      .map((method) => `<a class="technology-method-pill" href="#detail?tech=${encodeURIComponent(method.slug)}">${method.title}</a>`)
+      .map((method) => `<a class="technology-method-pill" href="#probing?tech=${encodeURIComponent(method.slug)}">${method.title}</a>`)
       .join('');
 
     return `
@@ -4949,9 +1483,38 @@ function renderTechnologyOverviewPage() {
     .map((category) => `<span class="technology-chip">${category.title.replace(/^\d+\.\s*/, '')}</span>`)
     .join('');
 
-  return `<main class="page-detail">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-detail">
+    <section class="card bundle-wide-card technology-hero-card">
+      <div class="technology-hero-copy">
+        <p class="technology-kicker">technology atlas</p>
+        <h1>Technology Categories</h1>
+        <p class="technology-intro">This page is now organized as a method directory: 5 large technology modules first, then concrete techniques inside each module. Every technique name below opens its own child page.</p>
+        <p class="technology-intro technology-intro-secondary">That gives you the exact structure you described: users first browse by category, then click into a specific method page for principle, workflow, strengths, caveats, and references.</p>
+        <div class="technology-chip-row">${categoryChips}</div>
+      </div>
+      <aside class="technology-summary-panel">
+        <article class="technology-summary-card">
+          <p>major categories</p>
+          <strong>${technologyCategories.length}</strong>
+          <span>top-level modules on the technology landing page</span>
+        </article>
+        <article class="technology-summary-card">
+          <p>child pages</p>
+          <strong>${technologyMethods.length}</strong>
+          <span>clickable method pages ready for later expansion</span>
+        </article>
+      </aside>
+    </section>
+
     <section class="card bundle-wide-card technology-section-card">
+      <div class="technology-section-heading">
+        <div>
+          <p class="technology-kicker">browse by category</p>
+          <h2>Category Cards</h2>
+        </div>
+        <p>Each large card represents one category. Desktop shows two cards per row, and every method stays clickable as its own child page.</p>
+      </div>
       <div class="technology-category-grid" role="list">
         ${categoryCards}
       </div>
@@ -4971,18 +1534,15 @@ function renderTechnologyMethodPage(method) {
   const caveats = method.caveats.map((item) => `<li>${item}</li>`).join('');
   const outputs = method.outputs.map((item) => `<li>${item}</li>`).join('');
   const references = method.references.map((item) => `<li>${item}</li>`).join('');
-  const literatureHighlights = (method.literatureHighlights ?? [])
-    .map((item) => `<li>${item}</li>`)
-    .join('');
 
-  return `<main class="page-detail">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-detail">
     <section class="card bundle-wide-card technology-detail-hero">
-      <a class="technology-back-link" href="#detail">Back to technology overview</a>
+      <a class="technology-back-link" href="#probing">Back to technology overview</a>
       <div class="technology-detail-header">
         <div>
-          <p class="technology-kicker">${method.category}</p>
           <h1>${method.title}</h1>
+          <p class="technology-intro">${method.subtitle}</p>
         </div>
         <dl class="technology-detail-meta">
           <div><dt>Reagent</dt><dd>${method.reagent}</dd></div>
@@ -5013,27 +1573,13 @@ function renderTechnologyMethodPage(method) {
       </div>
     </section>
 
-    ${literatureHighlights ? `
-    <section class="card bundle-wide-card technology-section-card">
-      <div class="technology-section-heading">
-        <div>
-          <p class="technology-kicker">literature summary</p>
-          <h2>What The Papers Established</h2>
-        </div>
-        <p>This summary condenses the main takeaways that repeatedly appear across foundational SHAPE method papers and later validation studies.</p>
-      </div>
-      <article class="technology-note-card">
-        <ul>${literatureHighlights}</ul>
-      </article>
-    </section>` : ''}
-
     <section class="card bundle-wide-card technology-section-card">
       <div class="technology-section-heading">
         <div>
           <p class="technology-kicker">workflow</p>
-          <h2>Experimental Workflow</h2>
+          <h2>Suggested Page Structure</h2>
         </div>
-        <p>${method.workflowIntro}</p>
+        <p>This is a good default layout for your future real content: principle first, then workflow, then interpretation, then examples.</p>
       </div>
       <div class="technology-step-grid">
         ${workflow}
@@ -5057,444 +1603,98 @@ function renderTechnologyMethodPage(method) {
       <div class="technology-section-heading">
         <div>
           <p class="technology-kicker">references</p>
-          <h2>Key References</h2>
+          <h2>Starter References</h2>
         </div>
-        <p>These papers define the method, establish how the signal should be interpreted, or show important later extensions and limitations.</p>
+        <p>These can later become linked citations, method notes, or protocol references.</p>
       </div>
       <ul class="technology-reference-list">
         ${references}
       </ul>
     </section>
-    ${renderDetailPageFooterActions('Back to Probing', 'probing')}
   </main>`;
 }
 
 function detailPage() {
-  const slug = getTechnologySlugFromHash();
-  const method = technologyMethods.find((item) => item.slug === slug);
-  if (method) return renderTechnologyMethodPage(method);
+  const requestedSlug = getTechnologySlugFromHash();
+  // The legacy technology directory links to `shape`, while the curated
+  // article asset is `shape-reagents`; keep the old entry point pointing at
+  // the new article instead of rendering the placeholder method page.
+  const slug = requestedSlug === 'shape' ? 'shape-reagents' : requestedSlug;
+  const header = renderBundleHeader();
+
+  // 探针科普文章优先：若 index 里存在该 slug，则渲染真实阅读页。
+  const hasIndex = probingArticleIndexState && typeof probingArticleIndexState === 'object';
+  const articleSlugs = hasIndex
+    ? new Set((probingArticleIndexState.articles || []).map((a) => a.slug))
+    : null;
+
+  if (slug) {
+    // 已加载详情 → 渲染阅读页
+    const detailState = probingArticleDetailState.get(slug);
+    if (detailState && typeof detailState === 'object') {
+      return renderProbingArticlePage(detailState, hasIndex ? probingArticleIndexState : null, header);
+    }
+    // index 已确认该 slug 是真实文章 → 触发详情加载并显示 loading
+    if (articleSlugs && articleSlugs.has(slug)) {
+      if (detailState !== 'loading' && detailState !== 'error') loadProbingArticleDetail(slug);
+      if (detailState === 'error') {
+        // 加载失败时回退到旧占位方法页（若存在）
+        const method = technologyMethods.find((item) => item.slug === slug);
+        if (method) return renderTechnologyMethodPage(method);
+      }
+      return renderProbingArticleLoadingPage(slug, header, detailState === 'error');
+    }
+    // index 尚未加载 → 后台拉取，同时乐观触发该 slug 的详情加载
+    if (!hasIndex) {
+      if (probingArticleIndexState !== 'loading' && probingArticleIndexState !== 'error') {
+        loadProbingArticleIndex();
+      }
+      if (detailState !== 'loading' && detailState !== 'error') loadProbingArticleDetail(slug);
+      if (detailState === 'error') {
+        const method = technologyMethods.find((item) => item.slug === slug);
+        if (method) return renderTechnologyMethodPage(method);
+      }
+      return renderProbingArticleLoadingPage(slug, header, false);
+    }
+    // index 已加载但无此 slug → 回退到旧占位方法页（保留 legacy 方法目录）
+    const method = technologyMethods.find((item) => item.slug === slug);
+    if (method) return renderTechnologyMethodPage(method);
+    return renderProbingArticleIndex(probingArticleIndexState, header, buildProbingHubSections());
+  }
+
+  // 无 slug：总览页。优先真实文章索引；未加载则后台拉取并显示原 technology 总览作为占位。
+  if (hasIndex) {
+    return renderProbingArticleIndex(probingArticleIndexState, header, buildProbingHubSections());
+  }
+  if (probingArticleIndexState !== 'loading' && probingArticleIndexState !== 'error') {
+    loadProbingArticleIndex();
+  }
   return renderTechnologyOverviewPage();
 }
 
-function case10fzPage() {
-  const matchedRows = case10fzMatchedSequences
-    .map(
-      (row) => `<tr>
-        <td><span class="entry-sequence" title="${row.bundleSequenceId}">${row.bundleSequenceId}</span></td>
-        <td><span class="entry-sequence" title="${row.sourceFile}">${row.sourceFile}</span></td>
-        <td>${row.sequenceLength}</td>
-        <td>${row.identityFraction}</td>
-        <td>${row.queryCoverage}</td>
-        <td>${row.pdbCoverage}</td>
-      </tr>`
-    )
-    .join('');
-
-  const reactivityRows = case10fzReactivityPreview
-    .map(
-      (row) => `<tr>
-        <td>${row.pdbPos}</td>
-        <td>${row.pdbBase}</td>
-        <td>${row.source}</td>
-        <td>${row.rmdbPos}</td>
-        <td>${row.reactivity}</td>
-        <td>${row.error}</td>
-      </tr>`
-    )
-    .join('');
-
-  return `<main class="page-sequence-detail page-case-detail">
-    ${renderBundleHeader()}
-    <section class="sequence-detail-card case-detail-card">
-      <div class="sequence-detail-header">
-        <a class="sequence-detail-back" href="#browse">Back to browse</a>
-        <div class="sequence-detail-title-row">
-          <div>
-            <p class="sequence-detail-kicker">PDB-centered case bundle</p>
-            <h1>10FZ Projection Case</h1>
-          </div>
-          <dl class="sequence-detail-meta">
-            <div><dt>PDB ID</dt><dd>${case10fzSummary.pdbId}</dd></div>
-            <div><dt>Reference chain</dt><dd>${case10fzSummary.pdbReferenceId}</dd></div>
-            <div><dt>Projection status</dt><dd>${case10fzSummary.projectionStatus}</dd></div>
-            <div><dt>Scientific scope</dt><dd>${case10fzSummary.scientificScope}</dd></div>
-          </dl>
-        </div>
-      </div>
-
-      <section class="sequence-detail-panel">
-        <div class="sequence-detail-section-heading">
-          <h2>Case Summary</h2>
-          <p>${case10fzSummary.sourceNote}</p>
-        </div>
-        <div class="sequence-detail-insight-grid">
-          <article class="sequence-detail-insight-card">
-            <span>Candidate pair rows</span>
-            <strong>${case10fzSummary.candidatePairRows}</strong>
-          </article>
-          <article class="sequence-detail-insight-card">
-            <span>RMDB unique sequences</span>
-            <strong>${case10fzSummary.rmdbUniqueSequenceCount}</strong>
-          </article>
-          <article class="sequence-detail-insight-card">
-            <span>RMDB profiles</span>
-            <strong>${case10fzSummary.rmdbProfileCount}</strong>
-          </article>
-          <article class="sequence-detail-insight-card">
-            <span>Alignment rows</span>
-            <strong>${case10fzSummary.alignmentRows}</strong>
-          </article>
-          <article class="sequence-detail-insight-card">
-            <span>PDB-axis reactivity rows</span>
-            <strong>${case10fzSummary.pdbAxisReactivityRows}</strong>
-          </article>
-          <article class="sequence-detail-insight-card">
-            <span>Projection method</span>
-            <strong>BLAST projection</strong>
-          </article>
-        </div>
-      </section>
-
-      <section class="sequence-detail-panel">
-        <div class="sequence-detail-section-heading">
-          <h2>Alignment Policy</h2>
-          <p>The delivered case keeps only best-hit sequence pairs under the published thresholds below. This page presents the case as sequence-to-axis projection evidence, not as direct structural proof.</p>
-        </div>
-        <div class="technology-detail-meta case-detail-meta-grid">
-          <div><dt>E-value</dt><dd>${case10fzSummary.blastThresholds.evalue}</dd></div>
-          <div><dt>Min identity</dt><dd>${case10fzSummary.blastThresholds.percIdentityMin}</dd></div>
-          <div><dt>Strand</dt><dd>${case10fzSummary.blastThresholds.strand}</dd></div>
-          <div><dt>Max HSPs</dt><dd>${case10fzSummary.blastThresholds.maxHsps}</dd></div>
-        </div>
-      </section>
-
-      <section class="sequence-detail-panel">
-        <div class="sequence-detail-section-heading">
-          <h2>Matched RMDB Sequences</h2>
-          <p>Representative matched bundle sequences aligned to the 10FZ reference axis.</p>
-        </div>
-        <div class="entry-table-wrap">
-          <table class="entry-table case-detail-table">
-            <thead>
-              <tr>
-                <th>Bundle sequence ID</th>
-                <th>Source RDAT</th>
-                <th>Length</th>
-                <th>Identity</th>
-                <th>Query coverage</th>
-                <th>PDB coverage</th>
-              </tr>
-            </thead>
-            <tbody>${matchedRows}</tbody>
-          </table>
-        </div>
-      </section>
-
-      <section class="sequence-detail-panel">
-        <div class="sequence-detail-section-heading">
-          <h2>PDB-axis Reactivity Preview</h2>
-          <p>Preview rows from the projected reactivity table, indexed on the PDB reference sequence axis.</p>
-        </div>
-        <div class="entry-table-wrap">
-          <table class="entry-table case-detail-table">
-            <thead>
-              <tr>
-                <th>PDB position</th>
-                <th>Base</th>
-                <th>Profile</th>
-                <th>RMDB position</th>
-                <th>Reactivity</th>
-                <th>Error</th>
-              </tr>
-            </thead>
-            <tbody>${reactivityRows}</tbody>
-          </table>
-        </div>
-      </section>
-    </section>
-  </main>`;
-}
-
-function caseDetailPage() {
-  const caseId = getCaseIdFromHash();
-  const row = case3dRows.find((item) => item.pdbId === caseId);
-  if (caseId && activeCaseDetailId !== caseId) {
-    activeCaseDetailId = caseId;
-    caseDetailSequencePage = 1;
-  }
-  if (!row) {
-    return `<main class="page-sequence-detail page-case-detail">
-      ${renderBundleHeader()}
-      <section class="sequence-detail-card case-detail-card">
-        <div class="sequence-detail-header">
-          <a class="sequence-detail-back" href="#browse">Back to browse</a>
-          <div class="sequence-detail-title-row">
-            <div>
-              <p class="sequence-detail-kicker">3D Entry</p>
-              <h1>Case not found</h1>
-              <p class="technology-intro">The requested 3D case could not be found in the current manifest.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>`;
-  }
-
-  const detail = caseDetailCache.get(caseId);
-  if (!detail) {
-    ensureCaseDetailLoaded(caseId);
-    return `<main class="page-sequence-detail page-case-detail">
-      ${renderBundleHeader()}
-      <section class="sequence-detail-card case-detail-card">
-        <div class="sequence-detail-header">
-          <a class="sequence-detail-back" href="#browse">Back to browse</a>
-          <div class="sequence-detail-title-row">
-            <div>
-              <p class="sequence-detail-kicker">3D Entry case bundle</p>
-              <h1>${row.pdbId}</h1>
-              <p class="technology-intro">Loading packaged case details, sequences, and case metadata...</p>
-            </div>
-          </div>
-        </div>
-
-        <section class="sequence-detail-panel">
-          <div class="sequence-detail-placeholder">
-            <p>The case package is being loaded from the bundled 3D entry files.</p>
-          </div>
-        </section>
-      </section>
-    </main>`;
-  }
-
-  if (detail.error) {
-    return `<main class="page-sequence-detail page-case-detail">
-      ${renderBundleHeader()}
-      <section class="sequence-detail-card case-detail-card">
-        <div class="sequence-detail-header">
-          <a class="sequence-detail-back" href="#browse">Back to browse</a>
-          <div class="sequence-detail-title-row">
-            <div>
-              <p class="sequence-detail-kicker">3D Entry case bundle</p>
-              <h1>${row.pdbId}</h1>
-              <p class="technology-intro">This case is listed in the manifest, but the detailed packaged files could not be opened.</p>
-            </div>
-          </div>
-        </div>
-
-        <section class="sequence-detail-panel">
-          <div class="sequence-detail-placeholder">
-            <p>${detail.message || 'Failed to load case detail.'}</p>
-          </div>
-        </section>
-      </section>
-    </main>`;
-  }
-
-  const caseInfo = detail.caseInfo || {};
-  const selectedInfoCards = [
-    ['Projection status', caseInfo.projection_status],
-    ['Scientific scope', humanizeCaseToken(caseInfo.scientific_scope)],
-    ['Reactivity axis', humanizeCaseToken(caseInfo.reactivity_axis)],
-    ['2D map status', humanizeCaseToken(caseInfo.map2d_status)],
-    ['Structural evidence', formatCaseBoolean(caseInfo.projection_is_structural_evidence)],
-    ['Release snapshot', caseInfo.release_snapshot_id]
-  ];
-  const implementationCards = [
-    ['Projection method', humanizeCaseToken(caseInfo.projection_method)],
-    ['Query position map', humanizeCaseToken(caseInfo.query_feature_position_map_method)],
-    ['Candidate policy', humanizeCaseToken(caseInfo.candidate_selection_policy)],
-    ['Package type', humanizeCaseToken(caseInfo.package_type)],
-    ['Bundle sequence status', humanizeCaseToken(caseInfo.self_contained_bundle_sequence_status)],
-    ['Sequence member rows', caseInfo.rmdb_sequence_member_rows]
-  ];
-  const blastThresholdEntries = Object.entries(caseInfo.blast_thresholds || {})
-    .map(([key, value]) => `<div><dt>${humanizeCaseToken(key)}</dt><dd>${formatCaseDetailValue(value)}</dd></div>`)
-    .join('');
-  const pdbSequenceMarkup = (detail.pdbSequences || [])
-    .map((sequence) => `<article class="case-sequence-card">
-      <div class="case-sequence-card-header">
+function renderProbingArticleLoadingPage(slug, headerHtml, isError) {
+  const method = technologyMethods.find((item) => item.slug === slug);
+  const title = method ? method.title : slug;
+  return `${headerHtml}
+  <main class="page-detail page-probing-article">
+    <section class="card bundle-wide-card technology-detail-hero">
+      <a class="technology-back-link" href="#probing">← Back to probing methods overview</a>
+      <div class="technology-detail-header">
         <div>
-          <p class="case-sequence-card-kicker">PDB reference</p>
-          <h3>${sequence.id}</h3>
-        </div>
-        <span class="case-sequence-card-length">${sequence.length} nt</span>
-      </div>
-      <code class="case-sequence-block">${sequence.sequence}</code>
-    </article>`)
-    .join('');
-  const totalSequencePages = Math.max(1, Math.ceil((detail.rmdbSequences?.length || 0) / CASE_DETAIL_SEQUENCE_PAGE_SIZE));
-  if (caseDetailSequencePage > totalSequencePages) caseDetailSequencePage = totalSequencePages;
-  const sequenceStartIndex = (caseDetailSequencePage - 1) * CASE_DETAIL_SEQUENCE_PAGE_SIZE;
-  const visibleRmdbSequences = (detail.rmdbSequences || []).slice(
-    sequenceStartIndex,
-    sequenceStartIndex + CASE_DETAIL_SEQUENCE_PAGE_SIZE
-  );
-  const rmdbSequenceRows = visibleRmdbSequences.length
-    ? visibleRmdbSequences
-        .map((sequence) => `<tr>
-          <td title="${sequence.rmdbUniqueId}">
-            <span class="case-table-truncate">${sequence.rmdbUniqueId}</span>
-          </td>
-          <td>${sequence.length}</td>
-          <td>${formatFractionPercent(sequence.identityFraction)}</td>
-          <td>${formatFractionPercent(sequence.rmdbQueryCoverage)}</td>
-          <td>${formatFractionPercent(sequence.pdbSubjectCoverage)}</td>
-          <td>${sequence.pairCount}</td>
-          <td title="${sequence.sequence}">
-            <code class="case-sequence-inline case-table-truncate">${sequence.sequence}</code>
-          </td>
-        </tr>`)
-        .join('')
-    : `<tr><td class="entry-table-empty" colspan="7">No RMDB sequences were packaged for this case.</td></tr>`;
-
-  return `<main class="page-sequence-detail page-case-detail">
-    ${renderBundleHeader()}
-    <section class="sequence-detail-card case-detail-card">
-      <div class="sequence-detail-header">
-        <a class="sequence-detail-back" href="#browse">Back to browse</a>
-        <div class="sequence-detail-title-row">
-          <div>
-            <p class="sequence-detail-kicker">3D Entry case bundle</p>
-            <h1>${row.pdbId}</h1>
-          </div>
+          <p class="technology-kicker">probing article</p>
+          <h1>${title}</h1>
+          <p class="technology-intro">${isError ? 'Failed to load article assets. Please try again later.' : 'Loading article…'}</p>
         </div>
       </div>
-
-      <section class="sequence-detail-panel">
-        <div class="sequence-detail-section-heading">
-          <h2>Case Metrics</h2>
-          <p>This detail page summarizes the packaged case-level metrics currently available from the imported 3D entry bundle.</p>
-        </div>
-        <div class="sequence-detail-insight-grid">
-          <article class="sequence-detail-insight-card"><span>Candidate pair rows</span><strong>${row.candidatePairRows ?? 0}</strong></article>
-          <article class="sequence-detail-insight-card"><span>Unique RMDB sequences</span><strong>${row.rmdbUniqueSequenceCount ?? 0}</strong></article>
-          <article class="sequence-detail-insight-card"><span>RMDB profiles</span><strong>${row.rmdbProfileCount ?? 0}</strong></article>
-          <article class="sequence-detail-insight-card"><span>Alignment rows</span><strong>${row.alignmentRows ?? 0}</strong></article>
-          <article class="sequence-detail-insight-card"><span>PDB-axis reactivity rows</span><strong>${row.pdbAxisReactivityRows ?? 0}</strong></article>
-        </div>
-      </section>
-
-      <section class="sequence-detail-panel">
-        <div class="sequence-detail-section-heading">
-          <h2>Case Interpretation</h2>
-          <p>These fields come directly from the packaged <code>case.json</code> and help explain what this 3D entry actually represents.</p>
-        </div>
-        <div class="sequence-detail-insight-grid">
-          ${selectedInfoCards
-            .map(
-              ([label, value]) => `<article class="sequence-detail-insight-card">
-                <span>${label}</span>
-                <strong>${formatCaseDetailValue(value)}</strong>
-              </article>`
-            )
-            .join('')}
-        </div>
-        <div class="sequence-detail-placeholder case-detail-note">
-          <p>${caseInfo.source_note || 'No source note was packaged for this case.'}</p>
-        </div>
-      </section>
-
-      <section class="sequence-detail-panel">
-        <div class="sequence-detail-section-heading">
-          <h2>Projection Rules</h2>
-          <p>These fields describe how RMDB sequence information was aligned and projected onto the PDB reference axis.</p>
-        </div>
-        <div class="sequence-detail-insight-grid">
-          ${implementationCards
-            .map(
-              ([label, value]) => `<article class="sequence-detail-insight-card">
-                <span>${label}</span>
-                <strong>${formatCaseDetailValue(value)}</strong>
-              </article>`
-            )
-            .join('')}
-        </div>
-        <div class="case-detail-threshold-card">
-          <h3>BLAST Thresholds</h3>
-          <dl class="case-detail-threshold-grid">
-            ${blastThresholdEntries || '<div><dt>Status</dt><dd>No threshold block found</dd></div>'}
-          </dl>
-        </div>
-      </section>
-
-      <section class="sequence-detail-panel">
-        <div class="sequence-detail-section-heading">
-          <h2>PDB Reference Sequence</h2>
-          <p>The structural reference sequence packaged with this case is shown below.</p>
-        </div>
-        <div class="case-sequence-stack">
-          ${pdbSequenceMarkup || '<div class="sequence-detail-placeholder"><p>No PDB reference sequence was packaged for this case.</p></div>'}
-        </div>
-      </section>
-
-      <section class="sequence-detail-panel">
-        <div class="sequence-detail-section-heading">
-          <h2>Matched RMDB Sequences</h2>
-          <p>These are the unique RMDB sequences carried by this case package, summarized from <code>alignment_pair_summary.tsv</code>.</p>
-        </div>
-        <div class="entry-table-wrap case-sequence-table-wrap">
-          <table class="entry-table case-sequence-table">
-            <thead>
-              <tr>
-                <th>RMDB unique ID</th>
-                <th>Length</th>
-                <th>Identity</th>
-                <th>RMDB coverage</th>
-                <th>PDB coverage</th>
-                <th>Pair rows</th>
-                <th>Sequence</th>
-              </tr>
-            </thead>
-            <tbody>${rmdbSequenceRows}</tbody>
-          </table>
-        </div>
-        <div class="browse-pagination">
-          <span class="browse-pagination-status">Page ${caseDetailSequencePage} of ${totalSequencePages}</span>
-          <div class="browse-pagination-actions">
-            <button
-              id="case-detail-prev-page"
-              type="button"
-              class="download-outline-btn"
-              ${caseDetailSequencePage <= 1 ? 'disabled' : ''}
-            >
-              Previous
-            </button>
-            <button
-              id="case-detail-next-page"
-              type="button"
-              class="download-outline-btn"
-              ${caseDetailSequencePage >= totalSequencePages ? 'disabled' : ''}
-            >
-              Next
-            </button>
-          </div>
-        </div>
-      </section>
-      ${renderDetailPageFooterActions('Back to Browse', 'browse')}
     </section>
   </main>`;
 }
 
 function browsePage() {
-  const totalPages = Math.max(1, Math.ceil(browseEntryRows.length / BROWSE_PAGE_SIZE));
-  if (browseCurrentPage > totalPages) browseCurrentPage = totalPages;
-  const startIndex = (browseCurrentPage - 1) * BROWSE_PAGE_SIZE;
-  const visibleBrowseRows = browseEntryRows.slice(startIndex, startIndex + BROWSE_PAGE_SIZE);
-  const rows = visibleBrowseRows.length
-    ? visibleBrowseRows
+  const rows = browseEntryRows.length
+    ? browseEntryRows
         .map(
-          (row) => {
-            const browseDetailUrl = `#browse-detail?foldBridgeId=${encodeURIComponent(row.foldBridgeId)}`;
-            const foldBridgeCell = `<a href="${browseDetailUrl}" class="browse-record-link">${row.foldBridgeId}</a>`;
-            const fileCodeUrl = getProbingDetailUrl(row.fileCode);
-            const modifierUrl = getProbingDetailUrl(row.modifier);
-            const fileCodeCell = fileCodeUrl
-              ? `<a href="${fileCodeUrl}" class="browse-probing-link">${row.fileCode}</a>`
-              : row.fileCode;
-            const modifierCell = modifierUrl
-              ? `<a href="${modifierUrl}" class="browse-probing-link">${row.modifier}</a>`
-              : row.modifier;
-            return `<tr>
+          (row) => `<tr>
             <td>
               <input
                 type="checkbox"
@@ -5503,66 +1703,50 @@ function browsePage() {
                 ${selectedBrowseIds.has(row.foldBridgeId) ? 'checked' : ''}
               />
             </td>
-            <td>${foldBridgeCell}</td>
+            <td>${row.foldBridgeId}</td>
             <td>${row.name}</td>
             <td>
               <span class="entry-sequence" title="${row.sequence}">${row.sequence}</span>
             </td>
-            <td>${fileCodeCell}</td>
+            <td>${row.fileCode}</td>
             <td>${row.experimentType}</td>
-            <td>${modifierCell}</td>
-            <td>
-              <span class="browse-match-pill ${row.hasPdbMatch ? 'is-hit' : 'is-miss'}">
-                ${row.hasPdbMatch ? 'Matched' : 'Pending'}
-              </span>
-            </td>
-            <td>${summarizePdbMatch(row)}</td>
-            <td>${formatBlastEvalue(row.bestEvalue)}</td>
-          </tr>`;
-          }
+            <td>${row.modifier}</td>
+          </tr>`
         )
         .join('')
-    : `<tr><td colspan="10" class="entry-table-empty">No entries yet.</td></tr>`;
+    : `<tr><td colspan="7" class="entry-table-empty">No entries yet.</td></tr>`;
 
-  return `<main class="page-download-sequences page-browse">
-    ${renderBundleHeader()}
-    <section class="card bundle-wide-card browse-entry-section">
-      <div class="browse-section-heading">
-        <div>
-          <h2>Browse</h2>
-        </div>
-      </div>
-      <p class="browse-section-note">
-        Browse is the full RMDB-facing record table. Entries without a PDB hit stay visible here and are marked as pending, while Structure shows only the matched subset.
-      </p>
+  return `${renderBundleHeader()}
+  <main class="page-download-sequences page-browse">
+    <section class="card download-card entry-table-card">
       <div class="download-toolbar browse-toolbar">
-        <button
-          type="button"
+        <span
           id="select-all-rdat"
           class="browse-action-btn ${browseEntryRows.length ? '' : 'is-disabled'}"
-          ${browseEntryRows.length ? '' : 'disabled'}
+          role="button"
+          tabindex="${browseEntryRows.length ? '0' : '-1'}"
           aria-disabled="${browseEntryRows.length ? 'false' : 'true'}"
         >
           Select All
-        </button>
-        <button
-          type="button"
+        </span>
+        <span
           id="download-selected-rdat"
-          class="browse-action-btn ${selectedBrowseIds.size ? 'is-active' : 'is-disabled'}"
-          ${selectedBrowseIds.size ? '' : 'disabled'}
+          class="browse-action-btn ${selectedBrowseIds.size ? '' : 'is-disabled'}"
+          role="button"
+          tabindex="${selectedBrowseIds.size ? '0' : '-1'}"
           aria-disabled="${selectedBrowseIds.size ? 'false' : 'true'}"
         >
-          Export Selected (${selectedBrowseIds.size})
-        </button>
-        <button
-          type="button"
+          Download Selected RDAT (${selectedBrowseIds.size})
+        </span>
+        <span
           id="clear-selected-rdat"
-          class="browse-action-btn ${selectedBrowseIds.size ? 'is-active' : 'is-disabled'}"
-          ${selectedBrowseIds.size ? '' : 'disabled'}
+          class="browse-action-btn ${selectedBrowseIds.size ? '' : 'is-disabled'}"
+          role="button"
+          tabindex="${selectedBrowseIds.size ? '0' : '-1'}"
           aria-disabled="${selectedBrowseIds.size ? 'false' : 'true'}"
         >
           Clear Selection
-        </button>
+        </span>
       </div>
       <div class="entry-table-wrap">
         <table class="entry-table">
@@ -5575,39 +1759,12 @@ function browsePage() {
               <th>File Code</th>
               <th>Experiment Type</th>
               <th>Modifier</th>
-              <th>Status</th>
-              <th>Best PDB</th>
-              <th>E-value</th>
             </tr>
           </thead>
           <tbody>
             ${rows}
           </tbody>
         </table>
-      </div>
-      <div class="browse-pagination">
-        <div class="browse-pagination-info">
-          <span class="browse-pagination-status">Page ${browseCurrentPage} of ${totalPages}</span>
-          ${renderPageJumpControls('browse', totalPages, browseCurrentPage)}
-        </div>
-        <div class="browse-pagination-actions">
-          <button
-            type="button"
-            id="browse-prev-page"
-            class="download-outline-btn"
-            ${browseCurrentPage === 1 ? 'disabled' : ''}
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            id="browse-next-page"
-            class="download-outline-btn"
-            ${browseCurrentPage === totalPages ? 'disabled' : ''}
-          >
-            Next
-          </button>
-        </div>
       </div>
     </section>
   </main>`;
@@ -5617,543 +1774,743 @@ function structurePage() {
   return downloadStructuresPage();
 }
 
-function browseDetailPage() {
-  const foldBridgeId = getStructureRecordIdFromHash();
-  const row = getBrowseRecordById(foldBridgeId);
-
-  if (!row) {
-    return `<main class="page-sequence-detail page-browse-detail">
-      ${renderBundleHeader()}
-      <section class="sequence-detail-card">
-        <div class="sequence-detail-header">
-          <a class="sequence-detail-back" href="#browse">Back to Browse</a>
-          <div class="sequence-detail-title-row">
-            <div>
-              <p class="sequence-detail-kicker">Browse record</p>
-              <h1>Record Not Found</h1>
-            </div>
-          </div>
-        </div>
-        <section class="sequence-detail-panel">
-          <h2>Missing record</h2>
-          <div class="sequence-detail-placeholder">
-            <p>No Browse record matched this FoldBridge ID.</p>
-          </div>
-        </section>
-        ${renderDetailPageFooterActions('Back to Browse', 'browse')}
-      </section>
-    </main>`;
-  }
-
-  const localRecord = getLocalRmdbRecordById(foldBridgeId);
-  const detailSequence = trimSequenceLengthSuffix(row.sourceSequence || localRecord?.sequence || row.sequence || '');
-  const detailStructure = String(row.sourceStructure || '').trim();
-  const detailLength = row.length || localRecord?.length || (detailSequence ? `${detailSequence.length}nt` : '');
-  const sourceCategory = localRecord?.localCategory || '';
-  const datasetGroup = localRecord?.structureDatasetGroup || row.structureDatasetGroup || '';
-  const hasBundledHeatmap = Boolean(row.rdatPath);
-  const rdatAvailability = row.rdatPath
-    ? 'Bundled RDAT asset available in this demo.'
-    : localRecord
-      ? 'Imported from local RDAT header metadata.'
-      : 'Metadata-only record in the current bundle.';
-  const relatedLinks = [
-    row.hasPdbMatch
-      ? `<a href="#structure-detail?foldBridgeId=${encodeURIComponent(row.foldBridgeId)}" class="browse-detail-inline-link">Open matched structure detail</a>`
-      : '',
-    getProbingDetailUrl(row.modifier)
-      ? `<a href="${getProbingDetailUrl(row.modifier)}" class="browse-detail-inline-link">Open probing method page</a>`
-      : ''
-  ]
-    .filter(Boolean)
-    .join('');
-
-  return `<main class="page-sequence-detail page-browse-detail">
-    ${renderBundleHeader()}
-    <section class="sequence-detail-card">
-      <div class="sequence-detail-header">
-        <a class="sequence-detail-back" href="#browse">Back to Browse</a>
-        <div class="sequence-detail-title-row">
-          <div>
-            <p class="sequence-detail-kicker">Browse record</p>
-            <h1>${escapeHtml(row.foldBridgeId)}</h1>
-            <p>${escapeHtml(row.name || 'Unnamed RMDB record')}</p>
-          </div>
-          <dl class="sequence-detail-meta">
-            <div><dt>Status</dt><dd>${row.hasPdbMatch ? 'Matched' : 'Pending'}</dd></div>
-            <div><dt>Best PDB</dt><dd>${renderPdbExternalLink(row.bestPdbId)}</dd></div>
-            <div><dt>Modifier</dt><dd>${escapeHtml(row.modifier || 'N/A')}</dd></div>
-            <div><dt>File Code</dt><dd>${escapeHtml(row.fileCode || 'N/A')}</dd></div>
-            <div><dt>Length</dt><dd>${escapeHtml(detailLength || 'N/A')}</dd></div>
-            <div><dt>Species</dt><dd>${escapeHtml(row.species || 'N/A')}</dd></div>
-          </dl>
-        </div>
-      </div>
-
-      <section class="sequence-detail-panel">
-        <h2>Overview</h2>
-        <div class="sequence-detail-placeholder">
-          <p>${escapeHtml(row.foldBridgeId)} is a Browse entry derived from RMDB-facing metadata. This page collects the core RDAT-associated fields we currently have for this record without switching into the heavier Structure view.</p>
-        </div>
-      </section>
-
-      <section class="sequence-detail-panel">
-        <h2>RDAT Summary</h2>
-        <dl class="browse-detail-summary">
-          <div><dt>FoldBridge ID</dt><dd>${escapeHtml(row.foldBridgeId)}</dd></div>
-          <div><dt>Name</dt><dd>${escapeHtml(row.name || 'N/A')}</dd></div>
-          <div><dt>Experiment Type</dt><dd>${escapeHtml(row.experimentType || 'N/A')}</dd></div>
-          <div><dt>Modifier</dt><dd>${escapeHtml(row.modifier || 'N/A')}</dd></div>
-          <div><dt>File Code</dt><dd>${escapeHtml(row.fileCode || 'N/A')}</dd></div>
-          <div><dt>Dataset Group</dt><dd>${escapeHtml(datasetGroup || 'N/A')}</dd></div>
-          <div><dt>Local Category</dt><dd>${escapeHtml(sourceCategory || 'N/A')}</dd></div>
-          <div><dt>Source</dt><dd>${escapeHtml(rdatAvailability)}</dd></div>
-          <div><dt>Discovery Year</dt><dd>${escapeHtml(row.discoveryYear || 'N/A')}</dd></div>
-          <div><dt>Match Count</dt><dd>${escapeHtml(String(row.pdbMatchCount || 0))}</dd></div>
-          <div><dt>Identity</dt><dd>${escapeHtml(formatBlastPercent(row.bestIdentity))}</dd></div>
-          <div><dt>Coverage</dt><dd>${escapeHtml(formatBlastPercent(row.bestCoverage))}</dd></div>
-          <div><dt>E-value</dt><dd>${escapeHtml(formatBlastEvalue(row.bestEvalue))}</dd></div>
-          <div><dt>RDAT Asset</dt><dd>${row.rdatPath ? `<a href="${row.rdatPath}" class="browse-detail-inline-link" download>Download bundled RDAT</a>` : 'Not bundled in this demo'}</dd></div>
-        </dl>
-      </section>
-
-      <section class="sequence-detail-panel">
-        <h2>Sequence${detailLength ? ` (${escapeHtml(detailLength)})` : ''}</h2>
-        <article class="case-sequence-card">
-          <code class="case-sequence-block case-sequence-block-formatted">${detailSequence ? renderFormattedDetailSequence(detailSequence, 5, { forceUppercaseDisplay: true }) : 'Sequence unavailable'}</code>
-        </article>
-      </section>
-
-      ${
-        hasBundledHeatmap
-          ? `<section class="sequence-detail-panel">
-              <h2>Reactivity Heatmap</h2>
-              <div class="sequence-detail-section-intro">
-                <p>This heatmap summarizes the bundled RDAT reactivity matrix for this Browse record so you can inspect the experimental signal directly without leaving the lightweight detail page.</p>
-              </div>
-              <section class="sequence-secondary-card sequence-secondary-heatmap-card structure-detail-heatmap-card">
-                <div
-                  id="browse-detail-heatmap"
-                  class="sequence-secondary-heatmap-host"
-                  data-rdat-url="${row.rdatPath}"
-                  data-sequence="${escapeHtml(detailSequence)}"
-                ></div>
-                <p id="browse-detail-heatmap-status" class="mini-note" hidden></p>
-              </section>
-            </section>`
-          : ''
-      }
-
-      ${
-        detailStructure
-          ? `<section class="sequence-detail-panel">
-              <h2>Dot-Bracket</h2>
-              <div class="sequence-detail-placeholder">
-                <p class="mini-note">Curated or imported secondary-structure text is available for this record.</p>
-              </div>
-              <code class="case-sequence-structure">${renderAlignedSequenceStructure(detailSequence, detailStructure)}</code>
-            </section>`
-          : ''
-      }
-
-      <section class="sequence-detail-panel">
-        <h2>Related Pages</h2>
-        ${relatedLinks ? `<div class="browse-detail-action-row">${relatedLinks}</div>` : '<div class="sequence-detail-placeholder"><p>No related pages are available for this record yet.</p></div>'}
-      </section>
-
-      ${renderDetailPageFooterActions('Back to Browse', 'browse')}
+function renderPdbCaseLoadingPage(message, headerHtml = '') {
+  return `${headerHtml}
+  <main class="page-pdb-case">
+    <section class="card bundle-wide-card pdb-case-hero">
+      <a class="technology-back-link" href="#pdb-case">Back to PDB case index</a>
+      <p class="technology-kicker">PDB case</p>
+      <h1>${message}</h1>
+      <div class="pdb-case-track-empty">Loading…</div>
     </section>
   </main>`;
 }
 
-function structureDetailPdbUrl(pdbId, subjectId = '') {
-  if (!pdbId) return '';
+async function loadPdbCaseIndex() {
+  if (pdbCaseIndexState === 'loading') return;
+  pdbCaseIndexState = 'loading';
+  try {
+    const index = await pdbCaseStore.loadCaseIndex();
+    pdbCaseIndexState = { cases: index.cases || [] };
+  } catch (err) {
+    console.error('[main] 加载 PDB case 索引失败', err);
+    pdbCaseIndexState = 'error';
+  }
+  if (route === 'pdb-case') render({ preserveScroll: true });
+}
 
-  const uppercasePdbId = String(pdbId).toUpperCase();
-  const chainMatch = String(subjectId || '').match(/_([A-Za-z0-9-]+)$/);
-  const authAsymId = chainMatch?.[1];
-  const localPdbMap = {
-    '1AM0': './src/assets/structures/1AM0-assembly1.cif',
-    '4L81': './src/assets/structures/4L81-assembly1.cif',
-    '5KPY': './src/assets/structures/5KPY-assembly1.cif',
-    '5TPY': './src/assets/structures/5TPY-assembly1.cif',
-    '8QO5': './src/assets/structures/8QO5-assembly1.cif'
+async function loadPdbCaseDetail(pdbId) {
+  if (pdbCaseDetailState.get(pdbId) === 'loading') return;
+  pdbCaseDetailState.set(pdbId, 'loading');
+  try {
+    const detail = await pdbCaseStore.loadCase(pdbId);
+    const profilesDoc = await pdbCaseStore.loadProfiles(pdbId).catch(() => null);
+    const profiles = profilesDoc?.profiles || [];
+    const page = pdbCaseAlignmentPageByPdb.get(pdbId) || 1;
+    let alignmentPage = null;
+    if ((detail.alignmentPageCount || 0) > 0) {
+      alignmentPage = await pdbCaseStore.loadAlignmentPage(pdbId, page).catch(() => null);
+    }
+    let reactivitySummary = null;
+    const firstReac = (detail.reactivity || [])[0];
+    if (firstReac?.profileKey) {
+      reactivitySummary = await pdbCaseStore
+        .loadReactivitySummary(pdbId, firstReac.profileKey)
+        .catch(() => null);
+    }
+    pdbCaseDetailState.set(pdbId, { detail, profiles, alignmentPage, reactivitySummary });
+  } catch (err) {
+    console.error('[main] 加载 PDB case 详情失败', pdbId, err);
+    pdbCaseDetailState.set(pdbId, 'error');
+  }
+  if (route === 'pdb-case') render({ preserveScroll: true });
+}
+
+async function loadProbingArticleIndex() {
+  if (probingArticleIndexState === 'loading') return;
+  probingArticleIndexState = 'loading';
+  try {
+    probingArticleIndexState = await probingArticleStore.loadIndex();
+  } catch (err) {
+    console.error('[main] 加载探针文章索引失败', err);
+    probingArticleIndexState = 'error';
+  }
+  if (route === 'detail' || route === 'probing' || route === 'home') render({ preserveScroll: true });
+}
+
+async function loadHelpContent() {
+  if (helpContentState === 'loading') return;
+  helpContentState = 'loading';
+  try {
+    // 与 About 同款：store 失败返回 null → 终态 'error'，避免无限重试。
+    helpContentState = (await helpContentStore.loadContent()) || 'error';
+  } catch (err) {
+    console.error('[main] 加载 Help 内容失败', err);
+    helpContentState = 'error';
+  }
+  if (route === 'help') render({ preserveScroll: true });
+}
+
+async function loadSiteStats() {
+  if (siteStatsState === 'loading') return;
+  siteStatsState = 'loading';
+  try {
+    const stats = await siteStatsStore.loadStats();
+    siteStatsState = stats || 'error';
+  } catch (err) {
+    console.error('[main] 加载站点统计失败', err);
+    siteStatsState = 'error';
+  }
+  if (route === 'stats') render({ preserveScroll: true });
+}
+
+// 组装探针 hub 的家族索引，注入文章总览页。
+function buildProbingHubSections() {
+  const families = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
+    ? probingArticleIndexState.families
+    : [];
+  return renderProbingFamilyIndex(families, { embedded: true });
+}
+
+// 访问计数：每次成功加载招牌 story 自增（localStorage），用于 pickFeaturedCase 轮换。
+// 隐私模式 localStorage 抛错 → 退回 0，绝不报错（规格 §8 降级）。
+function readHomeScrollVisitIndex() {
+  try {
+    const raw = globalThis.localStorage?.getItem('fb.hss.visitIndex');
+    const n = Number.parseInt(raw, 10);
+    return Number.isFinite(n) ? n : 0;
+  } catch (_err) {
+    return 0;
+  }
+}
+
+function bumpHomeScrollVisitIndex() {
+  try {
+    const next = readHomeScrollVisitIndex() + 1;
+    globalThis.localStorage?.setItem('fb.hss.visitIndex', String(next));
+  } catch (_err) {
+    /* 隐私模式：忽略 */
+  }
+}
+
+async function loadHomeScrollStory() {
+  if (homeScrollStoryState === 'loading') return;
+  homeScrollStoryState = 'loading';
+  homeScrollVisitIndex = readHomeScrollVisitIndex();
+  try {
+    homeScrollStoryState = await homeScrollStoryStore.loadStory();
+    bumpHomeScrollVisitIndex();
+  } catch (err) {
+    console.error('[main] 加载主页招牌叙事失败', err);
+    homeScrollStoryState = 'error';
+  }
+  if (route === 'home') render({ preserveScroll: true });
+}
+
+async function loadProbingArticleDetail(slug) {
+  if (!slug || probingArticleDetailState.get(slug) === 'loading') return;
+  probingArticleDetailState.set(slug, 'loading');
+  try {
+    const detail = await probingArticleStore.loadArticle(slug);
+    probingArticleDetailState.set(slug, detail);
+  } catch (err) {
+    console.error('[main] 加载探针文章详情失败', slug, err);
+    probingArticleDetailState.set(slug, 'error');
+  }
+  if (route === 'detail' || route === 'probing') render({ preserveScroll: true });
+}
+
+async function loadEntryTable() {
+  if (entryTableState === 'loading') return;
+  entryTableState = 'loading';
+  try {
+    const response = await fetch('./src/assets/generated/entry-table/entry-table.json');
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    entryTableState = normalizeEntryRows(await response.json());
+  } catch (err) {
+    console.error('[main] 加载 entry 表失败', err);
+    entryTableState = 'error';
+  }
+  // 缺页清单：fetch 失败/不存在时降级为空集合（所有行照常可跳，回到旧行为），不阻断表加载。
+  try {
+    const missingResponse = await fetch('./src/assets/generated/entry-table/entry-missing-pages.json');
+    if (!missingResponse.ok) throw new Error(`HTTP ${missingResponse.status}`);
+    const payload = await missingResponse.json();
+    entryMissingPdbsState = new Set(Array.isArray(payload.missingPdbs) ? payload.missingPdbs : []);
+  } catch (err) {
+    console.error('[main] 加载 entry 缺页清单失败（降级为空集合）', err);
+    entryMissingPdbsState = new Set();
+  }
+  if (route === 'entry') render({ preserveScroll: true });
+}
+
+function entryTablePage() {
+  if (!entryTableState || entryTableState === 'loading') {
+    if (entryTableState !== 'loading') loadEntryTable();
+    return renderEntryTablePage({ rows: null, statusMessage: { tone: 'loading', text: 'Loading the entry table…' } });
+  }
+  if (entryTableState === 'error') {
+    return renderEntryTablePage({ rows: null, statusMessage: { tone: 'error', text: 'The entry table could not be loaded. Refresh to try again.' } });
+  }
+  return renderEntryTablePage({ rows: entryTableState, missingPdbs: entryMissingPdbsState });
+}
+
+async function loadAnnojointAtlasIndex() {
+  if (annojoinAtlasIndexState === 'loading') return;
+  annojoinAtlasIndexState = 'loading';
+  try {
+    annojoinAtlasIndexState = await annojoinAtlasStore.loadIndex();
+  } catch (err) {
+    console.error('[main] 加载 ANNOJOIN Atlas 索引失败', err);
+    annojoinAtlasIndexState = 'error';
+  }
+  if (route === 'entry' || route === 'sequence' || route === 'annojoin-atlas' || route === 'annojoin-case') render({ preserveScroll: true });
+}
+
+async function loadAnnojointDetailRouteIndex() {
+  if (annojoinDetailRouteIndexState === 'loading') return;
+  annojoinDetailRouteIndexState = 'loading';
+  try {
+    annojoinDetailRouteIndexState = await annojoinAtlasStore.loadDetailRouteIndex();
+  } catch (err) {
+    console.error('[main] 加载 ANNOJOIN Atlas detail route index 失败', err);
+    annojoinDetailRouteIndexState = 'error';
+  }
+  if (route === 'annojoin-case') render({ preserveScroll: true });
+}
+
+function resolveAnnojointDetailRouteEntry(caseKey, caseId = '') {
+  if (!annojoinDetailRouteIndexState || typeof annojoinDetailRouteIndexState !== 'object') return null;
+  const lookup = annojoinDetailRouteIndexState.lookup || {};
+  return lookup[caseKey] || lookup[String(caseKey || '').toUpperCase()] || lookup[caseId] || lookup[String(caseId || '').toUpperCase()] || null;
+}
+
+function annojoinConfidenceAssetPaths(caseKey = '') {
+  const normalizedKey = String(caseKey || '').trim();
+  const segment = encodeURIComponent(normalizedKey);
+  return {
+    summaryPath: `cases/${segment}/confidence-summary.json`,
+    evidencePath: `cases/${segment}/confidence-evidence.json`,
+    provenancePath: `cases/${segment}/confidence-provenance.json`,
   };
-
-  if (!authAsymId && localPdbMap[uppercasePdbId]) {
-    return localPdbMap[uppercasePdbId];
-  }
-
-  const normalizedPdbId = encodeURIComponent(uppercasePdbId);
-
-  if (!authAsymId) {
-    return `https://files.rcsb.org/download/${normalizedPdbId}.cif`;
-  }
-
-  return `https://www.ebi.ac.uk/pdbe/model-server/v1/${normalizedPdbId}/atoms?auth_asym_id=${encodeURIComponent(authAsymId)}&encoding=cif`;
 }
 
-function predictedStructurePath(foldBridgeId) {
-  if (!hasUsablePredictedStructure(foldBridgeId)) return '';
-  const stem = foldBridgeId.replace(/^RMDB_/, '');
-  return `./src/assets/predicted-structures/${stem}.rnacomposer.pdb`;
+async function loadAnnojointAtlasDetail(caseKey, caseAssetPath = '') {
+  if (!caseKey || annojoinAtlasDetailState.get(caseKey) === 'loading') return;
+  annojoinAtlasDetailState.set(caseKey, 'loading');
+  try {
+    const asset = caseAssetPath
+      ? await annojoinAtlasStore.loadCaseAssetPath(caseAssetPath, { compressed: true })
+      : await annojoinAtlasStore.loadCase(caseKey, { compressed: true });
+    annojoinAtlasDetailState.set(caseKey, asset);
+  } catch (err) {
+    console.error('[main] 加载 ANNOJOIN Atlas case 失败', caseKey, err);
+    annojoinAtlasDetailState.set(caseKey, 'error');
+  }
+  if (route === 'annojoin-case') render({ preserveScroll: true });
 }
 
-function structureDetailPage() {
-  const foldBridgeId = getStructureRecordIdFromHash();
-  const row =
-    structureEntryRows.find((item) => item.foldBridgeId === foldBridgeId)
-    || browseEntryRows.find((item) => item.foldBridgeId === foldBridgeId);
+async function loadAnnojointCaseConfidence(caseKey, caseAsset) {
+  if (!caseKey || annojoinCaseConfidenceState.get(caseKey) === 'loading') return;
+  const family = String(caseAsset?.case?.assetFamily || '').trim();
+  if (!['RMDB2PDB', 'RASP2PDB'].includes(family)) return;
+  annojoinCaseConfidenceState.set(caseKey, 'loading');
+  try {
+    const assetPaths = caseAsset?.supplementalAssets || annojoinConfidenceAssetPaths(caseKey);
+    const [summary, evidence, provenance] = await Promise.all([
+      annojoinAtlasStore.loadAssetPath(assetPaths.confidenceSummaryPath || assetPaths.summaryPath, { compressed: true }),
+      annojoinAtlasStore.loadAssetPath(assetPaths.confidenceEvidencePath || assetPaths.evidencePath, { compressed: true }),
+      annojoinAtlasStore.loadAssetPath(assetPaths.confidenceProvenancePath || assetPaths.provenancePath, { compressed: true }),
+    ]);
+    annojoinCaseConfidenceState.set(caseKey, { summary, evidence, provenance });
+  } catch (err) {
+    console.error('[main] 加载 ANNOJOIN case confidence sidecars 失败', caseKey, err);
+    annojoinCaseConfidenceState.set(caseKey, 'error');
+  }
+  if (route === 'annojoin-case') render({ preserveScroll: true });
+}
 
-  if (!row) {
-    return `<main class="page-sequence-detail">
-      ${renderBundleHeader()}
-      <section class="sequence-detail-card">
-        <div class="sequence-detail-header">
-          <a class="sequence-detail-back" href="#structure">Back to structure</a>
-          <div class="sequence-detail-title-row">
-            <div>
-              <h1>Record not found</h1>
-              <p class="technology-intro">The requested FoldBridge structure-linked record could not be found.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>`;
+async function loadAnnojointPdbCitation(pdbId) {
+  const normalizedPdbId = String(pdbId || '').trim().toUpperCase();
+  if (!normalizedPdbId || annojoinPdbCitationState.get(normalizedPdbId) === 'loading') return;
+  annojoinPdbCitationState.set(normalizedPdbId, 'loading');
+  const citation = await pdbCitationStore.loadPrimaryCitation(normalizedPdbId);
+  annojoinPdbCitationState.set(normalizedPdbId, citation || 'unavailable');
+  if (route === 'annojoin-case') render({ preserveScroll: true });
+}
+
+// alignment 分页导航：保留已加载的 detail/profiles/reactivity，只换 alignment 页，避免整页 loading 闪烁。
+async function loadAlignmentForCase(pdbId, page) {
+  pdbCaseAlignmentPageByPdb.set(pdbId, page);
+  const state = pdbCaseDetailState.get(pdbId);
+  if (!state || typeof state === 'string') {
+    loadPdbCaseDetail(pdbId);
+    return;
+  }
+  try {
+    const alignmentPage = await pdbCaseStore.loadAlignmentPage(pdbId, page);
+    pdbCaseDetailState.set(pdbId, { ...state, alignmentPage });
+  } catch (err) {
+    console.error('[main] 加载 alignment 页失败', pdbId, page, err);
+  }
+  if (route === 'pdb-case') render({ preserveScroll: true });
+}
+
+function pdbCasePage() {
+  const params = getPdbCaseParamsFromHash();
+  const headerHtml = renderBundleHeader();
+  if (!params.pdbId) {
+    if (pdbCaseIndexState && typeof pdbCaseIndexState === 'object') {
+      return renderPdbCaseIndexPage(pdbCaseIndexState.cases, { headerHtml });
+    }
+    if (pdbCaseIndexState !== 'loading') loadPdbCaseIndex();
+    return renderPdbCaseLoadingPage(
+      pdbCaseIndexState === 'error' ? 'PDB case index unavailable' : 'Loading PDB case index…',
+      headerHtml
+    );
+  }
+  const state = pdbCaseDetailState.get(params.pdbId);
+  if (state && typeof state === 'object') {
+    return renderPdbCasePage(state.detail, params, {
+      profiles: state.profiles,
+      alignmentPage: state.alignmentPage,
+      reactivitySummary: state.reactivitySummary
+    }, { headerHtml });
+  }
+  if (state === 'error') return renderPdbCasePage(null, params, {}, { headerHtml });
+  if (state !== 'loading') loadPdbCaseDetail(params.pdbId);
+  return renderPdbCaseLoadingPage(`Loading case assets for ${params.pdbId}…`, headerHtml);
+}
+
+function annojoinAtlasPage() {
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
+  const filters = getAnnojointAtlasFilters(params);
+  const selectedCaseId = params.get('caseId') || '';
+  const selectedCaseKey = params.get('caseKey') || '';
+  const headerHtml = renderBundleHeader();
+  if (!annojoinAtlasIndexState || annojoinAtlasIndexState === 'loading') {
+    if (annojoinAtlasIndexState !== 'loading') loadAnnojointAtlasIndex();
+    return renderAnnojointAtlasPage({
+      state: null,
+      routeName,
+      selectedCaseIds: selectedAnnojointCaseIds,
+      expandedGroupIds: expandedAnnojointGroupIds,
+      uncappedGroupIds: uncappedAnnojointGroupIds,
+      selectedCaseId,
+      selectedCaseKey,
+      statusMessage: { tone: 'loading', text: 'Loading the master table…' },
+      headerHtml
+    });
+  }
+  if (annojoinAtlasIndexState === 'error') {
+    return renderAnnojointAtlasPage({
+      state: null,
+      routeName,
+      selectedCaseIds: selectedAnnojointCaseIds,
+      expandedGroupIds: expandedAnnojointGroupIds,
+      uncappedGroupIds: uncappedAnnojointGroupIds,
+      selectedCaseId,
+      selectedCaseKey,
+      statusMessage: { tone: 'error', text: 'The master table could not be loaded. Refresh to try again.' },
+      headerHtml
+    });
   }
 
-  const detailSequence = String(row?.sourceSequence || row?.sequence || '').replace(/\s*\(\d+nt\)$/i, '');
-  const detailSequenceLength = detailSequence.replace(/\s+/g, '').length;
-  const detailSecondaryStructure = getDisplaySecondaryStructure(row);
-  const predictedSecondaryStructure = getPredictedSecondaryStructure(row);
-  const isReactivityGuidedStructure = usesReactivityGuidedWorkflow(row);
-  const hasLowercaseSequenceAnnotation = sequenceHasLowercaseAnnotation(detailSequence);
-  const hasSecondaryStructureConstraints = structureHasSecondaryStructure(row);
-  const showPredictedStructureSection = hasUsablePredictedStructure(row?.foldBridgeId) || hasSecondaryStructureConstraints;
-  const showReactivityHeatmap = Boolean(row?.hasLocalRdat && row?.rdatPath);
-  const showPredictedStructureViewer = hasUsablePredictedStructure(row?.foldBridgeId);
-  const heatmapSection = showReactivityHeatmap
-    ? `<section class="sequence-detail-panel">
-        <h2>Reactivity Heatmap</h2>
-        <div class="sequence-detail-section-intro">
-          <p>${
-            isReactivityGuidedStructure
-              ? 'This heatmap is the starting point for this record because no curated dot-bracket annotation was packaged with the RDAT. The secondary-structure view below is estimated from these reactivity measurements.'
-              : 'This heatmap summarizes per-position chemical probing reactivity across the RDAT measurements, helping relate experimental signal to structural context.'
-          }</p>
-        </div>
-        <section class="sequence-secondary-card sequence-secondary-heatmap-card structure-detail-heatmap-card">
-          <div
-            id="structure-detail-heatmap"
-            class="sequence-secondary-heatmap-host"
-            data-rdat-url="${row.rdatPath}"
-            data-sequence="${(row.sourceSequence || row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-          ></div>
-          <p id="structure-detail-heatmap-status" class="mini-note" hidden></p>
-        </section>
-      </section>`
-    : '';
-  const secondaryStructureSection = hasSecondaryStructureConstraints
-    ? `<section class="sequence-detail-panel">
-        <h2>${isReactivityGuidedStructure ? 'Predicted Secondary Structure' : 'Secondary Structure'}</h2>
-        <div class="sequence-detail-section-intro">
-          <p>${
-            isReactivityGuidedStructure
-              ? 'This panel shows a local reactivity-guided secondary-structure estimate derived from the bundled RDAT measurements and rendered as an interactive 2D layout.'
-              : 'This panel shows the RNA secondary structure derived from the packaged dot-bracket annotation and rendered as an interactive 2D layout.'
-          }</p>
-        </div>
-        <section class="sequence-secondary-card sequence-secondary-forna-card">
-          <div class="sequence-detail-forna-copy">
-            <p class="sequence-detail-forna-title">RNA Secondary Structure Viewer (Forna)</p>
-            ${
-              isReactivityGuidedStructure
-                ? `<p class="mini-note">${predictedSecondaryStructure?.method || 'Reactivity-guided prediction.'}</p>
-                   <p class="mini-note">Treat this as a working hypothesis, not a final curated structure.</p>`
-                : ''
-            }
-          </div>
-          <div class="sequence-detail-forna-frame">
-            <div
-              id="structure-detail-forna-host"
-              class="sequence-detail-forna-host"
-              data-rdat-url="${rdatDownloadPath(row.foldBridgeId)}"
-              data-foldbridge-id="${row.foldBridgeId}"
-              data-sequence="${(row.sourceSequence || row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-              data-structure="${detailSecondaryStructure || ''}"
-            ></div>
-          </div>
-          <div id="structure-detail-sequence-structure-block" class="sequence-detail-dot-bracket-block">
-            <p class="case-sequence-structure-label">Dot-bracket notation</p>
-            <code
-              id="structure-detail-sequence-structure"
-              class="case-sequence-structure"
-              data-sequence="${detailSequence || ''}"
-              data-chunk-size="120"
-            >${renderAlignedSequenceStructure(detailSequence, detailSecondaryStructure)}</code>
-          </div>
-          <p id="structure-detail-forna-status" class="sequence-detail-forna-note" hidden></p>
-        </section>
-      </section>`
-    : '';
-  const tertiaryStructureSection =
-    hasSecondaryStructureConstraints && (showPredictedStructureSection || row.bestPdbId)
-      ? `<section class="sequence-detail-panel">
-          <h2>Tertiary Structure Comparison</h2>
-          <div class="sequence-detail-section-intro">
-            <p>${
-              (!isReactivityGuidedStructure || (row.bestPdbId && hasUsablePredictedStructure(row.foldBridgeId)))
-                ? 'Compare the secondary-structure-derived RNA model with the matched experimental PDB structure side by side.'
-                : 'Three-dimensional follow-up depends on whether a precomputed model is available. When no predicted 3D file has been generated yet, the 2D structure above should be treated as the current endpoint.'
-            }</p>
-          </div>
-          <div class="structure-detail-comparison-grid">
-            <section class="structure-detail-comparison-card">
-              <div class="structure-detail-comparison-copy">
-                <h3>Predicted 3D from dot-bracket</h3>
-              </div>
-              ${
-                showPredictedStructureViewer
-                  ? `<div class="sequence-detail-media">
-                      <div id="predicted-structure-detail-molstar-status" class="mini-note">Loading predicted 3D model…</div>
-                      <div
-                        id="predicted-structure-detail-molstar"
-                        class="sequence-detail-viewer"
-                        data-structure-url="${predictedStructurePath(row.foldBridgeId)}"
-                        data-structure-format="pdb"
-                        data-structure-label="${row.foldBridgeId.replace(/^RMDB_/, '')}"
-                        data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                        data-structure-source="rnacomposer"
-                      ></div>
-                    </div>`
-                  : `<div class="sequence-detail-media">
-                      <div class="mini-note">${
-                        unsupportedPredictedStructureIds.has(row?.foldBridgeId)
-                          ? 'RNAComposer prediction unavailable for this record.'
-                          : 'Predicted 3D model is not available yet for this record.'
-                      }</div>
-                      ${
-                        isReactivityGuidedStructure && !unsupportedPredictedStructureIds.has(row?.foldBridgeId)
-                          ? '<p class="mini-note">If we want a 3D view here, the next step is to run a dedicated generator such as RNAComposer or another RNA 3D modeling workflow from the predicted dot-bracket.</p>'
-                          : ''
-                      }
-                    </div>`
-              }
-            </section>
-            <section class="structure-detail-comparison-card">
-              <div class="structure-detail-comparison-copy">
-                <h3>Matched PDB tertiary structure</h3>
-              </div>
-              ${
-                row.bestPdbId
-                  ? `<div class="sequence-detail-media">
-                      <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
-                      <div
-                        id="structure-detail-molstar"
-                        class="sequence-detail-viewer"
-                        data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
-                        data-structure-format="cif"
-                        data-structure-label="${row.bestPdbId}"
-                        data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                        data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
-                      ></div>
-                    </div>`
-                  : `<div class="sequence-detail-placeholder">
-                      <p>No matched PDB structure is available for this record.</p>
-                    </div>`
-              }
-            </section>
-          </div>
-        </section>`
-      : row.bestPdbId
-        ? `<section class="sequence-detail-panel">
-            <h2>Tertiary Structure</h2>
-            <div class="sequence-detail-media">
-              <div id="structure-detail-molstar-status" class="mini-note">Loading interactive 3D structure…</div>
-              <div
-                id="structure-detail-molstar"
-                class="sequence-detail-viewer"
-                data-structure-url="${structureDetailPdbUrl(row.bestPdbId, row.bestSubjectId)}"
-                data-structure-format="cif"
-                data-structure-label="${row.bestPdbId}"
-                data-structure-sequence="${(row.sequence || '').replace(/\s*\(\d+nt\)$/i, '')}"
-                data-structure-chain="${String(row.bestSubjectId || '').match(/_([A-Za-z0-9-]+)$/)?.[1] || ''}"
-              ></div>
-            </div>
-          </section>`
-        : '';
-  const structureWorkflowSections = isReactivityGuidedStructure
-    ? `${heatmapSection}${secondaryStructureSection}${tertiaryStructureSection}`
-    : `${secondaryStructureSection}${heatmapSection}${tertiaryStructureSection}`;
+  const state = buildAtlasSearchState(annojoinAtlasIndexState, filters);
+  if (!annojoinGroupsDefaultedExpanded) {
+    // Keep the first view compact: users can expand only the molecule group
+    // they want to inspect instead of rendering every group at once.
+    expandedAnnojointGroupIds = new Set();
+    annojoinGroupsDefaultedExpanded = true;
+  }
+  return renderAnnojointAtlasPage({
+    state,
+    routeName,
+    selectedCaseIds: selectedAnnojointCaseIds,
+    expandedGroupIds: expandedAnnojointGroupIds,
+    uncappedGroupIds: uncappedAnnojointGroupIds,
+    selectedCaseId,
+    selectedCaseKey,
+    headerHtml
+  });
+}
 
-  return `<main class="page-sequence-detail">
-    ${renderBundleHeader()}
-    <section class="sequence-detail-card">
-      <div class="sequence-detail-header">
-        <a class="sequence-detail-back" href="#structure">Back to structure</a>
-        <div class="sequence-detail-title-row">
-          <div>
-            <h1>${row.foldBridgeId}</h1>
-          </div>
-          <dl class="sequence-detail-meta">
-            <div><dt>PDB ID</dt><dd>${renderPdbExternalLink(row.bestPdbId)}</dd></div>
-            <div><dt>E-value</dt><dd>${formatBlastEvalue(row.bestEvalue)}</dd></div>
-            <div><dt>Identity</dt><dd>${formatBlastPercent(row.bestIdentity)}</dd></div>
-            <div><dt>Coverage</dt><dd>${formatBlastPercent(row.bestCoverage)}</dd></div>
-          </dl>
-        </div>
-      </div>
+function getAnnojointAtlasFilters(params) {
+  return {
+    query: params.get('q') || '',
+    rnaFamily: params.get('rnaFamily') || '',
+    probeType: params.get('probeType') || '',
+    pdbId: params.get('pdbId') || '',
+    motif: params.get('motif') || '',
+    structureClass: params.get('structureClass') || '',
+    techniqueFamilies: params.getAll('techniqueFamilies'),
+    techniqueNames: params.getAll('techniqueNames')
+  };
+}
 
-      <section class="sequence-detail-panel">
-        <h2>Description</h2>
-        <div class="sequence-detail-placeholder">
-          <p>${renderStructureDetailDescription(row)}</p>
-        </div>
-      </section>
+function currentAnnojointAtlasTables() {
+  return annojoinAtlasIndexState && typeof annojoinAtlasIndexState === 'object'
+    ? annojoinAtlasIndexState
+    : { cases: [], displayCases: [], facets: [], presets: [], downloads: [] };
+}
 
-      <section class="sequence-detail-panel">
-        <h2>Sequence${detailSequenceLength ? ` (${detailSequenceLength} nt)` : ''}</h2>
-        <article class="case-sequence-card">
-          <code class="case-sequence-block case-sequence-block-formatted">${detailSequence ? renderFormattedDetailSequence(detailSequence, 5, { forceUppercaseDisplay: true }) : 'Sequence unavailable'}</code>
-        </article>
-        ${
-          hasLowercaseSequenceAnnotation
-            ? `<p class="mini-note">The source RDAT marks auxiliary sequence context in lowercase. This view shows those bases in uppercase for readability only.</p>`
-            : ''
-        }
-      </section>
+function currentAnnojointAtlasState() {
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const filters = getAnnojointAtlasFilters(params);
+  const sortedRows = sortAnnojointCases(buildAtlasSearchState(currentAnnojointAtlasTables(), filters).cases);
+  const rows = isAnnojointSearchActive(filters.query)
+    ? searchAnnojointRows(sortedRows, filters.query)
+    : sortedRows;
+  return { rows };
+}
 
-      ${structureWorkflowSections}
+function getAnnojointCaseIdFromHash() {
+  const parsed = parseHashRoute(window.location.hash);
+  return String(parsed.params.get('caseId') || '10ZT').trim().toUpperCase();
+}
 
+function getAnnojointCaseKeyFromHash() {
+  const parsed = parseHashRoute(window.location.hash);
+  return String(parsed.params.get('caseKey') || getAnnojointCaseIdFromHash()).trim();
+}
 
-      <section class="sequence-detail-panel" id="references">
-        <h2>References</h2>
-        ${renderStructureDetailReferenceContent(row)}
-      </section>
-      ${renderDetailPageFooterActions('Back to Structure', 'structure')}
+function findAnnojointIndexRowByKey(caseKey) {
+  const normalizedKey = String(caseKey || '').trim().toUpperCase();
+  if (!normalizedKey) return null;
+  const state = buildAtlasSearchState(currentAnnojointAtlasTables(), {}).cases;
+  return state.find((row) => rowCaseKey(row).toUpperCase() === normalizedKey || rowCaseId(row).toUpperCase() === normalizedKey) || null;
+}
 
-    </section>
-  </main>`;
+function annojoinCasePage() {
+  const caseId = getAnnojointCaseIdFromHash();
+  const caseKey = getAnnojointCaseKeyFromHash();
+  const detailState = annojoinAtlasDetailState.get(caseKey);
+  const confidenceState = annojoinCaseConfidenceState.get(caseKey);
+  if (!annojoinDetailRouteIndexState) loadAnnojointDetailRouteIndex();
+  const detailRouteEntry = resolveAnnojointDetailRouteEntry(caseKey, caseId);
+  const caseAssetPath = detailRouteEntry?.asset?.caseAssetPath || findAnnojointIndexRowByKey(caseKey)?.caseAssetPath;
+  if (!detailState && (annojoinDetailRouteIndexState === 'error' || detailRouteEntry || caseAssetPath)) {
+    loadAnnojointAtlasDetail(caseKey, caseAssetPath);
+  }
+  if (detailState && typeof detailState === 'object' && !confidenceState) {
+    loadAnnojointCaseConfidence(caseKey, detailState);
+  }
+  const pdbId = String(detailState?.case?.pdbId || caseId || '').trim().toUpperCase();
+  const citationState = pdbId ? annojoinPdbCitationState.get(pdbId) : null;
+  if (detailState && typeof detailState === 'object' && !citationState) {
+    loadAnnojointPdbCitation(pdbId);
+  }
+  return renderAnnojointCasePage({
+    caseAsset: detailState && typeof detailState === 'object' ? detailState : null,
+    confidenceBundle: confidenceState && typeof confidenceState === 'object' ? confidenceState : null,
+    confidenceStatus: confidenceState || 'idle',
+    pdbCitation: citationState && typeof citationState === 'object' ? citationState : null,
+    pdbCitationStatus: citationState || 'idle',
+    caseId,
+    caseKey,
+    headerHtml: renderBundleHeader()
+  });
+}
+
+function setAnnojointAtlasFilter(key, value, { replace = false } = {}) {
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
+  if (value) params.set(key, value);
+  else params.delete(key);
+  params.set('page', '1');
+  params.delete('caseId');
+  params.delete('caseKey');
+  params.delete('field');
+  const next = params.toString();
+  const composedHash = next ? `${routeName}?${next}` : routeName;
+  if (replace) {
+    // replaceState 不触发 hashchange，需手动同步 route 并重渲染（保留滚动与焦点）。
+    history.replaceState(null, '', '#' + composedHash);
+    route = routeFromHash(window.location.hash);
+    render({ preserveScroll: true });
+  } else {
+    window.location.hash = composedHash;
+  }
+}
+
+function clearAnnojointAtlasFilters() {
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
+  ['q', 'rnaFamily', 'probeType', 'pdbId', 'motif', 'structureClass', 'techniqueFamilies', 'techniqueNames'].forEach((key) => params.delete(key));
+  params.set('page', '1');
+  params.delete('caseId');
+  params.delete('caseKey');
+  params.delete('field');
+  const next = params.toString();
+  window.location.hash = next ? `${routeName}?${next}` : routeName;
+}
+
+function toggleAnnojointAtlasTechnique(kind, value) {
+  // kind = 'techniqueFamilies' | 'techniqueNames'; value = the Probing category id or technique name.
+  const parsed = parseHashRoute(window.location.hash);
+  const params = parsed.params;
+  const routeName = (parsed.route === 'entry' || parsed.route === 'sequence') ? parsed.route : 'annojoin-atlas';
+  const current = params.getAll(kind);
+  const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value];
+  params.delete(kind);
+  for (const v of next) params.append(kind, v);
+  params.set('page', '1');
+  params.delete('caseId');
+  params.delete('caseKey');
+  params.delete('field');
+  const nextQs = params.toString();
+  window.location.hash = nextQs ? `${routeName}?${nextQs}` : routeName;
+}
+
+function setAnnojointAtlasQuery(query) {
+  setAnnojointAtlasFilter('q', query, { replace: true });
+}
+
+function toggleAnnojointAtlasGroup(groupId) {
+  if (expandedAnnojointGroupIds.has(groupId)) expandedAnnojointGroupIds.delete(groupId);
+  else expandedAnnojointGroupIds.add(groupId);
+  render({ preserveScroll: true });
+}
+
+function allAnnojointAtlasGroupIds() {
+  const groups = buildAnnojointTableGroups(currentAnnojointAtlasState().rows);
+  return groups.flatMap((parent) => [
+    `parent:${parent.id}`,
+    ...parent.children.map((child) => `child:${child.id}`)
+  ]);
+}
+
+function toggleAnnojointAtlasGroupLimit(groupId) {
+  if (uncappedAnnojointGroupIds.has(groupId)) uncappedAnnojointGroupIds.delete(groupId);
+  else uncappedAnnojointGroupIds.add(groupId);
+  render({ preserveScroll: true });
+}
+
+function downloadGeneratedText(text, filename, mimeType = 'text/plain;charset=utf-8') {
+  const blob = new Blob([text], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function downloadCsvRows(rows, filename) {
+  const columns = rows.length ? Object.keys(rows[0]) : [];
+  const csvValue = (value) => {
+    const text = Array.isArray(value) ? value.join('; ') : String(value ?? '');
+    return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
+  };
+  const csv = [
+    columns.map(csvValue).join(','),
+    ...rows.map((row) => columns.map((column) => csvValue(row[column])).join(','))
+  ].join('\n');
+  downloadGeneratedText(`\uFEFF${csv}\n`, filename, 'text/csv;charset=utf-8');
+}
+
+async function downloadAnnojointEntryCatalog() {
+  const index = await annojoinAtlasStore.loadIndex();
+  const rows = (index.displayCases || []).map((row) => ({
+    atlas_case_key: row.atlasCaseKey || row.atlas_case_key || '',
+    pdb_id: row.pdbId || row.pdb_id || '',
+    molecule: row.moleculeDisplayName || row.molecule_display_name || '',
+    family: row.assetFamily || row.asset_family || '',
+    chains: Array.isArray(row.chains) ? row.chains.join('; ') : (row.chains || ''),
+    profile_count: row.profileCount || row.profile_count || 0,
+    confidence: row.confidenceDisplayLabel || row.confidence_display_label || '',
+    structure_class: row.structureClass || row.structure_class_label || ''
+  }));
+  downloadCsvRows(rows, 'foldbridge-entry-catalog.csv');
+}
+
+function downloadStructureCatalog() {
+  const rows = sequenceRows.map((row) => ({
+    pdb_id: row.pdbName || '',
+    name: row.sequenceName || '',
+    description: row.aptamerName || '',
+    category: row.category || '',
+    structure_file: row.structureFile || '',
+    sequence_length: row.type ? row.type.length : 0,
+    confidence: row.confidence || ''
+  }));
+  downloadCsvRows(rows, 'foldbridge-structure-catalog.csv');
+}
+
+function downloadBundledStructureFiles() {
+  sequenceRows
+    .filter((row) => row.structureFile)
+    .forEach((row, index) => {
+      const filePath = row.structureFile;
+      const filename = filePath.split('/').pop() || `${row.pdbName || 'structure'}.cif`;
+      const link = document.createElement('a');
+      link.href = `./${filePath.replace(/^\.\//, '')}`;
+      link.download = filename;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      window.setTimeout(() => {
+        link.click();
+        link.remove();
+      }, index * 180);
+    });
+}
+
+function downloadDataManifest() {
+  const manifest = {
+    name: 'FoldBridge download manifest',
+    version: '2026-06-16.generated-rmdb-cases.v1',
+    generated_at: new Date().toISOString(),
+    downloads: [
+      { id: 'entry-catalog', file: 'foldbridge-entry-catalog.csv', description: 'Case-level Entry catalog exported from the ANNOJOIN index.' },
+      { id: 'rdat-summary', file: 'src/assets/data/rmdb-puzzle/rdat_summary.csv', description: 'RDAT record summary for the bundled RMDB examples.' },
+      { id: 'structure-catalog', file: 'foldbridge-structure-catalog.csv', description: 'Structure records and local mmCIF asset paths.' },
+      { id: 'entry-detail', description: 'Use the Download entry button on an Entry detail page for a case JSON and HTML summary.' },
+      { id: 'profile', description: 'Use the Download profile button on an Entry detail page for the selected profile CSV and color map JSON.' },
+      { id: 'structure-3d', description: 'Use the Download 3D structure button on an Entry detail page for target-chain/full-structure mmCIF and color map JSON.' }
+    ]
+  };
+  downloadGeneratedText(JSON.stringify(manifest, null, 2), 'foldbridge-download-manifest.json', 'application/json;charset=utf-8');
+}
+
+function bindDownloadPageControls() {
+  document.getElementById('download-entry-catalog')?.addEventListener('click', async (event) => {
+    const button = event.currentTarget;
+    button.disabled = true;
+    button.textContent = 'Preparing…';
+    try {
+      await downloadAnnojointEntryCatalog();
+    } catch (error) {
+      console.error('[main] entry catalog download failed', error);
+      window.alert('The Entry catalog is temporarily unavailable. Please try again.');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Download Entry catalog';
+    }
+  });
+  document.getElementById('download-structure-catalog')?.addEventListener('click', () => {
+    if (!sequenceRows.length) {
+      window.alert('The structure catalog is still loading. Please try again in a moment.');
+      return;
+    }
+    downloadStructureCatalog();
+  });
+  document.getElementById('download-structure-files')?.addEventListener('click', downloadBundledStructureFiles);
+  document.getElementById('download-data-manifest')?.addEventListener('click', downloadDataManifest);
 }
 
 function downloadPage() {
-  return `<main class="page-download">
-    ${renderBundleHeader()}
-    <section class="card bundle-wide-card download-card">
-      <h1>Download</h1>
-      <p class="download-intro">Use this page as the download entry for all RMDB records in Browse and the structure-matched subset in Structure.</p>
-      <div class="actions">
-        <button type="button" data-route="browse">Browse all records</button>
-        <button type="button" data-route="structure">Structure subset</button>
+  return `${renderBundleHeader()}
+  <main class="page-download" aria-label="Download">
+    <section class="card bundle-wide-card download-page-card">
+      <header class="page-card-heading">
+        <h1>Download</h1>
+        <p class="download-page-intro">Download the data behind FoldBridge, or open an Entry detail page for a focused export of one profile and its mapped structure.</p>
+      </header>
+
+      <div class="download-center-grid">
+        <section class="download-center-section">
+          <div class="download-center-heading">
+            <span class="download-center-number">01</span>
+            <div>
+              <h2>Entry data</h2>
+              <p>Case-level metadata and the bundled chemical-probing records.</p>
+            </div>
+          </div>
+          <div class="download-center-actions">
+            <button id="download-entry-catalog" type="button" class="download-center-button">Download Entry catalog</button>
+            <a class="download-center-button" href="./src/assets/data/rmdb-puzzle/rdat_summary.csv" download>Download RDAT summary</a>
+            <a class="download-center-link" href="#entry">Open Entry table →</a>
+          </div>
+        </section>
+
+        <section class="download-center-section">
+          <div class="download-center-heading">
+            <span class="download-center-number">02</span>
+            <div>
+              <h2>Structure data</h2>
+              <p>Structure records are available as mmCIF files, with a catalog for quick lookup.</p>
+            </div>
+          </div>
+          <div class="download-center-actions">
+            <button id="download-structure-catalog" type="button" class="download-center-button">Download structure catalog</button>
+            <button id="download-structure-files" type="button" class="download-center-button">Download example mmCIF files</button>
+          </div>
+        </section>
+
+        <section class="download-center-section">
+          <div class="download-center-heading">
+            <span class="download-center-number">03</span>
+            <div>
+              <h2>Entry-specific exports</h2>
+              <p>Open an Entry, choose a profile, then export the page summary, profile table, or 3D structure.</p>
+            </div>
+          </div>
+          <div class="download-center-actions">
+            <a class="download-center-button" href="#entry">Choose an Entry</a>
+            <button id="download-data-manifest" type="button" class="download-center-button">Download data manifest</button>
+          </div>
+          <p class="download-center-note">Detail-page downloads are small and reproducible.</p>
+        </section>
       </div>
+
+      <p class="download-page-footnote">File formats: CSV for tables and catalogs, JSON for metadata and color maps, and mmCIF for structures.</p>
     </section>
   </main>`;
 }
 
 function searchPage() {
-  const { species, discoveryYears, pdbIds } = getAdvancedSearchOptions();
-  const rows = getAdvancedSearchRows();
+  const params = searchParamsFromHash(window.location.hash);
+  const query = params.get('q') ?? '';
+  const filters = filtersFromSearchParams(params);
+  const activeTags = Array.isArray(filters.tag) ? filters.tag : filters.tag ? [filters.tag] : [];
+  const activeType = filters.type ?? '';
 
-  return `<main class="page-detail page-browse page-search">
-    ${renderBundleHeader()}
-    <section class="card bundle-wide-card search-page-shell">
-      <div class="search-page-header">
-        <h1>Advanced FoldBridge Search</h1>
+  return `${renderBundleHeader()}
+  <main class="page-detail page-browse page-search">
+    <section class="card bundle-wide-card site-search-card">
+      <div class="site-search-header">
+        <div>
+          <h1>Search</h1>
+        </div>
+        <button id="save-search-query" type="button" class="download-outline-btn">Save Search</button>
       </div>
+      <form class="site-search-form" id="site-search-form">
+        <input
+          id="site-search-input"
+          class="site-search-input"
+          type="search"
+          placeholder="Search probing methods, PDB ID, molecule name..."
+          value="${escapeHtml(query)}"
+          aria-label="Search query"
+        />
+        <button type="submit">Search</button>
+      </form>
+      <div class="site-search-active">
+        ${activeType ? `<span class="chip">type: ${escapeHtml(activeType)}</span>` : ''}
+        ${activeTags.map((tag) => `<span class="chip">tag: ${escapeHtml(tag)}</span>`).join('')}
+      </div>
+    </section>
 
-      <section class="search-hero-panel">
-        <div class="search-hero-input-shell">
-          <label class="search-hero-input">
-            <span class="search-hero-icon" aria-hidden="true">⌕</span>
-            <input
-              id="advanced-search-input"
-              type="search"
-              placeholder="Search by number, FoldBridge ID, name, sequence, year, species, PDB ID..."
-              value="${advancedSearchQuery.replace(/"/g, '&quot;')}"
-            />
-            <button id="advanced-search-clear" type="button" class="search-inline-clear" ${advancedSearchQuery ? '' : 'disabled'}>Clear</button>
-          </label>
+    <section class="site-search-layout bundle-wide-card">
+      <aside class="card site-search-filter-card">
+        <h2>Filters</h2>
+        <div id="site-search-filters" class="site-search-filters">
+          <span class="mini-note">Loading filters...</span>
         </div>
-      </section>
-
-      <section class="search-filter-band">
-        <button id="advanced-search-filters-toggle" type="button" class="search-filter-toggle ${advancedSearchFiltersOpen ? 'open' : ''}">
-          <span class="search-filter-toggle-label">Filters</span>
-          <span class="search-filter-toggle-summary">${renderAdvancedSearchFilterPills()}</span>
-          <span class="search-filter-toggle-caret" aria-hidden="true">${advancedSearchFiltersOpen ? '−' : '+'}</span>
-        </button>
-        <div class="search-filter-drawer ${advancedSearchFiltersOpen ? 'open' : ''}">
-          <label>
-            <span>Species</span>
-            <select id="advanced-search-species">
-              <option value="all">All species</option>
-              ${species
-                .map(
-                  (item) =>
-                    `<option value="${item.replace(/"/g, '&quot;')}" ${advancedSearchSpecies === item ? 'selected' : ''}>${item}</option>`
-                )
-                .join('')}
-            </select>
-          </label>
-          <label>
-            <span>Discovery Year</span>
-            <select id="advanced-search-discovery-year">
-              <option value="all">All discovery years</option>
-              ${discoveryYears
-                .map(
-                  (item) =>
-                    `<option value="${item.replace(/"/g, '&quot;')}" ${advancedSearchDiscoveryYear === item ? 'selected' : ''}>${item}</option>`
-                )
-                .join('')}
-            </select>
-          </label>
-          <label>
-            <span>PDB ID</span>
-            <select id="advanced-search-pdb-id">
-              <option value="all">All PDB IDs</option>
-              ${pdbIds
-                .map(
-                  (item) =>
-                    `<option value="${item.replace(/"/g, '&quot;')}" ${advancedSearchPdbId === item ? 'selected' : ''}>${item}</option>`
-                )
-                .join('')}
-            </select>
-          </label>
-          <button id="advanced-search-reset" type="button" class="ghost search-reset-btn">Reset filters</button>
-        </div>
-      </section>
-
-      <section class="search-results-shell">
-        <div class="search-results-toolbar">
-          <div class="search-results-count">
-            <strong>${rows.length}</strong>
-            <span>${rows.length === 1 ? 'result' : 'results'}</span>
-          </div>
-          <div class="search-results-controls">
-            <label class="search-sort-control">
-              <span>Sort by</span>
-              <select id="advanced-search-sort">
-                <option value="relevance" ${advancedSearchSort === 'relevance' ? 'selected' : ''}>Relevance</option>
-                <option value="name" ${advancedSearchSort === 'name' ? 'selected' : ''}>Name</option>
-                <option value="species" ${advancedSearchSort === 'species' ? 'selected' : ''}>Species</option>
-                <option value="year" ${advancedSearchSort === 'year' ? 'selected' : ''}>Discovery year</option>
-                <option value="pdb" ${advancedSearchSort === 'pdb' ? 'selected' : ''}>PDB ID</option>
-                <option value="identity" ${advancedSearchSort === 'identity' ? 'selected' : ''}>Identity</option>
-                <option value="coverage" ${advancedSearchSort === 'coverage' ? 'selected' : ''}>Coverage</option>
-                <option value="evalue" ${advancedSearchSort === 'evalue' ? 'selected' : ''}>E-value</option>
-              </select>
-            </label>
-            <button id="advanced-search-export" type="button" class="search-export-btn">Export CSV</button>
-            <div class="search-view-toggle" role="group" aria-label="Search result view">
-              <button id="advanced-search-view-list" type="button" class="${advancedSearchView === 'list' ? 'active' : ''}">List</button>
-              <button id="advanced-search-view-grid" type="button" class="${advancedSearchView === 'grid' ? 'active' : ''}">Cards</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="search-results-body">
-          ${renderAdvancedSearchResults(rows)}
-        </div>
+        <h2>Saved</h2>
+        <div id="site-search-saved" class="site-search-saved"></div>
+      </aside>
+      <section class="card site-search-results-card">
+        <div id="site-search-summary" class="mini-note">Loading search index...</div>
+        <div id="site-search-results" class="site-search-results"></div>
       </section>
     </section>
   </main>`;
@@ -6161,118 +2518,11 @@ function searchPage() {
 
 
 function downloadStructuresPage() {
-  const totalStructurePages = Math.max(1, Math.ceil(structureEntryRows.length / CASE3D_PAGE_SIZE));
-  if (structureCurrentPage > totalStructurePages) structureCurrentPage = totalStructurePages;
-  const structureStartIndex = (structureCurrentPage - 1) * CASE3D_PAGE_SIZE;
-  const visibleStructureRows = structureEntryRows.slice(structureStartIndex, structureStartIndex + CASE3D_PAGE_SIZE);
-  const structureRows = visibleStructureRows.length
-    ? visibleStructureRows
-        .map(
-          (row, idx) => {
-            const globalIndex = structureStartIndex + idx + 1;
-            return `<tr>
-              <td>
-                <input
-                  type="checkbox"
-                  class="structure-select"
-                  data-structure-id="${row.foldBridgeId}"
-                  ${selectedStructureIds.has(row.foldBridgeId) ? 'checked' : ''}
-                />
-              </td>
-              <td class="structure-index-cell">${globalIndex}</td>
-              <td><a href="${row.detailPage}" class="sequence-link">${row.foldBridgeId}</a></td>
-              <td>${row.name || 'Untitled record'}</td>
-              <td>${row.species || 'N/A'}</td>
-              <td>${row.discoveryYear || 'N/A'}</td>
-              <td><span class="entry-sequence" title="${row.sequence || 'Sequence unavailable'}">${row.sequence || 'N/A'}</span></td>
-              <td>${renderPdbExternalLink(row.bestPdbId)}</td>
-              <td>${formatBlastEvalue(row.bestEvalue)}</td>
-              <td>${formatBlastPercent(row.bestIdentity)}</td>
-              <td>${formatBlastPercent(row.bestCoverage)}</td>
-            </tr>`;
-          }
-        )
-        .join('')
-    : `<tr><td colspan="11" class="entry-table-empty">No structure matches yet.</td></tr>`;
-
-  return `<main class="page-download">
-    ${renderBundleHeader()}
-    <section class="card bundle-wide-card browse-entry-section">
+  return `${renderBundleHeader()}
+  <main class="page-download">
+    <section class="card bundle-wide-card">
       <h1>Structure</h1>
-      <p class="browse-section-note">Structure is the curated subset of Browse that already has a best tertiary-structure match in the current BLAST mapping table.</p>
-      <div class="download-toolbar browse-toolbar">
-        <button
-          type="button"
-          id="select-all-structure"
-          class="browse-action-btn ${structureEntryRows.length ? '' : 'is-disabled'}"
-          ${structureEntryRows.length ? '' : 'disabled'}
-          aria-disabled="${structureEntryRows.length ? 'false' : 'true'}"
-        >
-          Select All
-        </button>
-        <button
-          type="button"
-          id="download-selected-structure"
-          class="browse-action-btn ${selectedStructureIds.size ? 'is-active' : 'is-disabled'}"
-          ${selectedStructureIds.size ? '' : 'disabled'}
-          aria-disabled="${selectedStructureIds.size ? 'false' : 'true'}"
-        >
-          Export Selected (${selectedStructureIds.size})
-        </button>
-        <button
-          type="button"
-          id="clear-selected-structure"
-          class="browse-action-btn ${selectedStructureIds.size ? 'is-active' : 'is-disabled'}"
-          ${selectedStructureIds.size ? '' : 'disabled'}
-          aria-disabled="${selectedStructureIds.size ? 'false' : 'true'}"
-        >
-          Clear Selection
-        </button>
-      </div>
-      <div class="entry-table-wrap">
-        <table class="entry-table case-detail-table">
-          <thead>
-            <tr>
-              <th>Select</th>
-              <th>No.</th>
-              <th>FoldBridge ID</th>
-              <th>Name</th>
-              <th>Species</th>
-              <th>Discovery year</th>
-              <th>Sequence</th>
-              <th>PDB ID</th>
-              <th>E-value</th>
-              <th>Identity</th>
-              <th>Coverage</th>
-            </tr>
-          </thead>
-          <tbody>${structureRows}</tbody>
-        </table>
-      </div>
-      <div class="browse-pagination">
-        <div class="browse-pagination-info">
-          <span class="browse-pagination-status">Page ${structureCurrentPage} of ${totalStructurePages}</span>
-          ${renderPageJumpControls('structure', totalStructurePages, structureCurrentPage)}
-        </div>
-        <div class="browse-pagination-actions">
-          <button
-            type="button"
-            id="structure-prev-page"
-            class="download-outline-btn"
-            ${structureCurrentPage === 1 ? 'disabled' : ''}
-          >
-            Previous
-          </button>
-          <button
-            type="button"
-            id="structure-next-page"
-            class="download-outline-btn"
-            ${structureCurrentPage === totalStructurePages ? 'disabled' : ''}
-          >
-            Next
-          </button>
-        </div>
-      </div>
+      <p>Structure-linked downloads and related assets are collected here.</p>
     </section>
   </main>`;
 }
@@ -6285,8 +2535,8 @@ function publicationsPage() {
     </tr>
   `).join('');
 
-  return `<main class="page-publications">
-    ${renderBundleHeader()}
+  return `${renderBundleHeader()}
+  <main class="page-publications">
     <section class="card bundle-wide-card">
       <h1>Publications Page</h1>
       <table class="structure-table">
@@ -6302,141 +2552,777 @@ function publicationsPage() {
 }
 
 function helpPage() {
-  return `<main class="page-help">
-    ${renderBundleHeader()}
-    <section class="card bundle-wide-card help-page-shell">
-      <div class="help-page-header">
-        <h1>Help</h1>
-        <p class="page-explainer">This page provides database documentation, usage guidelines, research group details, and contact options for FoldBridge.</p>
+  const helpCached = helpContentStore.peek();
+  if (!helpCached && helpContentState !== 'loading' && helpContentState !== 'error') loadHelpContent();
+  return `${renderBundleHeader()}<main class="page-detail">${renderHelpPage(helpCached)}</main>`;
+}
+
+function statsPage() {
+  // 已加载则喂 stats，否则空壳占位 + 触发懒加载（与 probing 路由同款）。
+  const stats = (siteStatsState && typeof siteStatsState === 'object') ? siteStatsState : null;
+  if (siteStatsState === null) {
+    loadSiteStats();
+  }
+  return `${renderBundleHeader()}<main class="page-detail">${renderStatsPage(stats)}</main>`;
+}
+
+// ANNOJOIN 置信度科普页：解释主表 Confidence distribution 列里 A/B/C/D 族、
+// LSS 召回层级（STRONG/MODERATE/WEAK/...）、以及 RASP "not active" 的含义。
+function annojoinConfidencePage() {
+  return `${renderBundleHeader()}
+  <main class="page-annojoin-confidence annojoin-confidence-article">
+    <section class="annojoin-confidence-article-head">
+      <p class="technology-kicker">ANNOJOIN · Confidence guide</p>
+      <h1>Reading the ANNOJOIN confidence labels</h1>
+      <p class="pdb-case-lede">Every confidence label on the master table is two words doing two different jobs. The first word
+        is a <strong>measurement family</strong> — it tells you <em>which physical quantity</em> the experiment measured. The
+        second word is a <strong>calibrated recall tier</strong> — it tells you <em>how reliably</em> that evidence recovers the
+        structure actually deposited in the PDB, after we test it against chance. Read it as
+        <code>&lt;measurement family&gt; &lt;calibrated recall tier&gt;</code>. The family is not a grade: a bare family letter
+        promises nothing about strength — <code>A</code> is not "better" than <code>D</code>, it just means a different
+        instrument was pointed at the molecule. All of the strength lives in the tier, and the tier has to be earned.</p>
+      <p><a class="download-outline-btn" href="#annojoin-atlas">Back to the master table</a></p>
+    </section>
+
+    <section class="annojoin-confidence-article-body">
+      <h2>What a confidence label encodes</h2>
+      <div class="annojoin-confidence-plain">
+        <p>Take a badge like <span class="annojoin-confidence-badge"><span class="annojoin-confidence-badge-family">D</span><span class="annojoin-confidence-badge-tier">MODERATE</span></span> and split it down the middle. The <code>D</code> is the
+          <strong>family</strong> — the kind of measurement. Here it means the experiment reported solvent accessibility of the
+          RNA backbone. That is all the letter says; it does not mean the evidence is weak, broad, or unfiltered. The
+          <code>MODERATE</code> is the <strong>tier</strong> — the verdict on how well that evidence matches the deposited
+          structure once we have checked it against chance and a handful of quality gates. A family letter on its own tells you
+          what was measured; you always need the tier next to it to know how strong the support is.</p>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 520 220" role="img" aria-label="Anatomy of a confidence badge: family zone plus calibrated recall tier zone">
+          <g transform="translate(150,28)">
+            <rect x="0" y="0" width="220" height="56" rx="28" fill="var(--surface)" stroke="var(--border)" stroke-width="1.5"/>
+            <path d="M 28 0 L 110 0 L 110 56 L 28 56 A 28 28 0 0 1 28 0 Z" fill="var(--primarySoft)"><title>Family zone: which physical quantity was measured</title></path>
+            <path d="M 110 0 L 192 0 A 28 28 0 0 1 192 56 L 110 56 Z" fill="var(--accentSoft)"><title>Tier zone: calibrated recall reliability</title></path>
+            <line x1="110" y1="4" x2="110" y2="52" stroke="var(--border)" stroke-width="1"/>
+            <text x="69" y="35" text-anchor="middle" font-size="22" font-weight="700" fill="var(--textPrimary)">D</text>
+            <text x="151" y="35" text-anchor="middle" font-size="18" font-weight="700" fill="var(--textPrimary)">MODERATE</text>
+          </g>
+          <line x1="219" y1="88" x2="219" y2="132" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="219" y1="132" x2="130" y2="132" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="301" y1="88" x2="301" y2="132" stroke="var(--border)" stroke-width="1.2"/>
+          <line x1="301" y1="132" x2="390" y2="132" stroke="var(--border)" stroke-width="1.2"/>
+          <g transform="translate(8,134)">
+            <rect x="0" y="0" width="244" height="70" rx="10" fill="var(--primarySoft)" stroke="var(--border)" stroke-width="1"/>
+            <text x="14" y="24" font-size="12" font-weight="700" fill="var(--textPrimary)">FAMILY = D</text>
+            <text x="14" y="44" font-size="11.5" fill="var(--textPrimary)">which physical quantity was</text>
+            <text x="14" y="60" font-size="11.5" fill="var(--textPrimary)">measured (here: SASA)</text>
+          </g>
+          <g transform="translate(268,134)">
+            <rect x="0" y="0" width="244" height="70" rx="10" fill="var(--accentSoft)" stroke="var(--border)" stroke-width="1"/>
+            <text x="14" y="24" font-size="12" font-weight="700" fill="var(--textPrimary)">TIER = MODERATE</text>
+            <text x="14" y="44" font-size="11.5" fill="var(--textPrimary)">how reliably it recovers the</text>
+            <text x="14" y="60" font-size="11.5" fill="var(--textPrimary)">deposited structure after calibration</text>
+          </g>
+        </svg>
+        <figcaption>A confidence label reads <strong>family + tier</strong>. The family letter names the physical quantity that was measured and promises nothing about strength; the tier names how reliably that evidence recovers the deposited structure after calibration.</figcaption>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">How it's computed</p>
+        <p>LSS (Local Structure-Signal Support) is computed per <strong>segment</strong>, where a segment is one
+          <code>(profile, pdb_id, chain)</code> group: a single reactivity profile mapped onto one chain of one PDB entry. For
+          that segment we ask a single question — do the per-residue chemical-probing values agree with the paired/unpaired (or
+          geometric) state of the residues in the deposited structure? The family fixes <em>which</em> agreement statistic we
+          compute; the tier is the calibrated answer.</p>
       </div>
 
-      <section class="help-module-grid">
-        <article class="help-module-card help-module-card-wide">
-          <div class="help-module-titlebar">
-            <h2>About FoldBridge database</h2>
-          </div>
-          <div class="help-module-body" style="color: var(--textSecondary); line-height: 1.7; font-size: 0.98rem;">
-            <p style="margin: 0;">
-              <strong>FoldBridge</strong> Database is designed to provide comprehensive mappings between high-throughput RNA chemical probing experiments and 3D tertiary structures. Each RNA mapping page includes a brief introduction and offers various search options, such as sequence, structures, and chemical probing reactivities. Users can submit new RNA structure-mapping cases or related comments through the feedback portal to help us enhance our database. The <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Sequence</strong> page compiles information on chemical probing targets and their primary sequences verified by published studies. The <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Structure</strong> page showcases 3D structural details and alignment statistics, updated regularly. The <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Probing</strong> page offers detailed insights into the per-base chemical reactivity (e.g., SHAPE/DMS profiles) mapped onto structural models, and the <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Browse</strong> and <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Search</strong> pages provide links to individual entry details, structural alignments, and interactive visualizations.
-            </p>
-          </div>
-        </article>
+      <h2>The six measurement families</h2>
+      <div class="annojoin-confidence-plain">
+        <p>There are six families, one per physical quantity. They are categories of instrument, not a ranking — pick any one
+          and you can still land in any tier from STRONG down to NOT_SUPPORTED.</p>
+        <ul class="annojoin-confidence-legend">
+          <li><strong>A — base-specific chemistry.</strong> Probes that hit the Watson-Crick face of specific bases (DMS, CMCT, Keth-seq). High signal means that base is unpaired.</li>
+          <li><strong>B — backbone flexibility.</strong> SHAPE reagents that report 2′-OH flexibility on any of the four bases. High signal means a flexible, likely unpaired residue.</li>
+          <li><strong>C — enzymatic, run backwards.</strong> Nucleases like PARS/PARTE where the enzyme cuts <em>paired</em> stems, so the logic is reversed: high signal means paired.</li>
+          <li><strong>D — solvent accessibility.</strong> Hydroxyl-radical and related probes (RL-Seq, HRF, Lead-seq, icLASER) that report how exposed the backbone is. More signal should track more exposed surface.</li>
+          <li><strong>E — spatial contacts.</strong> Methods (MCA/MOHCA) that report which residue pairs sit close together in 3D. Near equals a hit.</li>
+          <li><strong>F — base-pair sets.</strong> Mutate-and-map approaches that infer an entire set of base pairs, scored against the reference pair set.</li>
+        </ul>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 720 470" role="img" aria-label="Matrix of six measurement families with physical quantity, statistic and positive-class direction">
+          <rect x="8" y="12" width="704" height="44" rx="8" fill="var(--surfaceAlt)" stroke="var(--border)" stroke-width="1"/>
+          <text x="52" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textMuted)">FAMILY</text>
+          <text x="215" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textMuted)">PHYSICAL QUANTITY</text>
+          <text x="450" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textMuted)">STATISTIC</text>
+          <text x="640" y="40" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textMuted)">POSITIVE CLASS</text>
+          <g>
+            <rect x="8" y="64" width="704" height="60" fill="var(--surface)"/>
+            <rect x="22" y="78" width="60" height="32" rx="8" fill="var(--primarySoft)" stroke="var(--border)"/>
+            <text x="52" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">A</text>
+            <text x="100" y="99" font-size="12.5" fill="var(--textPrimary)">WC-face base-specific (DMS/CMCT/Keth)</text>
+            <text x="335" y="99" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">auc_unpaired_vs_paired</text>
+            <text x="600" y="99" font-size="12.5" fill="var(--textPrimary)">unpaired</text>
+            <text x="668" y="99" font-size="16" font-weight="700" fill="var(--accent)">&#8594;</text>
+            <title>Family A: Watson-Crick face base-specific reagents, unpaired-positive</title>
+          </g>
+          <g>
+            <rect x="8" y="124" width="704" height="60" fill="var(--surfaceAlt)"/>
+            <rect x="22" y="138" width="60" height="32" rx="8" fill="var(--accentSoft)" stroke="var(--border)"/>
+            <text x="52" y="160" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">B</text>
+            <text x="100" y="159" font-size="12.5" fill="var(--textPrimary)">SHAPE 2&#8242;-OH flexibility (ACGU)</text>
+            <text x="335" y="159" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">auc_unpaired_vs_paired</text>
+            <text x="600" y="159" font-size="12.5" fill="var(--textPrimary)">unpaired</text>
+            <text x="668" y="159" font-size="16" font-weight="700" fill="var(--accent)">&#8594;</text>
+            <title>Family B: SHAPE flexibility proxy, unpaired-positive</title>
+          </g>
+          <g>
+            <rect x="8" y="184" width="704" height="60" fill="var(--surface)"/>
+            <rect x="22" y="198" width="60" height="32" rx="8" fill="var(--primarySoft)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="52" y="220" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">C</text>
+            <text x="100" y="214" font-size="12.5" fill="var(--textPrimary)">enzymatic (PARS/PARTE)</text>
+            <text x="100" y="232" font-size="10.5" font-weight="700" fill="var(--accent)">REVERSED &#183; V1 cleaves paired stems</text>
+            <text x="335" y="219" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">auc_paired_vs_unpaired (1&#8722;AUC)</text>
+            <text x="600" y="219" font-size="12.5" fill="var(--textPrimary)">paired</text>
+            <text x="654" y="219" font-size="16" font-weight="700" fill="var(--accent)">&#8592;</text>
+            <title>Family C: enzymatic, REVERSED direction, paired-positive</title>
+          </g>
+          <g>
+            <rect x="8" y="244" width="704" height="60" fill="var(--surfaceAlt)"/>
+            <rect x="22" y="258" width="60" height="32" rx="8" fill="var(--accentSoft)" stroke="var(--accent)" stroke-width="1.5"/>
+            <text x="52" y="280" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">D</text>
+            <text x="100" y="274" font-size="12.5" fill="var(--textPrimary)">SASA solvent accessibility</text>
+            <text x="100" y="292" font-size="10.5" font-weight="700" fill="var(--accent)">DUAL PATH &#183; fallback never STRONG</text>
+            <text x="335" y="279" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">spearman(reactivity, sasa)</text>
+            <text x="600" y="279" font-size="12.5" fill="var(--textPrimary)">high</text>
+            <text x="638" y="279" font-size="15" font-weight="700" fill="var(--accent)">&#8596;</text>
+            <text x="660" y="279" font-size="12.5" fill="var(--textPrimary)">high</text>
+            <title>Family D: SASA, dual path; Spearman main, AUC pairing-proxy fallback</title>
+          </g>
+          <g>
+            <rect x="8" y="304" width="704" height="60" fill="var(--surface)"/>
+            <rect x="22" y="318" width="60" height="32" rx="8" fill="var(--primarySoft)" stroke="var(--border)"/>
+            <text x="52" y="340" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">E</text>
+            <text x="100" y="339" font-size="12.5" fill="var(--textPrimary)">contact map (MCA/MOHCA)</text>
+            <text x="335" y="339" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">contact_pair_auc</text>
+            <text x="600" y="339" font-size="12.5" fill="var(--textPrimary)">near = hit</text>
+            <title>Family E: contact map, near = hit</title>
+          </g>
+          <g>
+            <rect x="8" y="364" width="704" height="60" fill="var(--surfaceAlt)"/>
+            <rect x="22" y="378" width="60" height="32" rx="8" fill="var(--accentSoft)" stroke="var(--border)"/>
+            <text x="52" y="400" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">F</text>
+            <text x="100" y="399" font-size="12.5" fill="var(--textPrimary)">pair-set F1 (mutate-and-map)</text>
+            <text x="335" y="399" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">pair_set_prf</text>
+            <text x="600" y="399" font-size="12.5" fill="var(--textPrimary)">F1 inferred vs ref</text>
+            <title>Family F: pair-set F1 of inferred vs reference pairs</title>
+          </g>
+          <rect x="8" y="64" width="704" height="360" fill="none" stroke="var(--border)" stroke-width="1" rx="2"/>
+        </svg>
+        <figcaption>The six families differ only by <strong>what they measure</strong>, not by quality. C runs <strong>reversed</strong> (enzymatic V1 marks paired stems, so paired is the positive class), and D carries a <strong>dual path</strong> whose pairing-proxy fallback can never reach STRONG.</figcaption>
+        <p class="annojoin-confidence-figure-cite">Family anchors — A: Burkhardt et al., eLife 2017 · PMID 28371612 · DOI 10.7554/eLife.22037. B: Siegfried et al., Nat Methods 2014 · PMID 25028896 · DOI 10.1038/nmeth.3029. C: Lockard &amp; Kumar, NAR 1981 · PMID 6269089 · DOI 10.1093/nar/9.13.3001. D: Solayman et al., RNA Biology 2022 · PMID 36369947 · DOI 10.1080/15476286.2022.2145098. E: Cheng et al., eLife 2015 · PMID 26035425 · DOI 10.7554/eLife.07600. F: Cheng et al., PNAS 2017 · PMID 28851837 · DOI 10.1073/pnas.1619897114.</p>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">Per-family detail</p>
+        <ul class="annojoin-confidence-legend">
+          <li><strong>A — Watson-Crick-face base-specific</strong> (DMS, CMCT, Keth-seq). Statistic <code>auc_unpaired_vs_paired</code>; <strong>unpaired-positive</strong>. Evaluated on targetable bases only — DMS → A, C; CMCT → G, U; Keth-seq → G.</li>
+          <li><strong>B — SHAPE 2′-OH flexibility</strong> (all four bases). Statistic <code>auc_unpaired_vs_paired</code>; <strong>unpaired-positive</strong>.</li>
+          <li><strong>C — enzymatic, REVERSED</strong> (PARS, PARTE, tNet-RNase-seq). Statistic <code>auc_paired_vs_unpaired</code>, computed as <code>1 − auc_unpaired_vs_paired</code>; <strong>paired-positive</strong>, because RNase V1 cleaves paired stems.</li>
+          <li><strong>D — solvent-accessible surface area, dual path</strong> (RL-Seq, HRF, Lead-seq, icLASER). Main path <code>spearman(reactivity, sasa)</code> with high reactivity ↔ high SASA; when SASA is unavailable it falls back to a pairing-proxy <code>auc_unpaired_vs_paired</code> that is tier-capped and <strong>can never reach STRONG</strong>.</li>
+          <li><strong>E — residue-residue contact map</strong> (MCA, MOHCA). Statistic <code>contact_pair_auc</code> = P(signal pair is nearer than a decoy pair); <strong>near = hit</strong>.</li>
+          <li><strong>F — base-pair set F1</strong> (mutate-and-map). Statistic <code>pair_set_prf</code> → F1 of the inferred base-pair set against the reference, with pairs canonicalised so <code>(i, j)</code> and <code>(j, i)</code> are the same pair.</li>
+        </ul>
+      </div>
 
-        <article class="help-module-card">
-          <div class="help-module-titlebar">
-            <h2>How to contact us</h2>
-          </div>
-          <div class="help-module-body">
-            <p>For any inquiries or concerns regarding the database, please reach out to xxx</p>
-          </div>
-        </article>
+      <h2>The recall tiers and their gates</h2>
+      <div class="annojoin-confidence-plain">
+        <ul class="annojoin-confidence-legend">
+          <li><strong>STRONG</strong> — the evidence reliably recovers the deposited structure and has passed every gate, including a chance test.</li>
+          <li><strong>MODERATE</strong> — solid, calibrated agreement that clears a slightly lower bar than STRONG.</li>
+          <li><strong>MODERATE_CANDIDATE</strong> — would qualify, but calibration has not run yet, so it is held one step below as a candidate.</li>
+          <li><strong>WEAK</strong> — the score is decent but the segment is not self-contained enough to lean on.</li>
+          <li><strong>NOT_SUPPORTED</strong> — the score did not survive the chance test; it could be luck.</li>
+          <li><strong>DISCORDANT</strong> — the signal points the wrong way or conflicts with the structure.</li>
+          <li><strong>UNDERPOWERED</strong> — too few evaluable residues to judge at all.</li>
+          <li><strong>NOT_EVALUABLE</strong> — the technology or data could not be resolved to a family, so no score is attempted.</li>
+        </ul>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 560 640" role="img" aria-label="STRONG gate decision ladder with fail branches to lower recall tiers">
+          <line x1="150" y1="84" x2="150" y2="106" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="154" x2="150" y2="176" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="224" x2="150" y2="246" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="294" x2="150" y2="316" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="364" x2="150" y2="386" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="434" x2="150" y2="456" stroke="var(--border)" stroke-width="2"/>
+          <line x1="150" y1="504" x2="150" y2="540" stroke="var(--primary)" stroke-width="2.5"/>
+          <g font-size="12.5" fill="var(--textPrimary)" text-anchor="middle">
+            <rect x="40" y="56" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="74">n_eval &#8805; 20 (size)</text>
+            <rect x="40" y="126" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="144">paired &#8805; 5 &#183; unpaired &#8805; 5</text>
+            <rect x="40" y="196" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="214">directional &#8805; 0.70</text>
+            <rect x="40" y="266" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="284">permutation RUN</text>
+            <rect x="40" y="336" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="354">empirical p &#8804; 0.05</text>
+            <rect x="40" y="406" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="424">conflict &#8804; 0.25</text>
+            <rect x="40" y="476" width="220" height="28" rx="7" fill="var(--surfaceAlt)" stroke="var(--border)"/><text x="150" y="494">partner_inside &#8805; 0.70</text>
+          </g>
+          <rect x="60" y="540" width="180" height="40" rx="20" fill="var(--primary)"/>
+          <text x="150" y="565" text-anchor="middle" font-size="16" font-weight="700" fill="var(--surface)">STRONG</text>
+          <g font-size="11" font-weight="700" text-anchor="middle">
+            <line x1="260" y1="70" x2="400" y2="70" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <rect x="400" y="56" width="148" height="28" rx="7" fill="var(--accentSoft)"/><text x="474" y="74" fill="var(--textPrimary)">MODERATE (n &#8805; 15)</text>
+            <line x1="260" y1="210" x2="400" y2="210" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <rect x="400" y="196" width="148" height="28" rx="7" fill="var(--accentSoft)"/><text x="474" y="214" fill="var(--textPrimary)">MODERATE (&#8805;0.65)</text>
+            <line x1="260" y1="350" x2="400" y2="350" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <rect x="400" y="336" width="148" height="28" rx="7" fill="var(--textMuted)"/><text x="474" y="354" fill="var(--surface)">NOT_SUPPORTED</text>
+            <line x1="260" y1="420" x2="400" y2="420" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <rect x="400" y="406" width="148" height="28" rx="7" fill="var(--accentSoft)"/><text x="474" y="424" fill="var(--textPrimary)">DISCORDANT</text>
+            <line x1="260" y1="490" x2="400" y2="490" stroke="var(--textMuted)" stroke-width="1.4" stroke-dasharray="4 3"/>
+            <rect x="400" y="476" width="148" height="28" rx="7" fill="var(--primarySoft)"/><text x="474" y="494" fill="var(--textPrimary)">WEAK</text>
+          </g>
+          <text x="150" y="32" text-anchor="middle" font-size="13" font-weight="700" fill="var(--textPrimary)">STRONG gate spine (all must pass)</text>
+          <text x="20" y="600" font-size="10.5" fill="var(--textMuted)">Footnote: the spine shows STRONG gates. Relaxing the size gate to n_eval &#8805; 15 (with the</text>
+          <text x="20" y="613" font-size="10.5" fill="var(--textMuted)">lower MODERATE cut-points) yields MODERATE; below n_eval 15 it is UNDERPOWERED.</text>
+          <text x="20" y="626" font-size="10.5" fill="var(--textMuted)">Family D main path uses discordance_floor = 0.0 (Spearman ranges &#8722;1..1).</text>
+        </svg>
+        <figcaption>STRONG is granted only when every gate on the spine passes. Each failure routes the segment to a lower tier; a strong-looking score that fails permutation drops to NOT_SUPPORTED, and an AUC-pass that is not self-contained drops to WEAK.</figcaption>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">Exact gates</p>
+        <p><strong>STRONG</strong> requires all of: n_eval ≥ 20, n_paired ≥ 5, n_unpaired ≥ 5, directional metric ≥ 0.70,
+          permutation status = RUN, empirical p ≤ 0.05, conflict ≤ 0.25, and partner_inside ≥ 0.70. <strong>MODERATE</strong>
+          relaxes these to n_eval ≥ 15, directional ≥ 0.65, p ≤ 0.10, conflict ≤ 0.35, partner_inside ≥ 0.50. The "directional
+          metric" is the family's own positive-class statistic (for Family C the reversed <code>1 − AUC</code>; for Family D's
+          main path the Spearman correlation). Because Spearman lives on −1..1 with no-correlation at 0 (not an AUC centred at
+          0.5), Family D's main path sets <code>discordance_floor = 0.0</code> — only a genuinely negative correlation reads as
+          DISCORDANT, while a small positive correlation below the support band reads as NOT_SUPPORTED.</p>
+      </div>
 
-        <article class="help-module-card">
-          <div class="help-module-titlebar">
-            <h2>Usage</h2>
-          </div>
-          <div class="help-module-body help-module-body-empty"></div>
-        </article>
+      <h2>Where the thresholds come from</h2>
+      <div class="annojoin-confidence-plain">
+        <p>Be clear about one thing: the A/B/C cut-points of <strong>0.70 / 0.65 / 0.55 are not thresholds that any paper
+          published.</strong> No study reported "an AUC of 0.70 means a strong match." External benchmarks establish only two
+          things — first, that the metric itself works (paired and unpaired residues really are separable by AUC/ROC); second,
+          that the STRONG tier is <em>attainable</em> (SHAPE-directed modeling recovers more than 90% of base pairs). The
+          specific numeric cut-points are RC3 operating values, set as reasonable defaults and waiting on calibration. That
+          honesty is exactly why the calibration step in the next section exists.</p>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 720 380" role="img" aria-label="Three-grade threshold provenance ladder from measured to operating values">
+          <line x1="40" y1="30" x2="40" y2="350" stroke="var(--border)" stroke-width="1.5"/>
+          <path d="M 40 350 L 36 340 L 44 340 Z" fill="var(--border)"/>
+          <text x="30" y="44" font-size="11" font-weight="700" fill="var(--textPrimary)" transform="rotate(-90 30 44)" text-anchor="end">measured</text>
+          <text x="30" y="340" font-size="11" font-weight="700" fill="var(--textMuted)" transform="rotate(-90 30 340)" text-anchor="start">operating</text>
+          <g>
+            <rect x="90" y="30" width="590" height="92" rx="10" fill="var(--primarySoft)" stroke="var(--border)"/>
+            <rect x="90" y="30" width="8" height="92" rx="4" fill="var(--primary)"/>
+            <text x="112" y="56" font-size="14" font-weight="700" fill="var(--textPrimary)">LITERATURE_SUPPORTED</text>
+            <text x="112" y="78" font-size="12" fill="var(--textPrimary)">Band set directly by measured values. Rep: RL-Seq &#183; Solayman 2022</text>
+            <text x="112" y="98" font-size="11.5" fill="var(--textMuted)">ribose-ASA Spearman 0.39&#8211;0.57 sets Family D&#8217;s 0.50/0.40/0.30</text>
+            <circle cx="638" cy="76" r="26" fill="var(--surface)" stroke="var(--primary)" stroke-width="2"/>
+            <text x="638" y="83" text-anchor="middle" font-size="22" font-weight="700" fill="var(--textPrimary)">1</text>
+            <title>LITERATURE_SUPPORTED: exactly 1 technology (RL-Seq)</title>
+          </g>
+          <g>
+            <rect x="90" y="140" width="555" height="92" rx="10" fill="var(--surfaceAlt)" stroke="var(--border)"/>
+            <rect x="90" y="140" width="8" height="92" rx="4" fill="var(--accent)"/>
+            <text x="112" y="166" font-size="14" font-weight="700" fill="var(--textPrimary)">LITERATURE_INFORMED</text>
+            <text x="112" y="188" font-size="12" fill="var(--textPrimary)">Benchmark proves STRONG attainable; exact cut-point not published.</text>
+            <text x="112" y="208" font-size="11.5" fill="var(--textMuted)">SHAPE, SHAPE-MaP, DMS, DMS-MaPseq, HRF, Lead-seq, icLASER &#8230;</text>
+            <circle cx="603" cy="186" r="26" fill="var(--surface)" stroke="var(--accent)" stroke-width="2"/>
+            <text x="603" y="193" text-anchor="middle" font-size="22" font-weight="700" fill="var(--textPrimary)">10</text>
+            <title>LITERATURE_INFORMED: 10 technologies</title>
+          </g>
+          <g>
+            <rect x="90" y="250" width="520" height="92" rx="10" fill="var(--surface)" stroke="var(--border)"/>
+            <rect x="90" y="250" width="8" height="92" rx="4" fill="var(--textMuted)"/>
+            <text x="112" y="276" font-size="14" font-weight="700" fill="var(--textMuted)">OPERATING_VALUE_PENDING_CALIBRATION</text>
+            <text x="112" y="298" font-size="12" fill="var(--textPrimary)">No published discrimination metric &#8212; beta operating value.</text>
+            <text x="112" y="318" font-size="11.5" fill="var(--textMuted)">PARS, PARTE, tNet-RNase-seq &#8230; (no AUC published)</text>
+            <circle cx="568" cy="296" r="26" fill="var(--surface)" stroke="var(--textMuted)" stroke-width="2"/>
+            <text x="568" y="303" text-anchor="middle" font-size="22" font-weight="700" fill="var(--textMuted)">23</text>
+            <title>OPERATING_VALUE_PENDING_CALIBRATION: 23 technologies</title>
+          </g>
+        </svg>
+        <figcaption>Of 34 technologies only <strong>one</strong> (RL-Seq) has a literature-set band; 10 are literature-informed and 23 remain RC3 operating values pending calibration. This is why permutation calibration exists: most cut-points must earn the right to ever emit STRONG.</figcaption>
+        <p class="annojoin-confidence-figure-cite">Solayman et al., RNA Biology 2022 · PMID 36369947 · DOI 10.1080/15476286.2022.2145098</p>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">The three honesty grades</p>
+        <ul class="annojoin-confidence-legend">
+          <li><strong>LITERATURE_SUPPORTED</strong> — the band is set directly by measured literature values. <strong>Exactly one technology qualifies: RL-Seq</strong> (Family D). Its ribose-ASA Spearman of 0.39–0.57 (16S 0.53–0.57 / 23S 0.47–0.50 / 5S 0.39–0.52, vs PDB 4V7T; Solayman et al., RNA Biology 2022) directly sets Family D's 0.50 / 0.40 / 0.30 band.</li>
+          <li><strong>LITERATURE_INFORMED</strong> — a related benchmark makes STRONG attainable and shows the metric is sound, but the exact cut-point is not published. This applies to exactly ten technologies: DMS, DMS-seq, DMS-MaPseq, Structure-Seq, Structure-seq2, SHAPE, SHAPE-MaP, HRF, Lead-seq, icLASER. (This is <em>not</em> "the whole DMS family" or "the whole SHAPE family" — Mod-seq, DIM-2P-seq, CMC, CMCT, Keth-seq, NMIA, 1M7, BzCN, 2A3, icSHAPE and the rest are operating values.) Anchors: orthogonal DMS reproducibility r ≈ 0.91, &gt;90% base-pair recovery of SHAPE-directed modeling (Siegfried et al., Nat Methods 2014), and the shared SASA reference quantity for HRF/Lead-seq/icLASER.</li>
+          <li><strong>OPERATING_VALUE_PENDING_CALIBRATION</strong> — no published discrimination metric; a beta operating value awaiting calibration. This covers the remaining 23 technologies, including the entire Family C set (PARS, PARTE, tNet-RNase-seq), whose <em>direction</em> is mechanistically anchored (RNase V1 cleaves paired stems; Lockard &amp; Kumar, NAR 1981) but for which no discrimination AUC was ever published, plus the contact and pair-set methods and the long tail.</li>
+        </ul>
+        <p>Because most cut-points are operating values rather than published thresholds, calibration is what earns a segment the
+          right to ever be called STRONG.</p>
+      </div>
 
-        <article class="help-module-card">
-          <div class="help-module-titlebar">
-            <h2>How to make a feedback</h2>
-          </div>
-          <div class="help-module-body" style="color: var(--textSecondary); line-height: 1.7; font-size: 0.98rem;">
-            <p style="margin: 0;">
-              You are welcomed to send us feedback and your ideas or suggestions will be greatly valued. We will continue to have our database improved to be fully functional and user-friendly. Your opinions will be fully considered. Click the <strong style="background: #fff7df; color: #a26f0c; padding: 2px 6px; border-radius: 6px; font-weight: 600; font-size: 0.9em; margin-inline: 2px; display: inline-block;">Submit</strong> button or figures to record your suggestions and comments on Google sheet. We provide more than one entrence you can find to send your feedback.
-            </p>
-          </div>
-        </article>
+      <h2>Why "candidate" exists: permutation calibration</h2>
+      <div class="annojoin-confidence-plain">
+        <p>A high score can just be luck. If a segment only has a handful of residues, a strong-looking AUC might appear by
+          chance. To guard against that, we keep the reactivity values exactly as measured but reshuffle which residues are
+          labelled paired versus unpaired, many times over, and watch how often a shuffled (random) labelling scores as well as
+          the real one. If the real score rarely beats the shuffles, the support is real. If chance reproduces it easily, the
+          score does not earn its tier.</p>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 640 320" role="img" aria-label="Permutation calibration: fixed reactivity, shuffled labels, null distribution with observed marker">
+          <text x="70" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textPrimary)">reactivity (fixed)</text>
+          <g>
+            <rect x="40" y="44" width="60" height="220" rx="8" fill="var(--surfaceAlt)" stroke="var(--border)"/>
+            <rect x="58" y="60" width="24" height="18" rx="3" fill="var(--primary)"/>
+            <path d="M 63 60 V 53 a 7 7 0 0 1 14 0 V 60" fill="none" stroke="var(--primary)" stroke-width="2.5"/>
+            <g font-size="11" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)" text-anchor="middle">
+              <text x="70" y="104">0.81</text><text x="70" y="128">0.12</text><text x="70" y="152">0.64</text>
+              <text x="70" y="176">0.05</text><text x="70" y="200">0.77</text><text x="70" y="224">0.21</text><text x="70" y="248">0.58</text>
+            </g>
+          </g>
+          <text x="190" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textPrimary)">paired/unpaired (shuffled)</text>
+          <g>
+            <rect x="160" y="44" width="60" height="220" rx="8" fill="var(--surface)" stroke="var(--border)"/>
+            <g font-size="11" font-weight="700" fill="var(--accent)" text-anchor="middle">
+              <text x="190" y="104">U</text><text x="190" y="128">P</text><text x="190" y="152">P</text>
+              <text x="190" y="176">U</text><text x="190" y="200">P</text><text x="190" y="224">U</text><text x="190" y="248">P</text>
+            </g>
+          </g>
+          <g fill="none" stroke="var(--accent)" stroke-width="1.6">
+            <path d="M 226 104 C 256 96 256 132 226 128"/>
+            <path d="M 226 152 C 256 144 256 204 226 200"/>
+            <path d="M 226 224 C 252 216 252 256 226 248"/>
+          </g>
+          <text x="258" y="160" font-size="11" fill="var(--textMuted)" transform="rotate(90 258 160)" text-anchor="middle">&#215; 1000</text>
+          <text x="470" y="30" text-anchor="middle" font-size="12" font-weight="700" fill="var(--textPrimary)">null distribution (schematic)</text>
+          <line x1="350" y1="250" x2="620" y2="250" stroke="var(--border)" stroke-width="1.5"/>
+          <line x1="350" y1="60" x2="350" y2="250" stroke="var(--border)" stroke-width="1.5"/>
+          <g fill="var(--primarySoft)" stroke="var(--border)" stroke-width="0.5">
+            <rect x="356" y="242" width="20" height="8"/><rect x="378" y="232" width="20" height="18"/>
+            <rect x="400" y="216" width="20" height="34"/><rect x="422" y="192" width="20" height="58"/>
+            <rect x="444" y="168" width="20" height="82"/><rect x="466" y="154" width="20" height="96"/>
+            <rect x="488" y="168" width="20" height="82"/><rect x="510" y="192" width="20" height="58"/>
+            <rect x="532" y="216" width="20" height="34"/><rect x="554" y="232" width="20" height="18"/>
+            <rect x="576" y="242" width="20" height="8"/>
+          </g>
+          <line x1="596" y1="70" x2="596" y2="250" stroke="var(--primary)" stroke-width="2.5"/>
+          <text x="596" y="64" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--primary)">observed</text>
+          <text x="350" y="284" font-size="11.5" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">p = (1 + #{null &#8805; obs}) / (1 + n_perm)</text>
+          <text x="350" y="304" font-size="10.5" fill="var(--textMuted)">1000 permutations &#183; seed 12345 &#183; p never zero</text>
+        </svg>
+        <figcaption>To test whether a score is luck, reactivity values are held fixed while paired/unpaired labels are reshuffled 1000 times to build a null distribution. The histogram is schematic. This label-shuffle applies to A/B/C and Family D&#8217;s pairing-proxy fallback; D&#8217;s SASA-Spearman main path has its own calibration path.</figcaption>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">The chance test</p>
+        <p>The empirical p-value is <code>(1 + #{null ≥ observed}) / (1 + n_perm)</code>, with the +1/+1 correction so it is
+          <strong>never zero</strong>. The default is 1000 permutations with seed 12345, which makes the calibration
+          deterministic and reproducible. While a segment is UNCALIBRATED, a would-be-STRONG (or would-be-MODERATE) result is
+          capped down to <strong>MODERATE_CANDIDATE</strong>. Once calibration runs, any segment with p &gt; 0.10 is downgraded
+          to <strong>NOT_SUPPORTED</strong>. Scope: this label-shuffle calibration applies to families A, B, C, and Family D's
+          pairing-proxy fallback; Family D's SASA-Spearman main path is calibrated by its own path, not by this label shuffle.</p>
+      </div>
 
-        <article class="help-module-card help-module-card-wide">
-          <div class="help-module-titlebar">
-            <h2>Group members</h2>
-          </div>
-          <div class="help-module-body">
-            <div class="help-member-grid">
-              <article class="help-member-card">
-                <div class="help-member-avatar">
-                  <img src="./src/assets/groupmember/Chichau_photo.jpg" alt="Portrait of Zhichao (Chichau) Miao" />
-                </div>
-                <div class="help-member-content">
-                  <h3><a class="help-member-name-link" href="mailto:miao_zhichao@gzlab.ac.cn">Zhichao (Chichau) Miao</a></h3>
-                  <p class="help-member-role"><span class="help-member-role-initial">P</span>rincipal Investigator of Guangzhou Lab</p>
-                  <ul class="help-member-history">
-                    <li>PhD <a class="help-member-link" href="https://ibp.cas.cn/" target="_blank" rel="noopener noreferrer">Institute of Biophysics, CAS</a></li>
-                    <li>Chercheur at <a class="help-member-link" href="https://ibmc.cnrs.fr/en/" target="_blank" rel="noopener noreferrer">IBMC, CNRS</a></li>
-                    <li>PostDoc at <a class="help-member-link" href="https://www.ebi.ac.uk/" target="_blank" rel="noopener noreferrer">EMBL-EBI</a></li>
-                    <li>Visiting Scientist at <a class="help-member-link" href="https://www.sanger.ac.uk/" target="_blank" rel="noopener noreferrer">Wellcome Sanger Institute</a></li>
-                    <li>Senior Bioinformatician at <a class="help-member-link" href="https://www.ebi.ac.uk/" target="_blank" rel="noopener noreferrer">EMBL-EBI</a></li>
-                  </ul>
-                </div>
-              </article>
+      <h2>Self-containment</h2>
+      <div class="annojoin-confidence-plain">
+        <p>A segment is only trustworthy if you can judge it on its own. If a residue is paired, its partner base ideally lives
+          inside the same segment, so the agreement we measure is about base pairs we can actually see. When too many partners
+          sit <em>outside</em> the segment, the segment is judging pairs it can't fully account for, and we hold it back.</p>
+      </div>
+      <figure class="annojoin-confidence-figure">
+        <svg viewBox="0 0 640 280" role="img" aria-label="Self-containment: base-pair partners inside the segment versus spilling outside">
+          <text x="160" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="var(--accent)">&#10003; partners inside segment</text>
+          <rect x="52" y="150" width="216" height="40" rx="8" fill="var(--accentSoft)" opacity="0.45"/>
+          <g fill="none" stroke="var(--accent)" stroke-width="2.2">
+            <path d="M 66 170 Q 160 96 254 170"><title>partner inside segment</title></path>
+            <path d="M 92 170 Q 160 116 228 170"><title>partner inside segment</title></path>
+            <path d="M 118 170 Q 160 134 202 170"><title>partner inside segment</title></path>
+          </g>
+          <g fill="var(--surface)" stroke="var(--textMuted)" stroke-width="1.2">
+            <circle cx="40" cy="170" r="6"/><circle cx="66" cy="170" r="6"/><circle cx="92" cy="170" r="6"/>
+            <circle cx="118" cy="170" r="6"/><circle cx="150" cy="170" r="6"/><circle cx="176" cy="170" r="6"/>
+            <circle cx="202" cy="170" r="6"/><circle cx="228" cy="170" r="6"/><circle cx="254" cy="170" r="6"/><circle cx="280" cy="170" r="6"/>
+          </g>
+          <line x1="320" y1="40" x2="320" y2="230" stroke="var(--border)" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="480" y="34" text-anchor="middle" font-size="13" font-weight="700" fill="var(--textMuted)">&#10007; partner outside segment</text>
+          <rect x="362" y="150" width="170" height="40" rx="8" fill="var(--surfaceAlt)" opacity="0.7"/>
+          <g fill="none" stroke="var(--accent)" stroke-width="2.2">
+            <path d="M 388 170 Q 440 120 492 170"><title>partner inside segment</title></path>
+          </g>
+          <path d="M 414 170 Q 500 60 600 170" fill="none" stroke="var(--textMuted)" stroke-width="2.2" stroke-dasharray="6 4"><title>partner lies outside the segment &#8212; not self-contained</title></path>
+          <g fill="var(--surface)" stroke="var(--textMuted)" stroke-width="1.2">
+            <circle cx="362" cy="170" r="6"/><circle cx="388" cy="170" r="6"/><circle cx="414" cy="170" r="6"/>
+            <circle cx="440" cy="170" r="6"/><circle cx="466" cy="170" r="6"/><circle cx="492" cy="170" r="6"/>
+            <circle cx="518" cy="170" r="6"/><circle cx="548" cy="170" r="6"/><circle cx="574" cy="170" r="6"/>
+          </g>
+          <circle cx="600" cy="170" r="6" fill="var(--surface)" stroke="var(--textMuted)" stroke-width="1.2" stroke-dasharray="3 2"/>
+          <text x="320" y="262" text-anchor="middle" font-size="10.5" fill="var(--textMuted)">STRONG &#8805; 0.70 inside &#183; MODERATE &#8805; 0.50 inside &#183; AUC-pass but &lt; 0.50 &#8594; WEAK (auc_supported_but_not_self_contained)</text>
+        </svg>
+        <figcaption>A segment is self-contained when its paired residues&#8217; base-pair partners also lie inside the same segment. STRONG needs <strong>partner_inside &#8805; 0.70</strong>, MODERATE <strong>&#8805; 0.50</strong>; an AUC-pass that spills below 0.50 is downgraded to WEAK.</figcaption>
+      </figure>
+      <div class="annojoin-confidence-deep">
+        <p class="annojoin-confidence-deep-label">partner_inside_fraction</p>
+        <p><code>partner_inside_fraction</code> is the fraction of evaluable paired residues whose base-pair partner also lies
+          inside the same segment. STRONG requires ≥ 0.70 and MODERATE requires ≥ 0.50. A segment that clears its AUC bar but has
+          partner_inside &lt; 0.50 is downgraded to <strong>WEAK</strong> with the note
+          <code>auc_supported_but_not_self_contained</code>: the signal looks good, but the segment is not self-contained enough
+          to stand on.</p>
+      </div>
 
-              <article class="help-member-card">
-                <div class="help-member-avatar">
-                  <img src="./src/assets/groupmember/Lin_Huang.jpg" alt="Portrait of Lin Huang" />
-                </div>
-                <div class="help-member-content">
-                  <h3><a class="help-member-name-link" href="mailto:huanglin36@mail.sysu.edu.cn">Lin Huang</a></h3>
-                  <p class="help-member-role"><span class="help-member-role-initial">P</span>rincipal Investigator of Sun Yat-sen University</p>
-                  <ul class="help-member-history">
-                    <li>PhD <a class="help-member-link" href="https://en.whu.edu.cn/" target="_blank" rel="noopener noreferrer">Wuhan University</a></li>
-                    <li>Postdoctoral research assistant at <a class="help-member-link" href="https://www.dundee.ac.uk/" target="_blank" rel="noopener noreferrer">University of<br />Dundee, UK</a></li>
-                    <li>Senior research associate at <a class="help-member-link" href="https://www.dundee.ac.uk/" target="_blank" rel="noopener noreferrer">University of<br />Dundee, UK</a></li>
-                  </ul>
-                </div>
-              </article>
-            </div>
-          </div>
-        </article>
-      </section>
+      <h2>What this looks like at scale</h2>
+      <div class="annojoin-confidence-plain">
+        <p>Put it all together across a full run and the headline is simple: <strong>STRONG is rare and earned.</strong> Most
+          segments do not clear the gates, and that is the system working as intended — the bar is high on purpose.</p>
+      </div>
+      <figure class="annojoin-confidence-figure annojoin-confidence-chart">
+        <svg viewBox="0 0 700 380" role="img" aria-label="RASP ABC calibrated tier counts on a log-scaled axis">
+          <text x="16" y="28" font-size="14" font-weight="700" fill="var(--textPrimary)">Calibrated recall tiers &#8212; 218,638 segments</text>
+          <text x="16" y="46" font-size="11" fill="var(--textMuted)">x-axis: log scale (counts span 283 to 114,591)</text>
+          <g stroke="var(--border)" stroke-width="1" stroke-dasharray="3 4">
+            <line x1="238" y1="66" x2="238" y2="312"/><line x1="316" y1="66" x2="316" y2="312"/>
+            <line x1="394" y1="66" x2="394" y2="312"/><line x1="472" y1="66" x2="472" y2="312"/>
+            <line x1="550" y1="66" x2="550" y2="312"/>
+          </g>
+          <g font-size="10" fill="var(--textMuted)" text-anchor="middle">
+            <text x="238" y="328">10</text><text x="316" y="328">100</text><text x="394" y="328">1,000</text>
+            <text x="472" y="328">10,000</text><text x="550" y="328">100,000</text>
+          </g>
+          <line x1="160" y1="66" x2="160" y2="312" stroke="var(--border)" stroke-width="1.5"/>
+          <g font-size="11.5" fill="var(--textPrimary)">
+            <text x="152" y="84" text-anchor="end" font-weight="700">STRONG</text>
+            <rect x="160" y="68" width="191" height="24" rx="3" fill="var(--primary)"><title>STRONG: 283 segments</title></rect>
+            <text x="357" y="84" font-weight="700" fill="var(--textPrimary)">283</text>
+            <text x="152" y="126" text-anchor="end" font-weight="700">MODERATE</text>
+            <rect x="160" y="110" width="240" height="24" rx="3" fill="var(--accent)"><title>MODERATE: 1,191 segments</title></rect>
+            <text x="406" y="126" font-weight="700">1,191</text>
+            <text x="152" y="168" text-anchor="end" font-weight="700">WEAK</text>
+            <rect x="160" y="152" width="333" height="24" rx="3" fill="var(--primarySoft)"><title>WEAK: 18,635 segments</title></rect>
+            <text x="499" y="168">18,635</text>
+            <text x="152" y="210" text-anchor="end" font-weight="700">DISCORDANT</text>
+            <rect x="160" y="194" width="353" height="24" rx="3" fill="var(--accentSoft)"><title>DISCORDANT: 33,876 segments</title></rect>
+            <text x="519" y="210">33,876</text>
+            <text x="152" y="252" text-anchor="end" font-weight="700">NOT_SUPPORTED</text>
+            <rect x="160" y="236" width="395" height="24" rx="3" fill="var(--textMuted)"><title>NOT_SUPPORTED: 114,591 segments</title></rect>
+            <text x="561" y="252">114,591</text>
+            <text x="152" y="294" text-anchor="end" font-weight="700">UNDERPOWERED</text>
+            <rect x="160" y="278" width="367" height="24" rx="3" fill="var(--border)"><title>UNDERPOWERED: 50,062 segments</title></rect>
+            <text x="533" y="294">50,062</text>
+          </g>
+          <text x="16" y="356" font-size="10.5" fill="var(--textMuted)">Log scale keeps the rare earned tiers (STRONG 283) visible beside NOT_SUPPORTED (114,591). STRONG/MODERATE in earned accents; NOT_SUPPORTED/UNDERPOWERED muted.</text>
+          <text x="16" y="372" font-size="10" fill="var(--textMuted)">STRONG is rare and earned: 283 of 218,638 segments (0.13%).</text>
+        </svg>
+        <figcaption>Calibrated recall tiers across the full RASP ABC run. The x-axis is <strong>log-scaled</strong> so the rare earned tiers stay visible against the dominant NOT_SUPPORTED bucket. STRONG accounts for just 283 of 218,638 segments.</figcaption>
+        <p class="annojoin-confidence-figure-cite">as of run 2026-06-26, source 133:/data/rasp_abc_lss_run_20260626/cal/abc_lss_calibrated.tsv</p>
+      </figure>
+      <figure class="annojoin-confidence-figure annojoin-confidence-chart">
+        <svg viewBox="0 0 220 220" role="img" aria-label="Family D SASA path: 82.3 percent SASA present versus 17.7 percent pairing-proxy fallback">
+          <path d="M 110 30 A 80 80 0 1 1 38.25 74.59 L 65.15 87.87 A 50 50 0 1 0 110 60 Z" fill="var(--primary)"><title>SASA_PRESENT: 82.3% (8,417 segments)</title></path>
+          <path d="M 38.25 74.59 A 80 80 0 0 1 110 30 L 110 60 A 50 50 0 0 0 65.15 87.87 Z" fill="var(--accentSoft)"><title>PAIRING_PROXY_FALLBACK: 17.7% (1,812 segments)</title></path>
+          <text x="110" y="106" text-anchor="middle" font-size="22" font-weight="700" fill="var(--textPrimary)">82.3%</text>
+          <text x="110" y="124" text-anchor="middle" font-size="10.5" fill="var(--textMuted)">SASA present</text>
+        </svg>
+        <figcaption>Family D evidence path across the full run (10,229 segments).
+          <span class="annojoin-confidence-chart-legend">
+            <span class="annojoin-confidence-chart-dot" style="background:var(--primary)"></span>SASA_PRESENT 82.3% (8,417)
+            &#160;&#160;
+            <span class="annojoin-confidence-chart-dot" style="background:var(--accentSoft)"></span>PAIRING_PROXY_FALLBACK 17.7% (1,812)
+          </span>
+        </figcaption>
+        <p class="annojoin-confidence-figure-cite">as of run 2026-06-27, source 130:/home/sunhao/family_d_lss_run_20260627/full/out/def_lss_confidence.tsv</p>
+      </figure>
+
+      <h2>"Not active" and merged labels</h2>
+      <div class="annojoin-confidence-plain">
+        <p><code>RASP: not active</code> does <strong>not</strong> mean the evidence failed. It means the positive-confidence
+          track for that source is not yet switched on for public display — think "pending," not "negative" and not
+          "unsupported." When it's turned on, you'll see real tiers.</p>
+        <p>A compound label like <code>RMDB: A/B/C; RASP: not active</code> appears on merged cases. It simply lists the
+          measurement families present across the underlying source cases (here, families A, B and C from RMDB) and notes that
+          the RASP track is still pending. The slash-separated letters are an inventory of what was measured, not a combined
+          grade. To see how each family and tier breaks down for a specific entry, open the side panel or the case detail page
+          from the master table.</p>
+      </div>
+
+      <h2>What confidence can never do</h2>
+      <div class="annojoin-confidence-plain">
+        <p>LSS is a supporting signal, not a verdict. It can nudge ranking and decide whether an entry is eligible for a ranked
+          set, but it has hard limits by design.</p>
+      </div>
+      <div class="annojoin-confidence-caveat">
+        <ul class="annojoin-confidence-legend">
+          <li>LSS <strong>never proves a full-feature claim</strong> and <strong>never exceeds the <code>claim_ceiling</code></strong> — it cannot promote an entry beyond the claim its underlying data already supports.</li>
+          <li>Its contribution to the score, <code>confidence_score_delta</code>, is bounded to <strong>[−0.10, +0.05]</strong> — a small nudge, never a takeover.</li>
+          <li>Only the tiers <strong>{STRONG, MODERATE, MODERATE_CANDIDATE}</strong> are eligible for ranked-set membership; everything below is informational.</li>
+          <li>High coverage combined with STRONG or MODERATE support raises only an entry's <strong>internal ranking</strong>, not its claim authority.</li>
+        </ul>
+      </div>
+
+      <p><a class="download-outline-btn" href="#annojoin-atlas">Back to the master table</a></p>
     </section>
   </main>`;
 }
 
 
+const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/public/entry-cases';
+
+function entryCasePage() {
+  const { pdb } = getEntryCaseParamsFromHash();
+  const safePdb = String(pdb || '').trim();
+  if (!safePdb || !/^[A-Za-z0-9]+$/.test(safePdb)) {
+    return `<main class="page"><section class="page-section"><p>Invalid case reference.</p>
+      <p><a class="download-outline-btn" href="#entry">Back to the table</a></p></section></main>`;
+  }
+  const src = `${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/index.html`;
+  // 无 bar、无外站链接：iframe 直接夹在主站 header(nav) 与 footer 之间，
+  // case 页内部的 site-nav.js 有 iframe 守卫（self!==top 不注入），不会重复渲染头。
+  return `<main class="entry-case-embed">
+    <iframe class="entry-case-embed-frame" src="${src}" title="${escapeHtml(safePdb)} case page"
+      loading="lazy" referrerpolicy="no-referrer"></iframe>
+  </main>`;
+}
+
 function pageFor(name) {
   const safeRoute = normalizeRoute(name);
   if (safeRoute === 'browse') return browsePage();
-  if (safeRoute === 'case-10fz') return case10fzPage();
-  if (safeRoute === 'case-detail') return caseDetailPage();
-  if (safeRoute === 'browse-detail') return browseDetailPage();
-  if (safeRoute === 'structure-detail') return structureDetailPage();
-  if (safeRoute === 'sequence') return browsePage();
+  if (safeRoute === 'entry-case') return entryCasePage();
+  if (safeRoute === 'entry') return entryTablePage();
+  if (safeRoute === 'sequence') return annojoinAtlasPage();
   if (safeRoute === 'structure') return structurePage();
+  if (safeRoute === 'pdb-case') return pdbCasePage();
+  if (safeRoute === 'annojoin-atlas') return annojoinAtlasPage();
+  if (safeRoute === 'annojoin-case') return annojoinCasePage();
+  if (safeRoute === 'annojoin-confidence') return annojoinConfidencePage();
   if (safeRoute === 'probing') return detailPage();
   if (safeRoute === 'download') return downloadPage();
   if (safeRoute === 'search') return searchPage();
-  if (safeRoute === 'download-sequences') return browsePage();
+  if (safeRoute === 'download-sequences') return downloadSequencesPage();
   if (safeRoute === 'download-structures') return downloadStructuresPage();
   if (safeRoute === 'detail') return detailPage();
   if (safeRoute === 'publications') return publicationsPage();
   if (safeRoute === 'help') return helpPage();
+  if (safeRoute === 'stats') return statsPage();
   if (safeRoute === 'sequence-detail') return sequenceDetailPage();
   return homePage();
+}
+
+function readSavedSearches() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(SAVED_SEARCHES_KEY) || '[]');
+    return Array.isArray(parsed) ? parsed.slice(0, 8) : [];
+  } catch {
+    return [];
+  }
+}
+
+function writeSavedSearches(items) {
+  localStorage.setItem(SAVED_SEARCHES_KEY, JSON.stringify(items.slice(0, 8)));
+}
+
+function currentSearchState() {
+  const params = searchParamsFromHash(window.location.hash);
+  return {
+    q: params.get('q') ?? '',
+    filters: filtersFromSearchParams(params)
+  };
+}
+
+function setSearchState(nextState) {
+  const nextHash = buildSearchHash(nextState);
+  if (window.location.hash === nextHash) {
+    render({ preserveScroll: true });
+    return;
+  }
+  window.location.hash = nextHash;
+}
+
+function isFilterActive(filters, key, value) {
+  const active = filters[key];
+  return Array.isArray(active) ? active.includes(value) : active === value;
+}
+
+function toggleSearchFilter(key, value) {
+  const state = currentSearchState();
+  const filters = { ...state.filters };
+
+  if (key === 'type') {
+    filters.type = filters.type === value ? '' : value;
+  } else {
+    const values = new Set(Array.isArray(filters[key]) ? filters[key] : filters[key] ? [filters[key]] : []);
+    if (values.has(value)) values.delete(value);
+    else values.add(value);
+    filters[key] = [...values];
+  }
+
+  setSearchState({ q: state.q, filters });
+}
+
+function renderSearchFilters(filters, activeFilters) {
+  const allowedKeys = ['type', 'tag', 'technique'];
+  return allowedKeys
+    .map((key) => {
+      const values = filters?.[key] ?? {};
+      const buttons = Object.entries(values)
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .slice(0, 12)
+        .map(([value, count]) => `<button
+          type="button"
+          class="site-search-filter ${isFilterActive(activeFilters, key, value) ? 'active' : ''}"
+          data-search-filter-key="${escapeHtml(key)}"
+          data-search-filter-value="${escapeHtml(value)}"
+        >
+          <span>${escapeHtml(value)}</span>
+          <small>${escapeHtml(count)}</small>
+        </button>`)
+        .join('');
+
+      return `<div class="site-search-filter-group">
+        <h3>${escapeHtml(key)}</h3>
+        <div>${buttons || '<span class="mini-note">No filters yet.</span>'}</div>
+      </div>`;
+    })
+    .join('');
+}
+
+function renderSavedSearches() {
+  const saved = readSavedSearches();
+  if (!saved.length) return '<span class="mini-note">No saved searches.</span>';
+
+  return saved
+    .map((item, index) => `<div class="saved-search-item">
+      <a href="${escapeHtml(item.hash)}">${escapeHtml(item.label)}</a>
+      <button type="button" data-remove-saved-search="${index}" aria-label="Remove saved search">×</button>
+    </div>`)
+    .join('');
+}
+
+function renderSearchResults(result) {
+  if (!result.items.length) {
+    return '<div class="entry-table-empty">No results.</div>';
+  }
+
+  return result.items
+    .map((item) => `<article class="site-search-result">
+      <div>
+        <a href="${escapeHtml(item.href)}">${escapeHtml(item.title)}</a>
+        <p>${item.excerpt}</p>
+      </div>
+      <div class="site-search-result-tags">
+        ${item.type ? `<span>${escapeHtml(item.type)}</span>` : ''}
+        ${item.tags.slice(0, 4).map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}
+      </div>
+    </article>`)
+    .join('');
+}
+
+function bindSearchPageControls() {
+  const form = document.getElementById('site-search-form');
+  const input = document.getElementById('site-search-input');
+  const saveButton = document.getElementById('save-search-query');
+  const savedHost = document.getElementById('site-search-saved');
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const state = currentSearchState();
+    setSearchState({ q: input?.value ?? '', filters: state.filters });
+  });
+
+  saveButton?.addEventListener('click', () => {
+    const state = currentSearchState();
+    const hash = buildSearchHash(state);
+    if (hash === '#search') return;
+    const labelParts = [state.q || 'Filtered search'];
+    if (state.filters.type) labelParts.push(`type:${state.filters.type}`);
+    const tags = Array.isArray(state.filters.tag) ? state.filters.tag : state.filters.tag ? [state.filters.tag] : [];
+    if (tags.length) labelParts.push(`tag:${tags.join(',')}`);
+    const item = { hash, label: labelParts.join(' · ') };
+    const next = [item, ...readSavedSearches().filter((saved) => saved.hash !== hash)];
+    writeSavedSearches(next);
+    if (savedHost) savedHost.innerHTML = renderSavedSearches();
+  });
+
+  savedHost?.addEventListener('click', (event) => {
+    const button = event.target.closest('[data-remove-saved-search]');
+    if (!button) return;
+    const index = Number(button.getAttribute('data-remove-saved-search'));
+    const next = readSavedSearches().filter((_, itemIndex) => itemIndex !== index);
+    writeSavedSearches(next);
+    savedHost.innerHTML = renderSavedSearches();
+  });
+}
+
+async function initSearchPage() {
+  if (route !== 'search') return;
+
+  const filterHost = document.getElementById('site-search-filters');
+  const resultHost = document.getElementById('site-search-results');
+  const summaryHost = document.getElementById('site-search-summary');
+  const savedHost = document.getElementById('site-search-saved');
+  if (!filterHost || !resultHost || !summaryHost || !savedHost) return;
+
+  bindSearchPageControls();
+  savedHost.innerHTML = renderSavedSearches();
+
+  const state = currentSearchState();
+
+  try {
+    const result = await siteSearchService.search({ q: state.q, filters: state.filters, pageSize: 20 });
+    filterHost.innerHTML = renderSearchFilters(result.availableFilters, state.filters);
+    resultHost.innerHTML = renderSearchResults(result);
+    summaryHost.textContent = state.q || Object.keys(state.filters).length
+      ? `${result.total} results`
+      : 'Enter a query or choose a filter.';
+
+    filterHost.querySelectorAll('[data-search-filter-key]').forEach((button) => {
+      button.addEventListener('click', () => {
+        toggleSearchFilter(button.getAttribute('data-search-filter-key'), button.getAttribute('data-search-filter-value'));
+      });
+    });
+  } catch (_error) {
+    summaryHost.textContent = 'Search index unavailable. Run npm run build:pages.';
+    resultHost.innerHTML = '';
+    filterHost.innerHTML = '<span class="mini-note">No index loaded.</span>';
+  }
+}
+
+function initGlobalSearch() {
+  const form = document.getElementById('global-search-form');
+  const input = document.getElementById('global-search-input');
+  if (!form || !input) return;
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    setSearchState({ q: input.value, filters: {} });
+  });
+
+  input.addEventListener('focus', () => {
+    siteSearchService.warm().catch(() => {});
+  });
 }
 
 function render(options = {}) {
   const { preserveScroll = false } = options;
   const previousScrollX = window.scrollX;
   const previousScrollY = window.scrollY;
-  const activeElement = document.activeElement;
-  const shouldRestoreTextFocus =
-    activeElement &&
-    (activeElement.tagName === 'INPUT' || activeElement.tagName === 'TEXTAREA') &&
-    typeof activeElement.id === 'string' &&
-    activeElement.id.length > 0;
-  const focusState = shouldRestoreTextFocus
-    ? {
-        id: activeElement.id,
-        selectionStart: typeof activeElement.selectionStart === 'number' ? activeElement.selectionStart : null,
-        selectionEnd: typeof activeElement.selectionEnd === 'number' ? activeElement.selectionEnd : null,
-        selectionDirection: typeof activeElement.selectionDirection === 'string' ? activeElement.selectionDirection : 'none'
-      }
+  // 宽表横向滚动位置存在内部容器上，整页重渲染会重建它并丢失用户的横向拖拽。
+  // 渲染前抓取、渲染后恢复，避免点击 Chains 等字段链接后横向滚动被重置。
+  const previousTableWrap = document.querySelector('.annojoin-master-table-wrap');
+  const previousTableScroll = previousTableWrap
+    ? { left: previousTableWrap.scrollLeft, top: previousTableWrap.scrollTop }
     : null;
+  let activeSearch = null;
+  if (document.activeElement?.id === 'annojoin-search-input') {
+    const el = document.activeElement;
+    activeSearch = {
+      selectionStart: el.selectionStart ?? null,
+      selectionEnd: el.selectionEnd ?? null
+    };
+  }
 
   setTheme(theme, mode);
   document.getElementById('app').innerHTML = `${nav()}${pageFor(route)}${renderFooter()}`;
+  if (route === 'entry' || route === 'sequence') {
+    const targetPdbId = new URLSearchParams(window.location.hash.split('?')[1] || '').get('pdbId')?.trim();
+    if (targetPdbId) {
+      requestAnimationFrame(() => {
+        const target = [...document.querySelectorAll('[data-annojoin-case-row]')]
+          .find((row) => String(row.getAttribute('data-pdb-id') || '').toUpperCase() === targetPdbId.toUpperCase());
+        target?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target?.classList.add('is-return-target');
+      });
+    }
+  }
   const exportAllBtn = document.getElementById('export-all-sequences');
   const modeToggle = document.getElementById('mode-toggle');
   if (modeToggle) {
@@ -6478,86 +3364,62 @@ function render(options = {}) {
       render({ preserveScroll: true });
     });
   }
-  const advancedSearchInput = document.getElementById('advanced-search-input');
-  if (advancedSearchInput) {
-    advancedSearchInput.addEventListener('input', (event) => {
-      advancedSearchQuery = event.target.value;
-      render({ preserveScroll: true });
+  const annojoinState = document.getElementById('annojoin-search-input') ? currentAnnojointAtlasState() : null;
+  if (annojoinState) {
+    bindAnnojointAtlasTable({
+      root: document,
+      selectedCaseIds: selectedAnnojointCaseIds,
+      rows: annojoinState.rows,
+      setQuery: setAnnojointAtlasQuery,
+      exportSelectedRows: (selectedRows) => {
+        downloadRowsAsCsv(selectedRows.map(annojoinExportRow), 'annojoin-selected-cases.csv');
+      },
+      selectRows: (rows) => {
+        rows.forEach((row) => {
+          const caseKey = rowCaseKey(row);
+          if (caseKey) selectedAnnojointCaseIds.add(caseKey);
+        });
+        render({ preserveScroll: true });
+      },
+      clearSelection: () => {
+        selectedAnnojointCaseIds.clear();
+        render({ preserveScroll: true });
+      },
+      toggleGroup: toggleAnnojointAtlasGroup,
+      toggleGroupLimit: toggleAnnojointAtlasGroupLimit,
+      expandAllGroups: () => {
+        expandedAnnojointGroupIds = new Set(allAnnojointAtlasGroupIds());
+        render({ preserveScroll: true });
+      },
+      collapseAllGroups: () => {
+        expandedAnnojointGroupIds.clear();
+        uncappedAnnojointGroupIds.clear();
+        render({ preserveScroll: true });
+      },
+      rerender: () => render({ preserveScroll: true }),
+      removeFilter: (key) => {
+        if (key && key.includes(':')) {
+          const idx = key.indexOf(':');
+          const kind = key.slice(0, idx);
+          const value = key.slice(idx + 1);
+          if (kind === 'techniqueFamilies' || kind === 'techniqueNames') {
+            toggleAnnojointAtlasTechnique(kind, value);
+            return;
+          }
+        }
+        setAnnojointAtlasFilter(key, '');
+      },
+      clearFilters: () => clearAnnojointAtlasFilters(),
+      toggleTechniqueFamily: (fam) => toggleAnnojointAtlasTechnique('techniqueFamilies', fam),
+      toggleTechniqueName: (name) => toggleAnnojointAtlasTechnique('techniqueNames', name)
     });
   }
-  const advancedSearchClear = document.getElementById('advanced-search-clear');
-  if (advancedSearchClear) {
-    advancedSearchClear.addEventListener('click', () => {
-      advancedSearchQuery = '';
-      render({ preserveScroll: true });
-    });
-  }
-  const advancedSearchFiltersToggle = document.getElementById('advanced-search-filters-toggle');
-  if (advancedSearchFiltersToggle) {
-    advancedSearchFiltersToggle.addEventListener('click', () => {
-      advancedSearchFiltersOpen = !advancedSearchFiltersOpen;
-      render({ preserveScroll: true });
-    });
-  }
-  const advancedSearchSpeciesSelect = document.getElementById('advanced-search-species');
-  if (advancedSearchSpeciesSelect) {
-    advancedSearchSpeciesSelect.addEventListener('change', (event) => {
-      advancedSearchSpecies = event.target.value;
-      render({ preserveScroll: true });
-    });
-  }
-  const advancedSearchDiscoveryYearSelect = document.getElementById('advanced-search-discovery-year');
-  if (advancedSearchDiscoveryYearSelect) {
-    advancedSearchDiscoveryYearSelect.addEventListener('change', (event) => {
-      advancedSearchDiscoveryYear = event.target.value;
-      render({ preserveScroll: true });
-    });
-  }
-  const advancedSearchPdbIdSelect = document.getElementById('advanced-search-pdb-id');
-  if (advancedSearchPdbIdSelect) {
-    advancedSearchPdbIdSelect.addEventListener('change', (event) => {
-      advancedSearchPdbId = event.target.value;
-      render({ preserveScroll: true });
-    });
-  }
-  const advancedSearchReset = document.getElementById('advanced-search-reset');
-  if (advancedSearchReset) {
-    advancedSearchReset.addEventListener('click', () => {
-      advancedSearchSpecies = 'all';
-      advancedSearchDiscoveryYear = 'all';
-      advancedSearchPdbId = 'all';
-      render({ preserveScroll: true });
-    });
-  }
-  const advancedSearchSortSelect = document.getElementById('advanced-search-sort');
-  if (advancedSearchSortSelect) {
-    advancedSearchSortSelect.addEventListener('change', (event) => {
-      advancedSearchSort = event.target.value;
-      render({ preserveScroll: true });
-    });
-  }
-  const advancedSearchExport = document.getElementById('advanced-search-export');
-  if (advancedSearchExport) {
-    advancedSearchExport.addEventListener('click', () => {
-      downloadRowsAsCsv(getAdvancedSearchRows(), 'foldbridge-search-results.csv');
-    });
-  }
-  const advancedSearchViewList = document.getElementById('advanced-search-view-list');
-  if (advancedSearchViewList) {
-    advancedSearchViewList.addEventListener('click', () => {
-      if (advancedSearchView === 'list') return;
-      advancedSearchView = 'list';
-      render({ preserveScroll: true });
-    });
-  }
-  const advancedSearchViewGrid = document.getElementById('advanced-search-view-grid');
-  if (advancedSearchViewGrid) {
-    advancedSearchViewGrid.addEventListener('click', () => {
-      if (advancedSearchView === 'grid') return;
-      advancedSearchView = 'grid';
-      render({ preserveScroll: true });
-    });
-  }
+  initAnnojointStructureViewers().catch((error) => {
+    console.error('[main] 初始化 ANNOJOIN 3D viewer 失败', error);
+  });
+  initAnnojointCasePage().catch((error) => {
+    console.error('[main] 初始化 ANNOJOIN case page 失败', error);
+  });
   const downloadSelectedRdatBtn = document.getElementById('download-selected-rdat');
   bindPseudoButton(downloadSelectedRdatBtn, () => {
     downloadSelectedRdatFiles();
@@ -6567,120 +3429,6 @@ function render(options = {}) {
     selectedBrowseIds.clear();
     render({ preserveScroll: true });
   });
-  const browsePrevPageBtn = document.getElementById('browse-prev-page');
-  if (browsePrevPageBtn) {
-    browsePrevPageBtn.addEventListener('click', () => {
-      if (browseCurrentPage <= 1) return;
-      browseCurrentPage -= 1;
-      render({ preserveScroll: true });
-    });
-  }
-  const browseNextPageBtn = document.getElementById('browse-next-page');
-  if (browseNextPageBtn) {
-    browseNextPageBtn.addEventListener('click', () => {
-      const totalPages = Math.max(1, Math.ceil(browseEntryRows.length / BROWSE_PAGE_SIZE));
-      if (browseCurrentPage >= totalPages) return;
-      browseCurrentPage += 1;
-      render({ preserveScroll: true });
-    });
-  }
-  bindPageJump({
-    inputId: 'browse-page-input',
-    buttonId: 'browse-page-go',
-    totalPages: () => Math.max(1, Math.ceil(browseEntryRows.length / BROWSE_PAGE_SIZE)),
-    getCurrentPage: () => browseCurrentPage,
-    setCurrentPage: (value) => {
-      browseCurrentPage = value;
-    }
-  });
-  const case3dPrevPageBtn = document.getElementById('case3d-prev-page');
-  if (case3dPrevPageBtn) {
-    case3dPrevPageBtn.addEventListener('click', () => {
-      if (case3dCurrentPage <= 1) return;
-      case3dCurrentPage -= 1;
-      render({ preserveScroll: true });
-    });
-  }
-  const case3dNextPageBtn = document.getElementById('case3d-next-page');
-  if (case3dNextPageBtn) {
-    case3dNextPageBtn.addEventListener('click', () => {
-      const total3dPages = Math.max(1, Math.ceil(case3dRows.length / CASE3D_PAGE_SIZE));
-      if (case3dCurrentPage >= total3dPages) return;
-      case3dCurrentPage += 1;
-      render({ preserveScroll: true });
-    });
-  }
-  bindPageJump({
-    inputId: 'case3d-page-input',
-    buttonId: 'case3d-page-go',
-    totalPages: () => Math.max(1, Math.ceil(case3dRows.length / CASE3D_PAGE_SIZE)),
-    getCurrentPage: () => case3dCurrentPage,
-    setCurrentPage: (value) => {
-      case3dCurrentPage = value;
-    }
-  });
-  const structurePrevPageBtn = document.getElementById('structure-prev-page');
-  if (structurePrevPageBtn) {
-    structurePrevPageBtn.addEventListener('click', () => {
-      if (structureCurrentPage <= 1) return;
-      structureCurrentPage -= 1;
-      render({ preserveScroll: true });
-    });
-  }
-  const structureNextPageBtn = document.getElementById('structure-next-page');
-  if (structureNextPageBtn) {
-    structureNextPageBtn.addEventListener('click', () => {
-      const totalStructurePages = Math.max(1, Math.ceil(structureEntryRows.length / CASE3D_PAGE_SIZE));
-      if (structureCurrentPage >= totalStructurePages) return;
-      structureCurrentPage += 1;
-      render({ preserveScroll: true });
-    });
-  }
-  bindPageJump({
-    inputId: 'structure-page-input',
-    buttonId: 'structure-page-go',
-    totalPages: () => Math.max(1, Math.ceil(structureEntryRows.length / CASE3D_PAGE_SIZE)),
-    getCurrentPage: () => structureCurrentPage,
-    setCurrentPage: (value) => {
-      structureCurrentPage = value;
-    }
-  });
-  const selectAllStructureBtn = document.getElementById('select-all-structure');
-  bindPseudoButton(selectAllStructureBtn, () => {
-    structureEntryRows.forEach((row) => selectedStructureIds.add(row.foldBridgeId));
-    render({ preserveScroll: true });
-  });
-  const downloadSelectedStructureBtn = document.getElementById('download-selected-structure');
-  bindPseudoButton(downloadSelectedStructureBtn, () => {
-    downloadSelectedRdatFiles([...selectedStructureIds]);
-  });
-  const clearSelectedStructureBtn = document.getElementById('clear-selected-structure');
-  bindPseudoButton(clearSelectedStructureBtn, () => {
-    selectedStructureIds.clear();
-    render({ preserveScroll: true });
-  });
-  const caseDetailPrevPageBtn = document.getElementById('case-detail-prev-page');
-  if (caseDetailPrevPageBtn) {
-    caseDetailPrevPageBtn.addEventListener('click', () => {
-      if (caseDetailSequencePage <= 1) return;
-      caseDetailSequencePage -= 1;
-      render({ preserveScroll: true });
-    });
-  }
-  const caseDetailNextPageBtn = document.getElementById('case-detail-next-page');
-  if (caseDetailNextPageBtn) {
-    caseDetailNextPageBtn.addEventListener('click', () => {
-      const caseId = getCaseIdFromHash();
-      const detail = caseId ? caseDetailCache.get(caseId) : null;
-      const totalPages = Math.max(
-        1,
-        Math.ceil(((detail && !detail.error ? detail.rmdbSequences.length : 0) || 0) / CASE_DETAIL_SEQUENCE_PAGE_SIZE)
-      );
-      if (caseDetailSequencePage >= totalPages) return;
-      caseDetailSequencePage += 1;
-      render({ preserveScroll: true });
-    });
-  }
   const selectAllRdatBtn = document.getElementById('select-all-rdat');
   bindPseudoButton(selectAllRdatBtn, () => {
     browseEntryRows.forEach((row) => selectedBrowseIds.add(row.foldBridgeId));
@@ -6692,15 +3440,6 @@ function render(options = {}) {
       if (!id) return;
       if (event.target.checked) selectedBrowseIds.add(id);
       else selectedBrowseIds.delete(id);
-      render({ preserveScroll: true });
-    });
-  });
-  document.querySelectorAll('.structure-select').forEach((checkbox) => {
-    checkbox.addEventListener('change', (event) => {
-      const id = event.target.getAttribute('data-structure-id');
-      if (!id) return;
-      if (event.target.checked) selectedStructureIds.add(id);
-      else selectedStructureIds.delete(id);
       render({ preserveScroll: true });
     });
   });
@@ -6718,20 +3457,20 @@ function render(options = {}) {
 
 
   initHeaderSearch();
+  initGlobalSearch();
   initAptamerMultiSelect();
   initSecondaryStructureModule();
   initMolstarModule();
   initHomeStructureShowcase();
   initSequenceDetailMolstar();
   initSequenceDetailSecondaryHeatmap();
-  initStructureDetailSecondaryForna();
-  initStructureDetailSecondaryHeatmap();
-  initBrowseDetailSecondaryHeatmap();
-  initStructureDetailMolstar();
-  initPredictedStructureDetailMolstar();
   initAnimatedStats();
   initHomeDashboardFilters();
-  initHomeInteractiveDashboard();
+  initHomeProbingCarousel();
+  initHomeScrollStory();
+  initPdbCasePage();
+  initSearchPage();
+  bindDownloadPageControls();
 
 const subnavMenuToggle = document.getElementById('subnav-menu-toggle');
 const subnavNav = document.querySelector('.hero-subnav nav');
@@ -6773,38 +3512,208 @@ document.addEventListener('click', () => {
     });
   });
 
-  document.querySelectorAll('.back-to-top-btn').forEach((btn) => {
-    btn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  });
-
-  document.querySelectorAll('[data-scroll-target]').forEach((el) => {
+  // Browse by mechanism 卡片：同页滚动到对应家族 section，不改 hash（改 hash 会被路由归一化回 home 并整页重渲染）。
+  // 目标缺失时不阻止默认行为，交回浏览器原生锚点跳转。
+  document.querySelectorAll('[data-probing-family-link]').forEach((el) => {
     el.addEventListener('click', (event) => {
-      event.preventDefault();
-      const targetId = el.getAttribute('data-scroll-target');
-      if (!targetId) return;
-      const target = document.getElementById(targetId);
+      const id = el.getAttribute('data-probing-family-link');
+      if (!id) return;
+      const target = document.getElementById(`probing-family-${id}`);
       if (!target) return;
+      event.preventDefault();
+      if (target.tagName === 'DETAILS') target.open = true;
       target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
   });
 
-  if (preserveScroll || focusState) {
-    requestAnimationFrame(() => {
-      if (preserveScroll) {
-        window.scrollTo(previousScrollX, previousScrollY);
+  if (activeSearch) {
+    const el = document.getElementById('annojoin-search-input');
+    if (el) {
+      el.focus();
+      if (typeof activeSearch.selectionStart === 'number' && typeof activeSearch.selectionEnd === 'number') {
+        try {
+          el.setSelectionRange(activeSearch.selectionStart, activeSearch.selectionEnd);
+        } catch (error) {
+          // type="search" 可能不支持 setSelectionRange，忽略。
+        }
       }
+    }
+  }
 
-      if (!focusState) return;
-      const nextActive = document.getElementById(focusState.id);
-      if (!nextActive || (nextActive.tagName !== 'INPUT' && nextActive.tagName !== 'TEXTAREA')) return;
-      nextActive.focus({ preventScroll: true });
-      if (typeof nextActive.setSelectionRange === 'function' && focusState.selectionStart !== null && focusState.selectionEnd !== null) {
-        nextActive.setSelectionRange(focusState.selectionStart, focusState.selectionEnd, focusState.selectionDirection);
-      }
+  if (previousTableScroll) {
+    const nextTableWrap = document.querySelector('.annojoin-master-table-wrap');
+    if (nextTableWrap) {
+      nextTableWrap.scrollLeft = previousTableScroll.left;
+      nextTableWrap.scrollTop = previousTableScroll.top;
+    }
+  }
+
+  if (preserveScroll) {
+    requestAnimationFrame(() => window.scrollTo(previousScrollX, previousScrollY));
+  }
+}
+
+function initPdbCasePage() {
+  // 索引页 confidence 过滤：纯前端切换行可见性，不触发整页重渲染。
+  const filterButtons = document.querySelectorAll('[data-confidence-filter]');
+  if (filterButtons.length) {
+    const applyFilter = () => {
+      document.querySelectorAll('[data-confidence-class]').forEach((row) => {
+        const cls = row.getAttribute('data-confidence-class');
+        const isParentRow = row.classList.contains('pdb-case-parent-row');
+        if (pdbCaseConfidenceFilter === 'all') {
+          // parent 行始终可见；child 行取决于其 parent 是否展开
+          if (isParentRow) { row.hidden = false; }
+          else if (row.classList.contains('pdb-case-child-row')) {
+            // 由 parent toggle 控制
+          } else { row.hidden = false; }
+        } else {
+          row.hidden = cls !== pdbCaseConfidenceFilter;
+          // 过滤时强制折叠 child 行
+          if (row.classList.contains('pdb-case-child-row')) row.hidden = true;
+        }
+      });
+      // parent 行特殊逻辑：如果过滤后没有子行匹配，隐藏 parent
+      document.querySelectorAll('[data-parent-toggle]').forEach((parentRow) => {
+        const parentName = parentRow.getAttribute('data-parent-toggle');
+        if (pdbCaseConfidenceFilter === 'all') {
+          parentRow.hidden = false;
+        } else {
+          const hasVisible = !!document.querySelector(
+            `[data-parent-name="${CSS.escape(parentName)}"][data-confidence-class="${pdbCaseConfidenceFilter}"]`
+          );
+          parentRow.hidden = !hasVisible;
+        }
+      });
+      filterButtons.forEach((btn) => {
+        btn.classList.toggle('is-active', btn.getAttribute('data-confidence-filter') === pdbCaseConfidenceFilter);
+      });
+    };
+    filterButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        pdbCaseConfidenceFilter = btn.getAttribute('data-confidence-filter') || 'all';
+        applyFilter();
+      });
+    });
+    applyFilter();
+  }
+
+  // Parent group 折叠/展开切换
+  document.querySelectorAll('[data-parent-toggle]').forEach((parentRow) => {
+    const toggleBtn = parentRow.querySelector('.pdb-case-parent-toggle');
+    if (!toggleBtn) return;
+    toggleBtn.addEventListener('click', () => {
+      const parentName = parentRow.getAttribute('data-parent-toggle');
+      const expanded = toggleBtn.getAttribute('aria-expanded') === 'true';
+      toggleBtn.setAttribute('aria-expanded', String(!expanded));
+      const arrow = toggleBtn.querySelector('.pdb-case-parent-arrow');
+      if (arrow) arrow.textContent = expanded ? '\u25B6' : '\u25BC';
+      document.querySelectorAll(`.pdb-case-child-row[data-parent-name="${CSS.escape(parentName)}"]`).forEach((child) => {
+        child.hidden = expanded; // toggle: was expanded → collapse, was collapsed → expand
+      });
+    });
+  });
+
+  // Detail 按钮：导航到本站详情页
+  document.querySelectorAll('.pdb-case-detail-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const href = btn.getAttribute('data-detail-href');
+      if (href) window.location.hash = href.replace(/^#/, '');
+    });
+  });
+
+  // 详情页 alignment 分页导航。
+  const params = getPdbCaseParamsFromHash();
+  if (params.pdbId) {
+    const section = document.querySelector('[data-alignment-page]');
+    const current = section ? Number(section.getAttribute('data-alignment-page')) || 1 : 1;
+    document.querySelectorAll('[data-alignment-nav]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        if (btn.disabled) return;
+        const dir = btn.getAttribute('data-alignment-nav');
+        const next = dir === 'prev' ? current - 1 : current + 1;
+        if (next < 1) return;
+        loadAlignmentForCase(params.pdbId, next);
+      });
     });
   }
+}
+
+function initHomeProbingCarousel() {
+  // 幂等：每次 render 都会重跑本函数，先清旧定时器再决定是否重启，
+  // 否则同一 home 会话内反复 render 会叠加多个 interval。
+  if (homeProbingCarouselTimer) {
+    clearInterval(homeProbingCarouselTimer);
+    homeProbingCarouselTimer = null;
+  }
+  const carousel = document.querySelector('.home-probing-carousel');
+  // 非 home 路由 / 空壳无 slide：清掉定时器后直接返回（已在上面清理）。
+  if (!carousel) return;
+  const slides = Array.from(carousel.querySelectorAll('[data-carousel-slide]'));
+  const dots = Array.from(carousel.querySelectorAll('[data-carousel-dot]'));
+  if (slides.length <= 1) return;
+
+  let current = 0;
+  const show = (next) => {
+    current = (next + slides.length) % slides.length;
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  };
+
+  const restart = () => {
+    if (homeProbingCarouselTimer) clearInterval(homeProbingCarouselTimer);
+    homeProbingCarouselTimer = setInterval(() => show(current + 1), 6000);
+  };
+
+  carousel.querySelector('[data-carousel-prev]')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    show(current - 1);
+    restart();
+  });
+  carousel.querySelector('[data-carousel-next]')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    show(current + 1);
+    restart();
+  });
+  dots.forEach((dot, i) => {
+    dot.addEventListener('click', (e) => {
+      e.preventDefault();
+      show(i);
+      restart();
+    });
+  });
+
+  restart();
+}
+
+function initHomeScrollStory() {
+  // 幂等：每次 render 都会重跑，先 disconnect 旧 observer 再决定是否重建，
+  // 否则同一 home 会话内反复 render 会叠加多个 observer（同轮播 setInterval 坑）。
+  if (homeScrollStoryObserver) {
+    homeScrollStoryObserver.disconnect();
+    homeScrollStoryObserver = null;
+  }
+  const story = document.querySelector('.home-scroll-story');
+  if (!story) return; // 非 home / placeholder 壳：清理后返回
+  const scenes = Array.from(story.querySelectorAll('.hss-scene'));
+  const layers = Array.from(story.querySelectorAll('.hss-layer'));
+  if (scenes.length === 0 || layers.length === 0) return;
+  if (typeof IntersectionObserver !== 'function') return; // 不支持 → CSS 静态堆叠降级（任务 7）
+
+  story.classList.add('hss-js'); // observer 确实接上后才启用滚动渐隐；无 JS/无 observer → 场景全可读（spec §8）
+
+  const activate = (idx) => {
+    scenes.forEach((s) => s.classList.toggle('is-active', Number(s.dataset.scene) === idx));
+    layers.forEach((l) => l.classList.toggle('is-active', Number(l.dataset.stage) === idx));
+  };
+
+  homeScrollStoryObserver = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) activate(Number(e.target.dataset.scene));
+    });
+  }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+
+  scenes.forEach((s) => homeScrollStoryObserver.observe(s));
 }
 
 function initHomeDashboardFilters() {
@@ -6853,94 +3762,18 @@ function initHomeDashboardFilters() {
   }
 }
 
-function initHomeInteractiveDashboard() {
-  document.querySelectorAll('[data-filter-species]').forEach((el) => {
-    el.addEventListener('click', () => {
-      const species = el.getAttribute('data-filter-species');
-      if (homeActiveSpecies === species) {
-        homeActiveSpecies = '';
-      } else {
-        homeActiveSpecies = species;
-      }
-      homeTablePage = 1;
-      render({ preserveScroll: true });
-    });
-  });
-
-  document.querySelectorAll('[data-filter-year]').forEach((el) => {
-    el.addEventListener('click', () => {
-      const year = el.getAttribute('data-filter-year');
-      if (homeActiveYear === year) {
-        homeActiveYear = '';
-      } else {
-        homeActiveYear = year;
-      }
-      homeTablePage = 1;
-      render({ preserveScroll: true });
-    });
-  });
-
-  document.querySelectorAll('[data-clear-filter]').forEach((el) => {
-    el.addEventListener('click', (event) => {
-      event.stopPropagation();
-      const type = el.getAttribute('data-clear-filter');
-      if (type === 'species') homeActiveSpecies = '';
-      if (type === 'year') homeActiveYear = '';
-      homeTablePage = 1;
-      render({ preserveScroll: true });
-    });
-  });
-
-  const clearAllBtn = document.getElementById('home-clear-all-filters');
-  if (clearAllBtn) {
-    clearAllBtn.addEventListener('click', () => {
-      homeActiveSpecies = '';
-      homeActiveYear = '';
-      homeTablePage = 1;
-      render({ preserveScroll: true });
-    });
-  }
-
-  const prevBtn = document.getElementById('home-page-prev');
-  if (prevBtn) {
-    prevBtn.addEventListener('click', () => {
-      if (homeTablePage > 1) {
-        homeTablePage -= 1;
-        render({ preserveScroll: true });
-        const section = document.querySelector('.home-table-section');
-        if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  }
-
-  const nextBtn = document.getElementById('home-page-next');
-  if (nextBtn) {
-    nextBtn.addEventListener('click', () => {
-      homeTablePage += 1;
-      render({ preserveScroll: true });
-      const section = document.querySelector('.home-table-section');
-      if (section) section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
-  }
-}
-
 window.addEventListener('hashchange', () => {
+  const previousRoute = route;
   route = routeFromHash(window.location.hash);
-  if (route !== 'case-detail') {
-    activeCaseDetailId = null;
-    caseDetailSequencePage = 1;
-  }
-  render();
-  requestAnimationFrame(() => {
-    window.scrollTo(0, 0);
-  });
+  // 同路由内仅参数变化（如点击字段链接切换右侧面板）保留滚动位置；
+  // 真正切换路由时才重置到顶部。
+  render({ preserveScroll: route === previousRoute });
 });
 
 
 async function initApp() {
   await loadSequenceRows();
   await loadBrowseEntryRows();
-  await loadCase3dRows();
   render();
 }
 

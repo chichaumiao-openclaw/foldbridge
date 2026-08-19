@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5NCO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1022,
+  "defaultEvidenceId": "annojoin:5NCO:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#6277",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 421,
+    "B": 601
+  },
+  "generatedAt": "2026-08-17T11:59:32.100172Z",
+  "materializedEvidenceCount": 1022,
+  "pdbId": "5NCO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 13,
+    "LOW": 210,
+    "NOT_SUPPORTED": 799
+  },
+  "totalEvidenceCount": 1022
+}

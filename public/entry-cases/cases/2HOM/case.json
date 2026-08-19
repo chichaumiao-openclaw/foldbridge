@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2HOM",
+  "biologicalMoleculeName": "2HOM",
+  "caseId": "2HOM",
+  "caseKey": "2HOM",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "2HOM",
+  "profileCount": 510
+}

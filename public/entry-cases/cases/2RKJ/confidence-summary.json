@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2RKJ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 176,
+  "defaultEvidenceId": "annojoin:2RKJ:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#4768",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 88,
+    "B": 88
+  },
+  "generatedAt": "2026-08-17T13:10:54.484222Z",
+  "materializedEvidenceCount": 176,
+  "pdbId": "2RKJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 4,
+    "NOT_SUPPORTED": 172
+  },
+  "totalEvidenceCount": 176
+}

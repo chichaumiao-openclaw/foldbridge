@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2DET",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 22,
+  "defaultEvidenceId": "annojoin:2DET:confidence:B:data-eterna/OK2TRN_2A3_0000.rdat#30046",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 11,
+    "B": 11
+  },
+  "generatedAt": "2026-08-17T11:09:41.751286Z",
+  "materializedEvidenceCount": 22,
+  "pdbId": "2DET",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 11,
+    "NOT_SUPPORTED": 10
+  },
+  "totalEvidenceCount": 22
+}

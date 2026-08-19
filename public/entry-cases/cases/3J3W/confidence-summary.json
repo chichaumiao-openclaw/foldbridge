@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3J3W",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5230,
+  "defaultEvidenceId": "annojoin:3J3W:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#37219",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2614,
+    "B": 2616
+  },
+  "generatedAt": "2026-08-17T11:18:34.916425Z",
+  "materializedEvidenceCount": 5230,
+  "pdbId": "3J3W",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 205,
+    "LOW": 1684,
+    "NOT_SUPPORTED": 3341
+  },
+  "totalEvidenceCount": 5230
+}
