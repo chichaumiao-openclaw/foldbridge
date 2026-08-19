@@ -1,14 +1,183 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>RNA Structure Mapping Demo</title>
-    <link rel="icon" href="./src/assets/favicon.ico" />
-    <link rel="stylesheet" href="./src/styles.css" />
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="./src/main.js"></script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>FoldBridge | Maintenance</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17252a;
+      --muted: #5e6c70;
+      --paper: #f6f8f5;
+      --card: #ffffff;
+      --line: #d9e3df;
+      --accent: #0b7a75;
+      --accent-dark: #075b58;
+      --warm: #e6ad49;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: Georgia, "Times New Roman", serif;
+    }
+
+    .shell {
+      width: min(100% - 40px, 920px);
+      min-height: 100vh;
+      margin: 0 auto;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+    }
+
+    header {
+      padding: 32px 0 22px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--ink);
+      font-size: 1.25rem;
+      font-weight: 700;
+      letter-spacing: .02em;
+    }
+
+    .mark {
+      width: 34px;
+      height: 34px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      position: relative;
+    }
+
+    .mark::before,
+    .mark::after {
+      content: "";
+      position: absolute;
+      left: 7px;
+      right: 7px;
+      height: 2px;
+      background: var(--accent);
+      transform: rotate(34deg);
+    }
+
+    .mark::before { top: 10px; }
+    .mark::after { top: 19px; transform: rotate(-34deg); }
+
+    .tag {
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: .75rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    main {
+      display: grid;
+      align-content: center;
+      padding: 72px 0 88px;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--accent);
+      font-family: Arial, sans-serif;
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 720px;
+      margin: 0;
+      font-size: clamp(2.8rem, 7vw, 5.8rem);
+      line-height: .98;
+      letter-spacing: -.03em;
+      font-weight: 700;
+    }
+
+    .message {
+      max-width: 650px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: clamp(1.1rem, 2vw, 1.35rem);
+      line-height: 1.55;
+    }
+
+    .return-date {
+      width: fit-content;
+      margin-top: 38px;
+      padding: 16px 20px;
+      border-left: 4px solid var(--warm);
+      background: var(--card);
+      box-shadow: 0 12px 32px rgba(23, 37, 42, .07);
+    }
+
+    .return-date span {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    .return-date strong {
+      color: var(--accent-dark);
+      font-size: 1.45rem;
+    }
+
+    footer {
+      padding: 20px 0 28px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-family: Arial, sans-serif;
+      font-size: .82rem;
+    }
+
+    @media (max-width: 560px) {
+      .shell { width: min(100% - 28px, 920px); }
+      header { padding-top: 22px; }
+      .tag { display: none; }
+      main { padding: 58px 0 70px; }
+      h1 { font-size: clamp(2.7rem, 15vw, 4.3rem); }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="brand"><span class="mark" aria-hidden="true"></span>FoldBridge</div>
+      <div class="tag">Ribocentre database</div>
+    </header>
+
+    <main>
+      <p class="eyebrow">Temporary maintenance</p>
+      <h1>We are sorry.<br>FoldBridge is being refreshed.</h1>
+      <p class="message">We are experiencing a technical issue and the website is under active maintenance. Thank you for your patience while we restore the service.</p>
+      <div class="return-date">
+        <span>Expected return</span>
+        <strong>21 August 2026</strong>
+      </div>
+    </main>
+
+    <footer>Thank you for your understanding.</footer>
+  </div>
+</body>
 </html>
