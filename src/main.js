@@ -1945,14 +1945,16 @@ async function loadEntryTable() {
 }
 
 function entryTablePage() {
+  let content;
   if (!entryTableState || entryTableState === 'loading') {
     if (entryTableState !== 'loading') loadEntryTable();
-    return renderEntryTablePage({ rows: null, statusMessage: { tone: 'loading', text: 'Loading the entry table…' } });
+    content = renderEntryTablePage({ rows: null, statusMessage: { tone: 'loading', text: 'Loading the entry table…' } });
+  } else if (entryTableState === 'error') {
+    content = renderEntryTablePage({ rows: null, statusMessage: { tone: 'error', text: 'The entry table could not be loaded. Refresh to try again.' } });
+  } else {
+    content = renderEntryTablePage({ rows: entryTableState, missingPdbs: entryMissingPdbsState });
   }
-  if (entryTableState === 'error') {
-    return renderEntryTablePage({ rows: null, statusMessage: { tone: 'error', text: 'The entry table could not be loaded. Refresh to try again.' } });
-  }
-  return renderEntryTablePage({ rows: entryTableState, missingPdbs: entryMissingPdbsState });
+  return `${renderBundleHeader()}${content}`;
 }
 
 async function loadAnnojointAtlasIndex() {
