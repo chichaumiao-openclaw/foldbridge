@@ -31,19 +31,19 @@ test('normalizeEntryRows tolerates missing/empty payload', () => {
   assert.deepEqual(normalizeEntryRows({ rows: 'nope' }), []);
 });
 
-test('entryCaseHref points to static case page with chain query', () => {
+test('entryCaseHref points to in-site entry-case hash route with chain query', () => {
   const row = { pdbId: '7SYS', auth: 'z', chainKey: 'I[z]' };
   assert.equal(
     entryCaseHref('./public/entry-cases', row),
-    './public/entry-cases/cases/7SYS/index.html?chain=z'
+    '#entry-case?pdb=7SYS&chain=z'
   );
 });
 
-test('entryCaseHref url-encodes pdb path segment and chain query', () => {
+test('entryCaseHref url-encodes pdb and chain query params', () => {
   const row = { pdbId: 'A B', auth: 'a/b', chainKey: 'x' };
   const href = entryCaseHref('./base', row);
-  // PDB 进路径段用 encodeURIComponent（空格→%20）；chain 用 URLSearchParams（/→%2F）
-  assert.equal(href, './base/cases/A%20B/index.html?chain=a%2Fb');
+  // 桥接路由：pdb 与 chain 均用 encodeURIComponent（空格→%20，/→%2F）
+  assert.equal(href, '#entry-case?pdb=A%20B&chain=a%2Fb');
 });
 
 test('entryCaseHref returns empty string when pdb or auth missing', () => {

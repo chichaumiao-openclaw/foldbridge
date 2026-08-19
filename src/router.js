@@ -15,6 +15,7 @@ const ALLOWED_ROUTES = new Set([
   'publications',
   'sequence-detail',
   'pdb-case',
+  'entry-case',
   'annojoin-atlas',
   'annojoin-case',
   'annojoin-confidence'

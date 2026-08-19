@@ -44,7 +44,7 @@ function renderRow(row, caseBase, missingSet) {
 
 // 主渲染。rows=null → loading/error 态由 statusMessage 承载。
 // missingPdbs（Set 或 Array，缺省空集合）：命中的 PDB 行降级为纯文本，不渲染死链。
-export function renderEntryTablePage({ rows, caseBase = 'https://foldbridge.sunhao.uk/public/entry-cases', statusMessage = null, missingPdbs = null } = {}) {
+export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', statusMessage = null, missingPdbs = null } = {}) {
   const missingSet = toMissingSet(missingPdbs);
   const head = ENTRY_TABLE_COLUMNS
     .map((col) => `<th scope="col">${escapeHtml(col.label)}</th>`)

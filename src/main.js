@@ -403,6 +403,16 @@ function getTechnologySlugFromHash() {
   return params.get('tech');
 }
 
+function getEntryCaseParamsFromHash() {
+  const hash = window.location.hash || '';
+  const [, queryString = ''] = hash.split('?');
+  const params = new URLSearchParams(queryString);
+  return {
+    pdb: params.get('pdb'),
+    chain: params.get('chain')
+  };
+}
+
 function getPdbCaseParamsFromHash() {
   const hash = window.location.hash || '';
   const [, queryString = ''] = hash.split('?');
@@ -3045,9 +3055,31 @@ function annojoinConfidencePage() {
 }
 
 
+const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/public/entry-cases';
+
+function entryCasePage() {
+  const { pdb } = getEntryCaseParamsFromHash();
+  const safePdb = String(pdb || '').trim();
+  if (!safePdb || !/^[A-Za-z0-9]+$/.test(safePdb)) {
+    return `<main class="page"><section class="page-section"><p>Invalid case reference.</p>
+      <p><a class="download-outline-btn" href="#entry">Back to the table</a></p></section></main>`;
+  }
+  const src = `${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/index.html`;
+  return `<main class="entry-case-embed">
+    <div class="entry-case-embed-bar">
+      <a class="download-outline-btn" href="#entry">← Back to the table</a>
+      <span class="entry-case-embed-pdb">${escapeHtml(safePdb)}</span>
+      <a class="download-outline-btn" href="${src}" target="_blank" rel="noopener">Open in new tab ↗</a>
+    </div>
+    <iframe class="entry-case-embed-frame" src="${src}" title="${escapeHtml(safePdb)} case page"
+      loading="lazy" referrerpolicy="no-referrer"></iframe>
+  </main>`;
+}
+
 function pageFor(name) {
   const safeRoute = normalizeRoute(name);
   if (safeRoute === 'browse') return browsePage();
+  if (safeRoute === 'entry-case') return entryCasePage();
   if (safeRoute === 'entry') return entryTablePage();
   if (safeRoute === 'sequence') return annojoinAtlasPage();
   if (safeRoute === 'structure') return structurePage();

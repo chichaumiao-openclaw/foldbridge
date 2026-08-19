@@ -41,7 +41,5 @@ export function entryCaseHref(base, row) {
   const pdb = text(row && row.pdbId);
   const chain = text(row && row.auth);
   if (!pdb || !chain) return '';
-  const params = new URLSearchParams();
-  params.set('chain', chain);
-  return `${base}/cases/${encodeURIComponent(pdb)}/index.html?${params.toString()}`;
+  return `#entry-case?pdb=${encodeURIComponent(pdb)}&chain=${encodeURIComponent(chain)}`;
 }
