@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1LS2",
+  "biologicalMoleculeName": "1LS2",
+  "caseId": "1LS2",
+  "caseKey": "RASP2PDB:1LS2",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "1LS2",
+  "profileCount": 26
+}

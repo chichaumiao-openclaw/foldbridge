@@ -1,0 +1,13 @@
+{
+  "assetFamily": "RASP2PDB",
+  "atlasCaseKey": "RASP2PDB:1JGP",
+  "biologicalMoleculeName": "1JGP",
+  "caseId": "1JGP",
+  "caseKey": "RASP2PDB:1JGP",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "A UNDERPOWERED",
+  "pdbId": "1JGP",
+  "profileCount": 26
+}
