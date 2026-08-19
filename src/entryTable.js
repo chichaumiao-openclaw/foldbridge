@@ -43,3 +43,50 @@ export function entryCaseHref(base, row) {
   if (!pdb || !chain) return '';
   return `#entry-case?pdb=${encodeURIComponent(pdb)}&chain=${encodeURIComponent(chain)}`;
 }
+
+// 稳定 slug：小写、非字母数字折成单个连字符、去首尾连字符。用于折叠分组的稳定 id。
+export function entryGroupSlug(label = '') {
+  return String(label)
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'na';
+}
+
+// 两层折叠分组：外层 partition(RNA class)，内层 sciName(分子名)。
+// chain 行全保留、不漏行、不改行内容——只是把已有归一化行按现有字段包进分组结构。
+// 空 partition → 'Unclassified RNA'；空 sciName → 回退到 partition label。
+// 排序：parent/child 按 label 升序，组内行按 pdbId→auth 升序（稳定、确定，避免部署 churn）。
+export function buildEntryTableGroups(rows = []) {
+  const parentMap = new Map();
+  for (const row of rows) {
+    const parentLabel = text(row.partition) || 'Unclassified RNA';
+    const childLabel = text(row.sciName) || parentLabel;
+    const parentId = entryGroupSlug(parentLabel);
+    const childId = `${parentId}::${entryGroupSlug(childLabel)}`;
+    if (!parentMap.has(parentId)) {
+      parentMap.set(parentId, { id: parentId, label: parentLabel, count: 0, children: new Map() });
+    }
+    const parent = parentMap.get(parentId);
+    if (!parent.children.has(childId)) {
+      parent.children.set(childId, { id: childId, parentId, label: childLabel, count: 0, rows: [] });
+    }
+    const child = parent.children.get(childId);
+    child.rows.push(row);
+    child.count += 1;
+    parent.count += 1;
+  }
+
+  const byLabel = (a, b) => String(a.label).localeCompare(String(b.label));
+  const byRow = (a, b) =>
+    String(a.pdbId).localeCompare(String(b.pdbId)) || String(a.auth).localeCompare(String(b.auth));
+
+  return [...parentMap.values()]
+    .sort(byLabel)
+    .map((parent) => ({
+      ...parent,
+      children: [...parent.children.values()]
+        .sort(byLabel)
+        .map((child) => ({ ...child, rows: [...child.rows].sort(byRow) }))
+    }));
+}

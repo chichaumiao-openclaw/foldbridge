@@ -97,6 +97,7 @@ let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
 let entryTableState = null; // null=未加载, 'loading', 'error', 或归一化后的 rows 数组
 let entryMissingPdbsState = new Set(); // 缺页 PDB 集合（降级：命中行只渲染纯文本，不渲染死链）；fetch 失败降级为空集合
+let expandedEntryGroupIds = new Set(); // entry 表两层折叠（partition→分子名）已展开的分组 id：parent:<id> / child:<id>
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let pdbCaseConfidenceFilter = 'all';
@@ -1952,7 +1953,12 @@ function entryTablePage() {
   } else if (entryTableState === 'error') {
     content = renderEntryTablePage({ rows: null, statusMessage: { tone: 'error', text: 'The entry table could not be loaded. Refresh to try again.' } });
   } else {
-    content = renderEntryTablePage({ rows: entryTableState, missingPdbs: entryMissingPdbsState });
+    content = renderEntryTablePage({
+      rows: entryTableState,
+      missingPdbs: entryMissingPdbsState,
+      grouped: true,
+      expandedGroupIds: expandedEntryGroupIds
+    });
   }
   return `${renderBundleHeader()}${content}`;
 }
@@ -2271,6 +2277,14 @@ function toggleAnnojointAtlasTechnique(kind, value) {
 
 function setAnnojointAtlasQuery(query) {
   setAnnojointAtlasFilter('q', query, { replace: true });
+}
+
+// entry 表折叠：切换某个分组 id（parent:<id> / child:<id>）的展开状态，整页重渲染。
+function toggleEntryGroup(groupId) {
+  if (!groupId) return;
+  if (expandedEntryGroupIds.has(groupId)) expandedEntryGroupIds.delete(groupId);
+  else expandedEntryGroupIds.add(groupId);
+  render({ preserveScroll: true });
 }
 
 function toggleAnnojointAtlasGroup(groupId) {
@@ -3325,6 +3339,12 @@ function render(options = {}) {
       });
     }
   }
+  // entry 表两层折叠：委托绑定分组表头的展开/收起（parent:<id> / child:<id>）。
+  document.querySelectorAll('[data-entry-group-toggle]').forEach((button) => {
+    button.addEventListener('click', () => {
+      toggleEntryGroup(button.getAttribute('data-entry-group-toggle'));
+    });
+  });
   const exportAllBtn = document.getElementById('export-all-sequences');
   const modeToggle = document.getElementById('mode-toggle');
   if (modeToggle) {

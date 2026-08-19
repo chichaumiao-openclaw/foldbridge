@@ -2669,6 +2669,80 @@ tbody tr:hover {
   color: #b3261e;
 }
 
+/* Entry 表两层折叠分组表头（partition→分子名）。沿用 annojoin 金色分组视觉，
+   仅新增折叠表头行样式，不改 entry 数据行现有视觉。 */
+.entry-parent-group-row td,
+.entry-child-group-row td {
+  white-space: nowrap;
+}
+
+.entry-group-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.entry-parent-group-row td {
+  background: linear-gradient(180deg, #fff4c9 0%, #ffe8a3 100%);
+  color: var(--textPrimary);
+  font-weight: var(--fontWeightStrong, 700);
+  box-shadow: inset 3px 0 0 #e0ae24;
+}
+
+.entry-child-group-row td {
+  background: #fff8df;
+  color: var(--textPrimary);
+}
+
+.entry-group-head-child {
+  padding-left: 28px !important;
+}
+
+.entry-parent-group-row.is-expanded-group td,
+.entry-child-group-row.is-expanded-group td {
+  background: #ffefb5;
+  box-shadow: inset 3px 0 0 #d9a51b;
+}
+
+.entry-group-toggle {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: #fffdf7;
+  color: var(--textPrimary);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.entry-group-toggle:hover,
+.entry-group-toggle:focus-visible {
+  outline: none;
+  border-color: #e0ae24;
+  background: #fff2bf;
+}
+
+.entry-group-label {
+  font-weight: var(--fontWeightStrong, 700);
+}
+
+.entry-group-count {
+  flex: none;
+  padding: 1px 8px;
+  border: 1px solid rgba(227, 191, 92, 0.36);
+  border-radius: 999px;
+  background: #fffdf7;
+  color: var(--textSecondary);
+  font-size: 0.72rem;
+}
+
 .entry-sequence {
   display: inline-block;
   max-width: 100%;
