@@ -77,6 +77,9 @@ let sequenceSearchQuery = '';
 // 让同步的 pageFor()/render() 路径命中即渲染数据，未命中则渲染 loading 占位并触发后台加载。
 const pdbCaseStore = createCaseStore();
 const annojoinAtlasStore = createAnnojointAtlasStore();
+// entry-case 资源型：独立 store 指向 Cloudflare 隧道上的 family-case-bundle.v3 资源，
+// 主站同源渲染（复用 renderAnnojointCasePage），不整页嵌 iframe。资源为 raw JSON（无 .br/.gz）。
+const ENTRY_CASE_STORE = createAnnojointAtlasStore({ baseUrl: 'https://foldbridge.sunhao.uk/public/entry-cases' });
 const probingArticleStore = createProbingArticleStore();
 const homeScrollStoryStore = createHomeScrollStoryStore();
 const helpContentStore = createHelpContentStore({ assetBase: './src/' });
@@ -89,6 +92,7 @@ let annojoinAtlasIndexState = null; // null=未加载, 'loading', 'error', 或 i
 let annojoinDetailRouteIndexState = null; // null=未加载, 'loading', 'error', 或 detail-route-index.json
 const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'error' | generated case asset
 const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
+const entryCaseState = new Map(); // PDB -> 'loading' | 'error' | { caseAsset, confidenceBundle }
 const annojoinPdbCitationState = new Map(); // pdbId -> 'loading' | 'unavailable' | primary citation
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
 let siteStatsState = null; // null=未加载, 'loading', 'error', 或 stats.json
@@ -3057,22 +3061,56 @@ function annojoinConfidencePage() {
 }
 
 
-const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/public/entry-cases';
+// entry-case 资源型加载：从隧道 fetch v3 bundle 的三个 JSON（case + confidence summary/evidence），
+// 适配成 renderAnnojointCasePage 期望的 { caseAsset, confidenceBundle } 形状。资源为 raw JSON。
+async function loadEntryCase(pdb) {
+  const key = String(pdb || '').trim();
+  if (!key || entryCaseState.get(key) === 'loading') return;
+  entryCaseState.set(key, 'loading');
+  try {
+    const base = `cases/${encodeURIComponent(key)}`;
+    const caseJson = await ENTRY_CASE_STORE.loadAssetPath(`${base}/case.json`);
+    // confidence sidecars 可缺失（优雅降级为无 evidence 表）。
+    const [summary, evidence] = await Promise.all([
+      ENTRY_CASE_STORE.loadAssetPath(`${base}/confidence-summary.json`).catch(() => null),
+      ENTRY_CASE_STORE.loadAssetPath(`${base}/confidence-evidence.json`).catch(() => null),
+    ]);
+    const caseAsset = { case: caseJson, summary: { profileCount: caseJson?.profileCount ?? 0 } };
+    const confidenceBundle = summary || evidence
+      ? { summary: summary || {}, evidence: { rows: evidence?.rows || [] }, provenance: null }
+      : null;
+    entryCaseState.set(key, { caseAsset, confidenceBundle });
+  } catch (err) {
+    console.error('[main] 加载 entry-case 资源失败', key, err);
+    entryCaseState.set(key, 'error');
+  }
+  if (route === 'entry-case') render({ preserveScroll: true });
+}
 
 function entryCasePage() {
   const { pdb } = getEntryCaseParamsFromHash();
-  const safePdb = String(pdb || '').trim();
+  const safePdb = String(pdb || '').trim().toUpperCase();
   if (!safePdb || !/^[A-Za-z0-9]+$/.test(safePdb)) {
-    return `<main class="page"><section class="page-section"><p>Invalid case reference.</p>
+    return `${renderBundleHeader()}
+    <main class="page"><section class="page-section"><p>Invalid case reference.</p>
       <p><a class="download-outline-btn" href="#entry">Back to the table</a></p></section></main>`;
   }
-  const src = `${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/index.html`;
-  // 无 bar、无外站链接：iframe 直接夹在主站 header(nav) 与 footer 之间，
-  // case 页内部的 site-nav.js 有 iframe 守卫（self!==top 不注入），不会重复渲染头。
-  return `<main class="entry-case-embed">
-    <iframe class="entry-case-embed-frame" src="${src}" title="${escapeHtml(safePdb)} case page"
-      loading="lazy" referrerpolicy="no-referrer"></iframe>
-  </main>`;
+  const state = entryCaseState.get(safePdb);
+  if (!state) loadEntryCase(safePdb);
+  if (state === 'error') {
+    return `${renderBundleHeader()}
+    <main class="page"><section class="page-section"><p>Unable to load case ${escapeHtml(safePdb)}.</p>
+      <p><a class="download-outline-btn" href="#entry">Back to the table</a></p></section></main>`;
+  }
+  const ready = state && typeof state === 'object' ? state : null;
+  return renderAnnojointCasePage({
+    caseAsset: ready?.caseAsset || null,
+    confidenceBundle: ready?.confidenceBundle || null,
+    confidenceStatus: ready ? 'ready' : 'loading',
+    caseId: safePdb,
+    caseKey: safePdb,
+    headerHtml: renderBundleHeader(),
+  });
 }
 
 function pageFor(name) {
