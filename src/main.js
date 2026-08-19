@@ -3057,7 +3057,7 @@ function annojoinConfidencePage() {
 }
 
 
-const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/public/entry-cases';
+const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/entry-cases';
 
 function entryCasePage() {
   const { pdb } = getEntryCaseParamsFromHash();
