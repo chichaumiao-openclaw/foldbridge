@@ -20,13 +20,16 @@ function makeRow(overrides = {}) {
   };
 }
 
-test('renderEntryTablePage renders <a> link for a built (non-missing) PDB', () => {
+test('renderEntryTablePage renders in-site entry-case link for a built (non-missing) PDB', () => {
   const row = makeRow({ pdbId: '7SYS', auth: 'z' });
   const html = renderEntryTablePage({ rows: [row], caseBase: CASE_BASE, missingPdbs: new Set(['OTHR']) });
   assert.ok(html.includes('<a class="entry-table-link"'), 'expected an anchor link');
   const expectedHref = entryCaseHref(CASE_BASE, row);
-  assert.ok(expectedHref.includes('cases/7SYS/'), 'sanity: href points at case page');
-  assert.ok(html.includes(`href="${expectedHref}"`), 'expected href to point to cases/<PDB>/');
+  assert.equal(expectedHref, '#entry-case?pdb=7SYS&chain=z', 'sanity: href uses the in-site entry-case route');
+  assert.ok(
+    html.includes('href="#entry-case?pdb=7SYS&amp;chain=z"'),
+    'expected HTML-escaped href to point at the in-site entry-case route'
+  );
 });
 
 test('renderEntryTablePage renders plain text (no <a>) for a missing PDB', () => {
