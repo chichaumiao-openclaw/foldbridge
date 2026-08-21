@@ -64,7 +64,9 @@ import {
   buildSearchHash,
   createSearchService,
   filtersFromSearchParams,
-  searchParamsFromHash
+  SEARCH_FILTER_GROUPS,
+  searchParamsFromHash,
+  visibleSearchFilterEntries
 } from './search/searchService.js';
 let sequenceRows = [];
 let browseEntryRows = [];
@@ -3269,20 +3271,16 @@ function toggleSearchFilter(key, value) {
 }
 
 function renderSearchFilters(filters, activeFilters) {
-  const allowedKeys = ['type', 'tag', 'technique'];
-  return allowedKeys
-    .map((key) => {
-      const values = filters?.[key] ?? {};
-      const buttons = Object.entries(values)
-        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-        .slice(0, 12)
-        .map(([value, count]) => `<button
+  return SEARCH_FILTER_GROUPS
+    .map(({ key }) => {
+      const buttons = visibleSearchFilterEntries(filters, key)
+        .map(({ value, label, count }) => `<button
           type="button"
           class="site-search-filter ${isFilterActive(activeFilters, key, value) ? 'active' : ''}"
           data-search-filter-key="${escapeHtml(key)}"
           data-search-filter-value="${escapeHtml(value)}"
         >
-          <span>${escapeHtml(value)}</span>
+          <span>${escapeHtml(label)}</span>
           <small>${escapeHtml(count)}</small>
         </button>`)
         .join('');
