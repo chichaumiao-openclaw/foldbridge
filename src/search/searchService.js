@@ -1,12 +1,20 @@
+import { MECHANISM_FAMILIES } from '../techniqueFilterModel.js';
+
 const SEARCH_FILTER_KEYS = ['type', 'tag', 'technique'];
 
-const TECHNIQUE_FILTER_OPTIONS = [
-  { value: 'dms', label: 'DMS-based methods', facets: ['dms-based-probing'] },
-  { value: 'shape', label: 'SHAPE-based methods', facets: ['shape-based-probing'] },
-  { value: 'cleavage', label: 'Cleavage-based methods', facets: ['enzymatic-probing', 'cleavage-footprinting'] },
-  { value: 'nucleotide', label: 'Nucleotide-specific chemical probing methods', facets: ['carbodiimide', 'guanine-specific-probing'] },
-  { value: 'interaction', label: 'RNA–RNA interaction mapping methods', facets: ['rna-protein-interaction'] }
-];
+const PAGEFIND_TECHNIQUE_FACETS = {
+  dms: ['dms-based-probing'],
+  shape: ['shape-based-probing'],
+  cleavage: ['enzymatic-probing', 'cleavage-footprinting'],
+  nucleotide: ['carbodiimide', 'guanine-specific-probing'],
+  interaction: ['rna-protein-interaction']
+};
+
+const TECHNIQUE_FILTER_OPTIONS = MECHANISM_FAMILIES.map(({ id, label }) => {
+  const facets = PAGEFIND_TECHNIQUE_FACETS[id];
+  if (!facets) throw new Error(`Missing Pagefind facets for mechanism family: ${id}`);
+  return { value: id, label, facets };
+});
 
 const RNA_TYPE_FILTER_OPTIONS = [
   { value: 'rrna', label: 'rRNA' },
