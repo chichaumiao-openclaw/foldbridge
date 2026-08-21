@@ -2,19 +2,7 @@
 // 无 DOM 副作用、无 fetch。跳转链接由 entryCaseHref 生成，指向静态 case 页树。
 
 import { ENTRY_TABLE_COLUMNS, entryCaseHref, buildEntryTableGroups } from './entryTable.js';
-
-// technique 筛选选项：对齐 #probing 页的公开口径（SHAPE/DMS/enzymatic 等）。
-// id 与 entry-table.json 的 probing_category 值逐字对应；label 为公开展示名。
-// 绝不含内部 family(ABCDEF) 分类。
-export const ENTRY_TECHNIQUE_OPTIONS = [
-  { id: 'shape-based-probing', label: 'SHAPE' },
-  { id: 'dms-based-probing', label: 'DMS' },
-  { id: 'enzymatic-probing', label: 'Enzymatic' },
-  { id: 'cleavage-footprinting', label: 'Cleavage footprinting' },
-  { id: 'carbodiimide', label: 'Carbodiimide' },
-  { id: 'rna-protein-interaction', label: 'RNA–protein interaction' },
-  { id: 'guanine-specific-probing', label: 'Guanine-specific' }
-];
+import { renderTechniqueFilterControls } from './annojoinAtlasView.js';
 
 function escapeHtml(value) {
   return String(value ?? '')
@@ -111,21 +99,17 @@ function renderGroups(rows, caseBase, missingSet, expandedSet, selectedSet) {
   return out.join('');
 }
 
-// technique 筛选栏（对齐 #probing 公开口径）：一排可切换 chip + 清空按钮。
-// data-entry-technique-toggle 承载 technique id，供 main.js 委托绑定。
-function renderTechniqueFilter(techniqueSet) {
-  const chips = ENTRY_TECHNIQUE_OPTIONS.map((opt) => {
-    const active = techniqueSet.has(opt.id);
-    return `<button type="button" class="entry-technique-chip${active ? ' is-active' : ''}" data-entry-technique-toggle="${escapeHtml(opt.id)}" aria-pressed="${active ? 'true' : 'false'}">${escapeHtml(opt.label)}</button>`;
-  }).join('');
-  const clearBtn = techniqueSet.size
+function renderEntryTechniqueFilter(rows, selection) {
+  const families = selection.families instanceof Set ? selection.families : new Set(selection.families || []);
+  const techniques = selection.techniques instanceof Set ? selection.techniques : new Set(selection.techniques || []);
+  const controls = renderTechniqueFilterControls(rows, {
+    techniqueFamilies: [...families],
+    techniqueNames: [...techniques]
+  });
+  const clear = families.size || techniques.size
     ? `<button type="button" class="entry-filter-clear" id="clear-entry-technique-filter">Clear filter</button>`
     : '';
-  return `<div class="entry-technique-filter" role="group" aria-label="Filter by probing technique">
-      <span class="entry-filter-label">Technique</span>
-      ${chips}
-      ${clearBtn}
-    </div>`;
+  return `${controls}${clear}`;
 }
 
 // 选择工具条：导出选中 + 清空选择。
@@ -139,13 +123,16 @@ function renderSelectionToolbar(selectedCount) {
 // 主渲染。rows=null → loading/error 态由 statusMessage 承载。
 // missingPdbs（Set 或 Array，缺省空集合）：命中的 PDB 行降级为纯文本，不渲染死链。
 // grouped=true 时按 partition→分子名 两层折叠渲染；expandedGroupIds 控制展开状态。
-// selectedIds（Set/Array）：已勾选行键；techniqueFilter（Set/Array）：已选 technique 筛选。
+// selectedIds（Set/Array）：已勾选行键；techniqueSelection：旧版 family + detail technique 两级筛选。
 // totalRowCount：过滤前总行数（用于展示 "N of M"）。
-export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', statusMessage = null, missingPdbs = null, grouped = false, expandedGroupIds = null, selectedIds = null, techniqueFilter = null, totalRowCount = null } = {}) {
+export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', statusMessage = null, missingPdbs = null, grouped = false, expandedGroupIds = null, selectedIds = null, techniqueSelection = null, totalRowCount = null } = {}) {
   const missingSet = toMissingSet(missingPdbs);
   const expandedSet = toSet(expandedGroupIds);
   const selectedSet = toSet(selectedIds);
-  const techniqueSet = toSet(techniqueFilter);
+  const normalizedTechniqueSelection = {
+    families: toSet(techniqueSelection?.families),
+    techniques: toSet(techniqueSelection?.techniques)
+  };
   // 勾选列表头（空 <th>）+ 数据列表头。
   const head = `<th scope="col" class="entry-select-head"><span class="visually-hidden">Select</span></th>`
     + ENTRY_TABLE_COLUMNS.map((col) => `<th scope="col">${escapeHtml(col.label)}</th>`).join('');
@@ -164,12 +151,13 @@ export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', 
 
   const count = Array.isArray(rows) ? rows.length : 0;
   const total = Number.isFinite(totalRowCount) ? totalRowCount : count;
-  const countLabel = techniqueSet.size && total !== count
+  const filterActive = normalizedTechniqueSelection.families.size || normalizedTechniqueSelection.techniques.size;
+  const countLabel = filterActive && total !== count
     ? `${count.toLocaleString()} of ${total.toLocaleString()} chains`
     : `${count.toLocaleString()} chains`;
   const controls = statusMessage
     ? ''
-    : `${renderTechniqueFilter(techniqueSet)}${renderSelectionToolbar(selectedSet.size)}`;
+    : `${renderEntryTechniqueFilter(rows || [], normalizedTechniqueSelection)}${renderSelectionToolbar(selectedSet.size)}`;
 
   return `<main class="entry-table-page">
     <section class="entry-table-hero">

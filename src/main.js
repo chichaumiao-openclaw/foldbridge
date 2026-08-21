@@ -53,8 +53,9 @@ import {
   sortAnnojointCases
 } from './annojoinAtlasTableModel.js';
 import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
-import { normalizeEntryRows } from './entryTable.js';
+import { buildEntryRowsWithTechniqueEvidence, filterEntryRowsByTechniqueSelection } from './entryTable.js';
 import { renderEntryTablePage } from './entryTableView.js';
+import { toggleTechniqueSelection } from './techniqueFilterModel.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
 import {
   initAnnojointCasePage,
@@ -105,7 +106,7 @@ let entryTableState = null; // null=未加载, 'loading', 'error', 或归一化�
 let entryMissingPdbsState = new Set(); // 缺页 PDB 集合（降级：命中行只渲染纯文本，不渲染死链）；fetch 失败降级为空集合
 let expandedEntryGroupIds = new Set(); // entry 表两层折叠（partition→分子名）已展开的分组 id：parent:<id> / child:<id>
 let selectedEntryIds = new Set(); // entry 表已勾选行（键=pdbId + '\t' + auth，pdb×chain 唯一）
-let entryTechniqueFilter = new Set(); // entry 表按 technique(probing_category) 的筛选集合；空=不过滤（对齐 #probing 公开口径）
+let entryTechniqueSelection = { families: new Set(), techniques: new Set() }; // 旧版 family + detail technique 两级筛选
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let pdbCaseConfidenceFilter = 'all';
@@ -1978,9 +1979,12 @@ async function loadEntryTable() {
   if (entryTableState === 'loading') return;
   entryTableState = 'loading';
   try {
-    const response = await fetch('./src/assets/generated/entry-table/entry-table.json');
+    const [response, atlasIndex] = await Promise.all([
+      fetch('./src/assets/generated/entry-table/entry-table.json'),
+      annojoinAtlasStore.loadIndex()
+    ]);
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    entryTableState = normalizeEntryRows(await response.json());
+    entryTableState = buildEntryRowsWithTechniqueEvidence(await response.json(), atlasIndex);
   } catch (err) {
     console.error('[main] 加载 entry 表失败', err);
     entryTableState = 'error';
@@ -2013,7 +2017,7 @@ function entryTablePage() {
       grouped: true,
       expandedGroupIds: expandedEntryGroupIds,
       selectedIds: selectedEntryIds,
-      techniqueFilter: entryTechniqueFilter
+      techniqueSelection: entryTechniqueSelection
     });
   }
   return `${renderBundleHeader()}${content}`;
@@ -2348,25 +2352,14 @@ function entryRowId(row) {
   return `${row.pdbId}\t${row.auth}`;
 }
 
-// 按 technique(probingCategory) 过滤：filter 为空则返回全部；否则保留 probingCategory
-// 里含任一选中 technique 的行。probingCategory 是分号分隔的 technique 列表（#probing 公开口径）。
 function getFilteredEntryRows() {
   if (!Array.isArray(entryTableState)) return [];
-  if (entryTechniqueFilter.size === 0) return entryTableState;
-  return entryTableState.filter((row) => {
-    const cats = String(row.probingCategory || '')
-      .split(/[;,]/)
-      .map((s) => s.trim())
-      .filter(Boolean);
-    return cats.some((cat) => entryTechniqueFilter.has(cat));
-  });
+  return filterEntryRowsByTechniqueSelection(entryTableState, entryTechniqueSelection);
 }
 
-// entry 表 technique 筛选切换：整页重渲染。切换后清空跨筛选的行选择歧义由 UI 承担（选择键与行绑定，过滤只影响可见集）。
-function toggleEntryTechnique(technique) {
-  if (!technique) return;
-  if (entryTechniqueFilter.has(technique)) entryTechniqueFilter.delete(technique);
-  else entryTechniqueFilter.add(technique);
+function toggleEntryTechnique(kind, value) {
+  if (!value) return;
+  entryTechniqueSelection = toggleTechniqueSelection(entryTechniqueSelection, kind, value);
   render({ preserveScroll: true });
 }
 
@@ -3447,10 +3440,15 @@ function render(options = {}) {
       toggleEntryGroup(button.getAttribute('data-entry-group-toggle'));
     });
   });
-  // entry 表 technique 筛选 chip（对齐 #probing 公开口径）。
-  document.querySelectorAll('[data-entry-technique-toggle]').forEach((button) => {
-    button.addEventListener('click', () => {
-      toggleEntryTechnique(button.getAttribute('data-entry-technique-toggle'));
+  // entry 表旧版 family + detail technique 两级筛选。
+  document.querySelectorAll('.entry-table-page [data-technique-family]').forEach((input) => {
+    input.addEventListener('change', () => {
+      toggleEntryTechnique('families', input.getAttribute('data-technique-family'));
+    });
+  });
+  document.querySelectorAll('.entry-table-page [data-technique-name]').forEach((input) => {
+    input.addEventListener('change', () => {
+      toggleEntryTechnique('techniques', input.getAttribute('data-technique-name'));
     });
   });
   // entry 表行勾选（select 功能）。
@@ -3478,11 +3476,11 @@ function render(options = {}) {
       render({ preserveScroll: true });
     });
   }
-  // entry 表：清空 technique 筛选。
+  // entry 表：清空 family + detail technique 筛选。
   const clearEntryFilterBtn = document.getElementById('clear-entry-technique-filter');
   if (clearEntryFilterBtn) {
     clearEntryFilterBtn.addEventListener('click', () => {
-      entryTechniqueFilter.clear();
+      entryTechniqueSelection = { families: new Set(), techniques: new Set() };
       render({ preserveScroll: true });
     });
   }

@@ -8368,7 +8368,7 @@ main .technology-method-pill {
 }
 
 /* Entry 表筛选 + 选择功能（2026-08-21）。
-   technique 筛选对齐 #probing 公开口径；勾选 + 导出选中行。绝无 family/confidence。 */
+   筛选复用旧版 Entry/ANNOJOIN 的 family + detail technique 两级结构；勾选 + 导出选中行。 */
 .visually-hidden {
   position: absolute;
   width: 1px;

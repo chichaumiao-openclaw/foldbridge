@@ -2,6 +2,8 @@
 // 读 build-entry-table.py 产出的 entry-table.json（pdb_id x chain 粒度），
 // 归一化为视图行，并拼指向静态 case 页 cases/<PDB>/index.html?chain=<auth> 的跳转链接。
 
+import { matchesTechniqueFilter } from './techniqueFilterModel.js';
+
 // 展示列顺序（源自论文 Fig 2C：molecule / PDB / chain / profiles / technique /
 // confidence / class / source）。锁死列序。
 export const ENTRY_TABLE_COLUMNS = [
@@ -17,6 +19,82 @@ export const ENTRY_TABLE_COLUMNS = [
 
 function text(value) {
   return String(value ?? '').trim();
+}
+
+const ENTRY_TABLE_SCHEMA_VERSION = 'entry-table.v1';
+const ANNOJOIN_ATLAS_SCHEMA_VERSION = 'annojoin-atlas.v2';
+const EXPECTED_ENTRY_ROW_COUNT = 17843;
+
+function entryRowKey(row = {}) {
+  return `${text(row.pdbId)}\t${text(row.auth)}`;
+}
+
+function evidenceRowKey(row = {}, index = 0) {
+  const pdbId = text(row.pdbId);
+  if (!pdbId || !Array.isArray(row.chains) || row.chains.length !== 1 || !text(row.chains[0])) {
+    throw new Error(`Invalid Entry technique evidence row at index ${index}`);
+  }
+  if (!Array.isArray(row.techniqueFamilies) || !Array.isArray(row.techniqueNames)) {
+    throw new Error(`Invalid Entry technique evidence fields for ${pdbId}`);
+  }
+  return `${pdbId}\t${text(row.chains[0])}`;
+}
+
+export function mergeEntryTechniqueEvidence(rows = [], evidenceRows = []) {
+  const entryKeys = new Set();
+  for (const row of rows) {
+    const key = entryRowKey(row);
+    if (entryKeys.has(key)) throw new Error(`Duplicate Entry row: ${key}`);
+    entryKeys.add(key);
+  }
+
+  const evidenceByKey = new Map();
+  evidenceRows.forEach((evidence, index) => {
+    const key = evidenceRowKey(evidence, index);
+    if (evidenceByKey.has(key)) throw new Error(`Duplicate technique evidence: ${key}`);
+    if (!entryKeys.has(key)) throw new Error(`Unexpected technique evidence: ${key}`);
+    evidenceByKey.set(key, evidence);
+  });
+
+  return rows.map((row) => {
+    const key = entryRowKey(row);
+    const evidence = evidenceByKey.get(key);
+    if (!evidence) throw new Error(`Missing technique evidence: ${key}`);
+    return {
+      ...row,
+      techniqueFamilies: [...evidence.techniqueFamilies],
+      techniqueNames: [...evidence.techniqueNames]
+    };
+  });
+}
+
+export function buildEntryRowsWithTechniqueEvidence(entryPayload, atlasIndex) {
+  if (entryPayload?.schemaVersion !== ENTRY_TABLE_SCHEMA_VERSION) {
+    throw new Error(`Entry table schema must be ${ENTRY_TABLE_SCHEMA_VERSION}`);
+  }
+  if (!Array.isArray(entryPayload.rows)
+      || entryPayload.rowCount !== EXPECTED_ENTRY_ROW_COUNT
+      || entryPayload.rows.length !== EXPECTED_ENTRY_ROW_COUNT) {
+    throw new Error('Entry table must contain exactly 17,843 rows');
+  }
+  if (atlasIndex?.schemaVersion !== ANNOJOIN_ATLAS_SCHEMA_VERSION) {
+    throw new Error(`ANNOJOIN atlas schema must be ${ANNOJOIN_ATLAS_SCHEMA_VERSION}`);
+  }
+  if (!Array.isArray(atlasIndex.displayCases)
+      || atlasIndex.totalCaseCount !== EXPECTED_ENTRY_ROW_COUNT
+      || atlasIndex.totalSourceCaseCount !== EXPECTED_ENTRY_ROW_COUNT
+      || atlasIndex.displayCases.length !== EXPECTED_ENTRY_ROW_COUNT) {
+    throw new Error('ANNOJOIN atlas must contain exactly 17,843 Entry cases');
+  }
+  return mergeEntryTechniqueEvidence(normalizeEntryRows(entryPayload), atlasIndex.displayCases);
+}
+
+export function filterEntryRowsByTechniqueSelection(rows = [], selection = {}) {
+  const filters = {
+    families: selection.families instanceof Set ? selection.families : new Set(selection.families || []),
+    techniques: selection.techniques instanceof Set ? selection.techniques : new Set(selection.techniques || [])
+  };
+  return rows.filter((row) => matchesTechniqueFilter(row, filters));
 }
 
 export function normalizeEntryRows(payload) {

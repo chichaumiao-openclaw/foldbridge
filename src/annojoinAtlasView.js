@@ -520,7 +520,7 @@ function renderFilterChip(removeKey, label) {
   return `<span class="annojoin-filter-chip">${escapeHtml(label)} <button type="button" data-annojoin-chip-remove="${escapeHtml(removeKey)}">×</button></span>`;
 }
 
-function renderTechniqueFilterControls(cases = [], filters = {}) {
+export function renderTechniqueFilterControls(cases = [], filters = {}) {
   const model = buildMechanismFilterModel();
   if (!model.families.length) return '';
   const selectedFamilies = new Set(filters.techniqueFamilies || []);
