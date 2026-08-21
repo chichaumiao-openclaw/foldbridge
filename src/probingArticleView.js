@@ -3,7 +3,7 @@
 // 文章正文用专门的 article-* class 控制阅读排版（行宽、行高、图注）。
 //
 // 三个入口：
-//   buildProbingOverviewModel(index)        — 公开方法总览模型（5 个家族 / 26 个方法）
+//   buildProbingOverviewModel(index)        — 公开方法总览模型（5 个家族 / 28 个方法）
 //   renderProbingArticleIndex(index)        — 方法总览（按机制家族分组的卡片墙）
 //   renderProbingUnavailablePage(error)     — 索引不可用时的明确错误边界
 //   renderProbingArticlePage(detail, index) — 单篇阅读页（标题 + 有序 block + 图注）
@@ -191,6 +191,16 @@ const RNA_INTERACTION_METHOD_DESCRIPTIONS = [
     slug: 'comrades',
     title: 'COMRADES',
     description: 'Targeted mapping of RNA–RNA interactions and RNA structures in living cells.'
+  },
+  {
+    slug: 'mca',
+    title: 'MOHCA/MOHCA-seq (MCA)',
+    description: 'Tertiary proximity restraint.'
+  },
+  {
+    slug: 'mutate-and-map',
+    title: 'Mutate-and-map (M²)',
+    description: 'Perturbational structural coupling.'
   }
 ];
 
@@ -246,6 +256,10 @@ export function buildProbingOverviewModel(index) {
     }
   }
 
+  const indexArticlesBySlug = new Map(
+    (Array.isArray(index.articles) ? index.articles : [])
+      .map((article) => [article.slug, article])
+  );
   const families = indexFamilies
     .filter((family) => family.id !== 'inference'
       && Object.hasOwn(CURATED_METHODS_BY_FAMILY_ID, family.id))
@@ -258,7 +272,9 @@ export function buildProbingOverviewModel(index) {
         ...family,
         ...PUBLIC_FAMILY_COPY_BY_ID[family.id],
         methods: CURATED_METHODS_BY_FAMILY_ID[family.id].map((method) => ({
-          ...(familyArticlesBySlug.get(method.slug) || {}),
+          ...(familyArticlesBySlug.get(method.slug)
+            || indexArticlesBySlug.get(method.slug)
+            || {}),
           ...method
         }))
       };

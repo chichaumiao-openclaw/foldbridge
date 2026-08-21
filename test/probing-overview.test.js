@@ -46,7 +46,7 @@ for (const familyId of PUBLIC_FAMILY_IDS) {
   });
 }
 
-test('buildProbingOverviewModel derives the five public families and 26 curated methods', () => {
+test('buildProbingOverviewModel derives the five public families and 28 curated methods', () => {
   assert.equal(
     typeof probingArticleView.buildProbingOverviewModel,
     'function',
@@ -55,9 +55,41 @@ test('buildProbingOverviewModel derives the five public families and 26 curated 
 
   const model = probingArticleView.buildProbingOverviewModel(INDEX);
 
-  assert.equal(model.methodCount, 26);
+  assert.equal(model.methodCount, 28);
   assert.equal(model.familyCount, 5);
-  assert.equal(model.families.flatMap((family) => family.methods).length, 26);
+  assert.equal(model.families.flatMap((family) => family.methods).length, 28);
+});
+
+test('RNA interaction methods append MCA and mutate-and-map article cards', () => {
+  const model = probingArticleView.buildProbingOverviewModel(INDEX);
+  const interactionFamily = model.families.find((family) => family.id === 'carbodiimide-special');
+
+  assert.equal(interactionFamily.methods.length, 8);
+  assert.deepEqual(
+    interactionFamily.methods.slice(-2).map((method) => ({
+      slug: method.slug,
+      title: method.title,
+      description: method.description,
+      figureCount: method.figure_count,
+      pmid: method.rep_pmid
+    })),
+    [
+      {
+        slug: 'mca',
+        title: 'MOHCA/MOHCA-seq (MCA)',
+        description: 'Tertiary proximity restraint.',
+        figureCount: 4,
+        pmid: '26035425'
+      },
+      {
+        slug: 'mutate-and-map',
+        title: 'Mutate-and-map (M²)',
+        description: 'Perturbational structural coupling.',
+        figureCount: 4,
+        pmid: '22109276'
+      }
+    ]
+  );
 });
 
 test('an extra raw family cannot enter the shared overview, family navigation, or method sections', () => {
@@ -114,10 +146,14 @@ test('renderProbingArticleIndex uses the curated method count and public wording
   const html = probingArticleView.renderProbingArticleIndex(INDEX);
   const methodLinks = html.match(/href="#probing\?tech=[^"]+"/g) || [];
 
-  assert.equal(methodLinks.length, 26);
-  assert.match(html, /26 probing methods/i);
-  assert.doesNotMatch(html, /26 in-depth explainers/i);
-  assert.doesNotMatch(html, /26 articles/i);
+  assert.equal(methodLinks.length, 28);
+  assert.match(html, /28 probing methods/i);
+  assert.doesNotMatch(html, /28 in-depth explainers/i);
+  assert.doesNotMatch(html, /28 articles/i);
+  assert.match(html, /href="#probing\?tech=mca"/);
+  assert.match(html, /href="#probing\?tech=mutate-and-map"/);
+  assert.match(html, /MOHCA\/MOHCA-seq \(MCA\)/);
+  assert.match(html, /Mutate-and-map \(M²\)/);
   assert.doesNotMatch(html, /Chain confidence/i);
 });
 
@@ -138,5 +174,5 @@ test('renderProbingUnavailablePage renders an escaped probing-specific error she
   assert.match(html, /Probing methods unavailable/);
   assert.match(html, /broken &lt;index&gt; &amp; &quot;family&quot;/);
   assert.doesNotMatch(html, /broken <index>/);
-  assert.doesNotMatch(html, /Technology Categories|26 probing methods|Five mechanism families/);
+  assert.doesNotMatch(html, /Technology Categories|28 probing methods|Five mechanism families/);
 });

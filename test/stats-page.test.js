@@ -20,7 +20,7 @@ const DASHBOARD_VIEW = {
   },
   probingStatus: 'ready',
   probingError: null,
-  probingOverview: { methodCount: 26, familyCount: 5 }
+  probingOverview: { methodCount: 28, familyCount: 5 }
 };
 
 function withStatuses(entryStatus, probingStatus) {
@@ -47,7 +47,7 @@ test('renderStatsPage renders only the four public dashboard metrics', () => {
   for (const label of ['RNA chains', 'PDB structures', 'Chains with probing profiles', 'Probing methods']) {
     assert.match(html, new RegExp(label));
   }
-  for (const value of ['17,843', '5,321', '14,953', '26']) assert.match(html, new RegExp(value));
+  for (const value of ['17,843', '5,321', '14,953', '28']) assert.match(html, new RegExp(value));
   assert.equal((html.match(/class="stats-metric(?: |")/g) || []).length, 4);
   assert.doesNotMatch(html, /PDBs with ≥1 high-confidence chain|Registered technologies|Explainer articles|Chemical probing entries|Measurement families/i);
 });
@@ -116,11 +116,11 @@ for (const [entryStatus, probingStatus] of [
       assert.doesNotMatch(html, /17,843|5,321|14,953|data-stats-panel=/);
     }
     if (probingStatus === 'ready') {
-      assert.match(html, />26<\/span>[\s\S]*Probing methods/);
+      assert.match(html, />28<\/span>[\s\S]*Probing methods/);
       assert.doesNotMatch(html, /Probing methods unavailable/);
     } else {
       assert.match(html, /Probing methods unavailable/);
-      assert.doesNotMatch(html, />26<\/span>[\s\S]*Probing methods/);
+      assert.doesNotMatch(html, />28<\/span>[\s\S]*Probing methods/);
     }
     assert.doesNotMatch(html, /4,664|2,386|510|undefined/);
   });
@@ -153,7 +153,7 @@ test('renderStatsPage loading state does not hide the other ready data source', 
     rows: ROWS,
     filters: emptyStatsFilters()
   });
-  assert.match(probingReady, />26<\/span>[\s\S]*Probing methods/);
+  assert.match(probingReady, />28<\/span>[\s\S]*Probing methods/);
   assert.match(probingReady, /stats-charts-status--loading/);
   assert.doesNotMatch(probingReady, /data-stats-panel=/);
 });
@@ -168,5 +168,5 @@ test('ready Entry state with a null metric makes charts unavailable, not loading
   assert.match(html, /Entry statistics unavailable/);
   assert.match(html, /stats-charts-status--error/);
   assert.doesNotMatch(html, /stats-charts-status--loading|data-stats-panel=/);
-  assert.match(html, />26<\/span>[\s\S]*Probing methods/);
+  assert.match(html, />28<\/span>[\s\S]*Probing methods/);
 });

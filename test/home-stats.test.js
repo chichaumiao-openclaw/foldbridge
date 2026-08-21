@@ -17,7 +17,7 @@ const DASHBOARD_VIEW = {
   },
   probingStatus: 'ready',
   probingError: null,
-  probingOverview: { methodCount: 26, familyCount: 5 }
+  probingOverview: { methodCount: 28, familyCount: 5 }
 };
 
 const CASE_DATA = {
@@ -45,7 +45,7 @@ function withStatuses(entryStatus, probingStatus) {
 test('renderHomeHero uses the current Entry and Probing dashboard metrics', () => {
   const html = renderHomeHero(DASHBOARD_VIEW);
 
-  for (const value of ['17,843', '5,321', '26']) assert.match(html, new RegExp(value));
+  for (const value of ['17,843', '5,321', '28']) assert.match(html, new RegExp(value));
   for (const label of ['RNA chains', 'PDB structures', 'Probing methods']) assert.match(html, new RegExp(label));
   assert.doesNotMatch(html, /4,664|2,386|510|High confidence|high-confidence/i);
 });
@@ -54,7 +54,7 @@ test('renderHomeModuleCards describes the current PDB and probing method coverag
   const html = renderHomeModuleCards(DASHBOARD_VIEW);
 
   assert.match(html, /5,321 structure-linked PDB entries/);
-  assert.match(html, /26 probing methods across 5 mechanism families/);
+  assert.match(html, /28 probing methods across 5 mechanism families/);
   assert.doesNotMatch(html, /4,664|2,386|510|explainer articles|High confidence/i);
 });
 
@@ -90,11 +90,11 @@ for (const [entryStatus, probingStatus] of [
       assert.doesNotMatch(html, /17,843|5,321|4,664|2,386|510/);
     }
     if (probingStatus === 'ready') {
-      assert.match(html, /26 probing methods/);
+      assert.match(html, /28 probing methods/);
       assert.doesNotMatch(html, /Probing methods unavailable/);
     } else {
       assert.match(html, /Probing methods unavailable/);
-      assert.doesNotMatch(html, /26 probing methods|34 probing methods|37 probing methods/);
+      assert.doesNotMatch(html, /28 probing methods|34 probing methods|37 probing methods/);
     }
   });
 }
@@ -117,7 +117,7 @@ test('home loading state does not hide the other ready data source', () => {
   assert.doesNotMatch(entryReady, /Entry statistics loading/);
 
   const probingReady = renderHomeHero(withStatuses('loading', 'ready'));
-  assert.match(probingReady, /26/);
+  assert.match(probingReady, /28/);
   assert.match(probingReady, /Entry statistics loading/);
   assert.doesNotMatch(probingReady, /Probing methods loading/);
 });

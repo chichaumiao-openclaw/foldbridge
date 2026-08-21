@@ -157,7 +157,7 @@ test('ready Probing preserves the shared overview families and filters raw extra
   const view = buildDashboardViewModel(SITE_READY, indexWithExtraFamily);
 
   assert.equal(view.probingStatus, 'ready');
-  assert.equal(view.probingOverview.methodCount, 26);
+  assert.equal(view.probingOverview.methodCount, 28);
   assert.equal(view.probingOverview.familyCount, 5);
   assert.equal(view.probingOverview.families.length, 5);
   assert.deepEqual(
