@@ -703,6 +703,10 @@ body[data-mode="dark"] .fb-detail-nav .bundle-home-route-nav .nav-btn.active {
   border-radius: 38px;
   box-shadow: 0 30px 80px rgba(155, 122, 38, 0.09);
 }
+html.is-embedded .shell {
+  width: 100%;
+  max-width: 100%;
+}
 .viewer-frame {
   border: 0;
   border-radius: 0;

@@ -8352,16 +8352,19 @@ main .technology-method-pill {
 }
 
 /* Entry case embed: iframe-hosted case page，无 bar、无外站痕迹。
-   iframe 夹在主站 header(nav) 与 footer 之间，高度自适应视口去掉头尾后的余量。 */
+   外层复用主站卡片宽度；嵌入模式下子页 shell 占满 iframe，避免二次扣减 gutter；
+   加载后由 case shell 上报内容高度，页面只保留外层滚动。 */
 .entry-case-embed {
   display: block;
+  width: var(--feature-card-width);
+  max-width: var(--feature-card-width);
   padding: 0;
-  margin: 0;
+  margin: 0 auto;
 }
 .entry-case-embed-frame {
   display: block;
   width: 100%;
-  height: calc(100vh - var(--nav-height, 64px));
+  height: 720px;
   min-height: 480px;
   border: none;
   background: var(--background, #fff);

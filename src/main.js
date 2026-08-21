@@ -56,6 +56,7 @@ import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
 import { buildEntryRowsWithTechniqueEvidence, filterEntryRowsByTechniqueSelection } from './entryTable.js';
 import { renderEntryTablePage } from './entryTableView.js';
 import { toggleTechniqueSelection } from './techniqueFilterModel.js';
+import { mountEntryCaseHeightListener } from './entryCaseEmbed.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
 import {
   initAnnojointCasePage,
@@ -109,6 +110,7 @@ let selectedEntryIds = new Set(); // entry 表已勾选行（键=pdbId + '\t' + 
 let entryTechniqueSelection = { families: new Set(), techniques: new Set() }; // 旧版 family + detail technique 两级筛选
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
+let disposeEntryCaseHeightListener = null;
 let pdbCaseConfidenceFilter = 'all';
 let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
 let homeDashboardFilters = {
@@ -3171,6 +3173,25 @@ function annojoinConfidencePage() {
 
 
 const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/entry-cases';
+const ENTRY_CASE_FRAME_ORIGIN = new URL(ENTRY_CASE_ORIGIN).origin;
+
+function clearEntryCaseEmbed() {
+  if (!disposeEntryCaseHeightListener) return;
+  disposeEntryCaseHeightListener();
+  disposeEntryCaseHeightListener = null;
+}
+
+function initEntryCaseEmbed() {
+  clearEntryCaseEmbed();
+  const frame = document.querySelector('.entry-case-embed-frame');
+  if (!frame) return;
+
+  disposeEntryCaseHeightListener = mountEntryCaseHeightListener({
+    windowObject: window,
+    frame,
+    expectedOrigin: ENTRY_CASE_FRAME_ORIGIN,
+  });
+}
 
 function entryCasePage() {
   const { pdb } = getEntryCaseParamsFromHash();
@@ -3421,8 +3442,10 @@ function render(options = {}) {
     };
   }
 
+  clearEntryCaseEmbed();
   setTheme(theme, mode);
   document.getElementById('app').innerHTML = `${nav()}${pageFor(route)}${renderFooter()}`;
+  if (route === 'entry-case') initEntryCaseEmbed();
   if (route === 'entry' || route === 'sequence') {
     const targetPdbId = new URLSearchParams(window.location.hash.split('?')[1] || '').get('pdbId')?.trim();
     if (targetPdbId) {

@@ -33,6 +33,27 @@ const TIER_ORDER = [
   "LSS_UNDERPOWERED",
 ];
 
+const ENTRY_CASE_HEIGHT_MESSAGE = "foldbridge-case-height";
+
+function measureEmbeddedCaseHeight(shell, scrollY = 0, marginBottom = 0) {
+  if (!shell || typeof shell.getBoundingClientRect !== "function") return null;
+  const bottom = Number(shell.getBoundingClientRect().bottom);
+  const scrollOffset = Number(scrollY);
+  const bottomMargin = Number(marginBottom);
+  if (![bottom, scrollOffset, bottomMargin].every(Number.isFinite)) return null;
+  return Math.ceil(Math.max(0, bottom + scrollOffset + bottomMargin));
+}
+
+function postEmbeddedCaseHeight(parentWindow, height) {
+  const nextHeight = Number(height);
+  if (!parentWindow || typeof parentWindow.postMessage !== "function") return false;
+  if (!Number.isFinite(nextHeight) || nextHeight <= 0) return false;
+  // The containing site can run on production, preview, or localhost origins.
+  // The payload is only a numeric layout hint; the parent validates origin and source.
+  parentWindow.postMessage({ type: ENTRY_CASE_HEIGHT_MESSAGE, height: nextHeight }, "*");
+  return true;
+}
+
 function familyCounts(rows) {
   const out = {};
   for (const r of rows) { const f = r.family || ""; out[f] = (out[f] || 0) + 1; }
@@ -93,6 +114,10 @@ function pickBestEvidence(rows, defaultEvidenceId) {
 
 // DOM bootstrap (browser only). Pure helpers above are referenced here.
 if (typeof document !== "undefined") {
+  if (window.parent !== window) {
+    document.documentElement.classList.add("is-embedded");
+  }
+
   // Add the portal header to top-level entry detail pages. The shared module
   // deliberately skips framed chain workbenches, so nested pages stay chrome-free.
   (function () {
@@ -143,6 +168,32 @@ if (typeof document !== "undefined") {
 
   const chainButtons = [...document.querySelectorAll("[data-chain-id]")];
   const frame = document.getElementById("chainFrame");
+  let embeddedCaseHeightRequest = null;
+
+  function reportEmbeddedCaseHeight() {
+    if (window.parent === window) return;
+    const shell = document.querySelector(".shell");
+    const marginBottom = shell ? parseFloat(getComputedStyle(shell).marginBottom) || 0 : 0;
+    const height = measureEmbeddedCaseHeight(shell, window.scrollY, marginBottom);
+    postEmbeddedCaseHeight(window.parent, height);
+  }
+
+  function reportEmbeddedCaseHeightSoon() {
+    if (embeddedCaseHeightRequest !== null) cancelAnimationFrame(embeddedCaseHeightRequest);
+    embeddedCaseHeightRequest = requestAnimationFrame(() => {
+      embeddedCaseHeightRequest = null;
+      reportEmbeddedCaseHeight();
+    });
+  }
+
+  if (window.parent !== window) {
+    const shell = document.querySelector(".shell");
+    if (shell && typeof ResizeObserver !== "undefined") {
+      new ResizeObserver(reportEmbeddedCaseHeightSoon).observe(shell);
+    }
+    window.addEventListener("load", reportEmbeddedCaseHeightSoon, { once: true });
+    reportEmbeddedCaseHeightSoon();
+  }
 
   function downloadTextFile(filename, text, mime = "text/plain;charset=utf-8") {
     const blob = new Blob([text], { type: mime });
@@ -232,6 +283,7 @@ if (typeof document !== "undefined") {
     const nextHeight = Number(height);
     if (!frame || !Number.isFinite(nextHeight) || nextHeight <= 0) return;
     frame.style.height = `${Math.ceil(nextHeight)}px`;
+    reportEmbeddedCaseHeightSoon();
   }
 
   if (typeof window !== "undefined") {
@@ -376,5 +428,6 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     familyCounts, tierCounts, distinctChains, familyLabel, tierDisplay,
     fmtMetric, fmtP, fmtFraction, fmtCount, pickBestEvidence,
+    measureEmbeddedCaseHeight, postEmbeddedCaseHeight,
   };
 }
