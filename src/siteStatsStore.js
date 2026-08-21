@@ -1,37 +1,93 @@
-// siteStatsStore.js — 浏览器侧站点全局统计资产加载层。
-// 与 probingArticleStore 同构：相对路径基址 + 内存缓存，避免重复 fetch。
-// stats.json 由 scripts/build-site-stats.mjs 在构建期生成。
-// 失败返回 null（绝不抛错），让 Stats 页降级为最小壳而非白屏。
+import { deriveEntryStatsContract } from './statsDashboard.js';
 
 export const DEFAULT_ASSET_BASE = './src/assets/generated/site-stats';
+export const DEFAULT_ENTRY_TABLE_URL = './src/assets/generated/entry-table/entry-table.json';
 
-/**
- * 创建站点统计资产 store。
- * @param {object} [opts]
- * @param {string} [opts.assetBase] 生成资产根路径（默认相对路径）
- * @param {Function} [opts.fetchImpl] 注入的 fetch（测试用）；默认全局 fetch
- */
-export function createSiteStatsStore({ assetBase = DEFAULT_ASSET_BASE, fetchImpl } = {}) {
+function requireObject(value, label) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    throw new Error(`${label} must be an object`);
+  }
+}
+
+async function fetchJson(fetchImpl, url, label) {
+  let response;
+  try {
+    response = await fetchImpl(url);
+  } catch (error) {
+    throw new Error(`${label} request failed: ${error.message}`);
+  }
+  if (!response?.ok) {
+    throw new Error(`${label} HTTP ${response?.status ?? 'error'} at ${url}`);
+  }
+  try {
+    return await response.json();
+  } catch (error) {
+    throw new Error(`${label} JSON is invalid: ${error.message}`);
+  }
+}
+
+function validateBundle(stats, entryTable) {
+  requireObject(stats, 'stats asset');
+  if (stats.schema_version !== 'site-stats.v2') {
+    throw new Error(`stats asset schema is incompatible: ${stats.schema_version}`);
+  }
+  requireObject(stats.entry_contract, 'stats entry contract');
+  requireObject(stats.entry_contract.metrics, 'stats entry contract metrics');
+  requireObject(stats.entry_contract.distributions, 'stats entry contract distributions');
+  requireObject(stats.metrics, 'stats metrics');
+  requireObject(stats.distributions, 'stats distributions');
+  for (const key of ['rna_chains', 'pdb_structures', 'chains_with_probing_profiles', 'pdbs_with_high_confidence_chain']) {
+    if (stats.metrics[key] !== stats.entry_contract.metrics[key]) {
+      throw new Error(`stats metrics do not match entry contract for ${key}`);
+    }
+  }
+  for (const key of ['registered_technologies', 'explainer_articles']) {
+    if (!Number.isInteger(stats.metrics[key]) || stats.metrics[key] < 0) {
+      throw new Error(`stats metric ${key} must be a non-negative integer`);
+    }
+  }
+  if (JSON.stringify(stats.distributions) !== JSON.stringify(stats.entry_contract.distributions)) {
+    throw new Error('stats distributions do not match entry contract');
+  }
+  requireObject(entryTable, 'entry table asset');
+  if (entryTable.schemaVersion !== 'entry-table.v1' || stats.entry_schema_version !== entryTable.schemaVersion) {
+    throw new Error(`entry table schema does not match stats: ${entryTable.schemaVersion}`);
+  }
+  if (!Array.isArray(entryTable.rows)) throw new Error('entry table rows must be an array');
+  if (!Number.isInteger(entryTable.rowCount) || entryTable.rowCount !== entryTable.rows.length) {
+    throw new Error(`entry table rowCount must equal rows length (${entryTable.rows.length})`);
+  }
+  const currentContract = deriveEntryStatsContract(entryTable.rows);
+  if (JSON.stringify(currentContract) !== JSON.stringify(stats.entry_contract)) {
+    throw new Error('entry table contract does not match stats asset');
+  }
+  return { stats, rows: entryTable.rows };
+}
+
+export function createSiteStatsStore({
+  assetBase = DEFAULT_ASSET_BASE,
+  entryTableUrl = DEFAULT_ENTRY_TABLE_URL,
+  fetchImpl
+} = {}) {
   const doFetch = fetchImpl || ((...args) => fetch(...args));
   let cached;
+  let pending;
 
   return {
-    async loadStats() {
+    async loadDashboard() {
       if (cached !== undefined) return cached;
-      const url = `${assetBase}/stats.json`;
-      try {
-        const res = await doFetch(url);
-        if (!res || !res.ok) {
-          cached = null;
-          return cached;
-        }
-        cached = await res.json();
-      } catch (_err) {
-        cached = null;
-      }
-      return cached;
+      if (pending) return pending;
+      pending = Promise.all([
+        fetchJson(doFetch, `${assetBase}/stats.json`, 'stats asset'),
+        fetchJson(doFetch, entryTableUrl, 'entry table asset')
+      ]).then(([stats, entryTable]) => {
+        cached = validateBundle(stats, entryTable);
+        return cached;
+      }).finally(() => {
+        pending = undefined;
+      });
+      return pending;
     },
-    // 同步缓存读取（供同步渲染路径命中已加载资产）；未加载时 undefined。
     peek() {
       return cached;
     }

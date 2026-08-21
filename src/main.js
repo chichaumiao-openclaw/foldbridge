@@ -33,7 +33,9 @@ import { createCaseStore } from './rmdbCaseStore.js';
 import { createProbingArticleStore } from './probingArticleStore.js';
 import { createHelpContentStore } from './helpContentStore.js';
 import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
-import { createSiteStatsStore } from './siteStatsStore.js';import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
+import { createSiteStatsStore } from './siteStatsStore.js';
+import { clearStatsFilters, emptyStatsFilters, toggleStatsFilter } from './statsDashboard.js';
+import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
 import { createPdbCitationStore } from './pdbCitationStore.js';
 import {
   buildAtlasSearchState
@@ -91,7 +93,8 @@ const annojoinAtlasDetailState = new Map(); // caseKey/caseId -> 'loading' | 'er
 const annojoinCaseConfidenceState = new Map(); // caseKey/caseId -> 'loading' | 'error' | { summary, evidence, provenance }
 const annojoinPdbCitationState = new Map(); // pdbId -> 'loading' | 'unavailable' | primary citation
 let probingArticleIndexState = null; // null=未加载, 'loading', 'error', 或 index.json
-let siteStatsState = null; // null=未加载, 'loading', 'error', 或 stats.json
+let siteStatsState = { status: 'idle' };
+let statsDashboardFilters = emptyStatsFilters();
 let homeScrollStoryState = null; // null=未加载, 'loading', 'error', 或 story.json 对象
 let homeScrollVisitIndex = 0; // 本次会话展示用的轮换序号（load 时捕获，bump 前的值）
 const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | detail.json
@@ -1853,16 +1856,43 @@ async function loadHelpContent() {
 }
 
 async function loadSiteStats() {
-  if (siteStatsState === 'loading') return;
-  siteStatsState = 'loading';
+  if (siteStatsState.status === 'loading' || siteStatsState.status === 'ready') return;
+  siteStatsState = { status: 'loading' };
   try {
-    const stats = await siteStatsStore.loadStats();
-    siteStatsState = stats || 'error';
+    const dashboard = await siteStatsStore.loadDashboard();
+    siteStatsState = { status: 'ready', ...dashboard };
   } catch (err) {
     console.error('[main] 加载站点统计失败', err);
-    siteStatsState = 'error';
+    siteStatsState = { status: 'error', error: err instanceof Error ? err.message : String(err) };
   }
   if (route === 'stats') render({ preserveScroll: true });
+}
+
+function initStatsDashboard() {
+  document.querySelectorAll('.stats-chart-row[data-stats-filter-dimension]').forEach((button) => {
+    button.addEventListener('click', () => {
+      statsDashboardFilters = toggleStatsFilter(
+        statsDashboardFilters,
+        button.getAttribute('data-stats-filter-dimension'),
+        button.getAttribute('data-stats-filter-value')
+      );
+      render({ preserveScroll: true });
+    });
+  });
+  document.querySelectorAll('[data-stats-filter-chip]').forEach((button) => {
+    button.addEventListener('click', () => {
+      statsDashboardFilters = toggleStatsFilter(
+        statsDashboardFilters,
+        button.getAttribute('data-stats-filter-dimension'),
+        button.getAttribute('data-stats-filter-value')
+      );
+      render({ preserveScroll: true });
+    });
+  });
+  document.querySelector('[data-stats-reset]')?.addEventListener('click', () => {
+    statsDashboardFilters = clearStatsFilters();
+    render({ preserveScroll: true });
+  });
 }
 
 // 组装探针 hub 的家族索引，注入文章总览页。
@@ -2574,12 +2604,11 @@ function helpPage() {
 }
 
 function statsPage() {
-  // 已加载则喂 stats，否则空壳占位 + 触发懒加载（与 probing 路由同款）。
-  const stats = (siteStatsState && typeof siteStatsState === 'object') ? siteStatsState : null;
-  if (siteStatsState === null) {
-    loadSiteStats();
-  }
-  return `${renderBundleHeader()}<main class="page-detail">${renderStatsPage(stats)}</main>`;
+  if (siteStatsState.status === 'idle') loadSiteStats();
+  return `${renderBundleHeader()}<main class="page-detail">${renderStatsPage({
+    ...siteStatsState,
+    filters: statsDashboardFilters
+  })}</main>`;
 }
 
 // ANNOJOIN 置信度科普页：解释主表 Confidence distribution 列里 A/B/C/D 族、
@@ -3488,6 +3517,7 @@ function render(options = {}) {
   initSequenceDetailSecondaryHeatmap();
   initAnimatedStats();
   initHomeDashboardFilters();
+  initStatsDashboard();
   initHomeProbingCarousel();
   initHomeScrollStory();
   initPdbCasePage();

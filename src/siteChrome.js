@@ -1,3 +1,5 @@
+import { emptyStatsFilters, summarizeStatsRows } from './statsDashboard.js';
+
 // 站点骨架纯渲染片段。从 main.js 抽出以便 node --test 可 import 测试。
 // 所有函数必须是纯函数：入参 → 返回 HTML 字符串，禁止访问模块级 window/route/mode。
 // main.js 负责把这些片段接回并绑定 DOM 事件。
@@ -539,58 +541,22 @@ export function renderHelpPage(content) {
   </div>`;
 }
 
-// === STATS PAGE (W-B 在此追加 renderStatsPage) ===
+// === STATS PAGE ===
 
-// 千分位格式化（纯展示）。非有限值 → '—'，绝不输出 undefined/NaN。
 function statsNumber(value) {
-  const n = Number(value);
-  if (!Number.isFinite(n)) return '—';
-  return n.toLocaleString('en-US');
+  const number = Number(value);
+  return Number.isFinite(number) ? number.toLocaleString('en-US') : '—';
 }
 
-// RNA 链 partition 分布：竖向比例条，颜色与图例顺序固定，方便跨次构建比较。
-const RNA_CHAIN_PARTITION_COLORS = [
-  '#D5A52B', '#E6BF4D', '#C9864F', '#AAB75D', '#789B72', '#D1A667',
-  '#B87983', '#839F8A', '#C9AE4B', '#B87859', '#9AA565', '#B89B70'
-];
-const RNA_CHAIN_PARTITION_LABELS = {
-  other_RNA: 'other_<wbr>RNA',
-  ribozyme: 'ribo<wbr>zyme',
-  riboswitch: 'ribo<wbr>switch',
-  snRNA: 'sn<wbr>RNA',
-  aptamer: 'apt<wbr>amer',
-  synthetic_RNA: 'synth<wbr>etic_<wbr>RNA',
-  SRP_RNA: 'SRP_<wbr>RNA',
-  designed_RNA: 'desi<wbr>gned_<wbr>RNA'
-};
-
-function renderStatsRnaChainChart(partitions) {
-  if (!partitions || typeof partitions !== 'object') {
-    return `<p class="stats-empty">RNA chain distribution not available.</p>`;
-  }
-  const rows = Object.entries(partitions)
-    .map(([name, count], index) => ({ name, count: Number(count) || 0, color: RNA_CHAIN_PARTITION_COLORS[index % RNA_CHAIN_PARTITION_COLORS.length] }))
-    .filter((r) => r.count > 0)
-    .sort((a, b) => b.count - a.count);
-  if (!rows.length) return `<p class="stats-empty">RNA chain distribution not available.</p>`;
-  const total = rows.reduce((sum, r) => sum + r.count, 0);
-  const maxCount = rows.reduce((m, r) => Math.max(m, r.count), 0) || 1;
-  const bars = rows.map((r) => {
-    const height = Math.max(2, Math.round((r.count / maxCount) * 100));
-    const pct = total ? `${((r.count / total) * 100).toFixed(1)}%` : '0%';
-    const label = RNA_CHAIN_PARTITION_LABELS[r.name] || r.name.replaceAll('_', '_<wbr>');
-    return `<li class="stats-rna-chain-column" style="--stats-rna-fill:${r.color}">
-        <span class="stats-rna-chain-value">${statsNumber(r.count)}</span>
-        <span class="stats-rna-chain-track"><span class="stats-rna-chain-fill" style="height:${height}%"><span class="stats-rna-chain-pct">${pct}</span></span></span>
-        <span class="stats-rna-chain-label" title="${r.name}">${label}</span>
-      </li>`;
-  }).join('\n      ');
-  return `<ul class="stats-rna-chain-list" role="img" aria-label="RNA chain distribution across ${statsNumber(total)} chains">
-      ${bars}
-    </ul>`;
+function statsText(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }
 
-// 单张数字卡。
 function statsMetricCard(value, label) {
   return `<div class="stats-metric">
       <span class="stats-metric-value">${statsNumber(value)}</span>
@@ -598,41 +564,119 @@ function statsMetricCard(value, label) {
     </div>`;
 }
 
-// Stats 总览页纯渲染。stats 缺失（null/undefined）→ 最小壳（含 <h1>Statistics</h1>），
-// 绝不输出 undefined。stats 是构建产物（build-site-stats.mjs），可信插值。
-export function renderStatsPage(stats) {
-  if (!stats || typeof stats !== 'object') {
-    return `<section class="card bundle-wide-card stats-page">
-      <header class="stats-head">
-        <h1>Statistics</h1>
-      </header>
-      <p class="stats-empty">Statistics are still loading. If this persists, the stats asset may not be built yet.</p>
+const STATS_VALUE_LABELS = {
+  rRNA: 'rRNA',
+  tRNA: 'tRNA',
+  other_RNA: 'Other RNA',
+  mRNA: 'mRNA',
+  ribozyme: 'Ribozyme',
+  riboswitch: 'Riboswitch',
+  snRNA: 'snRNA',
+  viral: 'Viral RNA',
+  aptamer: 'Aptamer',
+  synthetic_RNA: 'Synthetic RNA',
+  SRP_RNA: 'SRP RNA',
+  designed_RNA: 'Designed RNA',
+  'Unclassified RNA': 'Unclassified RNA',
+  high: 'High confidence',
+  low: 'Low confidence',
+  not_supported: 'Not supported',
+  rmdb: 'RMDB',
+  geo: 'GEO',
+  rasp: 'RASP'
+};
+
+const STATS_DIMENSION_LABELS = {
+  rna_class: 'RNA class',
+  confidence: 'Confidence',
+  source: 'Source'
+};
+
+function statsValueLabel(value) {
+  return STATS_VALUE_LABELS[value] || String(value).replaceAll('_', ' ');
+}
+
+function renderStatsBarPanel({ dimension, title, lede, distribution, filters, totalChains, wide = false }) {
+  const entries = Object.entries(distribution || {}).filter(([, count]) => Number(count) > 0);
+  const maxCount = Math.max(1, ...entries.map(([, count]) => Number(count)));
+  const rows = entries.map(([value, rawCount]) => {
+    const count = Number(rawCount);
+    const width = Math.max(2, (count / maxCount) * 100);
+    const pct = totalChains ? ((count / totalChains) * 100).toFixed(1) : '0.0';
+    const selected = filters[dimension] === value;
+    return `<button type="button" class="stats-chart-row${selected ? ' is-selected' : ''}"
+        data-stats-filter-dimension="${dimension}" data-stats-filter-value="${statsText(value)}" aria-pressed="${selected}">
+        <span class="stats-chart-row-copy"><span class="stats-chart-label">${statsText(statsValueLabel(value))}</span><span class="stats-chart-value">${statsNumber(count)} <small>${pct}%</small></span></span>
+        <span class="stats-chart-track" aria-hidden="true"><span class="stats-chart-fill" style="--stats-bar-width:${width.toFixed(2)}%"></span></span>
+      </button>`;
+  }).join('\n      ');
+  return `<section class="stats-chart-panel${wide ? ' stats-chart-panel--wide' : ''}" data-stats-panel="${dimension}">
+      <header><h2>${title}</h2><p>${lede}</p></header>
+      <div class="stats-chart-list">${rows}</div>
+    </section>`;
+}
+
+function renderStatsFilterChips(filters) {
+  const chips = Object.entries(filters)
+    .filter(([, value]) => value)
+    .map(([dimension, value]) => `<button type="button" class="stats-filter-chip" data-stats-filter-chip="${dimension}"
+        data-stats-filter-dimension="${dimension}" data-stats-filter-value="${statsText(value)}"
+        aria-label="Remove ${statsText(STATS_DIMENSION_LABELS[dimension])} filter ${statsText(statsValueLabel(value))}">
+        <span>${statsText(STATS_DIMENSION_LABELS[dimension])}: ${statsText(statsValueLabel(value))}</span><span aria-hidden="true">×</span>
+      </button>`)
+    .join('');
+  return chips || '<span class="stats-filter-none">All published chains</span>';
+}
+
+export function renderStatsPage(state = { status: 'loading' }) {
+  if (state.status === 'error') {
+    return `<section class="card bundle-wide-card stats-page stats-page--error">
+      <header class="stats-head"><h1>Statistics</h1></header>
+      <div class="stats-error" role="alert"><h2>Statistics unavailable</h2><p>${statsText(state.error || 'The published statistics assets could not be validated.')}</p></div>
     </section>`;
   }
-  const rnaChainPartitions = stats.rna_chain_partitions || {};
+  if (state.status !== 'ready') {
+    return `<section class="card bundle-wide-card stats-page" aria-busy="true">
+      <header class="stats-head"><h1>Statistics</h1></header>
+      <p class="stats-empty">Loading the current published statistics…</p>
+    </section>`;
+  }
 
-  return `<section class="card bundle-wide-card stats-page" data-pdb-total="${Number(stats.pdb_total) || 0}">
+  const { stats, rows } = state;
+  const filters = state.filters || emptyStatsFilters();
+  const metrics = stats.metrics;
+  const distributions = stats.distributions;
+  const summary = summarizeStatsRows(rows, filters);
+  const hasFilters = Object.values(filters).some(Boolean);
+
+  return `<section class="card bundle-wide-card stats-page" data-pdb-total="${metrics.pdb_structures}">
       <header class="stats-head">
-        <h1>Statistics</h1>
+        <div><p class="stats-kicker">Published data at a glance</p><h1>Statistics</h1></div>
+        <p>Explore the current FoldBridge catalogue by RNA class, confidence, and evidence source.</p>
       </header>
 
       <div class="stats-metric-grid">
-        ${statsMetricCard(stats.probing_entries, 'Chemical probing entries')}
-        ${statsMetricCard(stats.pdb_total, 'Published PDB structures')}
-        ${statsMetricCard(stats.high_confidence_entries, 'High-confidence entries')}
-        ${statsMetricCard(stats.technologies, 'Probe technologies')}
-        ${statsMetricCard(stats.families, 'Measurement families')}
-        ${statsMetricCard(stats.articles, 'Probing articles')}
+        ${statsMetricCard(metrics.rna_chains, 'RNA chains')}
+        ${statsMetricCard(metrics.pdb_structures, 'PDB structures')}
+        ${statsMetricCard(metrics.chains_with_probing_profiles, 'Chains with probing profiles')}
+        ${statsMetricCard(metrics.pdbs_with_high_confidence_chain, 'PDBs with ≥1 high-confidence chain')}
+        ${statsMetricCard(metrics.registered_technologies, 'Registered technologies')}
+        ${statsMetricCard(metrics.explainer_articles, 'Explainer articles')}
       </div>
-      <p class="stats-summary">Each entry groups PDB chains with the same biological-molecule name within one structure.</p>
 
-      <section class="stats-section stats-rna-types">
-        <h2>RNA types</h2>
-        <p class="stats-section-lede">RNA chains are partitioned across 12 annotated types, for a total of
-          ${statsNumber(Object.values(rnaChainPartitions).reduce((sum, count) => sum + (Number(count) || 0), 0))} chains.</p>
-        ${renderStatsRnaChainChart(rnaChainPartitions)}
-      </section>
+      <div class="stats-dashboard-toolbar">
+        <p class="stats-match-summary" aria-live="polite">Showing <strong>${statsNumber(summary.chain_count)}</strong> of ${statsNumber(metrics.rna_chains)} RNA chains across <strong>${statsNumber(summary.pdb_count)}</strong> of ${statsNumber(metrics.pdb_structures)} PDB structures.</p>
+        <div class="stats-filter-actions"><div class="stats-filter-chips">${renderStatsFilterChips(filters)}</div>
+          <button type="button" class="stats-reset" data-stats-reset${hasFilters ? '' : ' disabled'}>Reset filters</button>
+          <a href="#entry" class="stats-entry-link" data-route="entry">Open Entry table</a>
+        </div>
+      </div>
 
+      <div class="stats-chart-grid">
+        ${renderStatsBarPanel({ dimension: 'rna_class', title: 'RNA class distribution', lede: 'Select a class to narrow the catalogue summary.', distribution: distributions.rna_class, filters, totalChains: metrics.rna_chains, wide: true })}
+        ${renderStatsBarPanel({ dimension: 'confidence', title: 'Chain confidence', lede: 'Confidence is shown at the chain grain.', distribution: distributions.chain_confidence, filters, totalChains: metrics.rna_chains })}
+        ${renderStatsBarPanel({ dimension: 'source', title: 'Evidence source coverage', lede: 'Source categories overlap; one chain can appear in more than one source.', distribution: distributions.source_coverage, filters, totalChains: metrics.rna_chains })}
+      </div>
     </section>`;
 }
 
