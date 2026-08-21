@@ -102,6 +102,8 @@ const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | de
 let entryTableState = null; // null=未加载, 'loading', 'error', 或归一化后的 rows 数组
 let entryMissingPdbsState = new Set(); // 缺页 PDB 集合（降级：命中行只渲染纯文本，不渲染死链）；fetch 失败降级为空集合
 let expandedEntryGroupIds = new Set(); // entry 表两层折叠（partition→分子名）已展开的分组 id：parent:<id> / child:<id>
+let selectedEntryIds = new Set(); // entry 表已勾选行（键=pdbId + '\t' + auth，pdb×chain 唯一）
+let entryTechniqueFilter = new Set(); // entry 表按 technique(probing_category) 的筛选集合；空=不过滤（对齐 #probing 公开口径）
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let pdbCaseConfidenceFilter = 'all';
@@ -2003,10 +2005,13 @@ function entryTablePage() {
     content = renderEntryTablePage({ rows: null, statusMessage: { tone: 'error', text: 'The entry table could not be loaded. Refresh to try again.' } });
   } else {
     content = renderEntryTablePage({
-      rows: entryTableState,
+      rows: getFilteredEntryRows(),
+      totalRowCount: entryTableState.length,
       missingPdbs: entryMissingPdbsState,
       grouped: true,
-      expandedGroupIds: expandedEntryGroupIds
+      expandedGroupIds: expandedEntryGroupIds,
+      selectedIds: selectedEntryIds,
+      techniqueFilter: entryTechniqueFilter
     });
   }
   return `${renderBundleHeader()}${content}`;
@@ -2334,6 +2339,54 @@ function toggleEntryGroup(groupId) {
   if (expandedEntryGroupIds.has(groupId)) expandedEntryGroupIds.delete(groupId);
   else expandedEntryGroupIds.add(groupId);
   render({ preserveScroll: true });
+}
+
+// entry 行唯一键：pdbId + TAB + auth（pdb×chain 粒度唯一，17843 行全唯一）。
+function entryRowId(row) {
+  return `${row.pdbId}\t${row.auth}`;
+}
+
+// 按 technique(probingCategory) 过滤：filter 为空则返回全部；否则保留 probingCategory
+// 里含任一选中 technique 的行。probingCategory 是分号分隔的 technique 列表（#probing 公开口径）。
+function getFilteredEntryRows() {
+  if (!Array.isArray(entryTableState)) return [];
+  if (entryTechniqueFilter.size === 0) return entryTableState;
+  return entryTableState.filter((row) => {
+    const cats = String(row.probingCategory || '')
+      .split(/[;,]/)
+      .map((s) => s.trim())
+      .filter(Boolean);
+    return cats.some((cat) => entryTechniqueFilter.has(cat));
+  });
+}
+
+// entry 表 technique 筛选切换：整页重渲染。切换后清空跨筛选的行选择歧义由 UI 承担（选择键与行绑定，过滤只影响可见集）。
+function toggleEntryTechnique(technique) {
+  if (!technique) return;
+  if (entryTechniqueFilter.has(technique)) entryTechniqueFilter.delete(technique);
+  else entryTechniqueFilter.add(technique);
+  render({ preserveScroll: true });
+}
+
+// entry 行勾选切换。
+function toggleEntrySelection(rowId) {
+  if (!rowId) return;
+  if (selectedEntryIds.has(rowId)) selectedEntryIds.delete(rowId);
+  else selectedEntryIds.add(rowId);
+  render({ preserveScroll: true });
+}
+
+// entry 导出行 → 公开列（对齐 #probing 口径）。绝不导出内部 family/confidence 分类。
+function entryExportRow(row) {
+  return {
+    pdb_id: row.pdbId,
+    chain: row.auth,
+    molecule: row.sciName,
+    rna_class: row.partition,
+    technique: row.probingCategory,
+    profiles: row.nProfiles,
+    source: row.sourceLanes
+  };
 }
 
 function toggleAnnojointAtlasGroup(groupId) {
@@ -3396,6 +3449,45 @@ function render(options = {}) {
       toggleEntryGroup(button.getAttribute('data-entry-group-toggle'));
     });
   });
+  // entry 表 technique 筛选 chip（对齐 #probing 公开口径）。
+  document.querySelectorAll('[data-entry-technique-toggle]').forEach((button) => {
+    button.addEventListener('click', () => {
+      toggleEntryTechnique(button.getAttribute('data-entry-technique-toggle'));
+    });
+  });
+  // entry 表行勾选（select 功能）。
+  document.querySelectorAll('[data-entry-select]').forEach((box) => {
+    box.addEventListener('change', () => {
+      toggleEntrySelection(box.getAttribute('data-entry-select'));
+    });
+  });
+  // entry 表：导出选中行（export select 功能，公开列，无 family/confidence）。
+  const exportSelectedEntryBtn = document.getElementById('export-selected-entry');
+  if (exportSelectedEntryBtn) {
+    exportSelectedEntryBtn.addEventListener('click', () => {
+      if (!Array.isArray(entryTableState)) return;
+      const selectedRows = entryTableState
+        .filter((row) => selectedEntryIds.has(entryRowId(row)))
+        .map(entryExportRow);
+      downloadRowsAsCsv(selectedRows, 'entry-selected.csv');
+    });
+  }
+  // entry 表：清空选择。
+  const clearSelectedEntryBtn = document.getElementById('clear-selected-entry');
+  if (clearSelectedEntryBtn) {
+    clearSelectedEntryBtn.addEventListener('click', () => {
+      selectedEntryIds.clear();
+      render({ preserveScroll: true });
+    });
+  }
+  // entry 表：清空 technique 筛选。
+  const clearEntryFilterBtn = document.getElementById('clear-entry-technique-filter');
+  if (clearEntryFilterBtn) {
+    clearEntryFilterBtn.addEventListener('click', () => {
+      entryTechniqueFilter.clear();
+      render({ preserveScroll: true });
+    });
+  }
   const exportAllBtn = document.getElementById('export-all-sequences');
   const modeToggle = document.getElementById('mode-toggle');
   if (modeToggle) {
