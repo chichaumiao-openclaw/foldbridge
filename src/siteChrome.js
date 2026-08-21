@@ -1,4 +1,4 @@
-import { emptyStatsFilters, summarizeStatsRows } from './statsDashboard.js';
+import { emptyStatsFilters, summarizeStatsFacet, summarizeStatsRows } from './statsDashboard.js';
 
 // 站点骨架纯渲染片段。从 main.js 抽出以便 node --test 可 import 测试。
 // 所有函数必须是纯函数：入参 → 返回 HTML 字符串，禁止访问模块级 window/route/mode。
@@ -36,24 +36,28 @@ export function renderPrimaryNav(activeRoute = 'home') {
         </nav>`;
 }
 
-// 首页指标（写死，集中一处便于一处更新）。最新口径（用户 2026-06-30）：
-//   probingEntries       = 4,664 chemical probing entries
-//   pdbStructures        = 2,386 PDB structures
-//   highConfidencePaired = 510 high-confidence paired datas
-//   probingArticles/mechanismFamilies = probing-articles 首页展示口径（26 篇文章 / 5 个 families）
-// 口径再变化时只改这里的数字。
-export const HOME_METRICS = {
-  probingEntries: 4664,
-  pdbStructures: 2386,
-  highConfidencePaired: 510,
-  probingArticles: 26,
-  mechanismFamilies: 5
-};
+function dashboardMetricState(dashboardView, source, value) {
+  const statusKey = source === 'entry' ? 'entryStatus' : 'probingStatus';
+  const sourceLabel = source === 'entry' ? 'Entry statistics' : 'Probing methods';
+  const requestedStatus = dashboardView?.[statusKey];
+  const validCount = typeof value === 'number' && Number.isInteger(value) && value >= 0;
+  if (requestedStatus === 'ready' && validCount) {
+    return { status: 'ready', value: value.toLocaleString('en-US'), message: '' };
+  }
+  if (requestedStatus === 'error' || requestedStatus === 'ready') {
+    return { status: 'error', value: '—', message: `${sourceLabel} unavailable` };
+  }
+  return { status: 'loading', value: '—', message: `${sourceLabel} loading` };
+}
 
-export function renderHomeHero(metrics = HOME_METRICS) {
-  const probingEntries = metrics.probingEntries.toLocaleString('en-US');
-  const pdbStructures = metrics.pdbStructures.toLocaleString('en-US');
-  const highConfidencePaired = metrics.highConfidencePaired.toLocaleString('en-US');
+function dashboardStatusClass(metric) {
+  return `dashboard-metric--${metric.status}`;
+}
+
+export function renderHomeHero(dashboardView) {
+  const rnaChains = dashboardMetricState(dashboardView, 'entry', dashboardView?.entryMetrics?.rnaChains);
+  const pdbStructures = dashboardMetricState(dashboardView, 'entry', dashboardView?.entryMetrics?.pdbStructures);
+  const probingMethods = dashboardMetricState(dashboardView, 'probing', dashboardView?.probingOverview?.methodCount);
   return `<section class="bundle-hero-card bundle-wide-card">
         <div class="bundle-hero-copy">
           <p class="bundle-kicker">RNA structure-linked database</p>
@@ -68,52 +72,64 @@ export function renderHomeHero(metrics = HOME_METRICS) {
         </div>
 
         <aside class="bundle-hero-metrics">
-          <article class="bundle-metric-card bundle-metric-large">
-            <p>chemical probing entries</p>
-            <strong>${probingEntries}</strong>
-            <span>RNA reactivity records</span>
+          <article class="bundle-metric-card bundle-metric-large ${dashboardStatusClass(rnaChains)}">
+            <p>RNA chains</p>
+            <strong>${rnaChains.value}</strong>
+            <span>${rnaChains.message || 'Canonical chain records'}</span>
           </article>
-          <article class="bundle-metric-card">
+          <article class="bundle-metric-card ${dashboardStatusClass(pdbStructures)}">
             <p>PDB structures</p>
-            <strong>${pdbStructures}</strong>
-            <span>Structures matched to probing data</span>
+            <strong>${pdbStructures.value}</strong>
+            <span>${pdbStructures.message || 'Distinct deposited structures'}</span>
           </article>
-          <article class="bundle-metric-card">
-            <p>high-confidence paired</p>
-            <strong>${highConfidencePaired}</strong>
-            <span>Structure-linked paired datasets</span>
+          <article class="bundle-metric-card ${dashboardStatusClass(probingMethods)}">
+            <p>Probing methods</p>
+            <strong>${probingMethods.value}</strong>
+            <span>${probingMethods.message || 'Curated method guides'}</span>
           </article>
         </aside>
       </section>`;
 }
 
-const HOME_MODULE_CARDS = [
-  {
-    route: 'entry',
-    kicker: 'master table',
-    title: 'Entry table',
-    summary: `${HOME_METRICS.pdbStructures.toLocaleString('en-US')} structure-linked PDB entries with search, grouping and export.`,
-    action: 'Open Entry table'
-  },
-  {
-    route: 'probing',
-    kicker: 'science library',
-    title: 'Probing methods',
-    summary: `${HOME_METRICS.probingArticles} explainer articles across ${HOME_METRICS.mechanismFamilies} mechanism families.`,
-    action: 'Explore probing methods'
-  },
-  {
-    route: 'search',
-    kicker: 'site-wide',
-    title: 'Search',
-    summary: 'Search probing articles and PDB cases across the whole site.',
-    action: 'Open search'
-  }
-];
-
-export function renderHomeModuleCards(cards = HOME_MODULE_CARDS) {
+export function renderHomeModuleCards(dashboardView) {
+  const pdbStructures = dashboardMetricState(dashboardView, 'entry', dashboardView?.entryMetrics?.pdbStructures);
+  const probingMethods = dashboardMetricState(dashboardView, 'probing', dashboardView?.probingOverview?.methodCount);
+  const probingFamilies = dashboardMetricState(dashboardView, 'probing', dashboardView?.probingOverview?.familyCount);
+  const probingModuleStatus = probingMethods.status === 'ready' && probingFamilies.status === 'ready'
+    ? 'ready'
+    : (probingMethods.status === 'error' || probingFamilies.status === 'error' ? 'error' : 'loading');
+  const cards = [
+    {
+      route: 'entry',
+      kicker: 'master table',
+      title: 'Entry table',
+      summary: pdbStructures.status === 'ready'
+        ? `${pdbStructures.value} structure-linked PDB entries with search, grouping and export.`
+        : `${pdbStructures.message}.`,
+      status: pdbStructures.status,
+      action: 'Open Entry table'
+    },
+    {
+      route: 'probing',
+      kicker: 'science library',
+      title: 'Probing methods',
+      summary: probingMethods.status === 'ready' && probingFamilies.status === 'ready'
+        ? `${probingMethods.value} probing methods across ${probingFamilies.value} mechanism families.`
+        : `Probing methods ${probingModuleStatus === 'loading' ? 'loading' : 'unavailable'}.`,
+      status: probingModuleStatus,
+      action: 'Explore probing methods'
+    },
+    {
+      route: 'search',
+      kicker: 'site-wide',
+      title: 'Search',
+      summary: 'Search probing articles and PDB cases across the whole site.',
+      status: 'ready',
+      action: 'Open search'
+    }
+  ];
   const items = cards.map((card) => `
-    <article class="bundle-site-card">
+    <article class="bundle-site-card dashboard-metric--${card.status}">
       <div class="bundle-site-copy">
         <p class="bundle-site-kicker">${card.kicker}</p>
         <h3>${card.title}</h3>
@@ -268,15 +284,15 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     </div>`;
   }).join('');
   const legend = `<div class="hss-legend"><span>low</span><span class="hss-legend-bar"></span><span>high reactivity</span></div>`;
-  const records = HOME_METRICS.pdbStructures.toLocaleString('en-US');
+  const records = dashboardMetricState(opts.dashboardView, 'entry', opts.dashboardView?.entryMetrics?.pdbStructures);
   const intro = `<header class="hss-intro">
       <h1 class="hss-headline">Follow one RNA from<br><span class="hss-headline-grad">probing signal to 3D fold</span></h1>
       <p class="hss-lede">The same reactivity colors travel with every nucleotide — from the raw alignment, into the secondary structure, and onto the deposited tertiary structure. Scroll to watch it transform.</p>
       <p class="hss-scrollcue">↓ Scroll</p>
     </header>`;
-  const closing = `<footer class="hss-closing">
+  const closing = `<footer class="hss-closing ${dashboardStatusClass(records)}">
       <h2>Every record in FoldBridge tells this story</h2>
-      <p>${records} structure-linked records, each with calibrated confidence.</p>
+      <p>${records.status === 'ready' ? `${records.value} structure-linked records, each with calibrated confidence.` : `${records.message}.`}</p>
       <button type="button" class="hss-cta" data-route="entry">Browse the Entry table &rarr;</button>
     </footer>`;
   return `<section class="home-scroll-story" aria-label="From probing signal to 3D fold">
@@ -557,10 +573,11 @@ function statsText(value) {
     .replaceAll("'", '&#39;');
 }
 
-function statsMetricCard(value, label) {
-  return `<div class="stats-metric">
-      <span class="stats-metric-value">${statsNumber(value)}</span>
+function statsMetricCard(metric, label) {
+  return `<div class="stats-metric ${dashboardStatusClass(metric)}">
+      <span class="stats-metric-value">${metric.value}</span>
       <span class="stats-metric-label">${label}</span>
+      ${metric.message ? `<span class="stats-metric-status">${statsText(metric.message)}</span>` : ''}
     </div>`;
 }
 
@@ -588,7 +605,6 @@ const STATS_VALUE_LABELS = {
 
 const STATS_DIMENSION_LABELS = {
   rna_class: 'RNA class',
-  confidence: 'Confidence',
   source: 'Source'
 };
 
@@ -596,13 +612,14 @@ function statsValueLabel(value) {
   return STATS_VALUE_LABELS[value] || String(value).replaceAll('_', ' ');
 }
 
-function renderStatsBarPanel({ dimension, title, lede, distribution, filters, totalChains, wide = false }) {
-  const entries = Object.entries(distribution || {}).filter(([, count]) => Number(count) > 0);
-  const maxCount = Math.max(1, ...entries.map(([, count]) => Number(count)));
+function renderStatsBarPanel({ dimension, title, lede, facet, filters }) {
+  const totalChains = Number(facet?.total_chains);
+  const finiteTotal = Number.isFinite(totalChains) && totalChains > 0 ? totalChains : 0;
+  const entries = Object.entries(facet?.distribution || {}).filter(([, count]) => Number(count) > 0);
   const rows = entries.map(([value, rawCount]) => {
     const count = Number(rawCount);
-    const width = Math.max(2, (count / maxCount) * 100);
-    const pct = totalChains ? ((count / totalChains) * 100).toFixed(1) : '0.0';
+    const width = finiteTotal ? (count / finiteTotal) * 100 : 0;
+    const pct = finiteTotal ? ((count / finiteTotal) * 100).toFixed(1) : '0.0';
     const selected = filters[dimension] === value;
     return `<button type="button" class="stats-chart-row${selected ? ' is-selected' : ''}"
         data-stats-filter-dimension="${dimension}" data-stats-filter-value="${statsText(value)}" aria-pressed="${selected}">
@@ -610,9 +627,12 @@ function renderStatsBarPanel({ dimension, title, lede, distribution, filters, to
         <span class="stats-chart-track" aria-hidden="true"><span class="stats-chart-fill" style="--stats-bar-width:${width.toFixed(2)}%"></span></span>
       </button>`;
   }).join('\n      ');
-  return `<section class="stats-chart-panel${wide ? ' stats-chart-panel--wide' : ''}" data-stats-panel="${dimension}">
+  const body = finiteTotal && rows
+    ? rows
+    : '<p class="stats-empty">No chains match this filter context.</p>';
+  return `<section class="stats-chart-panel stats-chart-panel--wide" data-stats-panel="${dimension}">
       <header><h2>${title}</h2><p>${lede}</p></header>
-      <div class="stats-chart-list">${rows}</div>
+      <div class="stats-chart-list">${body}</div>
     </section>`;
 }
 
@@ -628,55 +648,59 @@ function renderStatsFilterChips(filters) {
   return chips || '<span class="stats-filter-none">All published chains</span>';
 }
 
-export function renderStatsPage(state = { status: 'loading' }) {
-  if (state.status === 'error') {
-    return `<section class="card bundle-wide-card stats-page stats-page--error">
-      <header class="stats-head"><h1>Statistics</h1></header>
-      <div class="stats-error" role="alert"><h2>Statistics unavailable</h2><p>${statsText(state.error || 'The published statistics assets could not be validated.')}</p></div>
-    </section>`;
-  }
-  if (state.status !== 'ready') {
-    return `<section class="card bundle-wide-card stats-page" aria-busy="true">
-      <header class="stats-head"><h1>Statistics</h1></header>
-      <p class="stats-empty">Loading the current published statistics…</p>
-    </section>`;
-  }
-
-  const { stats, rows } = state;
+export function renderStatsPage(state = {}) {
+  const dashboardView = state.dashboardView || {};
+  const rows = Array.isArray(state.rows) ? state.rows : [];
   const filters = state.filters || emptyStatsFilters();
-  const metrics = stats.metrics;
-  const distributions = stats.distributions;
-  const summary = summarizeStatsRows(rows, filters);
+  const rnaChains = dashboardMetricState(dashboardView, 'entry', dashboardView.entryMetrics?.rnaChains);
+  const pdbStructures = dashboardMetricState(dashboardView, 'entry', dashboardView.entryMetrics?.pdbStructures);
+  const chainsWithProfiles = dashboardMetricState(dashboardView, 'entry', dashboardView.entryMetrics?.chainsWithProbingProfiles);
+  const probingMethods = dashboardMetricState(dashboardView, 'probing', dashboardView.probingOverview?.methodCount);
+  const entryMetricStates = [rnaChains, pdbStructures, chainsWithProfiles];
+  const entryReady = entryMetricStates.every((metric) => metric.status === 'ready');
+  const entryLoading = !entryReady && entryMetricStates.some((metric) => metric.status === 'loading');
+  const summary = entryReady ? summarizeStatsRows(rows, filters) : null;
   const hasFilters = Object.values(filters).some(Boolean);
-
-  return `<section class="card bundle-wide-card stats-page" data-pdb-total="${metrics.pdb_structures}">
-      <header class="stats-head">
-        <div><p class="stats-kicker">Published data at a glance</p><h1>Statistics</h1></div>
-        <p>Explore the current FoldBridge catalogue by RNA class, confidence, and evidence source.</p>
-      </header>
-
-      <div class="stats-metric-grid">
-        ${statsMetricCard(metrics.rna_chains, 'RNA chains')}
-        ${statsMetricCard(metrics.pdb_structures, 'PDB structures')}
-        ${statsMetricCard(metrics.chains_with_probing_profiles, 'Chains with probing profiles')}
-        ${statsMetricCard(metrics.pdbs_with_high_confidence_chain, 'PDBs with ≥1 high-confidence chain')}
-        ${statsMetricCard(metrics.registered_technologies, 'Registered technologies')}
-        ${statsMetricCard(metrics.explainer_articles, 'Explainer articles')}
-      </div>
-
-      <div class="stats-dashboard-toolbar">
-        <p class="stats-match-summary" aria-live="polite">Showing <strong>${statsNumber(summary.chain_count)}</strong> of ${statsNumber(metrics.rna_chains)} RNA chains across <strong>${statsNumber(summary.pdb_count)}</strong> of ${statsNumber(metrics.pdb_structures)} PDB structures.</p>
+  const rnaClassFacet = entryReady ? summarizeStatsFacet(rows, filters, 'rna_class') : null;
+  const sourceFacet = entryReady ? summarizeStatsFacet(rows, filters, 'source') : null;
+  const busy = entryLoading || probingMethods.status === 'loading';
+  const pdbTotalAttribute = entryReady ? ` data-pdb-total="${dashboardView.entryMetrics.pdbStructures}"` : '';
+  const toolbar = entryReady
+    ? `<div class="stats-dashboard-toolbar">
+        <p class="stats-match-summary" aria-live="polite">Showing <strong>${statsNumber(summary.chain_count)}</strong> of ${rnaChains.value} RNA chains across <strong>${statsNumber(summary.pdb_count)}</strong> of ${pdbStructures.value} PDB structures.</p>
         <div class="stats-filter-actions"><div class="stats-filter-chips">${renderStatsFilterChips(filters)}</div>
           <button type="button" class="stats-reset" data-stats-reset${hasFilters ? '' : ' disabled'}>Reset filters</button>
           <a href="#entry" class="stats-entry-link" data-route="entry">Open Entry table</a>
         </div>
+      </div>`
+    : '';
+  const charts = entryReady
+    ? `<div class="stats-chart-grid">
+        ${renderStatsBarPanel({ dimension: 'rna_class', title: 'RNA class distribution', lede: 'Select a class to narrow the catalogue summary.', facet: rnaClassFacet, filters })}
+        ${renderStatsBarPanel({ dimension: 'source', title: 'Evidence source coverage', lede: 'Source categories overlap; one chain can appear in more than one source.', facet: sourceFacet, filters })}
+      </div>`
+    : `<div class="stats-charts-status stats-charts-status--${entryLoading ? 'loading' : 'error'}"${entryLoading ? ' aria-busy="true"' : ' role="alert"'}>
+        <h2>${entryLoading ? 'Entry statistics loading' : 'Entry statistics unavailable'}</h2>
+        <p>${entryLoading
+          ? 'Loading RNA class and evidence source distributions…'
+          : statsText(dashboardView.entryError || 'The published Entry statistics could not be validated.')}</p>
+      </div>`;
+
+  return `<section class="card bundle-wide-card stats-page"${pdbTotalAttribute}${busy ? ' aria-busy="true"' : ''}>
+      <header class="stats-head">
+        <div><p class="stats-kicker">Published data at a glance</p><h1>Statistics</h1></div>
+        <p>Explore the current FoldBridge catalogue by RNA class and evidence source.</p>
+      </header>
+
+      <div class="stats-metric-grid">
+        ${statsMetricCard(rnaChains, 'RNA chains')}
+        ${statsMetricCard(pdbStructures, 'PDB structures')}
+        ${statsMetricCard(chainsWithProfiles, 'Chains with probing profiles')}
+        ${statsMetricCard(probingMethods, 'Probing methods')}
       </div>
 
-      <div class="stats-chart-grid">
-        ${renderStatsBarPanel({ dimension: 'rna_class', title: 'RNA class distribution', lede: 'Select a class to narrow the catalogue summary.', distribution: distributions.rna_class, filters, totalChains: metrics.rna_chains, wide: true })}
-        ${renderStatsBarPanel({ dimension: 'confidence', title: 'Chain confidence', lede: 'Confidence is shown at the chain grain.', distribution: distributions.chain_confidence, filters, totalChains: metrics.rna_chains })}
-        ${renderStatsBarPanel({ dimension: 'source', title: 'Evidence source coverage', lede: 'Source categories overlap; one chain can appear in more than one source.', distribution: distributions.source_coverage, filters, totalChains: metrics.rna_chains })}
-      </div>
+      ${toolbar}
+      ${charts}
     </section>`;
 }
 

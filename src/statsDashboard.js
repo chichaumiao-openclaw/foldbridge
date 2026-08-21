@@ -100,23 +100,20 @@ export function deriveEntryStatsContract(rows) {
 }
 
 export function emptyStatsFilters() {
-  return { rna_class: null, confidence: null, source: null };
+  return { rna_class: null, source: null };
 }
 
 export function clearStatsFilters() {
   return emptyStatsFilters();
 }
 
-const FILTER_DIMENSIONS = ['rna_class', 'confidence', 'source'];
+const FILTER_DIMENSIONS = ['rna_class', 'source'];
 
 function validateFilterValue(dimension, value) {
   if (typeof value !== 'string' || !value.trim()) {
     throw new Error(`${dimension} filter value must be a non-empty string`);
   }
   const normalized = value.trim();
-  if (dimension === 'confidence' && !CONFIDENCE_VALUES.includes(normalized)) {
-    throw new Error(`confidence filter has unsupported value: ${normalized}`);
-  }
   if (dimension === 'source' && !SOURCE_VALUES.includes(normalized)) {
     throw new Error(`source filter has unsupported value: ${normalized}`);
   }
@@ -154,10 +151,33 @@ export function filterStatsRows(rows, filters = emptyStatsFilters()) {
     .map((row, index) => normalizeStatsEntryRow(row, index))
     .filter((row) => {
       if (validatedFilters.rna_class && row.partition !== validatedFilters.rna_class) return false;
-      if (validatedFilters.confidence && row.entry_confidence_class !== validatedFilters.confidence) return false;
       if (validatedFilters.source && !row.source_lanes.includes(validatedFilters.source)) return false;
       return true;
     });
+}
+
+export function summarizeStatsFacet(rows, filters = emptyStatsFilters(), dimension) {
+  const validatedFilters = validateStatsFilters(filters);
+  if (!FILTER_DIMENSIONS.includes(dimension)) {
+    throw new Error(`unknown stats filter dimension: ${dimension}`);
+  }
+
+  const contextRows = filterStatsRows(rows, { ...validatedFilters, [dimension]: null });
+  const counts = new Map();
+  contextRows.forEach((row) => {
+    if (dimension === 'rna_class') {
+      counts.set(row.partition, (counts.get(row.partition) || 0) + 1);
+      return;
+    }
+    row.source_lanes.forEach((source) => {
+      counts.set(source, (counts.get(source) || 0) + 1);
+    });
+  });
+
+  return {
+    total_chains: contextRows.length,
+    distribution: sortedCountObject(counts)
+  };
 }
 
 export function summarizeStatsRows(rows, filters = emptyStatsFilters()) {

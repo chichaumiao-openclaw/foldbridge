@@ -35,7 +35,8 @@ import { createHelpContentStore } from './helpContentStore.js';
 import { createHomeScrollStoryStore } from './homeScrollStoryStore.js';
 import { createSiteStatsStore } from './siteStatsStore.js';
 import { clearStatsFilters, emptyStatsFilters, toggleStatsFilter } from './statsDashboard.js';
-import { renderProbingArticleIndex, renderProbingArticlePage } from './probingArticleView.js';
+import { renderProbingArticleIndex, renderProbingArticlePage, renderProbingUnavailablePage } from './probingArticleView.js';
+import { buildDashboardViewModel } from './dashboardViewModel.js';
 import { createPdbCitationStore } from './pdbCitationStore.js';
 import {
   buildAtlasSearchState
@@ -1420,13 +1421,18 @@ function describeDonutArc(cx, cy, outerRadius, innerRadius, startAngle, endAngle
 }
 
 function homePage() {
+  if (probingArticleIndexState === null) {
+    loadProbingArticleIndex();
+  }
+  if (siteStatsState.status === 'idle') {
+    loadSiteStats();
+  }
+  const dashboardView = buildDashboardViewModel(siteStatsState, probingArticleIndexState);
+
   // 已加载则喂文章，否则空壳占位 + 触发懒加载（与 probing 路由同款）。
   const articles = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
     ? (probingArticleIndexState.articles || [])
     : [];
-  if (probingArticleIndexState === null) {
-    loadProbingArticleIndex();
-  }
 
   if (homeScrollStoryState === null) {
     loadHomeScrollStory();
@@ -1435,7 +1441,10 @@ function homePage() {
   if (homeScrollStoryState && typeof homeScrollStoryState === 'object') {
     const visitIndex = homeScrollVisitIndex;
     const featured = pickFeaturedCase(homeScrollStoryState.cases || [], visitIndex);
-    scrollStoryHtml = renderHomeScrollStory(featured, { assetBase: homeScrollStoryStore.assetBase });
+    scrollStoryHtml = renderHomeScrollStory(featured, {
+      assetBase: homeScrollStoryStore.assetBase,
+      dashboardView
+    });
   }
 
   const bundleHeader = renderBundleHeader();
@@ -1443,10 +1452,10 @@ function homePage() {
   return `${bundleHeader}
   <main class="page-home bundle-home-page">
     <section class="bundle-home-shell">
-      ${renderHomeHero()}
+      ${renderHomeHero(dashboardView)}
       ${scrollStoryHtml}
       ${renderHomeProbingCarousel(articles)}
-      ${renderHomeModuleCards()}
+      ${renderHomeModuleCards(dashboardView)}
     </section>
   </main>`;
 }
@@ -1625,6 +1634,10 @@ function detailPage() {
   // the new article instead of rendering the placeholder method page.
   const slug = requestedSlug === 'shape' ? 'shape-reagents' : requestedSlug;
   const header = renderBundleHeader();
+
+  if (probingArticleIndexState === 'error') {
+    return renderProbingUnavailablePage('The probing method index could not be loaded.', header);
+  }
 
   // 探针科普文章优先：若 index 里存在该 slug，则渲染真实阅读页。
   const hasIndex = probingArticleIndexState && typeof probingArticleIndexState === 'object';
@@ -1834,12 +1847,17 @@ async function loadProbingArticleIndex() {
   if (probingArticleIndexState === 'loading') return;
   probingArticleIndexState = 'loading';
   try {
-    probingArticleIndexState = await probingArticleStore.loadIndex();
+    const loadedIndex = await probingArticleStore.loadIndex();
+    const dashboardView = buildDashboardViewModel(siteStatsState, loadedIndex);
+    if (dashboardView.probingStatus !== 'ready') {
+      throw new Error(dashboardView.probingError || 'The probing method index is invalid.');
+    }
+    probingArticleIndexState = loadedIndex;
   } catch (err) {
     console.error('[main] 加载探针文章索引失败', err);
     probingArticleIndexState = 'error';
   }
-  if (route === 'detail' || route === 'probing' || route === 'home') render({ preserveScroll: true });
+  if (route === 'detail' || route === 'probing' || route === 'home' || route === 'stats') render({ preserveScroll: true });
 }
 
 async function loadHelpContent() {
@@ -1865,7 +1883,7 @@ async function loadSiteStats() {
     console.error('[main] 加载站点统计失败', err);
     siteStatsState = { status: 'error', error: err instanceof Error ? err.message : String(err) };
   }
-  if (route === 'stats') render({ preserveScroll: true });
+  if (route === 'stats' || route === 'home') render({ preserveScroll: true });
 }
 
 function initStatsDashboard() {
@@ -1897,8 +1915,9 @@ function initStatsDashboard() {
 
 // 组装探针 hub 的家族索引，注入文章总览页。
 function buildProbingHubSections() {
-  const families = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
-    ? probingArticleIndexState.families
+  const dashboardView = buildDashboardViewModel(siteStatsState, probingArticleIndexState);
+  const families = dashboardView.probingStatus === 'ready'
+    ? (dashboardView.probingOverview?.families || [])
     : [];
   return renderProbingFamilyIndex(families, { embedded: true });
 }
@@ -2605,8 +2624,11 @@ function helpPage() {
 
 function statsPage() {
   if (siteStatsState.status === 'idle') loadSiteStats();
+  if (probingArticleIndexState === null) loadProbingArticleIndex();
+  const dashboardView = buildDashboardViewModel(siteStatsState, probingArticleIndexState);
   return `${renderBundleHeader()}<main class="page-detail">${renderStatsPage({
-    ...siteStatsState,
+    dashboardView,
+    rows: siteStatsState.rows || [],
     filters: statsDashboardFilters
   })}</main>`;
 }

@@ -2,11 +2,11 @@
 // 复用站点既有 design tokens / card / technology-kicker 视觉语言；
 // 文章正文用专门的 article-* class 控制阅读排版（行宽、行高、图注）。
 //
-// 两个入口：
+// 三个入口：
+//   buildProbingOverviewModel(index)        — 公开方法总览模型（5 个家族 / 26 个方法）
 //   renderProbingArticleIndex(index)        — 方法总览（按机制家族分组的卡片墙）
+//   renderProbingUnavailablePage(error)     — 索引不可用时的明确错误边界
 //   renderProbingArticlePage(detail, index) — 单篇阅读页（标题 + 有序 block + 图注）
-
-import { HOME_METRICS } from './siteChrome.js';
 
 const ENLARGED_FIGURE_ARTICLE_SLUGS = new Set([
   'structure-seq',
@@ -194,55 +194,88 @@ const RNA_INTERACTION_METHOD_DESCRIPTIONS = [
   }
 ];
 
+const CURATED_METHODS_BY_FAMILY_ID = Object.freeze({
+  dms: DMS_METHOD_DESCRIPTIONS,
+  shape: SHAPE_METHOD_DESCRIPTIONS,
+  'in-cell-shape': CLEAVAGE_METHOD_DESCRIPTIONS,
+  footprinting: NUCLEOTIDE_METHOD_DESCRIPTIONS,
+  'carbodiimide-special': RNA_INTERACTION_METHOD_DESCRIPTIONS
+});
+
+const PUBLIC_FAMILY_COPY_BY_ID = Object.freeze({
+  dms: {
+    title: 'DMS-based methods',
+    summary: 'DMS methylates the Watson–Crick faces of adenine (N1) and cytosine (N3), reporting base accessibility and pairing-dependent protection.'
+  },
+  shape: {
+    title: 'SHAPE-based methods',
+    summary: 'SHAPE reagents acylate the ribose 2′-hydroxyl of conformationally flexible nucleotides, reporting backbone flexibility.'
+  },
+  'in-cell-shape': {
+    title: 'Cleavage-based methods',
+    summary: 'Selective cleavage of the RNA backbone generates accessibility footprints that reveal RNA structural features.'
+  },
+  footprinting: {
+    title: 'Nucleotide-specific chemical probing methods',
+    summary: 'Chemical reagents selectively modify specific nucleobases or base-pairing environments, providing nucleotide identity–specific information on RNA structure and interactions.'
+  },
+  'carbodiimide-special': {
+    title: 'RNA–RNA interaction mapping methods',
+    summary: 'Crosslinking and proximity ligation capture RNA–RNA contacts and higher-order RNA organization.'
+  }
+});
+
 // ---- 总览页 ----
 
-export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsHtml = '') {
-  const families = (index && index.families) || [];
-  const visibleFamilies = families.filter((family) => family.id !== 'inference');
-  const articleCount = HOME_METRICS.probingArticles;
-  const articlesBySlug = new Map(
-    families.flatMap((family) => Array.isArray(family.articles) ? family.articles : [])
-      .map((article) => [article.slug, article])
-  );
+export function buildProbingOverviewModel(index) {
+  if (!index || typeof index !== 'object' || Array.isArray(index)) {
+    throw new Error('probing index must be an object');
+  }
+  if (!Array.isArray(index.families)) {
+    throw new Error('probing index families must be an array');
+  }
 
-  const familySections = visibleFamilies.map((fam, familyIndex) => {
-    const familyTitle = fam.id === 'dms'
-      ? 'DMS-based methods'
-      : (fam.id === 'shape'
-        ? 'SHAPE-based methods'
-        : (fam.id === 'in-cell-shape'
-          ? 'Cleavage-based methods'
-          : (fam.id === 'footprinting'
-            ? 'Nucleotide-specific chemical probing methods'
-            : (fam.id === 'carbodiimide-special' ? 'RNA–RNA interaction mapping methods' : fam.title))));
-    const familySummary = fam.id === 'dms'
-      ? 'DMS methylates the Watson–Crick faces of adenine (N1) and cytosine (N3), reporting base accessibility and pairing-dependent protection.'
-      : (fam.id === 'shape'
-        ? 'SHAPE reagents acylate the ribose 2′-hydroxyl of conformationally flexible nucleotides, reporting backbone flexibility.'
-        : (fam.id === 'in-cell-shape'
-          ? 'Selective cleavage of the RNA backbone generates accessibility footprints that reveal RNA structural features.'
-          : (fam.id === 'footprinting'
-            ? 'Chemical reagents selectively modify specific nucleobases or base-pairing environments, providing nucleotide identity–specific information on RNA structure and interactions.'
-            : (fam.id === 'carbodiimide-special'
-              ? 'Crosslinking and proximity ligation capture RNA–RNA contacts and higher-order RNA organization.'
-              : fam.summary))));
-    let familyArticles = fam.articles;
-    if (fam.id === 'dms') {
-      familyArticles = DMS_METHOD_DESCRIPTIONS;
-    } else if (fam.id === 'shape') {
-      familyArticles = SHAPE_METHOD_DESCRIPTIONS;
-    } else if (fam.id === 'in-cell-shape') {
-      familyArticles = CLEAVAGE_METHOD_DESCRIPTIONS;
-    } else if (fam.id === 'footprinting') {
-      familyArticles = NUCLEOTIDE_METHOD_DESCRIPTIONS;
-    } else if (fam.id === 'carbodiimide-special') {
-      familyArticles = RNA_INTERACTION_METHOD_DESCRIPTIONS;
+  const indexFamilies = index.families;
+  for (const familyId of Object.keys(CURATED_METHODS_BY_FAMILY_ID)) {
+    const matches = indexFamilies.filter((family) => family?.id === familyId);
+    if (matches.length === 0) {
+      throw new Error(`probing index is missing curated public family: ${familyId}`);
     }
-    familyArticles = familyArticles.map((method) => ({
-      ...(articlesBySlug.get(method.slug) || {}),
-      ...method
-    }));
-    const cards = familyArticles.map((a) => {
+    if (matches.length > 1) {
+      throw new Error(`probing index has duplicate curated public family: ${familyId}`);
+    }
+  }
+
+  const families = indexFamilies
+    .filter((family) => family.id !== 'inference'
+      && Object.hasOwn(CURATED_METHODS_BY_FAMILY_ID, family.id))
+    .map((family) => {
+      const familyArticlesBySlug = new Map(
+        (Array.isArray(family.articles) ? family.articles : [])
+          .map((article) => [article.slug, article])
+      );
+      return {
+        ...family,
+        ...PUBLIC_FAMILY_COPY_BY_ID[family.id],
+        methods: CURATED_METHODS_BY_FAMILY_ID[family.id].map((method) => ({
+          ...(familyArticlesBySlug.get(method.slug) || {}),
+          ...method
+        }))
+      };
+    });
+
+  return {
+    families,
+    methodCount: families.reduce((total, family) => total + family.methods.length, 0),
+    familyCount: families.length
+  };
+}
+
+export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsHtml = '') {
+  const model = buildProbingOverviewModel(index);
+
+  const familySections = model.families.map((family, familyIndex) => {
+    const cards = family.methods.map((a) => {
       const meta = [];
       if (a.figure_count) meta.push(`${a.figure_count} figures`);
       if (a.rep_pmid) meta.push(`PMID ${escapeHtml(a.rep_pmid)}`);
@@ -259,13 +292,13 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
     }).join('');
 
     return `
-      <details id="probing-family-${escapeHtml(fam.id)}" class="technology-section-card" data-probing-family="${escapeHtml(fam.id)}"${familyIndex === 0 ? ' open' : ''}>
+      <details id="probing-family-${escapeHtml(family.id)}" class="technology-section-card" data-probing-family="${escapeHtml(family.id)}"${familyIndex === 0 ? ' open' : ''}>
         <summary class="technology-section-summary">
           <div class="technology-section-heading">
             <div>
-              <h2>${escapeHtml(familyTitle)}</h2>
+              <h2>${escapeHtml(family.title)}</h2>
             </div>
-            <p>${escapeHtml(familySummary)}</p>
+            <p>${escapeHtml(family.summary)}</p>
           </div>
         </summary>
         <div class="probing-article-grid">${cards}</div>
@@ -277,7 +310,7 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
     <section class="card bundle-wide-card technology-hero-card technology-hero-card-solo">
       <div class="technology-hero-copy">
         <h1>Chemical probing methods</h1>
-        <p class="technology-intro">This curated overview presents ${articleCount} in-depth explainers on RNA structure probing methods. The articles use original figures to clarify the chemical events each method measures and, where applicable, relate those measurements to FoldBridge’s raw data, visualization, and confidence layers.</p>
+        <p class="technology-intro">This curated overview presents ${model.methodCount} probing methods for RNA structure analysis. The method guides use original figures to clarify the chemical events each method measures and, where applicable, relate those measurements to FoldBridge’s raw data, visualization, and confidence layers.</p>
         <p class="technology-intro technology-intro-secondary">Browse by mechanism family first, then open any method to enter its full reading page.</p>
       </div>
     </section>
@@ -286,6 +319,20 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
       <div class="probing-overview-divider" aria-hidden="true"></div>
       <div class="probing-family-collection">
         ${familySections}
+      </div>
+    </section>
+  </main>`;
+}
+
+export function renderProbingUnavailablePage(error, headerHtml = '') {
+  const message = error instanceof Error ? error.message : error;
+  return `${headerHtml}
+  <main class="page-detail page-probing-index">
+    <section class="card bundle-wide-card technology-hero-card technology-hero-card-solo">
+      <div class="technology-hero-copy">
+        <h1>Chemical probing methods</h1>
+        <p class="technology-intro">Probing methods unavailable</p>
+        <p class="technology-intro technology-intro-secondary">${escapeHtml(message || 'The probing method index could not be loaded.')}</p>
       </div>
     </section>
   </main>`;
