@@ -1,7 +1,7 @@
 // entry 浏览入口表的视图层：纯函数，输入归一化行 → 输出 HTML 字符串。
 // 无 DOM 副作用、无 fetch。跳转链接由 entryCaseHref 生成，指向静态 case 页树。
 
-import { ENTRY_TABLE_COLUMNS, entryCaseHref, buildEntryTableGroups } from './entryTable.js';
+import { ENTRY_TABLE_COLUMNS, entryCaseHref, rcsbStructureHref, buildEntryTableGroups } from './entryTable.js';
 import { renderTechniqueFilterControls } from './annojoinAtlasView.js';
 
 function escapeHtml(value) {
@@ -44,15 +44,24 @@ function selectCell(row, selectedSet) {
 }
 
 function renderRow(row, caseBase, missingSet, selectedSet) {
-  const href = entryCaseHref(caseBase, row);
-  // 缺页降级：命中缺页集合（逐字节精确，不折叠大小写）则强制纯文本，不渲染死链 <a>。
+  const caseHref = entryCaseHref(caseBase, row);
+  const rcsbHref = rcsbStructureHref(row);
+  // 缺页降级：命中缺页集合（逐字节精确，不折叠大小写）则详情页链接强制纯文本，不渲染死链 <a>。
   const isMissing = missingSet.has(row.pdbId);
   const cells = ENTRY_TABLE_COLUMNS.map((col) => {
     if (col.id === 'pdbId') {
-      // PDB 列作为跳转入口：有链接且非缺页则渲染 <a>，否则纯文本（占位不可跳）。
+      // PDB 列 → RCSB 结构页外链（新窗口）。RCSB 永不缺页，无需降级。
       const label = escapeHtml(row.pdbId);
-      const inner = href && !isMissing
-        ? `<a class="entry-table-link" href="${escapeHtml(href)}">${label}</a>`
+      const inner = rcsbHref
+        ? `<a class="entry-table-link" href="${escapeHtml(rcsbHref)}" target="_blank" rel="noopener noreferrer">${label}</a>`
+        : label;
+      return `<td>${inner}</td>`;
+    }
+    if (col.id === 'sciName') {
+      // Molecule 列 → 站内详情页链接（#entry-case）。有链接且非缺页则 <a>，否则纯文本。
+      const label = escapeHtml(row.sciName ?? '');
+      const inner = caseHref && !isMissing
+        ? `<a class="entry-table-link" href="${escapeHtml(caseHref)}">${label}</a>`
         : label;
       return `<td>${inner}</td>`;
     }

@@ -146,3 +146,23 @@ test('two-level filter over tech_filter-derived rows (family + detail OR)', () =
   );
   assert.equal(filterEntryRowsByTechniqueSelection(rows, {}).length, 5);
 });
+
+// 行链接：PDB → RCSB 结构页外链（新窗口）；Molecule(sciName) → 站内 case 详情页。
+const LINK_ROW = { pdbId: '7SYS', auth: 'z', sciName: 'E. coli 16S rRNA', partition: 'rRNA', nProfiles: 3, techFilter: 'SHAPE;DMS' };
+
+test('PDB cell links to RCSB structure page in a new tab', () => {
+  const html = renderEntryTablePage({ rows: [LINK_ROW] });
+  assert.match(html, /href="https:\/\/www\.rcsb\.org\/structure\/7SYS"[^>]*target="_blank"[^>]*rel="noopener noreferrer"/);
+});
+
+test('Molecule cell links to the in-app case detail page', () => {
+  const html = renderEntryTablePage({ rows: [LINK_ROW] });
+  assert.match(html, /href="#entry-case\?pdb=7SYS&amp;chain=z"[^>]*>E\. coli 16S rRNA<\/a>/);
+});
+
+test('missing PDB degrades Molecule link to plain text but keeps RCSB link', () => {
+  const html = renderEntryTablePage({ rows: [LINK_ROW], missingPdbs: ['7SYS'] });
+  assert.match(html, /href="https:\/\/www\.rcsb\.org\/structure\/7SYS"/);
+  assert.ok(!html.includes('#entry-case?pdb=7SYS'));
+  assert.match(html, />E\. coli 16S rRNA</);
+});

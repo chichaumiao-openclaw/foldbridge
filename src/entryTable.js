@@ -144,11 +144,20 @@ export function normalizeEntryRows(payload) {
 
 // entry 行 → 静态 case 页链接。PDB 进路径段（对齐 render shell 输出 cases/<PDB>/），
 // chain(auth) 作 query（对齐 bundle chains/<auth>）。pdb 或 auth 缺失 → 空串（不可跳）。
+// 详情页链接现挂在 Molecule(sciName) 列；缺页由 missingPdbs 降级为纯文本。
 export function entryCaseHref(base, row) {
   const pdb = text(row && row.pdbId);
   const chain = text(row && row.auth);
   if (!pdb || !chain) return '';
   return `#entry-case?pdb=${encodeURIComponent(pdb)}&chain=${encodeURIComponent(chain)}`;
+}
+
+// PDB 列外链：指向 RCSB 该结构的具体页面。RCSB 对任何有效 PDB 均有页面，
+// 故此链接永不缺页（无需 missingPdbs 降级）。pdb 缺失 → 空串（纯文本）。
+export function rcsbStructureHref(row) {
+  const pdb = text(row && row.pdbId);
+  if (!pdb) return '';
+  return `https://www.rcsb.org/structure/${encodeURIComponent(pdb)}`;
 }
 
 // 稳定 slug：小写、非字母数字折成单个连字符、去首尾连字符。用于折叠分组的稳定 id。
