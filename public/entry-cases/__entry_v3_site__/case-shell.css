@@ -205,6 +205,67 @@ a { color: inherit; }
 .viewer {
   display: grid;
   gap: 12px;
+  position: relative;
+}
+.fb-case-progress {
+  position: absolute;
+  z-index: 8;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  padding: 12px 14px;
+  border: 1px solid rgba(227, 191, 92, 0.5);
+  border-radius: 12px;
+  background: rgba(255, 253, 247, 0.96);
+  box-shadow: 0 12px 32px rgba(81, 62, 12, 0.12);
+  transition: opacity 180ms ease-out, transform 180ms ease-out;
+}
+.fb-case-progress.is-complete {
+  opacity: 0;
+  transform: translateY(-4px);
+  pointer-events: none;
+}
+.fb-case-progress-copy {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+  color: var(--textPrimary);
+  font-size: 14px;
+  font-weight: 600;
+}
+.fb-case-progress-track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: rgba(227, 191, 92, 0.2);
+}
+.fb-case-progress-track > span {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform: scaleX(0.15);
+  transform-origin: left center;
+  border-radius: inherit;
+  background: var(--accent);
+  transition: transform 220ms ease-out;
+}
+.fb-case-progress-retry {
+  margin-top: 10px;
+  padding: 7px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--textPrimary);
+  font: inherit;
+  cursor: pointer;
+}
+.fb-case-progress[data-state="error"] {
+  border-color: #b84a3a;
+}
+@media (prefers-reduced-motion: reduce) {
+  .fb-case-progress,
+  .fb-case-progress-track > span { transition: none; }
 }
 .viewer-frame {
   width: 100%;

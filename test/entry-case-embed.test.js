@@ -176,3 +176,27 @@ test('Case shell accepts only a chain present in its own manifest', () => {
   assert.equal(initialChainId(bootstrap, '?chain=missing'), 'b');
   assert.equal(initialChainId(bootstrap, ''), 'b');
 });
+
+test('Case shell shows staged loading progress until the first profile is ready', () => {
+  const shell = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
+  const shellStyles = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.css', import.meta.url), 'utf8');
+  const workbench = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/workbench.js', import.meta.url), 'utf8');
+  const initStart = workbench.indexOf('async function init()');
+  const initEnd = workbench.indexOf('\nel.select.addEventListener', initStart);
+  const initBody = workbench.slice(initStart, initEnd);
+
+  assert.match(shell, /foldbridge-workbench-progress/);
+  assert.match(shell, /event\.source !== frame\?\.contentWindow/);
+  assert.match(shell, /event\.origin !== window\.location\.origin/);
+  assert.match(shell, /fb-case-progress/);
+  assert.match(shellStyles, /\.fb-case-progress/);
+  assert.match(shellStyles, /prefers-reduced-motion:\s*reduce/);
+
+  const loadingAt = initBody.indexOf('reportWorkbenchProgress(45');
+  const assetsAt = initBody.indexOf('reportWorkbenchProgress(80');
+  const readyAt = initBody.indexOf('reportWorkbenchProgress(100');
+  const molstarAt = initBody.indexOf('initMolstarViewer()');
+  assert.ok(loadingAt >= 0 && loadingAt < assetsAt);
+  assert.ok(assetsAt < readyAt && readyAt < molstarAt);
+  assert.match(workbench, /reportWorkbenchProgress\(80, "Case data failed to load\.", "error"\)/);
+});

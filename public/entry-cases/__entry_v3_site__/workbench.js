@@ -24,6 +24,13 @@ try {
   manifestDetectionError = error instanceof Error ? error : new Error(String(error));
 }
 
+const WORKBENCH_PROGRESS_MESSAGE = "foldbridge-workbench-progress";
+
+function reportWorkbenchProgress(progress, label, state = "loading") {
+  if (window.parent === window) return;
+  window.parent.postMessage({ type: WORKBENCH_PROGRESS_MESSAGE, progress, label, state }, window.location.origin);
+}
+
 function removeRetiredWorkbenchPanels() {
   document.querySelector("#molstar-full-host")?.closest(".molstar-view")?.remove();
   document.querySelector("#molstarFullMeta")?.remove();
@@ -1285,8 +1292,6 @@ function renderInspector(residueKey = state.selectedResidueKey) {
     <div><dt>Structure state</dt><dd>${escapeHtml(details.structureState)}</dd></div>
     <div><dt>Raw value</dt><dd>${escapeHtml(rawValue)}</dd></div>
     <div><dt>Normalized value</dt><dd>${escapeHtml(details.norm.toFixed(6))}</dd></div>
-    <div><dt>Join status</dt><dd>${escapeHtml(details.joinStatus)}</dd></div>
-    <div><dt>Join key</dt><dd>${escapeHtml(details.joinKey)}</dd></div>
     <div><dt>PDB polymer residue</dt><dd>${escapeHtml(details.pdbResidue)}</dd></div>
     <div><dt>3D coordinate status</dt><dd>${escapeHtml(details.coordinateStatus)}</dd></div>
     <div><dt>3D coverage</dt><dd>${escapeHtml(details.coordinateCoverage)}</dd></div>
@@ -1295,9 +1300,6 @@ function renderInspector(residueKey = state.selectedResidueKey) {
     <div><dt>Bridge membership</dt><dd>${escapeHtml(details.bridgeMembership)}</dd></div>
     <div><dt>Interaction endpoint</dt><dd>${escapeHtml(details.interactionEndpoint)}</dd></div>
     <div><dt>Observed mask</dt><dd>${escapeHtml(details.coordinateStatus)}</dd></div>
-    <div><dt>LSS context</dt><dd>${escapeHtml(details.lssContext)}</dd></div>
-    <div><dt>FEC/LSS confidence</dt><dd>${escapeHtml(details.fecLssConfidence)}</dd></div>
-    <div><dt>ANNOCONFIDENCE</dt><dd>${escapeHtml(details.annoconfidence)}</dd></div>
   </dl>`;
 }
 
@@ -2856,10 +2858,13 @@ async function initEfMode(chainId, manifestUrl) {
 }
 
 async function init() {
+  reportWorkbenchProgress(45, "Loading Case assets…");
   if (manifestDetectionError) throw manifestDetectionError;
   if (detectedEfChain) {
     try {
+      reportWorkbenchProgress(80, "Preparing the Case view…");
       await initEfMode(config.chainId || '', efManifestUrl);
+      reportWorkbenchProgress(100, "Case ready", "ready");
       return; // Skip normal workbench initialization
     } catch (error) {
       showEfModeError(error);
@@ -2924,6 +2929,7 @@ async function init() {
     linkedViewPromise,
     fetchJsonMaybeGzip("../../confidence-evidence.json").catch(() => null),
   ]);
+  reportWorkbenchProgress(80, "Preparing the first Profile…");
   const {
     residueIndex,
     profileJoins,
@@ -2959,6 +2965,7 @@ async function init() {
   // renderProfile sets el.select.value without dispatching change, so re-sync the
   // custom dropdown trigger to the initially rendered profile. No-op if unmounted.
   refreshProfileDropdownTrigger();
+  reportWorkbenchProgress(100, "Case ready", "ready");
   initMolstarViewer();
 }
 
@@ -2994,4 +3001,5 @@ void loadPrimaryReference();
 init().catch((error) => {
   if (manifestDetectionError) showEfModeError(error);
   if (!detectedEfChain && !manifestDetectionError && el.status) el.status.textContent = "asset load failed";
+  reportWorkbenchProgress(80, "Case data failed to load.", "error");
 });

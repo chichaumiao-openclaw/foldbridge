@@ -34,6 +34,7 @@ const TIER_ORDER = [
 ];
 
 const ENTRY_CASE_HEIGHT_MESSAGE = "foldbridge-case-height";
+const WORKBENCH_PROGRESS_MESSAGE = "foldbridge-workbench-progress";
 
 function measureEmbeddedCaseHeight(shell, scrollY = 0, marginBottom = 0) {
   if (!shell || typeof shell.getBoundingClientRect !== "function") return null;
@@ -183,6 +184,62 @@ if (typeof document !== "undefined") {
   const frame = document.getElementById("chainFrame");
   const chainStatus = document.querySelector("#chainStatus");
   let embeddedCaseHeightRequest = null;
+  let caseProgressValue = 15;
+  let caseProgressTimer = null;
+
+  const caseProgress = document.createElement("div");
+  caseProgress.className = "fb-case-progress";
+  caseProgress.setAttribute("aria-live", "polite");
+  caseProgress.innerHTML = `
+    <div class="fb-case-progress-copy">
+      <span data-case-progress-label>Opening Case page…</span>
+      <span data-case-progress-percent aria-hidden="true">15%</span>
+    </div>
+    <div class="fb-case-progress-track" role="progressbar" aria-label="Case loading progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="15">
+      <span data-case-progress-fill></span>
+    </div>
+    <button type="button" class="fb-case-progress-retry" hidden>Retry</button>`;
+  frame?.parentElement?.insertBefore(caseProgress, frame);
+
+  const progressLabel = caseProgress.querySelector("[data-case-progress-label]");
+  const progressPercent = caseProgress.querySelector("[data-case-progress-percent]");
+  const progressTrack = caseProgress.querySelector("[role=progressbar]");
+  const progressFill = caseProgress.querySelector("[data-case-progress-fill]");
+  const progressRetry = caseProgress.querySelector(".fb-case-progress-retry");
+
+  function armCaseProgressTimer() {
+    clearTimeout(caseProgressTimer);
+    caseProgressTimer = window.setTimeout(() => {
+      caseProgress.dataset.state = "slow";
+      progressLabel.textContent = "This Case is taking longer than expected.";
+      progressRetry.hidden = false;
+    }, 45_000);
+  }
+
+  function setCaseProgress({ progress, label, state = "loading" }) {
+    const next = Number(progress);
+    if (Number.isFinite(next) && next >= caseProgressValue) caseProgressValue = Math.min(100, next);
+    if (label) progressLabel.textContent = label;
+    progressPercent.textContent = `${caseProgressValue}%`;
+    progressTrack.setAttribute("aria-valuenow", String(caseProgressValue));
+    progressFill.style.transform = `scaleX(${caseProgressValue / 100})`;
+    caseProgress.dataset.state = state;
+    progressRetry.hidden = state !== "error" && state !== "slow";
+    if (state === "ready" || caseProgressValue >= 100) {
+      clearTimeout(caseProgressTimer);
+      caseProgress.classList.add("is-complete");
+    } else {
+      armCaseProgressTimer();
+    }
+  }
+
+  progressRetry?.addEventListener("click", () => {
+    caseProgressValue = 15;
+    caseProgress.classList.remove("is-complete");
+    setCaseProgress({ progress: 15, label: "Retrying Case data…" });
+    if (frame) frame.src = frame.src;
+  });
+  setCaseProgress({ progress: 15, label: "Opening Case page…" });
 
   function reportEmbeddedCaseHeight() {
     if (window.parent === window) return;
@@ -298,11 +355,16 @@ if (typeof document !== "undefined") {
         applyCaseDownloadMessage(event.data);
         return;
       }
-      if (event.data?.type === "foldbridge-workbench-height") setWorkbenchFrameHeight(event.data.height);
+      if (event.data?.type === "foldbridge-workbench-height") {
+        setWorkbenchFrameHeight(event.data.height);
+      } else if (event.data?.type === WORKBENCH_PROGRESS_MESSAGE) {
+        setCaseProgress(event.data);
+      }
     });
   }
 
   frame?.addEventListener("load", () => {
+    setCaseProgress({ progress: 30, label: "Loading Case data…" });
     try {
       setWorkbenchFrameHeight(frame.contentDocument?.documentElement?.scrollHeight);
     } catch (error) {
