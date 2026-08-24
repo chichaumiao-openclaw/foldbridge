@@ -31,7 +31,7 @@ export const MECHANISM_FAMILIES = [
     id: 'interaction',
     label: 'RNA–RNA interaction mapping methods',
     shortLabel: 'RNA–RNA interaction',
-    techniques: ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES'],
+    techniques: ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES', 'MOHCA', 'Mutate-and-map methods'],
     filterTechniques: ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES']
   }
 ];

@@ -53,7 +53,7 @@ import {
   sortAnnojointCases
 } from './annojoinAtlasTableModel.js';
 import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
-import { buildEntryRowsWithTechniqueEvidence, filterEntryRowsByTechniqueSelection } from './entryTable.js';
+import { normalizeEntryRows, filterEntryRowsByTechniqueSelection } from './entryTable.js';
 import { renderEntryTablePage } from './entryTableView.js';
 import { toggleTechniqueSelection } from './techniqueFilterModel.js';
 import { mountEntryCaseHeightListener } from './entryCaseEmbed.js';
@@ -1981,12 +1981,9 @@ async function loadEntryTable() {
   if (entryTableState === 'loading') return;
   entryTableState = 'loading';
   try {
-    const [response, atlasIndex] = await Promise.all([
-      fetch('./src/assets/generated/entry-table/entry-table.json'),
-      annojoinAtlasStore.loadIndex()
-    ]);
+    const response = await fetch('./src/assets/generated/entry-table/entry-table.json');
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
-    entryTableState = buildEntryRowsWithTechniqueEvidence(await response.json(), atlasIndex);
+    entryTableState = normalizeEntryRows(await response.json());
   } catch (err) {
     console.error('[main] 加载 entry 表失败', err);
     entryTableState = 'error';
