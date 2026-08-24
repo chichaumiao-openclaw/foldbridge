@@ -218,6 +218,7 @@ if (typeof document !== "undefined") {
 
   function setCaseProgress({ progress, label, state = "loading" }) {
     const next = Number(progress);
+    if (Number.isFinite(next) && next < caseProgressValue && state === "loading") return;
     if (Number.isFinite(next) && next >= caseProgressValue) caseProgressValue = Math.min(100, next);
     if (label) progressLabel.textContent = label;
     progressPercent.textContent = `${caseProgressValue}%`;
