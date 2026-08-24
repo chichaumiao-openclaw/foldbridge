@@ -1,8 +1,7 @@
 import fs from 'node:fs';
-import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { TextDecoder } from 'node:util';
-import { gunzipSync } from 'node:zlib';
+import { createGunzip } from 'node:zlib';
 
 const SCHEMA_VERSION = 'pdb-primary-citations.v2';
 const SOURCE_LABEL = 'local case mmCIF _citation and _citation_author categories';
@@ -332,25 +331,10 @@ export function discoverPublishedCases(caseRoot) {
   }
   const resolvedRoot = path.resolve(caseRoot);
   const casesByPdbId = new Map();
-  const isFile = (filePath) => {
-    try {
-      return fs.statSync(filePath).isFile();
-    } catch (error) {
-      if (error?.code === 'ENOENT') return false;
-      throw error;
-    }
-  };
 
   for (const entry of fs.readdirSync(resolvedRoot, { withFileTypes: true })) {
     if (!entry.isDirectory() || !/^[A-Za-z0-9]{4}$/.test(entry.name)) continue;
     const caseDir = path.join(resolvedRoot, entry.name);
-    if (
-      !isFile(path.join(caseDir, 'case.json'))
-      || !isFile(path.join(caseDir, 'browser-manifest.json'))
-    ) {
-      continue;
-    }
-
     const pdbId = entry.name.toUpperCase();
     if (casesByPdbId.has(pdbId)) {
       throw new Error(
@@ -551,7 +535,6 @@ export async function buildCitationPayload({ caseRoot, generatedAt } = {}) {
   const citations = {};
   const unavailablePdbIds = [];
   const missingStructurePdbIds = [];
-  const decoder = new TextDecoder('utf-8', { fatal: true });
 
   for (const publishedCase of publishedCases) {
     const { pdbId, structurePath } = publishedCase;
@@ -562,8 +545,7 @@ export async function buildCitationPayload({ caseRoot, generatedAt } = {}) {
 
     let citation;
     try {
-      const compressed = await readFile(structurePath);
-      const source = decoder.decode(gunzipSync(compressed));
+      const source = await readCitationHeader(structurePath);
       citation = extractPrimaryCitation(source);
     } catch (error) {
       throw new Error(
@@ -593,5 +575,57 @@ export async function buildCitationPayload({ caseRoot, generatedAt } = {}) {
 
   return validateCitationPayload(payload, {
     expectedPdbIds: publishedCases.map(({ pdbId }) => pdbId)
+  });
+}
+
+function readCitationHeader(structurePath) {
+  return new Promise((resolve, reject) => {
+    const decoder = new TextDecoder('utf-8', { fatal: true });
+    const input = fs.createReadStream(structurePath);
+    const gunzip = createGunzip();
+    let source = '';
+    let settled = false;
+
+    const fail = (error) => {
+      if (settled) return;
+      settled = true;
+      input.destroy();
+      gunzip.destroy();
+      reject(error);
+    };
+    const finish = () => {
+      if (settled) return;
+      settled = true;
+      input.destroy();
+      gunzip.destroy();
+      resolve(source);
+    };
+
+    input.on('error', fail);
+    gunzip.on('error', fail);
+    gunzip.on('data', (chunk) => {
+      try {
+        source += decoder.decode(chunk, { stream: true });
+      } catch (error) {
+        fail(error);
+        return;
+      }
+      const authorStart = source.indexOf('_citation_author.');
+      const authorEnd = authorStart < 0 ? -1 : source.indexOf('\n#', authorStart);
+      if (authorEnd >= 0) {
+        source = `${source.slice(0, authorEnd + 2)}\n`;
+        finish();
+      }
+    });
+    gunzip.on('end', () => {
+      if (settled) return;
+      try {
+        source += decoder.decode();
+        finish();
+      } catch (error) {
+        fail(error);
+      }
+    });
+    input.pipe(gunzip);
   });
 }

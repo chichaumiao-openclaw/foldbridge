@@ -279,7 +279,7 @@ _citation.title ?
   );
 });
 
-test('discoverPublishedCases accepts only complete four-alphanumeric case directories and normalizes ids', async (t) => {
+test('discoverPublishedCases accepts every four-alphanumeric case directory and normalizes ids', async (t) => {
   const root = await makeTempRoot(t);
   await createCase(root, '2bbb');
   await createCase(root, '1AaA');
@@ -294,11 +294,11 @@ test('discoverPublishedCases accepts only complete four-alphanumeric case direct
   const cases = discoverPublishedCases(root);
   assert.deepEqual(
     cases.map(({ pdbId }) => pdbId),
-    ['1AAA', '2BBB']
+    ['1AAA', '2BBB', '3CCC', '4DDD', '5EEE']
   );
   assert.deepEqual(
     cases.map(({ caseDir }) => path.basename(caseDir)),
-    ['1AaA', '2bbb']
+    ['1AaA', '2bbb', '3CCC', '4DDD', '5EEE']
   );
 });
 
