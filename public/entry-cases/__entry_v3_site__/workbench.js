@@ -1,6 +1,6 @@
 import "./site-nav.js";
 import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter } from "./workbench-pure.mjs";
-import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.mjs?v=20260825-ef-ui-4";
+import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260825-ef-ui-4.mjs";
 
 const EF_ASSET_VERSION = "20260825-ef-ui-4";
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
@@ -2965,11 +2965,10 @@ async function initEfMode(chainId, manifestUrl) {
   // Locate shared assets from workbench.js itself. This is independent of the
   // current chain page depth and works for both 7SYS/z and 9WNR/a.
   const scripts = [
-    new URL('../__entry_ef_site__/ef-heatmap-core.js', import.meta.url),
-    new URL('../__entry_ef_site__/ef-heatmap.js', import.meta.url),
-    new URL('../__entry_ef_site__/ef-case.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap-core.20260825-ef-ui-4.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap.20260825-ef-ui-4.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-case.20260825-ef-ui-4.js', import.meta.url),
   ];
-  for (const scriptUrl of scripts) scriptUrl.searchParams.set("v", EF_ASSET_VERSION);
 
   // Keep the working 1D DOM intact until every EF dependency is available.
   for (const scriptUrl of scripts) {

@@ -6,7 +6,7 @@ const read = (relative) => fs.readFileSync(new URL(`../${relative}`, import.meta
 
 test("EF stays inside the existing Workbench shell", () => {
   const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
-  assert.match(source, /ef-workbench-shell\.mjs/);
+  assert.match(source, /ef-workbench-shell\.[^"']+\.mjs/);
   assert.match(source, /prepareEfWorkbenchShell/);
   assert.match(source, /window\.efCaseBootstrap\(\s*\{/);
   assert.doesNotMatch(source, /document\.body\s*\.\s*innerHTML\s*=/);
@@ -110,10 +110,13 @@ test("EF component chrome is entirely Workbench-token driven", () => {
   assert.doesNotMatch(efBlock, /(?:^|\n)\s*\.ef-/, "EF visual rules must remain scoped to Workbench EF mode");
 });
 
-test("EF dependency URLs are versioned for the tunnel cache", () => {
+test("EF dependency paths are fingerprinted for caches that ignore query strings", () => {
   const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
   assert.match(source, /const EF_ASSET_VERSION\s*=\s*["'][^"']+["']/);
-  assert.match(source, /scriptUrl\.searchParams\.set\(["']v["'],\s*EF_ASSET_VERSION\)/);
+  assert.match(source, /ef-heatmap-core\.20260825-ef-ui-4\.js/);
+  assert.match(source, /ef-heatmap\.20260825-ef-ui-4\.js/);
+  assert.match(source, /ef-case\.20260825-ef-ui-4\.js/);
+  assert.doesNotMatch(source, /scriptUrl\.searchParams\.set\(["']v["']/);
 });
 
 test("Case Shell navigation does not force desktop horizontal overflow", () => {

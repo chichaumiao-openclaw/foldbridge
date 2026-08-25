@@ -3171,6 +3171,8 @@ function annojoinConfidencePage() {
 
 const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/entry-cases';
 const ENTRY_CASE_FRAME_ORIGIN = new URL(ENTRY_CASE_ORIGIN).origin;
+const EF_ASSET_VERSION = '20260825-ef-ui-4';
+const EF_ENTRY_CASE_IDS = new Set(['7SYS', '8QO5', '8UYE', '8UYL', '9TMI', '9ZC6', '9WNR']);
 
 function clearEntryCaseEmbed() {
   if (!disposeEntryCaseHeightListener) return;
@@ -3198,7 +3200,10 @@ function entryCasePage() {
       <p><a class="download-outline-btn" href="#entry">Back to the table</a></p></section></main>`;
   }
   const safeChain = String(chain || '').trim();
-  const srcUrl = new URL(`${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/index.html`);
+  const entryDocument = EF_ENTRY_CASE_IDS.has(safePdb.toUpperCase())
+    ? `index.${EF_ASSET_VERSION}.html`
+    : 'index.html';
+  const srcUrl = new URL(`${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/${entryDocument}`);
   if (safeChain && /^[A-Za-z0-9._-]+$/.test(safeChain)) {
     srcUrl.searchParams.set('chain', safeChain);
   }

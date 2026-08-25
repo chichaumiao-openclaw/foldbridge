@@ -162,6 +162,8 @@ test('main-site entry route forwards the requested chain into the case iframe', 
   const main = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
   assert.match(main, /const \{ pdb, chain \} = getEntryCaseParamsFromHash\(\)/);
   assert.match(main, /searchParams\.set\(['"]chain['"],\s*safeChain\)/);
+  assert.match(main, /EF_ENTRY_CASE_IDS\.has\(safePdb\.toUpperCase\(\)\)/);
+  assert.match(main, /index\.\$\{EF_ASSET_VERSION\}\.html/);
 });
 
 test('Case shell accepts only a chain present in its own manifest', () => {
