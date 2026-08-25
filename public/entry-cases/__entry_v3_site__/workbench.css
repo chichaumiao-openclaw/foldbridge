@@ -8,6 +8,13 @@
   --accent-strong: #004f9e;
   --selected: #9b1c1c;
   --hover: #005fcc;
+  --surface: #fff;
+  --surface-subtle: #fbfcfd;
+  --surface-hover: #eef5fc;
+  --on-selected: #fff;
+  --accent-soft: rgba(21, 101, 192, 0.14);
+  --selected-soft: rgba(155, 28, 28, 0.14);
+  --shadow-raised: 0 3px 12px rgba(15, 23, 42, 0.18);
   /* Plan 1 canonical family color tokens (identical across both universes;
      family colors do NOT fork, only --accent forks). */
   --family-a: #7C5CBF;  --family-a-bg: #EFEAF8;
@@ -771,42 +778,54 @@ pre {
   background: var(--panel);
 }
 .workbench-shell.is-ef-mode .ef-sequence-viewport {
-  height: 66px !important;
-  overflow-x: auto !important;
-  border: 0 !important;
-  background: var(--panel) !important;
+  height: 66px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  border: 0;
+  background: var(--panel);
 }
 .workbench-shell.is-ef-mode .ef-sequence-strip {
-  height: 65px !important;
-  padding: 0 !important;
+  display: flex;
+  align-items: stretch;
+  width: max-content;
+  min-width: 100%;
+  height: 65px;
+  padding: 0;
 }
 .workbench-shell.is-ef-mode .ef-sequence-base {
-  width: 32px !important;
-  min-width: 32px !important;
+  width: 44px;
+  min-width: 44px;
   height: 64px;
-  padding: 8px 0 !important;
-  border: 0 !important;
-  border-right: 1px solid var(--line) !important;
+  padding: 8px 0;
+  border: 0;
+  border-right: 1px solid var(--line);
   border-radius: 0;
-  background: transparent !important;
-  color: var(--ink) !important;
-  font-size: 13px !important;
+  background: transparent;
+  color: var(--ink);
+  font: 600 13px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  cursor: pointer;
 }
 .workbench-shell.is-ef-mode .ef-sequence-base:hover,
 .workbench-shell.is-ef-mode .ef-sequence-base:focus-visible {
-  background: #eef5fc !important;
+  background: var(--surface-hover);
   outline: 2px solid var(--hover);
   outline-offset: -2px;
 }
 .workbench-shell.is-ef-mode .ef-sequence-base.is-selected {
-  background: var(--selected) !important;
-  color: #fff !important;
+  background: var(--selected);
+  color: var(--on-selected);
 }
 .workbench-shell.is-ef-mode .ef-sequence-base.is-selected .ef-sequence-pos {
-  color: #fff !important;
+  color: var(--on-selected);
+}
+.workbench-shell.is-ef-mode .ef-sequence-letter,
+.workbench-shell.is-ef-mode .ef-sequence-pos {
+  display: block;
 }
 .workbench-shell.is-ef-mode .ef-sequence-pos {
-  color: var(--muted) !important;
+  margin-top: 7px;
+  color: var(--muted);
+  font: 10px/1 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
 .workbench-shell.is-ef-mode .ef-workbench-matrix-panel {
   width: 100%;
@@ -818,21 +837,137 @@ pre {
   border: 1px solid var(--line);
   overflow: hidden;
   color: var(--ink);
-  background: #fff;
+  background: var(--surface);
 }
 .workbench-shell.is-ef-mode .ef-heatmap-component {
-  background: #fff !important;
-  color: var(--ink) !important;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  height: 100%;
+  background: var(--surface);
+  color: var(--ink);
 }
-.workbench-shell.is-ef-mode .ef-interaction-status,
-.workbench-shell.is-ef-mode .ef-colorbar {
-  border-color: var(--line) !important;
-  color: var(--muted) !important;
-  background: var(--panel) !important;
+.workbench-shell.is-ef-mode .ef-interaction-status {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.workbench-shell.is-ef-mode .ef-plot-wrap {
+  position: relative;
+  flex: 1 1 auto;
+  min-height: 190px;
+  overflow: hidden;
+  background: var(--surface);
+}
+.workbench-shell.is-ef-mode .ef-matrix-svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.workbench-shell.is-ef-mode .ef-matrix-background {
+  fill: var(--panel);
+}
+.workbench-shell.is-ef-mode .ef-matrix-border {
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 0.5;
+}
+.workbench-shell.is-ef-mode .ef-axes {
+  fill: var(--muted);
+}
+.workbench-shell.is-ef-mode .ef-axis-tick-line {
+  stroke: var(--muted);
+  stroke-width: 0.35;
+}
+.workbench-shell.is-ef-mode .ef-axis-tick {
+  cursor: pointer;
+}
+.workbench-shell.is-ef-mode .ef-axis-title {
+  fill: var(--ink);
+}
+.workbench-shell.is-ef-mode .ef-selection-row {
+  fill: var(--selected-soft);
+  stroke: var(--selected);
+  stroke-width: 0.5;
+}
+.workbench-shell.is-ef-mode .ef-selection-column {
+  fill: var(--accent-soft);
+  stroke: var(--accent);
+  stroke-width: 0.5;
+}
+.workbench-shell.is-ef-mode .ef-selection-cell {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.9;
+}
+.workbench-shell.is-ef-mode .ef-hover-guide {
+  stroke: var(--accent);
+  stroke-width: 0.45;
+  stroke-dasharray: 1.4 1;
+}
+.workbench-shell.is-ef-mode .ef-hover-cell {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.75;
+}
+.workbench-shell.is-ef-mode .ef-hitgrid {
+  cursor: crosshair;
+}
+.workbench-shell.is-ef-mode .ef-hitgrid:focus-visible {
+  outline: none;
+  stroke: var(--accent);
+  stroke-width: 0.9;
 }
 .workbench-shell.is-ef-mode .ef-tooltip {
-  border-color: var(--accent) !important;
-  color: var(--ink) !important;
+  display: none;
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  max-width: 260px;
+  padding: 8px 10px;
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  background: var(--surface);
+  box-shadow: var(--shadow-raised);
+  color: var(--ink);
+  font: 12px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: nowrap;
+}
+.workbench-shell.is-ef-mode .ef-colorbar {
+  flex: 0 0 auto;
+  padding: 8px 12px;
+  border-top: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+.workbench-shell.is-ef-mode .ef-colorbar-title {
+  margin-bottom: 6px;
+}
+.workbench-shell.is-ef-mode .ef-colorbar-row {
+  display: grid;
+  grid-template-columns: auto minmax(48px, 1fr) auto minmax(48px, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+}
+.workbench-shell.is-ef-mode .ef-colorbar-ramp {
+  height: 10px;
+  border: 1px solid var(--line);
+}
+.workbench-shell.is-ef-mode .ef-colorbar-ramp-low {
+  background: linear-gradient(90deg, var(--ef-scale-low), var(--ef-scale-center));
+}
+.workbench-shell.is-ef-mode .ef-colorbar-ramp-high {
+  background: linear-gradient(90deg, var(--ef-scale-center), var(--ef-scale-high));
 }
 .workbench-shell.is-ef-mode .varna-viewport {
   height: 404px;
@@ -846,10 +981,18 @@ pre {
   width: 100% !important;
   height: 100% !important;
   max-height: 404px;
+  cursor: pointer;
+}
+.workbench-shell.is-ef-mode .varna-frame circle {
+  cursor: pointer;
+}
+.workbench-shell.is-ef-mode .varna-frame circle.is-ef-hovered {
+  stroke: var(--accent) !important;
+  stroke-width: 2.5 !important;
 }
 .workbench-shell.is-ef-mode .view3d-body {
   padding: 12px 0 0;
-  background: #fff;
+  background: var(--surface);
 }
 .workbench-shell.is-ef-mode .ef-inspector-empty {
   margin: 0;

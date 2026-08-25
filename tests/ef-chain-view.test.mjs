@@ -97,11 +97,25 @@ class FakeElement {
     this.name = name;
     this.attrs = {};
     this.children = [];
-    this.style = {};
+    this.style = {
+      setProperty: (property, value) => { this.style[property] = String(value); },
+    };
     this.handlers = {};
     this.innerHTML = "";
     this.className = "";
     this.textContent = "";
+    this.classList = {
+      add: (...names) => {
+        const values = new Set(String(this.className || "").split(/\s+/).filter(Boolean));
+        names.forEach((value) => values.add(value));
+        this.className = [...values].join(" ");
+      },
+      remove: (...names) => {
+        const removed = new Set(names);
+        this.className = String(this.className || "").split(/\s+/).filter((value) => value && !removed.has(value)).join(" ");
+      },
+      contains: (name) => String(this.className || "").split(/\s+/).includes(name),
+    };
   }
   setAttribute(name, value) { this.attrs[name] = String(value); }
   getAttribute(name) { return this.attrs[name] ?? null; }
@@ -109,6 +123,7 @@ class FakeElement {
   appendChild(child) { this.children.push(child); return child; }
   addEventListener(name, fn) { this.handlers[name] = fn; }
   removeEventListener(name) { delete this.handlers[name]; }
+  getBoundingClientRect() { return { left: 0, top: 0, width: 390, height: 340 }; }
   querySelector(selector) {
     const matches = (node) => selector === "svg"
       ? node.name === "svg"
@@ -171,6 +186,17 @@ assert.ok(heatmapHost.querySelector(".ef-selection"), "heatmap must render locke
 assert.ok(sequenceHost.querySelector(".ef-sequence-strip"), "sequence host must render the clickable 1D sequence strip");
 assert.equal(heatmapHost.querySelector(".ef-sequence-strip"), null, "matrix host must not duplicate the 1D strip");
 assert.ok(heatmapHost.querySelector(".ef-colorbar"), "heatmap must render a visible colorbar");
+const hitgrid = heatmapHost.querySelector(".ef-hitgrid");
+const hoverLayer = heatmapHost.querySelector(".ef-hover");
+const tooltip = heatmapHost.querySelector(".ef-tooltip");
+hitgrid.handlers.mousemove({ clientX: 195, clientY: 105 });
+assert.equal(hoverLayer.getAttribute("visibility"), "visible", "matrix hover must reveal the crosshair layer");
+assert.equal(tooltip.style.display, "block", "matrix hover must reveal the value tooltip");
+assert.equal(varnaSvg.circles[0].classList.contains("is-ef-hovered"), true, "matrix hover must mark linked VARNA residues");
+hitgrid.handlers.mouseleave();
+assert.equal(hoverLayer.getAttribute("visibility"), "hidden", "matrix leave must hide the crosshair layer");
+assert.equal(tooltip.style.display, "none", "matrix leave must hide the value tooltip");
+assert.equal(varnaSvg.circles[0].classList.contains("is-ef-hovered"), false, "matrix leave must clear linked VARNA hover");
 assert.deepEqual(JSON.parse(JSON.stringify(selectCalls[0])), {
   data: [{ struct_asym_id: "HA", start_residue_number: 1, end_residue_number: 2, color: { r: 200, g: 200, b: 200 }, focus: true }],
   nonSelectedColor: { r: 255, g: 255, b: 255 },

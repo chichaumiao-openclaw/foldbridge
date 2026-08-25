@@ -1,7 +1,8 @@
 import "./site-nav.js";
 import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter } from "./workbench-pure.mjs";
-import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.mjs";
+import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.mjs?v=20260825-ef-ui-3";
 
+const EF_ASSET_VERSION = "20260825-ef-ui-3";
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const efManifestUrl = new URL('../../browser-manifest.json', window.location.href).href;
 let detectedEfChain = null;
@@ -2968,6 +2969,7 @@ async function initEfMode(chainId, manifestUrl) {
     new URL('../__entry_ef_site__/ef-heatmap.js', import.meta.url),
     new URL('../__entry_ef_site__/ef-case.js', import.meta.url),
   ];
+  for (const scriptUrl of scripts) scriptUrl.searchParams.set("v", EF_ASSET_VERSION);
 
   // Keep the working 1D DOM intact until every EF dependency is available.
   for (const scriptUrl of scripts) {

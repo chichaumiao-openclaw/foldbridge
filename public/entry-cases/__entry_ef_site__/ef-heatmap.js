@@ -60,17 +60,13 @@
     sequenceHost.innerHTML = "";
     heatmapHost.innerHTML = "";
     const root = htmlNode("div", "ef-heatmap-component");
-    root.style.cssText = "height:100%;display:flex;flex-direction:column;min-height:0;background:#fff;color:#172033;";
     const status = htmlNode("div", "ef-interaction-status", "Hover a cell; click to lock its row and recolor 2D / 3D");
-    status.style.cssText = "padding:6px 10px;border-bottom:1px solid #e5e7eb;font:12px/1.25 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#4b5563;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;";
     root.appendChild(status);
 
     const sequenceViewport = htmlNode("div", "ef-sequence-viewport");
-    sequenceViewport.style.cssText = "flex:0 0 46px;overflow-x:auto;overflow-y:hidden;border-bottom:1px solid #dbe2ea;background:#f8fafc;";
     const sequenceStrip = htmlNode("div", "ef-sequence-strip");
     sequenceStrip.setAttribute("role", "list");
     sequenceStrip.setAttribute("aria-label", "1D chain sequence; click a residue to recolor linked views");
-    sequenceStrip.style.cssText = "display:flex;width:max-content;min-width:100%;height:45px;padding-left:6px;align-items:stretch;";
     sequenceRows.forEach((row) => {
       const index = row.matrix_index;
       const base = htmlNode("button", "ef-sequence-base");
@@ -78,11 +74,8 @@
       base.setAttribute("data-index", index);
       base.setAttribute("data-pdb-pos", row.pdb_pos ?? "");
       base.setAttribute("title", `PDB ${row.pdb_pos ?? "unmapped"} ${row.base || ""}; click to select axis ${sequenceAxis}=${index}`);
-      base.style.cssText = "width:24px;min-width:24px;border:0;border-right:1px solid #e5e7eb;background:transparent;padding:3px 0;cursor:pointer;color:#111827;font:600 12px/1 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;";
       const baseLetter = htmlNode("span", "ef-sequence-letter", row.base || "·");
-      baseLetter.style.cssText = "display:block;";
       const basePos = htmlNode("span", "ef-sequence-pos", String(row.pdb_pos ?? ""));
-      basePos.style.cssText = "display:block;margin-top:4px;color:#6b7280;font:9px/1 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;";
       base.appendChild(baseLetter);
       base.appendChild(basePos);
       const click = () => selectAxis(sequenceAxis, index, "sequence");
@@ -94,16 +87,16 @@
     sequenceHost.appendChild(sequenceViewport);
 
     const plotWrap = htmlNode("div", "ef-plot-wrap");
-    plotWrap.style.cssText = "position:relative;flex:1 1 auto;min-height:190px;overflow:hidden;background:#fff;";
     const svg = svgNode("svg", {
+      class: "ef-matrix-svg",
       viewBox: `0 0 ${TOTAL_W} ${TOTAL_H}`,
       preserveAspectRatio: "xMidYMid meet",
       role: "img",
       "aria-label": `${H.value_kind || "EF"} matrix ${H.n_rows} by ${H.n_cols}, PDB chain coordinates`,
     });
-    svg.style.width = "100%";
-    svg.style.height = "100%";
-    svg.appendChild(svgNode("rect", { x: PLOT_X, y: PLOT_Y, width: PLOT_W, height: PLOT_H, fill: "#f3f4f6" }));
+    svg.appendChild(svgNode("rect", {
+      class: "ef-matrix-background", x: PLOT_X, y: PLOT_Y, width: PLOT_W, height: PLOT_H,
+    }));
 
     const gCells = svgNode("g", { class: "ef-cells" });
     for (const [i, j, value] of viewPayload.cells) {
@@ -115,30 +108,28 @@
     }
     svg.appendChild(gCells);
     svg.appendChild(svgNode("rect", {
+      class: "ef-matrix-border",
       x: PLOT_X, y: PLOT_Y, width: PLOT_W, height: PLOT_H,
-      fill: "none", stroke: "#475569", "stroke-width": 0.5,
     }));
 
-    const gAxes = svgNode("g", { class: "ef-axes", fill: "#475569" });
+    const gAxes = svgNode("g", { class: "ef-axes" });
     const tickStep = Math.max(1, Math.ceil(Math.max(H.n_rows, H.n_cols) / 12 / 5) * 5);
     function addTick(axis, index, row) {
       const label = String(row?.pdb_pos ?? index + 1);
       if (axis === "j") {
         const x = PLOT_X + index + 0.5;
-        gAxes.appendChild(svgNode("line", { x1: x, y1: PLOT_Y - 1.2, x2: x, y2: PLOT_Y, stroke: "#475569", "stroke-width": 0.35 }));
+        gAxes.appendChild(svgNode("line", { class: "ef-axis-tick-line", x1: x, y1: PLOT_Y - 1.2, x2: x, y2: PLOT_Y }));
         const text = svgNode("text", { x, y: PLOT_Y - 2, "text-anchor": "middle", "font-size": 2.7, class: "ef-axis-tick ef-axis-j", "data-index": index });
         text.textContent = label;
-        text.style.cursor = "pointer";
         const click = () => selectAxis("j", index, "axis-j");
         text.addEventListener("click", click);
         cleanup.push(() => text.removeEventListener("click", click));
         gAxes.appendChild(text);
       } else {
         const y = PLOT_Y + index + 0.75;
-        gAxes.appendChild(svgNode("line", { x1: PLOT_X - 1.2, y1: y, x2: PLOT_X, y2: y, stroke: "#475569", "stroke-width": 0.35 }));
+        gAxes.appendChild(svgNode("line", { class: "ef-axis-tick-line", x1: PLOT_X - 1.2, y1: y, x2: PLOT_X, y2: y }));
         const text = svgNode("text", { x: PLOT_X - 2, y, "text-anchor": "end", "font-size": 2.7, class: "ef-axis-tick ef-axis-i", "data-index": index });
         text.textContent = label;
-        text.style.cursor = "pointer";
         const click = () => selectAxis("i", index, "axis-i");
         text.addEventListener("click", click);
         cleanup.push(() => text.removeEventListener("click", click));
@@ -151,27 +142,27 @@
     viewPayload.axis_i.forEach((row, index) => {
       if (index === 0 || index === H.n_rows - 1 || (row.pdb_pos ?? index + 1) % tickStep === 0) addTick("i", index, row);
     });
-    const xTitle = svgNode("text", { x: PLOT_X + PLOT_W / 2, y: TOTAL_H - 2, "text-anchor": "middle", "font-size": 3.2, "font-weight": 600 });
+    const xTitle = svgNode("text", { class: "ef-axis-title", x: PLOT_X + PLOT_W / 2, y: TOTAL_H - 2, "text-anchor": "middle", "font-size": 3.2, "font-weight": 600 });
     xTitle.textContent = "j · PDB residue";
     gAxes.appendChild(xTitle);
-    const yTitle = svgNode("text", { x: 3.2, y: PLOT_Y + PLOT_H / 2, "text-anchor": "middle", "font-size": 3.2, "font-weight": 600, transform: `rotate(-90 3.2 ${PLOT_Y + PLOT_H / 2})` });
+    const yTitle = svgNode("text", { class: "ef-axis-title", x: 3.2, y: PLOT_Y + PLOT_H / 2, "text-anchor": "middle", "font-size": 3.2, "font-weight": 600, transform: `rotate(-90 3.2 ${PLOT_Y + PLOT_H / 2})` });
     yTitle.textContent = "i · PDB residue";
     gAxes.appendChild(yTitle);
     svg.appendChild(gAxes);
 
     const gSelection = svgNode("g", { class: "ef-selection", "pointer-events": "none" });
-    const selectedRow = svgNode("rect", { fill: "rgba(109,40,217,0.14)", stroke: "#6d28d9", "stroke-width": 0.5, visibility: "hidden" });
-    const selectedCol = svgNode("rect", { fill: "rgba(109,40,217,0.08)", stroke: "#6d28d9", "stroke-width": 0.5, visibility: "hidden" });
-    const selectedCell = svgNode("rect", { fill: "none", stroke: "#111827", "stroke-width": 0.9, visibility: "hidden" });
+    const selectedRow = svgNode("rect", { class: "ef-selection-row", visibility: "hidden" });
+    const selectedCol = svgNode("rect", { class: "ef-selection-column", visibility: "hidden" });
+    const selectedCell = svgNode("rect", { class: "ef-selection-cell", visibility: "hidden" });
     gSelection.appendChild(selectedRow);
     gSelection.appendChild(selectedCol);
     gSelection.appendChild(selectedCell);
     svg.appendChild(gSelection);
 
     const gHover = svgNode("g", { class: "ef-hover", "pointer-events": "none", visibility: "hidden" });
-    const hoverH = svgNode("line", { stroke: "#7c3aed", "stroke-width": 0.45, "stroke-dasharray": "1.4 1" });
-    const hoverV = svgNode("line", { stroke: "#7c3aed", "stroke-width": 0.45, "stroke-dasharray": "1.4 1" });
-    const hoverCell = svgNode("rect", { fill: "none", stroke: "#111827", "stroke-width": 0.75 });
+    const hoverH = svgNode("line", { class: "ef-hover-guide" });
+    const hoverV = svgNode("line", { class: "ef-hover-guide" });
+    const hoverCell = svgNode("rect", { class: "ef-hover-cell" });
     gHover.appendChild(hoverH);
     gHover.appendChild(hoverV);
     gHover.appendChild(hoverCell);
@@ -181,12 +172,10 @@
       x: PLOT_X, y: PLOT_Y, width: PLOT_W, height: PLOT_H,
       fill: "transparent", class: "ef-hitgrid", tabindex: 0,
     });
-    overlay.style.cursor = "crosshair";
     svg.appendChild(overlay);
     plotWrap.appendChild(svg);
     const tooltip = htmlNode("div", "ef-tooltip");
     tooltip.setAttribute("role", "status");
-    tooltip.style.cssText = "display:none;position:absolute;z-index:5;pointer-events:none;max-width:260px;padding:6px 8px;border:1px solid #c4b5fd;border-radius:5px;background:rgba(255,255,255,.97);box-shadow:0 3px 12px rgba(15,23,42,.18);color:#111827;font:11px/1.35 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:nowrap;";
     plotWrap.appendChild(tooltip);
     root.appendChild(plotWrap);
 
@@ -195,16 +184,15 @@
     const mid = core.colorForValue(center, H);
     const high = core.colorForValue(H.value_max, H);
     const colorbar = htmlNode("div", "ef-colorbar");
-    colorbar.style.cssText = "flex:0 0 38px;padding:4px 10px 5px;border-top:1px solid #e5e7eb;background:#fff;font:10px/1.2 -apple-system,BlinkMacSystemFont,Segoe UI,sans-serif;color:#475569;";
+    const rgbCss = (color) => `rgb(${color.r}, ${color.g}, ${color.b})`;
+    colorbar.style.setProperty("--ef-scale-low", rgbCss(low));
+    colorbar.style.setProperty("--ef-scale-center", rgbCss(mid));
+    colorbar.style.setProperty("--ef-scale-high", rgbCss(high));
     const scaleName = H.family === "F" ? "F coupling z" : "E contact score";
     const legendTitle = htmlNode("div", "ef-colorbar-title", `${H.value_kind || scaleName} · blue < center < red`);
-    legendTitle.style.cssText = "margin-bottom:3px;";
     const legendRow = htmlNode("div", "ef-colorbar-row");
-    legendRow.style.cssText = "display:grid;grid-template-columns:auto 1fr auto 1fr auto;gap:5px;align-items:center;";
     const rampLow = htmlNode("span", "ef-colorbar-ramp ef-colorbar-ramp-low");
-    rampLow.style.cssText = `height:8px;border:1px solid #cbd5e1;background:linear-gradient(90deg,rgb(${low.r},${low.g},${low.b}),rgb(${mid.r},${mid.g},${mid.b}));`;
     const rampHigh = htmlNode("span", "ef-colorbar-ramp ef-colorbar-ramp-high");
-    rampHigh.style.cssText = `height:8px;border:1px solid #cbd5e1;background:linear-gradient(90deg,rgb(${mid.r},${mid.g},${mid.b}),rgb(${high.r},${high.g},${high.b}));`;
     legendRow.appendChild(htmlNode("span", "ef-colorbar-min", fmt(H.value_min)));
     legendRow.appendChild(rampLow);
     legendRow.appendChild(htmlNode("span", "ef-colorbar-center", fmt(center)));
@@ -227,8 +215,7 @@
         const circle = row && circles[row.varna_index];
         if (!circle) continue;
         circle.setAttribute("data-ef-hover", "1");
-        circle.setAttribute("stroke", "#6d28d9");
-        circle.setAttribute("stroke-width", "2.5");
+        circle.classList.add("is-ef-hovered");
       }
     }
 
@@ -236,8 +223,7 @@
       for (const circle of circles) {
         if (circle.getAttribute("data-ef-hover") === "1") {
           circle.removeAttribute("data-ef-hover");
-          circle.setAttribute("stroke", "none");
-          circle.removeAttribute("stroke-width");
+          circle.classList.remove("is-ef-hovered");
         }
       }
     }
@@ -372,8 +358,6 @@
         matrixRefByVarna.set(row.varna_index, { axis, index: row.matrix_index });
       }
     }
-    for (const circle of circles) circle.style.cursor = "pointer";
-    varnaSvg.style.cursor = "pointer";
     function onVarnaClick(evt) {
       let nearestVarna = null;
       let nearestDistance = Infinity;

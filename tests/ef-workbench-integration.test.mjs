@@ -75,6 +75,37 @@ test("EF styles are scoped to Workbench EF mode", () => {
   assert.match(source, /var\(--(?:ink|muted|line|panel|accent|selected|hover)\)/);
 });
 
+test("EF component chrome is entirely Workbench-token driven", () => {
+  const renderer = read("public/entry-cases/__entry_ef_site__/ef-heatmap.js");
+  const styles = read("public/entry-cases/__entry_v3_site__/workbench.css");
+  assert.doesNotMatch(renderer, /style\.cssText\s*=/);
+  assert.doesNotMatch(renderer, /\.style\.cursor\s*=/);
+  assert.doesNotMatch(renderer, /#[0-9a-fA-F]{3,8}/);
+  assert.match(renderer, /class:\s*["']ef-matrix-background["']/);
+  assert.match(renderer, /class:\s*["']ef-selection-row["']/);
+  assert.match(renderer, /class:\s*["']ef-hover-guide["']/);
+  assert.match(renderer, /classList\.add\(["']is-ef-hovered["']\)/);
+  assert.match(renderer, /--ef-scale-low/);
+  assert.match(renderer, /--ef-scale-center/);
+  assert.match(renderer, /--ef-scale-high/);
+
+  const efBlock = styles.slice(styles.indexOf("/* EF mode"));
+  assert.match(efBlock, /\.ef-colorbar\s*\{[^}]*var\(--panel\)/s);
+  assert.match(efBlock, /\.ef-colorbar-ramp-low\s*\{[^}]*var\(--ef-scale-low\)[^}]*var\(--ef-scale-center\)/s);
+  assert.match(efBlock, /\.ef-colorbar-ramp-high\s*\{[^}]*var\(--ef-scale-center\)[^}]*var\(--ef-scale-high\)/s);
+  assert.match(efBlock, /\.ef-selection-row\s*\{[^}]*var\(--selected-soft\)[^}]*var\(--selected\)/s);
+  assert.match(efBlock, /\.ef-hover-guide\s*\{[^}]*var\(--accent\)/s);
+  assert.match(efBlock, /\.ef-sequence-base\s*\{[^}]*min-width:\s*44px/s);
+  assert.match(efBlock, /\.varna-frame circle\.is-ef-hovered\s*\{[^}]*var\(--accent\)/s);
+  assert.doesNotMatch(efBlock, /(?:^|\n)\s*\.ef-/, "EF visual rules must remain scoped to Workbench EF mode");
+});
+
+test("EF dependency URLs are versioned for the tunnel cache", () => {
+  const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
+  assert.match(source, /const EF_ASSET_VERSION\s*=\s*["'][^"']+["']/);
+  assert.match(source, /scriptUrl\.searchParams\.set\(["']v["'],\s*EF_ASSET_VERSION\)/);
+});
+
 test("Case Shell navigation does not force desktop horizontal overflow", () => {
   const source = read("public/entry-cases/__entry_v3_site__/case-shell.css");
   const routeRule = source.match(/\.fb-detail-nav \.bundle-home-route-nav\s*\{([^}]*)\}/)?.[1] || "";
