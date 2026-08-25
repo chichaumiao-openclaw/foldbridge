@@ -29,15 +29,13 @@ function caseDocId(caseKey, caseId) {
   return `pdb-case-${slug}-${identity}`;
 }
 
-// 详情链接走站内 hash 路由 #annojoin-case。Atlas case 资产对每个 displayCase 都存在
-// （cases/<atlasCaseKey>.json），因此该路由对所有 case 可解析——区别于只有部分 case
-// 才物化的 public/<universe>/cases 静态页（静态页缺失时会 404）。
-function caseDetailHref(caseId, caseKey) {
+// 与 Entry 表保持同一条已部署的 chain-grain case 路由。
+function caseDetailHref(caseId, chain) {
   const query = new URLSearchParams();
-  if (caseId) query.set('caseId', caseId);
-  if (caseKey && caseKey !== caseId) query.set('caseKey', caseKey);
+  if (caseId) query.set('pdb', caseId);
+  if (chain) query.set('chain', chain);
   const suffix = query.toString();
-  return `#annojoin-case${suffix ? `?${suffix}` : ''}`;
+  return `#entry-case${suffix ? `?${suffix}` : ''}`;
 }
 
 function tagForCase(row) {
@@ -84,7 +82,7 @@ function buildPdbCaseDocs() {
       id: caseDocId(caseKey, caseId),
       type: 'pdb-case',
       title,
-      href: caseDetailHref(caseId, caseKey),
+      href: caseDetailHref(caseId, Array.isArray(row.chains) ? row.chains[0] : ''),
       tags: tagForCase(row),
       techniques: (Array.isArray(row.techniqueFamilies) && row.techniqueFamilies.length
         ? row.techniqueFamilies
