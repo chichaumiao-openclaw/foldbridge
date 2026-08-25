@@ -168,6 +168,7 @@ if (typeof document !== "undefined") {
 
   const chainButtons = [...document.querySelectorAll("[data-chain-id]")];
   const frame = document.getElementById("chainFrame");
+  const chainStatus = document.querySelector("#chainStatus");
   let embeddedCaseHeightRequest = null;
 
   function reportEmbeddedCaseHeight() {
@@ -394,6 +395,7 @@ if (typeof document !== "undefined") {
     for (const button of chainButtons) {
       button.classList.toggle("is-active", button.dataset.chainId === state.activeChainId);
     }
+    if (chainStatus) chainStatus.textContent = state.activeChainId;
     updateFrame();
     if (typeof refreshEvidenceHighlight === "function") {
       refreshEvidenceHighlight(state.selectedEvidenceId);

@@ -750,6 +750,122 @@ pre {
 .workbench-shell header {
   border-bottom-color: #edc457;
 }
+
+/* EF mode reuses the Entry Workbench regions; only descendants of this mode vary. */
+.workbench-shell.is-ef-mode .controls[hidden],
+.workbench-shell.is-ef-mode .track-viewport-controls[hidden] {
+  display: none;
+}
+.workbench-shell.is-ef-mode .stats {
+  margin-top: 24px;
+}
+.workbench-shell.is-ef-mode .track-panel,
+.workbench-shell.is-ef-mode .ef-workbench-matrix-panel,
+.workbench-shell.is-ef-mode .view-grid,
+.workbench-shell.is-ef-mode .inspector-panel {
+  margin-top: var(--module-rule-gap);
+}
+.workbench-shell.is-ef-mode .track-viewport {
+  height: 68px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+}
+.workbench-shell.is-ef-mode .ef-sequence-viewport {
+  height: 66px !important;
+  overflow-x: auto !important;
+  border: 0 !important;
+  background: var(--panel) !important;
+}
+.workbench-shell.is-ef-mode .ef-sequence-strip {
+  height: 65px !important;
+  padding: 0 !important;
+}
+.workbench-shell.is-ef-mode .ef-sequence-base {
+  width: 32px !important;
+  min-width: 32px !important;
+  height: 64px;
+  padding: 8px 0 !important;
+  border: 0 !important;
+  border-right: 1px solid var(--line) !important;
+  border-radius: 0;
+  background: transparent !important;
+  color: var(--ink) !important;
+  font-size: 13px !important;
+}
+.workbench-shell.is-ef-mode .ef-sequence-base:hover,
+.workbench-shell.is-ef-mode .ef-sequence-base:focus-visible {
+  background: #eef5fc !important;
+  outline: 2px solid var(--hover);
+  outline-offset: -2px;
+}
+.workbench-shell.is-ef-mode .ef-sequence-base.is-selected {
+  background: var(--selected) !important;
+  color: #fff !important;
+}
+.workbench-shell.is-ef-mode .ef-sequence-base.is-selected .ef-sequence-pos {
+  color: #fff !important;
+}
+.workbench-shell.is-ef-mode .ef-sequence-pos {
+  color: var(--muted) !important;
+}
+.workbench-shell.is-ef-mode .ef-workbench-matrix-panel {
+  width: 100%;
+}
+.workbench-shell.is-ef-mode .ef-workbench-heatmap-host {
+  width: 100%;
+  height: min(74vw, 820px);
+  min-height: 560px;
+  border: 1px solid var(--line);
+  overflow: hidden;
+  color: var(--ink);
+  background: #fff;
+}
+.workbench-shell.is-ef-mode .ef-heatmap-component {
+  background: #fff !important;
+  color: var(--ink) !important;
+}
+.workbench-shell.is-ef-mode .ef-interaction-status,
+.workbench-shell.is-ef-mode .ef-colorbar {
+  border-color: var(--line) !important;
+  color: var(--muted) !important;
+  background: var(--panel) !important;
+}
+.workbench-shell.is-ef-mode .ef-tooltip {
+  border-color: var(--accent) !important;
+  color: var(--ink) !important;
+}
+.workbench-shell.is-ef-mode .varna-viewport {
+  height: 404px;
+  aspect-ratio: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-color: var(--line);
+}
+.workbench-shell.is-ef-mode .varna-frame svg {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 404px;
+}
+.workbench-shell.is-ef-mode .view3d-body {
+  padding: 12px 0 0;
+  background: #fff;
+}
+.workbench-shell.is-ef-mode .ef-inspector-empty {
+  margin: 0;
+  color: var(--muted);
+}
+.workbench-shell.is-ef-mode .ef-workbench-error {
+  margin: 0;
+  color: var(--selected);
+  white-space: pre-wrap;
+}
+@media (max-width: 900px) {
+  .workbench-shell.is-ef-mode .ef-workbench-heatmap-host {
+    height: 88vw;
+    min-height: 420px;
+  }
+}
 /* Detail-section labels use the small-heading weight; control values remain body text. */
 .workbench-shell .controls > div > label,
 .workbench-shell .panel-head h2 {

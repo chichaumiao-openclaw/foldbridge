@@ -1,5 +1,23 @@
 import "./site-nav.js";
 import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter } from "./workbench-pure.mjs";
+import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.mjs";
+
+const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
+const efManifestUrl = new URL('../../browser-manifest.json', window.location.href).href;
+let detectedEfChain = null;
+let manifestDetectionError = null;
+try {
+  const response = await fetch(efManifestUrl);
+  if (!response.ok) throw new Error(`Case manifest load failed: HTTP ${response.status}`);
+  const manifest = await response.json();
+  const chainId = config.chainId || '';
+  if (!chainId) throw new Error("Case manifest detection missing selected chain id");
+  const chain = manifest?.chains?.[chainId];
+  if (!chain) throw new Error(`Case manifest missing selected chain ${chainId}`);
+  if (chain.efMatrixPath) detectedEfChain = { manifest, chain };
+} catch (error) {
+  manifestDetectionError = error instanceof Error ? error : new Error(String(error));
+}
 
 function removeRetiredWorkbenchPanels() {
   document.querySelector("#molstar-full-host")?.closest(".molstar-view")?.remove();
@@ -14,7 +32,7 @@ function removeRetiredWorkbenchPanels() {
   document.querySelector(".track-viewport-controls")?.remove();
 }
 
-removeRetiredWorkbenchPanels();
+if (!detectedEfChain && !manifestDetectionError) removeRetiredWorkbenchPanels();
 
 function reportEmbeddedPageHeight() {
   if (window.parent === window) return;
@@ -37,7 +55,6 @@ if (window.parent !== window && typeof ResizeObserver !== "undefined") {
   reportHeightSoon();
 }
 
-const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const caseUrl = config.caseUrl || "./case-2d-structure.json";
 const profileIndexUrl = config.profileIndexUrl || "./profiles/profile-index.json";
 const varnaTemplateUrl = config.varnaTemplateUrl || "./varna-template.svg";
@@ -2913,7 +2930,81 @@ async function loadPrimaryReference() {
   }
 }
 
+function loadEfScript(scriptUrl) {
+  return new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = scriptUrl.href;
+    script.onload = resolve;
+    script.onerror = () => reject(new Error(`Failed to load ${scriptUrl.href}`));
+    document.body.appendChild(script);
+  });
+}
+
+function showEfModeError(error) {
+  const msg = error && error.message ? error.message : String(error);
+  const host = document.querySelector('#assetStatus') || document.querySelector('#ef-matrix-status') || document.querySelector('#ef-heatmap-host');
+  if (!host) throw new Error(`EF Workbench has no permanent error host: ${msg}`);
+  const pre = document.createElement('pre');
+  pre.className = 'ef-workbench-error';
+  pre.textContent = `EF case load failed:\n${msg}`;
+  host.replaceChildren(pre);
+  console.error('[workbench:ef]', error);
+}
+
+async function initEfMode(chainId, manifestUrl) {
+  const caseId = config.caseId || '';
+  const hosts = prepareEfWorkbenchShell(document, { caseId, chainId });
+  window.__FOLDBRIDGE_EF_CASE_CONFIG__ = {
+    caseId,
+    chainId,
+    manifestUrl,
+    deferBootstrap: true,
+  };
+
+  // Locate shared assets from workbench.js itself. This is independent of the
+  // current chain page depth and works for both 7SYS/z and 9WNR/a.
+  const scripts = [
+    new URL('../__entry_ef_site__/ef-heatmap-core.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-case.js', import.meta.url),
+  ];
+
+  // Keep the working 1D DOM intact until every EF dependency is available.
+  for (const scriptUrl of scripts) {
+    await loadEfScript(scriptUrl);
+  }
+  if (typeof window.efCaseBootstrap !== 'function') {
+    throw new Error('ef-case.js loaded without window.efCaseBootstrap');
+  }
+  let lockedEvent = null;
+  const onInteraction = (event) => {
+    if (event?.kind === 'select') lockedEvent = event;
+    renderEfInteraction(document, event, lockedEvent);
+  };
+  const result = await window.efCaseBootstrap({
+    caseId,
+    chainId,
+    manifestUrl,
+    hosts,
+    onInteraction,
+  });
+  renderEfWorkbenchMetadata(document, result);
+  reportEmbeddedPageHeight();
+  return result;
+}
+
 async function init() {
+  if (manifestDetectionError) throw manifestDetectionError;
+  if (detectedEfChain) {
+    try {
+      await initEfMode(config.chainId || '', efManifestUrl);
+      return; // Skip normal workbench initialization
+    } catch (error) {
+      showEfModeError(error);
+      throw error;
+    }
+  }
+
   const started = performance.now();
   const linkedViewPromise = linkedViewBundleUrl
     ? fetchJsonMaybeGzip(linkedViewBundleUrl).then((bundle) => ({
@@ -3038,5 +3129,6 @@ installExternalProfileBridge();
 void loadPrimaryReference();
 
 init().catch((error) => {
-  if (el.status) el.status.textContent = "asset load failed";
+  if (manifestDetectionError) showEfModeError(error);
+  if (!detectedEfChain && !manifestDetectionError && el.status) el.status.textContent = "asset load failed";
 });
