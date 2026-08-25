@@ -70,18 +70,19 @@ assert.equal(chainPayload.header.color_scale, "matrix_extent");
 
 assert.deepEqual(
   JSON.parse(JSON.stringify(core.colorForValue(6, chainPayload.header))),
-  { r: 235, g: 0, b: 0 }
+  { r: 198, g: 0, b: 0 }
 );
 assert.deepEqual(
   JSON.parse(JSON.stringify(core.colorForValue(-6, chainPayload.header))),
-  { r: 0, g: 0, b: 235 }
+  { r: 255, g: 255, b: 255 },
+  "negative/non-contact signal must use the existing Workbench white baseline, never a blue diverging scale"
 );
 assert.deepEqual(
-  JSON.parse(JSON.stringify(core.colorForValue(-2, {
+  JSON.parse(JSON.stringify(core.colorForValue(0.8, {
     family: "E", bg_mean: 0, value_min: -2, value_max: 8,
   }))),
-  { r: 0, g: 0, b: 235 },
-  "an asymmetric E matrix must still use the full cold half of the visible colorbar"
+  { r: 255, g: 211, b: 0 },
+  "EF must use the same white-yellow-red response ramp as the existing Workbench heatmap"
 );
 
 assert.deepEqual(
@@ -170,11 +171,13 @@ const molstarPlugin = {
     clearHighlight() {},
   },
 };
+const molstarHost = new FakeElement("host");
 
 const controller = integrationSandbox.window.createEfHeatmap({
   sequenceHost,
   heatmapHost,
   varnaHost,
+  molstarHost,
   molstarPlugin,
   payload: constructPayload,
 });
@@ -208,5 +211,19 @@ assert.equal(controller.state.selected.index, 0);
 assert.equal(typeof varnaSvg.handlers.click, "function", "VARNA SVG must delegate clicks from overlaid base labels");
 varnaSvg.handlers.click({ clientX: 25, clientY: 25, target: new FakeElement("text") });
 assert.equal(controller.state.selected.index, 1, "clicking a VARNA base label must select its nearest nucleotide circle");
+assert.equal(varnaSvg.circles[1].classList.contains("is-ef-selected"), true, "VARNA selection must remain visibly locked");
+
+assert.equal(typeof molstarHost.handlers["PDB.molstar.click"], "function", "3D host must listen for PDBe Mol* residue clicks");
+molstarHost.handlers["PDB.molstar.click"]({
+  detail: {
+    label_asym_id: "HA",
+    auth_asym_id: "a",
+    label_seq_id: 1,
+  },
+});
+assert.equal(controller.state.selected.index, 0, "clicking a 3D residue must select its mapped matrix axis");
+assert.equal(controller.state.selected.source, "3d", "3D selection must retain its interaction source");
+assert.equal(varnaSvg.circles[0].classList.contains("is-ef-selected"), true, "3D selection must update the linked VARNA residue");
+assert.equal(sequenceHost.querySelector(".is-selected")?.getAttribute("data-pdb-pos"), "1", "3D selection must update the 1D strip");
 
 console.log("ok - EF chain view uses one 2D/3D coordinate system");

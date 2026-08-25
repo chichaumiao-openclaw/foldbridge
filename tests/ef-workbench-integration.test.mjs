@@ -52,12 +52,25 @@ test("EF renderer owns separate 1D and matrix hosts", () => {
   assert.match(source, /const matrixRefByVarna\s*=\s*new Map/);
   assert.match(source, /for\s*\(const axis of \[sequenceAxis/);
   assert.match(source, /selectAxis\(matrixRef\.axis,\s*matrixRef\.index,\s*["']varna["']\)/);
+  assert.match(source, /PDB\.molstar\.click/);
+  assert.match(source, /selectPdbPosition\([^,]+,\s*["']3d["']\)/);
+});
+
+test("EF uses the existing Workbench heatmap palette instead of blue-red", () => {
+  const core = read("public/entry-cases/__entry_ef_site__/ef-heatmap-core.js");
+  const renderer = read("public/entry-cases/__entry_ef_site__/ef-heatmap.js");
+  assert.match(core, /\[255,\s*255,\s*255\]/);
+  assert.match(core, /\[255,\s*242,\s*0\]/);
+  assert.match(core, /\[198,\s*0,\s*0\]/);
+  assert.doesNotMatch(renderer, /blue\s*<\s*center\s*<\s*red/i);
+  assert.match(renderer, /no \/ negative signal.*strong positive signal/i);
 });
 
 test("Case Shell reports the chain it actually embeds", () => {
   const source = read("public/entry-cases/__entry_v3_site__/case-shell.js");
   assert.match(source, /querySelector\(["']#chainStatus["']\)/);
   assert.match(source, /chainStatus\.textContent\s*=\s*state\.activeChainId/);
+  assert.match(source, /initialChainId\(bootstrap,\s*window\.location\.search\)/);
 });
 
 test("EF inspector reports linked 3D state without undefined matrix values", () => {
@@ -85,14 +98,11 @@ test("EF component chrome is entirely Workbench-token driven", () => {
   assert.match(renderer, /class:\s*["']ef-selection-row["']/);
   assert.match(renderer, /class:\s*["']ef-hover-guide["']/);
   assert.match(renderer, /classList\.add\(["']is-ef-hovered["']\)/);
-  assert.match(renderer, /--ef-scale-low/);
-  assert.match(renderer, /--ef-scale-center/);
-  assert.match(renderer, /--ef-scale-high/);
+  assert.match(renderer, /rmdb-heatmap-gradient ef-colorbar-ramp/);
 
   const efBlock = styles.slice(styles.indexOf("/* EF mode"));
   assert.match(efBlock, /\.ef-colorbar\s*\{[^}]*var\(--panel\)/s);
-  assert.match(efBlock, /\.ef-colorbar-ramp-low\s*\{[^}]*var\(--ef-scale-low\)[^}]*var\(--ef-scale-center\)/s);
-  assert.match(efBlock, /\.ef-colorbar-ramp-high\s*\{[^}]*var\(--ef-scale-center\)[^}]*var\(--ef-scale-high\)/s);
+  assert.doesNotMatch(efBlock, /--ef-scale-(?:low|center|high)/);
   assert.match(efBlock, /\.ef-selection-row\s*\{[^}]*var\(--selected-soft\)[^}]*var\(--selected\)/s);
   assert.match(efBlock, /\.ef-hover-guide\s*\{[^}]*var\(--accent\)/s);
   assert.match(efBlock, /\.ef-sequence-base\s*\{[^}]*min-width:\s*44px/s);

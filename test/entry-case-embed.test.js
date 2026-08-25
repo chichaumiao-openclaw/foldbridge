@@ -157,3 +157,20 @@ test('entry Case layout uses the shared centered width and content-driven height
   assert.match(shell, /ResizeObserver/);
   assert.match(shell, /foldbridge-case-height/);
 });
+
+test('main-site entry route forwards the requested chain into the case iframe', () => {
+  const main = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
+  assert.match(main, /const \{ pdb, chain \} = getEntryCaseParamsFromHash\(\)/);
+  assert.match(main, /searchParams\.set\(['"]chain['"],\s*safeChain\)/);
+});
+
+test('Case shell accepts only a chain present in its own manifest', () => {
+  const source = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
+  const context = { module: { exports: {} }, Number, Math, URLSearchParams };
+  vm.runInNewContext(source, context);
+  const { initialChainId } = context.module.exports;
+  const bootstrap = { defaultChainId: 'b', chainPageById: { a: 'chains/a/index.html', b: 'chains/b/index.html' } };
+  assert.equal(initialChainId(bootstrap, '?chain=a'), 'a');
+  assert.equal(initialChainId(bootstrap, '?chain=missing'), 'b');
+  assert.equal(initialChainId(bootstrap, ''), 'b');
+});

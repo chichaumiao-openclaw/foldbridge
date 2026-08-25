@@ -3191,13 +3191,18 @@ function initEntryCaseEmbed() {
 }
 
 function entryCasePage() {
-  const { pdb } = getEntryCaseParamsFromHash();
+  const { pdb, chain } = getEntryCaseParamsFromHash();
   const safePdb = String(pdb || '').trim();
   if (!safePdb || !/^[A-Za-z0-9]+$/.test(safePdb)) {
     return `<main class="page"><section class="page-section"><p>Invalid case reference.</p>
       <p><a class="download-outline-btn" href="#entry">Back to the table</a></p></section></main>`;
   }
-  const src = `${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/index.html`;
+  const safeChain = String(chain || '').trim();
+  const srcUrl = new URL(`${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/index.html`);
+  if (safeChain && /^[A-Za-z0-9._-]+$/.test(safeChain)) {
+    srcUrl.searchParams.set('chain', safeChain);
+  }
+  const src = srcUrl.href;
   // 主站 header 与其它页面一致（renderBundleHeader），iframe 夹在其下、footer 之上。
   // case 页内部的 site-nav.js 有 iframe 守卫（self!==top 不注入），不会重复渲染头。
   return `${renderBundleHeader()}<main class="entry-case-embed">

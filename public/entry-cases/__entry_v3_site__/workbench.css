@@ -955,19 +955,14 @@ pre {
 }
 .workbench-shell.is-ef-mode .ef-colorbar-row {
   display: grid;
-  grid-template-columns: auto minmax(48px, 1fr) auto minmax(48px, 1fr) auto;
+  grid-template-columns: auto minmax(118px, 1fr) auto;
   gap: 8px;
   align-items: center;
 }
 .workbench-shell.is-ef-mode .ef-colorbar-ramp {
+  display: inline-block;
+  width: 100%;
   height: 10px;
-  border: 1px solid var(--line);
-}
-.workbench-shell.is-ef-mode .ef-colorbar-ramp-low {
-  background: linear-gradient(90deg, var(--ef-scale-low), var(--ef-scale-center));
-}
-.workbench-shell.is-ef-mode .ef-colorbar-ramp-high {
-  background: linear-gradient(90deg, var(--ef-scale-center), var(--ef-scale-high));
 }
 .workbench-shell.is-ef-mode .varna-viewport {
   height: 404px;
@@ -989,6 +984,11 @@ pre {
 .workbench-shell.is-ef-mode .varna-frame circle.is-ef-hovered {
   stroke: var(--accent) !important;
   stroke-width: 2.5 !important;
+}
+.workbench-shell.is-ef-mode .varna-frame circle.is-ef-selected {
+  fill: var(--selected) !important;
+  stroke: var(--selected) !important;
+  stroke-width: 2px !important;
 }
 .workbench-shell.is-ef-mode .view3d-body {
   padding: 12px 0 0;

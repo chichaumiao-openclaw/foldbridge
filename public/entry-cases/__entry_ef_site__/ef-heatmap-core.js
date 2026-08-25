@@ -191,18 +191,79 @@
   }
 
   function colorForValue(value, header) {
-    const center = header.family === "F" ? 0 : (header.bg_mean ?? 0);
-    const span = header.family === "F"
-      ? Math.max(Math.abs(header.value_min ?? -1), Math.abs(header.value_max ?? 1))
-      : value >= center
-        ? Math.abs((header.value_max ?? center + 1) - center) || 1
-        : Math.abs((header.value_min ?? center - 1) - center) || 1;
-    const t = Math.max(-1, Math.min(1, (value - center) / span));
-    const neutral = 235;
-    if (t >= 0) {
-      return { r: neutral, g: Math.round(neutral * (1 - t)), b: Math.round(neutral * (1 - t)) };
+    // Match the existing Workbench response ramp. Contact/pair evidence is
+    // directional: non-positive values are the white baseline, while stronger
+    // positive evidence moves through yellow/orange to red.
+    const stops = [
+      [0.000, [255, 255, 255]],
+      [0.018, [255, 255, 255]],
+      [0.040, [255, 242, 0]],
+      [0.140, [255, 191, 0]],
+      [0.380, [240, 126, 44]],
+      [0.700, [219, 53, 37]],
+      [1.000, [198, 0, 0]],
+    ];
+    const maximum = Math.max(0, Number(header.value_max) || 0) || 1;
+    const normalized = Math.max(0, Math.min(1, Number(value) / maximum));
+    const upperIndex = stops.findIndex(([position]) => normalized <= position);
+    const upper = stops[upperIndex < 0 ? stops.length - 1 : upperIndex];
+    const lower = stops[Math.max(0, upperIndex - 1)];
+    const span = upper[0] - lower[0];
+    const fraction = span ? (normalized - lower[0]) / span : 0;
+    const [r, g, b] = lower[1].map((channel, index) =>
+      Math.round(channel + (upper[1][index] - channel) * fraction)
+    );
+    return { r, g, b };
+  }
+
+  function molstarValue(payload, names) {
+    for (const name of names) {
+      const value = payload?.[name];
+      if (value !== undefined && value !== null && value !== "") return value;
     }
-    return { r: Math.round(neutral * (1 + t)), g: Math.round(neutral * (1 + t)), b: neutral };
+    return null;
+  }
+
+  function extractMolstarEventData(event) {
+    const queue = [event?.eventData, event?.detail, event];
+    const seen = new Set();
+    const residueFields = [
+      "label_seq_id", "labelSeqId", "residueNumber", "residue_number",
+      "seq_id", "seqId", "auth_seq_id", "authSeqId", "start_residue_number",
+    ];
+    while (queue.length) {
+      const item = queue.shift();
+      if (!item || typeof item !== "object" || seen.has(item)) continue;
+      seen.add(item);
+      if (molstarValue(item, residueFields) !== null) return item;
+      if (Array.isArray(item)) queue.push(...item);
+      else queue.push(item.eventData, item.data, item.payload, item.loci, item.current, item.object);
+    }
+    return null;
+  }
+
+  function pdbPositionFromMolstarEvent(event, header) {
+    const payload = extractMolstarEventData(event);
+    if (!payload) return null;
+    const authIds = [
+      molstarValue(payload, ["auth_asym_id", "authAsymId"]),
+      molstarValue(payload, ["auth_chain_id", "authChainId"]),
+      molstarValue(payload, ["chain_id", "chainId"]),
+    ].filter(Boolean).map(String);
+    const labelIds = [
+      molstarValue(payload, ["label_asym_id", "labelAsymId"]),
+      molstarValue(payload, ["label_chain_id", "labelChainId"]),
+      molstarValue(payload, ["struct_asym_id", "structAsymId"]),
+    ].filter(Boolean).map(String);
+    const hasChainIdentity = authIds.length > 0 || labelIds.length > 0;
+    const chainMatches = authIds.includes(String(header.chain)) || labelIds.includes(String(header.label_asym_id));
+    if (hasChainIdentity && !chainMatches) return null;
+    const rawPosition = molstarValue(payload, [
+      "label_seq_id", "labelSeqId", "residueNumber", "residue_number",
+      "seq_id", "seqId", "auth_seq_id", "authSeqId", "start_residue_number",
+    ]);
+    const position = Number(rawPosition);
+    return Number.isInteger(position) && position > 0 ? position : null;
   }
 
   function rgbStr(color) {
@@ -279,6 +340,8 @@
     assertLinkedContract,
     cellFromXY,
     colorForValue,
+    extractMolstarEventData,
+    pdbPositionFromMolstarEvent,
     buildMolstarSelectPayload,
     buildVarnaColorMap,
     buildHoverTargets,

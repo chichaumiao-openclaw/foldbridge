@@ -1,8 +1,8 @@
 import "./site-nav.js";
 import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter } from "./workbench-pure.mjs";
-import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.mjs?v=20260825-ef-ui-3";
+import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.mjs?v=20260825-ef-ui-4";
 
-const EF_ASSET_VERSION = "20260825-ef-ui-3";
+const EF_ASSET_VERSION = "20260825-ef-ui-4";
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const efManifestUrl = new URL('../../browser-manifest.json', window.location.href).href;
 let detectedEfChain = null;

@@ -54,6 +54,14 @@ function postEmbeddedCaseHeight(parentWindow, height) {
   return true;
 }
 
+function initialChainId(bootstrap, search = "") {
+  const requested = new URLSearchParams(search).get("chain");
+  if (requested && Object.prototype.hasOwnProperty.call(bootstrap?.chainPageById || {}, requested)) {
+    return requested;
+  }
+  return bootstrap?.defaultChainId || "";
+}
+
 function familyCounts(rows) {
   const out = {};
   for (const r of rows) { const f = r.family || ""; out[f] = (out[f] || 0) + 1; }
@@ -162,7 +170,7 @@ if (typeof document !== "undefined") {
     hero.insertBefore(link, hero.firstChild);
   }
   const state = {
-    activeChainId: bootstrap.defaultChainId,
+    activeChainId: initialChainId(bootstrap, window.location.search),
     selectedEvidenceId: bootstrap.defaultEvidenceId || "",
   };
 
@@ -431,5 +439,6 @@ if (typeof module !== "undefined" && module.exports) {
     familyCounts, tierCounts, distinctChains, familyLabel, tierDisplay,
     fmtMetric, fmtP, fmtFraction, fmtCount, pickBestEvidence,
     measureEmbeddedCaseHeight, postEmbeddedCaseHeight,
+    initialChainId,
   };
 }

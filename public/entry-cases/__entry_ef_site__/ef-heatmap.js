@@ -24,9 +24,9 @@
     return value.toFixed(3);
   }
 
-  window.createEfHeatmap = function ({ sequenceHost, heatmapHost, varnaHost, molstarPlugin, payload, onInteraction = () => {} }) {
-    if (!sequenceHost || !heatmapHost || !varnaHost) {
-      throw new Error("createEfHeatmap requires separate sequence, heatmap, and VARNA hosts");
+  window.createEfHeatmap = function ({ sequenceHost, heatmapHost, varnaHost, molstarHost, molstarPlugin, payload, onInteraction = () => {} }) {
+    if (!sequenceHost || !heatmapHost || !varnaHost || !molstarHost) {
+      throw new Error("createEfHeatmap requires separate sequence, heatmap, VARNA, and Mol* hosts");
     }
     if (!molstarPlugin || !molstarPlugin.visual) {
       throw new Error("createEfHeatmap requires a molstar plugin with .visual (full-3d linkage required)");
@@ -179,24 +179,13 @@
     plotWrap.appendChild(tooltip);
     root.appendChild(plotWrap);
 
-    const center = H.family === "F" ? 0 : (H.bg_mean ?? 0);
-    const low = core.colorForValue(H.value_min, H);
-    const mid = core.colorForValue(center, H);
-    const high = core.colorForValue(H.value_max, H);
     const colorbar = htmlNode("div", "ef-colorbar");
-    const rgbCss = (color) => `rgb(${color.r}, ${color.g}, ${color.b})`;
-    colorbar.style.setProperty("--ef-scale-low", rgbCss(low));
-    colorbar.style.setProperty("--ef-scale-center", rgbCss(mid));
-    colorbar.style.setProperty("--ef-scale-high", rgbCss(high));
     const scaleName = H.family === "F" ? "F coupling z" : "E contact score";
-    const legendTitle = htmlNode("div", "ef-colorbar-title", `${H.value_kind || scaleName} · blue < center < red`);
+    const legendTitle = htmlNode("div", "ef-colorbar-title", `${H.value_kind || scaleName} · no / negative signal → strong positive signal`);
     const legendRow = htmlNode("div", "ef-colorbar-row");
-    const rampLow = htmlNode("span", "ef-colorbar-ramp ef-colorbar-ramp-low");
-    const rampHigh = htmlNode("span", "ef-colorbar-ramp ef-colorbar-ramp-high");
-    legendRow.appendChild(htmlNode("span", "ef-colorbar-min", fmt(H.value_min)));
-    legendRow.appendChild(rampLow);
-    legendRow.appendChild(htmlNode("span", "ef-colorbar-center", fmt(center)));
-    legendRow.appendChild(rampHigh);
+    const ramp = htmlNode("span", "rmdb-heatmap-gradient ef-colorbar-ramp");
+    legendRow.appendChild(htmlNode("span", "ef-colorbar-min", "≤ 0"));
+    legendRow.appendChild(ramp);
     legendRow.appendChild(htmlNode("span", "ef-colorbar-max", fmt(H.value_max)));
     colorbar.appendChild(legendTitle);
     colorbar.appendChild(legendRow);
@@ -302,7 +291,13 @@
       selectAxis("i", i, "matrix", cell);
     }
 
+    const originalVarnaFills = [...circles].map((circle) => circle.getAttribute("fill"));
     function recolorVarna(colorMap) {
+      circles.forEach((circle, index) => {
+        const fill = originalVarnaFills[index];
+        if (fill == null) circle.removeAttribute("fill");
+        else circle.setAttribute("fill", fill);
+      });
       colorMap.forEach((rgb, varnaIdx) => {
         const circle = circles[varnaIdx];
         if (!circle) throw new Error(`recolorVarna: varna_index ${varnaIdx} outside ${circles.length} circles`);
@@ -316,7 +311,7 @@
       }
       const limit = axis === "i" ? H.n_rows : H.n_cols;
       if (index < 0 || index >= limit) throw new Error(`selectAxis ${axis} index ${index} outside 0-${limit - 1}`);
-      state.selected = { axis, index };
+      state.selected = { axis, index, source };
       if (!cell) {
         state.selectedCell = null;
         selectedCell.setAttribute("visibility", "hidden");
@@ -335,6 +330,9 @@
         const active = row?.pdb_pos != null && Number(base.getAttribute("data-pdb-pos")) === row.pdb_pos;
         base.className = active ? "ef-sequence-base is-selected" : "ef-sequence-base";
       }
+      for (const circle of circles) circle.classList.remove("is-ef-selected");
+      const selectedVarnaCircle = row && circles[row.varna_index];
+      if (selectedVarnaCircle) selectedVarnaCircle.classList.add("is-ef-selected");
       status.textContent = `locked ${axis} · PDB ${row?.pdb_pos ?? "–"} ${row?.base || ""} · linked 2D/3D recolored`;
       molstarPlugin.visual.select({
         data: core.buildMolstarSelectPayload(index, axis, idx, H),
@@ -380,11 +378,31 @@
     varnaSvg.addEventListener("click", onVarnaClick);
     cleanup.push(() => varnaSvg.removeEventListener("click", onVarnaClick));
 
+    function selectPdbPosition(pdbPosition, source = "3d") {
+      if (!Number.isInteger(pdbPosition)) return false;
+      const axes = [sequenceAxis, sequenceAxis === "i" ? "j" : "i"];
+      for (const axis of axes) {
+        const matrixIndex = idx.axisByPdbPos[axis].get(pdbPosition);
+        if (Number.isInteger(matrixIndex)) {
+          selectAxis(axis, matrixIndex, source);
+          return true;
+        }
+      }
+      return false;
+    }
+    function onMolstarClick(event) {
+      const pdbPosition = core.pdbPositionFromMolstarEvent(event, H);
+      if (pdbPosition != null) selectPdbPosition(pdbPosition, "3d");
+    }
+    molstarHost.addEventListener("PDB.molstar.click", onMolstarClick);
+    cleanup.push(() => molstarHost.removeEventListener("PDB.molstar.click", onMolstarClick));
+
     if (focusChain) molstarPlugin.visual.select(core.buildMolstarChainFocusPayload(viewPayload));
     return {
       viewHeader: H,
       state,
       selectAxis,
+      selectPdbPosition,
       viewPayload,
       selectCell(i, j) {
         markSelectedCell(i, j);

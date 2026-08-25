@@ -312,6 +312,7 @@
         sequenceHost: sequence,
         heatmapHost: heatmap,
         varnaHost: varna,
+        molstarHost: molstar,
         molstarPlugin: viewer,
         payload,
         onInteraction: options.onInteraction,
