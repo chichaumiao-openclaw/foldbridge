@@ -18,11 +18,6 @@ function cellValue(row, columnId) {
   return escapeHtml(row[columnId] ?? '');
 }
 
-// entry 行唯一键：pdbId + TAB + auth（与 main.js entryRowId 保持一致，pdb×chain 唯一）。
-function rowId(row) {
-  return `${row.pdbId}\t${row.auth}`;
-}
-
 // 把 missingPdbs 入参（Set | Array | null/undefined）归一为 Set。
 function toMissingSet(missingPdbs) {
   if (missingPdbs instanceof Set) return missingPdbs;
@@ -36,14 +31,7 @@ function toSet(value) {
   return new Set();
 }
 
-// 勾选单元格：checkbox，data-entry-select 承载行唯一键，供 main.js 委托绑定。
-function selectCell(row, selectedSet) {
-  const id = rowId(row);
-  const checked = selectedSet.has(id) ? ' checked' : '';
-  return `<td class="entry-select-cell"><input type="checkbox" class="entry-select-box" data-entry-select="${escapeHtml(id)}"${checked} aria-label="Select ${escapeHtml(row.pdbId)} chain ${escapeHtml(row.auth)}"></td>`;
-}
-
-function renderRow(row, caseBase, missingSet, selectedSet) {
+function renderRow(row, caseBase, missingSet) {
   const caseHref = entryCaseHref(caseBase, row);
   const rcsbHref = rcsbStructureHref(row);
   // 缺页降级：命中缺页集合（逐字节精确，不折叠大小写）则详情页链接强制纯文本，不渲染死链 <a>。
@@ -67,16 +55,16 @@ function renderRow(row, caseBase, missingSet, selectedSet) {
     }
     return `<td>${cellValue(row, col.id)}</td>`;
   }).join('');
-  return `<tr>${selectCell(row, selectedSet)}${cells}</tr>`;
+  return `<tr>${cells}</tr>`;
 }
 
 // 两层折叠分组渲染：外层 partition(RNA class)，内层 sciName(分子名)。
 // toggle id 方案：parent:<id> / child:<id>（与 annojoin 一致但用 entry 前缀属性委托，互不干扰）。
 // parent 展开才显示其 child 行；child 展开才显示其 chain 数据行。chain 行全保留、不漏行。
-// colCount = 列数 + 1（勾选列），保证分组表头 colspan 跨满整表。
-function renderGroups(rows, caseBase, missingSet, expandedSet, selectedSet) {
+// colCount = 数据列数，保证分组表头 colspan 跨满整表。
+function renderGroups(rows, caseBase, missingSet, expandedSet) {
   const groups = buildEntryTableGroups(rows);
-  const colCount = ENTRY_TABLE_COLUMNS.length + 1;
+  const colCount = ENTRY_TABLE_COLUMNS.length;
   const out = [];
   for (const parent of groups) {
     const parentToggleId = `parent:${parent.id}`;
@@ -101,7 +89,7 @@ function renderGroups(rows, caseBase, missingSet, expandedSet, selectedSet) {
       </tr>`);
       if (!childExpanded) continue;
       for (const row of child.rows) {
-        out.push(renderRow(row, caseBase, missingSet, selectedSet));
+        out.push(renderRow(row, caseBase, missingSet));
       }
     }
   }
@@ -121,31 +109,26 @@ function renderEntryTechniqueFilter(rows, selection) {
   return `${controls}${clear}`;
 }
 
-// 选择工具条：导出选中 + 清空选择。
-function renderSelectionToolbar(selectedCount) {
+// Entry 只保留一个导出动作：导出当前筛选后的整张表及 profile meta。
+function renderExportToolbar() {
   return `<div class="entry-selection-toolbar">
-      <button type="button" class="entry-action-btn" id="export-selected-entry"${selectedCount ? '' : ' disabled'}>Download selected (${selectedCount})</button>
-      <button type="button" class="entry-action-btn entry-action-secondary" id="clear-selected-entry"${selectedCount ? '' : ' disabled'}>Clear selection</button>
+      <a id="export-entry" class="entry-action-btn" href="#" download="foldbridge-entry-filtered.json">Export</a>
     </div>`;
 }
 
 // 主渲染。rows=null → loading/error 态由 statusMessage 承载。
 // missingPdbs（Set 或 Array，缺省空集合）：命中的 PDB 行降级为纯文本，不渲染死链。
 // grouped=true 时按 partition→分子名 两层折叠渲染；expandedGroupIds 控制展开状态。
-// selectedIds（Set/Array）：已勾选行键；techniqueSelection：旧版 family + detail technique 两级筛选。
 // totalRowCount：过滤前总行数（用于展示 "N of M"）。
-export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', statusMessage = null, missingPdbs = null, grouped = false, expandedGroupIds = null, selectedIds = null, techniqueSelection = null, totalRowCount = null } = {}) {
+export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', statusMessage = null, missingPdbs = null, grouped = false, expandedGroupIds = null, techniqueSelection = null, totalRowCount = null } = {}) {
   const missingSet = toMissingSet(missingPdbs);
   const expandedSet = toSet(expandedGroupIds);
-  const selectedSet = toSet(selectedIds);
   const normalizedTechniqueSelection = {
     families: toSet(techniqueSelection?.families),
     techniques: toSet(techniqueSelection?.techniques)
   };
-  // 勾选列表头（空 <th>）+ 数据列表头。
-  const head = `<th scope="col" class="entry-select-head"><span class="visually-hidden">Select</span></th>`
-    + ENTRY_TABLE_COLUMNS.map((col) => `<th scope="col">${escapeHtml(col.label)}</th>`).join('');
-  const totalColCount = ENTRY_TABLE_COLUMNS.length + 1;
+  const head = ENTRY_TABLE_COLUMNS.map((col) => `<th scope="col">${escapeHtml(col.label)}</th>`).join('');
+  const totalColCount = ENTRY_TABLE_COLUMNS.length;
 
   let body;
   if (statusMessage) {
@@ -153,9 +136,9 @@ export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', 
   } else if (!rows || rows.length === 0) {
     body = `<tr><td class="entry-table-status" colspan="${totalColCount}">No entries.</td></tr>`;
   } else if (grouped) {
-    body = renderGroups(rows, caseBase, missingSet, expandedSet, selectedSet);
+    body = renderGroups(rows, caseBase, missingSet, expandedSet);
   } else {
-    body = rows.map((row) => renderRow(row, caseBase, missingSet, selectedSet)).join('');
+    body = rows.map((row) => renderRow(row, caseBase, missingSet)).join('');
   }
 
   const count = Array.isArray(rows) ? rows.length : 0;
@@ -166,7 +149,7 @@ export function renderEntryTablePage({ rows, caseBase = './public/entry-cases', 
     : `${count.toLocaleString()} chains`;
   const controls = statusMessage
     ? ''
-    : `${renderEntryTechniqueFilter(rows || [], normalizedTechniqueSelection)}${renderSelectionToolbar(selectedSet.size)}`;
+    : `${renderEntryTechniqueFilter(rows || [], normalizedTechniqueSelection)}${renderExportToolbar()}`;
 
   return `<main class="entry-table-page">
     <section class="entry-table-hero">

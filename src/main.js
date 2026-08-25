@@ -7,7 +7,6 @@ import {
   renderEvidenceTable,
   renderProvenanceSummary,
   renderProvenanceHistory,
-  renderVisualizationShowcase,
   initHeaderSearch,
   initAptamerMultiSelect,
   initSecondaryStructureModule,
@@ -27,7 +26,6 @@ import {
   stageDiseaseCards
 } from './data.js';
 import { normalizeRoute, parseHashRoute, routeFromHash } from './router.js';
-import { downloadRowsAsCsv } from './modules.js';
 import { renderPdbCaseIndexPage, renderPdbCasePage } from './pdbCaseView.js';
 import { createCaseStore } from './rmdbCaseStore.js';
 import { createProbingArticleStore } from './probingArticleStore.js';
@@ -44,7 +42,6 @@ import {
 import { renderAnnojointAtlasPage } from './annojoinAtlasView.js';
 import { bindAnnojointAtlasTable } from './annojoinAtlasController.js';
 import {
-  annojoinExportRow,
   buildAnnojointTableGroups,
   isAnnojointSearchActive,
   rowCaseId,
@@ -55,6 +52,7 @@ import {
 import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
 import { normalizeEntryRows, filterEntryRowsByTechniqueSelection } from './entryTable.js';
 import { renderEntryTablePage } from './entryTableView.js';
+import { buildEntryExport } from './downloadExport.js';
 import { toggleTechniqueSelection } from './techniqueFilterModel.js';
 import { mountEntryCaseHeightListener } from './entryCaseEmbed.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
@@ -72,13 +70,9 @@ import {
 } from './search/searchService.js';
 let sequenceRows = [];
 let browseEntryRows = [];
-let selectedBrowseIds = new Set();
-let selectedSequenceIds = new Set();
-let selectedAnnojointCaseIds = new Set();
 let expandedAnnojointGroupIds = new Set();
 let uncappedAnnojointGroupIds = new Set();
 let annojoinGroupsDefaultedExpanded = false;
-let sequenceSearchQuery = '';
 // RMDB→PDB case 资产懒加载层与浏览器侧渲染缓存。
 // store 命中内存缓存避免重复 fetch；下面三类 state 缓存“已加载”结果，
 // 让同步的 pageFor()/render() 路径命中即渲染数据，未命中则渲染 loading 占位并触发后台加载。
@@ -106,8 +100,9 @@ const probingArticleDetailState = new Map(); // slug -> 'loading' | 'error' | de
 let entryTableState = null; // null=未加载, 'loading', 'error', 或归一化后的 rows 数组
 let entryMissingPdbsState = new Set(); // 缺页 PDB 集合（降级：命中行只渲染纯文本，不渲染死链）；fetch 失败降级为空集合
 let expandedEntryGroupIds = new Set(); // entry 表两层折叠（partition→分子名）已展开的分组 id：parent:<id> / child:<id>
-let selectedEntryIds = new Set(); // entry 表已勾选行（键=pdbId + '\t' + auth，pdb×chain 唯一）
 let entryTechniqueSelection = { families: new Set(), techniques: new Set() }; // 旧版 family + detail technique 两级筛选
+let entryExportObjectUrl = '';
+let entryExportSignature = '';
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let disposeEntryCaseHeightListener = null;
@@ -437,23 +432,6 @@ function getPdbCaseParamsFromHash() {
   };
 }
 
-function getFilteredSequenceRows() {
-  const query = sequenceSearchQuery.trim().toLowerCase();
-  if (!query) return sequenceRows;
-  return sequenceRows.filter((row) =>
-    [
-      row.sequenceName,
-      row.aptamerName,
-      row.category,
-      row.type,
-      row.chemicalProbing,
-      row.pdbName,
-      row.article,
-      row.sequence
-    ].some((value) => String(value ?? '').toLowerCase().includes(query))
-  );
-}
-
 function renderColoredSequence(sequence) {
   return String(sequence ?? '')
     .split('')
@@ -580,24 +558,6 @@ function renderSequenceDetailSecondaryContent(row) {
           <div><dt>MgCl2</dt><dd>10 mM</dd></div>
           <div><dt>Temperature</dt><dd>24 C</dd></div>
           <div><dt>Processing</dt><dd>background subtraction, overmodification correction, normalization GAGUA</dd></div>`;
-  const filesMarkup = is5kpy
-    ? `<a class="sequence-secondary-link" href="./src/assets/data/RNAPZ9_1M7_0001.rdat" download>Download RDAT</a>`
-    : is1am0
-      ? `<a class="sequence-secondary-link" href="./src/assets/data/ATPCON_TITR_0001.rdat" download>Download RDAT</a>
-       <a class="sequence-secondary-link" href="./src/assets/data/ATPCON_TITR_0001_2.xls" download>Download XLS</a>`
-      : is4l81
-        ? `<a class="sequence-secondary-link" href="./src/assets/data/RNAPZ8_1M7_0001.rdat" download>Download RDAT</a>
-       <a class="sequence-secondary-link" href="./src/assets/data/RNAPZ8_1M7_0001_2.xls" download>Download XLS</a>`
-        : `<a class="sequence-secondary-link" href="./src/assets/data/RNAPZ18_1M7_0000.rdat" download>Download RDAT</a>
-       <a class="sequence-secondary-link" href="./src/assets/data/RNAPZ18_1M7_0000_1.xls" download>Download XLS</a>`;
-  const footnoteText = is5kpy
-    ? 'The local RDAT file is included in this project for future heatmap or reactivity visualization work.'
-    : is1am0
-      ? 'The local RDAT and XLS files are included in this project as source data for the ATP-responsive aptamer record.'
-      : is4l81
-        ? 'The local RDAT and XLS files are included in this project as source data for the SAM-responsive aptamer record.'
-        : 'The local RDAT and XLS files are included in this project as source data for the RNA Puzzle 18 record.';
-
   return `<div class="sequence-secondary-layout">
     <div class="sequence-secondary-top">
       <div class="sequence-secondary-block">
@@ -635,13 +595,6 @@ function renderSequenceDetailSecondaryContent(row) {
         </dl>
       </div>
 
-      <div class="sequence-secondary-card">
-        <h3>Files</h3>
-        <div class="sequence-secondary-actions">
-          ${filesMarkup}
-        </div>
-        <p class="sequence-secondary-footnote">${footnoteText}</p>
-      </div>
       </aside>
     </div>
   </div>`;
@@ -856,7 +809,7 @@ function sequenceDetailPage() {
   <main class="page-sequence-detail">
     <section class="sequence-detail-card">
       <div class="sequence-detail-header">
-        <a class="sequence-detail-back" href="#download-sequences">Back to sequence list</a>
+        <a class="sequence-detail-back" href="#sequence">Back to Entry</a>
         <div class="sequence-detail-title-row">
           <div>
             <p class="sequence-detail-kicker">${row.category ?? 'RNA'} record</p>
@@ -1060,127 +1013,6 @@ async function loadBrowseEntryRows() {
     browseEntryRows = [];
   }
 }
-
-function rdatDownloadPath(foldBridgeId) {
-  return dataAssetPath(`${foldBridgeId.replace(/^RMDB_/, '')}.rdat`);
-}
-
-function downloadSelectedRdatFiles() {
-  const selectedIds = [...selectedBrowseIds];
-  selectedIds.forEach((foldBridgeId, index) => {
-    const link = document.createElement('a');
-    link.href = rdatDownloadPath(foldBridgeId);
-    link.download = `${foldBridgeId.replace(/^RMDB_/, '')}.rdat`;
-    link.style.display = 'none';
-    document.body.appendChild(link);
-    window.setTimeout(() => {
-      link.click();
-      link.remove();
-    }, index * 120);
-  });
-}
-
-function bindPseudoButton(element, handler) {
-  if (!element || element.getAttribute('aria-disabled') === 'true') return;
-  element.addEventListener('click', handler);
-  element.addEventListener('keydown', (event) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      handler();
-    }
-  });
-}
-
-
-
-function downloadSequencesPage() {
-  const visibleRows = getFilteredSequenceRows();
-  const rows = visibleRows.map((row) => `
-    <tr>
-      <td>
-        <input
-          type="checkbox"
-          class="sequence-select"
-          data-sequence-id="${row.id}"
-          ${selectedSequenceIds.has(row.id) ? 'checked' : ''}
-        />
-      </td>
-      <td><a href="#sequence-detail?sequenceId=${encodeURIComponent(row.id ?? '')}" class="sequence-link">${row.sequenceName ?? ''}</a></td>
-      <td>${row.aptamerName ?? ''}</td>
-      <td>${row.article ?? ''}</td>
-      <td>${row.category ?? ''}</td>
-      <td>
-        <span class="sequence-preview" title="${row.type ?? ''}">
-          ${row.type ? `${row.type.slice(0, 10)}...` : ''}
-        </span>
-      </td>
-      <td>${row.chemicalProbing ?? ''}</td>
-      <td><a href="#pdb-case?pdbId=${encodeURIComponent(row.pdbName ?? '')}" class="sequence-link">${row.pdbName ?? ''}</a></td>
-      <td>${row.sequence ?? ''}</td>
-      <td>${row.confidence ?? ''}</td>
-    </tr>
-  `).join('');
-
-  return `${renderBundleHeader()}
-  <main class="page-download-sequences">
-    <section class="card download-card">
-      <h1>Structures</h1>
-      <p class="download-intro">Select one or more rows below to download example structure records. Current data are demo entries copied from the first available record.</p>
-
-      <div class="download-toolbar browse-toolbar">
-        <input
-          id="sequence-search"
-          class="download-search"
-          type="search"
-          placeholder="Search..."
-          value="${sequenceSearchQuery.replace(/"/g, '&quot;')}"
-        />
-        <button id="export-selected-sequences" type="button" class="download-outline-btn" ${selectedSequenceIds.size ? '' : 'disabled'}>
-          Export Selected (${selectedSequenceIds.size})
-        </button>
-        <button id="export-all-sequences" type="button" class="download-outline-btn">
-          Export All Results
-        </button>
-        <button id="select-visible-sequences" type="button" class="download-outline-btn">
-          Select Current Page
-        </button>
-        <button id="clear-selected-sequences" type="button" class="download-outline-btn">
-          Clear Selection
-        </button>
-      </div>
-
-      <div class="download-table-wrap">
-      <table class="structure-table download-table">
-        <thead>
-          <tr>
-            <th>Select</th>
-            <th>Name</th>
-            <th>Description(PDB)</th>
-            <th>Discovery Year</th>
-            <th>Category</th>
-            <th>Sequence</th>
-            <th>Chemical Probing</th>
-            <th>PDB ID</th>
-            <th>PDB Coverage</th>
-            <th>Confidence</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${rows}
-        </tbody>
-      </table>
-      </div>
-
-      <div class="download-footnote">
-        <span>Showing 1-${visibleRows.length} of ${visibleRows.length} entries</span>
-      </div>
-    </section>
-  </main>`;
-}
-
-
-
-
 
 const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'about', 'stats', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case', 'annojoin-confidence'];
 let route = routeFromHash(window.location.hash);
@@ -1719,14 +1551,6 @@ function browsePage() {
     ? browseEntryRows
         .map(
           (row) => `<tr>
-            <td>
-              <input
-                type="checkbox"
-                class="browse-select"
-                data-browse-id="${row.foldBridgeId}"
-                ${selectedBrowseIds.has(row.foldBridgeId) ? 'checked' : ''}
-              />
-            </td>
             <td>${row.foldBridgeId}</td>
             <td>${row.name}</td>
             <td>
@@ -1738,45 +1562,15 @@ function browsePage() {
           </tr>`
         )
         .join('')
-    : `<tr><td colspan="7" class="entry-table-empty">No entries yet.</td></tr>`;
+    : `<tr><td colspan="6" class="entry-table-empty">No entries yet.</td></tr>`;
 
   return `${renderBundleHeader()}
   <main class="page-download-sequences page-browse">
     <section class="card download-card entry-table-card">
-      <div class="download-toolbar browse-toolbar">
-        <span
-          id="select-all-rdat"
-          class="browse-action-btn ${browseEntryRows.length ? '' : 'is-disabled'}"
-          role="button"
-          tabindex="${browseEntryRows.length ? '0' : '-1'}"
-          aria-disabled="${browseEntryRows.length ? 'false' : 'true'}"
-        >
-          Select All
-        </span>
-        <span
-          id="download-selected-rdat"
-          class="browse-action-btn ${selectedBrowseIds.size ? '' : 'is-disabled'}"
-          role="button"
-          tabindex="${selectedBrowseIds.size ? '0' : '-1'}"
-          aria-disabled="${selectedBrowseIds.size ? 'false' : 'true'}"
-        >
-          Download Selected RDAT (${selectedBrowseIds.size})
-        </span>
-        <span
-          id="clear-selected-rdat"
-          class="browse-action-btn ${selectedBrowseIds.size ? '' : 'is-disabled'}"
-          role="button"
-          tabindex="${selectedBrowseIds.size ? '0' : '-1'}"
-          aria-disabled="${selectedBrowseIds.size ? 'false' : 'true'}"
-        >
-          Clear Selection
-        </span>
-      </div>
       <div class="entry-table-wrap">
         <table class="entry-table">
           <thead>
             <tr>
-              <th>Select</th>
               <th>FoldBridge ID</th>
               <th>Name</th>
               <th>Sequence</th>
@@ -2015,7 +1809,6 @@ function entryTablePage() {
       missingPdbs: entryMissingPdbsState,
       grouped: true,
       expandedGroupIds: expandedEntryGroupIds,
-      selectedIds: selectedEntryIds,
       techniqueSelection: entryTechniqueSelection
     });
   }
@@ -2162,7 +1955,6 @@ function annojoinAtlasPage() {
     return renderAnnojointAtlasPage({
       state: null,
       routeName,
-      selectedCaseIds: selectedAnnojointCaseIds,
       expandedGroupIds: expandedAnnojointGroupIds,
       uncappedGroupIds: uncappedAnnojointGroupIds,
       selectedCaseId,
@@ -2175,7 +1967,6 @@ function annojoinAtlasPage() {
     return renderAnnojointAtlasPage({
       state: null,
       routeName,
-      selectedCaseIds: selectedAnnojointCaseIds,
       expandedGroupIds: expandedAnnojointGroupIds,
       uncappedGroupIds: uncappedAnnojointGroupIds,
       selectedCaseId,
@@ -2195,7 +1986,6 @@ function annojoinAtlasPage() {
   return renderAnnojointAtlasPage({
     state,
     routeName,
-    selectedCaseIds: selectedAnnojointCaseIds,
     expandedGroupIds: expandedAnnojointGroupIds,
     uncappedGroupIds: uncappedAnnojointGroupIds,
     selectedCaseId,
@@ -2346,11 +2136,6 @@ function toggleEntryGroup(groupId) {
   render({ preserveScroll: true });
 }
 
-// entry 行唯一键：pdbId + TAB + auth（pdb×chain 粒度唯一，17843 行全唯一）。
-function entryRowId(row) {
-  return `${row.pdbId}\t${row.auth}`;
-}
-
 function getFilteredEntryRows() {
   if (!Array.isArray(entryTableState)) return [];
   return filterEntryRowsByTechniqueSelection(entryTableState, entryTechniqueSelection);
@@ -2362,25 +2147,23 @@ function toggleEntryTechnique(kind, value) {
   render({ preserveScroll: true });
 }
 
-// entry 行勾选切换。
-function toggleEntrySelection(rowId) {
-  if (!rowId) return;
-  if (selectedEntryIds.has(rowId)) selectedEntryIds.delete(rowId);
-  else selectedEntryIds.add(rowId);
-  render({ preserveScroll: true });
-}
-
-// entry 导出行 → 公开列（对齐 #probing 口径）。绝不导出内部 family/confidence 分类。
-function entryExportRow(row) {
-  return {
-    pdb_id: row.pdbId,
-    chain: row.auth,
-    molecule: row.sciName,
-    rna_class: row.partition,
-    technique: row.probingCategory,
-    profiles: row.nProfiles,
-    source: row.sourceLanes
-  };
+function bindEntryExportLink() {
+  const link = document.getElementById('export-entry');
+  if (!link || !Array.isArray(entryTableState)) return;
+  const signature = JSON.stringify({
+    families: [...entryTechniqueSelection.families].sort(),
+    techniques: [...entryTechniqueSelection.techniques].sort()
+  });
+  if (!entryExportObjectUrl || signature !== entryExportSignature) {
+    if (entryExportObjectUrl) URL.revokeObjectURL(entryExportObjectUrl);
+    const payload = buildEntryExport(getFilteredEntryRows());
+    entryExportObjectUrl = URL.createObjectURL(new Blob(
+      [JSON.stringify(payload)],
+      { type: 'application/json;charset=utf-8' }
+    ));
+    entryExportSignature = signature;
+  }
+  link.href = entryExportObjectUrl;
 }
 
 function toggleAnnojointAtlasGroup(groupId) {
@@ -2403,177 +2186,14 @@ function toggleAnnojointAtlasGroupLimit(groupId) {
   render({ preserveScroll: true });
 }
 
-function downloadGeneratedText(text, filename, mimeType = 'text/plain;charset=utf-8') {
-  const blob = new Blob([text], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  link.style.display = 'none';
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
-function downloadCsvRows(rows, filename) {
-  const columns = rows.length ? Object.keys(rows[0]) : [];
-  const csvValue = (value) => {
-    const text = Array.isArray(value) ? value.join('; ') : String(value ?? '');
-    return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
-  };
-  const csv = [
-    columns.map(csvValue).join(','),
-    ...rows.map((row) => columns.map((column) => csvValue(row[column])).join(','))
-  ].join('\n');
-  downloadGeneratedText(`\uFEFF${csv}\n`, filename, 'text/csv;charset=utf-8');
-}
-
-async function downloadAnnojointEntryCatalog() {
-  const index = await annojoinAtlasStore.loadIndex();
-  const rows = (index.displayCases || []).map((row) => ({
-    atlas_case_key: row.atlasCaseKey || row.atlas_case_key || '',
-    pdb_id: row.pdbId || row.pdb_id || '',
-    molecule: row.moleculeDisplayName || row.molecule_display_name || '',
-    family: row.assetFamily || row.asset_family || '',
-    chains: Array.isArray(row.chains) ? row.chains.join('; ') : (row.chains || ''),
-    profile_count: row.profileCount || row.profile_count || 0,
-    confidence: row.confidenceDisplayLabel || row.confidence_display_label || '',
-    structure_class: row.structureClass || row.structure_class_label || ''
-  }));
-  downloadCsvRows(rows, 'foldbridge-entry-catalog.csv');
-}
-
-function downloadStructureCatalog() {
-  const rows = sequenceRows.map((row) => ({
-    pdb_id: row.pdbName || '',
-    name: row.sequenceName || '',
-    description: row.aptamerName || '',
-    category: row.category || '',
-    structure_file: row.structureFile || '',
-    sequence_length: row.type ? row.type.length : 0,
-    confidence: row.confidence || ''
-  }));
-  downloadCsvRows(rows, 'foldbridge-structure-catalog.csv');
-}
-
-function downloadBundledStructureFiles() {
-  sequenceRows
-    .filter((row) => row.structureFile)
-    .forEach((row, index) => {
-      const filePath = row.structureFile;
-      const filename = filePath.split('/').pop() || `${row.pdbName || 'structure'}.cif`;
-      const link = document.createElement('a');
-      link.href = `./${filePath.replace(/^\.\//, '')}`;
-      link.download = filename;
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      window.setTimeout(() => {
-        link.click();
-        link.remove();
-      }, index * 180);
-    });
-}
-
-function downloadDataManifest() {
-  const manifest = {
-    name: 'FoldBridge download manifest',
-    version: '2026-06-16.generated-rmdb-cases.v1',
-    generated_at: new Date().toISOString(),
-    downloads: [
-      { id: 'entry-catalog', file: 'foldbridge-entry-catalog.csv', description: 'Case-level Entry catalog exported from the ANNOJOIN index.' },
-      { id: 'rdat-summary', file: 'src/assets/data/rmdb-puzzle/rdat_summary.csv', description: 'RDAT record summary for the bundled RMDB examples.' },
-      { id: 'structure-catalog', file: 'foldbridge-structure-catalog.csv', description: 'Structure records and local mmCIF asset paths.' },
-      { id: 'entry-detail', description: 'Use the Download entry button on an Entry detail page for a case JSON and HTML summary.' },
-      { id: 'profile', description: 'Use the Download profile button on an Entry detail page for the selected profile CSV and color map JSON.' },
-      { id: 'structure-3d', description: 'Use the Download 3D structure button on an Entry detail page for target-chain/full-structure mmCIF and color map JSON.' }
-    ]
-  };
-  downloadGeneratedText(JSON.stringify(manifest, null, 2), 'foldbridge-download-manifest.json', 'application/json;charset=utf-8');
-}
-
-function bindDownloadPageControls() {
-  document.getElementById('download-entry-catalog')?.addEventListener('click', async (event) => {
-    const button = event.currentTarget;
-    button.disabled = true;
-    button.textContent = 'Preparing…';
-    try {
-      await downloadAnnojointEntryCatalog();
-    } catch (error) {
-      console.error('[main] entry catalog download failed', error);
-      window.alert('The Entry catalog is temporarily unavailable. Please try again.');
-    } finally {
-      button.disabled = false;
-      button.textContent = 'Download Entry catalog';
-    }
-  });
-  document.getElementById('download-structure-catalog')?.addEventListener('click', () => {
-    if (!sequenceRows.length) {
-      window.alert('The structure catalog is still loading. Please try again in a moment.');
-      return;
-    }
-    downloadStructureCatalog();
-  });
-  document.getElementById('download-structure-files')?.addEventListener('click', downloadBundledStructureFiles);
-  document.getElementById('download-data-manifest')?.addEventListener('click', downloadDataManifest);
-}
-
 function downloadPage() {
   return `${renderBundleHeader()}
   <main class="page-download" aria-label="Download">
     <section class="card bundle-wide-card download-page-card">
       <header class="page-card-heading">
         <h1>Download</h1>
-        <p class="download-page-intro">Download the data behind FoldBridge, or open an Entry detail page for a focused export of one profile and its mapped structure.</p>
+        <p class="download-page-intro">Figshare archive link will be added here.</p>
       </header>
-
-      <div class="download-center-grid">
-        <section class="download-center-section">
-          <div class="download-center-heading">
-            <span class="download-center-number">01</span>
-            <div>
-              <h2>Entry data</h2>
-              <p>Case-level metadata and the bundled chemical-probing records.</p>
-            </div>
-          </div>
-          <div class="download-center-actions">
-            <button id="download-entry-catalog" type="button" class="download-center-button">Download Entry catalog</button>
-            <a class="download-center-button" href="./src/assets/data/rmdb-puzzle/rdat_summary.csv" download>Download RDAT summary</a>
-            <a class="download-center-link" href="#entry">Open Entry table →</a>
-          </div>
-        </section>
-
-        <section class="download-center-section">
-          <div class="download-center-heading">
-            <span class="download-center-number">02</span>
-            <div>
-              <h2>Structure data</h2>
-              <p>Structure records are available as mmCIF files, with a catalog for quick lookup.</p>
-            </div>
-          </div>
-          <div class="download-center-actions">
-            <button id="download-structure-catalog" type="button" class="download-center-button">Download structure catalog</button>
-            <button id="download-structure-files" type="button" class="download-center-button">Download example mmCIF files</button>
-          </div>
-        </section>
-
-        <section class="download-center-section">
-          <div class="download-center-heading">
-            <span class="download-center-number">03</span>
-            <div>
-              <h2>Entry-specific exports</h2>
-              <p>Open an Entry, choose a profile, then export the page summary, profile table, or 3D structure.</p>
-            </div>
-          </div>
-          <div class="download-center-actions">
-            <a class="download-center-button" href="#entry">Choose an Entry</a>
-            <button id="download-data-manifest" type="button" class="download-center-button">Download data manifest</button>
-          </div>
-          <p class="download-center-note">Detail-page downloads are small and reproducible.</p>
-        </section>
-      </div>
-
-      <p class="download-page-footnote">File formats: CSV for tables and catalogs, JSON for metadata and color maps, and mmCIF for structures.</p>
     </section>
   </main>`;
 }
@@ -3230,8 +2850,6 @@ function pageFor(name) {
   if (safeRoute === 'probing') return detailPage();
   if (safeRoute === 'download') return downloadPage();
   if (safeRoute === 'search') return searchPage();
-  if (safeRoute === 'download-sequences') return downloadSequencesPage();
-  if (safeRoute === 'download-structures') return downloadStructuresPage();
   if (safeRoute === 'detail') return detailPage();
   if (safeRoute === 'publications') return publicationsPage();
   if (safeRoute === 'help') return helpPage();
@@ -3481,31 +3099,7 @@ function render(options = {}) {
       toggleEntryTechnique('techniques', input.getAttribute('data-technique-name'));
     });
   });
-  // entry 表行勾选（select 功能）。
-  document.querySelectorAll('[data-entry-select]').forEach((box) => {
-    box.addEventListener('change', () => {
-      toggleEntrySelection(box.getAttribute('data-entry-select'));
-    });
-  });
-  // entry 表：导出选中行（export select 功能，公开列，无 family/confidence）。
-  const exportSelectedEntryBtn = document.getElementById('export-selected-entry');
-  if (exportSelectedEntryBtn) {
-    exportSelectedEntryBtn.addEventListener('click', () => {
-      if (!Array.isArray(entryTableState)) return;
-      const selectedRows = entryTableState
-        .filter((row) => selectedEntryIds.has(entryRowId(row)))
-        .map(entryExportRow);
-      downloadRowsAsCsv(selectedRows, 'entry-selected.csv');
-    });
-  }
-  // entry 表：清空选择。
-  const clearSelectedEntryBtn = document.getElementById('clear-selected-entry');
-  if (clearSelectedEntryBtn) {
-    clearSelectedEntryBtn.addEventListener('click', () => {
-      selectedEntryIds.clear();
-      render({ preserveScroll: true });
-    });
-  }
+  bindEntryExportLink();
   // entry 表：清空 family + detail technique 筛选。
   const clearEntryFilterBtn = document.getElementById('clear-entry-technique-filter');
   if (clearEntryFilterBtn) {
@@ -3514,7 +3108,6 @@ function render(options = {}) {
       render({ preserveScroll: true });
     });
   }
-  const exportAllBtn = document.getElementById('export-all-sequences');
   const modeToggle = document.getElementById('mode-toggle');
   if (modeToggle) {
     modeToggle.addEventListener('click', () => {
@@ -3522,60 +3115,11 @@ function render(options = {}) {
       render({ preserveScroll: true });
     });
   }
-  if (exportAllBtn) {
-    exportAllBtn.addEventListener('click', () => {
-      downloadRowsAsCsv(getFilteredSequenceRows(), 'sequences-export.csv');
-    });
-  }
-  const exportSelectedBtn = document.getElementById('export-selected-sequences');
-  if (exportSelectedBtn) {
-    exportSelectedBtn.addEventListener('click', () => {
-      const selectedRows = sequenceRows.filter((row) => selectedSequenceIds.has(row.id));
-      downloadRowsAsCsv(selectedRows, 'sequences-selected.csv');
-    });
-  }
-  const selectVisibleBtn = document.getElementById('select-visible-sequences');
-  if (selectVisibleBtn) {
-    selectVisibleBtn.addEventListener('click', () => {
-      getFilteredSequenceRows().forEach((row) => selectedSequenceIds.add(row.id));
-      render({ preserveScroll: true });
-    });
-  }
-  const clearSelectedBtn = document.getElementById('clear-selected-sequences');
-  if (clearSelectedBtn) {
-    clearSelectedBtn.addEventListener('click', () => {
-      selectedSequenceIds.clear();
-      render({ preserveScroll: true });
-    });
-  }
-  const sequenceSearchInput = document.getElementById('sequence-search');
-  if (sequenceSearchInput) {
-    sequenceSearchInput.addEventListener('input', (event) => {
-      sequenceSearchQuery = event.target.value;
-      render({ preserveScroll: true });
-    });
-  }
   const annojoinState = document.getElementById('annojoin-search-input') ? currentAnnojointAtlasState() : null;
   if (annojoinState) {
     bindAnnojointAtlasTable({
       root: document,
-      selectedCaseIds: selectedAnnojointCaseIds,
-      rows: annojoinState.rows,
       setQuery: setAnnojointAtlasQuery,
-      exportSelectedRows: (selectedRows) => {
-        downloadRowsAsCsv(selectedRows.map(annojoinExportRow), 'annojoin-selected-cases.csv');
-      },
-      selectRows: (rows) => {
-        rows.forEach((row) => {
-          const caseKey = rowCaseKey(row);
-          if (caseKey) selectedAnnojointCaseIds.add(caseKey);
-        });
-        render({ preserveScroll: true });
-      },
-      clearSelection: () => {
-        selectedAnnojointCaseIds.clear();
-        render({ preserveScroll: true });
-      },
       toggleGroup: toggleAnnojointAtlasGroup,
       toggleGroupLimit: toggleAnnojointAtlasGroupLimit,
       expandAllGroups: () => {
@@ -3587,7 +3131,6 @@ function render(options = {}) {
         uncappedAnnojointGroupIds.clear();
         render({ preserveScroll: true });
       },
-      rerender: () => render({ preserveScroll: true }),
       removeFilter: (key) => {
         if (key && key.includes(':')) {
           const idx = key.indexOf(':');
@@ -3611,42 +3154,6 @@ function render(options = {}) {
   initAnnojointCasePage().catch((error) => {
     console.error('[main] 初始化 ANNOJOIN case page 失败', error);
   });
-  const downloadSelectedRdatBtn = document.getElementById('download-selected-rdat');
-  bindPseudoButton(downloadSelectedRdatBtn, () => {
-    downloadSelectedRdatFiles();
-  });
-  const clearSelectedRdatBtn = document.getElementById('clear-selected-rdat');
-  bindPseudoButton(clearSelectedRdatBtn, () => {
-    selectedBrowseIds.clear();
-    render({ preserveScroll: true });
-  });
-  const selectAllRdatBtn = document.getElementById('select-all-rdat');
-  bindPseudoButton(selectAllRdatBtn, () => {
-    browseEntryRows.forEach((row) => selectedBrowseIds.add(row.foldBridgeId));
-    render({ preserveScroll: true });
-  });
-  document.querySelectorAll('.browse-select').forEach((checkbox) => {
-    checkbox.addEventListener('change', (event) => {
-      const id = event.target.getAttribute('data-browse-id');
-      if (!id) return;
-      if (event.target.checked) selectedBrowseIds.add(id);
-      else selectedBrowseIds.delete(id);
-      render({ preserveScroll: true });
-    });
-  });
-  document.querySelectorAll('.sequence-select').forEach((checkbox) => {
-    checkbox.addEventListener('change', (event) => {
-      const id = event.target.getAttribute('data-sequence-id');
-      if (event.target.checked) {
-        selectedSequenceIds.add(id);
-      } else {
-        selectedSequenceIds.delete(id);
-      }
-      render({ preserveScroll: true });
-    });
-  });
-
-
   initHeaderSearch();
   initGlobalSearch();
   initAptamerMultiSelect();
@@ -3662,7 +3169,6 @@ function render(options = {}) {
   initHomeScrollStory();
   initPdbCasePage();
   initSearchPage();
-  bindDownloadPageControls();
 
 const subnavMenuToggle = document.getElementById('subnav-menu-toggle');
 const subnavNav = document.querySelector('.hero-subnav nav');
@@ -3945,13 +3451,6 @@ function initHomeDashboardFilters() {
     });
   }
 
-  const exportButton = document.getElementById('home-dashboard-export');
-  if (exportButton) {
-    exportButton.addEventListener('click', () => {
-      const rows = getFilteredHomeDashboardRows(sequenceRows);
-      downloadRowsAsCsv(rows, 'home-dashboard-filtered.csv');
-    });
-  }
 }
 
 window.addEventListener('hashchange', () => {

@@ -1,5 +1,5 @@
 import "./site-nav.js";
-import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter } from "./workbench-pure.mjs";
+import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter, buildCaseProfileDownloadItems } from "./workbench-pure.mjs";
 import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260825-ef-ui-4.mjs";
 
 const EF_ASSET_VERSION = "20260825-ef-ui-4";
@@ -160,121 +160,17 @@ function safeDownloadStem(value, fallback = "foldbridge") {
   return String(value || fallback).replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^_+|_+$/g, "") || fallback;
 }
 
-function downloadBlob(blob, filename) {
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = filename;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+function publishCaseDownload(kind, payload) {
+  if (window.parent === window) return;
+  const caseId = String(state.caseData?.case_id || config.caseId || "");
+  const chainId = String(config.chainId || "");
+  window.parent.postMessage({ type: "foldbridge-case-download-ready", kind, caseId, chainId, ...payload }, window.location.origin);
 }
 
-function downloadText(filename, text, mime = "text/plain;charset=utf-8") {
-  downloadBlob(new Blob([text], { type: mime }), filename);
-}
-
-function csvField(value) {
-  const text = value === null || value === undefined ? "" : String(value);
-  return /[",\n\r]/.test(text) ? `"${text.replaceAll('"', '""')}"` : text;
-}
-
-function selectedProfileCsv() {
-  const profile = state.lastRender?.profile;
-  const normalized = state.lastRender?.normalized;
-  const strand = activeStrand();
-  if (!profile || !normalized || !strand) return null;
-  const columns = [
-    "position", "profile_base", "raw_value", "normalized_value", "reactivity_color",
-    "structure_state", "residue_key", "pdb_base", "sequence_match",
-    "coordinate_status", "pdb_label_asym_id", "pdb_label_seq_id", "pdb_auth_asym_id", "pdb_auth_seq_id",
-  ];
-  const rows = [columns.join(",")];
-  for (let position = 1; position <= strand.sequence.length; position += 1) {
-    const residue = residueForPosition(position, strand);
-    const row = normalized.byPosition.get(position) || {};
-    const pdb = state.pdbResidueByKey.get(residue.residueKey) || {};
-    rows.push([
-      position,
-      residue.parentBase || strand.sequence[position - 1] || "",
-      Number.isFinite(row.raw) ? row.raw : "",
-      Number.isFinite(row.norm) ? row.norm : "",
-      row.color || "",
-      secondaryStructureStateForPosition(position, strand),
-      residue.residueKey,
-      residue.compId || "",
-      alignmentStateForResidue(residue.residueKey),
-      pdb.coordinateStatus || "unavailable",
-      pdb.labelAsymId || "",
-      pdb.labelSeqId || "",
-      pdb.authAsymId || "",
-      pdb.authSeqId || "",
-    ].map(csvField).join(","));
-  }
-  return rows.join("\n");
-}
-
-function selectedProfileColorMap() {
-  const profile = state.lastRender?.profile;
-  const normalized = state.lastRender?.normalized;
-  const strand = activeStrand();
-  if (!profile || !normalized || !strand) return null;
-  return {
-    downloadType: "foldbridge-profile-color-map",
-    generatedAt: new Date().toISOString(),
-    caseId: state.caseData?.case_id || config.caseId || "",
-    chain: activeChainKey(),
-    profileId: profile.profile_id || "",
-    positions: Array.from({ length: strand.sequence.length }, (_, index) => {
-      const position = index + 1;
-      const residue = residueForPosition(position, strand);
-      const row = normalized.byPosition.get(position) || {};
-      const pdb = state.pdbResidueByKey.get(residue.residueKey) || {};
-      return {
-        position,
-        base: residue.parentBase || strand.sequence[index] || "",
-        rawValue: Number.isFinite(row.raw) ? row.raw : null,
-        normalizedValue: Number.isFinite(row.norm) ? row.norm : null,
-        color: row.color || "#ffffff",
-        residueKey: residue.residueKey,
-        coordinateStatus: pdb.coordinateStatus || "unavailable",
-      };
-    }),
-  };
-}
-
-function downloadSelectedProfile() {
-  const profile = state.lastRender?.profile;
-  const csv = selectedProfileCsv();
-  if (!profile || !csv) return;
-  const stem = safeDownloadStem(profile.profile_id, "profile");
-  downloadText(`${stem}.csv`, csv, "text/csv;charset=utf-8");
-}
-
-async function downloadSelected3d() {
-  const profile = state.lastRender?.profile;
-  if (!profile) return;
-  try {
-    const sourceCif = await loadStructureSourceForMolstar();
-    if (!state.molstarCroppedUrl) {
-      await prepareClientAlignmentCroppedCif(sourceCif);
-    }
-    const response = await fetch(state.molstarCroppedUrl);
-    if (!response.ok) throw new Error(`target structure unavailable (${response.status})`);
-    const cifBlob = await response.blob();
-    const stem = safeDownloadStem(profile.profile_id, "profile");
-    downloadBlob(cifBlob, `${stem}-target-chain.cif`);
-    const sourceBuffer = await fetchArrayBufferOrThrow(sourceCif.sourceUrl);
-    const sourceDecoded = String(sourceCif.sourceUrl).endsWith(".gz")
-      ? await decodeGzipArrayBuffer(sourceBuffer)
-      : sourceBuffer;
-    downloadBlob(new Blob([sourceDecoded], { type: "chemical/x-mmcif" }), `${stem}-full-structure.cif`);
-    const colorMap = selectedProfileColorMap();
-    if (colorMap) downloadText(`${stem}-reactivity-colors.json`, JSON.stringify(colorMap, null, 2), "application/json;charset=utf-8");
-  } catch (error) {
-    if (el.molstarStatus) el.molstarStatus.textContent = `3D download unavailable: ${error.message || error}`;
-  }
+function publishProfileDownloads(profileIndex) {
+  const items = buildCaseProfileDownloadItems(profileIndex, profileIndexUrl)
+    .map((item) => ({ ...item, href: resolveAssetUrl(item.href) }));
+  publishCaseDownload("profiles", { items });
 }
 
 function resolveAssetUrl(href, baseUrl = window.location.href) {
@@ -1606,6 +1502,12 @@ async function prepareClientAlignmentCroppedCif(sourceCif) {
   const blob = new Blob([filtered.text], { type: "chemical/x-mmcif" });
   const url = URL.createObjectURL(blob);
   state.molstarCroppedUrl = url;
+  const caseStem = safeDownloadStem(state.caseData?.case_id || config.caseId, "case");
+  const chainStem = safeDownloadStem(activeChainKey() || config.chainId, "chain");
+  publishCaseDownload("alignment-mmcif", {
+    href: url,
+    filename: `${caseStem}-${chainStem}-alignment.cif`,
+  });
   return {
     ...sourceCif,
     mode: "client-alignment-crop",
@@ -2847,14 +2749,6 @@ function installExternalProfileBridge() {
   window.addEventListener("message", (event) => {
     const payload = event?.data;
     if (!payload) return;
-    if (payload.type === "annojoin:download-profile") {
-      downloadSelectedProfile();
-      return;
-    }
-    if (payload.type === "annojoin:download-3d") {
-      void downloadSelected3d();
-      return;
-    }
     if (payload.type !== "annojoin:set-profile") return;
     void renderProfileById(payload.profileId);
   });
@@ -3083,6 +2977,7 @@ async function init() {
   const evidenceRows = confidenceEvidence?.rows || [];
   state.techniqueByProfile = joinTechniqueByProfile(evidenceRows, config.chainId);
   state.evidenceRows = evidenceRows;
+  publishProfileDownloads(profileIndex);
   const strand = activeStrand() || caseData.strands[0];
   state.viewport = { start: 1, end: strand.sequence.length };
   el.select.innerHTML = buildProfileSelectMarkup(state.profiles);

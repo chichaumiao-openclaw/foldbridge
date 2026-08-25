@@ -62,6 +62,11 @@ function initialChainId(bootstrap, search = "") {
   return bootstrap?.defaultChainId || "";
 }
 
+function matchesCaseDownloadMessage(payload, caseId, chainId) {
+  return String(payload?.caseId || "") === String(caseId || "")
+    && String(payload?.chainId || "") === String(chainId || "");
+}
+
 function familyCounts(rows) {
   const out = {};
   for (const r of rows) { const f = r.family || ""; out[f] = (out[f] || 0) + 1; }
@@ -204,78 +209,36 @@ if (typeof document !== "undefined") {
     reportEmbeddedCaseHeightSoon();
   }
 
-  function downloadTextFile(filename, text, mime = "text/plain;charset=utf-8") {
-    const blob = new Blob([text], { type: mime });
-    const url = URL.createObjectURL(blob);
-    const anchor = document.createElement("a");
-    anchor.href = url;
-    anchor.download = filename;
-    document.body.appendChild(anchor);
-    anchor.click();
-    anchor.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-  }
-
-  function htmlEscape(value) {
-    return String(value ?? "")
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;")
-      .replaceAll('"', "&quot;")
-      .replaceAll("'", "&#39;");
-  }
+  let alignmentDownloadLink = null;
+  let profileDownloadMenu = null;
+  let profileDownloadList = null;
 
   function mountDownloadActions() {
     if (!hero || hero.querySelector(".fb-download-actions")) return;
     const actions = document.createElement("div");
     actions.className = "fb-download-actions";
-    const button = (label, title) => {
-      const item = document.createElement("button");
-      item.type = "button";
-      item.className = "fb-download-button";
-      item.textContent = label;
-      item.title = title;
-      actions.appendChild(item);
-      return item;
-    };
-    const entryButton = button("Download entry", "Download an HTML summary and JSON data for this entry");
-    const profileButton = button("Download profile", "Download the currently selected profile as CSV");
-    const structureButton = button("Download 3D structure", "Download the target-chain mmCIF and reactivity color map");
-    entryButton.addEventListener("click", () => {
-      const payload = {
-        downloadType: "foldbridge-entry",
-        generatedAt: new Date().toISOString(),
-        caseId: bootstrap.caseId || "",
-        caseKey: bootstrap.caseKey || "",
-        defaultChainId: bootstrap.defaultChainId || "",
-        evidenceChainMap: bootstrap.evidenceChainMap || {},
-        evidenceRows: bootstrap.evidenceRows || [],
-        sourcePage: window.location.href,
-      };
-      downloadTextFile(
-        `foldbridge-entry-${String(bootstrap.caseId || "case").replace(/[^A-Za-z0-9._-]+/g, "_")}.json`,
-        JSON.stringify(payload, null, 2),
-        "application/json;charset=utf-8"
-      );
-      const tableRows = (bootstrap.evidenceRows || []).map((row) => `<tr>
-        <td>${htmlEscape(row.family)}</td>
-        <td>${htmlEscape(row.technology)}</td>
-        <td>${htmlEscape(tierDisplay(row.lssTierCalibrated).label)}</td>
-        <td>${htmlEscape(row.profileKey || row.trackProfileId || "")}</td>
-      </tr>`).join("");
-      const pageHtml = `<!doctype html><html lang="en"><meta charset="utf-8"><title>${htmlEscape(bootstrap.caseKey || bootstrap.caseId || "FoldBridge entry")}</title><style>body{font:16px Arial,sans-serif;max-width:1100px;margin:40px auto;color:#111}table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid #ddd}</style><h1>${htmlEscape(document.querySelector(".hero h1")?.textContent || bootstrap.caseId || "FoldBridge entry")}</h1><p>${htmlEscape(bootstrap.caseKey || "")}</p><h2>Evidence</h2><table><thead><tr><th>Family</th><th>Technology</th><th>Tier</th><th>Profile</th></tr></thead><tbody>${tableRows}</tbody></table><p>Interactive profile and 3D files are available from the detail page downloads.</p></html>`;
-      downloadTextFile(
-        `foldbridge-entry-${String(bootstrap.caseId || "case").replace(/[^A-Za-z0-9._-]+/g, "_")}.html`,
-        pageHtml,
-        "text/html;charset=utf-8"
-      );
+    alignmentDownloadLink = document.createElement("a");
+    alignmentDownloadLink.className = "fb-download-button";
+    alignmentDownloadLink.textContent = "Download alignment mmCIF";
+    alignmentDownloadLink.title = "Download the alignment-cropped mmCIF for this chain";
+    alignmentDownloadLink.setAttribute("aria-disabled", "true");
+    actions.appendChild(alignmentDownloadLink);
+
+    profileDownloadMenu = document.createElement("details");
+    profileDownloadMenu.className = "fb-profile-download-menu";
+    const profileSummary = document.createElement("summary");
+    profileSummary.className = "fb-download-button";
+    profileSummary.textContent = "Download profiles";
+    profileSummary.title = "Download the compressed profile index, values, and metadata";
+    profileSummary.setAttribute("aria-disabled", "true");
+    profileSummary.addEventListener("click", (event) => {
+      if (profileSummary.getAttribute("aria-disabled") === "true") event.preventDefault();
     });
-    profileButton.addEventListener("click", () => {
-      frame?.contentWindow?.postMessage({ type: "annojoin:download-profile" }, window.location.origin);
-    });
-    structureButton.addEventListener("click", () => {
-      frame?.contentWindow?.postMessage({ type: "annojoin:download-3d" }, window.location.origin);
-    });
+    profileDownloadList = document.createElement("div");
+    profileDownloadList.className = "fb-profile-download-list";
+    profileDownloadList.textContent = "Preparing profile links…";
+    profileDownloadMenu.append(profileSummary, profileDownloadList);
+    actions.appendChild(profileDownloadMenu);
     const heading = hero.querySelector("h1");
     if (heading) {
       const titleRow = document.createElement("div");
@@ -288,6 +251,38 @@ if (typeof document !== "undefined") {
   }
   mountDownloadActions();
 
+  function resetCaseDownloadActions() {
+    alignmentDownloadLink?.removeAttribute("href");
+    alignmentDownloadLink?.removeAttribute("download");
+    alignmentDownloadLink?.setAttribute("aria-disabled", "true");
+    const summary = profileDownloadMenu?.querySelector("summary");
+    summary?.setAttribute("aria-disabled", "true");
+    if (profileDownloadMenu) profileDownloadMenu.open = false;
+    if (profileDownloadList) profileDownloadList.textContent = "Preparing profile links…";
+  }
+
+  function applyCaseDownloadMessage(payload) {
+    if (!matchesCaseDownloadMessage(payload, bootstrap.caseId, state.activeChainId)) return;
+    if (payload?.kind === "alignment-mmcif" && payload.href && alignmentDownloadLink) {
+      alignmentDownloadLink.href = payload.href;
+      alignmentDownloadLink.download = payload.filename || "foldbridge-alignment.cif";
+      alignmentDownloadLink.removeAttribute("aria-disabled");
+      return;
+    }
+    if (payload?.kind !== "profiles" || !Array.isArray(payload.items) || !profileDownloadList) return;
+    profileDownloadList.replaceChildren();
+    payload.items.forEach((item) => {
+      if (!item?.href) return;
+      const link = document.createElement("a");
+      link.className = "fb-profile-download-link";
+      link.href = item.href;
+      link.download = item.filename || "";
+      link.textContent = item.label || item.filename || "Profile file";
+      profileDownloadList.appendChild(link);
+    });
+    profileDownloadMenu?.querySelector("summary")?.removeAttribute("aria-disabled");
+  }
+
   function setWorkbenchFrameHeight(height) {
     const nextHeight = Number(height);
     if (!frame || !Number.isFinite(nextHeight) || nextHeight <= 0) return;
@@ -298,8 +293,12 @@ if (typeof document !== "undefined") {
   if (typeof window !== "undefined") {
     window.addEventListener("message", (event) => {
       if (event.source !== frame?.contentWindow) return;
-      if (event.data?.type !== "foldbridge-workbench-height") return;
-      setWorkbenchFrameHeight(event.data.height);
+      if (event.origin !== window.location.origin) return;
+      if (event.data?.type === "foldbridge-case-download-ready") {
+        applyCaseDownloadMessage(event.data);
+        return;
+      }
+      if (event.data?.type === "foldbridge-workbench-height") setWorkbenchFrameHeight(event.data.height);
     });
   }
 
@@ -328,6 +327,7 @@ if (typeof document !== "undefined") {
     const profileId = activeEvidence?.trackProfileId || activeEvidence?.profileKey || "";
     const query = profileId ? `?profileId=${encodeURIComponent(profileId)}` : "";
     const chainPage = bootstrap.chainPageById[state.activeChainId] || "";
+    resetCaseDownloadActions();
     frame.src = `${chainPage}${query}`;
   }
 
@@ -440,5 +440,6 @@ if (typeof module !== "undefined" && module.exports) {
     fmtMetric, fmtP, fmtFraction, fmtCount, pickBestEvidence,
     measureEmbeddedCaseHeight, postEmbeddedCaseHeight,
     initialChainId,
+    matchesCaseDownloadMessage,
   };
 }

@@ -9,8 +9,6 @@ const ALLOWED_ROUTES = new Set([
   'stats',
   'download',
   'search',
-  'download-sequences',
-  'download-structures',
   'detail',
   'publications',
   'sequence-detail',

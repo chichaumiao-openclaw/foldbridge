@@ -12,7 +12,6 @@ const PRIMARY_NAV_ITEMS = [
     activeRoutes: [
       'entry',
       'sequence',
-      'download-sequences',
       'pdb-case',
       'annojoin-atlas',
       'annojoin-case',

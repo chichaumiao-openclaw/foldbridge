@@ -58,19 +58,6 @@ function buildPreservedParams(filters = {}, page = 1) {
   return preserved;
 }
 
-function currentFilterExportHref(filters = {}, format = 'csv') {
-  const params = new URLSearchParams();
-  if (filters.query) params.set('q', filters.query);
-  if (filters.rnaFamily) params.set('rnaFamily', filters.rnaFamily);
-  for (const fam of filters.techniqueFamilies || []) params.append('techniqueFamilies', fam);
-  for (const name of filters.techniqueNames || []) params.append('techniqueNames', name);
-  if (filters.pdbId) params.set('pdbId', filters.pdbId);
-  if (filters.motif) params.set('motif', filters.motif);
-  if (filters.structureClass) params.set('structureClass', filters.structureClass);
-  params.set('format', format);
-  return `/api/annojoin/export-current-filter?${params.toString()}`;
-}
-
 function sourceTitle(source = '') {
   return source ? ` title="${escapeHtml(source)}"` : '';
 }
@@ -133,24 +120,22 @@ function columnValue(row = {}, columnId, routeName = 'annojoin-atlas', groupLabe
   return values[columnId] ?? escapeHtml(row[columnId] || '');
 }
 
-function renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass = '', groupLabels = [], preserved = {} }) {
+function renderCaseRow({ row, visibleColumns, routeName, rowClass = '', groupLabels = [], preserved = {} }) {
   const caseKey = rowCaseKey(row);
   const pdbId = String(row.pdbId || row.caseId || '').trim();
   return `<tr class="annojoin-case-row${rowClass ? ` ${rowClass}` : ''}" data-annojoin-case-row="${escapeHtml(caseKey)}" data-pdb-id="${escapeHtml(pdbId)}">
-      <td><input type="checkbox" class="annojoin-case-select" data-annojoin-case-id="${escapeHtml(caseKey)}" ${selectedCaseIds.has(caseKey) ? 'checked' : ''} /></td>
       ${visibleColumns.map((column) => `<td>${columnValue(row, column.id, routeName, groupLabels, preserved)}</td>`).join('')}
     </tr>`;
 }
 
-function renderFlatRows({ rows, visibleColumns, selectedCaseIds, routeName, preserved = {} }) {
+function renderFlatRows({ rows, visibleColumns, routeName, preserved = {} }) {
   if (!rows.length) return '';
-  return rows.map((row) => renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, preserved })).join('');
+  return rows.map((row) => renderCaseRow({ row, visibleColumns, routeName, preserved })).join('');
 }
 
 function renderTableBody({
   groups,
   visibleColumns,
-  selectedCaseIds,
   expandedGroupIds,
   uncappedGroupIds,
   routeName,
@@ -158,10 +143,10 @@ function renderTableBody({
   groupRowLimit = DEFAULT_GROUP_ROW_LIMIT
 }) {
   if (!groups.length) {
-    return `<tr><td colspan="${visibleColumns.length + 1}">No ANNOJOIN cases match the current filters.</td></tr>`;
+    return `<tr><td colspan="${visibleColumns.length}">No ANNOJOIN cases match the current filters.</td></tr>`;
   }
   const rows = [];
-  const renderRow = (row, rowClass = '', groupLabels = []) => renderCaseRow({ row, visibleColumns, selectedCaseIds, routeName, rowClass, groupLabels, preserved });
+  const renderRow = (row, rowClass = '', groupLabels = []) => renderCaseRow({ row, visibleColumns, routeName, rowClass, groupLabels, preserved });
   const renderExpandedRows = (caseRows = [], groupToggleId, groupLabels = []) => {
     const isUncapped = uncappedGroupIds.has(groupToggleId);
     const visibleRows = isUncapped ? caseRows : caseRows.slice(0, groupRowLimit);
@@ -170,7 +155,7 @@ function renderTableBody({
     }
     if (caseRows.length > groupRowLimit) {
       rows.push(`<tr class="annojoin-group-overflow-row">
-        <td colspan="${visibleColumns.length + 1}">
+        <td colspan="${visibleColumns.length}">
           <button type="button" class="download-outline-btn" data-annojoin-group-page-toggle="${escapeHtml(groupToggleId)}">${isUncapped ? 'Show less' : 'Show all in group'}</button>
           <span>${isUncapped ? `Showing all ${escapeHtml(caseRows.length)} cases in this group` : `Showing ${escapeHtml(groupRowLimit)} of ${escapeHtml(caseRows.length)} cases in this group`}</span>
         </td>
@@ -185,7 +170,7 @@ function renderTableBody({
     const parentToggleId = `parent:${parent.id}`;
     const parentExpanded = expandedGroupIds.has(parentToggleId);
     rows.push(`<tr class="annojoin-parent-group-row${parentExpanded ? ' is-expanded-group' : ''}" data-annojoin-parent-group="${escapeHtml(parent.id)}" data-annojoin-group-state="${parentExpanded ? 'expanded' : 'collapsed'}">
-      <td colspan="${visibleColumns.length + 1}">
+      <td colspan="${visibleColumns.length}">
         <div class="annojoin-group-row-inner">
           <button type="button" data-annojoin-group-toggle="${escapeHtml(parentToggleId)}" aria-expanded="${parentExpanded ? 'true' : 'false'}">${parentExpanded ? '-' : '+'}</button>
           <strong>${escapeHtml(parent.label)}</strong>
@@ -206,7 +191,7 @@ function renderTableBody({
       const childToggleId = `child:${child.id}`;
       const childExpanded = expandedGroupIds.has(childToggleId);
       rows.push(`<tr class="annojoin-child-group-row${childExpanded ? ' is-expanded-group' : ''}" data-annojoin-child-group="${escapeHtml(child.id)}" data-annojoin-group-state="${childExpanded ? 'expanded' : 'collapsed'}">
-        <td colspan="${visibleColumns.length + 1}">
+        <td colspan="${visibleColumns.length}">
           <div class="annojoin-group-row-inner">
             <button type="button" data-annojoin-group-toggle="${escapeHtml(childToggleId)}" aria-expanded="${childExpanded ? 'true' : 'false'}">${childExpanded ? '-' : '+'}</button>
             <span>${escapeHtml(child.label)}</span>
@@ -577,7 +562,6 @@ function renderActiveConditionChips(filters = {}, query = '') {
 export function renderAnnojointAtlasPage({
   state,
   routeName = 'annojoin-atlas',
-  selectedCaseIds = new Set(),
   expandedGroupIds,
   uncappedGroupIds = new Set(),
   page = 1,
@@ -589,7 +573,6 @@ export function renderAnnojointAtlasPage({
   headerHtml = ''
 } = {}) {
   const atlasState = state || { cases: [], source: {}, totalCaseCount: 0, filters: {} };
-  const selected = selectedCaseIds instanceof Set ? selectedCaseIds : new Set(selectedCaseIds || []);
   const expanded = expandedGroupIds instanceof Set ? expandedGroupIds : new Set(expandedGroupIds || []);
   const uncapped = uncappedGroupIds instanceof Set ? uncappedGroupIds : new Set(uncappedGroupIds || []);
   const visibleColumns = ANNOJOIN_TABLE_COLUMNS;
@@ -607,17 +590,17 @@ export function renderAnnojointAtlasPage({
     : '';
 
   const emptySearchRow = searchActive && !baseRows.length
-    ? `<tr class="annojoin-empty-search-row"><td colspan="${visibleColumns.length + 1}">
+    ? `<tr class="annojoin-empty-search-row"><td colspan="${visibleColumns.length}">
       <p>No entries match "${escapeHtml(query)}". Check the PDB ID, or try a molecule name.</p>
       <button type="button" class="download-outline-btn" data-annojoin-clear-search>Clear search</button>
     </td></tr>`
     : '';
 
   const tableBody = searchActive
-    ? (emptySearchRow || renderFlatRows({ rows: baseRows, visibleColumns, selectedCaseIds: selected, routeName, preserved }))
+    ? (emptySearchRow || renderFlatRows({ rows: baseRows, visibleColumns, routeName, preserved }))
     : (statusMessage && !atlasState.cases.length
-      ? `<tr class="annojoin-status-row"><td colspan="${visibleColumns.length + 1}">${escapeHtml(statusMessage.text || '')}</td></tr>`
-      : renderTableBody({ groups, visibleColumns, selectedCaseIds: selected, expandedGroupIds: expanded, uncappedGroupIds: uncapped, routeName, preserved }));
+      ? `<tr class="annojoin-status-row"><td colspan="${visibleColumns.length}">${escapeHtml(statusMessage.text || '')}</td></tr>`
+      : renderTableBody({ groups, visibleColumns, expandedGroupIds: expanded, uncappedGroupIds: uncapped, routeName, preserved }));
 
   const statusBanner = statusMessage
     ? `<section class="annojoin-table-status" role="status" data-status-tone="${escapeHtml(statusMessage.tone || 'info')}">
@@ -641,10 +624,6 @@ export function renderAnnojointAtlasPage({
 
     <section class="annojoin-table-toolbar" aria-label="ANNOJOIN table controls">
       <input type="search" id="annojoin-search-input" placeholder="Filter this table by PDB ID or molecule name" value="${escapeHtml(atlasState.filters?.query || '')}" />
-      <button id="export-selected-annojoin-cases" type="button" class="download-outline-btn" ${selected.size ? '' : 'disabled'}>Export Selected (${escapeHtml(selected.size)})</button>
-      <a class="download-outline-btn" href="${escapeHtml(currentFilterExportHref(atlasState.filters, 'csv'))}">Export All Results</a>
-      <button id="select-all-annojoin-cases" type="button" class="download-outline-btn">Select All Results</button>
-      <button id="clear-selected-annojoin-cases" type="button" class="download-outline-btn" ${selected.size ? '' : 'disabled'}>Clear Selection</button>
       <button id="expand-all-annojoin-groups" type="button" class="download-outline-btn">Expand All</button>
       <button id="collapse-all-annojoin-groups" type="button" class="download-outline-btn">Collapse All</button>
       <a class="download-outline-btn" href="${escapeHtml(atlasHref(routeName))}">Reset</a>
@@ -657,7 +636,6 @@ export function renderAnnojointAtlasPage({
 
     <section class="annojoin-table-meta">
       <span>${metaCountText}</span>
-      <span>${escapeHtml(selected.size)} selected</span>
       <span>Case-level profile/confidence summary</span>
     </section>
 
@@ -670,7 +648,6 @@ export function renderAnnojointAtlasPage({
         <table class="annojoin-master-table">
           <thead>
             <tr>
-              <th>Select</th>
               ${visibleColumns.map((column) => `<th>${escapeHtml(column.label)}${COLUMN_HELP[column.id] ? helpTooltip(COLUMN_HELP[column.id]) : ''}</th>`).join('')}
             </tr>
           </thead>

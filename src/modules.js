@@ -75,7 +75,6 @@ export function renderVisualizationShowcase() {
             <h4 class="filter-title">Data Filtering</h4>
             <div class="filter-actions">
               <button class="filter-btn reset-btn" id="resetAllFilters">Reset All</button>
-              <button class="filter-btn export-btn" id="exportData">Export Data</button>
             </div>
           </div>
           <div class="filter-tags" id="filterTags"></div>
@@ -250,7 +249,6 @@ export function initAptamerMultiSelect() {
   const tableInfo = document.getElementById('tableInfo');
   const filterTags = document.getElementById('filterTags');
   const resetBtn = document.getElementById('resetAllFilters');
-  const exportBtn = document.getElementById('exportData');
   const currentCount = document.getElementById('currentCount');
   const filterPercentage = document.getElementById('filterPercentage');
 
@@ -376,23 +374,6 @@ export function initAptamerMultiSelect() {
     filterPercentage.textContent = `${Math.round((rows.length / totalRows) * 100)}%`;
   }
 
-  function exportFiltered() {
-    const rows = applyFilters();
-    const header = ['No.', 'Sequence Name', 'Aptamer Name', 'Discovery Year', 'Category', 'Sequence', 'Description'];
-    const body = rows.map((r, i) => [i + 1, r.sequenceName, r.aptamerName, r.year, r.category, r.sequence, r.description]);
-    const csv = [header, ...body]
-      .map((line) => line.map((v) => `"${String(v).replaceAll('"', '""')}"`).join(','))
-      .join('\n');
-
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'aptamer_filtered_data.csv';
-    a.click();
-    URL.revokeObjectURL(url);
-  }
-
   function refresh() {
     renderYearChart();
     renderPieChart();
@@ -405,8 +386,6 @@ export function initAptamerMultiSelect() {
     selectedCategories.clear();
     refresh();
   });
-
-  exportBtn?.addEventListener('click', exportFiltered);
 
   refresh();
 }
@@ -1066,34 +1045,4 @@ export async function initSequenceDetailSecondaryHeatmap() {
   } catch (_error) {
     status.textContent = 'Heatmap data could not be loaded.';
   }
-}
-
-export function downloadRowsAsCsv(rows, filename = 'sequences.csv') {
-  if (!rows || !rows.length) return;
-
-  const headers = Object.keys(rows[0]);
-
-  const escapeCell = (value) => {
-    const text = String(value ?? '');
-    if (text.includes('"') || text.includes(',') || text.includes('\n')) {
-      return `"${text.replace(/"/g, '""')}"`;
-    }
-    return text;
-  };
-
-  const csv = [
-    headers.join(','),
-    ...rows.map((row) => headers.map((header) => escapeCell(row[header])).join(','))
-  ].join('\n');
-
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const link = document.createElement('a');
-
-  link.href = url;
-  link.download = filename;
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
 }

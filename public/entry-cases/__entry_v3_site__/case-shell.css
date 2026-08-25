@@ -73,6 +73,8 @@ a { color: inherit; }
   margin: 0 0 8px auto;
 }
 .fb-download-button {
+  display: inline-flex;
+  align-items: center;
   padding: 7px 12px;
   border: 1px solid #edc457;
   border-radius: 4px;
@@ -83,12 +85,52 @@ a { color: inherit; }
   font-weight: 400;
   line-height: 1.55;
   cursor: pointer;
+  text-decoration: none;
 }
 .fb-download-button:hover,
 .fb-download-button:focus-visible {
   border-color: #edc457;
   outline: 2px solid #edc457;
   outline-offset: 1px;
+}
+.fb-download-button[aria-disabled="true"] {
+  cursor: progress;
+  opacity: 0.55;
+  pointer-events: none;
+}
+.fb-profile-download-menu {
+  position: relative;
+}
+.fb-profile-download-menu > summary {
+  list-style: none;
+}
+.fb-profile-download-menu > summary::-webkit-details-marker {
+  display: none;
+}
+.fb-profile-download-list {
+  position: absolute;
+  z-index: 20;
+  right: 0;
+  top: calc(100% + 6px);
+  display: grid;
+  min-width: 250px;
+  max-height: 320px;
+  overflow: auto;
+  padding: 8px;
+  border: 1px solid #edc457;
+  border-radius: 4px;
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.14);
+}
+.fb-profile-download-link {
+  padding: 7px 9px;
+  color: #000000;
+  text-decoration: none;
+}
+.fb-profile-download-link:hover,
+.fb-profile-download-link:focus-visible {
+  background: #fff8dd;
+  outline: none;
 }
 @media (max-width: 900px) {
   .fb-hero-title-row {

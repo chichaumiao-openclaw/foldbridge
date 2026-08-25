@@ -1,11 +1,6 @@
 export function bindAnnojointAtlasTable({
   root = document,
-  selectedCaseIds,
-  rows = [],
   setQuery,
-  exportSelectedRows,
-  selectRows,
-  clearSelection,
   toggleGroup,
   toggleGroupLimit,
   expandAllGroups,
@@ -13,10 +8,8 @@ export function bindAnnojointAtlasTable({
   removeFilter,
   clearFilters,
   toggleTechniqueFamily,
-  toggleTechniqueName,
-  rerender
+  toggleTechniqueName
 } = {}) {
-  const rowCaseKey = (row = {}) => String(row.atlasCaseKey || row.caseKey || row.caseId || row.pdbId || '').trim();
   const searchInput = root.getElementById?.('annojoin-search-input');
   if (searchInput) {
     let debounceTimer = null;
@@ -57,34 +50,6 @@ export function bindAnnojointAtlasTable({
 
   root.querySelectorAll?.('[data-annojoin-clear-search]').forEach((button) => {
     button.addEventListener('click', () => removeFilter?.('q'));
-  });
-
-  const exportSelectedBtn = root.getElementById?.('export-selected-annojoin-cases');
-  if (exportSelectedBtn) {
-    exportSelectedBtn.addEventListener('click', () => {
-      const selectedRows = rows.filter((row) => selectedCaseIds?.has(rowCaseKey(row)));
-      exportSelectedRows?.(selectedRows);
-    });
-  }
-
-  const selectAllBtn = root.getElementById?.('select-all-annojoin-cases');
-  if (selectAllBtn) {
-    selectAllBtn.addEventListener('click', () => selectRows?.(rows));
-  }
-
-  const clearSelectedBtn = root.getElementById?.('clear-selected-annojoin-cases');
-  if (clearSelectedBtn) {
-    clearSelectedBtn.addEventListener('click', () => clearSelection?.());
-  }
-
-  root.querySelectorAll?.('.annojoin-case-select').forEach((checkbox) => {
-    checkbox.addEventListener('change', (event) => {
-      const caseId = event.target.getAttribute('data-annojoin-case-id');
-      if (!caseId) return;
-      if (event.target.checked) selectedCaseIds?.add(caseId);
-      else selectedCaseIds?.delete(caseId);
-      rerender?.();
-    });
   });
 
   root.querySelectorAll?.('[data-annojoin-group-toggle]').forEach((button) => {

@@ -65,3 +65,39 @@ export function applyTechniqueFilter(model, selection) {
   });
   return hit;
 }
+
+export function buildCaseProfileDownloadItems(profileIndex, profileIndexUrl = "./profiles/profile-index.json.gz") {
+  const shards = profileIndex?.shards;
+  if (!shards || typeof shards !== "object" || Array.isArray(shards)) {
+    throw new TypeError("Case profile index must contain a shards object");
+  }
+  const filenameFor = (href, fallback) => {
+    const clean = String(href || "").split(/[?#]/)[0];
+    return clean.split("/").filter(Boolean).at(-1) || fallback;
+  };
+  const items = [{
+    kind: "index",
+    label: "Profile index",
+    href: String(profileIndexUrl),
+    filename: filenameFor(profileIndexUrl, "profile-index.json.gz"),
+  }];
+  Object.keys(shards).sort().forEach((shardId) => {
+    const shard = shards[shardId] || {};
+    if (!shard.gzip_path || !shard.meta_path) {
+      throw new Error(`Profile shard ${shardId} is missing values or metadata`);
+    }
+    items.push({
+      kind: "values",
+      label: `Profile values ${shardId}`,
+      href: String(shard.gzip_path),
+      filename: filenameFor(shard.gzip_path, `${shardId}.f32.bin.gz`),
+    });
+    items.push({
+      kind: "meta",
+      label: `Profile metadata ${shardId}`,
+      href: String(shard.meta_path),
+      filename: filenameFor(shard.meta_path, `${shardId}.meta.json.gz`),
+    });
+  });
+  return items;
+}
