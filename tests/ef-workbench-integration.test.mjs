@@ -39,8 +39,14 @@ test("EF renderer owns separate 1D and matrix hosts", () => {
   const source = read("public/entry-cases/__entry_ef_site__/ef-heatmap.js");
   assert.match(source, /sequenceHost/);
   assert.match(source, /onInteraction/);
-  assert.match(source, /sequenceHost\.appendChild\(sequenceViewport\)/);
-  assert.doesNotMatch(source, /root\.appendChild\(sequenceViewport\)/);
+  assert.match(source, /sequenceHost\.appendChild\(sequenceTrack\)/);
+  assert.doesNotMatch(source, /root\.appendChild\(sequenceTrack\)/);
+  assert.match(source, /Mapped chain seq/);
+  assert.match(source, /Intensity/);
+  assert.match(source, /role:\s*["']group["']/);
+  assert.match(source, /aria-pressed/);
+  assert.match(source, /data-track-kind/);
+  assert.match(source, /updateSequenceIntensity/);
   assert.match(source, /kind:\s*["']hover["']/);
   assert.match(source, /kind:\s*["']select["']/);
   assert.match(source, /cellMap\.get\([^\n]+\)\s*\?\?\s*null/);
@@ -105,7 +111,9 @@ test("EF component chrome is entirely Workbench-token driven", () => {
   assert.doesNotMatch(efBlock, /--ef-scale-(?:low|center|high)/);
   assert.match(efBlock, /\.ef-selection-row\s*\{[^}]*var\(--selected-soft\)[^}]*var\(--selected\)/s);
   assert.match(efBlock, /\.ef-hover-guide\s*\{[^}]*var\(--accent\)/s);
-  assert.match(efBlock, /\.ef-sequence-base\s*\{[^}]*min-width:\s*44px/s);
+  assert.match(efBlock, /\.ef-sequence-track\s*\{/);
+  assert.match(efBlock, /\.ef-sequence-base\[data-base=["']A["']\]\s*\{[^}]*#4c78a8/s);
+  assert.doesNotMatch(efBlock, /\.ef-sequence-base\s*\{[^}]*min-width:\s*44px/s);
   assert.match(efBlock, /\.varna-frame circle\.is-ef-hovered\s*\{[^}]*var\(--accent\)/s);
   assert.doesNotMatch(efBlock, /(?:^|\n)\s*\.ef-/, "EF visual rules must remain scoped to Workbench EF mode");
 });
@@ -113,9 +121,9 @@ test("EF component chrome is entirely Workbench-token driven", () => {
 test("EF dependency paths are fingerprinted for caches that ignore query strings", () => {
   const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
   assert.match(source, /const EF_ASSET_VERSION\s*=\s*["'][^"']+["']/);
-  assert.match(source, /ef-heatmap-core\.20260825-ef-ui-4\.js/);
-  assert.match(source, /ef-heatmap\.20260825-ef-ui-4\.js/);
-  assert.match(source, /ef-case\.20260825-ef-ui-4\.js/);
+  assert.match(source, /ef-heatmap-core\.20260826-ef-ui-5\.js/);
+  assert.match(source, /ef-heatmap\.20260826-ef-ui-5\.js/);
+  assert.match(source, /ef-case\.20260826-ef-ui-5\.js/);
   assert.doesNotMatch(source, /scriptUrl\.searchParams\.set\(["']v["']/);
 });
 

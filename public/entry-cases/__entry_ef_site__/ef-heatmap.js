@@ -63,28 +63,143 @@
     const status = htmlNode("div", "ef-interaction-status", "Hover a cell; click to lock its row and recolor 2D / 3D");
     root.appendChild(status);
 
-    const sequenceViewport = htmlNode("div", "ef-sequence-viewport");
-    const sequenceStrip = htmlNode("div", "ef-sequence-strip");
-    sequenceStrip.setAttribute("role", "list");
-    sequenceStrip.setAttribute("aria-label", "1D chain sequence; click a residue to recolor linked views");
-    sequenceRows.forEach((row) => {
-      const index = row.matrix_index;
-      const base = htmlNode("button", "ef-sequence-base");
-      base.setAttribute("type", "button");
-      base.setAttribute("data-index", index);
-      base.setAttribute("data-pdb-pos", row.pdb_pos ?? "");
-      base.setAttribute("title", `PDB ${row.pdb_pos ?? "unmapped"} ${row.base || ""}; click to select axis ${sequenceAxis}=${index}`);
-      const baseLetter = htmlNode("span", "ef-sequence-letter", row.base || "·");
-      const basePos = htmlNode("span", "ef-sequence-pos", String(row.pdb_pos ?? ""));
-      base.appendChild(baseLetter);
-      base.appendChild(basePos);
-      const click = () => selectAxis(sequenceAxis, index, "sequence");
-      base.addEventListener("click", click);
-      cleanup.push(() => base.removeEventListener("click", click));
-      sequenceStrip.appendChild(base);
+    const sequenceHeight = 118;
+    const sequenceLeft = 210;
+    const sequenceRight = 18;
+    const sequenceWidth = Math.max(1120, sequenceLeft + sequenceRight + sequenceRows.length * 24);
+    const sequenceUsable = sequenceWidth - sequenceLeft - sequenceRight;
+    const sequenceX = (position) => sequenceLeft + ((position + 0.5) / sequenceRows.length) * sequenceUsable;
+    const sequenceHitWidth = Math.max(24, sequenceUsable / sequenceRows.length);
+    const sequenceCellWidth = Math.max(4, sequenceHitWidth - 1);
+    const sequenceTrack = svgNode("svg", {
+      class: "ef-sequence-track",
+      viewBox: `0 0 ${sequenceWidth} ${sequenceHeight}`,
+      width: sequenceWidth,
+      height: sequenceHeight,
+      role: "group",
+      "aria-label": "1D mapped chain sequence and dynamically linked EF intensity",
     });
-    sequenceViewport.appendChild(sequenceStrip);
-    sequenceHost.appendChild(sequenceViewport);
+    sequenceTrack.appendChild(svgNode("rect", {
+      class: "ef-sequence-background", x: 0, y: 0, width: sequenceWidth, height: sequenceHeight,
+    }));
+    for (const [label, y] of [["PDB pos", 24], ["Mapped chain seq", 52], ["Intensity", 84]]) {
+      const text = svgNode("text", { class: "ef-track-label", x: 2, y: y + 6 });
+      text.textContent = label;
+      sequenceTrack.appendChild(text);
+      sequenceTrack.appendChild(svgNode("line", {
+        class: "ef-track-rule", x1: sequenceLeft, x2: sequenceWidth - sequenceRight, y1: y, y2: y,
+      }));
+    }
+
+    const sequenceMarks = [];
+    const intensityMarksByPdb = new Map();
+    const intensityTargetsByPdb = new Map();
+    const intensityBarsByPdb = new Map();
+    const intensityTitlesByPdb = new Map();
+    const noSignalColor = core.colorForValue(null, H);
+    const noSignalFill = `rgb(${noSignalColor.r},${noSignalColor.g},${noSignalColor.b})`;
+
+    function wireSequenceMark(mark, row, trackKind) {
+      const index = row.matrix_index;
+      mark.setAttribute("data-index", index);
+      mark.setAttribute("data-pdb-pos", row.pdb_pos ?? "");
+      mark.setAttribute("data-track-kind", trackKind);
+      mark.setAttribute("role", "button");
+      mark.setAttribute("tabindex", "0");
+      mark.setAttribute("aria-pressed", "false");
+      const select = () => selectAxis(sequenceAxis, index, "sequence");
+      const keydown = (event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        select();
+      };
+      mark.addEventListener("click", select);
+      mark.addEventListener("keydown", keydown);
+      cleanup.push(() => mark.removeEventListener("click", select));
+      cleanup.push(() => mark.removeEventListener("keydown", keydown));
+      sequenceMarks.push(mark);
+    }
+
+    sequenceRows.forEach((row, position) => {
+      const x = sequenceX(position);
+      if (position === 0 || (position + 1) % 10 === 0 || position === sequenceRows.length - 1) {
+        sequenceTrack.appendChild(svgNode("line", {
+          class: "ef-position-tick-line", x1: x, x2: x, y1: 15, y2: 30,
+        }));
+        const tick = svgNode("text", { class: "ef-position-tick", x, y: 14, "text-anchor": "middle" });
+        tick.textContent = String(row.pdb_pos ?? position + 1);
+        sequenceTrack.appendChild(tick);
+      }
+
+      const baseTarget = svgNode("g", {
+        class: "ef-sequence-target residue-mark",
+        "data-hit-width": sequenceHitWidth,
+        "aria-label": `PDB ${row.pdb_pos ?? "unmapped"} ${row.base || ""}; select residue`,
+      });
+      wireSequenceMark(baseTarget, row, "mapped_chain_sequence");
+      baseTarget.appendChild(svgNode("rect", {
+        class: "ef-sequence-hit",
+        x: x - sequenceHitWidth / 2,
+        y: 40,
+        width: sequenceHitWidth,
+        height: 24,
+        rx: 1,
+      }));
+      const base = svgNode("rect", {
+        class: "ef-sequence-base",
+        x: x - sequenceCellWidth / 2,
+        y: 40,
+        width: sequenceCellWidth,
+        height: 24,
+        rx: 1,
+        "data-base": String(row.base || "N").toUpperCase(),
+      });
+      baseTarget.appendChild(base);
+      sequenceTrack.appendChild(baseTarget);
+      const baseLetter = svgNode("text", {
+        class: "ef-sequence-letter", x, y: 56, "text-anchor": "middle",
+      });
+      baseLetter.textContent = row.base || "·";
+      sequenceTrack.appendChild(baseLetter);
+
+      const intensityTarget = svgNode("g", {
+        class: "ef-sequence-target residue-mark",
+        "data-hit-width": sequenceHitWidth,
+        "aria-label": `PDB ${row.pdb_pos ?? "unmapped"} ${row.base || ""}; no EF intensity selected`,
+      });
+      wireSequenceMark(intensityTarget, row, "ef_intensity");
+      intensityTarget.appendChild(svgNode("rect", {
+        class: "ef-sequence-hit",
+        x: x - sequenceHitWidth / 2,
+        y: 76,
+        width: sequenceHitWidth,
+        height: 24,
+        rx: 1,
+      }));
+      const intensity = svgNode("rect", {
+        class: "ef-sequence-intensity",
+        x: x - sequenceCellWidth / 2,
+        y: 76,
+        width: sequenceCellWidth,
+        height: 24,
+        rx: 1,
+        fill: noSignalFill,
+      });
+      intensityTarget.appendChild(intensity);
+      const intensityTitle = svgNode("title");
+      intensityTitle.textContent = `PDB ${row.pdb_pos ?? "unmapped"} ${row.base || ""} · no EF intensity selected`;
+      intensityTarget.appendChild(intensityTitle);
+      sequenceTrack.appendChild(intensityTarget);
+      const bar = svgNode("rect", {
+        class: "ef-intensity-bar", x: x - 2, y: 99, width: 4, height: 0, visibility: "hidden",
+      });
+      sequenceTrack.appendChild(bar);
+      intensityMarksByPdb.set(row.pdb_pos, intensity);
+      intensityTargetsByPdb.set(row.pdb_pos, intensityTarget);
+      intensityBarsByPdb.set(row.pdb_pos, bar);
+      intensityTitlesByPdb.set(row.pdb_pos, intensityTitle);
+    });
+    sequenceHost.appendChild(sequenceTrack);
 
     const plotWrap = htmlNode("div", "ef-plot-wrap");
     const svg = svgNode("svg", {
@@ -326,20 +441,53 @@
         selectedCol.setAttribute("width", 1); selectedCol.setAttribute("height", PLOT_H);
         selectedCol.setAttribute("visibility", "visible"); selectedRow.setAttribute("visibility", "hidden");
       }
-      for (const base of sequenceStrip.children) {
-        const active = row?.pdb_pos != null && Number(base.getAttribute("data-pdb-pos")) === row.pdb_pos;
-        base.className = active ? "ef-sequence-base is-selected" : "ef-sequence-base";
+      for (const mark of sequenceMarks) {
+        const active = row?.pdb_pos != null && Number(mark.getAttribute("data-pdb-pos")) === row.pdb_pos;
+        mark.classList[active ? "add" : "remove"]("selected");
+        mark.setAttribute("aria-pressed", active ? "true" : "false");
       }
+      updateSequenceIntensity(axis, index);
       for (const circle of circles) circle.classList.remove("is-ef-selected");
       const selectedVarnaCircle = row && circles[row.varna_index];
       if (selectedVarnaCircle) selectedVarnaCircle.classList.add("is-ef-selected");
-      status.textContent = `locked ${axis} · PDB ${row?.pdb_pos ?? "–"} ${row?.base || ""} · linked 2D/3D recolored`;
+      status.textContent = `locked ${axis} · PDB ${row?.pdb_pos ?? "–"} ${row?.base || ""} · linked 1D intensity / 2D / 3D recolored`;
       molstarPlugin.visual.select({
         data: core.buildMolstarSelectPayload(index, axis, idx, H),
         nonSelectedColor: focusChain ? { r: 255, g: 255, b: 255 } : NEUTRAL_GRAY,
       });
       recolorVarna(core.buildVarnaColorMap(index, axis, idx, H));
       onInteraction({ kind: "select", source, axis, index, residue: row, cell });
+    }
+
+    function updateSequenceIntensity(axis, index) {
+      const entries = axis === "i" ? idx.rowIndex.get(index) || [] : idx.colIndex.get(index) || [];
+      const partnerAxis = axis === "i" ? "j" : "i";
+      const valuesByPdb = new Map();
+      for (const entry of entries) {
+        const partnerIndex = axis === "i" ? entry.j : entry.i;
+        const partner = idx.axisByIndex[partnerAxis].get(partnerIndex);
+        if (Number.isInteger(partner?.pdb_pos)) valuesByPdb.set(partner.pdb_pos, entry.value);
+      }
+      const maximum = Math.max(0, Number(H.value_max) || 0) || 1;
+      for (const sequenceRow of sequenceRows) {
+        const value = valuesByPdb.get(sequenceRow.pdb_pos);
+        const color = core.colorForValue(value ?? null, H);
+        const intensity = intensityMarksByPdb.get(sequenceRow.pdb_pos);
+        const intensityTarget = intensityTargetsByPdb.get(sequenceRow.pdb_pos);
+        const bar = intensityBarsByPdb.get(sequenceRow.pdb_pos);
+        const title = intensityTitlesByPdb.get(sequenceRow.pdb_pos);
+        const valueLabel = Number.isFinite(value) ? fmt(value) : "no signal";
+        intensity.setAttribute("fill", `rgb(${color.r},${color.g},${color.b})`);
+        intensity.setAttribute("data-value", Number.isFinite(value) ? String(value) : "");
+        intensityTarget.setAttribute("data-value", Number.isFinite(value) ? String(value) : "");
+        intensityTarget.setAttribute("aria-label", `PDB ${sequenceRow.pdb_pos} ${sequenceRow.base || ""}; EF intensity ${valueLabel}`);
+        title.textContent = `PDB ${sequenceRow.pdb_pos} ${sequenceRow.base || ""} · EF intensity ${valueLabel}`;
+        const normalized = Number.isFinite(value) ? Math.max(0, Math.min(1, value / maximum)) : 0;
+        const barHeight = normalized > 0 ? Math.max(1, Math.round(normalized * 21)) : 0;
+        bar.setAttribute("y", 99 - barHeight);
+        bar.setAttribute("height", barHeight);
+        bar.setAttribute("visibility", barHeight ? "visible" : "hidden");
+      }
     }
 
     overlay.addEventListener("mousemove", onMove);

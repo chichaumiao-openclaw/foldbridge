@@ -107,15 +107,15 @@ class FakeElement {
     this.textContent = "";
     this.classList = {
       add: (...names) => {
-        const values = new Set(String(this.className || "").split(/\s+/).filter(Boolean));
+        const values = new Set(String(this.attrs.class || this.className || "").split(/\s+/).filter(Boolean));
         names.forEach((value) => values.add(value));
-        this.className = [...values].join(" ");
+        this.attrs.class = [...values].join(" ");
       },
       remove: (...names) => {
         const removed = new Set(names);
-        this.className = String(this.className || "").split(/\s+/).filter((value) => value && !removed.has(value)).join(" ");
+        this.attrs.class = String(this.attrs.class || this.className || "").split(/\s+/).filter((value) => value && !removed.has(value)).join(" ");
       },
-      contains: (name) => String(this.className || "").split(/\s+/).includes(name),
+      contains: (name) => String(this.attrs.class || this.className || "").split(/\s+/).includes(name),
     };
   }
   setAttribute(name, value) { this.attrs[name] = String(value); }
@@ -140,6 +140,15 @@ class FakeElement {
     if (selector === 'circle[stroke="none"][r="5.0"]') return this.circles || [];
     return [];
   }
+}
+
+function descendants(node, predicate) {
+  const matches = [];
+  for (const child of node.children || []) {
+    if (predicate(child)) matches.push(child);
+    matches.push(...descendants(child, predicate));
+  }
+  return matches;
 }
 
 const heatmapSource = fs.readFileSync(
@@ -186,8 +195,22 @@ assert.equal(controller.viewHeader.n_cols, 2);
 assert.ok(heatmapHost.querySelector(".ef-axes"), "heatmap must render coordinate axes");
 assert.ok(heatmapHost.querySelector(".ef-hover"), "heatmap must render hover crosshair layer");
 assert.ok(heatmapHost.querySelector(".ef-selection"), "heatmap must render locked selection layer");
-assert.ok(sequenceHost.querySelector(".ef-sequence-strip"), "sequence host must render the clickable 1D sequence strip");
-assert.equal(heatmapHost.querySelector(".ef-sequence-strip"), null, "matrix host must not duplicate the 1D strip");
+const sequenceTrack = sequenceHost.querySelector(".ef-sequence-track");
+assert.ok(sequenceTrack, "sequence host must render the Workbench-style SVG 1D track");
+assert.equal(sequenceTrack.getAttribute("role"), "group", "interactive SVG track must expose a group, not flattened image semantics");
+assert.equal(heatmapHost.querySelector(".ef-sequence-track"), null, "matrix host must not duplicate the 1D track");
+const trackLabels = descendants(sequenceTrack, (node) => node.getAttribute("class") === "ef-track-label").map((node) => node.textContent);
+assert.deepEqual(trackLabels, ["PDB pos", "Mapped chain seq", "Intensity"]);
+const baseMarks = descendants(sequenceTrack, (node) => node.getAttribute("data-track-kind") === "mapped_chain_sequence");
+const intensityMarks = descendants(sequenceTrack, (node) => node.getAttribute("data-track-kind") === "ef_intensity");
+const baseCells = descendants(sequenceTrack, (node) => String(node.getAttribute("class") || "").split(/\s+/).includes("ef-sequence-base"));
+const intensityCells = descendants(sequenceTrack, (node) => String(node.getAttribute("class") || "").split(/\s+/).includes("ef-sequence-intensity"));
+assert.equal(baseMarks.length, 2, "mapped chain sequence row must render one interactive cell per mapped residue");
+assert.equal(intensityMarks.length, 2, "intensity row must align one cell per mapped residue");
+assert.ok(baseMarks.every((mark) => Number(mark.getAttribute("data-hit-width")) >= 24), "every interactive sequence target must be at least 24 px wide");
+assert.ok(baseCells.every((cell, index) => Number(cell.getAttribute("width")) <= Number(baseMarks[index].getAttribute("data-hit-width")) - 1), "visible sequence cells retain the normal Workbench inter-cell gap");
+assert.ok([...baseMarks, ...intensityMarks].every((mark) => mark.getAttribute("aria-pressed") === "false"), "track cells start unpressed");
+assert.deepEqual(intensityCells.map((cell) => cell.getAttribute("fill")), ["rgb(255,255,255)", "rgb(255,255,255)"], "intensity row starts at the no-signal baseline");
 assert.ok(heatmapHost.querySelector(".ef-colorbar"), "heatmap must render a visible colorbar");
 const hitgrid = heatmapHost.querySelector(".ef-hitgrid");
 const hoverLayer = heatmapHost.querySelector(".ef-hover");
@@ -208,6 +231,18 @@ controller.selectAxis("i", 0);
 assert.deepEqual(JSON.parse(JSON.stringify(selectCalls[1].nonSelectedColor)), { r: 255, g: 255, b: 255 });
 assert.equal(controller.state.selected.axis, "i");
 assert.equal(controller.state.selected.index, 0);
+assert.deepEqual(
+  intensityCells.map((cell) => cell.getAttribute("fill")),
+  [1.5, 6].map((value) => {
+    const color = core.colorForValue(value, chainPayload.header);
+    return `rgb(${color.r},${color.g},${color.b})`;
+  }),
+  "selecting a residue must render that matrix slice in the aligned intensity row"
+);
+assert.equal(baseMarks[0].classList.contains("selected"), true, "selection uses the existing Workbench residue-mark state");
+assert.equal(intensityMarks[0].classList.contains("selected"), true, "selection stays linked across sequence and intensity rows");
+assert.equal(baseMarks[0].getAttribute("aria-pressed"), "true", "selected sequence cell exposes pressed state");
+assert.equal(intensityMarks[0].getAttribute("aria-pressed"), "true", "selected intensity cell exposes pressed state");
 assert.equal(typeof varnaSvg.handlers.click, "function", "VARNA SVG must delegate clicks from overlaid base labels");
 varnaSvg.handlers.click({ clientX: 25, clientY: 25, target: new FakeElement("text") });
 assert.equal(controller.state.selected.index, 1, "clicking a VARNA base label must select its nearest nucleotide circle");
@@ -224,6 +259,96 @@ molstarHost.handlers["PDB.molstar.click"]({
 assert.equal(controller.state.selected.index, 0, "clicking a 3D residue must select its mapped matrix axis");
 assert.equal(controller.state.selected.source, "3d", "3D selection must retain its interaction source");
 assert.equal(varnaSvg.circles[0].classList.contains("is-ef-selected"), true, "3D selection must update the linked VARNA residue");
-assert.equal(sequenceHost.querySelector(".is-selected")?.getAttribute("data-pdb-pos"), "1", "3D selection must update the 1D strip");
+assert.equal(sequenceHost.querySelector(".selected")?.getAttribute("data-pdb-pos"), "1", "3D selection must update the 1D track");
+
+const fPayload = {
+  header: {
+    pdb_id: "8QO5",
+    chain: "A",
+    label_asym_id: "A",
+    family: "F",
+    n_rows: 2,
+    n_cols: 4,
+    value_min: -1,
+    value_max: 8,
+    render_scope: "mapped_chain",
+    focus_chain: true,
+  },
+  axis_i: [
+    { matrix_index: 0, pdb_pos: 10, varna_index: 0, observed: true, base: "A" },
+    { matrix_index: 1, pdb_pos: 20, varna_index: 1, observed: true, base: "C" },
+  ],
+  axis_j: [
+    { matrix_index: 0, pdb_pos: 10, varna_index: 0, observed: true, base: "A" },
+    { matrix_index: 1, pdb_pos: 20, varna_index: 1, observed: true, base: "C" },
+    { matrix_index: 2, pdb_pos: 30, varna_index: 2, observed: true, base: "G" },
+    { matrix_index: 3, pdb_pos: 40, varna_index: 3, observed: true, base: "U" },
+  ],
+  cells: [
+    [0, 0, 1], [0, 1, 2], [0, 2, 3], [0, 3, 4],
+    [1, 0, 5], [1, 1, 6], [1, 2, 7], [1, 3, 8],
+  ],
+};
+const fSequenceHost = new FakeElement("host");
+const fHeatmapHost = new FakeElement("host");
+const fVarnaHost = new FakeElement("host");
+const fVarnaSvg = new FakeElement("svg");
+fVarnaSvg.circles = Array.from({ length: 4 }, (_, index) => {
+  const circle = new FakeElement("circle");
+  circle.getBoundingClientRect = () => ({ left: index * 20, top: index * 20, width: 10, height: 10 });
+  return circle;
+});
+fVarnaHost.appendChild(fVarnaSvg);
+const fMolstarHost = new FakeElement("host");
+const fInteractions = [];
+const fController = integrationSandbox.window.createEfHeatmap({
+  sequenceHost: fSequenceHost,
+  heatmapHost: fHeatmapHost,
+  varnaHost: fVarnaHost,
+  molstarHost: fMolstarHost,
+  molstarPlugin: { visual: { select() {}, highlight() {}, clearHighlight() {} } },
+  payload: fPayload,
+  onInteraction(event) { fInteractions.push(event); },
+});
+const fTrack = fSequenceHost.querySelector(".ef-sequence-track");
+const fBases = descendants(fTrack, (node) => node.getAttribute("data-track-kind") === "mapped_chain_sequence");
+const fIntensities = descendants(fTrack, (node) => node.getAttribute("data-track-kind") === "ef_intensity");
+assert.equal(fBases.length, 4, "F sequence track follows the longer j axis");
+
+fController.selectCell(1, 2);
+assert.equal(fController.state.selected.axis, "i", "matrix selection locks its i row");
+assert.equal(fController.state.selected.source, "matrix");
+assert.deepEqual(fIntensities.map((mark) => mark.getAttribute("data-value")), ["5", "6", "7", "8"], "i selection renders the full j-axis matrix row");
+
+fBases[2].handlers.click();
+assert.equal(fController.state.selected.axis, "j", "clicking a j-only sequence residue selects the j axis");
+assert.equal(fController.state.selected.index, 2);
+assert.equal(fController.state.selected.source, "sequence");
+assert.deepEqual(fIntensities.map((mark) => mark.getAttribute("data-value")), ["3", "7", "", ""], "j selection renders the i-axis column and leaves j-only positions blank");
+
+let enterPrevented = false;
+fBases[3].handlers.keydown({ key: "Enter", preventDefault() { enterPrevented = true; } });
+assert.equal(enterPrevented, true, "Enter activates a sequence cell without browser default behavior");
+assert.equal(fController.state.selected.index, 3);
+let spacePrevented = false;
+fIntensities[2].handlers.keydown({ key: " ", preventDefault() { spacePrevented = true; } });
+assert.equal(spacePrevented, true, "Space activates an intensity cell without scrolling");
+assert.equal(fController.state.selected.index, 2);
+
+fVarnaSvg.handlers.click({ clientX: 45, clientY: 45, target: new FakeElement("text") });
+assert.equal(fController.state.selected.axis, "j");
+assert.equal(fController.state.selected.index, 2);
+assert.equal(fController.state.selected.source, "varna");
+assert.deepEqual(fIntensities.map((mark) => mark.getAttribute("data-value")), ["3", "7", "", ""], "VARNA uses the same F column intensity slice");
+
+fMolstarHost.handlers["PDB.molstar.click"]({ detail: { label_asym_id: "A", auth_asym_id: "A", label_seq_id: 40 } });
+assert.equal(fController.state.selected.axis, "j");
+assert.equal(fController.state.selected.index, 3);
+assert.equal(fController.state.selected.source, "3d");
+assert.deepEqual(fIntensities.map((mark) => mark.getAttribute("data-value")), ["4", "8", "", ""], "3D uses the same F column intensity slice");
+assert.ok(fInteractions.some((event) => event.source === "matrix"), "matrix path emits a normalized interaction event");
+assert.ok(fInteractions.some((event) => event.source === "sequence"), "sequence path emits a normalized interaction event");
+assert.ok(fInteractions.some((event) => event.source === "varna"), "VARNA path emits a normalized interaction event");
+assert.ok(fInteractions.some((event) => event.source === "3d"), "3D path emits a normalized interaction event");
 
 console.log("ok - EF chain view uses one 2D/3D coordinate system");

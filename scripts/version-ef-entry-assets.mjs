@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-export const EF_ASSET_VERSION = "20260825-ef-ui-4";
+export const EF_ASSET_VERSION = "20260826-ef-ui-5";
 
 export const EF_ENTRY_ROUTES = Object.freeze([
   { caseId: "7SYS", chainId: "z" },
