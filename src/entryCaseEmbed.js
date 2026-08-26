@@ -43,3 +43,19 @@ export function mountEntryCaseHeightListener({ windowObject, frame, expectedOrig
     windowObject.removeEventListener('message', handler);
   };
 }
+
+export function mountEntryCaseLoadingIndicator({ frame, indicator }) {
+  if (!frame || typeof frame.addEventListener !== 'function' || !indicator) {
+    return () => {};
+  }
+
+  indicator.hidden = false;
+  const handleLoad = () => {
+    indicator.hidden = true;
+  };
+  frame.addEventListener('load', handleLoad, { once: true });
+
+  return () => {
+    frame.removeEventListener('load', handleLoad);
+  };
+}

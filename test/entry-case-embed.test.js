@@ -7,7 +7,33 @@ import {
   applyEntryCaseHeightMessage,
   ENTRY_CASE_HEIGHT_MESSAGE,
   mountEntryCaseHeightListener,
+  mountEntryCaseLoadingIndicator,
 } from '../src/entryCaseEmbed.js';
+
+test('entry Case loading indicator stays visible until the iframe loads', () => {
+  const handlers = new Set();
+  const frame = {
+    addEventListener(type, handler) {
+      if (type === 'load') handlers.add(handler);
+    },
+    removeEventListener(type, handler) {
+      if (type === 'load') handlers.delete(handler);
+    },
+  };
+  const indicator = { hidden: true };
+
+  const dispose = mountEntryCaseLoadingIndicator({ frame, indicator });
+  assert.equal(indicator.hidden, false);
+  assert.equal(handlers.size, 1);
+
+  for (const handler of handlers) handler();
+  assert.equal(indicator.hidden, true);
+
+  indicator.hidden = false;
+  dispose();
+  for (const handler of handlers) handler();
+  assert.equal(indicator.hidden, false);
+});
 
 test('entry Case iframe accepts a valid height only from its own trusted child', () => {
   const childWindow = {};
@@ -152,6 +178,10 @@ test('entry Case layout uses the shared centered width and content-driven height
   assert.match(embedStyles, /margin:\s*0 auto/);
   assert.doesNotMatch(frameStyles, /height:\s*calc\(100vh/);
   assert.match(main, /mountEntryCaseHeightListener\(\{/);
+  assert.match(main, /mountEntryCaseLoadingIndicator\(\{/);
+  assert.match(main, /class="entry-case-loading"/);
+  assert.match(styles, /\.entry-case-loading-track/);
+  assert.match(styles, /@keyframes entry-case-loading-slide/);
   assert.match(shell, /classList\.add\("is-embedded"\)/);
   assert.match(shellStyles, /html\.is-embedded \.shell\s*\{[^}]*width:\s*100%[^}]*max-width:\s*100%/s);
   assert.match(shell, /ResizeObserver/);

@@ -54,7 +54,7 @@ import { normalizeEntryRows, filterEntryRowsByTechniqueSelection } from './entry
 import { renderEntryTablePage } from './entryTableView.js';
 import { buildEntryExport } from './downloadExport.js';
 import { toggleTechniqueSelection } from './techniqueFilterModel.js';
-import { mountEntryCaseHeightListener } from './entryCaseEmbed.js';
+import { mountEntryCaseHeightListener, mountEntryCaseLoadingIndicator } from './entryCaseEmbed.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
 import {
   initAnnojointCasePage,
@@ -2805,11 +2805,19 @@ function initEntryCaseEmbed() {
   const frame = document.querySelector('.entry-case-embed-frame');
   if (!frame) return;
 
-  disposeEntryCaseHeightListener = mountEntryCaseHeightListener({
+  const disposeHeight = mountEntryCaseHeightListener({
     windowObject: window,
     frame,
     expectedOrigin: ENTRY_CASE_FRAME_ORIGIN,
   });
+  const disposeLoading = mountEntryCaseLoadingIndicator({
+    frame,
+    indicator: document.querySelector('.entry-case-loading'),
+  });
+  disposeEntryCaseHeightListener = () => {
+    disposeHeight();
+    disposeLoading();
+  };
 }
 
 function entryCasePage() {
@@ -2831,6 +2839,10 @@ function entryCasePage() {
   // 主站 header 与其它页面一致（renderBundleHeader），iframe 夹在其下、footer 之上。
   // case 页内部的 site-nav.js 有 iframe 守卫（self!==top 不注入），不会重复渲染头。
   return `${renderBundleHeader()}<main class="entry-case-embed">
+    <div class="entry-case-loading" role="status" aria-live="polite">
+      <span class="entry-case-loading-label">Loading Case…</span>
+      <span class="entry-case-loading-track" aria-hidden="true"><span></span></span>
+    </div>
     <iframe class="entry-case-embed-frame" src="${src}" title="${escapeHtml(safePdb)} case page"
       loading="lazy" referrerpolicy="no-referrer"></iframe>
   </main>`;

@@ -8356,10 +8356,59 @@ main .technology-method-pill {
    加载后由 case shell 上报内容高度，页面只保留外层滚动。 */
 .entry-case-embed {
   display: block;
+  position: relative;
   width: var(--feature-card-width);
   max-width: var(--feature-card-width);
   padding: 0;
   margin: 0 auto;
+}
+.entry-case-loading {
+  position: absolute;
+  z-index: 2;
+  top: 16px;
+  left: 50%;
+  width: min(420px, calc(100% - 32px));
+  padding: 12px 14px;
+  transform: translateX(-50%);
+  border: 1px solid var(--border, #e0ce8f);
+  border-radius: 10px;
+  background: var(--surface, #fffdf7);
+  box-shadow: 0 8px 24px rgb(58 47 16 / 12%);
+  color: var(--textPrimary, #3a2f10);
+}
+.entry-case-loading[hidden] {
+  display: none;
+}
+.entry-case-loading-label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.entry-case-loading-track {
+  display: block;
+  height: 5px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--surfaceAlt, #f1ead5);
+}
+.entry-case-loading-track > span {
+  display: block;
+  width: 42%;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--accent, #b47c00);
+  animation: entry-case-loading-slide 1.15s ease-in-out infinite;
+}
+@keyframes entry-case-loading-slide {
+  from { transform: translateX(-110%); }
+  to { transform: translateX(240%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entry-case-loading-track > span {
+    width: 65%;
+    animation: none;
+  }
 }
 .entry-case-embed-frame {
   display: block;
