@@ -49,17 +49,31 @@ test("EF renderer owns separate 1D and matrix hosts", () => {
   assert.match(source, /updateSequenceIntensity/);
   assert.match(source, /kind:\s*["']hover["']/);
   assert.match(source, /kind:\s*["']select["']/);
-  assert.match(source, /cellMap\.get\([^\n]+\)\s*\?\?\s*null/);
+  assert.match(source, /idx\.cellMap\.has/);
+  assert.match(source, /core\.presentationPayload/);
   assert.match(source, /const mappedAxisI\s*=\s*viewPayload\.axis_i\.filter/);
   assert.match(source, /const mappedAxisJ\s*=\s*viewPayload\.axis_j\.filter/);
   assert.match(source, /const sequenceAxis\s*=\s*mappedAxisJ\.length\s*>\s*mappedAxisI\.length\s*\?\s*["']j["']\s*:\s*["']i["']/);
   assert.match(source, /const sequenceRows\s*=\s*sequenceAxis\s*===\s*["']j["']\s*\?\s*mappedAxisJ\s*:\s*mappedAxisI/);
   assert.match(source, /sequenceRows\.forEach/);
-  assert.match(source, /const matrixRefByVarna\s*=\s*new Map/);
+  assert.match(source, /const matrixRefByKey\s*=\s*new Map/);
   assert.match(source, /for\s*\(const axis of \[sequenceAxis/);
-  assert.match(source, /selectAxis\(matrixRef\.axis,\s*matrixRef\.index,\s*["']varna["']\)/);
+  assert.match(source, /selectAxis\(ref\.axis,\s*ref\.index,\s*["']varna["']\)/);
   assert.match(source, /PDB\.molstar\.click/);
   assert.match(source, /selectPdbPosition\([^,]+,\s*["']3d["']\)/);
+  assert.match(source, /FoldBridgeResidueLinkage/);
+  assert.match(source, /data-residue-key/);
+  assert.match(source, /PDB\.molstar\.mouseover/);
+  assert.match(source, /PDB\.molstar\.mouseout/);
+  assert.doesNotMatch(source, /nearestVarna|nearestDistance|nearestRadius/);
+});
+
+test("ordinary Case and EF share the residue linkage API", () => {
+  const workbench = read("public/entry-cases/__entry_v3_site__/workbench.js");
+  assert.match(workbench, /residue-linkage\.[^"']+\.mjs/);
+  assert.match(workbench, /window\.FoldBridgeResidueLinkage/);
+  assert.match(workbench, /setResidueMarkState/);
+  assert.match(workbench, /installVarnaHitLayer/);
 });
 
 test("EF uses the existing Workbench heatmap palette instead of blue-red", () => {
@@ -103,7 +117,7 @@ test("EF component chrome is entirely Workbench-token driven", () => {
   assert.match(renderer, /class:\s*["']ef-matrix-background["']/);
   assert.match(renderer, /class:\s*["']ef-selection-row["']/);
   assert.match(renderer, /class:\s*["']ef-hover-guide["']/);
-  assert.match(renderer, /classList\.add\(["']is-ef-hovered["']\)/);
+  assert.doesNotMatch(renderer, /is-ef-hovered|is-ef-selected/);
   assert.match(renderer, /rmdb-heatmap-gradient ef-colorbar-ramp/);
 
   const efBlock = styles.slice(styles.indexOf("/* EF mode"));
@@ -114,16 +128,16 @@ test("EF component chrome is entirely Workbench-token driven", () => {
   assert.match(efBlock, /\.ef-sequence-track\s*\{/);
   assert.match(efBlock, /\.ef-sequence-base\[data-base=["']A["']\]\s*\{[^}]*#4c78a8/s);
   assert.doesNotMatch(efBlock, /\.ef-sequence-base\s*\{[^}]*min-width:\s*44px/s);
-  assert.match(efBlock, /\.varna-frame circle\.is-ef-hovered\s*\{[^}]*var\(--accent\)/s);
+  assert.doesNotMatch(efBlock, /is-ef-hovered|is-ef-selected/);
   assert.doesNotMatch(efBlock, /(?:^|\n)\s*\.ef-/, "EF visual rules must remain scoped to Workbench EF mode");
 });
 
 test("EF dependency paths are fingerprinted for caches that ignore query strings", () => {
   const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
   assert.match(source, /const EF_ASSET_VERSION\s*=\s*["'][^"']+["']/);
-  assert.match(source, /ef-heatmap-core\.20260826-ef-ui-5\.js/);
-  assert.match(source, /ef-heatmap\.20260826-ef-ui-5\.js/);
-  assert.match(source, /ef-case\.20260826-ef-ui-5\.js/);
+  assert.match(source, /ef-heatmap-core\.20260826-ef-ui-6\.js/);
+  assert.match(source, /ef-heatmap\.20260826-ef-ui-6\.js/);
+  assert.match(source, /ef-case\.20260826-ef-ui-6\.js/);
   assert.doesNotMatch(source, /scriptUrl\.searchParams\.set\(["']v["']/);
 });
 

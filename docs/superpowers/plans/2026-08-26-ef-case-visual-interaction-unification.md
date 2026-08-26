@@ -16,6 +16,7 @@
 - 修改 `public/entry-cases/__entry_ef_site__/ef-case.js`：向 renderer 传递 linked-view residues。
 - 修改 `public/entry-cases/__entry_ef_site__/ef-heatmap.js`：E 三角命中、共享 1D 状态、VARNA hit layer、四视图 hover/click。
 - 修改 `public/entry-cases/__entry_v3_site__/workbench.js`：公开并调用普通/EF 共用的 residue-linkage API。
+- 创建 `public/entry-cases/__entry_v3_site__/residue-rail.mjs`：普通 Case 与 EF 共用的 SVG rail geometry/labels/ticks primitive。
 - 修改 `public/entry-cases/__entry_v3_site__/workbench.css`：删除 EF 专用 hover/selected，复用普通 `.residue-mark` 状态。
 - 修改 `tests/ef-chain-view.test.mjs`：行为级 E/F、1D、VARNA、Mol* 回归。
 - 修改 `tests/ef-workbench-integration.test.mjs`：禁止重新引入 EF 专用状态类。
@@ -28,7 +29,8 @@
 
 ```js
 assert.equal(core.isDisplayCell(0, 1, 0, { family: "E", value_kind: "cohcoa_contact" }), false);
-assert.equal(core.isDisplayCell(1, 0, -6, { family: "E", value_kind: "cohcoa_contact" }), true);
+assert.equal(core.isDisplayCell(6, 0, -6, { family: "E", value_kind: "cohcoa_contact", diag_mask_min_sep: 6 }), true);
+assert.equal(core.isDisplayCell(5, 0, 4, { family: "E", value_kind: "cohcoa_contact", diag_mask_min_sep: 6 }), false);
 assert.equal(core.isDisplayCell(0, 3, 4, { family: "F", value_kind: "m2_coupling_z" }), true);
 ```
 
@@ -49,7 +51,8 @@ function isDisplayCell(i, j, value, header) {
   if (value === null || value === undefined || !Number.isFinite(Number(value))) return false;
   const isEContact = String(header?.family || "").toUpperCase() === "E"
     || header?.value_kind === "cohcoa_contact";
-  return !isEContact || i > j;
+  const minSep = Math.max(1, Number(header?.diag_mask_min_sep) || 1);
+  return !isEContact || i - j >= minSep;
 }
 ```
 
@@ -87,11 +90,15 @@ assert.equal(sourceCircle.getAttribute("fill"), originalOrIntensityFill);
 residues: linkedView.residueIndex.residues,
 ```
 
-在 `workbench.js` 建立 `window.FoldBridgeResidueLinkage` 公共 API，并让普通 Case 原有 `setDomState` 与 `installVarnaHitLayer` 也调用它：
+创建并在 `workbench.js` 暴露共享 residue-linkage API，让普通 Case 原有 `setDomState` 与 `installVarnaHitLayer` 也调用它；`keySet` 必须接受单个 string、iterable 或 null：
 
 ```js
 const FoldBridgeResidueLinkage = {
-  keySet(keys) { return new Set((keys || []).filter(Boolean)); },
+  keySet(keys) {
+    if (keys == null) return new Set();
+    if (typeof keys === "string") return new Set([keys]);
+    return new Set(Array.from(keys).filter(Boolean));
+  },
   setState(root, className, keys) {
     const active = this.keySet(keys);
     root.querySelectorAll(".residue-mark").forEach((node) => {
@@ -103,6 +110,8 @@ const FoldBridgeResidueLinkage = {
 ```
 
 renderer 建立 linkedView `labelSeqId -> residueKey` 严格映射；缺失、重复或 axis 不一致直接 throw。1D interactive target 和可见 rect 都携带原始 key，并调用公共 API 的 key-set state；mousemove/leave/click/keyboard 进入同一 select/hover 函数。
+
+创建 `createResidueRail(document, { positions, rows, height, positionLabel })` primitive，生成固定 210px label gutter、24px residue pitch、规则线与 first/every-10/last ticks，返回 `{ svg, xFor, cellWidth, hitWidth }`。普通 `renderTrackRail` 和 EF 1D 都必须调用它；测试同时断言两条路径使用该函数及共同 geometry constants。
 
 VARNA 原始 fill circle 携带 `.residue-mark` 和 key，另建与普通 Case 等价的透明 `.varna-hit` circle；每个 hit circle直接绑定 hover/click，不再做 SVG 最近圆点扫描。selection 仅加描边状态，保留 intensity fill。
 
@@ -116,7 +125,7 @@ VARNA 原始 fill circle 携带 `.residue-mark` 和 key，另建与普通 Case �
 
 - [ ] **步骤 1：写失败测试**
 
-断言 `PDB.molstar.mouseover` 用真实 label sequence id 给 1D/VARNA/heatmap 加 `.hovered`，`mouseout` 清除；matrix cell click 保留两个 selected residue key，同时只把 `observed !== false` 的端点送入 3D。
+断言 `PDB.molstar.mouseover` 用真实 label sequence id 给 1D/VARNA/heatmap 加 `.hovered`，`mouseout` 清除；matrix cell click 保留两个 selected residue key，同时只有 `observed === true` 的端点进入 3D，`false` 被排除、`undefined` 在 contract 阶段失败。
 
 - [ ] **步骤 2：验证 RED**
 
@@ -127,6 +136,8 @@ VARNA 原始 fill circle 携带 `.residue-mark` 和 key，另建与普通 Case �
 presentation index 增加 Family E residue slice：按 residue 的两个轴 index 合并有效 row 和 column entries，以 partner residue key 去重；Family F 继续按事件的 i/j 轴取 slice，1D/VARNA/3D 使用 `sequenceAxis`。增加 `hoverPdbPosition`、`clearLinkedHover` 与 Mol* mouseover/mouseout 监听。pair selection 把两个端点加入 selected key set，只把 `observed === true` 的端点送入 3D；axis 缺失 observed 在 contract 阶段 throw。mouseleave 仅清 hover，重复点击当前单/双 key set 清 locked selection。
 
 收紧 `pdbPositionFromMolstarEvent`：只接受 `label_seq_id/labelSeqId`；事件只有 `auth_seq_id` 时不得直接当 label 编号。若未来需要 auth→label，必须由 linked-view locator 显式 map。测试 fixture 使用不同 auth/label 编号验证仅 label 生效。
+
+补齐状态机测试：pair→single 替换为单 key、pair→另一 pair 替换旧双 key、重复 click 清 selection/强度、mouseleave 只清 hover；1D 与 VARNA Enter/Space 使用同一 selection 路径。非方形 F fixture 分别验证 i-row 与 j-column slice 不合并、`sequenceAxis=j`，状态文本明确当前 i/j。
 
 - [ ] **步骤 4：验证 GREEN**
 

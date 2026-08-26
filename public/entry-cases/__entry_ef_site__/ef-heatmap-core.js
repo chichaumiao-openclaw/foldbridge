@@ -44,6 +44,42 @@
     }
   }
 
+  function isDisplayCell(i, j, value, header) {
+    if (value === null || value === undefined || !Number.isFinite(Number(value))) return false;
+    const isEContact = String(header?.family || "").toUpperCase() === "E"
+      || header?.value_kind === "cohcoa_contact";
+    if (!isEContact) return true;
+    const minSep = Math.max(1, Number(header?.diag_mask_min_sep) || 1);
+    return i - j >= minSep;
+  }
+
+  function presentationPayload(payload) {
+    assertContract(payload);
+    const sourceIndices = Object.fromEntries(["i", "j"].map((axis) => [
+      axis,
+      new Map(payload[`axis_${axis}`].map((row) => [
+        row.matrix_index,
+        Number.isInteger(row.source_matrix_index) ? row.source_matrix_index : row.matrix_index,
+      ])),
+    ]));
+    const cells = payload.cells.filter(([i, j, value]) => (
+      isDisplayCell(sourceIndices.i.get(i), sourceIndices.j.get(j), value, payload.header)
+    ));
+    const values = cells.map((cell) => Number(cell[2])).filter(Number.isFinite);
+    if (!values.length) throw new Error("EF presentation has no valid finite matrix cells");
+    return {
+      ...payload,
+      header: {
+        ...payload.header,
+        value_min: Math.min(...values),
+        value_max: Math.max(...values),
+      },
+      axis_i: payload.axis_i.map((row) => ({ ...row })),
+      axis_j: payload.axis_j.map((row) => ({ ...row })),
+      cells: cells.map((cell) => [...cell]),
+    };
+  }
+
   function materializeMappedChain(payload) {
     assertContract(payload);
     const sourceRows = payload.axis_i.filter((row) => row.pdb_pos != null && row.varna_index != null);
@@ -154,6 +190,9 @@
           throw new Error(`axis_${axis}[${row.matrix_index}] has one-sided 2D/3D mapping`);
         }
         if (!mapped3d) continue;
+        if (row.observed !== true && row.observed !== false) {
+          throw new Error(`axis_${axis}[${row.matrix_index}] mapped residue is missing boolean observed state`);
+        }
         if (!Number.isInteger(row.pdb_pos) || !residueByPosition.has(row.pdb_pos)) {
           throw new Error(`axis_${axis}[${row.matrix_index}] pdb_pos ${row.pdb_pos} is outside linked chain`);
         }
@@ -227,10 +266,9 @@
   function extractMolstarEventData(event) {
     const queue = [event?.eventData, event?.detail, event];
     const seen = new Set();
-    const residueFields = [
-      "label_seq_id", "labelSeqId", "residueNumber", "residue_number",
-      "seq_id", "seqId", "auth_seq_id", "authSeqId", "start_residue_number",
-    ];
+    // PDBe Molstar 3.3 custom events expose mmCIF label_seq_id as seq_id.
+    // Accept that label-authoritative alias, but never auth_seq_id.
+    const residueFields = ["label_seq_id", "labelSeqId", "seq_id", "seqId"];
     while (queue.length) {
       const item = queue.shift();
       if (!item || typeof item !== "object" || seen.has(item)) continue;
@@ -258,10 +296,7 @@
     const hasChainIdentity = authIds.length > 0 || labelIds.length > 0;
     const chainMatches = authIds.includes(String(header.chain)) || labelIds.includes(String(header.label_asym_id));
     if (hasChainIdentity && !chainMatches) return null;
-    const rawPosition = molstarValue(payload, [
-      "label_seq_id", "labelSeqId", "residueNumber", "residue_number",
-      "seq_id", "seqId", "auth_seq_id", "authSeqId", "start_residue_number",
-    ]);
+    const rawPosition = molstarValue(payload, ["label_seq_id", "labelSeqId", "seq_id", "seqId"]);
     const position = Number(rawPosition);
     return Number.isInteger(position) && position > 0 ? position : null;
   }
@@ -281,7 +316,7 @@
     const out = [];
     for (const { partner, value, partnerAxis } of partnersFor(index, axis, indices)) {
       const row = indices.axisByIndex[partnerAxis].get(partner);
-      if (!row || row.pdb_pos == null || row.observed === false) continue;
+      if (!row || row.pdb_pos == null || row.observed !== true) continue;
       out.push({
         struct_asym_id: header.label_asym_id,
         start_residue_number: row.pdb_pos,
@@ -305,7 +340,7 @@
   function buildHoverTargets(i, j, indices, header) {
     const out = [];
     for (const row of [indices.axisByIndex.i.get(i), indices.axisByIndex.j.get(j)]) {
-      if (row && row.pdb_pos != null && row.observed !== false) {
+      if (row && row.pdb_pos != null && row.observed === true) {
         out.push({
           struct_asym_id: header.label_asym_id,
           start_residue_number: row.pdb_pos,
@@ -317,9 +352,11 @@
   }
 
   function buildMolstarChainFocusPayload(payload) {
-    const residues = payload.axis_i
-      .filter((row) => Number.isInteger(row.pdb_pos) && row.observed !== false)
-      .map((row) => row.pdb_pos);
+    const residues = [...new Set(["i", "j"].flatMap((axis) => (
+      payload[`axis_${axis}`]
+        .filter((row) => Number.isInteger(row.pdb_pos) && row.observed === true)
+        .map((row) => row.pdb_pos)
+    )))];
     if (!residues.length) throw new Error("EF payload has no resolved target-chain residues");
     return {
       data: [{
@@ -336,6 +373,8 @@
   window.EfHeatmapCore = {
     buildIndices,
     assertContract,
+    isDisplayCell,
+    presentationPayload,
     materializeMappedChain,
     assertLinkedContract,
     cellFromXY,

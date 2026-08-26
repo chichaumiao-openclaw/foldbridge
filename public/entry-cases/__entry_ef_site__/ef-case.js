@@ -315,6 +315,7 @@
         molstarHost: molstar,
         molstarPlugin: viewer,
         payload,
+        residues: linkedView.residueIndex.residues,
         onInteraction: options.onInteraction,
       });
 

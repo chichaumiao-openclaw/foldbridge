@@ -68,6 +68,8 @@ test("Workbench shell and downstream EF scripts use the deploy version", async (
   );
   const main = await fs.readFile(new URL("../src/main.js", import.meta.url), "utf8");
   assert.match(workbench, new RegExp(versionedAssetName("ef-workbench-shell.mjs").replaceAll(".", "\\.")));
+  assert.match(workbench, new RegExp(versionedAssetName("residue-linkage.mjs").replaceAll(".", "\\.")));
+  assert.match(workbench, new RegExp(versionedAssetName("residue-rail.mjs").replaceAll(".", "\\.")));
   assert.match(workbench, new RegExp(`const EF_ASSET_VERSION = ["']${EF_ASSET_VERSION}["']`));
   assert.match(main, new RegExp(`const EF_ASSET_VERSION = ["']${EF_ASSET_VERSION}["']`));
   for (const assetName of ["ef-heatmap-core.js", "ef-heatmap.js", "ef-case.js"]) {

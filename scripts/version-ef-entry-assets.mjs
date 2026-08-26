@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-export const EF_ASSET_VERSION = "20260826-ef-ui-5";
+export const EF_ASSET_VERSION = "20260826-ef-ui-6";
 
 export const EF_ENTRY_ROUTES = Object.freeze([
   { caseId: "7SYS", chainId: "z" },
@@ -20,6 +20,8 @@ export const VERSIONED_ASSETS = Object.freeze([
   { directory: "__entry_v3_site__", assetName: "workbench.css" },
   { directory: "__entry_v3_site__", assetName: "workbench.js" },
   { directory: "__entry_v3_site__", assetName: "ef-workbench-shell.mjs" },
+  { directory: "__entry_v3_site__", assetName: "residue-linkage.mjs" },
+  { directory: "__entry_v3_site__", assetName: "residue-rail.mjs" },
   { directory: "__entry_ef_site__", assetName: "ef-heatmap-core.js" },
   { directory: "__entry_ef_site__", assetName: "ef-heatmap.js" },
   { directory: "__entry_ef_site__", assetName: "ef-case.js" },

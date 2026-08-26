@@ -2791,7 +2791,7 @@ function annojoinConfidencePage() {
 
 const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/entry-cases';
 const ENTRY_CASE_FRAME_ORIGIN = new URL(ENTRY_CASE_ORIGIN).origin;
-const EF_ASSET_VERSION = '20260826-ef-ui-5';
+const EF_ASSET_VERSION = '20260826-ef-ui-6';
 const EF_ENTRY_CASE_IDS = new Set(['7SYS', '8QO5', '8UYE', '8UYL', '9TMI', '9ZC6', '9WNR']);
 
 function clearEntryCaseEmbed() {

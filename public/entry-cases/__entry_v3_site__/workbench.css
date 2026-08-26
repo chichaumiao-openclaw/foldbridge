@@ -783,27 +783,6 @@ pre {
   min-width: 100%;
   background: var(--panel);
 }
-.workbench-shell.is-ef-mode .ef-sequence-background {
-  fill: var(--panel);
-}
-.workbench-shell.is-ef-mode .ef-track-label {
-  fill: var(--ink);
-  font-size: 1.08rem;
-  font-weight: 400;
-}
-.workbench-shell.is-ef-mode .ef-track-rule {
-  stroke: var(--line);
-  stroke-width: 1;
-}
-.workbench-shell.is-ef-mode .ef-position-tick-line {
-  stroke: var(--muted);
-  stroke-width: 0.8;
-}
-.workbench-shell.is-ef-mode .ef-position-tick {
-  fill: var(--ink);
-  font-size: 1.08rem;
-  font-weight: 400;
-}
 .workbench-shell.is-ef-mode .ef-sequence-base,
 .workbench-shell.is-ef-mode .ef-sequence-intensity {
   stroke: #aeb7c1;
@@ -830,19 +809,8 @@ pre {
   opacity: 0.35;
   pointer-events: none;
 }
-.workbench-shell.is-ef-mode .ef-sequence-target:hover .ef-sequence-base,
-.workbench-shell.is-ef-mode .ef-sequence-target:hover .ef-sequence-intensity,
-.workbench-shell.is-ef-mode .ef-sequence-target:focus-visible .ef-sequence-base,
-.workbench-shell.is-ef-mode .ef-sequence-target:focus-visible .ef-sequence-intensity {
-  stroke: var(--hover);
-  stroke-width: 2.2;
+.workbench-shell.is-ef-mode .ef-sequence-target:focus-visible {
   outline: none;
-}
-.workbench-shell.is-ef-mode .ef-sequence-target.selected .ef-sequence-base,
-.workbench-shell.is-ef-mode .ef-sequence-target.selected .ef-sequence-intensity {
-  stroke: var(--selected);
-  stroke-width: 2.6;
-  filter: drop-shadow(0 0 2px rgba(155, 28, 28, 0.35));
 }
 .workbench-shell.is-ef-mode .ef-workbench-matrix-panel {
   width: 100%;
@@ -997,15 +965,6 @@ pre {
 }
 .workbench-shell.is-ef-mode .varna-frame circle {
   cursor: pointer;
-}
-.workbench-shell.is-ef-mode .varna-frame circle.is-ef-hovered {
-  stroke: var(--accent) !important;
-  stroke-width: 2.5 !important;
-}
-.workbench-shell.is-ef-mode .varna-frame circle.is-ef-selected {
-  fill: var(--selected) !important;
-  stroke: var(--selected) !important;
-  stroke-width: 2px !important;
 }
 .workbench-shell.is-ef-mode .view3d-body {
   padding: 12px 0 0;

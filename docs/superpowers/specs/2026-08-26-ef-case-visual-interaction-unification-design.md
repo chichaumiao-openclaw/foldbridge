@@ -22,13 +22,13 @@
 
 保留 EF 矩阵/强度的特有数据逻辑，复用普通 Case 的轨道几何、CSS 状态类、VARNA hit layer 和 residue identity。改动边界明确，也能由交互测试验证。
 
-共享不是复制同名 CSS。实现必须提供普通 Case 与 EF 同时调用的 residue-linkage API，至少负责 residue-key 集合归一化、DOM `.hovered/.selected` 状态和 VARNA hit layer。普通 Case 的单 residue 状态使用单元素 key 集合，EF matrix pair 使用双元素集合。
+共享不是复制同名 CSS。实现必须提供普通 Case 与 EF 同时调用的 residue-linkage API，至少负责 residue-key 集合归一化、DOM `.hovered/.selected` 状态和 VARNA hit layer；同时提供共同调用的 residue-rail primitive，统一 210px gutter、24px pitch、刻度、规则线、字体和基础 SVG 结构。普通 Case 的单 residue 状态使用单元素 key 集合，EF matrix pair 使用双元素集合。
 
 ## 行为设计
 
 ### Heatmap
 
-- Family E / `cohcoa_contact`：仅渲染并命中 `i > j` 的有效左下三角；`i <= j` 和 `diag_mask_min_sep` 遮罩区没有 cell tooltip、hover 或 click。
+- Family E / `cohcoa_contact`：仅渲染并命中 `i > j` 且 `i - j >= diag_mask_min_sep` 的有效左下三角；其余上三角/对角遮罩区没有 cell tooltip、hover 或 click。
 - Family F / `m2_coupling_z`：保留完整 `n_rows × n_cols` 矩形和双轴行为。
 - renderer 必须从 mapped payload 派生一份不修改原始科学载荷的 presentation-valid-cell 集。cell rendering、hit testing、tooltip/click、intensity slice、VARNA recolor、Mol* payload 和 interaction event 全部只能读取该集合，禁止只有 SVG 隐藏而下游仍读取 E 上三角。
 - presentation header 的 `value_min/value_max` 必须从有效 cells 重算，避免隐藏的上三角值污染颜色尺度和 colorbar；原始 payload/header 保持不变。

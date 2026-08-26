@@ -1,8 +1,12 @@
 import "./site-nav.js";
 import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter, buildCaseProfileDownloadItems } from "./workbench-pure.mjs";
-import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260826-ef-ui-5.mjs";
+import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260826-ef-ui-6.mjs";
+import * as ResidueLinkage from "./residue-linkage.20260826-ef-ui-6.mjs";
+import { createResidueRail, RESIDUE_RAIL_GEOMETRY } from "./residue-rail.20260826-ef-ui-6.mjs";
 
-const EF_ASSET_VERSION = "20260826-ef-ui-5";
+const EF_ASSET_VERSION = "20260826-ef-ui-6";
+window.FoldBridgeResidueLinkage = ResidueLinkage;
+window.FoldBridgeResidueRail = { createResidueRail, RESIDUE_RAIL_GEOMETRY };
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const efManifestUrl = new URL('../../browser-manifest.json', window.location.href).href;
 let detectedEfChain = null;
@@ -1203,9 +1207,7 @@ function hideTip() {
 }
 
 function setDomState(className, residueKey) {
-  document.querySelectorAll(".residue-mark").forEach((node) => {
-    node.classList.toggle(className, residueKey !== null && node.getAttribute("data-residue-key") === residueKey);
-  });
+  ResidueLinkage.setResidueMarkState(document, className, residueKey);
 }
 
 function applyLinkedHover(residueKey, origin = "preview") {
@@ -1823,9 +1825,11 @@ function wireTrackMark(mark, residueKey, trackKind, clickHandler) {
   mark.setAttribute("class", `${mark.getAttribute("class") || ""} residue-mark`.trim());
   mark.setAttribute("data-residue-key", residueKey);
   mark.setAttribute("data-track-kind", trackKind);
-  mark.addEventListener("mousemove", (event) => handleTrackHoverEvent(event, residueKey, trackKind));
-  mark.addEventListener("mouseleave", hideTip);
-  mark.addEventListener("click", (event) => clickHandler(event, residueKey));
+  ResidueLinkage.wireResidueMark(mark, {
+    onHover: (event) => handleTrackHoverEvent(event, residueKey, trackKind),
+    onLeave: hideTip,
+    onSelect: (event) => clickHandler(event, residueKey),
+  });
 }
 
 function renderTrackRail() {
@@ -1836,12 +1840,6 @@ function renderTrackRail() {
   const { start, end } = state.viewport;
   const positions = Array.from({ length: end - start + 1 }, (_, idx) => start + idx);
   const height = 182;
-  const left = 210;
-  const right = 18;
-  const width = Math.max(1120, left + right + positions.length * 24);
-  const usable = width - left - right;
-  const xFor = (position) => left + ((position - start + 0.5) / positions.length) * usable;
-  const cellW = Math.max(4, usable / positions.length - 1);
   const rows = [
     ["Profile pos", 24],
     ["Profile/RMDB seq", 52],
@@ -1849,19 +1847,9 @@ function renderTrackRail() {
     ["Structure state", 116],
     ["reactivity", 148],
   ];
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
-  svg.setAttribute("width", String(width));
-  svg.setAttribute("height", String(height));
-  svg.setAttribute("role", "img");
-  svg.setAttribute("aria-label", "1D residue track rail");
-  svg.appendChild(createSvgNode(svg, "rect", { x: 0, y: 0, width, height, fill: "#ffffff" }));
-  for (const [label, y] of rows) {
-    const text = createSvgNode(svg, "text", { x: 2, y: y + 6, "font-size": "1.08rem", "font-weight": 400, fill: "#000000" });
-    text.textContent = label;
-    svg.appendChild(text);
-    svg.appendChild(createSvgNode(svg, "line", { x1: left, x2: width - right, y1: y, y2: y, stroke: "#e3e7ec", "stroke-width": 1 }));
-  }
+  const rail = createResidueRail(document, { positions, rows, height, positionLabel: (position) => String(position) });
+  const { svg, cellWidth: cellW } = rail;
+  const xFor = (position) => rail.xForIndex(position - start);
   for (const position of positions) {
     const x = xFor(position);
     const residueKey = residueKeyForPosition(position, strand);
@@ -1872,12 +1860,6 @@ function renderTrackRail() {
     const alignmentState = alignmentStateForResidue(residueKey);
     const row = normalized.byPosition.get(position) || {};
     const color = row.color || "#ffffff";
-    if (position === 1 || position % 10 === 0 || position === strand.sequence.length) {
-      svg.appendChild(createSvgNode(svg, "line", { x1: x, x2: x, y1: 15, y2: 30, stroke: "#7c8792", "stroke-width": 0.8 }));
-      const tick = createSvgNode(svg, "text", { x, y: 14, "font-size": "1.08rem", "font-weight": 400, "text-anchor": "middle", fill: "#000000" });
-      tick.textContent = String(position);
-      svg.appendChild(tick);
-    }
     const profileSeq = createSvgNode(svg, "rect", { x: x - cellW / 2, y: 40, width: cellW, height: 24, fill: colorForBase(profileBase), stroke: "#aeb7c1", "stroke-width": 0.5, rx: 1, "data-profile-base": profileBase });
     wireTrackMark(profileSeq, residueKey, "profile_sequence", handleProfileSequenceTrackEvent);
     svg.appendChild(profileSeq);
@@ -2034,38 +2016,23 @@ function recolorVarnaSvg(template, strand, normalized, profile) {
 }
 
 function installVarnaHitLayer(doc, svg, fillCircles, strand) {
-  const group = doc.createElementNS("http://www.w3.org/2000/svg", "g");
-  group.setAttribute("data-layer", "varna-hit-layer");
-  group.setAttribute("class", "varna-hit-layer");
-  for (let idx = 0; idx < fillCircles.length; idx += 1) {
-    const pos = idx + 1;
-    const source = fillCircles[idx];
-    const hit = doc.createElementNS("http://www.w3.org/2000/svg", "circle");
-    hit.setAttribute("class", "residue-mark varna-hit");
-    hit.setAttribute("data-layer", "varna-hit-layer");
-    hit.setAttribute("data-position", String(pos));
-    hit.setAttribute("data-residue-key", residueKeyForPosition(pos, strand));
-    hit.setAttribute("cx", source.getAttribute("cx"));
-    hit.setAttribute("cy", source.getAttribute("cy"));
-    hit.setAttribute("r", "8");
-    hit.setAttribute("fill", "transparent");
-    hit.setAttribute("stroke", "transparent");
-    group.appendChild(hit);
-  }
-  svg.appendChild(group);
+  const residueKeys = fillCircles.map((_circle, idx) => residueKeyForPosition(idx + 1, strand));
+  return ResidueLinkage.installVarnaHitLayer(doc, svg, fillCircles, residueKeys);
 }
 
 function wireVarnaEvents() {
   el.varnaViewport.querySelectorAll('circle[data-layer="varna-hit-layer"][data-position]').forEach((circle) => {
     const position = Number(circle.getAttribute("data-position"));
     const residueKey = circle.getAttribute("data-residue-key") || residueKeyForPosition(position);
-    circle.addEventListener("mousemove", (event) => {
-      const details = getResidueDetails(residueKey);
-      applyLinkedHover(residueKey, "2d");
-      showTip(event, `2D ${details?.position || ""} ${details?.base || ""}`);
+    ResidueLinkage.wireResidueMark(circle, {
+      onHover: (event) => {
+        const details = getResidueDetails(residueKey);
+        applyLinkedHover(residueKey, "2d");
+        showTip(event, `2D ${details?.position || ""} ${details?.base || ""}`);
+      },
+      onSelect: () => selectResidue(residueKey, "2d"),
+      onLeave: hideTip,
     });
-    circle.addEventListener("click", () => selectResidue(residueKey, "2d"));
-    circle.addEventListener("mouseleave", hideTip);
   });
 }
 
@@ -2859,9 +2826,9 @@ async function initEfMode(chainId, manifestUrl) {
   // Locate shared assets from workbench.js itself. This is independent of the
   // current chain page depth and works for both 7SYS/z and 9WNR/a.
   const scripts = [
-    new URL('../__entry_ef_site__/ef-heatmap-core.20260826-ef-ui-5.js', import.meta.url),
-    new URL('../__entry_ef_site__/ef-heatmap.20260826-ef-ui-5.js', import.meta.url),
-    new URL('../__entry_ef_site__/ef-case.20260826-ef-ui-5.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap-core.20260826-ef-ui-6.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap.20260826-ef-ui-6.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-case.20260826-ef-ui-6.js', import.meta.url),
   ];
 
   // Keep the working 1D DOM intact until every EF dependency is available.
