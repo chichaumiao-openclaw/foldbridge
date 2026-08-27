@@ -1,12 +1,22 @@
 import "./site-nav.js";
-import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter, buildCaseProfileDownloadItems } from "./workbench-pure.mjs";
-import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260826-ef-ui-6.mjs";
-import * as ResidueLinkage from "./residue-linkage.20260826-ef-ui-6.mjs";
-import { createResidueRail, RESIDUE_RAIL_GEOMETRY } from "./residue-rail.20260826-ef-ui-6.mjs";
+import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter, buildCaseProfileDownloadItems } from "./workbench-pure.20260826-ef-ui-7.mjs";
+import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260826-ef-ui-7.mjs";
+import * as ResidueLinkage from "./residue-linkage.20260826-ef-ui-7.mjs";
+import { createResidueRail, RESIDUE_RAIL_GEOMETRY } from "./residue-rail.20260826-ef-ui-7.mjs";
 
-const EF_ASSET_VERSION = "20260826-ef-ui-6";
+const EF_ASSET_VERSION = "20260826-ef-ui-7";
 window.FoldBridgeResidueLinkage = ResidueLinkage;
 window.FoldBridgeResidueRail = { createResidueRail, RESIDUE_RAIL_GEOMETRY };
+
+function removeRetiredFullCifReference() {
+  document.querySelector("#molstar-full-host")?.closest(".molstar-view")?.remove();
+  document.querySelector("#molstarFullMeta")?.remove();
+}
+
+// This panel was retired from every Case page. Remove the stale materialized
+// markup before manifest loading so a slow request cannot expose it again.
+removeRetiredFullCifReference();
+
 const config = window.__FAMILY_D_CHAIN_WORKBENCH_CONFIG__ || {};
 const efManifestUrl = new URL('../../browser-manifest.json', window.location.href).href;
 let detectedEfChain = null;
@@ -32,8 +42,7 @@ function reportWorkbenchProgress(progress, label, state = "loading") {
 }
 
 function removeRetiredWorkbenchPanels() {
-  document.querySelector("#molstar-full-host")?.closest(".molstar-view")?.remove();
-  document.querySelector("#molstarFullMeta")?.remove();
+  removeRetiredFullCifReference();
   document.querySelectorAll(".debug-panel").forEach((panel) => panel.remove());
   document.querySelector("#assetStatus")?.remove();
   document.querySelector("#profileMeta")?.remove();
@@ -2828,9 +2837,9 @@ async function initEfMode(chainId, manifestUrl) {
   // Locate shared assets from workbench.js itself. This is independent of the
   // current chain page depth and works for both 7SYS/z and 9WNR/a.
   const scripts = [
-    new URL('../__entry_ef_site__/ef-heatmap-core.20260826-ef-ui-6.js', import.meta.url),
-    new URL('../__entry_ef_site__/ef-heatmap.20260826-ef-ui-6.js', import.meta.url),
-    new URL('../__entry_ef_site__/ef-case.20260826-ef-ui-6.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap-core.20260826-ef-ui-7.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap.20260826-ef-ui-7.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-case.20260826-ef-ui-7.js', import.meta.url),
   ];
 
   // Keep the working 1D DOM intact until every EF dependency is available.

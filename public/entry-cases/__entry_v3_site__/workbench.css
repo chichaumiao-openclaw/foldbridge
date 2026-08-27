@@ -397,6 +397,10 @@ svg {
 .molstar-view {
   min-width: 0;
 }
+.molstar-view:has(#molstar-full-host),
+#molstarFullMeta {
+  display: none !important;
+}
 .molstar-label {
   margin-bottom: 2px;
   color: #000000;

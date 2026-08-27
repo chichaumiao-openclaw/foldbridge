@@ -230,3 +230,56 @@ test('Case shell shows staged loading progress until the first profile is ready'
   assert.ok(assetsAt < readyAt && readyAt < molstarAt);
   assert.match(workbench, /reportWorkbenchProgress\(80, "Case data failed to load\.", "error"\)/);
 });
+
+test('Case shell hydrates deferred evidence without changing the active chain contract', () => {
+  const source = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
+  const context = { module: { exports: {} }, Number, Math, URLSearchParams, TypeError };
+  vm.runInNewContext(source, context);
+  const { initialChainId, mergeDeferredEvidence } = context.module.exports;
+  const bootstrap = {
+    defaultChainId: 'b',
+    chainPageById: { a: 'chains/a/index.html', b: 'chains/b/index.html' },
+    evidenceRows: [],
+    evidenceChainMap: {},
+  };
+
+  mergeDeferredEvidence(bootstrap, {
+    rows: [
+      { evidenceId: 'ev-a', chain: 'a', trackProfileId: 'profile-a' },
+      { evidenceId: 'ev-b', chain: 'b', trackProfileId: 'profile-b' },
+    ],
+  });
+
+  assert.equal(bootstrap.evidenceRows.length, 2);
+  assert.deepEqual({ ...bootstrap.evidenceChainMap }, { 'ev-a': 'a', 'ev-b': 'b' });
+  assert.equal(initialChainId(bootstrap, '?chain=a'), 'a');
+});
+
+test('Case shell starts deferred evidence only after the active chain frame loads', () => {
+  const source = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
+  assert.match(source, /async function loadDeferredEvidence\s*\(/);
+  assert.match(source, /frame\?\.addEventListener\(\s*["']load["'][\s\S]*loadDeferredEvidence/);
+});
+
+test('Deferred evidence preserves the materialized map last-row-wins duplicate semantics', () => {
+  const source = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
+  const context = { module: { exports: {} }, Number, Math, URLSearchParams, TypeError };
+  vm.runInNewContext(source, context);
+  const bootstrap = { evidenceRows: [], evidenceChainMap: {} };
+
+  context.module.exports.mergeDeferredEvidence(bootstrap, {
+    rows: [
+      { evidenceId: 'shared', chain: 'Y' },
+      { evidenceId: 'shared', chain: 'Z' },
+    ],
+  });
+
+  assert.equal(bootstrap.evidenceChainMap.shared, 'Z');
+});
+
+test('Deferred evidence waits for the EF chain to report linked assets', () => {
+  const source = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
+  assert.match(source, /function loadDeferredEvidenceWhenReady\s*\(/);
+  assert.match(source, /textContent\?\.trim\(\)\s*===\s*["']EF assets linked["']/);
+  assert.match(source, /new MutationObserver\s*\(/);
+});

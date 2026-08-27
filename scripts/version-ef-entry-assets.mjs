@@ -2,7 +2,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-export const EF_ASSET_VERSION = "20260826-ef-ui-6";
+export const EF_ASSET_VERSION = "20260826-ef-ui-7";
 
 export const EF_ENTRY_ROUTES = Object.freeze([
   { caseId: "7SYS", chainId: "z" },
@@ -19,6 +19,7 @@ export const VERSIONED_ASSETS = Object.freeze([
   { directory: "__entry_v3_site__", assetName: "case-shell.js" },
   { directory: "__entry_v3_site__", assetName: "workbench.css" },
   { directory: "__entry_v3_site__", assetName: "workbench.js" },
+  { directory: "__entry_v3_site__", assetName: "workbench-pure.mjs" },
   { directory: "__entry_v3_site__", assetName: "ef-workbench-shell.mjs" },
   { directory: "__entry_v3_site__", assetName: "residue-linkage.mjs" },
   { directory: "__entry_v3_site__", assetName: "residue-rail.mjs" },
@@ -66,6 +67,40 @@ function versionChainPage(source, chainId) {
   return output;
 }
 
+function deferCaseEvidence(source) {
+  const pattern = /(<script id="family-case-bootstrap" type="application\/json">)([\s\S]*?)(<\/script>)/g;
+  let matches = 0;
+  const output = source.replace(pattern, (_full, open, serialized, close) => {
+    matches += 1;
+    const bootstrap = JSON.parse(serialized);
+    if (!bootstrap.evidenceUrl && (!Array.isArray(bootstrap.evidenceRows) || !bootstrap.evidenceChainMap)) {
+      throw new Error("EF Case shell is missing inline or deferred evidence");
+    }
+    bootstrap.evidenceUrl = bootstrap.evidenceUrl || "confidence-evidence.json";
+    delete bootstrap.evidenceRows;
+    delete bootstrap.evidenceChainMap;
+    return `${open}${JSON.stringify(bootstrap)}${close}`;
+  });
+  if (matches !== 1) throw new Error(`Expected one family-case-bootstrap payload, found ${matches}`);
+  return output;
+}
+
+function markEfChainWorkbench(source) {
+  let shellMatches = 0;
+  let controlsMatches = 0;
+  const withShellMode = source.replace(/<main class="workbench-shell(?: is-ef-mode)?">/g, () => {
+    shellMatches += 1;
+    return '<main class="workbench-shell is-ef-mode">';
+  });
+  const output = withShellMode.replace(/<section class="controls"(?: hidden)?>/g, () => {
+    controlsMatches += 1;
+    return '<section class="controls" hidden>';
+  });
+  if (shellMatches !== 1) throw new Error(`Expected one Workbench shell, found ${shellMatches}`);
+  if (controlsMatches !== 1) throw new Error(`Expected one legacy profile controls section, found ${controlsMatches}`);
+  return output;
+}
+
 async function writeIfChanged(filePath, output, { check }) {
   const source = await fs.readFile(filePath, "utf8");
   if (source === output) return false;
@@ -94,9 +129,18 @@ async function syncCopy(sourcePath, targetPath, { check }) {
   return true;
 }
 
+async function assertWorkbenchPureContract(entryRoot) {
+  const sourcePath = path.join(entryRoot, "__entry_v3_site__", "workbench-pure.mjs");
+  const source = await fs.readFile(sourcePath, "utf8");
+  if (!/export\s+function\s+buildCaseProfileDownloadItems\s*\(/.test(source)) {
+    throw new Error(`${sourcePath} must export buildCaseProfileDownloadItems`);
+  }
+}
+
 export async function versionEfEntryAssets(publicRoot, { check = false } = {}) {
   if (!publicRoot) throw new Error("versionEfEntryAssets requires a public root");
   const entryRoot = path.join(publicRoot, "entry-cases");
+  await assertWorkbenchPureContract(entryRoot);
   let changedFiles = 0;
   let checkedFiles = 0;
 
@@ -116,9 +160,12 @@ export async function versionEfEntryAssets(publicRoot, { check = false } = {}) {
     const chainPath = path.join(caseDir, "chains", chainId, "index.html");
     if (await versionHtml(rootPath, ["case-shell.css", "case-shell.js"], {
       check,
-      transform: (source) => versionChainPage(source, chainId),
+      transform: (source) => deferCaseEvidence(versionChainPage(source, chainId)),
     })) changedFiles += 1;
-    if (await versionHtml(chainPath, ["workbench.css", "workbench.js"], { check })) changedFiles += 1;
+    if (await versionHtml(chainPath, ["workbench.css", "workbench.js"], {
+      check,
+      transform: markEfChainWorkbench,
+    })) changedFiles += 1;
     checkedFiles += 2;
 
     if (await syncCopy(rootPath, path.join(caseDir, `index.${EF_ASSET_VERSION}.html`), { check })) changedFiles += 1;

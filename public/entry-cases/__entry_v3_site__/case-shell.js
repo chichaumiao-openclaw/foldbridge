@@ -63,6 +63,21 @@ function initialChainId(bootstrap, search = "") {
   return bootstrap?.defaultChainId || "";
 }
 
+function mergeDeferredEvidence(bootstrap, payload) {
+  if (!bootstrap || typeof bootstrap !== "object") throw new TypeError("Case bootstrap must be an object");
+  if (!payload || !Array.isArray(payload.rows)) throw new TypeError("Deferred case evidence must contain rows");
+  const evidenceChainMap = {};
+  for (const row of payload.rows) {
+    const evidenceId = String(row?.evidenceId || "");
+    const chain = String(row?.chain || "");
+    if (!evidenceId || !chain) throw new TypeError("Deferred case evidence rows require evidenceId and chain");
+    evidenceChainMap[evidenceId] = chain;
+  }
+  bootstrap.evidenceRows = payload.rows;
+  bootstrap.evidenceChainMap = evidenceChainMap;
+  return bootstrap;
+}
+
 function matchesCaseDownloadMessage(payload, caseId, chainId) {
   return String(payload?.caseId || "") === String(caseId || "")
     && String(payload?.chainId || "") === String(chainId || "");
@@ -149,6 +164,10 @@ if (typeof document !== "undefined") {
     throw new Error("family case bootstrap missing");
   }
   const bootstrap = JSON.parse(bootstrapNode.textContent);
+  bootstrap.evidenceRows = Array.isArray(bootstrap.evidenceRows) ? bootstrap.evidenceRows : [];
+  bootstrap.evidenceChainMap = bootstrap.evidenceChainMap && typeof bootstrap.evidenceChainMap === "object"
+    ? bootstrap.evidenceChainMap
+    : {};
   const hero = document.querySelector(".hero");
   const caseId = String(bootstrap.caseId || "").trim();
   if (hero && caseId && !hero.querySelector(".fb-entry-return-link")) {
@@ -455,6 +474,43 @@ if (typeof document !== "undefined") {
     if (layout && layout.parentNode) layout.parentNode.insertBefore(wrapper, layout);
   }
 
+  let deferredEvidenceStarted = false;
+  async function loadDeferredEvidence() {
+    if (!bootstrap.evidenceUrl || bootstrap.evidenceRows.length || deferredEvidenceStarted) return;
+    deferredEvidenceStarted = true;
+    const evidenceUrl = new URL(bootstrap.evidenceUrl, window.location.href);
+    const response = await fetch(evidenceUrl);
+    if (!response.ok) throw new Error(`Deferred case evidence HTTP ${response.status}`);
+    mergeDeferredEvidence(bootstrap, await response.json());
+
+    const selected = evidenceById(state.selectedEvidenceId);
+    const selectedChainId = selected ? bootstrap.evidenceChainMap[selected.evidenceId] : "";
+    if (selectedChainId !== state.activeChainId) {
+      const fallback = defaultEvidenceForChain(state.activeChainId);
+      state.selectedEvidenceId = fallback?.evidenceId || "";
+    }
+    renderEnrichment(bootstrap);
+    refreshEvidenceHighlight(state.selectedEvidenceId);
+    reportEmbeddedCaseHeightSoon();
+  }
+
+  function loadDeferredEvidenceWhenReady() {
+    const status = frame?.contentDocument?.querySelector("#assetStatus");
+    if (!status) throw new Error("Active chain asset status is unavailable");
+    let observer = null;
+    const startWhenLinked = () => {
+      if (status.textContent?.trim() === "EF assets linked") {
+        observer?.disconnect();
+        loadDeferredEvidence().catch((error) => console.error("Deferred case evidence failed", error));
+        return true;
+      }
+      return false;
+    };
+    if (startWhenLinked()) return;
+    observer = new MutationObserver(startWhenLinked);
+    observer.observe(status, { childList: true, characterData: true, subtree: true });
+  }
+
   function refreshEvidenceHighlight(selectedId) {
     const trs = document.querySelectorAll(".fb-evtable tr[data-evidence-id]");
     for (const tr of trs) {
@@ -495,6 +551,11 @@ if (typeof document !== "undefined") {
   }
   renderEnrichment(bootstrap);
   syncUi();
+  if (bootstrap.evidenceUrl && frame) {
+    frame.addEventListener("load", () => {
+      loadDeferredEvidenceWhenReady();
+    }, { once: true });
+  }
 }
 
 if (typeof module !== "undefined" && module.exports) {
@@ -503,6 +564,7 @@ if (typeof module !== "undefined" && module.exports) {
     fmtMetric, fmtP, fmtFraction, fmtCount, pickBestEvidence,
     measureEmbeddedCaseHeight, postEmbeddedCaseHeight,
     initialChainId,
+    mergeDeferredEvidence,
     matchesCaseDownloadMessage,
   };
 }

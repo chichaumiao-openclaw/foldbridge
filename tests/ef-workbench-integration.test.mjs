@@ -16,6 +16,18 @@ test("EF stays inside the existing Workbench shell", () => {
   assert.match(source, /if\s*\(!detectedEfChain\s*&&\s*!manifestDetectionError\s*&&\s*el\.status\)/);
 });
 
+test("retired Full CIF reference is removed before ordinary or EF mode branches", () => {
+  const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
+  assert.match(source, /function\s+removeRetiredFullCifReference\s*\(/);
+  assert.match(source, /querySelector\(["']#molstar-full-host["']\)\?\.closest\(["']\.molstar-view["']\)\?\.remove\(\)/);
+  assert.match(source, /querySelector\(["']#molstarFullMeta["']\)\?\.remove\(\)/);
+
+  const helperBody = source.indexOf("function removeRetiredFullCifReference");
+  const eagerCleanupCall = source.indexOf("removeRetiredFullCifReference();", helperBody);
+  const manifestFetch = source.indexOf("const response = await fetch");
+  assert.ok(eagerCleanupCall >= 0 && eagerCleanupCall < manifestFetch, "retired Full CIF cleanup must run before manifest loading can block");
+});
+
 test("manifest detection fails loudly instead of falling back to profile mode", () => {
   const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
   assert.match(source, /let manifestDetectionError\s*=\s*null/);
@@ -106,6 +118,7 @@ test("EF styles are scoped to Workbench EF mode", () => {
   assert.match(source, /\.workbench-shell\.is-ef-mode/);
   assert.match(source, /\.ef-workbench-matrix-panel/);
   assert.match(source, /var\(--(?:ink|muted|line|panel|accent|selected|hover)\)/);
+  assert.match(source, /\.molstar-view:has\(#molstar-full-host\)/, "retired Full CIF panel must be hidden before JavaScript initializes");
 });
 
 test("EF component chrome is entirely Workbench-token driven", () => {
@@ -135,9 +148,9 @@ test("EF component chrome is entirely Workbench-token driven", () => {
 test("EF dependency paths are fingerprinted for caches that ignore query strings", () => {
   const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
   assert.match(source, /const EF_ASSET_VERSION\s*=\s*["'][^"']+["']/);
-  assert.match(source, /ef-heatmap-core\.20260826-ef-ui-6\.js/);
-  assert.match(source, /ef-heatmap\.20260826-ef-ui-6\.js/);
-  assert.match(source, /ef-case\.20260826-ef-ui-6\.js/);
+  assert.match(source, /ef-heatmap-core\.20260826-ef-ui-7\.js/);
+  assert.match(source, /ef-heatmap\.20260826-ef-ui-7\.js/);
+  assert.match(source, /ef-case\.20260826-ef-ui-7\.js/);
   assert.doesNotMatch(source, /scriptUrl\.searchParams\.set\(["']v["']/);
 });
 
