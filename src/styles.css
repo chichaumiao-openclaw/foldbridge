@@ -2659,6 +2659,44 @@ tbody tr:hover {
   text-decoration: underline;
 }
 
+/* E/F 2D 热图徽标：挂在 Molecule 列详情链接之后。产物存在即渲染（见 entryEfLinks）。
+   小药丸样式，与主详情链接区分：E=MOHCA、F=M2(Mutate-and-map)。 */
+.entry-ef-links {
+  display: inline-flex;
+  gap: 4px;
+  margin-left: 6px;
+  vertical-align: baseline;
+}
+
+.entry-ef-link {
+  display: inline-block;
+  padding: 0 6px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.entry-ef-link:hover {
+  text-decoration: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accentSoft);
+}
+
+.entry-ef-link-e {
+  color: #8a5a00;
+  background: rgba(181, 133, 26, 0.12);
+}
+
+.entry-ef-link-f {
+  color: #0d6b63;
+  background: rgba(13, 107, 99, 0.12);
+}
+
 .entry-table-status {
   text-align: center;
   color: var(--textMuted);

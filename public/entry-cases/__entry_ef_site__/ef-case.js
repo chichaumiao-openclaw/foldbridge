@@ -228,6 +228,15 @@
     return value;
   }
 
+  // 根据 family(E|F) 选 manifest 里对应的 2D 产物字段。family 缺/不认时回退:
+  // 有 efMatrixPath 选 E;只有 efMatrixPathF 选 F(纯 MAPseq 案,如 8UYP/8UYS)。
+  function pickEfMatrixField(chain, family, resolvedChain) {
+    if (family === "F") return "efMatrixPathF";
+    if (family === "E") return "efMatrixPath";
+    if (!chain.efMatrixPath && chain.efMatrixPathF) return "efMatrixPathF";
+    return "efMatrixPath";
+  }
+
   // --- 装配 + 联动接线 ------------------------------------------------------
   // 可选交互：给热图 overlay 加点击→反算 (i,j)→用 i 轴触发 selectAxis，令
   // select 路径（molstar 整链重着色 + VARNA 重着色）可交互 smoke。组件只自绑 hover。
@@ -283,7 +292,9 @@
       const manifestUrl = resolveManifestUrl(explicitManifestUrl, documentUrl);
       const manifest = await loadJson(manifestUrl);
       const { chainId: resolvedChain, chain } = resolveChain(manifest, chainId);
-      const efMatrixPath = requirePath(chain.efMatrixPath, `chains.${resolvedChain}.efMatrixPath`);
+      const family = options?.family === "E" || options?.family === "F" ? options.family : null;
+      const efMatrixField = pickEfMatrixField(chain, family, resolvedChain);
+      const efMatrixPath = requirePath(chain[efMatrixField], `chains.${resolvedChain}.${efMatrixField}`);
       const varnaTemplatePath = requirePath(chain.varnaTemplatePath, `chains.${resolvedChain}.varnaTemplatePath`);
       const case2dPath = requirePath(chain.case2dPath, `chains.${resolvedChain}.case2dPath`);
       const linkedViewBundlePath = requirePath(chain.linkedViewBundlePath, `chains.${resolvedChain}.linkedViewBundlePath`);

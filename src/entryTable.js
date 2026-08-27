@@ -137,7 +137,9 @@ export function normalizeEntryRows(payload) {
       techniqueNames,
       techniqueFamilies,
       sourceLanes: text(row.source_lanes),
-      hasGeo: text(row.has_geo)
+      hasGeo: text(row.has_geo),
+      hasEfE: row.has_ef_e === true,
+      hasEfF: row.has_ef_f === true
     };
   });
 }
@@ -145,11 +147,22 @@ export function normalizeEntryRows(payload) {
 // entry 行 → 静态 case 页链接。PDB 进路径段（对齐 render shell 输出 cases/<PDB>/），
 // chain(auth) 作 query（对齐 bundle chains/<auth>）。pdb 或 auth 缺失 → 空串（不可跳）。
 // 详情页链接现挂在 Molecule(sciName) 列；缺页由 missingPdbs 降级为纯文本。
-export function entryCaseHref(base, row) {
+export function entryCaseHref(base, row, family = null) {
   const pdb = text(row && row.pdbId);
   const chain = text(row && row.auth);
   if (!pdb || !chain) return '';
-  return `#entry-case?pdb=${encodeURIComponent(pdb)}&chain=${encodeURIComponent(chain)}`;
+  const fam = family === 'E' || family === 'F' ? `&family=${family}` : '';
+  return `#entry-case?pdb=${encodeURIComponent(pdb)}&chain=${encodeURIComponent(chain)}${fam}`;
+}
+
+// entry 行 → E/F 2D 热图 case 链接。按产物存在性(has_ef_e/has_ef_f，由
+// annotate-entry-table-ef.py 依线上产物集写入)决定给哪些链接，非按 tech_filter 文本，
+// 后者会造大量死链。E=MOHCA，F=M2(Mutate-and-map/MAPseq)。
+export function entryEfLinks(base, row) {
+  const out = [];
+  if (row && row.hasEfE) out.push({ family: 'E', label: 'MOHCA', href: entryCaseHref(base, row, 'E') });
+  if (row && row.hasEfF) out.push({ family: 'F', label: 'M2', href: entryCaseHref(base, row, 'F') });
+  return out;
 }
 
 // PDB 列外链：指向 RCSB 该结构的具体页面。RCSB 对任何有效 PDB 均有页面，

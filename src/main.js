@@ -414,9 +414,11 @@ function getEntryCaseParamsFromHash() {
   const hash = window.location.hash || '';
   const [, queryString = ''] = hash.split('?');
   const params = new URLSearchParams(queryString);
+  const family = params.get('family');
   return {
     pdb: params.get('pdb'),
-    chain: params.get('chain')
+    chain: params.get('chain'),
+    family: family === 'E' || family === 'F' ? family : null
   };
 }
 
@@ -2791,8 +2793,6 @@ function annojoinConfidencePage() {
 
 const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/entry-cases';
 const ENTRY_CASE_FRAME_ORIGIN = new URL(ENTRY_CASE_ORIGIN).origin;
-const EF_ASSET_VERSION = '20260826-ef-ui-7';
-const EF_ENTRY_CASE_IDS = new Set(['7SYS', '8QO5', '8UYE', '8UYL', '9TMI', '9ZC6', '9WNR']);
 
 function clearEntryCaseEmbed() {
   if (!disposeEntryCaseHeightListener) return;
@@ -2821,19 +2821,22 @@ function initEntryCaseEmbed() {
 }
 
 function entryCasePage() {
-  const { pdb, chain } = getEntryCaseParamsFromHash();
+  const { pdb, chain, family } = getEntryCaseParamsFromHash();
   const safePdb = String(pdb || '').trim();
   if (!safePdb || !/^[A-Za-z0-9]+$/.test(safePdb)) {
     return `<main class="page"><section class="page-section"><p>Invalid case reference.</p>
       <p><a class="download-outline-btn" href="#entry">Back to the table</a></p></section></main>`;
   }
   const safeChain = String(chain || '').trim();
-  const entryDocument = EF_ENTRY_CASE_IDS.has(safePdb.toUpperCase())
-    ? `index.${EF_ASSET_VERSION}.html`
-    : 'index.html';
-  const srcUrl = new URL(`${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/${entryDocument}`);
+  // 所有 case（含 EF）走无版本 index.html；EF 由无版本 family-aware 壳按 ?family= 选 2D 产物。
+  // 缓存击穿靠全局壳子模块的版本化文件名（VERSIONED_ASSETS），与 case 数量无关，新增 EF case 零改动。
+  const srcUrl = new URL(`${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/index.html`);
   if (safeChain && /^[A-Za-z0-9._-]+$/.test(safeChain)) {
     srcUrl.searchParams.set('chain', safeChain);
+  }
+  // family(E|F) 透传给 case 壳(case-shell.js 读 ?family= 选 E/F 2D 产物)。
+  if (family === 'E' || family === 'F') {
+    srcUrl.searchParams.set('family', family);
   }
   const src = srcUrl.href;
   // 主站 header 与其它页面一致（renderBundleHeader），iframe 夹在其下、footer 之上。

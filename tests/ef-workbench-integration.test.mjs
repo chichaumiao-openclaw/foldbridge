@@ -148,9 +148,9 @@ test("EF component chrome is entirely Workbench-token driven", () => {
 test("EF dependency paths are fingerprinted for caches that ignore query strings", () => {
   const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
   assert.match(source, /const EF_ASSET_VERSION\s*=\s*["'][^"']+["']/);
-  assert.match(source, /ef-heatmap-core\.20260826-ef-ui-7\.js/);
-  assert.match(source, /ef-heatmap\.20260826-ef-ui-7\.js/);
-  assert.match(source, /ef-case\.20260826-ef-ui-7\.js/);
+  assert.match(source, /ef-heatmap-core\.20260826-ef-ui-8\.js/);
+  assert.match(source, /ef-heatmap\.20260826-ef-ui-8\.js/);
+  assert.match(source, /ef-case\.20260826-ef-ui-8\.js/);
   assert.doesNotMatch(source, /scriptUrl\.searchParams\.set\(["']v["']/);
 });
 

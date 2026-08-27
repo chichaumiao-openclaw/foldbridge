@@ -407,7 +407,12 @@ if (typeof document !== "undefined") {
       ? selected
       : defaultEvidenceForChain(state.activeChainId);
     const profileId = activeEvidence?.trackProfileId || activeEvidence?.profileKey || "";
-    const query = profileId ? `?profileId=${encodeURIComponent(profileId)}` : "";
+    // family(?family=E|F) 从案级页 URL 透传到内层 chain 页 iframe，供 workbench 选 E/F 2D 产物。
+    const family = new URLSearchParams(window.location.search || "").get("family");
+    const params = new URLSearchParams();
+    if (profileId) params.set("profileId", profileId);
+    if (family === "E" || family === "F") params.set("family", family);
+    const query = params.toString() ? `?${params.toString()}` : "";
     const chainPage = bootstrap.chainPageById[state.activeChainId] || "";
     resetCaseDownloadActions();
     frame.src = `${chainPage}${query}`;

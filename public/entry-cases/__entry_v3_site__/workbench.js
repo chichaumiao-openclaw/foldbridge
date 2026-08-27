@@ -1,10 +1,10 @@
 import "./site-nav.js";
-import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter, buildCaseProfileDownloadItems } from "./workbench-pure.20260826-ef-ui-7.mjs";
-import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260826-ef-ui-7.mjs";
-import * as ResidueLinkage from "./residue-linkage.20260826-ef-ui-7.mjs";
-import { createResidueRail, RESIDUE_RAIL_GEOMETRY } from "./residue-rail.20260826-ef-ui-7.mjs";
+import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter, buildCaseProfileDownloadItems } from "./workbench-pure.20260826-ef-ui-8.mjs";
+import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260826-ef-ui-8.mjs";
+import * as ResidueLinkage from "./residue-linkage.20260826-ef-ui-8.mjs";
+import { createResidueRail, RESIDUE_RAIL_GEOMETRY } from "./residue-rail.20260826-ef-ui-8.mjs";
 
-const EF_ASSET_VERSION = "20260826-ef-ui-7";
+const EF_ASSET_VERSION = "20260826-ef-ui-8";
 window.FoldBridgeResidueLinkage = ResidueLinkage;
 window.FoldBridgeResidueRail = { createResidueRail, RESIDUE_RAIL_GEOMETRY };
 
@@ -29,7 +29,7 @@ try {
   if (!chainId) throw new Error("Case manifest detection missing selected chain id");
   const chain = manifest?.chains?.[chainId];
   if (!chain) throw new Error(`Case manifest missing selected chain ${chainId}`);
-  if (chain.efMatrixPath) detectedEfChain = { manifest, chain };
+  if (chain.efMatrixPath || chain.efMatrixPathF) detectedEfChain = { manifest, chain };
 } catch (error) {
   manifestDetectionError = error instanceof Error ? error : new Error(String(error));
 }
@@ -2827,19 +2827,23 @@ function showEfModeError(error) {
 async function initEfMode(chainId, manifestUrl) {
   const caseId = config.caseId || '';
   const hosts = prepareEfWorkbenchShell(document, { caseId, chainId });
+  // family(?family=E|F) 来自案级壳透传的 URL query；选 E(MOHCA)/F(M2) 2D 产物。
+  const urlFamily = new URLSearchParams(window.location.search || "").get("family");
+  const family = urlFamily === "E" || urlFamily === "F" ? urlFamily : null;
   window.__FOLDBRIDGE_EF_CASE_CONFIG__ = {
     caseId,
     chainId,
     manifestUrl,
+    family,
     deferBootstrap: true,
   };
 
   // Locate shared assets from workbench.js itself. This is independent of the
   // current chain page depth and works for both 7SYS/z and 9WNR/a.
   const scripts = [
-    new URL('../__entry_ef_site__/ef-heatmap-core.20260826-ef-ui-7.js', import.meta.url),
-    new URL('../__entry_ef_site__/ef-heatmap.20260826-ef-ui-7.js', import.meta.url),
-    new URL('../__entry_ef_site__/ef-case.20260826-ef-ui-7.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap-core.20260826-ef-ui-8.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap.20260826-ef-ui-8.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-case.20260826-ef-ui-8.js', import.meta.url),
   ];
 
   // Keep the working 1D DOM intact until every EF dependency is available.
@@ -2858,6 +2862,7 @@ async function initEfMode(chainId, manifestUrl) {
     caseId,
     chainId,
     manifestUrl,
+    family,
     hosts,
     onInteraction,
   });

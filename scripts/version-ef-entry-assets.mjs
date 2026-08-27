@@ -2,18 +2,13 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 
-export const EF_ASSET_VERSION = "20260826-ef-ui-7";
+export const EF_ASSET_VERSION = "20260826-ef-ui-8";
 
-export const EF_ENTRY_ROUTES = Object.freeze([
-  { caseId: "7SYS", chainId: "z" },
-  { caseId: "8QO5", chainId: "A" },
-  { caseId: "8UYE", chainId: "A" },
-  { caseId: "8UYL", chainId: "A" },
-  { caseId: "9TMI", chainId: "a" },
-  { caseId: "9ZC6", chainId: "A" },
-  { caseId: "9WNR", chainId: "a" },
-]);
-
+// 缓存击穿只靠全局壳子模块的版本化文件名（下表）：无版本 workbench.js 内部 import
+// 这些 *.<version>.mjs/js。这是线上实际部署的机制，与 EF case 数量无关。
+// per-case 的 index 版本化（旧 EF_ENTRY_ROUTES 循环）从未真正部署，且随 EF case 增长
+// 会带来多链/重发维护负担，已移除——所有 case（含 EF）统一走无版本 index.html + 无版本
+// family-aware 壳，新增 EF case 只需重跑数据标注，无需再跑本步骤的 per-case 部分。
 export const VERSIONED_ASSETS = Object.freeze([
   { directory: "__entry_v3_site__", assetName: "case-shell.css" },
   { directory: "__entry_v3_site__", assetName: "case-shell.js" },
@@ -28,91 +23,9 @@ export const VERSIONED_ASSETS = Object.freeze([
   { directory: "__entry_ef_site__", assetName: "ef-case.js" },
 ]);
 
-function escapeRegExp(value) {
-  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-}
-
 export function versionedAssetName(assetName) {
   const extension = path.extname(assetName);
   return `${assetName.slice(0, -extension.length)}.${EF_ASSET_VERSION}${extension}`;
-}
-
-function versionAsset(source, assetName) {
-  const extension = path.extname(assetName);
-  const stem = assetName.slice(0, -extension.length);
-  const pattern = new RegExp(
-    `${escapeRegExp(stem)}(?:\\.[A-Za-z0-9_-]+)*${escapeRegExp(extension)}(?:\\?v=[^"'\\s<>]+)?`,
-    "g",
-  );
-  let matches = 0;
-  const output = source.replace(pattern, () => {
-    matches += 1;
-    return versionedAssetName(assetName);
-  });
-  if (matches !== 1) throw new Error(`Expected one ${assetName} reference, found ${matches}`);
-  return output;
-}
-
-function versionChainPage(source, chainId) {
-  const pattern = new RegExp(
-    `chains/${escapeRegExp(chainId)}/index(?:\\.[A-Za-z0-9_-]+)*\\.html`,
-    "g",
-  );
-  let matches = 0;
-  const output = source.replace(pattern, () => {
-    matches += 1;
-    return `chains/${chainId}/index.${EF_ASSET_VERSION}.html`;
-  });
-  if (matches < 1) throw new Error(`Expected at least one chains/${chainId}/index.html reference`);
-  return output;
-}
-
-function deferCaseEvidence(source) {
-  const pattern = /(<script id="family-case-bootstrap" type="application\/json">)([\s\S]*?)(<\/script>)/g;
-  let matches = 0;
-  const output = source.replace(pattern, (_full, open, serialized, close) => {
-    matches += 1;
-    const bootstrap = JSON.parse(serialized);
-    if (!bootstrap.evidenceUrl && (!Array.isArray(bootstrap.evidenceRows) || !bootstrap.evidenceChainMap)) {
-      throw new Error("EF Case shell is missing inline or deferred evidence");
-    }
-    bootstrap.evidenceUrl = bootstrap.evidenceUrl || "confidence-evidence.json";
-    delete bootstrap.evidenceRows;
-    delete bootstrap.evidenceChainMap;
-    return `${open}${JSON.stringify(bootstrap)}${close}`;
-  });
-  if (matches !== 1) throw new Error(`Expected one family-case-bootstrap payload, found ${matches}`);
-  return output;
-}
-
-function markEfChainWorkbench(source) {
-  let shellMatches = 0;
-  let controlsMatches = 0;
-  const withShellMode = source.replace(/<main class="workbench-shell(?: is-ef-mode)?">/g, () => {
-    shellMatches += 1;
-    return '<main class="workbench-shell is-ef-mode">';
-  });
-  const output = withShellMode.replace(/<section class="controls"(?: hidden)?>/g, () => {
-    controlsMatches += 1;
-    return '<section class="controls" hidden>';
-  });
-  if (shellMatches !== 1) throw new Error(`Expected one Workbench shell, found ${shellMatches}`);
-  if (controlsMatches !== 1) throw new Error(`Expected one legacy profile controls section, found ${controlsMatches}`);
-  return output;
-}
-
-async function writeIfChanged(filePath, output, { check }) {
-  const source = await fs.readFile(filePath, "utf8");
-  if (source === output) return false;
-  if (check) throw new Error(`${filePath} does not use EF asset version ${EF_ASSET_VERSION}`);
-  await fs.writeFile(filePath, output);
-  return true;
-}
-
-async function versionHtml(filePath, assetNames, { check, transform = (value) => value }) {
-  const source = await fs.readFile(filePath, "utf8");
-  const output = transform(assetNames.reduce(versionAsset, source));
-  return writeIfChanged(filePath, output, { check });
 }
 
 async function syncCopy(sourcePath, targetPath, { check }) {
@@ -152,25 +65,6 @@ export async function versionEfEntryAssets(publicRoot, { check = false } = {}) {
       { check },
     )) changedFiles += 1;
     checkedFiles += 1;
-  }
-
-  for (const { caseId, chainId } of EF_ENTRY_ROUTES) {
-    const caseDir = path.join(entryRoot, "cases", caseId);
-    const rootPath = path.join(caseDir, "index.html");
-    const chainPath = path.join(caseDir, "chains", chainId, "index.html");
-    if (await versionHtml(rootPath, ["case-shell.css", "case-shell.js"], {
-      check,
-      transform: (source) => deferCaseEvidence(versionChainPage(source, chainId)),
-    })) changedFiles += 1;
-    if (await versionHtml(chainPath, ["workbench.css", "workbench.js"], {
-      check,
-      transform: markEfChainWorkbench,
-    })) changedFiles += 1;
-    checkedFiles += 2;
-
-    if (await syncCopy(rootPath, path.join(caseDir, `index.${EF_ASSET_VERSION}.html`), { check })) changedFiles += 1;
-    if (await syncCopy(chainPath, path.join(caseDir, "chains", chainId, `index.${EF_ASSET_VERSION}.html`), { check })) changedFiles += 1;
-    checkedFiles += 2;
   }
   return { version: EF_ASSET_VERSION, checkedFiles, changedFiles };
 }

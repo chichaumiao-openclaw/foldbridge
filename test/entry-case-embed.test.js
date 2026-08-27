@@ -190,10 +190,13 @@ test('entry Case layout uses the shared centered width and content-driven height
 
 test('main-site entry route forwards the requested chain into the case iframe', () => {
   const main = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
-  assert.match(main, /const \{ pdb, chain \} = getEntryCaseParamsFromHash\(\)/);
+  assert.match(main, /const \{ pdb, chain, family \} = getEntryCaseParamsFromHash\(\)/);
   assert.match(main, /searchParams\.set\(['"]chain['"],\s*safeChain\)/);
-  assert.match(main, /EF_ENTRY_CASE_IDS\.has\(safePdb\.toUpperCase\(\)\)/);
-  assert.match(main, /index\.\$\{EF_ASSET_VERSION\}\.html/);
+  // 选项 C：所有 case（含 EF）走无版本 index.html；不再有 per-case 版本化白名单。
+  assert.match(main, /cases\/\$\{encodeURIComponent\(safePdb\)\}\/index\.html/);
+  assert.doesNotMatch(main, /EF_ENTRY_CASE_IDS/);
+  // family(E|F) 透传给 case 壳，供其选 E/F 2D 产物。
+  assert.match(main, /searchParams\.set\(['"]family['"],\s*family\)/);
 });
 
 test('Case shell accepts only a chain present in its own manifest', () => {
