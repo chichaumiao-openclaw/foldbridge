@@ -251,6 +251,60 @@ export function buildPublicTechniqueModel(validatedPayload, categories) {
   };
 }
 
+export function buildUnavailablePublicTechniqueModel(profileIndex) {
+  const orderedProfileIds = validateProfileIndex(profileIndex);
+  const profileMeta = new Map();
+  for (const profileId of orderedProfileIds) {
+    profileMeta.set(profileId, {
+      profileId,
+      classificationStatus: "missing",
+      methods: [],
+      methodLabels: new Set(),
+      categoryIds: new Set(),
+      categories: [],
+    });
+  }
+  return {
+    schemaVersion: null,
+    pdbId: null,
+    authChain: null,
+    profileCount: orderedProfileIds.length,
+    orderedProfileIds,
+    profileMeta,
+  };
+}
+
+export function buildPublicTechniqueFilterOptions(model, categories) {
+  const { orderedCategories } = validatePublicTechniqueCategories(categories);
+  if (!isRecord(model) || !Array.isArray(model.orderedProfileIds) || !(model.profileMeta instanceof Map)) {
+    throw new TypeError("Profile public technique model is invalid");
+  }
+
+  const availableCategoryIds = new Set();
+  const methods = [];
+  const seenMethods = new Set();
+  for (const profileId of model.orderedProfileIds) {
+    const meta = model.profileMeta.get(profileId);
+    if (!isRecord(meta) || !(meta.categoryIds instanceof Set) || !Array.isArray(meta.methods)) {
+      throw new TypeError(`Profile public technique model is missing metadata for "${profileId}"`);
+    }
+    for (const categoryId of meta.categoryIds) availableCategoryIds.add(categoryId);
+    for (const method of meta.methods) {
+      if (method.mappingStatus !== "mapped" || seenMethods.has(method.label)) continue;
+      seenMethods.add(method.label);
+      methods.push(method.label);
+    }
+  }
+
+  return {
+    categories: orderedCategories.map((category) => ({
+      ...category,
+      enabled: availableCategoryIds.has(category.id),
+    })),
+    methods,
+  };
+}
+
 export function validateProfilePublicTechniques(payload, profileIndex, context) {
   if (payload === undefined || payload === null) {
     throw new Error("Profile public techniques sidecar is required");
@@ -420,74 +474,220 @@ export function profilePublicTechniqueLabel(profile, meta) {
   return `${base} | Technique metadata unavailable`;
 }
 
+function validatePublicProfileSelectorItems(selectorItems) {
+  if (!Array.isArray(selectorItems)) {
+    throw new TypeError("Public profile selector items must be an array");
+  }
+  const seenProfileIds = new Set();
+  selectorItems.forEach((item, position) => {
+    if (!isRecord(item)) throw new TypeError(`Public profile selector item ${position} must be an object`);
+    if (item.index !== position) {
+      throw new Error(`Public profile selector item index must equal ordered position ${position}`);
+    }
+    if (!isNonEmptyString(item.profileId)) {
+      throw new Error(`Public profile selector item ${position} has invalid profileId`);
+    }
+    if (seenProfileIds.has(item.profileId)) {
+      throw new Error(`Public profile selector items contain duplicate profileId "${item.profileId}"`);
+    }
+    seenProfileIds.add(item.profileId);
+    if (!isNonEmptyString(item.label)) {
+      throw new Error(`Public profile selector item ${position} has invalid label`);
+    }
+    if (!Array.isArray(item.categories)) {
+      throw new TypeError(`Public profile selector item ${position} categories must be an array`);
+    }
+  });
+  return selectorItems;
+}
+
+export function buildPublicProfileSelectorItems(profiles, publicTechniqueModel) {
+  const profileIds = validateProfileIndex({ profiles });
+  if (
+    !isRecord(publicTechniqueModel)
+    || !Array.isArray(publicTechniqueModel.orderedProfileIds)
+    || !(publicTechniqueModel.profileMeta instanceof Map)
+  ) {
+    throw new TypeError("Public profile selector requires a valid public technique model");
+  }
+  if (
+    publicTechniqueModel.profileCount !== profileIds.length
+    || publicTechniqueModel.orderedProfileIds.length !== profileIds.length
+    || publicTechniqueModel.profileMeta.size !== profileIds.length
+  ) {
+    throw new Error("Public profile selector profile count does not match the public technique model");
+  }
+
+  const selectorItems = profiles.map((profile, index) => {
+    const profileId = profileIds[index];
+    if (publicTechniqueModel.orderedProfileIds[index] !== profileId) {
+      throw new Error(
+        `Public profile selector profileId order mismatch at index ${index}:`
+        + ` expected "${profileId}", received "${publicTechniqueModel.orderedProfileIds[index]}"`,
+      );
+    }
+    const meta = publicTechniqueModel.profileMeta.get(profileId);
+    if (!isRecord(meta) || meta.profileId !== profileId || !Array.isArray(meta.categories)) {
+      throw new Error(`Public profile selector metadata mismatch for profileId "${profileId}"`);
+    }
+    return {
+      index,
+      profileId,
+      label: profilePublicTechniqueLabel(profile, meta),
+      categories: meta.categories.map((category) => ({ ...category })),
+    };
+  });
+  return validatePublicProfileSelectorItems(selectorItems);
+}
+
+export function buildPublicProfileSelectMarkup(selectorItems) {
+  return validatePublicProfileSelectorItems(selectorItems).map((item) => (
+    `<option value="${item.index}">${esc(item.label)}</option>`
+  )).join("");
+}
+
+function validatePublicProfileOptionElements(selectorItems, optionElements) {
+  const items = validatePublicProfileSelectorItems(selectorItems);
+  if (!Array.isArray(optionElements) || optionElements.length !== items.length) {
+    throw new Error("Public profile selector custom option count does not match selector items");
+  }
+  optionElements.forEach((option, index) => {
+    if (
+      String(option?.dataset?.index) !== String(items[index].index)
+      || option?.dataset?.profileId !== items[index].profileId
+    ) {
+      throw new Error(`Public profile selector custom option identity mismatch at index ${index}`);
+    }
+  });
+  return items;
+}
+
+export function mountPublicProfileSelectorDom(selectorItems, { document, select }) {
+  const items = validatePublicProfileSelectorItems(selectorItems);
+  if (!document || typeof document.createElement !== "function") {
+    throw new TypeError("Public profile selector requires a document adapter");
+  }
+  if (!select?.parentElement || typeof select.insertAdjacentElement !== "function") {
+    throw new TypeError("Public profile selector requires a mounted native select");
+  }
+
+  const existing = select.parentElement.querySelector?.(".profile-dropdown");
+  if (existing) {
+    const trigger = existing.querySelector?.(".profile-dropdown-trigger");
+    const list = existing.querySelector?.(".profile-dropdown-list");
+    const optionElements = list ? Array.from(list.querySelectorAll("li[role='option']")) : [];
+    if (!trigger || !list) throw new Error("Existing public profile selector DOM is incomplete");
+    validatePublicProfileOptionElements(items, optionElements);
+    select.hidden = true;
+    return { root: existing, trigger, list, optionElements };
+  }
+
+  const root = document.createElement("div");
+  root.className = "profile-dropdown";
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.className = "profile-dropdown-trigger";
+  trigger.setAttribute("aria-haspopup", "listbox");
+  trigger.setAttribute("aria-expanded", "false");
+  trigger.setAttribute("aria-label", "Profile selector");
+  const list = document.createElement("ul");
+  list.className = "profile-dropdown-list";
+  list.setAttribute("role", "listbox");
+  list.setAttribute("aria-label", "Profile options");
+  list.hidden = true;
+  root.append(trigger, list);
+
+  const optionElements = items.map((item) => {
+    const option = document.createElement("li");
+    option.setAttribute("role", "option");
+    option.dataset.index = String(item.index);
+    option.dataset.profileId = item.profileId;
+    option.tabIndex = -1;
+    option.title = item.label;
+    option.innerHTML = `${categoryBadgeMarkup({ categories: item.categories })}`
+      + `<span class="profile-dropdown-text">${esc(item.label)}</span>`;
+    list.appendChild(option);
+    return option;
+  });
+  validatePublicProfileOptionElements(items, optionElements);
+
+  select.insertAdjacentElement("afterend", root);
+  select.hidden = true;
+  return { root, trigger, list, optionElements };
+}
+
+export function applyPublicProfileSelectorVisibility(
+  selectorItems,
+  optionElements,
+  hitProfileIds,
+  active,
+) {
+  const items = validatePublicProfileOptionElements(selectorItems, optionElements);
+  let hits = new Set();
+  if (active) {
+    try {
+      hits = new Set(Set.prototype.values.call(hitProfileIds));
+    } catch {
+      throw new TypeError("Active public profile selector filter requires a Set of profile ids");
+    }
+  }
+  items.forEach((item, index) => {
+    const option = optionElements[index];
+    const hidden = Boolean(active) && !hits.has(item.profileId);
+    option.classList.toggle("filtered-out", hidden);
+    if (hidden) option.setAttribute("aria-hidden", "true");
+    else option.removeAttribute("aria-hidden");
+  });
+  return optionElements;
+}
+
+export function selectPublicProfileSelectorOption(selectorItems, select, optionElement) {
+  const items = validatePublicProfileSelectorItems(selectorItems);
+  const index = Number(optionElement?.dataset?.index);
+  if (!Number.isInteger(index) || index < 0 || index >= items.length) {
+    throw new Error("Public profile selector option has an invalid index");
+  }
+  const item = items[index];
+  if (optionElement.dataset.profileId !== item.profileId) {
+    throw new Error(`Public profile selector option identity mismatch at index ${index}`);
+  }
+  if (!select || !("value" in select)) {
+    throw new TypeError("Public profile selector option requires a native select backing");
+  }
+  select.value = String(item.index);
+  return item;
+}
+
+export function resolvePublicProfileSelector(profileIndex, sidecarResult, context) {
+  let error = sidecarResult?.error || null;
+  let model = null;
+  if (!error) {
+    try {
+      model = validateProfilePublicTechniques(sidecarResult?.payload, profileIndex, context);
+    } catch (validationError) {
+      error = validationError;
+    }
+  }
+  if (error) {
+    if (!(error instanceof Error)) error = new Error(String(error));
+    model = buildUnavailablePublicTechniqueModel(profileIndex);
+  }
+  return {
+    model,
+    selectorItems: buildPublicProfileSelectorItems(profileIndex?.profiles, model),
+    error,
+  };
+}
+
 export function categoryBadgeMarkup(meta) {
   if (!Array.isArray(meta?.categories) || meta.categories.length === 0) return "";
   const seen = new Set();
   return meta.categories.map((category) => {
     if (!isRecord(category) || seen.has(category.id)) return "";
     seen.add(category.id);
-    return `<span class="public-technique-category-badge" data-category="${esc(category.id)}"`
+    return `<span class="category-badge" data-category="${esc(category.id)}"`
       + ` title="${esc(category.label)}">${esc(category.shortLabel)}</span>`;
   }).join("");
-}
-
-// Join case-level confidence-evidence rows to the chain's profiles by technology.
-// rows come from the case-root confidence-evidence.json (the only chain-reachable
-// technology source; chain config/data files carry family only, no technology).
-// Filter to the active chain, key by trackProfileId (falls back to profileKey) so
-// the dropdown/filter can look up technology by workbench profile_id.
-export function joinTechniqueByProfile(rows, chainId) {
-  const map = new Map();
-  if (!Array.isArray(rows)) return map;
-  rows.forEach((row) => {
-    if (!row || (chainId != null && row.chain !== chainId)) return;
-    const key = row.trackProfileId || row.profileKey;
-    if (!key) return;
-    map.set(String(key), { technology: row.technology || "", family: row.family || "" });
-  });
-  return map;
-}
-
-// Render a colored family badge span. Uses data-family for CSS color hook
-// (--family-a..d tokens); empty/unknown family renders a neutral "unassigned"
-// badge so every profile stays visually consistent.
-export function familyBadgeMarkup(family) {
-  const f = String(family || "").toUpperCase();
-  const label = f || "?";
-  return `<span class="family-badge" data-family="${esc(f)}">${esc(label)}</span>`;
-}
-
-export function buildTechniqueFilterModel(rows, chainId) {
-  const techniquesByFamily = new Map();
-  const profileMeta = new Map();
-  (Array.isArray(rows) ? rows : []).forEach((row) => {
-    if (!row || (chainId != null && row.chain !== chainId)) return;
-    const fam = String(row.family || "").toUpperCase();
-    const tech = row.technology || "";
-    const pid = row.trackProfileId || row.profileKey;
-    if (fam) {
-      if (!techniquesByFamily.has(fam)) techniquesByFamily.set(fam, new Set());
-      if (tech) techniquesByFamily.get(fam).add(tech);
-    }
-    if (pid) profileMeta.set(String(pid), { family: fam, technology: tech });
-  });
-  const families = [...techniquesByFamily.keys()].sort();
-  return {
-    families,
-    techniquesByFamily: new Map([...techniquesByFamily].map(([k, v]) => [k, [...v]])),
-    profileMeta,
-  };
-}
-export function applyTechniqueFilter(model, selection) {
-  const fams = selection?.families || new Set();
-  const techs = selection?.techniques || new Set();
-  const all = new Set(model.profileMeta.keys());
-  if (!fams.size && !techs.size) return all;
-  const hit = new Set();
-  model.profileMeta.forEach((meta, pid) => {
-    if (fams.has(meta.family) || techs.has(meta.technology)) hit.add(pid);
-  });
-  return hit;
 }
 
 export function buildCaseProfileDownloadItems(profileIndex, profileIndexUrl = "./profiles/profile-index.json.gz") {

@@ -1,6 +1,16 @@
 import "./site-nav.js";
 import { classifyTechniqueFilter, MECHANISM_FAMILIES } from "./technique-filter-model.20260828-case-taxonomy-1.mjs";
-import { joinTechniqueByProfile, familyBadgeMarkup, buildTechniqueFilterModel, applyTechniqueFilter, buildCaseProfileDownloadItems } from "./workbench-pure.20260828-case-taxonomy-1.mjs";
+import {
+  applyPublicProfileSelectorVisibility,
+  applyPublicTechniqueFilter,
+  buildCaseProfileDownloadItems,
+  buildPublicProfileSelectMarkup,
+  buildPublicTechniqueFilterOptions,
+  categoryBadgeMarkup,
+  mountPublicProfileSelectorDom,
+  resolvePublicProfileSelector,
+  selectPublicProfileSelectorOption,
+} from "./workbench-pure.20260828-case-taxonomy-1.mjs";
 import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260828-case-taxonomy-1.mjs";
 import * as ResidueLinkage from "./residue-linkage.20260828-case-taxonomy-1.mjs";
 import { createResidueRail, RESIDUE_RAIL_GEOMETRY } from "./residue-rail.20260828-case-taxonomy-1.mjs";
@@ -79,6 +89,8 @@ if (window.parent !== window && typeof ResizeObserver !== "undefined") {
 
 const caseUrl = config.caseUrl || "./case-2d-structure.json";
 const profileIndexUrl = config.profileIndexUrl || "./profiles/profile-index.json";
+const profilePublicTechniquesUrl = config.profilePublicTechniquesUrl
+  || "./profiles/profile-public-techniques.json.gz";
 const varnaTemplateUrl = config.varnaTemplateUrl || "./varna-template.svg";
 const sourceStructureUrl = config.sourceStructureUrl || "../../structure.cif";
 const linkedViewRoot = config.linkedViewRoot || "./linked-view";
@@ -97,7 +109,9 @@ const linkedViewUrls = {
 const state = {
   caseData: null,
   profileIndex: null,
-  techniqueByProfile: new Map(),
+  publicTechniqueModel: null,
+  publicTechniqueError: null,
+  profileSelectorItems: [],
   linkedView: null,
   residueByKey: new Map(),
   residueByStrandPosition: new Map(),
@@ -2347,142 +2361,36 @@ function profileIndexForId(profileId) {
   return state.profiles.findIndex((profile) => profile.profile_id === normalized);
 }
 
-const PROFILE_FAMILY_ORDER = ["A", "B", "C", "D", "E", "F"];
-
-// Build the profile <select> markup grouped by Family. Profiles with a non-empty
-// lssContext family are grouped first, sorted by PROFILE_FAMILY_ORDER; profiles
-// without a family follow under an "Unassigned family" group so every loaded
-// profile stays selectable. Each <option> keeps its original state.profiles index
-// so the underlying profile_id<->row mapping stays intact. If no profile carries a
-// family, fall back to a flat list of all profiles.
-function buildProfileSelectMarkup(profiles) {
-  const list = Array.isArray(profiles) ? profiles : [];
-  const withFamily = [];
-  const withoutFamily = [];
-  list.forEach((profile, idx) => {
-    const family = lssContextForProfile(profile.profile_id)?.family;
-    if (family) withFamily.push({ profile, idx, family: String(family).toUpperCase() });
-    else withoutFamily.push({ profile, idx });
-  });
-  const optionFor = (entry) => {
-    const tech = state.techniqueByProfile?.get(entry.profile.profile_id) || {};
-    const techName = tech.technology || "—";
-    const fam = tech.family || entry.family || "";
-    const famSuffix = fam ? ` · Family ${fam}` : "";
-    return `<option value="${entry.idx}">${escapeHtml(`${entry.profile.pair_id} | ${techName}${famSuffix}`)}</option>`;
-  };
-  // No family signal anywhere: keep the original flat list of every profile.
-  if (!withFamily.length) {
-    return list.map((profile, idx) => optionFor({ profile, idx })).join("");
-  }
-  const families = Array.from(new Set(withFamily.map((entry) => entry.family)));
-  families.sort((a, b) => {
-    const ai = PROFILE_FAMILY_ORDER.indexOf(a);
-    const bi = PROFILE_FAMILY_ORDER.indexOf(b);
-    const ar = ai === -1 ? PROFILE_FAMILY_ORDER.length : ai;
-    const br = bi === -1 ? PROFILE_FAMILY_ORDER.length : bi;
-    if (ar !== br) return ar - br;
-    return a.localeCompare(b);
-  });
-  const familyGroups = families
-    .map((family) => {
-      const options = withFamily
-        .filter((entry) => entry.family === family)
-        .map(optionFor)
-        .join("");
-      return `<optgroup label="${escapeHtml(`Family ${family}`)}">${options}</optgroup>`;
-    })
-    .join("");
-  // Family-less profiles still belong in the dropdown: hiding them dropped the
-  // option count well below the loaded profile count (e.g. 2L1V loads 52 but
-  // only 2 carry a family). Surface them under a catch-all group so every
-  // profile stays selectable while the family grouping above is preserved.
-  const otherGroup = withoutFamily.length
-    ? `<optgroup label="Unassigned family">${withoutFamily.map(optionFor).join("")}</optgroup>`
-    : "";
-  return `${familyGroups}${otherGroup}`;
-}
-
-// Resolve the family letter for a profile: prefer the joined technique family
-// (case confidence-evidence), fall back to the lssContext family. Returns "".
-function familyForProfile(profileId) {
-  const joined = state.techniqueByProfile?.get(profileId)?.family;
-  if (joined) return String(joined).toUpperCase();
-  const ctx = lssContextForProfile(profileId)?.family;
-  return ctx ? String(ctx).toUpperCase() : "";
-}
-
-// Technique display name for a profile; "—" when unknown.
-function techniqueForProfile(profileId) {
-  return state.techniqueByProfile?.get(profileId)?.technology || "—";
-}
-
-// Human label for a profile option (used as the truncated trigger/list text).
-function profileOptionLabel(profile) {
-  const tech = techniqueForProfile(profile.profile_id);
-  const fam = familyForProfile(profile.profile_id);
-  const famSuffix = fam ? ` · Family ${fam}` : "";
-  return `${profile.pair_id} | ${tech}${famSuffix}`;
-}
-
 // Module-level refresh hook so renderProfile/change can re-sync the trigger label
 // with the native <select>'s current value. No-op until the dropdown is mounted.
 let refreshProfileDropdownTrigger = () => {};
 
-// Module-level hook so the technique chip filter can gray/hide non-hit profiles
-// in the self-built dropdown. No-op until the dropdown is mounted.
 let applyProfileDropdownFilter = () => {};
 
-// Build a self-contained colored family-badge dropdown as a sibling of the native
-// <select>, which stays in the DOM (hidden) as the source of truth + fallback.
-// DOM-only + defensive: returns early if the select is missing or no profiles.
 function mountProfileDropdown() {
   const select = el.select;
-  if (!select || !Array.isArray(state.profiles) || !state.profiles.length) return;
-  // Avoid double-mount if init runs more than once.
+  if (!select || !Array.isArray(state.profileSelectorItems) || !state.profileSelectorItems.length) return;
   if (select.parentElement?.querySelector(".profile-dropdown")) return;
-
-  const root = document.createElement("div");
-  root.className = "profile-dropdown";
-  const trigger = document.createElement("button");
-  trigger.type = "button";
-  trigger.className = "profile-dropdown-trigger";
-  trigger.setAttribute("aria-haspopup", "listbox");
-  trigger.setAttribute("aria-expanded", "false");
-  const list = document.createElement("ul");
-  list.className = "profile-dropdown-list";
-  list.setAttribute("role", "listbox");
-  list.hidden = true;
-  root.append(trigger, list);
+  const { root, trigger, list } = mountPublicProfileSelectorDom(
+    state.profileSelectorItems,
+    { document, select },
+  );
 
   const currentIndex = () => {
     const idx = Number(select.value);
     return Number.isInteger(idx) && idx >= 0 ? idx : 0;
   };
-  // Populate the floating listbox once; each <li> mirrors a native option index.
-  state.profiles.forEach((profile, idx) => {
-    const li = document.createElement("li");
-    li.setAttribute("role", "option");
-    li.dataset.index = String(idx);
-    li.tabIndex = -1;
-    const fam = familyForProfile(profile.profile_id);
-    const label = profileOptionLabel(profile);
-    li.title = label;
-    li.innerHTML = `${familyBadgeMarkup(fam)}<span class="profile-dropdown-text">${escapeHtml(label)}</span>`;
-    list.appendChild(li);
-  });
-
   const items = () => Array.from(list.querySelectorAll("li[role='option']"));
   const visibleItems = () => items().filter((li) => !li.classList.contains("filtered-out"));
 
   const refreshTrigger = () => {
     const idx = currentIndex();
-    const profile = state.profiles[idx];
-    if (!profile) return;
-    const fam = familyForProfile(profile.profile_id);
-    const label = profileOptionLabel(profile);
-    trigger.title = label;
-    trigger.innerHTML = `${familyBadgeMarkup(fam)}<span class="profile-dropdown-text">${escapeHtml(label)}</span>`;
+    const item = state.profileSelectorItems[idx];
+    if (!item || item.index !== idx) return;
+    trigger.title = item.label;
+    trigger.setAttribute("aria-label", `Profile selector: ${item.label}`);
+    trigger.innerHTML = `${categoryBadgeMarkup({ categories: item.categories })}`
+      + `<span class="profile-dropdown-text">${escapeHtml(item.label)}</span>`;
     items().forEach((li) => {
       const selected = Number(li.dataset.index) === idx;
       li.setAttribute("aria-selected", selected ? "true" : "false");
@@ -2501,8 +2409,8 @@ function mountProfileDropdown() {
     const active = visibleItems().find((li) => Number(li.dataset.index) === currentIndex());
     (active || visibleItems()[0])?.focus();
   };
-  const selectIndex = (idx) => {
-    select.value = String(idx);
+  const selectOption = (option) => {
+    selectPublicProfileSelectorOption(state.profileSelectorItems, select, option);
     // change listener runs synchronously and refreshes the trigger for us.
     select.dispatchEvent(new Event("change"));
     closeList(true);
@@ -2514,7 +2422,7 @@ function mountProfileDropdown() {
   list.addEventListener("click", (event) => {
     const li = event.target.closest("li[role='option']");
     if (!li) return;
-    selectIndex(Number(li.dataset.index));
+    selectOption(li);
   });
   list.addEventListener("keydown", (event) => {
     const all = visibleItems();
@@ -2528,7 +2436,7 @@ function mountProfileDropdown() {
       (all[pos - 1] || all[all.length - 1])?.focus();
     } else if (event.key === "Enter") {
       event.preventDefault();
-      if (focused) selectIndex(Number(focused.dataset.index));
+      if (focused) selectOption(focused);
     } else if (event.key === "Escape") {
       event.preventDefault();
       closeList(true);
@@ -2538,117 +2446,87 @@ function mountProfileDropdown() {
     if (!root.contains(event.target)) closeList();
   });
 
-  // Mount as sibling, then hide the native select (kept as source-of-truth +
-  // fallback). Hide only AFTER the dropdown is in the DOM.
-  // Gray/hide <li> items whose profile is NOT in the given hit set of
-  // profileIds. Empty/null hitIds = show all (no active filter). Defensive:
-  // never throws if state.profiles is missing.
-  const applyFilter = (hitIds) => {
-    const filtering = !!(hitIds && hitIds.size);
-    items().forEach((li) => {
-      const idx = Number(li.dataset.index);
-      const pid = state.profiles?.[idx]?.profile_id;
-      const hidden = filtering && pid != null && !hitIds.has(String(pid));
-      li.classList.toggle("filtered-out", hidden);
-      if (hidden) li.setAttribute("aria-hidden", "true");
-      else li.removeAttribute("aria-hidden");
-    });
-  };
+  const applyFilter = (hitIds, active = false) => applyPublicProfileSelectorVisibility(
+    state.profileSelectorItems,
+    items(),
+    hitIds,
+    active,
+  );
 
-  select.insertAdjacentElement("afterend", root);
-  select.hidden = true;
   refreshTrigger();
   refreshProfileDropdownTrigger = refreshTrigger;
   applyProfileDropdownFilter = applyFilter;
 }
 
-// Two-level technique chip filter above the profile control. First level = one
-// colored family chip per family; toggling a family chip both toggles the family
-// into the selection AND expands/collapses that family's technique chips (second
-// level). Cross-level OR union: a profile is a hit if its family is selected OR
-// its technology is selected. Empty selection = show all. DOM-only + defensive.
 function mountTechniqueFilter() {
   const select = el.select;
-  if (!select || !Array.isArray(state.evidenceRows) || !state.evidenceRows.length) return;
-  // Avoid double-mount if init runs more than once.
+  if (!select || !state.publicTechniqueModel) return;
   if (select.closest(".controls")?.querySelector(".technique-filter")) return;
 
-  const model = buildTechniqueFilterModel(state.evidenceRows, config.chainId);
-  if (!model.families.length) return;
-
-  const selection = { families: new Set(), techniques: new Set() };
+  const options = buildPublicTechniqueFilterOptions(state.publicTechniqueModel, MECHANISM_FAMILIES);
+  const selection = { categories: new Set(), methods: new Set() };
 
   const container = document.createElement("div");
   container.className = "technique-filter";
-  const famRow = document.createElement("div");
-  famRow.className = "technique-chip-row";
-  const subLevel = document.createElement("div");
-  subLevel.className = "technique-chip-sublevel";
-  container.append(famRow, subLevel);
+  container.setAttribute("role", "region");
+  container.setAttribute("aria-label", "Technique filters");
+
+  const status = document.createElement("div");
+  status.className = "technique-filter-status";
+  status.textContent = state.publicTechniqueError ? "Technique metadata unavailable" : "Technique";
+  const categoryRow = document.createElement("div");
+  categoryRow.className = "technique-chip-row";
+  categoryRow.setAttribute("role", "group");
+  categoryRow.setAttribute("aria-label", "Technique categories");
+  const methodRow = document.createElement("div");
+  methodRow.className = "technique-chip-sublevel";
+  methodRow.setAttribute("role", "group");
+  methodRow.setAttribute("aria-label", "Methods");
+  container.append(status, categoryRow, methodRow);
 
   const refilter = () => {
-    applyProfileDropdownFilter(applyTechniqueFilter(model, selection));
+    const active = selection.categories.size > 0 || selection.methods.size > 0;
+    applyProfileDropdownFilter(
+      applyPublicTechniqueFilter(state.publicTechniqueModel, selection),
+      active,
+    );
   };
 
-  model.families.forEach((fam) => {
+  options.categories.forEach((category) => {
     const chip = document.createElement("button");
     chip.type = "button";
     chip.className = "technique-chip";
-    chip.dataset.family = fam;
+    chip.dataset.category = category.id;
     chip.setAttribute("aria-pressed", "false");
-    chip.innerHTML = familyBadgeMarkup(fam);
+    chip.disabled = !category.enabled;
+    chip.innerHTML = categoryBadgeMarkup({ categories: [category] });
     chip.addEventListener("click", () => {
-      const on = !selection.families.has(fam);
+      const on = !selection.categories.has(category.id);
       chip.setAttribute("aria-pressed", on ? "true" : "false");
-      if (on) {
-        selection.families.add(fam);
-        appendTechniqueChips(fam);
-      } else {
-        selection.families.delete(fam);
-        removeTechniqueChips(fam);
-      }
+      if (on) selection.categories.add(category.id);
+      else selection.categories.delete(category.id);
       refilter();
     });
-    famRow.appendChild(chip);
+    categoryRow.appendChild(chip);
   });
 
-  function appendTechniqueChips(fam) {
-    const techs = model.techniquesByFamily.get(fam) || [];
-    const group = document.createElement("div");
-    group.className = "technique-chip-group";
-    group.dataset.family = fam;
-    techs.forEach((tech) => {
-      const chip = document.createElement("button");
-      chip.type = "button";
-      chip.className = "technique-chip technique-chip-sub";
-      chip.dataset.technique = tech;
-      chip.dataset.family = fam;
-      chip.setAttribute("aria-pressed", "false");
-      chip.textContent = tech;
-      chip.addEventListener("click", () => {
-        const on = !selection.techniques.has(tech);
-        chip.setAttribute("aria-pressed", on ? "true" : "false");
-        if (on) selection.techniques.add(tech);
-        else selection.techniques.delete(tech);
-        refilter();
-      });
-      group.appendChild(chip);
+  options.methods.forEach((method) => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "technique-chip technique-chip-sub";
+    chip.dataset.method = method;
+    chip.setAttribute("aria-pressed", "false");
+    chip.textContent = method;
+    chip.addEventListener("click", () => {
+      const on = !selection.methods.has(method);
+      chip.setAttribute("aria-pressed", on ? "true" : "false");
+      if (on) selection.methods.add(method);
+      else selection.methods.delete(method);
+      refilter();
     });
-    subLevel.appendChild(group);
-  }
+    methodRow.appendChild(chip);
+  });
 
-  function removeTechniqueChips(fam) {
-    const group = subLevel.querySelector(`.technique-chip-group[data-family="${fam}"]`);
-    if (group) {
-      group.querySelectorAll(".technique-chip-sub").forEach((chip) => {
-        selection.techniques.delete(chip.dataset.technique);
-      });
-      group.remove();
-    }
-  }
-
-  // Insert directly above the profile control (the <label> wrapping the select),
-  // falling back to before the dropdown/select itself if no wrapping label.
   const anchor = select.closest("label") || select.parentElement || select;
   anchor.insertAdjacentElement("beforebegin", container);
 }
@@ -2675,20 +2553,8 @@ function pickRichestProfileIndex(positiveCounts) {
 async function richestProfileIndex() {
   const profiles = state.profiles || [];
   if (profiles.length <= 1) return 0;
-  // Narrow the candidate set to profiles that carry an lssContext family (the
-  // ones visible in the grouped dropdown). Map the richest pick back to its
-  // original state.profiles index. If no profile has a family, fall back to the
-  // full-list logic so init never stalls on an empty candidate set.
-  const familyCandidates = [];
-  profiles.forEach((profile, idx) => {
-    if (lssContextForProfile(profile.profile_id)?.family) familyCandidates.push({ profile, idx });
-  });
-  const candidates = familyCandidates.length
-    ? familyCandidates
-    : profiles.map((profile, idx) => ({ profile, idx }));
-  if (candidates.length === 1) return candidates[0].idx;
   const positiveCounts = [];
-  for (const { profile } of candidates) {
+  for (const profile of profiles) {
     let positives = 0;
     try {
       const shard = await loadShard(profile.shard_id);
@@ -2702,7 +2568,7 @@ async function richestProfileIndex() {
     }
     positiveCounts.push(positives);
   }
-  return candidates[pickRichestProfileIndex(positiveCounts)].idx;
+  return pickRichestProfileIndex(positiveCounts);
 }
 
 function initialProfileIdFromLocation() {
@@ -2825,6 +2691,10 @@ function showEfModeError(error) {
   console.error('[workbench:ef]', error);
 }
 
+function classifyPublicTechniqueToken(label) {
+  return classifyTechniqueFilter(label).methods[0];
+}
+
 async function initEfMode(chainId, manifestUrl) {
   const caseId = config.caseId || '';
   const hosts = prepareEfWorkbenchShell(document, { caseId, chainId });
@@ -2888,6 +2758,10 @@ async function init() {
   }
 
   const started = performance.now();
+  const profilePublicTechniquesPromise = fetchJsonMaybeGzip(profilePublicTechniquesUrl).then(
+    (payload) => ({ payload, error: null }),
+    (error) => ({ payload: null, error }),
+  );
   const linkedViewPromise = linkedViewBundleUrl
     ? fetchJsonMaybeGzip(linkedViewBundleUrl).then((bundle) => ({
         residueIndex: bundle.residueIndex,
@@ -2936,13 +2810,13 @@ async function init() {
     profileIndex,
     varnaTemplate,
     linkedView,
-    confidenceEvidence,
+    profilePublicTechniquesResult,
   ] = await Promise.all([
     fetchJsonMaybeGzip(caseUrl),
     fetchJsonMaybeGzip(profileIndexUrl),
     fetchTextMaybeGzip(varnaTemplateUrl),
     linkedViewPromise,
-    fetchJsonMaybeGzip("../../confidence-evidence.json").catch(() => null),
+    profilePublicTechniquesPromise,
   ]);
   reportWorkbenchProgress(80, "Preparing the first Profile…");
   const {
@@ -2962,14 +2836,33 @@ async function init() {
   installLinkedViewIndexes(state.linkedView);
   state.varnaTemplate = varnaTemplate;
   state.profiles = profileIndex.profiles;
-  const evidenceRows = confidenceEvidence?.rows || [];
-  state.techniqueByProfile = joinTechniqueByProfile(evidenceRows, config.chainId);
-  state.evidenceRows = evidenceRows;
+  const publicProfileSelector = resolvePublicProfileSelector(
+    profileIndex,
+    profilePublicTechniquesResult,
+    {
+      pdbId: String(config.caseId || caseData.case_id || ""),
+      authChain: String(config.chainId || ""),
+      categories: MECHANISM_FAMILIES,
+      classifyTechniqueToken: classifyPublicTechniqueToken,
+    },
+  );
+  state.publicTechniqueModel = publicProfileSelector.model;
+  state.profileSelectorItems = publicProfileSelector.selectorItems;
+  state.publicTechniqueError = publicProfileSelector.error;
+  if (state.publicTechniqueError) {
+    console.error("[workbench:profile-public-techniques]", {
+      url: profilePublicTechniquesUrl,
+      pdbId: String(config.caseId || caseData.case_id || ""),
+      authChain: String(config.chainId || ""),
+      error: state.publicTechniqueError,
+    });
+  }
   publishProfileDownloads(profileIndex);
   const strand = activeStrand() || caseData.strands[0];
   state.viewport = { start: 1, end: strand.sequence.length };
-  el.select.innerHTML = buildProfileSelectMarkup(state.profiles);
+  el.select.innerHTML = buildPublicProfileSelectMarkup(state.profileSelectorItems);
   mountProfileDropdown();
+  mountTechniqueFilter();
   if (el.status) {
     el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
   }

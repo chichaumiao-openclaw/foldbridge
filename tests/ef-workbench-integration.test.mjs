@@ -160,3 +160,35 @@ test("Case Shell navigation does not force desktop horizontal overflow", () => {
   const routeRule = source.match(/\.fb-detail-nav \.bundle-home-route-nav\s*\{([^}]*)\}/)?.[1] || "";
   assert.doesNotMatch(routeRule, /left:\s*220px/);
 });
+
+test("ordinary Case exposes one public Profile selector without Family grouping", () => {
+  const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
+  const pure = read("public/entry-cases/__entry_v3_site__/workbench-pure.mjs");
+  const selectorSource = `${source}\n${pure}`;
+
+  assert.equal((selectorSource.match(/className\s*=\s*["']profile-dropdown["']/g) || []).length, 1);
+  assert.match(pure, /select\.hidden\s*=\s*true/);
+  assert.doesNotMatch(source, /<optgroup|familyBadgeMarkup|data-family/);
+  assert.match(source, /state\.profileSelectorItems/);
+  assert.match(source, /mountPublicProfileSelectorDom/);
+  const mountBody = source.slice(source.indexOf("function mountProfileDropdown"), source.indexOf("function mountTechniqueFilter"));
+  assert.doesNotMatch(mountBody, /state\.profiles\.forEach/);
+  assert.match(source, /categoryBadgeMarkup/);
+  assert.doesNotMatch(source, /familyCandidates|lssContextForProfile\(profile\.profile_id\)\?\.family/);
+});
+
+test("ordinary Case category badges copy the five Entry category colors exactly", () => {
+  const styles = read("public/entry-cases/__entry_v3_site__/workbench.css");
+
+  assert.match(styles, /\.category-badge\[data-category=["']dms["']\]\s*\{[^}]*color:\s*var\(--family-a\);[^}]*background:\s*var\(--family-a-bg\);/s);
+  assert.match(styles, /\.category-badge\[data-category=["']shape["']\]\s*\{[^}]*color:\s*var\(--family-b\);[^}]*background:\s*var\(--family-b-bg\);/s);
+  assert.match(styles, /\.category-badge\[data-category=["']cleavage["']\]\s*\{[^}]*color:\s*var\(--family-c\);[^}]*background:\s*var\(--family-c-bg\);/s);
+  assert.match(styles, /\.category-badge\[data-category=["']nucleotide["']\]\s*\{[^}]*color:\s*var\(--family-d\);[^}]*background:\s*var\(--family-d-bg\);/s);
+  assert.match(styles, /\.category-badge\[data-category=["']interaction["']\]\s*\{[^}]*color:\s*var\(--textAccent\);[^}]*background:\s*#fff2bf;/s);
+  const detailTypography = styles.match(/\.workbench-shell\s+:is\(([^)]*)\)\s*\{/s)?.[1] || "";
+  assert.doesNotMatch(detailTypography, /\.category-badge/);
+  assert.doesNotMatch(styles, /\.family-badge\[data-family=/);
+  assert.match(styles, /\.technique-chip:disabled/);
+  assert.match(styles, /\.technique-chip:focus-visible/);
+  assert.match(styles, /@media\s*\(max-width:\s*900px\)[\s\S]*\.technique-filter/);
+});

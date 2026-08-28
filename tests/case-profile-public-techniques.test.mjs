@@ -1,15 +1,20 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
 import test from "node:test";
 
 import { classifyTechniqueFilter, MECHANISM_FAMILIES } from "../src/techniqueFilterModel.js";
-import {
+import * as WorkbenchPure from "../public/entry-cases/__entry_v3_site__/workbench-pure.mjs";
+
+const {
   PROFILE_PUBLIC_TECHNIQUES_SCHEMA,
   applyPublicTechniqueFilter,
   buildPublicTechniqueModel,
   categoryBadgeMarkup,
   profilePublicTechniqueLabel,
   validateProfilePublicTechniques,
-} from "../public/entry-cases/__entry_v3_site__/workbench-pure.mjs";
+} = WorkbenchPure;
+
+const read = (relative) => fs.readFileSync(new URL(`../${relative}`, import.meta.url), "utf8");
 
 const PROFILE_IDS = [
   "p-mapped",
@@ -107,6 +112,104 @@ function makeContext(overrides = {}) {
 
 function clone(value) {
   return structuredClone(value);
+}
+
+class TinyClassList {
+  constructor(element) {
+    this.element = element;
+  }
+
+  values() {
+    return new Set(String(this.element.className || "").split(/\s+/).filter(Boolean));
+  }
+
+  contains(name) {
+    return this.values().has(name);
+  }
+
+  toggle(name, force) {
+    const values = this.values();
+    const enabled = force === undefined ? !values.has(name) : Boolean(force);
+    if (enabled) values.add(name);
+    else values.delete(name);
+    this.element.className = [...values].join(" ");
+    return enabled;
+  }
+}
+
+class TinyElement {
+  constructor(tagName) {
+    this.tagName = String(tagName).toUpperCase();
+    this.children = [];
+    this.parentElement = null;
+    this.attributes = new Map();
+    this.dataset = {};
+    this.className = "";
+    this.classList = new TinyClassList(this);
+    this.hidden = false;
+    this.innerHTML = "";
+    this.textContent = "";
+    this.value = "";
+  }
+
+  append(...children) {
+    children.forEach((child) => this.appendChild(child));
+  }
+
+  appendChild(child) {
+    child.parentElement = this;
+    this.children.push(child);
+    return child;
+  }
+
+  insertAdjacentElement(position, child) {
+    assert.equal(position, "afterend");
+    const index = this.parentElement.children.indexOf(this);
+    child.parentElement = this.parentElement;
+    this.parentElement.children.splice(index + 1, 0, child);
+    return child;
+  }
+
+  setAttribute(name, value) {
+    this.attributes.set(name, String(value));
+  }
+
+  getAttribute(name) {
+    return this.attributes.get(name) ?? null;
+  }
+
+  removeAttribute(name) {
+    this.attributes.delete(name);
+  }
+
+  matches(selector) {
+    if (selector.startsWith(".")) return this.classList.contains(selector.slice(1));
+    if (selector === "li[role='option']") {
+      return this.tagName === "LI" && this.getAttribute("role") === "option";
+    }
+    return false;
+  }
+
+  querySelectorAll(selector) {
+    const matches = [];
+    for (const child of this.children) {
+      if (child.matches(selector)) matches.push(child);
+      matches.push(...child.querySelectorAll(selector));
+    }
+    return matches;
+  }
+
+  querySelector(selector) {
+    return this.querySelectorAll(selector)[0] || null;
+  }
+}
+
+function makeTinySelectorDom() {
+  const document = { createElement: (tagName) => new TinyElement(tagName) };
+  const parent = new TinyElement("label");
+  const select = new TinyElement("select");
+  parent.appendChild(select);
+  return { document, parent, select };
 }
 
 function expectInvalid(mutator, pattern) {
@@ -271,8 +374,8 @@ test("renders each public category badge once in taxonomy order and escapes HTML
   const model = validateProfilePublicTechniques(makePayload(), profileIndex, makeContext());
   assert.equal(
     categoryBadgeMarkup(model.profileMeta.get("p-multi")),
-    '<span class="public-technique-category-badge" data-category="dms" title="DMS-based methods">DMS</span>'
-      + '<span class="public-technique-category-badge" data-category="shape" title="SHAPE-based methods">SHAPE</span>',
+    '<span class="category-badge" data-category="dms" title="DMS-based methods">DMS</span>'
+      + '<span class="category-badge" data-category="shape" title="SHAPE-based methods">SHAPE</span>',
   );
   assert.equal(categoryBadgeMarkup(model.profileMeta.get("p-background")), "");
   assert.equal(categoryBadgeMarkup(), "");
@@ -282,7 +385,7 @@ test("renders each public category badge once in taxonomy order and escapes HTML
   });
   assert.equal(
     escaped,
-    '<span class="public-technique-category-badge" data-category="cat&quot;&lt;&amp;" title="A &amp; &quot;B&quot; &lt;C&gt;">&lt;Short&gt;</span>',
+    '<span class="category-badge" data-category="cat&quot;&lt;&amp;" title="A &amp; &quot;B&quot; &lt;C&gt;">&lt;Short&gt;</span>',
   );
   assert.doesNotMatch(escaped, /\b(?:Family|EF|Tier|LSS)\b/);
 });
@@ -523,5 +626,179 @@ test("does not use category technique declarations as a canonical method registr
   const categories = MECHANISM_FAMILIES.map(({ id, label, shortLabel }) => ({ id, label, shortLabel }));
   assert.doesNotThrow(
     () => validateProfilePublicTechniques(makePayload(), profileIndex, makeContext({ categories })),
+  );
+});
+
+test("ordinary Case source uses the strict public sidecar and has no confidence-evidence taxonomy join", () => {
+  const workbench = read("public/entry-cases/__entry_v3_site__/workbench.js");
+  const pure = read("public/entry-cases/__entry_v3_site__/workbench-pure.mjs");
+
+  assert.match(workbench, /profile-public-techniques\.json\.gz/);
+  assert.match(workbench, /resolvePublicProfileSelector/);
+  assert.match(pure, /validateProfilePublicTechniques/);
+  assert.doesNotMatch(workbench, /\.\.\/\.\.\/confidence-evidence\.json/);
+  assert.doesNotMatch(workbench, /PROFILE_FAMILY_ORDER|Unassigned family|Family \$\{/);
+  assert.doesNotMatch(workbench, /state\.(?:techniqueByProfile|evidenceRows)/);
+  assert.match(workbench, /mountTechniqueFilter\(\)/);
+});
+
+test("sidecar failure preserves every profile in order with neutral public labels", () => {
+  assert.equal(typeof WorkbenchPure.buildUnavailablePublicTechniqueModel, "function");
+  const unavailable = WorkbenchPure.buildUnavailablePublicTechniqueModel(profileIndex);
+
+  assert.equal(unavailable.profileCount, profileIndex.profiles.length);
+  assert.deepEqual(unavailable.orderedProfileIds, PROFILE_IDS);
+  assert.deepEqual(
+    profileIndex.profiles.map((profile) => (
+      profilePublicTechniqueLabel(profile, unavailable.profileMeta.get(profile.profile_id))
+    )),
+    PROFILE_IDS.map((profileId) => `pair-${profileId} | Technique metadata unavailable`),
+  );
+  assert.deepEqual(
+    PROFILE_IDS.map((profileId) => unavailable.profileMeta.get(profileId).classificationStatus),
+    PROFILE_IDS.map(() => "missing"),
+  );
+});
+
+test("filter options keep the five-category order and expose only canonical mapped methods", () => {
+  assert.equal(typeof WorkbenchPure.buildPublicTechniqueFilterOptions, "function");
+  const model = validateProfilePublicTechniques(makePayload(), profileIndex, makeContext());
+  const options = WorkbenchPure.buildPublicTechniqueFilterOptions(model, MECHANISM_FAMILIES);
+
+  assert.deepEqual(
+    options.categories.map(({ id, enabled }) => [id, enabled]),
+    [
+      ["dms", true],
+      ["shape", true],
+      ["cleavage", false],
+      ["nucleotide", false],
+      ["interaction", false],
+    ],
+  );
+  assert.deepEqual(options.methods, ["DMS-seq", "DMS-MaPseq", "SHAPE-MaP", "DMS"]);
+  assert.doesNotMatch(options.methods.join(" "), /Mystery-seq|NoMap-seq/);
+});
+
+test("one ordered selector view model drives equal native and custom option sets", () => {
+  assert.equal(typeof WorkbenchPure.buildPublicProfileSelectorItems, "function");
+  assert.equal(typeof WorkbenchPure.buildPublicProfileSelectMarkup, "function");
+  assert.equal(typeof WorkbenchPure.mountPublicProfileSelectorDom, "function");
+  assert.equal(typeof WorkbenchPure.selectPublicProfileSelectorOption, "function");
+
+  const model = validateProfilePublicTechniques(makePayload(), profileIndex, makeContext());
+  const items = WorkbenchPure.buildPublicProfileSelectorItems(profileIndex.profiles, model);
+  assert.equal(items.length, PROFILE_IDS.length);
+  assert.deepEqual(
+    items.map(({ index, profileId, label }) => [index, profileId, label]),
+    PROFILE_IDS.map((profileId, index) => [
+      index,
+      profileId,
+      profilePublicTechniqueLabel(profileIndex.profiles[index], model.profileMeta.get(profileId)),
+    ]),
+  );
+  assert.equal(new Set(items.map((item) => item.profileId)).size, PROFILE_IDS.length);
+  assert.equal(items[1].categories.length, 2, "multi-category membership stays on one selector item");
+
+  const nativeMarkup = WorkbenchPure.buildPublicProfileSelectMarkup(items);
+  assert.equal((nativeMarkup.match(/<option\b/g) || []).length, PROFILE_IDS.length);
+  assert.deepEqual(
+    [...nativeMarkup.matchAll(/<option value="(\d+)">([^<]+)<\/option>/g)]
+      .map((match) => Number(match[1])),
+    PROFILE_IDS.map((_, index) => index),
+  );
+
+  const tiny = makeTinySelectorDom();
+  const mounted = WorkbenchPure.mountPublicProfileSelectorDom(items, tiny);
+  const mountedAgain = WorkbenchPure.mountPublicProfileSelectorDom(items, tiny);
+  const customOptions = mounted.list.querySelectorAll("li[role='option']");
+  assert.equal(mountedAgain.root, mounted.root, "re-mount reuses the one visible selector");
+  assert.equal(tiny.parent.querySelectorAll(".profile-dropdown").length, 1);
+  assert.equal(tiny.parent.querySelectorAll(".profile-dropdown-trigger").length, 1);
+  assert.equal(tiny.parent.querySelectorAll(".profile-dropdown-list").length, 1);
+  assert.equal(tiny.select.hidden, true);
+  assert.equal(customOptions.length, PROFILE_IDS.length);
+  assert.deepEqual(
+    customOptions.map((option) => [Number(option.dataset.index), option.dataset.profileId]),
+    PROFILE_IDS.map((profileId, index) => [index, profileId]),
+  );
+  assert.equal((customOptions[1].innerHTML.match(/class="category-badge"/g) || []).length, 2);
+
+  const clicked = customOptions[3];
+  const selectedItem = WorkbenchPure.selectPublicProfileSelectorOption(items, tiny.select, clicked);
+  assert.equal(Number(tiny.select.value), items[3].index);
+  assert.equal(selectedItem.profileId, "p-unmapped");
+  clicked.dataset.profileId = "p-wrong";
+  assert.throws(
+    () => WorkbenchPure.selectPublicProfileSelectorOption(items, tiny.select, clicked),
+    /identity mismatch/i,
+  );
+});
+
+test("selector item construction fails loudly on model count, order, or identity drift", () => {
+  const model = validateProfilePublicTechniques(makePayload(), profileIndex, makeContext());
+  const reversed = [...profileIndex.profiles].reverse();
+  assert.throws(
+    () => WorkbenchPure.buildPublicProfileSelectorItems(reversed, model),
+    /order|profileId/i,
+  );
+  assert.throws(
+    () => WorkbenchPure.buildPublicProfileSelectorItems(profileIndex.profiles.slice(1), model),
+    /count/i,
+  );
+  const duplicate = profileIndex.profiles.map((profile) => ({ ...profile }));
+  duplicate[1].profile_id = duplicate[0].profile_id;
+  assert.throws(
+    () => WorkbenchPure.buildPublicProfileSelectorItems(duplicate, model),
+    /duplicate/i,
+  );
+});
+
+test("sidecar fetch or validation errors resolve to N neutral selector items without throwing", () => {
+  assert.equal(typeof WorkbenchPure.resolvePublicProfileSelector, "function");
+  for (const result of [
+    { payload: null, error: new Error("fetch failed") },
+    { payload: { schemaVersion: "invalid" }, error: null },
+  ]) {
+    const resolved = WorkbenchPure.resolvePublicProfileSelector(profileIndex, result, makeContext());
+    assert.ok(resolved.error instanceof Error);
+    assert.equal(resolved.selectorItems.length, PROFILE_IDS.length);
+    assert.deepEqual(resolved.selectorItems.map((item) => item.profileId), PROFILE_IDS);
+    assert.deepEqual(
+      resolved.selectorItems.map((item) => item.label),
+      PROFILE_IDS.map((profileId) => `pair-${profileId} | Technique metadata unavailable`),
+    );
+  }
+});
+
+test("DOM visibility applies category-method OR without reordering and clearing restores all states", () => {
+  assert.equal(typeof WorkbenchPure.applyPublicProfileSelectorVisibility, "function");
+  const model = validateProfilePublicTechniques(makePayload(), profileIndex, makeContext());
+  const items = WorkbenchPure.buildPublicProfileSelectorItems(profileIndex.profiles, model);
+  const tiny = makeTinySelectorDom();
+  const { list } = WorkbenchPure.mountPublicProfileSelectorDom(items, tiny);
+  const options = list.querySelectorAll("li[role='option']");
+  const originalIdentity = options.map((option) => [option.dataset.index, option.dataset.profileId]);
+
+  const hits = applyPublicTechniqueFilter(model, {
+    categories: new Set(["shape"]),
+    methods: new Set(["NoMap-seq"]),
+  });
+  WorkbenchPure.applyPublicProfileSelectorVisibility(items, options, hits, true);
+  assert.deepEqual(
+    options.filter((option) => !option.classList.contains("filtered-out"))
+      .map((option) => option.dataset.profileId),
+    ["p-multi", "p-unmapped"],
+  );
+  assert.deepEqual(options.map((option) => [option.dataset.index, option.dataset.profileId]), originalIdentity);
+
+  WorkbenchPure.applyPublicProfileSelectorVisibility(items, options, new Set(PROFILE_IDS), false);
+  assert.deepEqual(
+    options.filter((option) => !option.classList.contains("filtered-out"))
+      .map((option) => option.dataset.profileId),
+    PROFILE_IDS,
+  );
+  assert.deepEqual(
+    options.slice(3).map((option) => option.dataset.profileId),
+    ["p-unmapped", "p-background", "p-missing"],
   );
 });
