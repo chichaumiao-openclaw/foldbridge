@@ -1,3 +1,8 @@
+export const TECHNIQUE_TAXONOMY_VERSION = 'entry-technique-taxonomy.v1';
+
+const TECHNIQUE_TOKEN_SEPARATOR = /[;,]/;
+const TECHNIQUE_TOKEN_SEPARATOR_SOURCE = '[;,]';
+
 export const MECHANISM_FAMILIES = [
   {
     id: 'dms',
@@ -40,45 +45,205 @@ const normalizeTechniqueName = (name = '') => String(name)
   .toLowerCase()
   .replace(/[^a-z0-9]+/g, '');
 
-const TECHNIQUE_TO_FAMILY = new Map();
-const TECHNIQUE_CANONICAL_NAMES = new Map();
-for (const family of MECHANISM_FAMILIES) {
-  for (const name of family.techniques) {
-    TECHNIQUE_TO_FAMILY.set(normalizeTechniqueName(name), family.id);
-    TECHNIQUE_CANONICAL_NAMES.set(normalizeTechniqueName(name), name);
-  }
-}
-
 // Existing atlas rows contain a few historical spellings that belong to one
 // of the five probing-page families but are not displayed as separate options.
 const TECHNIQUE_ALIASES = {
   structureseq: 'Structure-seq',
   cotranscriptionalshapeseq: 'SHAPE-Seq',
   nucshapestructureseq: 'SHAPE-Seq',
-  iclaser: 'LASER-seq'
+  iclaser: 'LASER-seq',
+  mca: 'MOHCA',
+  mutateandmap: 'Mutate-and-map methods'
 };
-for (const [alias, canonical] of Object.entries(TECHNIQUE_ALIASES)) {
-  const canonicalKey = normalizeTechniqueName(canonical);
-  TECHNIQUE_TO_FAMILY.set(alias, TECHNIQUE_TO_FAMILY.get(canonicalKey));
-  TECHNIQUE_CANONICAL_NAMES.set(alias, canonical);
+
+export function buildTechniqueClassifierRegistry({ families = [], aliases = {} } = {}) {
+  if (!Array.isArray(families)) throw new Error('Technique families must be an array');
+  if (!aliases || typeof aliases !== 'object' || Array.isArray(aliases)) {
+    throw new Error('Technique aliases must be an object');
+  }
+
+  const familyById = new Map();
+  families.forEach((family, index) => {
+    const familyId = family?.id;
+    if (typeof familyId !== 'string' || !familyId || familyId.trim() !== familyId || familyById.has(familyId)) {
+      throw new Error(`Invalid family id at index ${index}`);
+    }
+    if (!Array.isArray(family.techniques)) {
+      throw new Error(`Invalid techniques for family ${familyId}`);
+    }
+    familyById.set(familyId, family);
+  });
+
+  const declaredTechniques = [];
+  const declaredByNormalizedToken = new Map();
+  for (const family of families) {
+    for (const technique of family.techniques) {
+      const label = String(technique ?? '');
+      const normalizedToken = normalizeTechniqueName(label);
+      if (!normalizedToken) throw new Error(`Invalid technique label in family ${family.id}`);
+      const existing = declaredByNormalizedToken.get(normalizedToken);
+      if (existing && (existing.label !== label || existing.family.id !== family.id)) {
+        throw new Error(`Conflicting technique registration for normalized token "${normalizedToken}"`);
+      }
+      const declared = { normalizedToken, label, family };
+      if (!existing) declaredByNormalizedToken.set(normalizedToken, declared);
+      declaredTechniques.push(declared);
+    }
+  }
+
+  const aliasByNormalizedToken = new Map();
+  const aliasRecords = [];
+  for (const [aliasToken, requestedCanonicalLabel] of Object.entries(aliases)) {
+    const normalizedToken = normalizeTechniqueName(aliasToken);
+    if (!normalizedToken) throw new Error(`Invalid alias token "${aliasToken}"`);
+    const target = declaredByNormalizedToken.get(normalizeTechniqueName(requestedCanonicalLabel));
+    if (!target) throw new Error(`Alias target "${requestedCanonicalLabel}" does not exist`);
+    const alias = { normalizedToken, canonicalLabel: target.label, family: target.family };
+    const existing = aliasByNormalizedToken.get(normalizedToken);
+    if (existing && (existing.canonicalLabel !== alias.canonicalLabel || existing.family.id !== alias.family.id)) {
+      throw new Error(`Conflicting alias normalized token "${normalizedToken}"`);
+    }
+    if (!existing) {
+      aliasByNormalizedToken.set(normalizedToken, alias);
+      aliasRecords.push(alias);
+    }
+  }
+
+  for (const alias of aliasRecords) {
+    const targetAlias = aliasByNormalizedToken.get(normalizeTechniqueName(alias.canonicalLabel));
+    if (targetAlias && targetAlias.canonicalLabel !== alias.canonicalLabel) {
+      throw new Error(`Alias target "${alias.canonicalLabel}" is not canonical`);
+    }
+  }
+
+  const registrations = new Map();
+  const registerToken = (normalizedToken, canonicalLabel, family) => {
+    if (!family || !familyById.has(family.id)) throw new Error(`Invalid family id for "${canonicalLabel}"`);
+    const existing = registrations.get(normalizedToken);
+    if (existing && (existing.label !== canonicalLabel || existing.family.id !== family.id)) {
+      throw new Error(`Conflicting technique registration for normalized token "${normalizedToken}"`);
+    }
+    if (!existing) registrations.set(normalizedToken, { label: canonicalLabel, family });
+  };
+
+  for (const declared of declaredTechniques) {
+    const alias = aliasByNormalizedToken.get(declared.normalizedToken);
+    const canonicalLabel = alias?.canonicalLabel || declared.label;
+    const family = alias?.family || declared.family;
+    if (family.id !== declared.family.id) {
+      throw new Error(`Conflicting technique registration for normalized token "${declared.normalizedToken}"`);
+    }
+    registerToken(declared.normalizedToken, canonicalLabel, family);
+  }
+  for (const alias of aliasRecords) {
+    registerToken(alias.normalizedToken, alias.canonicalLabel, alias.family);
+  }
+
+  const classifyToken = (value = '') => {
+    const token = String(value ?? '').trim();
+    const registered = registrations.get(normalizeTechniqueName(token));
+    if (!registered) {
+      return {
+        label: token,
+        mappingStatus: 'unmapped',
+        categoryId: null,
+        categoryLabel: null,
+        categoryShortLabel: null
+      };
+    }
+    return {
+      label: registered.label,
+      mappingStatus: 'mapped',
+      categoryId: registered.family.id,
+      categoryLabel: registered.family.label,
+      categoryShortLabel: registered.family.shortLabel
+    };
+  };
+
+  return {
+    classifyToken,
+    familyForId: (familyId) => familyById.get(familyId) || null,
+    aliases: aliasRecords.map(({ normalizedToken, canonicalLabel }) => ({ normalizedToken, canonicalLabel })),
+    canonicalTechniques: declaredTechniques.map(({ normalizedToken, label }) => ({
+      normalizedToken,
+      ...classifyToken(label)
+    }))
+  };
 }
 
-const MECHANISM_FAMILY_BY_ID = new Map(MECHANISM_FAMILIES.map((family) => [family.id, family]));
+const TECHNIQUE_REGISTRY = buildTechniqueClassifierRegistry({
+  families: MECHANISM_FAMILIES,
+  aliases: TECHNIQUE_ALIASES
+});
 
 export function mechanismFamilyForTechnique(name = '') {
-  const key = normalizeTechniqueName(name);
-  const familyId = TECHNIQUE_TO_FAMILY.get(key);
-  return familyId ? MECHANISM_FAMILY_BY_ID.get(familyId) : null;
+  const method = TECHNIQUE_REGISTRY.classifyToken(name);
+  return method.categoryId ? TECHNIQUE_REGISTRY.familyForId(method.categoryId) : null;
 }
 
 export function canonicalTechniqueName(name = '') {
-  return TECHNIQUE_CANONICAL_NAMES.get(normalizeTechniqueName(name)) || '';
+  const method = TECHNIQUE_REGISTRY.classifyToken(name);
+  return method.mappingStatus === 'mapped' ? method.label : '';
+}
+
+export function classifyTechniqueFilter(value = '') {
+  const methods = [];
+  const seenMethods = new Set();
+  const categoryIds = new Set();
+  let mappedCount = 0;
+
+  const tokens = String(value ?? '')
+    .split(TECHNIQUE_TOKEN_SEPARATOR)
+    .map((token) => token.trim())
+    .filter(Boolean);
+
+  for (const token of tokens) {
+    const method = TECHNIQUE_REGISTRY.classifyToken(token);
+    const methodKey = method.label;
+    if (seenMethods.has(methodKey)) continue;
+    seenMethods.add(methodKey);
+
+    if (method.mappingStatus === 'mapped') {
+      mappedCount += 1;
+      categoryIds.add(method.categoryId);
+    }
+    methods.push(method);
+  }
+
+  let classificationStatus = 'empty';
+  if (methods.length > 0 && mappedCount === methods.length) classificationStatus = 'mapped';
+  else if (methods.length > 0 && mappedCount === 0) classificationStatus = 'unmapped';
+  else if (methods.length > 0) classificationStatus = 'partially_mapped';
+
+  return {
+    methods,
+    categoryIds: MECHANISM_FAMILIES.map((family) => family.id).filter((id) => categoryIds.has(id)),
+    classificationStatus
+  };
+}
+
+export function buildTechniqueTaxonomySnapshot() {
+  return {
+    taxonomyVersion: TECHNIQUE_TAXONOMY_VERSION,
+    tokenSeparator: TECHNIQUE_TOKEN_SEPARATOR_SOURCE,
+    families: MECHANISM_FAMILIES.map((family) => ({
+      id: family.id,
+      label: family.label,
+      shortLabel: family.shortLabel,
+      techniques: [...family.techniques],
+      filterTechniques: [...family.filterTechniques]
+    })),
+    aliases: TECHNIQUE_REGISTRY.aliases.map((alias) => ({ ...alias })),
+    canonicalTechniques: TECHNIQUE_REGISTRY.canonicalTechniques.map(({ mappingStatus, ...technique }) => ({
+      ...technique
+    }))
+  };
 }
 
 export function mechanismFamiliesForRow(row = {}) {
   const familyIds = new Set();
   for (const id of row.techniqueFamilies || []) {
-    if (MECHANISM_FAMILY_BY_ID.has(id)) familyIds.add(id);
+    if (TECHNIQUE_REGISTRY.familyForId(id)) familyIds.add(id);
   }
   for (const name of row.techniqueNames || []) {
     const family = mechanismFamilyForTechnique(name);

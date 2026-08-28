@@ -9,7 +9,12 @@ import {
   normalizeEntryRows
 } from '../src/entryTable.js';
 import { renderEntryTablePage } from '../src/entryTableView.js';
-import { buildMechanismFilterModel } from '../src/techniqueFilterModel.js';
+import {
+  buildMechanismFilterModel,
+  buildTechniqueClassifierRegistry,
+  buildTechniqueTaxonomySnapshot,
+  classifyTechniqueFilter
+} from '../src/techniqueFilterModel.js';
 
 const entryRows = [
   { pdbId: '1DMS', auth: 'A', probingCategory: 'dms-based-probing' },
@@ -22,6 +27,168 @@ const evidenceRows = [
   { pdbId: '1SHP', chains: ['A'], techniqueFamilies: ['shape-based-probing'], techniqueNames: ['SHAPE', 'SHAPE-MaP'] },
   { pdbId: '1CLV', chains: ['A'], techniqueFamilies: ['cleavage-footprinting'], techniqueNames: ['Lead-seq', 'PARS'] }
 ];
+
+test('shared classifier owns tokenization, aliases, canonical labels, and category order', () => {
+  const result = classifyTechniqueFilter('MCA;mutate-and-map;structureseq;CIRS-seq');
+  assert.deepEqual(result.methods, [
+    { label: 'MOHCA', mappingStatus: 'mapped', categoryId: 'interaction', categoryLabel: 'RNA–RNA interaction mapping methods', categoryShortLabel: 'RNA–RNA interaction' },
+    { label: 'Mutate-and-map methods', mappingStatus: 'mapped', categoryId: 'interaction', categoryLabel: 'RNA–RNA interaction mapping methods', categoryShortLabel: 'RNA–RNA interaction' },
+    { label: 'Structure-seq', mappingStatus: 'mapped', categoryId: 'dms', categoryLabel: 'DMS-based methods', categoryShortLabel: 'DMS' },
+    { label: 'CIRS-seq', mappingStatus: 'unmapped', categoryId: null, categoryLabel: null, categoryShortLabel: null },
+  ]);
+  assert.deepEqual(result.categoryIds, ['dms', 'interaction']);
+  assert.equal(result.classificationStatus, 'partially_mapped');
+});
+
+test('shared classifier leaves missing/background policy to callers', () => {
+  const result = classifyTechniqueFilter('');
+  assert.deepEqual(result, {
+    methods: [],
+    categoryIds: [],
+    classificationStatus: 'empty'
+  });
+  assert.equal('background' in result, false);
+  assert.equal('missing' in result, false);
+  assert.equal(classifyTechniqueFilter('CIRS-seq').classificationStatus, 'unmapped');
+});
+
+test('shared classifier deduplicates aliases and canonical tokens by canonical method', () => {
+  const result = classifyTechniqueFilter('MCA,MOHCA;mutate-and-map;Mutate-and-map methods');
+  assert.deepEqual(result.methods.map((method) => method.label), ['MOHCA', 'Mutate-and-map methods']);
+  assert.deepEqual(result.categoryIds, ['interaction']);
+  assert.equal(result.classificationStatus, 'mapped');
+});
+
+test('shared classifier deduplicates unmapped methods only by their trimmed label', () => {
+  const result = classifyTechniqueFilter('CIRS-seq;CIRS seq;CIRS-seq');
+  assert.deepEqual(result.methods.map((method) => method.label), ['CIRS-seq', 'CIRS seq']);
+  assert.deepEqual(result.methods.map((method) => method.mappingStatus), ['unmapped', 'unmapped']);
+});
+
+test('technique taxonomy snapshot is stable and fully serializable', () => {
+  const snapshot = buildTechniqueTaxonomySnapshot();
+  assert.equal(snapshot.taxonomyVersion, 'entry-technique-taxonomy.v1');
+  assert.equal(snapshot.tokenSeparator, '[;,]');
+  assert.deepEqual(snapshot.families, [
+    {
+      id: 'dms',
+      label: 'DMS-based methods',
+      shortLabel: 'DMS',
+      techniques: ['DMS', 'DMS-seq', 'Structure-seq', 'Structure-seq2', 'Mod-seq', 'DMS-MaPseq', 'DIM-2P-seq', 'tNet-MaPseq'],
+      filterTechniques: ['DMS', 'DMS-seq', 'Structure-seq', 'Structure-seq2', 'Mod-seq', 'DMS-MaPseq', 'DIM-2P-seq']
+    },
+    {
+      id: 'shape',
+      label: 'SHAPE-based methods',
+      shortLabel: 'SHAPE',
+      techniques: ['SHAPE', 'SHAPE-Seq', 'SHAPE-MaP', '1M7', 'BzCN', '2A3', 'NAI-MaP', 'icSHAPE', 'icSHAPE-MaP', 'smartSHAPE', 'ChemModSeq', 'Cotranscriptional_SHAPE-seq', 'Nuc-SHAPE-Structure-Seq'],
+      filterTechniques: ['SHAPE', 'SHAPE-Seq', 'SHAPE-MaP', 'icSHAPE', 'icSHAPE-MaP', 'NAI-MaP', 'smartSHAPE']
+    },
+    {
+      id: 'cleavage',
+      label: 'Cleavage-based methods',
+      shortLabel: 'Cleavage',
+      techniques: ['PARS', 'PARTE', 'HRF-seq', 'Lead-seq', 'RL-Seq', 'tNet-RNase-seq'],
+      filterTechniques: ['PARS', 'PARTE', 'HRF-seq']
+    },
+    {
+      id: 'nucleotide',
+      label: 'Nucleotide-specific chemical probing methods',
+      shortLabel: 'Nucleotide-specific',
+      techniques: ['Keth-seq', 'EDC probing', 'LASER-seq', 'icLASER'],
+      filterTechniques: ['Keth-seq', 'EDC probing', 'LASER-seq']
+    },
+    {
+      id: 'interaction',
+      label: 'RNA–RNA interaction mapping methods',
+      shortLabel: 'RNA–RNA interaction',
+      techniques: ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES', 'MOHCA', 'Mutate-and-map methods'],
+      filterTechniques: ['PARIS', 'SPLASH', 'LIGR-seq', 'MARIO', 'RIC-seq', 'COMRADES', 'MOHCA', 'Mutate-and-map methods']
+    }
+  ]);
+  assert.deepEqual(snapshot.aliases, [
+    { normalizedToken: 'structureseq', canonicalLabel: 'Structure-seq' },
+    { normalizedToken: 'cotranscriptionalshapeseq', canonicalLabel: 'SHAPE-Seq' },
+    { normalizedToken: 'nucshapestructureseq', canonicalLabel: 'SHAPE-Seq' },
+    { normalizedToken: 'iclaser', canonicalLabel: 'LASER-seq' },
+    { normalizedToken: 'mca', canonicalLabel: 'MOHCA' },
+    { normalizedToken: 'mutateandmap', canonicalLabel: 'Mutate-and-map methods' }
+  ]);
+  assert.deepEqual(snapshot.canonicalTechniques[0], {
+    normalizedToken: 'dms',
+    label: 'DMS',
+    categoryId: 'dms',
+    categoryLabel: 'DMS-based methods',
+    categoryShortLabel: 'DMS'
+  });
+  assert.deepEqual(snapshot.canonicalTechniques.find((technique) => technique.normalizedToken === 'iclaser'), {
+    normalizedToken: 'iclaser',
+    label: 'LASER-seq',
+    categoryId: 'nucleotide',
+    categoryLabel: 'Nucleotide-specific chemical probing methods',
+    categoryShortLabel: 'Nucleotide-specific'
+  });
+  assert.equal(snapshot.canonicalTechniques.length,
+    snapshot.families.reduce((count, family) => count + family.techniques.length, 0));
+  assert.deepEqual(JSON.parse(JSON.stringify(snapshot)), snapshot);
+});
+
+test('snapshot canonical techniques and aliases match runtime single-token classification', () => {
+  const snapshot = buildTechniqueTaxonomySnapshot();
+  const normalized = (label) => String(label).toLowerCase().replace(/[^a-z0-9]+/g, '');
+
+  for (const canonical of snapshot.canonicalTechniques) {
+    const method = classifyTechniqueFilter(canonical.label).methods[0];
+    assert.deepEqual(method, {
+      label: canonical.label,
+      mappingStatus: 'mapped',
+      categoryId: canonical.categoryId,
+      categoryLabel: canonical.categoryLabel,
+      categoryShortLabel: canonical.categoryShortLabel
+    });
+  }
+
+  for (const alias of snapshot.aliases) {
+    const targets = snapshot.canonicalTechniques.filter((canonical) =>
+      canonical.normalizedToken === normalized(alias.canonicalLabel));
+    assert.equal(targets.length, 1, `${alias.canonicalLabel} must have one canonical target`);
+    const method = classifyTechniqueFilter(alias.normalizedToken).methods[0];
+    assert.deepEqual(method, {
+      label: alias.canonicalLabel,
+      mappingStatus: 'mapped',
+      categoryId: targets[0].categoryId,
+      categoryLabel: targets[0].categoryLabel,
+      categoryShortLabel: targets[0].categoryShortLabel
+    });
+  }
+});
+
+test('registry builder fails loudly for invalid families, missing alias targets, and token conflicts', () => {
+  const families = [
+    { id: 'one', label: 'One methods', shortLabel: 'One', techniques: ['Alpha'], filterTechniques: ['Alpha'] },
+    { id: 'two', label: 'Two methods', shortLabel: 'Two', techniques: ['Beta'], filterTechniques: ['Beta'] }
+  ];
+
+  assert.throws(
+    () => buildTechniqueClassifierRegistry({ families: [{ ...families[0], id: '' }], aliases: {} }),
+    /invalid family id/i
+  );
+  assert.throws(
+    () => buildTechniqueClassifierRegistry({ families, aliases: { ghost: 'Missing' } }),
+    /alias target.*does not exist/i
+  );
+  assert.throws(
+    () => buildTechniqueClassifierRegistry({ families, aliases: { alpha: 'Beta' } }),
+    /conflicting technique registration/i
+  );
+  assert.throws(
+    () => buildTechniqueClassifierRegistry({
+      families,
+      aliases: { 'same-token': 'Alpha', sametoken: 'Beta' }
+    }),
+    /conflicting alias normalized token/i
+  );
+});
 
 test('Entry renders the original five-family filter with detailed techniques', () => {
   const model = buildMechanismFilterModel();
@@ -106,7 +273,7 @@ test('normalizeEntryRows derives technique families/names from tech_filter', () 
   const rows = normalizeEntryRows({
     schemaVersion: 'entry-table.v1',
     rows: [
-      { pdb_id: '1MIX', auth: 'A', tech_filter: 'DMS;SHAPE;PARS;MOHCA;Mutate-and-map methods;CIRS-seq' },
+      { pdb_id: '1MIX', auth: 'A', tech_filter: 'DMS;SHAPE;PARS;MCA;mutate-and-map;CIRS-seq' },
       { pdb_id: '1EMP', auth: 'B', tech_filter: '' }
     ]
   });

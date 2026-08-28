@@ -2,7 +2,7 @@
 // 读 build-entry-table.py 产出的 entry-table.json（pdb_id x chain 粒度），
 // 归一化为视图行，并拼指向静态 case 页 cases/<PDB>/index.html?chain=<auth> 的跳转链接。
 
-import { matchesTechniqueFilter, mechanismFamilyForTechnique } from './techniqueFilterModel.js';
+import { classifyTechniqueFilter, matchesTechniqueFilter } from './techniqueFilterModel.js';
 
 // 展示列顺序（源自论文 Fig 2C：molecule / PDB / chain / profiles / technique /
 // confidence / class / source）。锁死列序。
@@ -19,28 +19,6 @@ export const ENTRY_TABLE_COLUMNS = [
 
 function text(value) {
   return String(value ?? '').trim();
-}
-
-// tech_filter（分号/逗号分隔的具体技术名）→ 归一化技术名列表 + 派生五大类家族 id。
-// techniqueNames：tech_filter 原始名（供两级 filter 第二级精确匹配）。
-// techniqueFamilies：经 mechanismFamilyForTechnique 映射到五大类的 family id（去重，
-// 保序）。CIRS-seq/Glyoxal/Terbium 等不入五类的技术映射为 null，不进 families，但仍
-// 保留在 names 里、行照常展示（不漏行）。
-function techniqueFieldsFromFilter(techFilter) {
-  const names = String(techFilter || '')
-    .split(/[;,]/)
-    .map((s) => s.trim())
-    .filter(Boolean);
-  const familyIds = [];
-  const seen = new Set();
-  for (const name of names) {
-    const family = mechanismFamilyForTechnique(name);
-    if (family && !seen.has(family.id)) {
-      seen.add(family.id);
-      familyIds.push(family.id);
-    }
-  }
-  return { techniqueNames: names, techniqueFamilies: familyIds };
 }
 
 const ENTRY_TABLE_SCHEMA_VERSION = 'entry-table.v1';
@@ -123,7 +101,9 @@ export function normalizeEntryRows(payload) {
   const rows = payload && Array.isArray(payload.rows) ? payload.rows : [];
   return rows.map((row) => {
     const techFilter = text(row.tech_filter);
-    const { techniqueNames, techniqueFamilies } = techniqueFieldsFromFilter(techFilter);
+    const classified = classifyTechniqueFilter(techFilter);
+    const techniqueNames = classified.methods.map((method) => method.label);
+    const techniqueFamilies = classified.categoryIds;
     return {
       pdbId: text(row.pdb_id),
       auth: text(row.auth),
