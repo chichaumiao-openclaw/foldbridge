@@ -290,9 +290,16 @@ assert.ok(sequenceTrack, "sequence host must render the Workbench-style SVG 1D t
 assert.equal(sequenceTrack.getAttribute("role"), "group", "interactive SVG track must expose a group, not flattened image semantics");
 assert.equal(heatmapHost.querySelector(".ef-sequence-track"), null, "matrix host must not duplicate the 1D track");
 const trackLabels = descendants(sequenceTrack, (node) => node.getAttribute("class") === "residue-rail-label").map((node) => node.textContent);
-assert.deepEqual(trackLabels, ["PDB pos", "Mapped chain seq", "EF intensity"]);
+assert.deepEqual(trackLabels, ["PDB pos", "Sequence", "Signal"]);
 const baseMarks = descendants(sequenceTrack, (node) => node.getAttribute("data-track-kind") === "mapped_chain_sequence");
 const intensityMarks = descendants(sequenceTrack, (node) => node.getAttribute("data-track-kind") === "ef_intensity");
+const publicTrackCopy = [
+  sequenceTrack.getAttribute("aria-label"),
+  ...trackLabels,
+  ...intensityMarks.map((mark) => mark.getAttribute("aria-label")),
+  ...descendants(sequenceTrack, (node) => node.name === "title").map((node) => node.textContent),
+].filter(Boolean).join("\n");
+assert.doesNotMatch(publicTrackCopy, /\bEF\b|mapped(?:-| )chain sequence/i, "rendered sequence labels, ARIA, and titles must not expose internal matrix terminology");
 const baseCells = descendants(sequenceTrack, (node) => String(node.getAttribute("class") || "").split(/\s+/).includes("ef-sequence-base"));
 const intensityCells = descendants(sequenceTrack, (node) => String(node.getAttribute("class") || "").split(/\s+/).includes("ef-sequence-intensity"));
 const renderedECells = descendants(heatmapHost.querySelector(".ef-cells"), (node) => node.name === "rect");
@@ -305,6 +312,15 @@ assert.ok([...baseMarks, ...intensityMarks].every((mark) => mark.getAttribute("a
 assert.deepEqual(baseMarks.map((mark) => mark.getAttribute("data-residue-key")), linkedResidues.map((row) => row.residueKey), "1D marks use canonical linked-view residue keys");
 assert.deepEqual(intensityCells.map((cell) => cell.getAttribute("fill")), ["rgb(255,255,255)", "rgb(255,255,255)"], "intensity row starts at the no-signal baseline");
 assert.ok(heatmapHost.querySelector(".ef-colorbar"), "heatmap must render a visible colorbar");
+const interactionStatus = heatmapHost.querySelector(".ef-interaction-status");
+baseMarks[0].handlers.mousemove({ clientX: 5, clientY: 5 });
+assert.equal(interactionStatus.textContent, "hover Sequence · PDB 1 A");
+assert.doesNotMatch(interactionStatus.textContent, /\b(?:EF|Family|Tier|LSS)\b|mapped_chain|ef_intensity/i);
+baseMarks[0].handlers.mouseleave();
+intensityMarks[0].handlers.mousemove({ clientX: 5, clientY: 5 });
+assert.equal(interactionStatus.textContent, "hover Signal · PDB 1 A");
+assert.doesNotMatch(interactionStatus.textContent, /\b(?:EF|Family|Tier|LSS)\b|mapped_chain|ef_intensity/i);
+intensityMarks[0].handlers.mouseleave();
 const hitgrid = heatmapHost.querySelector(".ef-hitgrid");
 const hoverLayer = heatmapHost.querySelector(".ef-hover");
 const tooltip = heatmapHost.querySelector(".ef-tooltip");

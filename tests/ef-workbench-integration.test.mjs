@@ -1,6 +1,9 @@
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import test from "node:test";
+import vm from "node:vm";
+
+import * as MatrixShell from "../public/entry-cases/__entry_v3_site__/ef-workbench-shell.mjs";
 
 const read = (relative) => fs.readFileSync(new URL(`../${relative}`, import.meta.url), "utf8");
 
@@ -53,8 +56,8 @@ test("EF renderer owns separate 1D and matrix hosts", () => {
   assert.match(source, /onInteraction/);
   assert.match(source, /sequenceHost\.appendChild\(sequenceTrack\)/);
   assert.doesNotMatch(source, /root\.appendChild\(sequenceTrack\)/);
-  assert.match(source, /Mapped chain seq/);
-  assert.match(source, /Intensity/);
+  assert.match(source, /MATRIX_PUBLIC_COPY\.sequence/);
+  assert.match(source, /MATRIX_PUBLIC_COPY\.signal/);
   assert.match(source, /role:\s*["']group["']/);
   assert.match(source, /aria-pressed/);
   assert.match(source, /data-track-kind/);
@@ -78,6 +81,286 @@ test("EF renderer owns separate 1D and matrix hosts", () => {
   assert.match(source, /PDB\.molstar\.mouseover/);
   assert.match(source, /PDB\.molstar\.mouseout/);
   assert.doesNotMatch(source, /nearestVarna|nearestDistance|nearestRadius/);
+});
+
+test("matrix technology metadata uses the shared public classifier", () => {
+  const shellSource = read("public/entry-cases/__entry_v3_site__/ef-workbench-shell.mjs");
+  assert.match(shellSource, /import\s*\{\s*classifyTechniqueFilter\s*\}\s*from\s*["']\.\/technique-filter-model\.[^"']+\.mjs["']/);
+  assert.equal(typeof MatrixShell.matrixPublicTechnique, "function");
+  assert.deepEqual(MatrixShell.matrixPublicTechnique({ technology: "MCA" }), {
+    methodLabel: "MOHCA",
+    categoryLabel: "RNA–RNA interaction mapping methods",
+  });
+  assert.deepEqual(MatrixShell.matrixPublicTechnique({ technology: "mutate-and-map" }), {
+    methodLabel: "Mutate-and-map methods",
+    categoryLabel: "RNA–RNA interaction mapping methods",
+  });
+  assert.deepEqual(MatrixShell.matrixPublicTechnique({
+    pdb_id: "8QO5",
+    family: "F",
+    value_kind: "m2_coupling_z",
+    technology: "MAP",
+  }), {
+    methodLabel: "Mutate-and-map methods",
+    categoryLabel: "RNA–RNA interaction mapping methods",
+  });
+});
+
+test("matrix value metadata is derived from value_kind rather than family", () => {
+  assert.equal(typeof MatrixShell.matrixPublicValueLabel, "function");
+  assert.equal(MatrixShell.matrixPublicValueLabel({ value_kind: "cohcoa_contact", family: "F" }), "Contact score");
+  assert.equal(MatrixShell.matrixPublicValueLabel({ value_kind: "m2_coupling_z", family: "E" }), "Pair coupling");
+  assert.throws(
+    () => MatrixShell.matrixPublicValueLabel({ value_kind: "unknown", family: "E" }),
+    /unsupported matrix value_kind/i,
+  );
+
+  const shellSource = read("public/entry-cases/__entry_v3_site__/ef-workbench-shell.mjs");
+  const metadataStart = shellSource.indexOf("export function renderEfWorkbenchMetadata");
+  const metadataEnd = shellSource.indexOf("export function renderEfInteraction", metadataStart);
+  const metadataRenderer = shellSource.slice(metadataStart, metadataEnd);
+  assert.equal((metadataRenderer.match(/matrixPublicTechnique\(header\)/g) || []).length, 1);
+  assert.match(metadataRenderer, /metric\(document,\s*["']Technique["'],\s*publicTechnique\.methodLabel\)/);
+  assert.match(metadataRenderer, /metric\(document,\s*["']Category["'],\s*publicTechnique\.categoryLabel\)/);
+  assert.doesNotMatch(metadataRenderer, /header\.family/);
+});
+
+test("matrix interaction sources render through public component labels", () => {
+  assert.equal(typeof MatrixShell.matrixPublicInteractionSource, "function");
+  assert.deepEqual(
+    ["sequence", "signal", "varna", "3d", "matrix"].map(MatrixShell.matrixPublicInteractionSource),
+    ["Sequence", "Signal", "Secondary structure", "3D structure", "Contact / pair map"],
+  );
+  const workbenchSource = read("public/entry-cases/__entry_v3_site__/workbench.js");
+  const transitionStart = workbenchSource.indexOf("function nextMatrixLockedEvent");
+  const transitionEnd = workbenchSource.indexOf("async function initEfMode", transitionStart);
+  const nextMatrixLockedEvent = vm.runInNewContext(
+    `(() => { ${workbenchSource.slice(transitionStart, transitionEnd)}; return nextMatrixLockedEvent; })()`,
+  );
+  assert.match(workbenchSource, /lockedEvent = nextMatrixLockedEvent\(event, lockedEvent\)/);
+
+  class TinyNode {
+    constructor() {
+      this.children = [];
+      this.textContent = "";
+      this.className = "";
+    }
+    append(...children) { this.children.push(...children); }
+    appendChild(child) { this.children.push(child); return child; }
+    replaceChildren(...children) { this.children = children; }
+  }
+  const inspector = new TinyNode();
+  const inspectorStatus = new TinyNode();
+  const structureStatus = new TinyNode();
+  const document = {
+    createElement() { return new TinyNode(); },
+    querySelector(selector) {
+      return {
+        "#linked-inspector": inspector,
+        "#inspectorStatus": inspectorStatus,
+        "#molstar-selection-status": structureStatus,
+      }[selector] || null;
+    },
+  };
+  MatrixShell.renderEfInteraction(document, {
+    kind: "select",
+    source: "signal",
+    axis: "i",
+    index: 0,
+    residue: { base: "A", pdb_pos: 1, matrix_index: 0 },
+  });
+  const sourceCard = inspector.children[0].children[1];
+  assert.equal(sourceCard.children[0].textContent, "Source");
+  assert.equal(sourceCard.children[1].textContent, "Signal");
+
+  const selectedEvent = {
+    kind: "select",
+    source: "signal",
+    axis: "i",
+    index: 0,
+    residue: { base: "A", pdb_pos: 1, matrix_index: 0 },
+  };
+  MatrixShell.renderEfInteraction(document, { kind: "hover-clear" }, selectedEvent);
+  assert.equal(inspector.children[0].children[1].children[1].textContent, "Signal");
+  MatrixShell.renderEfInteraction(document, { kind: "select-clear" }, selectedEvent);
+  assert.equal(inspector.children[0].textContent, MatrixShell.MATRIX_PUBLIC_COPY.inspectorEmpty);
+  assert.equal(inspectorStatus.textContent, "no residue selected");
+  assert.equal(structureStatus.textContent, "selection: none");
+
+  let lockedEvent = nextMatrixLockedEvent(selectedEvent, null);
+  assert.equal(lockedEvent, selectedEvent);
+  lockedEvent = nextMatrixLockedEvent({ kind: "hover-clear" }, lockedEvent);
+  assert.equal(lockedEvent, selectedEvent);
+  lockedEvent = nextMatrixLockedEvent({ kind: "select-clear" }, lockedEvent);
+  assert.equal(lockedEvent, null);
+  MatrixShell.renderEfInteraction(document, { kind: "hover-clear" }, lockedEvent);
+  assert.equal(inspector.children[0].textContent, MatrixShell.MATRIX_PUBLIC_COPY.inspectorEmpty);
+});
+
+test("matrix metadata renders public Technique and Category for real E/F payload headers", () => {
+  class TinyNode {
+    constructor() {
+      this.children = [];
+      this.textContent = "";
+      this.className = "";
+    }
+    append(...children) { this.children.push(...children); }
+    appendChild(child) { this.children.push(child); return child; }
+    replaceChildren(...children) { this.children = children; }
+  }
+  const stats = new TinyNode();
+  const assetStatus = new TinyNode();
+  const matrixStatus = new TinyNode();
+  const caption = new TinyNode();
+  const document = {
+    createElement() { return new TinyNode(); },
+    querySelector(selector) {
+      return {
+        "#stats": stats,
+        "#assetStatus": assetStatus,
+        "#ef-matrix-status": matrixStatus,
+        "#viewCaption": caption,
+      }[selector] || null;
+    },
+  };
+  for (const expected of [
+    {
+      header: {
+        pdb_id: "8QO5", chain: "A", family: "F", technology: "MAP", value_kind: "m2_coupling_z",
+        n_rows: 124, n_cols: 160, value_min: -7.34, value_max: 10.9,
+      },
+      valueLabel: "Pair coupling",
+      technique: "Mutate-and-map methods",
+    },
+    {
+      header: {
+        pdb_id: "7SYS", chain: "z", family: "E", technology: "MCA", value_kind: "cohcoa_contact",
+        n_rows: 160, n_cols: 160, value_min: -2.1, value_max: 8.6,
+      },
+      valueLabel: "Contact score",
+      technique: "MOHCA",
+    },
+  ]) {
+    MatrixShell.renderEfWorkbenchMetadata(document, {
+      controller: {
+        viewHeader: expected.header,
+        viewPayload: {
+          axis_i: [{ pdb_pos: 1, varna_index: 0 }],
+          axis_j: [{ pdb_pos: 1, varna_index: 0 }],
+        },
+      },
+    });
+    const metrics = Object.fromEntries(stats.children.map((item) => [item.children[0].textContent, item.children[1].textContent]));
+    assert.equal(metrics["Matrix value"], expected.valueLabel);
+    assert.equal(metrics.Technique, expected.technique);
+    assert.equal(metrics.Category, "RNA–RNA interaction mapping methods");
+    assert.doesNotMatch(Object.values(metrics).join("\n"), /\b(?:EF|Family|Tier|LSS)\b/);
+  }
+});
+
+test("matrix public copy collection uses ordinary Case vocabulary without internal terms", () => {
+  assert.ok(MatrixShell.MATRIX_PUBLIC_COPY && typeof MatrixShell.MATRIX_PUBLIC_COPY === "object");
+
+  const rendererSource = read("public/entry-cases/__entry_ef_site__/ef-heatmap.js");
+  const sandbox = { window: {} };
+  vm.runInNewContext(rendererSource, sandbox);
+  const rendererCopy = sandbox.window.FoldBridgeMatrixPublicCopy;
+  assert.ok(rendererCopy && typeof rendererCopy === "object");
+
+  const copy = [...Object.values(MatrixShell.MATRIX_PUBLIC_COPY), ...Object.values(rendererCopy)].join("\n");
+  for (const expected of [
+    "Explore experimental contacts across sequence, secondary structure, and 3D structure.",
+    "Sequence",
+    "Contact / pair map",
+    "Secondary structure",
+    "3D structure",
+    "Signal",
+    "Loading matrix…",
+    "Linked data ready",
+  ]) {
+    assert.match(copy, new RegExp(expected.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
+  }
+  assert.doesNotMatch(copy, /\b(?:EF|Family|Tier|LSS)\b/i);
+  assert.doesNotMatch(copy, /mapped-chain sequence|VARNA secondary structure|3D linked structure/i);
+});
+
+test("matrix error rendering keeps raw diagnostics out of the DOM", () => {
+  const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
+  const start = source.indexOf("function showEfModeError");
+  const end = source.indexOf("function classifyPublicTechniqueToken", start);
+  assert.ok(start >= 0 && end > start);
+  const errorRenderer = source.slice(start, end);
+
+  assert.match(errorRenderer, /pre\.textContent\s*=\s*["']Case data could not be loaded\.["']/);
+  assert.match(errorRenderer, /console\.error\(["']\[workbench:matrix\]["'],\s*error\)/);
+  assert.doesNotMatch(errorRenderer, /pre\.textContent\s*=.*(?:msg|error)/);
+
+  const host = { replaceChildren(node) { this.child = node; } };
+  const diagnostics = [];
+  const sandbox = {
+    document: {
+      querySelector(selector) { return selector === "#assetStatus" ? host : null; },
+      createElement() { return {}; },
+    },
+    console: { error(...args) { diagnostics.push(args); } },
+  };
+  vm.runInNewContext(`${errorRenderer}; showEfModeError(new Error("private matrix diagnostic"));`, sandbox);
+  assert.equal(host.child.textContent, "Case data could not be loaded.");
+  assert.doesNotMatch(host.child.textContent, /private matrix diagnostic/);
+  assert.equal(diagnostics[0][0], "[workbench:matrix]");
+  assert.match(String(diagnostics[0][1]), /private matrix diagnostic/);
+});
+
+test("the real loader-to-workbench error chain never writes raw diagnostics into its host", async () => {
+  const workbenchSource = read("public/entry-cases/__entry_v3_site__/workbench.js");
+  const errorStart = workbenchSource.indexOf("function showEfModeError");
+  const errorEnd = workbenchSource.indexOf("function classifyPublicTechniqueToken", errorStart);
+  const errorRenderer = workbenchSource.slice(errorStart, errorEnd);
+  const efCaseSource = read("public/entry-cases/__entry_ef_site__/ef-case.js");
+  const domWrites = [];
+  const errorHost = {
+    set innerHTML(value) { domWrites.push(String(value)); },
+    replaceChildren(node) { this.child = node; domWrites.push(String(node.textContent)); },
+  };
+  const diagnostics = [];
+  const sandbox = {
+    window: {
+      __FOLDBRIDGE_EF_CASE_CONFIG__: { deferBootstrap: true },
+      location: { href: "https://example.test/cases/8QO5/chains/A/" },
+    },
+    document: {
+      baseURI: "https://example.test/cases/8QO5/chains/A/",
+      readyState: "complete",
+      querySelector(selector) { return selector === "#assetStatus" ? errorHost : null; },
+      createElement() { return {}; },
+    },
+    console: {
+      error(...args) { diagnostics.push(args); },
+      warn() {},
+    },
+  };
+  const context = vm.createContext(sandbox);
+  vm.runInContext(efCaseSource, context);
+  vm.runInContext(errorRenderer, context);
+  let caughtError;
+  try {
+    await sandbox.window.efCaseBootstrap({
+      caseId: "8QO5",
+      chainId: "A",
+      manifestUrl: "https://example.test/cases/8QO5/browser-manifest.json",
+      hosts: { sequence: {}, heatmap: {}, varna: {}, molstar: {}, error: errorHost },
+    });
+  } catch (error) {
+    caughtError = error;
+    sandbox.caughtError = error;
+    vm.runInContext("showEfModeError(caughtError)", context);
+  }
+  assert.match(String(caughtError), /EfHeatmapCore \/ createEfHeatmap not loaded/);
+  assert.ok(domWrites.length >= 1);
+  assert.ok(domWrites.every((value) => !value.includes("EfHeatmapCore")), `raw DOM writes: ${JSON.stringify(domWrites)}`);
+  assert.equal(errorHost.child.textContent, "Case data could not be loaded.");
+  assert.deepEqual(diagnostics.map((args) => args[0]), ["[workbench:matrix]"]);
+  assert.match(String(diagnostics[0][1]), /EfHeatmapCore \/ createEfHeatmap not loaded/);
 });
 
 test("ordinary Case and EF share the residue linkage API", () => {

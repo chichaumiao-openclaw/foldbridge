@@ -52,6 +52,7 @@ const TECHNIQUE_ALIASES = {
   cotranscriptionalshapeseq: 'SHAPE-Seq',
   nucshapestructureseq: 'SHAPE-Seq',
   iclaser: 'LASER-seq',
+  map: 'Mutate-and-map methods',
   mca: 'MOHCA',
   mutateandmap: 'Mutate-and-map methods'
 };

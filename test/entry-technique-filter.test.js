@@ -53,7 +53,7 @@ test('shared classifier leaves missing/background policy to callers', () => {
 });
 
 test('shared classifier deduplicates aliases and canonical tokens by canonical method', () => {
-  const result = classifyTechniqueFilter('MCA,MOHCA;mutate-and-map;Mutate-and-map methods');
+  const result = classifyTechniqueFilter('MCA,MOHCA;MAP;mutate-and-map;Mutate-and-map methods');
   assert.deepEqual(result.methods.map((method) => method.label), ['MOHCA', 'Mutate-and-map methods']);
   assert.deepEqual(result.categoryIds, ['interaction']);
   assert.equal(result.classificationStatus, 'mapped');
@@ -111,6 +111,7 @@ test('technique taxonomy snapshot is stable and fully serializable', () => {
     { normalizedToken: 'cotranscriptionalshapeseq', canonicalLabel: 'SHAPE-Seq' },
     { normalizedToken: 'nucshapestructureseq', canonicalLabel: 'SHAPE-Seq' },
     { normalizedToken: 'iclaser', canonicalLabel: 'LASER-seq' },
+    { normalizedToken: 'map', canonicalLabel: 'Mutate-and-map methods' },
     { normalizedToken: 'mca', canonicalLabel: 'MOHCA' },
     { normalizedToken: 'mutateandmap', canonicalLabel: 'Mutate-and-map methods' }
   ]);

@@ -4,6 +4,19 @@
   const NS = "http://www.w3.org/2000/svg";
   const NEUTRAL_GRAY = { r: 200, g: 200, b: 200 };
   const SELECTED_RGB = { r: 155, g: 28, b: 28 };
+  const MATRIX_PUBLIC_COPY = Object.freeze({
+    position: "PDB pos",
+    sequence: "Sequence",
+    signal: "Signal",
+    sequenceAria: "Sequence with dynamically linked signal",
+    contactMap: "Contact / pair map",
+    secondaryStructure: "Secondary structure",
+    structure3d: "3D structure",
+    idleStatus: "Hover a measured cell; click to link a residue or pair across sequence, secondary structure, and 3D structure.",
+    noSignalSelected: "no signal selected",
+    signalLegend: "Signal · no / negative signal → strong positive signal",
+  });
+  window.FoldBridgeMatrixPublicCopy = MATRIX_PUBLIC_COPY;
 
   function svgNode(name, attrs = {}) {
     const node = document.createElementNS(NS, name);
@@ -23,6 +36,14 @@
     if (Math.abs(value) >= 100) return value.toFixed(1);
     if (Math.abs(value) >= 10) return value.toFixed(2);
     return value.toFixed(3);
+  }
+
+  function publicSourceLabel(source) {
+    if (source === "sequence") return MATRIX_PUBLIC_COPY.sequence;
+    if (source === "signal") return MATRIX_PUBLIC_COPY.signal;
+    if (source === "varna") return MATRIX_PUBLIC_COPY.secondaryStructure;
+    if (source === "3d") return MATRIX_PUBLIC_COPY.structure3d;
+    return "Linked view";
   }
 
   function canonicalResidues(residues, header) {
@@ -116,15 +137,15 @@
     sequenceHost.innerHTML = "";
     heatmapHost.innerHTML = "";
     const root = htmlNode("div", "ef-heatmap-component");
-    const idleText = "Hover a measured cell; click to lock a residue or pair across 1D / 2D / 3D";
+    const idleText = MATRIX_PUBLIC_COPY.idleStatus;
     const status = htmlNode("div", "ef-interaction-status", idleText);
     root.appendChild(status);
 
     const sequenceRail = railApi.createResidueRail(document, {
       positions: sequenceRows,
-      rows: [["PDB pos", 24], ["Mapped chain seq", 52], ["EF intensity", 84]],
+      rows: [[MATRIX_PUBLIC_COPY.position, 24], [MATRIX_PUBLIC_COPY.sequence, 52], [MATRIX_PUBLIC_COPY.signal, 84]],
       height: 118,
-      ariaLabel: "1D mapped chain sequence and dynamically linked EF intensity",
+      ariaLabel: MATRIX_PUBLIC_COPY.sequenceAria,
       positionLabel: (row) => String(row.pdb_pos),
     });
     const sequenceTrack = sequenceRail.svg;
@@ -145,7 +166,7 @@
       return keys;
     }
 
-    function wireSequenceMark(mark, visibleMark, row, trackKind) {
+    function wireSequenceMark(mark, visibleMark, row, trackKind, publicSource) {
       const residueKey = residueKeyForRow(row);
       mark.setAttribute("data-residue-key", residueKey);
       mark.setAttribute("data-pdb-pos", row.pdb_pos);
@@ -155,9 +176,9 @@
       mark.setAttribute("data-index", row.matrix_index);
       mark.setAttribute("aria-pressed", "false");
       const dispose = linkage.wireResidueMark(mark, {
-        onHover: (event) => showResidueHover(row, `1d:${trackKind}`, event),
-        onLeave: () => clearHover(`1d:${trackKind}`),
-        onSelect: () => selectAxis(sequenceAxis, row.matrix_index, "sequence"),
+        onHover: (event) => showResidueHover(row, publicSource, event),
+        onLeave: () => clearHover(publicSource),
+        onSelect: () => selectAxis(sequenceAxis, row.matrix_index, publicSource),
       });
       cleanup.push(dispose);
       sequenceMarks.push(mark);
@@ -180,7 +201,7 @@
         "data-base": String(row.base || "N").toUpperCase(), "data-residue-key": residueKey,
       });
       baseTarget.appendChild(base);
-      wireSequenceMark(baseTarget, base, row, "mapped_chain_sequence");
+      wireSequenceMark(baseTarget, base, row, "mapped_chain_sequence", "sequence");
       sequenceTrack.appendChild(baseTarget);
       const baseLetter = svgNode("text", { class: "ef-sequence-letter", x, y: 56, "text-anchor": "middle" });
       baseLetter.textContent = row.base || "·";
@@ -188,7 +209,7 @@
 
       const intensityTarget = svgNode("g", {
         class: "ef-sequence-target residue-mark", "data-hit-width": sequenceRail.hitWidth,
-        "data-residue-key": residueKey, "aria-label": `PDB ${row.pdb_pos} ${row.base || ""}; no EF intensity selected`,
+        "data-residue-key": residueKey, "aria-label": `PDB ${row.pdb_pos} ${row.base || ""}; ${MATRIX_PUBLIC_COPY.noSignalSelected}`,
       });
       intensityTarget.appendChild(svgNode("rect", {
         class: "ef-sequence-hit", x: x - sequenceRail.hitWidth / 2, y: 76,
@@ -199,9 +220,9 @@
         width: sequenceRail.cellWidth, height: 24, rx: 1, fill: noSignalFill, "data-residue-key": residueKey,
       });
       intensityTarget.appendChild(intensity);
-      wireSequenceMark(intensityTarget, intensity, row, "ef_intensity");
+      wireSequenceMark(intensityTarget, intensity, row, "ef_intensity", "signal");
       const intensityTitle = svgNode("title");
-      intensityTitle.textContent = `PDB ${row.pdb_pos} ${row.base || ""} · no EF intensity selected`;
+      intensityTitle.textContent = `PDB ${row.pdb_pos} ${row.base || ""} · ${MATRIX_PUBLIC_COPY.noSignalSelected}`;
       intensityTarget.appendChild(intensityTitle);
       sequenceTrack.appendChild(intensityTarget);
       const bar = svgNode("rect", { class: "ef-intensity-bar", x: x - 2, y: 99, width: 4, height: 0, visibility: "hidden" });
@@ -217,7 +238,7 @@
     const svg = svgNode("svg", {
       class: "ef-matrix-svg", viewBox: `0 0 ${TOTAL_W} ${TOTAL_H}`,
       preserveAspectRatio: "xMidYMid meet", role: "group",
-      "aria-label": `${H.value_kind || "EF"} matrix ${H.n_rows} by ${H.n_cols}, PDB chain coordinates`,
+      "aria-label": `${MATRIX_PUBLIC_COPY.contactMap}, ${H.n_rows} by ${H.n_cols}, PDB chain coordinates`,
     });
     svg.appendChild(svgNode("rect", { class: "ef-matrix-background", x: PLOT_X, y: PLOT_Y, width: PLOT_W, height: PLOT_H }));
     const gCells = svgNode("g", { class: "ef-cells" });
@@ -277,8 +298,7 @@
     const tooltip = htmlNode("div", "ef-tooltip"); tooltip.setAttribute("role", "status"); plotWrap.appendChild(tooltip);
     root.appendChild(plotWrap);
     const colorbar = htmlNode("div", "ef-colorbar");
-    const scaleName = H.family === "F" ? "F coupling z" : "E contact score";
-    colorbar.appendChild(htmlNode("div", "ef-colorbar-title", `${H.value_kind || scaleName} · no / negative signal → strong positive signal`));
+    colorbar.appendChild(htmlNode("div", "ef-colorbar-title", MATRIX_PUBLIC_COPY.signalLegend));
     const legendRow = htmlNode("div", "ef-colorbar-row");
     legendRow.appendChild(htmlNode("span", "ef-colorbar-min", "≤ 0"));
     legendRow.appendChild(htmlNode("span", "rmdb-heatmap-gradient ef-colorbar-ramp"));
@@ -354,7 +374,7 @@
     function showResidueHover(row, source, event = null) {
       if (!row) return;
       state.hoveredCell = null; setLinkedState("hovered", [row]); showResidueGuides(row);
-      status.textContent = `hover ${source} · PDB ${row.pdb_pos} ${row.base || ""}`;
+      status.textContent = `hover ${publicSourceLabel(source)} · PDB ${row.pdb_pos} ${row.base || ""}`;
       if (source !== "3d") {
         const targets = observedTargets([row]); if (targets.length) molstarPlugin.visual.highlight({ data: targets });
       }
@@ -416,8 +436,8 @@
         const intensity = intensityMarksByPdb.get(row.pdb_pos); const target = intensityTargetsByPdb.get(row.pdb_pos);
         const bar = intensityBarsByPdb.get(row.pdb_pos); const title = intensityTitlesByPdb.get(row.pdb_pos);
         intensity.setAttribute("fill", noSignalFill); intensity.setAttribute("data-value", ""); target.setAttribute("data-value", "");
-        target.setAttribute("aria-label", `PDB ${row.pdb_pos} ${row.base || ""}; no EF intensity selected`);
-        title.textContent = `PDB ${row.pdb_pos} ${row.base || ""} · no EF intensity selected`;
+        target.setAttribute("aria-label", `PDB ${row.pdb_pos} ${row.base || ""}; ${MATRIX_PUBLIC_COPY.noSignalSelected}`);
+        title.textContent = `PDB ${row.pdb_pos} ${row.base || ""} · ${MATRIX_PUBLIC_COPY.noSignalSelected}`;
         bar.setAttribute("height", 0); bar.setAttribute("visibility", "hidden");
       }
     }
@@ -448,8 +468,8 @@
         const valueLabel = Number.isFinite(value) ? fmt(value) : "no signal";
         intensity.setAttribute("fill", `rgb(${color.r},${color.g},${color.b})`);
         intensity.setAttribute("data-value", Number.isFinite(value) ? String(value) : ""); target.setAttribute("data-value", Number.isFinite(value) ? String(value) : "");
-        target.setAttribute("aria-label", `PDB ${row.pdb_pos} ${row.base || ""}; EF intensity ${valueLabel}`);
-        title.textContent = `PDB ${row.pdb_pos} ${row.base || ""} · EF intensity ${valueLabel}`;
+        target.setAttribute("aria-label", `PDB ${row.pdb_pos} ${row.base || ""}; ${MATRIX_PUBLIC_COPY.signal} ${valueLabel}`);
+        title.textContent = `PDB ${row.pdb_pos} ${row.base || ""} · ${MATRIX_PUBLIC_COPY.signal} ${valueLabel}`;
         const normalized = Number.isFinite(value) ? Math.max(0, Math.min(1, value / maximum)) : 0;
         const barHeight = normalized > 0 ? Math.max(1, Math.round(normalized * 21)) : 0;
         bar.setAttribute("y", 99 - barHeight); bar.setAttribute("height", barHeight); bar.setAttribute("visibility", barHeight ? "visible" : "hidden");
@@ -508,7 +528,7 @@
       molstarPlugin.visual.select({ data: selectionData, nonSelectedColor: focusChain ? { r: 255, g: 255, b: 255 } : NEUTRAL_GRAY });
       status.textContent = cell
         ? `locked pair · i ${cell.iResidue?.pdb_pos ?? "–"} × j ${cell.jResidue?.pdb_pos ?? "–"} · ${fmt(cell.value)}`
-        : `locked ${axis} · PDB ${row?.pdb_pos ?? "–"} ${row?.base || ""} · ${isE ? "E row+column" : `F ${axis}-axis`} intensity`;
+        : `locked ${axis} · PDB ${row?.pdb_pos ?? "–"} ${row?.base || ""} · ${isE ? "row and column" : `${axis}-axis`} signal`;
       onInteraction({ kind: "select", source, axis, index, residue: row, cell, residueKeys: [...state.selectedKeys] });
     }
     function selectCell(i, j, source = "matrix") { const cell = cellAt(i, j); if (!cell) return false; selectAxis("i", i, source, cell); return true; }

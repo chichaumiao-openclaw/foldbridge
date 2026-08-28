@@ -2681,18 +2681,23 @@ function loadEfScript(scriptUrl) {
 }
 
 function showEfModeError(error) {
-  const msg = error && error.message ? error.message : String(error);
+  console.error('[workbench:matrix]', error);
   const host = document.querySelector('#assetStatus') || document.querySelector('#ef-matrix-status') || document.querySelector('#ef-heatmap-host');
-  if (!host) throw new Error(`EF Workbench has no permanent error host: ${msg}`);
+  if (!host) throw new Error('Matrix view has no permanent error host');
   const pre = document.createElement('pre');
   pre.className = 'ef-workbench-error';
-  pre.textContent = `EF case load failed:\n${msg}`;
+  pre.textContent = 'Case data could not be loaded.';
   host.replaceChildren(pre);
-  console.error('[workbench:ef]', error);
 }
 
 function classifyPublicTechniqueToken(label) {
   return classifyTechniqueFilter(label).methods[0];
+}
+
+function nextMatrixLockedEvent(event, lockedEvent = null) {
+  if (event?.kind === 'select') return event;
+  if (event?.kind === 'select-clear') return null;
+  return lockedEvent;
 }
 
 async function initEfMode(chainId, manifestUrl) {
@@ -2726,7 +2731,7 @@ async function initEfMode(chainId, manifestUrl) {
   }
   let lockedEvent = null;
   const onInteraction = (event) => {
-    if (event?.kind === 'select') lockedEvent = event;
+    lockedEvent = nextMatrixLockedEvent(event, lockedEvent);
     renderEfInteraction(document, event, lockedEvent);
   };
   const result = await window.efCaseBootstrap({

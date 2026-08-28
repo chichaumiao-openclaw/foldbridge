@@ -24,6 +24,31 @@ const WORKBENCH_IMPORT_ASSETS = [
 const WORKBENCH_DYNAMIC_ASSETS = ["ef-heatmap-core.js", "ef-heatmap.js", "ef-case.js"];
 const VERSION_SCRIPT = new URL("../scripts/version-ef-entry-assets.mjs", import.meta.url);
 
+test("checked-in classifier source, mirror, and fingerprint share the real F-payload MAP alias", async () => {
+  const sourceUrl = new URL("../src/techniqueFilterModel.js", import.meta.url);
+  const mirrorUrl = new URL("../public/entry-cases/__entry_v3_site__/technique-filter-model.mjs", import.meta.url);
+  const fingerprintUrl = new URL(
+    `../public/entry-cases/__entry_v3_site__/${versionedAssetName(CLASSIFIER_ASSET)}`,
+    import.meta.url,
+  );
+  const [sourceBytes, mirrorBytes, fingerprintBytes] = await Promise.all(
+    [sourceUrl, mirrorUrl, fingerprintUrl].map((url) => fs.readFile(url)),
+  );
+  assert.deepEqual(mirrorBytes, sourceBytes);
+  assert.deepEqual(fingerprintBytes, sourceBytes);
+
+  for (const moduleUrl of [sourceUrl, mirrorUrl, fingerprintUrl]) {
+    const classifier = await import(moduleUrl.href);
+    assert.deepEqual(classifier.classifyTechniqueFilter("MAP").methods, [{
+      label: "Mutate-and-map methods",
+      mappingStatus: "mapped",
+      categoryId: "interaction",
+      categoryLabel: "RNA–RNA interaction mapping methods",
+      categoryShortLabel: "RNA–RNA interaction",
+    }]);
+  }
+});
+
 function fixtureWorkbenchSource({ leadingImports = [], dynamicAssetVersion = EF_ASSET_VERSION } = {}) {
   return [
     ...leadingImports,

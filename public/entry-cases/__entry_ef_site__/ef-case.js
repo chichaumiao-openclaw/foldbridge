@@ -337,14 +337,14 @@
     }
   }
 
-  // --- 错误显示（fail-loud，页面可见） --------------------------------------
-  function showError(host, error) {
-    const msg = error && error.message ? error.message : String(error);
+  // --- 错误显示（fail-loud，页面可见；内部诊断交由调用方记录） ---------------
+  function showError(host) {
     if (host) {
-      host.innerHTML = `<pre style="color:#b00020;white-space:pre-wrap;padding:8px;">ef-case load failed:\n${msg}</pre>`;
+      const pre = document.createElement("pre");
+      pre.className = "ef-workbench-error";
+      pre.textContent = "Case data could not be loaded.";
+      host.replaceChildren(pre);
     }
-    // eslint-disable-next-line no-console
-    console.error("[ef-case]", error);
   }
 
   function requireHost(id) {
@@ -395,7 +395,7 @@
       }
       return await assemble(resolvedOptions);
     } catch (error) {
-      showError(resolvedOptions?.hosts?.error || null, error);
+      showError(resolvedOptions?.hosts?.error || null);
       throw error;
     }
   }
