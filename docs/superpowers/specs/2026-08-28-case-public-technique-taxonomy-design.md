@@ -48,7 +48,10 @@ Family A–F 与五个公开 categories 是正交维度，不可按字母一对�
 - 20,550,014 条 profile；
 - 14,953 个含 profile 的 case；
 - 已抽样的 37,838 条线上 `profile-index` 记录均可按 profile id 精确连接到 DuckDB；
-- `1C2X/C` 的 511/511 个 `profile-index` id 可精确连接。
+- `1C2X/C` 的 511/511 个 `profile-index` id 可唯一连接；DuckDB 同链有 520 条 profile，其中 9 条未进入该页面的 `profile-index`；
+- `9WNR/a` 的 6,838/6,838 个 `profile-index` id 可唯一连接；DuckDB 同链有 6,851 条 profile，其中 13 条未进入该页面的 `profile-index`。
+
+因此 `profile-index` 是公开页面 profile 集的权威清单。DuckDB-only profile 不得被追加进 sidecar，也不应导致页面清单失败；它们必须单独报告，便于审计数据池与发布清单的差异。
 
 五类映射后的 profile 计数为：
 
@@ -210,7 +213,7 @@ Schema 名称：`profile-public-techniques.v1`。
 
 连接链路固定为：
 
-1. 从只读 Case 源枚举 `profile-index.json.gz`，得到页面实际可选的 `(pdb_id, auth_chain, profile_id)`；
+1. 从只读 Case 源枚举 `profile-index.json.gz`，以其为页面实际可选 profile 的权威集合，得到 `(pdb_id, auth_chain, profile_id)`；
 2. DuckDB 中 `profile` 通过 `(pdb_id, chain_key)` 连接 `chain`；
 3. `chain.auth` 与 Case 路径中的 auth chain 精确匹配，区分大小写；
 4. `profile.profile_key` 与 `profile-index.profiles[].profile_id` 精确匹配；
@@ -225,7 +228,7 @@ Schema 名称：`profile-public-techniques.v1`。
 - join miss 时套用 chain 聚合技术；
 - 为了达到覆盖率而丢弃 profile。
 
-任一 chain 出现 profile join miss、duplicate、extra、chain identity 冲突或 count drift，整个 chain 不得产出可发布 sidecar，并写入 `profile-join-failures.tsv`。
+任一 `profile-index` profile 出现 DuckDB join miss、duplicate match、chain identity 冲突或 sidecar count drift，整个 chain 不得产出可发布 sidecar，并写入 `profile-join-failures.tsv`。同链存在 DuckDB-only profile 不属于 join failure：它们不得进入 sidecar，必须写入 `db-only-profiles.tsv`，并计入 manifest。
 
 ## 隔离 staging 布局
 
@@ -240,6 +243,7 @@ Schema 名称：`profile-public-techniques.v1`。
 ├── reports/
 │   ├── coverage.json
 │   ├── profile-join-failures.tsv
+│   ├── db-only-profiles.tsv
 │   ├── unmapped-techniques.tsv
 │   ├── null-techniques.tsv
 │   └── sha256.txt
@@ -256,6 +260,7 @@ Schema 名称：`profile-public-techniques.v1`。
 - taxonomy snapshot SHA-256；
 - 构建器版本；
 - sidecar、profile、`mapped`/`partially_mapped`/`unmapped`/`background`/`missing` 五种状态数量；五种状态之和必须严格等于 profile 总数；
+- DuckDB-only profile 数量及其按 chain/tech_filter/background 的审计汇总；
 - 生成时间和命令参数。
 
 staging 构建不得包含 `rsync --delete`，不得覆盖同名既有 run 目录。若目标 `run_id` 已存在，默认 fail-loud；只有显式指定一个新的 `run_id` 才能重跑。
@@ -307,14 +312,14 @@ UI 接入只允许发生在 staging 数据通过验收、且用户批准实施�
 
 第一阶段只在新的 `pilot-*` run 目录生成 pilot，不接线上：
 
-- 普通 Case：`1C2X/C`；
-- 当前 EF/2D 代表：`9WNR/a`、`9ZC6/A`、`9TMI/A`、`7SYS/z`、`8QO5/A`、`8UYE/A`、`8UYL/A`；
-- 额外自动选取至少一个 background-only、一个非 background null、一个 unmapped、一个大小写链并存 case。
+- 普通 Case：`1C2X/C`、`5E54/B`；
+- 当前 2D 代表：`9WNR/A`、`9WNR/a`、`9ZC6/A`、`9TMI/A`、`7SYS/z`、`8QO5/A`、`8UYE/A`、`8UYL/A`；
+- 边界覆盖固定为：`1C2X/C` 与 `9WNR/a` 含 background profile；`9ZC6/A` 含 30 个非 background 且 `tech_filter` 为空的公开 profile；`5E54/B` 含 12 个 Glyoxal 和 12 个 Terbium 未分类公开 profile；同时构建 `9WNR/A` 与 `9WNR/a` 验证大小写 chain identity。当前 DuckDB 不存在 background-only chain，因此不得把它设为 pilot 前置条件。
 
 数据验收必须全部通过：
 
-1. 每条 pilot chain 的 profile-index 与 sidecar 进行双向集合相等校验；
-2. `1C2X/C` 必须为 511/511 精确连接；
+1. 每条 pilot chain 的 profile-index 与 sidecar 进行双向集合相等校验；每个 profile-index id 在 DuckDB 中必须唯一命中；
+2. `1C2X/C` 必须为 511/511 唯一连接并报告 9 条 DB-only；`9WNR/a` 必须为 6,838/6,838 唯一连接并报告 13 条 DB-only；
 3. profile 顺序、count、id、chain case 全相等；
 4. mapped category 与当前 Entry taxonomy 函数逐项一致；
 5. `mapped`、`partially_mapped`、`unmapped`、`background`、`missing` 五种状态分别与 DuckDB + 共享分类函数的查询结果一致，且五者之和等于 sidecar `profileCount`；
@@ -322,7 +327,7 @@ UI 接入只允许发生在 staging 数据通过验收、且用户批准实施�
 7. 相同输入连续构建两次，解压 JSON 哈希一致；
 8. staging 目录之外零写入；
 9. 原 DuckDB 与全部输入资源 hash/mtime 不变；
-10. reports 中 join failures 必须为 0 才能进入 UI pilot。
+10. reports 中 join failures 必须为 0 才能进入 UI pilot；DB-only 计数允许非零，但必须与审计查询一致且不得进入 sidecar。
 
 UI pilot 验收必须覆盖：
 
