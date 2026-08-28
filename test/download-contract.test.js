@@ -125,8 +125,24 @@ test('legacy download and export controls are absent outside Entry and Case', ()
   assert.doesNotMatch(modules, /id="exportData"|aptamer_filtered_data\.csv/);
 });
 
-test('Download page is a Figshare placeholder with no download action yet', () => {
+test('Download page links the primary archives and every GEO series in the current atlas', () => {
   const main = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
-  assert.match(main, /Figshare archive link will be added here/);
+  const expectedGeoSeries = [
+    'GSE22393', 'GSE45803', 'GSE54106', 'GSE67667', 'GSE97609', 'GSE103421',
+    'GSE110516', 'GSE111962', 'GSE118309', 'GSE118387', 'GSE122286', 'GSE132099',
+    'GSE140048', 'GSE146952', 'GSE149767', 'GSE151327', 'GSE154171', 'GSE158052',
+    'GSE189259', 'GSE226865', 'GSE239954', 'GSE246246', 'GSE250290', 'GSE254361',
+    'GSE255779', 'GSE255783', 'GSE262014', 'GSE262888', 'GSE266263', 'GSE266872',
+    'GSE270001', 'GSE271825', 'GSE278422', 'GSE285333', 'GSE285334', 'GSE286293',
+    'GSE288618', 'GSE302505', 'GSE310313', 'GSE331520', 'GSE338022',
+  ];
+  const declaredSeries = main.match(/const DOWNLOAD_GEO_SERIES = Object\.freeze\(\[([\s\S]*?)\]\);/)?.[1] || '';
+  const actualGeoSeries = [...declaredSeries.matchAll(/'GSE\d+'/g)].map(([value]) => value.slice(1, -1));
+
+  assert.doesNotMatch(main, /Figshare archive link will be added here/);
+  assert.match(main, /https:\/\/rmdb\.stanford\.edu\/about\/#download-all-data/);
+  assert.match(main, /https:\/\/rasp2\.zhanglab\.net\/download\//);
+  assert.deepEqual(actualGeoSeries, expectedGeoSeries);
+  assert.match(main, /https:\/\/www\.ncbi\.nlm\.nih\.gov\/geo\/query\/acc\.cgi\?acc=\$\{encodeURIComponent\(accession\)\}/);
   assert.doesNotMatch(main, /function bindDownloadPageControls/);
 });

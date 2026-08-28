@@ -2188,14 +2188,61 @@ function toggleAnnojointAtlasGroupLimit(groupId) {
   render({ preserveScroll: true });
 }
 
+const DOWNLOAD_GEO_SERIES = Object.freeze([
+  'GSE22393', 'GSE45803', 'GSE54106', 'GSE67667', 'GSE97609', 'GSE103421',
+  'GSE110516', 'GSE111962', 'GSE118309', 'GSE118387', 'GSE122286', 'GSE132099',
+  'GSE140048', 'GSE146952', 'GSE149767', 'GSE151327', 'GSE154171', 'GSE158052',
+  'GSE189259', 'GSE226865', 'GSE239954', 'GSE246246', 'GSE250290', 'GSE254361',
+  'GSE255779', 'GSE255783', 'GSE262014', 'GSE262888', 'GSE266263', 'GSE266872',
+  'GSE270001', 'GSE271825', 'GSE278422', 'GSE285333', 'GSE285334', 'GSE286293',
+  'GSE288618', 'GSE302505', 'GSE310313', 'GSE331520', 'GSE338022',
+]);
+
+function renderDownloadGeoSeries() {
+  return DOWNLOAD_GEO_SERIES.map((accession) => `<a
+    class="download-geo-series-link"
+    href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=${encodeURIComponent(accession)}"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="${escapeHtml(accession)} on NCBI GEO">${escapeHtml(accession)}</a>`).join('');
+}
+
 function downloadPage() {
   return `${renderBundleHeader()}
   <main class="page-download" aria-label="Download">
     <section class="card bundle-wide-card download-page-card">
       <header class="page-card-heading">
         <h1>Download</h1>
-        <p class="download-page-intro">Figshare archive link will be added here.</p>
+        <p class="download-page-intro">FoldBridge indexes source data in their authoritative repositories. Use the links below to browse and download the original records.</p>
       </header>
+      <div class="download-center-grid">
+        <section class="download-center-section">
+          <div class="download-center-heading">
+            <span class="download-center-number">01</span>
+            <div>
+              <h2>Primary data repositories</h2>
+              <p>Open the official RMDB and RASP download directories. FoldBridge does not duplicate these large source archives.</p>
+            </div>
+          </div>
+          <div class="download-center-actions">
+            <a class="download-center-button" href="https://rmdb.stanford.edu/about/#download-all-data" target="_blank" rel="noopener noreferrer">RMDB downloads</a>
+            <a class="download-center-button" href="https://rasp2.zhanglab.net/download/" target="_blank" rel="noopener noreferrer">RASP downloads</a>
+          </div>
+        </section>
+        <section class="download-center-section download-center-section--geo">
+          <div class="download-center-heading">
+            <span class="download-center-number">02</span>
+            <div>
+              <h2>GEO / external datasets</h2>
+              <p>41 NCBI GEO Series represented in the current FoldBridge entry atlas. Each link opens the authoritative GEO record and its available files.</p>
+            </div>
+          </div>
+          <nav class="download-geo-series-links" aria-label="NCBI GEO Series downloads">
+            ${renderDownloadGeoSeries()}
+          </nav>
+        </section>
+      </div>
+      <p class="download-page-footnote">Source snapshot: FoldBridge entry atlas, 24 August 2026.</p>
     </section>
   </main>`;
 }

@@ -7758,7 +7758,7 @@ main.page-detail > .stats-page {
   color: var(--textPrimary);
   font-size: var(--body-text-size);
   line-height: 1.55;
-  white-space: nowrap;
+  white-space: normal;
 }
 .download-center-grid {
   display: grid;
@@ -7806,6 +7806,36 @@ main.page-detail > .stats-page {
   gap: 9px;
   align-items: center;
   justify-content: flex-end;
+}
+.download-center-section--geo {
+  align-items: start;
+}
+.download-geo-series-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(94px, 1fr));
+  gap: 8px;
+}
+.download-geo-series-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 6px 9px;
+  border: 1px solid #edc457;
+  border-radius: 8px;
+  background: #fffdf2;
+  color: var(--textPrimary);
+  font-size: var(--body-text-size);
+  line-height: 1.2;
+  text-decoration: none;
+}
+.download-geo-series-link:hover,
+.download-geo-series-link:focus-visible {
+  background: #fff2bf;
+}
+.download-geo-series-link:focus-visible {
+  outline: 2px solid #edc457;
+  outline-offset: 2px;
 }
 .download-center-button {
   appearance: none;
