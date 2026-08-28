@@ -9,6 +9,7 @@ import {
   readFileSync,
   readdirSync,
   readSync,
+  realpathSync,
   statSync,
 } from 'node:fs';
 import { open as openFile } from 'node:fs/promises';
@@ -27,10 +28,48 @@ import {
 } from '../public/entry-cases/__entry_v3_site__/workbench-pure.mjs';
 
 export const BUILDER_VERSION = 'case-public-techniques-builder.v1';
+// V2 remains the immutable data-only contract used by the two Task 5 runs.
 export const SOURCE_MANIFEST_SCHEMA = 'case-public-techniques-source-manifest.v2';
+export const PREVIEW_BUILDER_VERSION = 'case-public-techniques-preview-builder.v2';
+export const PREVIEW_SOURCE_MANIFEST_SCHEMA = 'case-public-techniques-source-manifest.v3';
+export const PREVIEW_PROVENANCE_SCHEMA = 'case-public-techniques-preview.v2';
+export const PREVIEW_ARTIFACT_KIND = 'pilot-preview';
+export const APPROVED_PREVIEW_BASELINE_ANCHOR = Object.freeze({
+  run: '/Volumes/tianyi/foldbridge_staging/case-public-taxonomy-20260828/runs/pilot-20260828T160812Z-f53fbdb138d2',
+  sha256: 'c0e5c91055d49c1503944551fb198e45fa07153862e1f0a9634692d1d136a65e',
+});
+export const PREVIEW_GLOBAL_DIRECTORIES = Object.freeze([
+  'entry-cases/__entry_v3_site__',
+  'entry-cases/__entry_ef_site__',
+]);
+export const PREVIEW_GLOBAL_FILES = Object.freeze([
+  'src/assets/generated/pdb-primary-citations/index.json',
+  'src/assets/header/aboutus.svg',
+  'src/assets/header/database.svg',
+  'src/assets/header/gznl2.svg',
+  'src/assets/header/home.svg',
+  'src/assets/header/research.svg',
+  'src/portalChrome.js',
+  'src/siteChrome.js',
+  'src/statsDashboard.js',
+]);
+export const PREVIEW_SOURCE_CLOSURE_PATHS = Object.freeze([
+  'package.json',
+  'scripts/build-case-public-techniques-preview.mjs',
+  'scripts/build-case-public-techniques.mjs',
+  'scripts/case-public-techniques-lib.mjs',
+  'scripts/extract-case-public-techniques.py',
+  'scripts/safe-openat-capture.py',
+  'scripts/verify-case-public-techniques.mjs',
+  'scripts/version-ef-entry-assets.mjs',
+  'src/techniqueFilterModel.js',
+  'public/entry-cases/__entry_v3_site__/workbench-pure.mjs',
+]);
 export const COVERAGE_SCHEMA = 'case-public-techniques-coverage.v1';
 export const MAX_DB_ONLY_AUDIT_SUMMARY_BYTES = 32 * 1024 * 1024;
 export const MAX_SOURCE_MANIFEST_BYTES = 64 * 1024 * 1024;
+export const MAX_PREVIEW_FILE_BYTES = 64 * 1024 * 1024;
+export const MAX_PREVIEW_MANIFEST_BYTES = 64 * 1024 * 1024;
 // One auditable ceiling applies to both compressed capture and decompressed JSON bytes.
 export const MAX_PROFILE_INDEX_BYTES = 32 * 1024 * 1024;
 export const MAX_SAFE_HELPER_STRUCTURED_OUTPUT_BYTES = 32 * 1024 * 1024;
@@ -262,8 +301,24 @@ function validateAnchoredFileRecord(record, label) {
 }
 
 function canonicalBase64Bytes(value, label) {
-  if (typeof value !== 'string' || !/^(?:[A-Za-z0-9+/]{4})*(?:[A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(value)) {
+  if (typeof value !== 'string' || value.length % 4 !== 0) {
     throw new Error(`${label} must be canonical base64`);
+  }
+  const padding = value.endsWith('==') ? 2 : value.endsWith('=') ? 1 : 0;
+  const dataLength = value.length - padding;
+  for (let index = 0; index < dataLength; index += 1) {
+    const code = value.charCodeAt(index);
+    const isCanonicalAlphabet = (
+      (code >= 0x41 && code <= 0x5a)
+      || (code >= 0x61 && code <= 0x7a)
+      || (code >= 0x30 && code <= 0x39)
+      || code === 0x2b
+      || code === 0x2f
+    );
+    if (!isCanonicalAlphabet) throw new Error(`${label} must be canonical base64`);
+  }
+  for (let index = dataLength; index < value.length; index += 1) {
+    if (value.charCodeAt(index) !== 0x3d) throw new Error(`${label} must be canonical base64`);
   }
   const bytes = Buffer.from(value, 'base64');
   if (bytes.toString('base64') !== value) throw new Error(`${label} is not canonical base64`);
@@ -278,7 +333,7 @@ function helperMaxBuffer(operation) {
 
 export function runSafeOpenatHelper({ python, request }) {
   if (typeof python !== 'string' || python.length === 0) throw new Error('Safe-openat python must be a path');
-  if (!isRecord(request) || !['capture', 'inventory', 'tree', 'sha256'].includes(request.operation)) {
+  if (!isRecord(request) || !['capture', 'inventory', 'tree', 'sha256', 'materialize'].includes(request.operation)) {
     throw new Error('Safe-openat request operation is invalid');
   }
   const result = spawnSync(python, [SAFE_OPENAT_HELPER_PATH], {
@@ -431,6 +486,36 @@ export function sha256AnchoredManifest({
   return response.manifest;
 }
 
+export function materializeAnchoredDirectory({
+  python,
+  sourceRoot,
+  outParent,
+  partialName,
+  finalName,
+  expectedInventory,
+  publish,
+  diagnosticText = null,
+}) {
+  const response = runSafeOpenatHelper({
+    python,
+    request: {
+      operation: 'materialize',
+      sourceRoot,
+      outParent,
+      partialName,
+      finalName,
+      expectedInventory,
+      publish,
+      diagnosticText,
+    },
+  });
+  assertExactFields(response, ['operation', 'published', 'name'], 'Safe-openat materialize response');
+  if (response.published !== publish || response.name !== (publish ? finalName : partialName)) {
+    throw new Error('Safe-openat materialize response drifted');
+  }
+  return { published: response.published, name: response.name };
+}
+
 function canonicalJsonValue(value, location = '$') {
   if (value === null || typeof value === 'string' || typeof value === 'boolean') return value;
   if (typeof value === 'number') {
@@ -478,6 +563,103 @@ export function sha256File(filePath) {
 
 export function compareUtf8(left, right) {
   return Buffer.compare(Buffer.from(String(left), 'utf8'), Buffer.from(String(right), 'utf8'));
+}
+
+export function runGitNoReplace(repoRoot, args, label, { maxBuffer = 64 * 1024 * 1024 } = {}) {
+  if (typeof repoRoot !== 'string' || !path.isAbsolute(repoRoot)) {
+    throw new Error('Git repoRoot must be an absolute path');
+  }
+  if (!Array.isArray(args) || args.some((argument) => typeof argument !== 'string')) {
+    throw new Error('Git arguments must be an array of strings');
+  }
+  const canonicalRepo = realpathSync(repoRoot);
+  const env = Object.fromEntries(
+    Object.entries(process.env).filter(([name]) => !name.startsWith('GIT_')),
+  );
+  env.GIT_NO_REPLACE_OBJECTS = '1';
+  const result = spawnSync('git', ['--no-replace-objects', '-C', canonicalRepo, ...args], {
+    env,
+    encoding: null,
+    maxBuffer,
+  });
+  if (result.error || result.status !== 0 || result.signal !== null) {
+    throw new Error(
+      `${label} failed: ${result.error?.message || result.stderr?.toString('utf8') || result.signal || result.status}`,
+    );
+  }
+  return result.stdout;
+}
+
+export function committedPreviewGlobalAssets({
+  repoRoot,
+  commit,
+  globalDirectories = PREVIEW_GLOBAL_DIRECTORIES,
+  globalFiles = PREVIEW_GLOBAL_FILES,
+} = {}) {
+  if (typeof repoRoot !== 'string' || !path.isAbsolute(repoRoot)) throw new Error('Preview Git repoRoot must be absolute');
+  if (typeof commit !== 'string' || !/^[0-9a-f]{40,64}$/.test(commit)) throw new Error('Preview Git commit is invalid');
+  if (!Array.isArray(globalDirectories) || globalDirectories.length === 0) {
+    throw new Error('Preview globalDirectories must be a non-empty array');
+  }
+  if (!Array.isArray(globalFiles) || globalFiles.length === 0) {
+    throw new Error('Preview globalFiles must be a non-empty array');
+  }
+  const validateRelativePath = (value, label) => {
+    if (
+      typeof value !== 'string'
+      || value.length === 0
+      || path.posix.isAbsolute(value)
+      || value.split('/').some((segment) => !segment || segment === '.' || segment === '..')
+    ) throw new Error(`${label} is not a safe repository-relative path`);
+  };
+  globalDirectories.forEach((directory, index) => validateRelativePath(directory, `Preview globalDirectories[${index}]`));
+  globalFiles.forEach((file, index) => validateRelativePath(file, `Preview globalFiles[${index}]`));
+  if (new Set(globalDirectories).size !== globalDirectories.length) throw new Error('Preview globalDirectories contain duplicates');
+  if (new Set(globalFiles).size !== globalFiles.length) throw new Error('Preview globalFiles contain duplicates');
+  const prefixes = [
+    ...globalDirectories.map((directory) => path.posix.join('public', directory)),
+    ...globalFiles,
+  ];
+  const output = runGitNoReplace(
+    repoRoot,
+    ['ls-tree', '-rz', '-r', '--full-tree', commit, '--', ...prefixes],
+    'Read committed preview global assets',
+  );
+  const entries = output.toString('utf8').split('\0').filter(Boolean).map((line) => {
+    const tab = line.indexOf('\t');
+    if (tab < 0) throw new Error('Committed preview global asset tree entry is malformed');
+    const [mode, type, blob] = line.slice(0, tab).split(' ');
+    const repositoryPath = line.slice(tab + 1);
+    if (!['100644', '100755'].includes(mode) || type !== 'blob' || !/^[0-9a-f]{40,64}$/.test(blob)) {
+      throw new Error(`Committed preview global asset is not a regular blob: ${repositoryPath}`);
+    }
+    const publicRelativePath = path.posix.relative('public', repositoryPath);
+    const inApprovedDirectory = !publicRelativePath.startsWith('../')
+      && globalDirectories.some((directory) => publicRelativePath.startsWith(`${directory}/`));
+    const isApprovedFile = globalFiles.includes(repositoryPath);
+    if (!inApprovedDirectory && !isApprovedFile) {
+      throw new Error(`Committed preview global asset escapes approved directories: ${repositoryPath}`);
+    }
+    const relativePath = isApprovedFile ? repositoryPath : publicRelativePath;
+    const bytes = runGitNoReplace(repoRoot, ['cat-file', 'blob', blob], `Read preview global blob ${repositoryPath}`);
+    return {
+      path: relativePath,
+      mode,
+      blob,
+      size: bytes.length,
+      sha256: createHash('sha256').update(bytes).digest('hex'),
+    };
+  }).sort((left, right) => compareUtf8(left.path, right.path));
+  if (entries.length === 0) throw new Error('Committed preview global asset inventory is empty');
+  const seen = new Set();
+  for (const entry of entries) {
+    if (seen.has(entry.path)) throw new Error(`Duplicate committed preview global asset ${entry.path}`);
+    seen.add(entry.path);
+  }
+  for (const file of globalFiles) {
+    if (!seen.has(file)) throw new Error(`Committed preview global file is missing: ${file}`);
+  }
+  return entries;
 }
 
 export function compareAuditRows(left, right) {

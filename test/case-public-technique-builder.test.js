@@ -526,6 +526,67 @@ test('input capture binds manifest metadata and parsed bytes to one stable read'
   rmSync(fixture.root, { recursive: true, force: true });
 });
 
+test('anchored base64 capture remains stack-safe at the real 9WNR root-structure size', (testContext) => {
+  const fixture = tempFixture();
+  testContext.after(() => rmSync(fixture.root, { recursive: true, force: true }));
+  const canonicalRoot = realpathSync(fixture.root);
+  const source = path.join(canonicalRoot, 'large-structure.cif.gz');
+  const payload = Buffer.alloc(4_227_121, 0xa5);
+  writeFileSync(source, payload);
+  const captured = techniqueLib.captureAnchoredFile({
+    python: realpathSync(PYTHON),
+    root: canonicalRoot,
+    segments: ['large-structure.cif.gz'],
+    maxBytes: 64 * 1024 * 1024,
+    includeBytes: true,
+  });
+  assert.equal(captured.bytes.equals(payload), true);
+  assert.equal(captured.record.size, payload.length);
+  assert.equal(captured.record.sha256, createHash('sha256').update(payload).digest('hex'));
+});
+
+test('anchored base64 capture rejects invalid length, characters, padding, and noncanonical bits', (testContext) => {
+  const fixture = tempFixture();
+  testContext.after(() => rmSync(fixture.root, { recursive: true, force: true }));
+  const expectedPath = path.join(fixture.root, 'payload.bin');
+  const fakePython = path.join(fixture.root, 'fake-python');
+  for (const [label, bytesBase64] of [
+    ['length', 'A'],
+    ['characters', '!!!!'],
+    ['padding', 'A==='],
+    ['noncanonical bits', 'Zh=='],
+  ]) {
+    const response = {
+      operation: 'capture',
+      record: {
+        path: expectedPath,
+        size: 1,
+        mtimeNs: '0',
+        inode: '0',
+        device: '0',
+        sha256: '0'.repeat(64),
+      },
+      bytesBase64,
+    };
+    writeFileSync(
+      fakePython,
+      `#!${process.execPath}\nprocess.stdout.write(${JSON.stringify(`${JSON.stringify(response)}\n`)});\n`,
+      { mode: 0o755 },
+    );
+    assert.throws(
+      () => techniqueLib.captureAnchoredFile({
+        python: fakePython,
+        root: fixture.root,
+        segments: ['payload.bin'],
+        maxBytes: 1024,
+        includeBytes: true,
+      }),
+      /canonical base64/,
+      label,
+    );
+  }
+});
+
 test('bounded sync and streaming captures stop reading at the first byte-limit breach', async () => {
   const fixture = tempFixture();
   const input = path.join(fixture.root, 'growing-input.bin');

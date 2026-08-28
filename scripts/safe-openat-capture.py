@@ -2,6 +2,8 @@
 """Dirfd-anchored, fail-closed filesystem capture primitives for Case staging."""
 
 import base64
+import ctypes
+import errno
 import hashlib
 import json
 import os
@@ -16,6 +18,9 @@ MAX_CAPTURE_OUTPUT_BYTES = 96 * 1024 * 1024
 MAX_STRUCTURED_OUTPUT_BYTES = 32 * 1024 * 1024
 MAX_SAFE_INTEGER = 9_007_199_254_740_991
 READ_CHUNK_BYTES = 1024 * 1024
+MAX_MATERIALIZE_ENTRIES = 200_000
+MAX_MATERIALIZE_FILE_BYTES = 64 * 1024 * 1024
+FIXED_DIAGNOSTIC_TEXT = "Preview build failed.\n"
 
 DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
 FILE_FLAGS = os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC
@@ -543,6 +548,512 @@ def sha256_manifest_anchored(
     return "".join(f"{row}\n" for row in rows)
 
 
+def _validate_relative_path(relative, label, *, allow_root=False):
+    if not isinstance(relative, str):
+        raise SafeOpenatError(f"{label} must be a string")
+    if relative == "" and allow_root:
+        return ()
+    if not relative or relative.startswith("/") or "\x00" in relative:
+        raise SafeOpenatError(f"{label} is invalid")
+    segments = relative.split("/")
+    return tuple(_validate_segment(segment, f"{label} segment[{index}]") for index, segment in enumerate(segments))
+
+
+def _validate_materialize_inventory(inventory):
+    _exact_keys(inventory, ["directories", "files"], "expectedInventory")
+    directories = inventory["directories"]
+    files = inventory["files"]
+    if not isinstance(directories, list) or not isinstance(files, list):
+        raise SafeOpenatError("expectedInventory directories and files must be arrays")
+    if len(directories) + len(files) > MAX_MATERIALIZE_ENTRIES:
+        raise SafeOpenatError("expectedInventory exceeds entry limit")
+    if not directories or directories[0] != "":
+        raise SafeOpenatError("expectedInventory directories must begin with the root entry")
+    expected_directory_order = sorted(directories, key=lambda value: value.encode("utf-8", "strict"))
+    if directories != expected_directory_order or len(set(directories)) != len(directories):
+        raise SafeOpenatError("expectedInventory directories must be unique and UTF-8 byte sorted")
+    directory_set = set()
+    for index, relative in enumerate(directories):
+        segments = _validate_relative_path(relative, f"expectedInventory.directories[{index}]", allow_root=True)
+        directory_set.add(relative)
+        if segments and "/".join(segments[:-1]) not in directory_set:
+            raise SafeOpenatError(f"expectedInventory directory parent is missing: {relative}")
+
+    normalized_files = []
+    previous = None
+    total_bytes = 0
+    for index, item in enumerate(files):
+        _exact_keys(item, ["path", "size", "sha256", "mode"], f"expectedInventory.files[{index}]")
+        segments = _validate_relative_path(item["path"], f"expectedInventory.files[{index}].path")
+        if previous is not None and previous.encode("utf-8") >= item["path"].encode("utf-8"):
+            raise SafeOpenatError("expectedInventory files must be unique and UTF-8 byte sorted")
+        previous = item["path"]
+        parent = "/".join(segments[:-1])
+        if parent not in directory_set:
+            raise SafeOpenatError(f"expectedInventory file parent is missing: {item['path']}")
+        size = item["size"]
+        if isinstance(size, bool) or not isinstance(size, int) or size < 0 or size > MAX_MATERIALIZE_FILE_BYTES:
+            raise SafeOpenatError(f"expectedInventory file size is invalid: {item['path']}")
+        digest = item["sha256"]
+        if not isinstance(digest, str) or len(digest) != 64 or any(character not in "0123456789abcdef" for character in digest):
+            raise SafeOpenatError(f"expectedInventory SHA-256 is invalid: {item['path']}")
+        mode = item["mode"]
+        if mode not in ("100644", "100755"):
+            raise SafeOpenatError(f"expectedInventory mode is invalid: {item['path']}")
+        total_bytes += size
+        if total_bytes > MAX_SAFE_INTEGER:
+            raise SafeOpenatError("expectedInventory total bytes exceed safe integer limit")
+        normalized_files.append({"path": item["path"], "size": size, "sha256": digest, "mode": mode})
+    return {"directories": list(directories), "files": normalized_files}
+
+
+def _hash_regular_file_at(parent_fd, name, relative, *, max_bytes=MAX_MATERIALIZE_FILE_BYTES):
+    display = "/".join(relative + (name,))
+    parent_metadata = _directory_metadata(os.fstat(parent_fd))
+    try:
+        file_fd = os.open(name, FILE_FLAGS, dir_fd=parent_fd)
+    except OSError as error:
+        raise SafeOpenatError(f"cannot open materialize source file {display}: {error}") from error
+    try:
+        before = os.fstat(file_fd)
+        if not stat.S_ISREG(before.st_mode):
+            raise SafeOpenatError(f"materialize source is not a regular file: {display}")
+        if before.st_size > max_bytes:
+            raise SafeOpenatError(f"materialize source exceeds {max_bytes} bytes: {display}")
+        digest = hashlib.sha256()
+        bytes_read = 0
+        while bytes_read < before.st_size:
+            chunk = os.read(file_fd, min(READ_CHUNK_BYTES, before.st_size - bytes_read))
+            if not chunk:
+                break
+            digest.update(chunk)
+            bytes_read += len(chunk)
+        after = os.fstat(file_fd)
+        named = _named_stat(parent_fd, name, display)
+        if (
+            not _same_identity(before, after)
+            or not _same_identity(after, named)
+            or before.st_size != after.st_size
+            or before.st_mtime_ns != after.st_mtime_ns
+            or before.st_ctime_ns != after.st_ctime_ns
+            or bytes_read != after.st_size
+            or _directory_metadata(os.fstat(parent_fd)) != parent_metadata
+        ):
+            raise SafeOpenatError(f"materialize source file edge changed or ABA drifted: {display}")
+        return {
+            "path": display,
+            "size": after.st_size,
+            "sha256": digest.hexdigest(),
+            "mode": "100755" if after.st_mode & 0o111 else "100644",
+        }
+    finally:
+        os.close(file_fd)
+
+
+def _snapshot_open_tree(root_fd):
+    directories = []
+    files = []
+
+    def visit(directory_fd, relative):
+        directories.append("/".join(relative))
+        for name in utf8_byte_sorted(os.listdir(directory_fd)):
+            child_relative = relative + (name,)
+            display = "/".join(child_relative)
+            named = _named_stat(directory_fd, name, display)
+            if stat.S_ISLNK(named.st_mode):
+                raise SafeOpenatError(f"symlink is not allowed in materialize source: {display}")
+            if stat.S_ISDIR(named.st_mode):
+                edge = _open_expected_directory(
+                    directory_fd, name, relative, missing_ok=False, hook=None
+                )
+                try:
+                    visit(edge["child_fd"], child_relative)
+                finally:
+                    _verify_and_close_directory_edge(edge)
+            elif stat.S_ISREG(named.st_mode):
+                files.append(_hash_regular_file_at(directory_fd, name, relative))
+            else:
+                raise SafeOpenatError(f"non-regular materialize source entry is not allowed: {display}")
+
+    visit(root_fd, ())
+    return {"directories": directories, "files": files}
+
+
+def _open_relative_directory(root_fd, segments, *, hook=None, watch_final_metadata=True):
+    fds = [os.dup(root_fd)]
+    edges = []
+    relative = ()
+    try:
+        for index, segment in enumerate(segments):
+            edge = _open_directory_edge(
+                fds[-1],
+                segment,
+                watch_parent=True,
+                relative_segments=relative,
+                watch_child_metadata=watch_final_metadata or index < len(segments) - 1,
+            )
+            edges.append(edge)
+            fds.append(edge["child_fd"])
+            relative += (segment,)
+            if hook is not None:
+                hook("after_destination_directory_open", relative)
+        return fds, edges
+    except Exception:
+        for fd in reversed(fds):
+            os.close(fd)
+        raise
+
+
+def _mkdir_relative_destination(partial_fd, segments, hook, created_identities):
+    parent_segments = segments[:-1]
+    fds, edges = _open_relative_directory(
+        partial_fd, parent_segments, hook=hook, watch_final_metadata=False
+    )
+    try:
+        parent_fd = fds[-1]
+        name = segments[-1]
+        display = "/".join(segments)
+        if _named_stat(parent_fd, name, display, missing_ok=True) is not None:
+            raise SafeOpenatError(f"materialize destination already exists: {display}")
+        try:
+            os.mkdir(name, 0o755, dir_fd=parent_fd)
+        except OSError as error:
+            raise SafeOpenatError(f"cannot create materialize destination directory {display}: {error}") from error
+        created_stat = _named_stat(parent_fd, name, display)
+        if not stat.S_ISDIR(created_stat.st_mode):
+            raise SafeOpenatError(f"created materialize destination is not a directory: {display}")
+        created_identities[_identity(created_stat)] = "directory"
+        if hook is not None:
+            hook("after_destination_directory_create", segments)
+        edge = _open_directory_edge(
+            parent_fd,
+            name,
+            watch_parent=True,
+            relative_segments=parent_segments,
+            watch_child_metadata=True,
+        )
+        try:
+            if hook is not None:
+                hook("after_destination_directory_open", segments)
+            _verify_directory_edge(edge)
+        finally:
+            os.close(edge["child_fd"])
+        _verify_edges(edges)
+    finally:
+        for fd in reversed(fds):
+            os.close(fd)
+
+
+def _copy_expected_file(source_fd, partial_fd, expected, created_identities, hook):
+    segments = tuple(expected["path"].split("/"))
+    source_fds, source_edges = _open_relative_directory(source_fd, segments[:-1])
+    destination_fds, destination_edges = _open_relative_directory(
+        partial_fd, segments[:-1], watch_final_metadata=False
+    )
+    input_fd = None
+    output_fd = None
+    try:
+        source_parent = source_fds[-1]
+        destination_parent = destination_fds[-1]
+        source_parent_metadata = _directory_metadata(os.fstat(source_parent))
+        try:
+            input_fd = os.open(segments[-1], FILE_FLAGS, dir_fd=source_parent)
+        except OSError as error:
+            raise SafeOpenatError(f"cannot open materialize source file {expected['path']}: {error}") from error
+        source_before = os.fstat(input_fd)
+        if not stat.S_ISREG(source_before.st_mode):
+            raise SafeOpenatError(f"materialize source is not regular: {expected['path']}")
+        source_mode = "100755" if source_before.st_mode & 0o111 else "100644"
+        if source_before.st_size != expected["size"] or source_mode != expected["mode"]:
+            raise SafeOpenatError(f"materialize source metadata drifted: {expected['path']}")
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC
+        try:
+            output_fd = os.open(
+                segments[-1], flags, int(expected["mode"][-3:], 8), dir_fd=destination_parent
+            )
+        except OSError as error:
+            raise SafeOpenatError(f"cannot create materialize destination file {expected['path']}: {error}") from error
+        created_identities[_identity(os.fstat(output_fd))] = "file"
+        digest = hashlib.sha256()
+        copied = 0
+        while copied < source_before.st_size:
+            chunk = os.read(input_fd, min(READ_CHUNK_BYTES, source_before.st_size - copied))
+            if not chunk:
+                break
+            digest.update(chunk)
+            copied += len(chunk)
+            offset = 0
+            while offset < len(chunk):
+                count = os.write(output_fd, chunk[offset:])
+                if count <= 0:
+                    raise SafeOpenatError(f"materialize destination write made no progress: {expected['path']}")
+                offset += count
+        os.fchmod(output_fd, int(expected["mode"][-3:], 8))
+        source_after = os.fstat(input_fd)
+        source_named = _named_stat(source_parent, segments[-1], expected["path"])
+        if (
+            not _same_identity(source_before, source_after)
+            or not _same_identity(source_after, source_named)
+            or source_before.st_mtime_ns != source_after.st_mtime_ns
+            or source_before.st_ctime_ns != source_after.st_ctime_ns
+            or copied != source_after.st_size
+            or digest.hexdigest() != expected["sha256"]
+            or _directory_metadata(os.fstat(source_parent)) != source_parent_metadata
+        ):
+            raise SafeOpenatError(f"materialize source content or edge drifted: {expected['path']}")
+        destination_after = os.fstat(output_fd)
+        destination_named = _named_stat(destination_parent, segments[-1], expected["path"])
+        if (
+            not _same_identity(destination_after, destination_named)
+            or not stat.S_ISREG(destination_after.st_mode)
+            or destination_after.st_size != expected["size"]
+        ):
+            raise SafeOpenatError(f"materialize destination file edge drifted: {expected['path']}")
+        _verify_edges(source_edges)
+        _verify_edges(destination_edges)
+        if hook is not None:
+            hook("after_destination_file_copy", segments)
+    finally:
+        if output_fd is not None:
+            os.close(output_fd)
+        if input_fd is not None:
+            os.close(input_fd)
+        for fd in reversed(destination_fds):
+            os.close(fd)
+        for fd in reversed(source_fds):
+            os.close(fd)
+
+
+def _clear_created_destination(directory_fd, created_identities, relative=()):
+    for name in utf8_byte_sorted(os.listdir(directory_fd)):
+        display = "/".join(relative + (name,))
+        named = _named_stat(directory_fd, name, display)
+        if stat.S_ISLNK(named.st_mode):
+            os.unlink(name, dir_fd=directory_fd)
+            continue
+        identity = _identity(named)
+        kind = created_identities.get(identity)
+        if stat.S_ISREG(named.st_mode):
+            if kind != "file":
+                raise SafeOpenatError(f"diagnostic reset refuses unknown file: {display}")
+            os.unlink(name, dir_fd=directory_fd)
+            continue
+        if stat.S_ISDIR(named.st_mode):
+            if kind != "directory":
+                raise SafeOpenatError(f"diagnostic reset refuses unknown directory: {display}")
+            edge = _open_directory_edge(
+                directory_fd,
+                name,
+                watch_parent=False,
+                relative_segments=relative,
+                watch_child_metadata=False,
+            )
+            try:
+                if not _same_identity(os.fstat(edge["child_fd"]), named):
+                    raise SafeOpenatError(f"diagnostic reset directory edge drifted: {display}")
+                _clear_created_destination(edge["child_fd"], created_identities, relative + (name,))
+                current = _named_stat(directory_fd, name, display)
+                if not _same_identity(current, named):
+                    raise SafeOpenatError(f"diagnostic reset directory edge changed: {display}")
+            finally:
+                os.close(edge["child_fd"])
+            os.rmdir(name, dir_fd=directory_fd)
+            continue
+        raise SafeOpenatError(f"diagnostic reset refuses unknown non-regular entry: {display}")
+
+
+def _write_fixed_diagnostic(partial_fd):
+    try:
+        os.mkdir("reports", 0o755, dir_fd=partial_fd)
+    except OSError as error:
+        raise SafeOpenatError(f"cannot create diagnostic reports directory: {error}") from error
+    reports_edge = _open_directory_edge(
+        partial_fd,
+        "reports",
+        watch_parent=False,
+        relative_segments=(),
+        watch_child_metadata=False,
+    )
+    report_fd = None
+    try:
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW | os.O_CLOEXEC
+        report_fd = os.open("build-error.txt", flags, 0o644, dir_fd=reports_edge["child_fd"])
+        diagnostic_bytes = FIXED_DIAGNOSTIC_TEXT.encode("utf-8")
+        offset = 0
+        while offset < len(diagnostic_bytes):
+            count = os.write(report_fd, diagnostic_bytes[offset:])
+            if count <= 0:
+                raise SafeOpenatError("diagnostic write made no progress")
+            offset += count
+        os.fchmod(report_fd, 0o644)
+    finally:
+        if report_fd is not None:
+            os.close(report_fd)
+        os.close(reports_edge["child_fd"])
+    expected = {
+        "directories": ["", "reports"],
+        "files": [{
+            "path": "reports/build-error.txt",
+            "size": len(FIXED_DIAGNOSTIC_TEXT.encode("utf-8")),
+            "sha256": hashlib.sha256(FIXED_DIAGNOSTIC_TEXT.encode("utf-8")).hexdigest(),
+            "mode": "100644",
+        }],
+    }
+    if _snapshot_open_tree(partial_fd) != expected:
+        raise SafeOpenatError("diagnostic reset did not produce the fixed plaintext layout")
+
+
+def _rename_directory_no_replace(parent_fd, source_name, destination_name):
+    libc = ctypes.CDLL(None, use_errno=True)
+    source = os.fsencode(source_name)
+    destination = os.fsencode(destination_name)
+    if sys.platform == "darwin" and hasattr(libc, "renameatx_np"):
+        result = libc.renameatx_np(parent_fd, source, parent_fd, destination, 0x00000004)
+    elif hasattr(libc, "renameat2"):
+        result = libc.renameat2(parent_fd, source, parent_fd, destination, 0x00000001)
+    else:
+        raise SafeOpenatError("atomic no-replace directory rename is unavailable")
+    if result != 0:
+        error_number = ctypes.get_errno()
+        raise SafeOpenatError(
+            f"atomic no-replace directory rename failed: {os.strerror(error_number)}"
+        )
+
+
+def materialize_anchored(
+    source_root,
+    out_parent,
+    *,
+    partial_name,
+    final_name,
+    expected_inventory,
+    publish,
+    diagnostic_text,
+    hook=None,
+):
+    _validate_segment(partial_name, "partialName")
+    _validate_segment(final_name, "finalName")
+    if partial_name == final_name:
+        raise SafeOpenatError("partialName and finalName must differ")
+    if not isinstance(publish, bool):
+        raise SafeOpenatError("publish must be boolean")
+    if hook is not None and not callable(hook):
+        raise SafeOpenatError("hook must be callable or None")
+    expected = _validate_materialize_inventory(expected_inventory)
+    if publish:
+        if diagnostic_text is not None:
+            raise SafeOpenatError("published materialization cannot contain diagnosticText")
+    else:
+        if diagnostic_text != FIXED_DIAGNOSTIC_TEXT:
+            raise SafeOpenatError("diagnosticText must equal the fixed public-safe diagnostic")
+        diagnostic_bytes = diagnostic_text.encode("utf-8")
+        diagnostic_expected = {
+            "directories": ["", "reports"],
+            "files": [{
+                "path": "reports/build-error.txt",
+                "size": len(diagnostic_bytes),
+                "sha256": hashlib.sha256(diagnostic_bytes).hexdigest(),
+                "mode": "100644",
+            }],
+        }
+        if expected != diagnostic_expected:
+            raise SafeOpenatError("diagnostic materialization inventory is not the fixed plaintext layout")
+
+    source_fds, source_root_edges = _open_canonical_root(source_root)
+    out_fds = []
+    out_root_edges = []
+    partial_edge = None
+    created_identities = {}
+    renamed = False
+    try:
+        source_stat = os.fstat(source_fds[-1])
+        if stat.S_IMODE(source_stat.st_mode) != 0o700:
+            raise SafeOpenatError("private materialize source root must have mode 0700")
+        initial_source = _snapshot_open_tree(source_fds[-1])
+        if initial_source != expected:
+            raise SafeOpenatError("private materialize source inventory differs from frozen expectedInventory")
+        _verify_edges(source_root_edges)
+
+        out_fds, out_root_edges = _open_canonical_root(out_parent)
+        # The helper intentionally changes out-parent contents, so retain edge identity
+        # without treating our own directory-entry mutation as root metadata drift.
+        if out_root_edges:
+            out_root_edges[-1]["child_metadata"] = None
+        out_fd = out_fds[-1]
+        if _named_stat(out_fd, final_name, final_name, missing_ok=True) is not None:
+            raise SafeOpenatError(f"final materialize destination already exists: {final_name}")
+        if _named_stat(out_fd, partial_name, partial_name, missing_ok=True) is not None:
+            raise SafeOpenatError(f"partial materialize destination already exists: {partial_name}")
+        try:
+            os.mkdir(partial_name, 0o700, dir_fd=out_fd)
+        except OSError as error:
+            raise SafeOpenatError(f"cannot create materialize partial directory: {error}") from error
+        partial_edge = _open_directory_edge(
+            out_fd,
+            partial_name,
+            watch_parent=True,
+            relative_segments=(),
+            watch_child_metadata=False,
+        )
+        partial_fd = partial_edge["child_fd"]
+        try:
+            for relative in expected["directories"][1:]:
+                _mkdir_relative_destination(
+                    partial_fd,
+                    tuple(relative.split("/")),
+                    hook,
+                    created_identities,
+                )
+            for item in expected["files"]:
+                _copy_expected_file(
+                    source_fds[-1], partial_fd, item, created_identities, hook
+                )
+
+            final_source = _snapshot_open_tree(source_fds[-1])
+            if final_source != expected:
+                raise SafeOpenatError("private materialize source changed before publication")
+            final_destination = _snapshot_open_tree(partial_fd)
+            if final_destination != expected:
+                raise SafeOpenatError("materialize destination differs from frozen expectedInventory")
+            _verify_edges(source_root_edges)
+            _verify_directory_edge(partial_edge)
+            _verify_edges(out_root_edges)
+            if publish:
+                os.fchmod(partial_fd, 0o755)
+                _verify_directory_edge(partial_edge)
+                if _named_stat(out_fd, final_name, final_name, missing_ok=True) is not None:
+                    raise SafeOpenatError(f"final materialize destination appeared before rename: {final_name}")
+                _rename_directory_no_replace(out_fd, partial_name, final_name)
+                renamed = True
+                final_stat = _named_stat(out_fd, final_name, final_name)
+                if not _same_identity(final_stat, os.fstat(partial_fd)) or not stat.S_ISDIR(final_stat.st_mode):
+                    raise SafeOpenatError("published final directory identity differs after atomic rename")
+                return {"published": True, "name": final_name}
+            return {"published": False, "name": partial_name}
+        except Exception as materialize_error:
+            if renamed:
+                raise
+            try:
+                _verify_directory_edge(partial_edge)
+                _clear_created_destination(partial_fd, created_identities)
+                os.fchmod(partial_fd, 0o700)
+                _write_fixed_diagnostic(partial_fd)
+                _verify_directory_edge(partial_edge)
+                _verify_edges(out_root_edges)
+            except Exception as diagnostic_error:
+                raise SafeOpenatError(
+                    f"materialize failed and fixed diagnostic reset also failed: {diagnostic_error}"
+                ) from materialize_error
+            raise
+    finally:
+        if partial_edge is not None:
+            os.close(partial_edge["child_fd"])
+        for fd in reversed(out_fds):
+            os.close(fd)
+        for fd in reversed(source_fds):
+            os.close(fd)
+
+
 def _parse_request(raw):
     if len(raw) > MAX_REQUEST_BYTES:
         raise SafeOpenatError("request exceeds input limit")
@@ -621,12 +1132,39 @@ def _dispatch(request):
                 exclude=request["exclude"],
             ),
         }
+    if operation == "materialize":
+        _exact_keys(
+            request,
+            [
+                "operation",
+                "sourceRoot",
+                "outParent",
+                "partialName",
+                "finalName",
+                "expectedInventory",
+                "publish",
+                "diagnosticText",
+            ],
+            "request",
+        )
+        return {
+            "operation": operation,
+            **materialize_anchored(
+                request["sourceRoot"],
+                request["outParent"],
+                partial_name=request["partialName"],
+                final_name=request["finalName"],
+                expected_inventory=request["expectedInventory"],
+                publish=request["publish"],
+                diagnostic_text=request["diagnosticText"],
+            ),
+        }
     raise SafeOpenatError("request operation is invalid")
 
 
 def encode_response(response, *, max_output_bytes=None):
     if not isinstance(response, dict) or response.get("operation") not in (
-        "capture", "inventory", "tree", "sha256"
+        "capture", "inventory", "tree", "sha256", "materialize"
     ):
         raise SafeOpenatError("response operation is invalid")
     if max_output_bytes is None:

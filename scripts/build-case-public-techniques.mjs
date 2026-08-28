@@ -43,6 +43,7 @@ import {
   parseProfileIndexGzipBytes,
   profileIndexPath,
   processSequentiallyBounded,
+  runGitNoReplace,
   sha256AnchoredManifest,
   sidecarRelativePath,
   taxonomySnapshotSha256,
@@ -237,42 +238,45 @@ function resolveInputs(parsed) {
 }
 
 export function resolveGitCommit(repoRoot, revision) {
-  const result = spawnSync('git', ['rev-parse', '--verify', `${revision}^{commit}`], {
-    cwd: repoRoot,
-    encoding: 'utf8',
-  });
-  if (result.error || result.status !== 0 || !/^[0-9a-f]{40}\n$/.test(result.stdout)) {
+  let stdout;
+  try {
+    stdout = runGitNoReplace(repoRoot, ['rev-parse', '--verify', `${revision}^{commit}`], 'Resolve git commit')
+      .toString('utf8');
+  } catch {
     throw new Error(`Cannot uniquely resolve real git commit ${JSON.stringify(revision)}`);
   }
-  return result.stdout.trim();
+  if (!/^[0-9a-f]{40}\n$/.test(stdout)) {
+    throw new Error(`Cannot uniquely resolve real git commit ${JSON.stringify(revision)}`);
+  }
+  return stdout.trim();
 }
 
 function resolveUniqueCommitPrefix(repoRoot, prefix) {
   if (typeof prefix !== 'string' || !/^[0-9a-f]{12}$/.test(prefix)) {
     throw new Error('Git commit prefix must be exactly 12 lowercase hex characters');
   }
-  const candidatesResult = spawnSync('git', ['rev-parse', `--disambiguate=${prefix}`], {
-    cwd: repoRoot,
-    encoding: 'utf8',
-  });
-  if (candidatesResult.error || candidatesResult.status !== 0) {
+  let candidates;
+  try {
+    candidates = runGitNoReplace(repoRoot, ['rev-parse', `--disambiguate=${prefix}`], 'Disambiguate git commit prefix')
+      .toString('utf8').split('\n').filter(Boolean);
+  } catch {
     throw new Error(`Cannot disambiguate git commit prefix ${prefix}`);
   }
-  const commits = candidatesResult.stdout.split('\n').filter(Boolean).filter((candidate) => {
+  const commits = candidates.filter((candidate) => {
     if (!/^[0-9a-f]{40,64}$/.test(candidate)) return false;
-    const type = spawnSync('git', ['cat-file', '-t', candidate], { cwd: repoRoot, encoding: 'utf8' });
-    return !type.error && type.status === 0 && type.stdout === 'commit\n';
+    try {
+      return runGitNoReplace(repoRoot, ['cat-file', '-t', candidate], `Read git object type ${candidate}`)
+        .toString('utf8') === 'commit\n';
+    } catch {
+      return false;
+    }
   });
   if (commits.length !== 1) throw new Error(`Git commit prefix ${prefix} does not uniquely select one commit object`);
   return commits[0];
 }
 
 function gitBuffer(repoRoot, args, label) {
-  const result = spawnSync('git', args, { cwd: repoRoot, encoding: null, maxBuffer: 8 * 1024 * 1024 });
-  if (result.error || result.status !== 0) {
-    throw new Error(`${label} failed: ${result.error?.message || result.stderr?.toString('utf8') || 'git error'}`);
-  }
-  return result.stdout;
+  return runGitNoReplace(repoRoot, args, label, { maxBuffer: 8 * 1024 * 1024 });
 }
 
 function committedRegularBlob(repoRoot, commit, relativePath) {

@@ -1,4 +1,5 @@
 import base64
+import hashlib
 import importlib.util
 import json
 import os
@@ -464,6 +465,184 @@ class SafeOpenatCaptureTests(unittest.TestCase):
             finally:
                 helper.os.fstat = original_fstat
                 os.close(parent_fd)
+
+    def materialize_inventory(self, source):
+        payload = (source / "nested" / "file.txt").read_bytes()
+        return {
+            "directories": ["", "nested"],
+            "files": [{
+                "path": "nested/file.txt",
+                "size": len(payload),
+                "sha256": hashlib.sha256(payload).hexdigest(),
+                "mode": "100644",
+            }],
+        }
+
+    def assert_fixed_diagnostic_partial(self, partial):
+        self.assertTrue(partial.is_dir())
+        self.assertEqual(
+            sorted(str(item.relative_to(partial)) for item in partial.rglob("*")),
+            ["reports", "reports/build-error.txt"],
+        )
+        self.assertEqual(
+            (partial / "reports" / "build-error.txt").read_bytes(),
+            b"Preview build failed.\n",
+        )
+
+    def test_materialize_rejects_intermediate_destination_symlink_swap_without_escape(self):
+        helper = self.require_helper()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            source = root / "private-assembly"
+            (source / "nested").mkdir(parents=True)
+            (source / "nested" / "file.txt").write_bytes(b"original\n")
+            source.chmod(0o700)
+            out_parent = root / "runs"
+            out_parent.mkdir()
+            outside = root / "outside"
+            outside.mkdir()
+            sentinel = outside / "sentinel.txt"
+            sentinel.write_bytes(b"untouched\n")
+            moved = out_parent / ".pilot.partial" / "nested-created-away"
+
+            def attack(event, relative_segments):
+                if event != "after_destination_directory_create" or tuple(relative_segments) != ("nested",):
+                    return
+                nested = out_parent / ".pilot.partial" / "nested"
+                nested.rename(moved)
+                nested.symlink_to(outside, target_is_directory=True)
+
+            with self.assertRaisesRegex(Exception, "edge|drift|directory|symlink"):
+                helper.materialize_anchored(
+                    str(source),
+                    str(out_parent),
+                    partial_name=".pilot.partial",
+                    final_name="pilot",
+                    expected_inventory=self.materialize_inventory(source),
+                    publish=True,
+                    diagnostic_text=None,
+                    hook=attack,
+                )
+            self.assertFalse((outside / "file.txt").exists())
+            self.assertEqual(sentinel.read_bytes(), b"untouched\n")
+            self.assertFalse((out_parent / "pilot").exists())
+            self.assert_fixed_diagnostic_partial(out_parent / ".pilot.partial")
+
+    def test_materialize_rejects_destination_directory_aba_restore(self):
+        helper = self.require_helper()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            source = root / "private-assembly"
+            (source / "nested").mkdir(parents=True)
+            (source / "nested" / "file.txt").write_bytes(b"original\n")
+            source.chmod(0o700)
+            out_parent = root / "runs"
+            out_parent.mkdir()
+            outside = root / "outside"
+            outside.mkdir()
+            sentinel = outside / "sentinel.txt"
+            sentinel.write_bytes(b"untouched\n")
+            moved = out_parent / ".pilot.partial" / "nested-opened-away"
+
+            def attack(event, relative_segments):
+                if event != "after_destination_directory_open" or tuple(relative_segments) != ("nested",):
+                    return
+                nested = out_parent / ".pilot.partial" / "nested"
+                nested.rename(moved)
+                nested.symlink_to(outside, target_is_directory=True)
+                nested.unlink()
+                moved.rename(nested)
+
+            with self.assertRaisesRegex(Exception, "edge|ABA|drift"):
+                helper.materialize_anchored(
+                    str(source),
+                    str(out_parent),
+                    partial_name=".pilot.partial",
+                    final_name="pilot",
+                    expected_inventory=self.materialize_inventory(source),
+                    publish=True,
+                    diagnostic_text=None,
+                    hook=attack,
+                )
+            self.assertFalse((outside / "file.txt").exists())
+            self.assertEqual(sentinel.read_bytes(), b"untouched\n")
+            self.assertFalse((out_parent / "pilot").exists())
+            self.assert_fixed_diagnostic_partial(out_parent / ".pilot.partial")
+
+    def test_materialize_failure_after_copy_replaces_all_preview_bytes_with_fixed_diagnostic(self):
+        helper = self.require_helper()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            source = root / "private-assembly"
+            (source / "nested").mkdir(parents=True)
+            (source / "nested" / "page.html").write_bytes(b"<html>preview</html>\n")
+            source.chmod(0o700)
+            out_parent = root / "runs"
+            out_parent.mkdir()
+            payload = (source / "nested" / "page.html").read_bytes()
+            inventory = {
+                "directories": ["", "nested"],
+                "files": [{
+                    "path": "nested/page.html",
+                    "size": len(payload),
+                    "sha256": hashlib.sha256(payload).hexdigest(),
+                    "mode": "100644",
+                }],
+            }
+
+            def fail_after_copy(event, relative_segments):
+                if event == "after_destination_file_copy":
+                    raise RuntimeError("injected post-copy failure")
+
+            with self.assertRaisesRegex(Exception, "injected post-copy failure"):
+                helper.materialize_anchored(
+                    str(source),
+                    str(out_parent),
+                    partial_name=".pilot.partial",
+                    final_name="pilot",
+                    expected_inventory=inventory,
+                    publish=True,
+                    diagnostic_text=None,
+                    hook=fail_after_copy,
+                )
+            self.assertFalse((out_parent / "pilot").exists())
+            self.assert_fixed_diagnostic_partial(out_parent / ".pilot.partial")
+
+    def test_materialize_copies_exact_inventory_and_atomically_publishes_no_replace(self):
+        helper = self.require_helper()
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary).resolve()
+            source = root / "private-assembly"
+            (source / "nested").mkdir(parents=True)
+            (source / "nested" / "file.txt").write_bytes(b"original\n")
+            source.chmod(0o700)
+            out_parent = root / "runs"
+            out_parent.mkdir()
+            inventory = self.materialize_inventory(source)
+            response = helper.materialize_anchored(
+                str(source),
+                str(out_parent),
+                partial_name=".pilot.partial",
+                final_name="pilot",
+                expected_inventory=inventory,
+                publish=True,
+                diagnostic_text=None,
+            )
+            self.assertEqual(response, {"published": True, "name": "pilot"})
+            self.assertFalse((out_parent / ".pilot.partial").exists())
+            self.assertEqual((out_parent / "pilot" / "nested" / "file.txt").read_bytes(), b"original\n")
+            self.assertEqual((out_parent / "pilot").stat().st_mode & 0o777, 0o755)
+            with self.assertRaisesRegex(Exception, "final.*already exists"):
+                helper.materialize_anchored(
+                    str(source),
+                    str(out_parent),
+                    partial_name=".second.partial",
+                    final_name="pilot",
+                    expected_inventory=inventory,
+                    publish=True,
+                    diagnostic_text=None,
+                )
+            self.assertFalse((out_parent / ".second.partial").exists())
 
 
 if __name__ == "__main__":

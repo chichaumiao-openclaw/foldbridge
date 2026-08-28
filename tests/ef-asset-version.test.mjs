@@ -22,6 +22,14 @@ const WORKBENCH_IMPORT_ASSETS = [
   "residue-rail.mjs",
 ];
 const WORKBENCH_DYNAMIC_ASSETS = ["ef-heatmap-core.js", "ef-heatmap.js", "ef-case.js"];
+const TASK9_REFRESH_ASSETS = [
+  ["__entry_v3_site__", "workbench.css"],
+  ["__entry_v3_site__", "workbench.js"],
+  ["__entry_v3_site__", "workbench-pure.mjs"],
+  ["__entry_v3_site__", "ef-workbench-shell.mjs"],
+  ["__entry_ef_site__", "ef-heatmap.js"],
+  ["__entry_ef_site__", "ef-case.js"],
+];
 const VERSION_SCRIPT = new URL("../scripts/version-ef-entry-assets.mjs", import.meta.url);
 
 test("checked-in classifier source, mirror, and fingerprint share the real F-payload MAP alias", async () => {
@@ -601,6 +609,21 @@ test("checked-in repository locks the real source mirror, fingerprints, and impo
   });
   assert.equal(result.checkedFiles, VERSIONED_ASSETS.length + 1);
   assert.equal(result.changedFiles, 0);
+});
+
+test("Task 9 refreshes every Task 7/8 global fingerprint and no per-case asset", async () => {
+  const publicRoot = fileURLToPath(new URL("../public/", import.meta.url));
+  const stale = [];
+  for (const [directory, assetName] of TASK9_REFRESH_ASSETS) {
+    const assetDir = path.join(publicRoot, "entry-cases", directory);
+    const [sourceBytes, fingerprintBytes] = await Promise.all([
+      fs.readFile(path.join(assetDir, assetName)),
+      fs.readFile(path.join(assetDir, versionedAssetName(assetName))),
+    ]);
+    if (!sourceBytes.equals(fingerprintBytes)) stale.push(`${directory}/${assetName}`);
+  }
+  assert.deepEqual(stale, []);
+  assert.ok(TASK9_REFRESH_ASSETS.every(([directory]) => directory !== "cases"));
 });
 
 test("Workbench imports every static dependency from the same deploy version", async () => {

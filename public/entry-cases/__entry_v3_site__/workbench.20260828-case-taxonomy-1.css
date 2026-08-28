@@ -15,14 +15,12 @@
   --accent-soft: rgba(21, 101, 192, 0.14);
   --selected-soft: rgba(155, 28, 28, 0.14);
   --shadow-raised: 0 3px 12px rgba(15, 23, 42, 0.18);
-  /* Plan 1 canonical family color tokens (identical across both universes;
-     family colors do NOT fork, only --accent forks). */
+  /* Exact Entry category color tokens from src/design-tokens.css. */
   --family-a: #7C5CBF;  --family-a-bg: #EFEAF8;
   --family-b: #2F6FB0;  --family-b-bg: #E6EFF7;
   --family-c: #C9761E;  --family-c-bg: #F8EEDF;
   --family-d: #3E9463;  --family-d-bg: #E6F3EC;
-  --family-unassigned: var(--muted);
-  --family-unassigned-bg: #f0f2f4;
+  --textAccent: #9A7B18;
 }
 * { box-sizing: border-box; }
 body {
@@ -581,23 +579,22 @@ pre {
   }
 }
 
-/* Colored family badge — identical family tokens across both universes. */
-.family-badge {
+/* Public category badges copy the Entry badge palette exactly. */
+.category-badge {
   display: inline-block;
-  padding: 1px 7px;
-  border-radius: 10px;
+  padding: 1px 6px;
+  border-radius: 4px;
   font-size: 0.82em;
   font-weight: 600;
-  border: 1px solid transparent;
-  line-height: 1.5;
+  margin-right: 3px;
 }
-.family-badge[data-family="A"] { background: var(--family-a-bg); color: var(--family-a); border-color: var(--family-a); }
-.family-badge[data-family="B"] { background: var(--family-b-bg); color: var(--family-b); border-color: var(--family-b); }
-.family-badge[data-family="C"] { background: var(--family-c-bg); color: var(--family-c); border-color: var(--family-c); }
-.family-badge[data-family="D"] { background: var(--family-d-bg); color: var(--family-d); border-color: var(--family-d); }
-.family-badge[data-family=""] { background: #f0f2f4; color: var(--muted); border-color: var(--line); }
+.category-badge[data-category="dms"] { color: var(--family-a); background: var(--family-a-bg); }
+.category-badge[data-category="shape"] { color: var(--family-b); background: var(--family-b-bg); }
+.category-badge[data-category="cleavage"] { color: var(--family-c); background: var(--family-c-bg); }
+.category-badge[data-category="nucleotide"] { color: var(--family-d); background: var(--family-d-bg); }
+.category-badge[data-category="interaction"] { color: var(--textAccent); background: #fff2bf; }
 
-/* Self-built colored family-badge dropdown (native <select> hidden fallback). */
+/* One visible profile listbox; the native select stays as the state backing. */
 .profile-dropdown { position: relative; width: 100%; }
 .profile-dropdown-trigger {
   display: flex;
@@ -657,7 +654,7 @@ pre {
 .profile-dropdown-list li:focus-visible,
 .profile-dropdown-list li.active,
 .profile-dropdown-list li[aria-selected="true"] {
-  background: var(--family-unassigned-bg);
+  background: var(--surface-hover);
   outline: none;
   box-shadow: inset 0 0 0 1px #edc457;
 }
@@ -699,7 +696,7 @@ pre {
   .sub, .profile-meta, .profile-meta b, .metric, .metric b, .metric span,
   .panel-head span, .rmdb-heatmap-controls, .rmdb-heatmap-meta,
   .view-caption, .legend, .inspector-grid dt, .inspector-grid dd,
-  .profile-dropdown-trigger, .profile-dropdown-list li, .family-badge
+  .profile-dropdown-trigger, .profile-dropdown-list li
 ) {
   color: #000000;
   font-size: 1.08rem;
@@ -999,8 +996,16 @@ pre {
 }
 .profile-dropdown-list li.filtered-out { display: none; }
 
-/* Two-level technique chip filter above the profile control. */
-.technique-filter { margin-bottom: 8px; }
+/* Public category + method filter inside the existing Profile controls. */
+.technique-filter {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.technique-filter-status {
+  color: var(--muted);
+  font-size: 12px;
+}
 .technique-chip-row,
 .technique-chip-sublevel {
   display: flex;
@@ -1008,7 +1013,6 @@ pre {
   gap: 6px;
 }
 .technique-chip-sublevel { margin-top: 6px; }
-.technique-chip-group { display: contents; }
 .technique-chip {
   display: inline-flex;
   align-items: center;
@@ -1027,6 +1031,13 @@ pre {
   border-color: var(--accent);
   outline: none;
 }
+.technique-chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.42;
+}
+.technique-chip:disabled:hover {
+  border-color: var(--line);
+}
 .technique-chip[aria-pressed="true"] {
   border-color: var(--accent);
   background: var(--accent);
@@ -1034,3 +1045,16 @@ pre {
   box-shadow: inset 0 0 0 1px var(--accent);
 }
 .technique-chip-sub { font-size: 12px; }
+@media (max-width: 900px) {
+  .technique-filter {
+    width: 100%;
+  }
+  .technique-chip-row,
+  .technique-chip-sublevel {
+    align-items: stretch;
+  }
+  .technique-chip {
+    max-width: 100%;
+    white-space: normal;
+  }
+}
