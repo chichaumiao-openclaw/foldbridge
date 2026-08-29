@@ -8,7 +8,18 @@ import {
   ENTRY_CASE_HEIGHT_MESSAGE,
   mountEntryCaseHeightListener,
   mountEntryCaseLoadingIndicator,
+  parseEntryCaseMatrixFamily,
 } from '../src/entryCaseEmbed.js';
+
+test('entry Case matrix family parser distinguishes absence from invalid query values', () => {
+  assert.equal(parseEntryCaseMatrixFamily('pdb=1C2X&chain=C'), null);
+  assert.equal(parseEntryCaseMatrixFamily('pdb=1C2X&chain=C&family=E'), 'E');
+  assert.equal(parseEntryCaseMatrixFamily('family=F'), 'F');
+  assert.throws(() => parseEntryCaseMatrixFamily('family='), /invalid.*family/i);
+  assert.throws(() => parseEntryCaseMatrixFamily('family=A'), /invalid.*family/i);
+  assert.throws(() => parseEntryCaseMatrixFamily('family=E&family=E'), /exactly once/i);
+  assert.throws(() => parseEntryCaseMatrixFamily('family=E&family=F'), /exactly once/i);
+});
 
 test('entry Case loading indicator stays visible until the iframe loads', () => {
   const handlers = new Set();
@@ -190,7 +201,10 @@ test('entry Case layout uses the shared centered width and content-driven height
 
 test('main-site entry route forwards the requested chain into the case iframe', () => {
   const main = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
-  assert.match(main, /const \{ pdb, chain, family \} = getEntryCaseParamsFromHash\(\)/);
+  assert.match(main, /entryCaseParams\s*=\s*getEntryCaseParamsFromHash\(\)/);
+  assert.match(main, /const \{ pdb, chain, family \} = entryCaseParams/);
+  assert.match(main, /family:\s*parseEntryCaseMatrixFamily\(queryString\)/);
+  assert.match(main, /try\s*\{\s*entryCaseParams\s*=\s*getEntryCaseParamsFromHash\(\);\s*\}\s*catch/s);
   assert.match(main, /searchParams\.set\(['"]chain['"],\s*safeChain\)/);
   // 选项 C：所有 case（含 EF）走无版本 index.html；不再有 per-case 版本化白名单。
   assert.match(main, /cases\/\$\{encodeURIComponent\(safePdb\)\}\/index\.html/);
@@ -208,6 +222,42 @@ test('Case shell accepts only a chain present in its own manifest', () => {
   assert.equal(initialChainId(bootstrap, '?chain=a'), 'a');
   assert.equal(initialChainId(bootstrap, '?chain=missing'), 'b');
   assert.equal(initialChainId(bootstrap, ''), 'b');
+});
+
+test('Case shell forwards one valid matrix family and rejects invalid or repeated values', () => {
+  const source = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
+  const context = { module: { exports: {} }, Number, Math, URLSearchParams };
+  vm.runInNewContext(source, context);
+  const { requestedMatrixFamily } = context.module.exports;
+  assert.equal(requestedMatrixFamily('?chain=C'), null);
+  assert.equal(requestedMatrixFamily('?family=E'), 'E');
+  assert.equal(requestedMatrixFamily('?family=F'), 'F');
+  assert.throws(() => requestedMatrixFamily('?family='), /invalid.*family/i);
+  assert.throws(() => requestedMatrixFamily('?family=A'), /invalid.*family/i);
+  assert.throws(() => requestedMatrixFamily('?family=E&family=E'), /exactly once/i);
+  assert.match(source, /const matrixFamily\s*=\s*requestedMatrixFamily\(window\.location\.search\)/);
+  assert.match(source, /if\s*\(matrixFamily\)\s*params\.set\(["']family["'],\s*matrixFamily\)/);
+});
+
+test('Case shell removes internal Family and Tier chrome without changing routing data', () => {
+  const source = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
+  const styles = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.css', import.meta.url), 'utf8');
+  const context = { module: { exports: {} }, Number, Math, URLSearchParams };
+  vm.runInNewContext(source, context);
+  const { suppressInternalCaseChrome } = context.module.exports;
+  assert.equal(typeof suppressInternalCaseChrome, 'function');
+
+  const removed = [];
+  const nodes = new Map([
+    ['.hero .meta', { remove() { removed.push('.hero .meta'); } }],
+    ['.fb-enrichment', { remove() { removed.push('.fb-enrichment'); } }],
+  ]);
+  suppressInternalCaseChrome({ querySelector: (selector) => nodes.get(selector) || null });
+  assert.deepEqual(removed, ['.hero .meta', '.fb-enrichment']);
+  assert.match(source, /suppressInternalCaseChrome\(document\)/);
+  assert.doesNotMatch(source, /function renderEnrichment\s*\(/);
+  assert.doesNotMatch(source, /\["Family",\s*"Technology",\s*"Tier"/);
+  assert.match(styles, /\.hero\s+\.meta\s*\{[^}]*display:\s*none/s);
 });
 
 test('Case shell shows staged loading progress until the first profile is ready', () => {
@@ -258,10 +308,17 @@ test('Case shell hydrates deferred evidence without changing the active chain co
   assert.equal(initialChainId(bootstrap, '?chain=a'), 'a');
 });
 
-test('Case shell starts deferred evidence only after the active chain frame loads', () => {
+test('Case shell resolves deferred evidence before the first ordinary frame navigation', () => {
   const source = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
   assert.match(source, /async function loadDeferredEvidence\s*\(/);
-  assert.match(source, /frame\?\.addEventListener\(\s*["']load["'][\s\S]*loadDeferredEvidence/);
+  assert.match(
+    source,
+    /if\s*\(bootstrap\.evidenceUrl\s*&&\s*frame\s*&&\s*!matrixFamily\)\s*\{[\s\S]*loadDeferredEvidence\(\)\.catch[\s\S]*\}\s*else\s*\{\s*syncUi\(\)/,
+  );
+  assert.doesNotMatch(
+    source,
+    /frame\?\.addEventListener\(\s*["']load["'],\s*\(\)\s*=>\s*\{\s*loadDeferredEvidence/,
+  );
 });
 
 test('Deferred evidence preserves the materialized map last-row-wins duplicate semantics', () => {
@@ -280,9 +337,47 @@ test('Deferred evidence preserves the materialized map last-row-wins duplicate s
   assert.equal(bootstrap.evidenceChainMap.shared, 'Z');
 });
 
-test('Deferred evidence waits for the EF chain to report linked assets', () => {
+test('9WNR-style deferred evidence drives the first A/a frame URL without cross-chain fallback', () => {
   const source = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
-  assert.match(source, /function loadDeferredEvidenceWhenReady\s*\(/);
-  assert.match(source, /textContent\?\.trim\(\)\s*===\s*["']EF assets linked["']/);
-  assert.match(source, /new MutationObserver\s*\(/);
+  const context = { module: { exports: {} }, Number, Math, URLSearchParams, TypeError };
+  vm.runInNewContext(source, context);
+  const { mergeDeferredEvidence, resolveCaseFrameHref } = context.module.exports;
+  assert.equal(typeof resolveCaseFrameHref, 'function');
+  const bootstrap = {
+    chainPageById: { A: 'chains/A/index.html', a: 'chains/a/index.html' },
+    evidenceRows: [],
+    evidenceChainMap: {},
+  };
+  mergeDeferredEvidence(bootstrap, {
+    rows: [
+      { evidenceId: 'ev-A', chain: 'A', trackProfileId: 'data-upper/profile.rdat#1' },
+      { evidenceId: 'ev-a', chain: 'a', trackProfileId: 'data-lower/profile.rdat#2' },
+    ],
+  });
+
+  assert.equal(
+    resolveCaseFrameHref(bootstrap, { activeChainId: 'A', selectedEvidenceId: 'ev-A', matrixFamily: null }),
+    'chains/A/index.html?profileId=data-upper%2Fprofile.rdat%231',
+  );
+  assert.equal(
+    resolveCaseFrameHref(bootstrap, { activeChainId: 'a', selectedEvidenceId: 'ev-A', matrixFamily: null }),
+    'chains/a/index.html?profileId=data-lower%2Fprofile.rdat%232',
+  );
+  assert.throws(
+    () => resolveCaseFrameHref(bootstrap, { activeChainId: '__proto__', selectedEvidenceId: '', matrixFamily: null }),
+    /selected chain/i,
+  );
+  assert.match(source, /frame\.src\s*=\s*resolveCaseFrameHref\(bootstrap/);
+});
+
+test('Deferred evidence propagates the selected profile without depending on internal status copy', () => {
+  const source = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
+  const start = source.indexOf('async function loadDeferredEvidence');
+  const end = source.indexOf('\n  function syncUi', start);
+  const body = source.slice(start, end);
+  assert.ok(start >= 0 && end > start);
+  assert.match(body, /mergeDeferredEvidence\(bootstrap,\s*await response\.json\(\)\)/);
+  assert.match(body, /syncUi\(\)/);
+  assert.ok(body.indexOf('mergeDeferredEvidence') < body.indexOf('syncUi()'));
+  assert.doesNotMatch(source, /EF assets linked|loadDeferredEvidenceWhenReady|new MutationObserver/);
 });

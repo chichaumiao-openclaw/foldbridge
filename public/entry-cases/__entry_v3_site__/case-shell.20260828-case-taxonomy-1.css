@@ -149,6 +149,9 @@ a { color: inherit; }
   margin: 0;
   color: var(--textSecondary);
 }
+.hero .meta {
+  display: none;
+}
 .meta {
   display: flex;
   flex-wrap: wrap;

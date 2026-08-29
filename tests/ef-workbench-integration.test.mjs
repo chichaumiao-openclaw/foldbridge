@@ -34,8 +34,12 @@ test("retired Full CIF reference is removed before ordinary or EF mode branches"
 test("manifest detection fails loudly instead of falling back to profile mode", () => {
   const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
   assert.match(source, /let manifestDetectionError\s*=\s*null/);
+  assert.match(source, /parseCaseMatrixFamilyQuery\(window\.location\.search\s*\|\|\s*["']["']\)/);
   assert.match(source, /if\s*\(!response\.ok\)\s*throw/);
-  assert.match(source, /if\s*\(!chain\)\s*throw/);
+  assert.match(
+    source,
+    /resolveCaseViewMode\(\{\s*manifest,\s*chainId,\s*requestedFamily:\s*requestedMatrixFamily\s*\}\)/,
+  );
   assert.match(source, /if\s*\(manifestDetectionError\)\s*throw manifestDetectionError/);
   assert.match(source, /if\s*\(!detectedEfChain\s*&&\s*!manifestDetectionError\s*&&\s*el\.status\)/);
 });
@@ -282,6 +286,12 @@ test("matrix public copy collection uses ordinary Case vocabulary without intern
   }
   assert.doesNotMatch(copy, /\b(?:EF|Family|Tier|LSS)\b/i);
   assert.doesNotMatch(copy, /mapped-chain sequence|VARNA secondary structure|3D linked structure/i);
+});
+
+test("ordinary secondary-structure accessible name uses public Case vocabulary", () => {
+  const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
+  assert.match(source, /setAttribute\("aria-label",\s*"Secondary structure"\)/);
+  assert.doesNotMatch(source, /setAttribute\("aria-label",\s*"VARNA secondary structure"\)/);
 });
 
 test("matrix error rendering keeps raw diagnostics out of the DOM", () => {

@@ -54,7 +54,11 @@ import { normalizeEntryRows, filterEntryRowsByTechniqueSelection } from './entry
 import { renderEntryTablePage } from './entryTableView.js';
 import { buildEntryExport } from './downloadExport.js';
 import { toggleTechniqueSelection } from './techniqueFilterModel.js';
-import { mountEntryCaseHeightListener, mountEntryCaseLoadingIndicator } from './entryCaseEmbed.js';
+import {
+  mountEntryCaseHeightListener,
+  mountEntryCaseLoadingIndicator,
+  parseEntryCaseMatrixFamily,
+} from './entryCaseEmbed.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
 import {
   initAnnojointCasePage,
@@ -414,11 +418,10 @@ function getEntryCaseParamsFromHash() {
   const hash = window.location.hash || '';
   const [, queryString = ''] = hash.split('?');
   const params = new URLSearchParams(queryString);
-  const family = params.get('family');
   return {
     pdb: params.get('pdb'),
     chain: params.get('chain'),
-    family: family === 'E' || family === 'F' ? family : null
+    family: parseEntryCaseMatrixFamily(queryString),
   };
 }
 
@@ -2868,7 +2871,14 @@ function initEntryCaseEmbed() {
 }
 
 function entryCasePage() {
-  const { pdb, chain, family } = getEntryCaseParamsFromHash();
+  let entryCaseParams;
+  try {
+    entryCaseParams = getEntryCaseParamsFromHash();
+  } catch (_error) {
+    return `<main class="page"><section class="page-section"><p>Invalid case reference.</p>
+      <p><a class="download-outline-btn" href="#entry">Back to the table</a></p></section></main>`;
+  }
+  const { pdb, chain, family } = entryCaseParams;
   const safePdb = String(pdb || '').trim();
   if (!safePdb || !/^[A-Za-z0-9]+$/.test(safePdb)) {
     return `<main class="page"><section class="page-section"><p>Invalid case reference.</p>

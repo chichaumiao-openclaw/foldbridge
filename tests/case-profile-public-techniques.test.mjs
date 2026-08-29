@@ -642,6 +642,82 @@ test("ordinary Case source uses the strict public sidecar and has no confidence-
   assert.match(workbench, /mountTechniqueFilter\(\)/);
 });
 
+test("ordinary and matrix Case entry points are separated by the explicit E/F link", () => {
+  assert.equal(typeof WorkbenchPure.parseCaseMatrixFamilyQuery, "function");
+  assert.equal(WorkbenchPure.parseCaseMatrixFamilyQuery("?profileId=x"), null);
+  assert.equal(WorkbenchPure.parseCaseMatrixFamilyQuery("?family=E"), "E");
+  assert.equal(WorkbenchPure.parseCaseMatrixFamilyQuery("?family=F&profileId=x"), "F");
+  assert.throws(() => WorkbenchPure.parseCaseMatrixFamilyQuery("?family="), /invalid.*family/i);
+  assert.throws(() => WorkbenchPure.parseCaseMatrixFamilyQuery("?family=A"), /invalid.*family/i);
+  assert.throws(
+    () => WorkbenchPure.parseCaseMatrixFamilyQuery("?family=E&family=F"),
+    /exactly once/i,
+  );
+  assert.equal(typeof WorkbenchPure.resolveCaseViewMode, "function");
+  const manifest = {
+    chains: {
+      C: {
+        chainId: "C",
+        efMatrixPath: "chains/C/ef-matrix.json.gz",
+      },
+    },
+  };
+
+  assert.deepEqual(
+    WorkbenchPure.resolveCaseViewMode({ manifest, chainId: "C", requestedFamily: null }),
+    { mode: "profiles", family: null, matrixField: null },
+    "a normal Case link must keep all profiles available even when a matrix artifact also exists",
+  );
+  assert.deepEqual(
+    WorkbenchPure.resolveCaseViewMode({ manifest, chainId: "C", requestedFamily: "E" }),
+    { mode: "matrix", family: "E", matrixField: "efMatrixPath" },
+  );
+  const fManifest = {
+    chains: {
+      C: {
+        chainId: "C",
+        efMatrixPathF: "chains/C/ef-matrix.F.json.gz",
+      },
+    },
+  };
+  assert.deepEqual(
+    WorkbenchPure.resolveCaseViewMode({ manifest: fManifest, chainId: "C", requestedFamily: "F" }),
+    { mode: "matrix", family: "F", matrixField: "efMatrixPathF" },
+  );
+  assert.throws(
+    () => WorkbenchPure.resolveCaseViewMode({ manifest, chainId: "C", requestedFamily: "F" }),
+    /efMatrixPathF/i,
+    "an unavailable requested matrix must fail loudly instead of changing modes",
+  );
+  assert.throws(
+    () => WorkbenchPure.resolveCaseViewMode({ manifest, chainId: "C", requestedFamily: "A" }),
+    /unsupported.*family/i,
+  );
+  assert.throws(
+    () => WorkbenchPure.resolveCaseViewMode({ manifest, chainId: "C", requestedFamily: "" }),
+    /unsupported.*family/i,
+    "an explicitly empty family query is invalid rather than an absent query",
+  );
+  assert.throws(
+    () => WorkbenchPure.resolveCaseViewMode({ manifest, chainId: "missing", requestedFamily: null }),
+    /selected chain/i,
+  );
+  assert.throws(
+    () => WorkbenchPure.resolveCaseViewMode({ manifest: { chains: {} }, chainId: "__proto__", requestedFamily: null }),
+    /selected chain/i,
+    "prototype properties are not manifest chains",
+  );
+  assert.throws(
+    () => WorkbenchPure.resolveCaseViewMode({
+      manifest: { chains: { C: { chainId: "B", efMatrixPath: "chains/C/ef-matrix.json.gz" } } },
+      chainId: "C",
+      requestedFamily: "E",
+    }),
+    /chainId.*selected chain/i,
+    "the selected manifest record must identify itself byte-for-byte",
+  );
+});
+
 test("sidecar failure preserves every profile in order with neutral public labels", () => {
   assert.equal(typeof WorkbenchPure.buildUnavailablePublicTechniqueModel, "function");
   const unavailable = WorkbenchPure.buildUnavailablePublicTechniqueModel(profileIndex);

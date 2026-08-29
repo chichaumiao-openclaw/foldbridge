@@ -66,6 +66,42 @@ function assertStrictIdentity(value, fieldPath) {
   }
 }
 
+export function parseCaseMatrixFamilyQuery(search = "") {
+  const params = new URLSearchParams(search);
+  const families = params.getAll("family");
+  if (families.length === 0) return null;
+  if (families.length !== 1) throw new Error("Case matrix family must appear exactly once");
+  const [family] = families;
+  if (family !== "E" && family !== "F") throw new Error(`Invalid Case matrix family "${family}"`);
+  return family;
+}
+
+export function resolveCaseViewMode({ manifest, chainId, requestedFamily = null } = {}) {
+  if (!isRecord(manifest) || !isRecord(manifest.chains)) {
+    throw new TypeError("Case manifest must contain a chains object");
+  }
+  assertStrictIdentity(chainId, "Case manifest selected chain id");
+  if (!Object.prototype.hasOwnProperty.call(manifest.chains, chainId)) {
+    throw new Error(`Case manifest missing selected chain ${chainId}`);
+  }
+  const chain = manifest.chains[chainId];
+  if (!isRecord(chain)) throw new Error(`Case manifest selected chain ${chainId} must be an object`);
+  if (chain.chainId !== chainId) {
+    throw new Error(`Case manifest chains.${chainId}.chainId must equal the selected chain`);
+  }
+
+  if (requestedFamily === null) {
+    return { mode: "profiles", family: null, matrixField: null };
+  }
+  if (requestedFamily !== "E" && requestedFamily !== "F") {
+    throw new Error(`Unsupported Case matrix family "${requestedFamily}"`);
+  }
+
+  const matrixField = requestedFamily === "F" ? "efMatrixPathF" : "efMatrixPath";
+  assertStrictIdentity(chain[matrixField], `Case manifest chains.${chainId}.${matrixField}`);
+  return { mode: "matrix", family: requestedFamily, matrixField };
+}
+
 function validatePublicTechniqueCategories(categories) {
   if (!Array.isArray(categories) || categories.length === 0) {
     throw new TypeError("Profile public technique categories must be a non-empty array");

@@ -32,6 +32,13 @@ const TASK9_REFRESH_ASSETS = [
 ];
 const VERSION_SCRIPT = new URL("../scripts/version-ef-entry-assets.mjs", import.meta.url);
 
+test("the fingerprinted Workbench pure module exports the Case view router used by production", async () => {
+  const fingerprintedPure = await import(
+    `../public/entry-cases/__entry_v3_site__/${versionedAssetName("workbench-pure.mjs")}`
+  );
+  assert.equal(typeof fingerprintedPure.resolveCaseViewMode, "function");
+});
+
 test("checked-in classifier source, mirror, and fingerprint share the real F-payload MAP alias", async () => {
   const sourceUrl = new URL("../src/techniqueFilterModel.js", import.meta.url);
   const mirrorUrl = new URL("../public/entry-cases/__entry_v3_site__/technique-filter-model.mjs", import.meta.url);

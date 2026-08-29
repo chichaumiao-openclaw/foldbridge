@@ -1,37 +1,4 @@
-// --- Pure enrichment helpers (DOM-free; safe to load under node for testing) ---
-
-const FAMILY_LABELS = {
-  A: "WC-face base-specific",
-  B: "SHAPE flexibility",
-  C: "enzymatic",
-  D: "SASA solvent access",
-  E: "contact-map",
-  F: "pair-set",
-};
-
-const TIER_DISPLAY = {
-  LSS_STRONG_CALIBRATED: { label: "STRONG", tone: "strong",
-    meaning: "Directional signal clears the bar and passes all secondary gates (self-containment, conflict, size) under permutation." },
-  LSS_MODERATE_CANDIDATE: { label: "MODERATE", tone: "moderate",
-    meaning: "Directional signal is supported but calibration is pending, so it is held below STRONG." },
-  LSS_WEAK: { label: "WEAK", tone: "weak",
-    meaning: "Directional signal clears the bar but a secondary gate (self-containment / conflict / size) does not — directional but not yet self-contained." },
-  LSS_NOT_SUPPORTED: { label: "NOT SUPPORTED", tone: "not-supported",
-    meaning: "Signal does not clear the bar / is not better than chance under permutation." },
-  LSS_DISCORDANT: { label: "DISCORDANT", tone: "discordant",
-    meaning: "Signal runs counter to the structure (negative / conflicting), not merely absent." },
-  LSS_UNDERPOWERED: { label: "UNDERPOWERED", tone: "underpowered",
-    meaning: "Too few evaluable residues (or too few paired/unpaired) to judge." },
-};
-
-const TIER_ORDER = [
-  "LSS_STRONG_CALIBRATED",
-  "LSS_MODERATE_CANDIDATE",
-  "LSS_WEAK",
-  "LSS_DISCORDANT",
-  "LSS_NOT_SUPPORTED",
-  "LSS_UNDERPOWERED",
-];
+// --- Pure shell helpers (DOM-free; safe to load under node for testing) ---
 
 const ENTRY_CASE_HEIGHT_MESSAGE = "foldbridge-case-height";
 const WORKBENCH_PROGRESS_MESSAGE = "foldbridge-workbench-progress";
@@ -63,6 +30,21 @@ function initialChainId(bootstrap, search = "") {
   return bootstrap?.defaultChainId || "";
 }
 
+function requestedMatrixFamily(search = "") {
+  const params = new URLSearchParams(search);
+  const families = params.getAll("family");
+  if (families.length === 0) return null;
+  if (families.length !== 1) throw new Error("Case matrix family must appear exactly once");
+  const family = families[0];
+  if (family !== "E" && family !== "F") throw new Error(`Invalid Case matrix family "${family}"`);
+  return family;
+}
+
+function suppressInternalCaseChrome(documentNode) {
+  documentNode?.querySelector?.(".hero .meta")?.remove();
+  documentNode?.querySelector?.(".fb-enrichment")?.remove();
+}
+
 function mergeDeferredEvidence(bootstrap, payload) {
   if (!bootstrap || typeof bootstrap !== "object") throw new TypeError("Case bootstrap must be an object");
   if (!payload || !Array.isArray(payload.rows)) throw new TypeError("Deferred case evidence must contain rows");
@@ -78,71 +60,43 @@ function mergeDeferredEvidence(bootstrap, payload) {
   return bootstrap;
 }
 
+function resolveCaseFrameHref(bootstrap, { activeChainId, selectedEvidenceId = "", matrixFamily = null } = {}) {
+  const chainPages = bootstrap?.chainPageById;
+  if (!chainPages || typeof chainPages !== "object" || Array.isArray(chainPages)) {
+    throw new TypeError("Case bootstrap must contain chain pages");
+  }
+  if (typeof activeChainId !== "string" || !activeChainId
+      || !Object.prototype.hasOwnProperty.call(chainPages, activeChainId)) {
+    throw new TypeError(`Case bootstrap missing selected chain ${String(activeChainId || "")}`);
+  }
+  if (matrixFamily !== null && matrixFamily !== "E" && matrixFamily !== "F") {
+    throw new TypeError(`Invalid Case matrix family "${String(matrixFamily)}"`);
+  }
+  const rows = Array.isArray(bootstrap.evidenceRows) ? bootstrap.evidenceRows : [];
+  const evidenceChainMap = bootstrap.evidenceChainMap && typeof bootstrap.evidenceChainMap === "object"
+    ? bootstrap.evidenceChainMap
+    : {};
+  const selected = rows.find((row) => row.evidenceId === selectedEvidenceId) || null;
+  const selectedChainId = selected ? evidenceChainMap[selected.evidenceId] : "";
+  const activeEvidence = selected && selectedChainId === activeChainId
+    ? selected
+    : rows.find((row) => evidenceChainMap[row.evidenceId] === activeChainId) || null;
+  const profileId = activeEvidence?.trackProfileId || activeEvidence?.profileKey || "";
+  const params = new URLSearchParams();
+  if (profileId) params.set("profileId", profileId);
+  if (matrixFamily) params.set("family", matrixFamily);
+  const query = params.toString();
+  return `${chainPages[activeChainId]}${query ? `?${query}` : ""}`;
+}
+
 function matchesCaseDownloadMessage(payload, caseId, chainId) {
   return String(payload?.caseId || "") === String(caseId || "")
     && String(payload?.chainId || "") === String(chainId || "");
 }
 
-function familyCounts(rows) {
-  const out = {};
-  for (const r of rows) { const f = r.family || ""; out[f] = (out[f] || 0) + 1; }
-  return out;
-}
-
-function tierCounts(rows) {
-  const out = {};
-  for (const r of rows) {
-    const t = r.lssTierCalibrated || "";
-    out[t] = (out[t] || 0) + 1;
-  }
-  return out;
-}
-
-function distinctChains(rows) {
-  return new Set(rows.map((r) => r.chain).filter(Boolean)).size;
-}
-
-function familyLabel(family) {
-  return FAMILY_LABELS[family] || String(family);
-}
-
-function tierDisplay(token) {
-  if (TIER_DISPLAY[token]) return TIER_DISPLAY[token];
-  const bare = String(token || "").replace(/^LSS_/, "").replace(/_/g, " ");
-  return { label: bare, tone: "not-supported", meaning: "" };
-}
-
-function fmtMetric(value) {
-  if (value === null || value === undefined || Number.isNaN(value)) return "—";
-  return Number(value).toFixed(2);
-}
-
-function fmtP(value) {
-  if (value === null || value === undefined || Number.isNaN(value)) return "—";
-  return Number(value).toFixed(3);
-}
-
-function fmtFraction(value) {
-  if (value === null || value === undefined || Number.isNaN(value)) return "—";
-  return Number(value).toFixed(2);
-}
-
-function fmtCount(value) {
-  if (value === null || value === undefined || Number.isNaN(value)) return "—";
-  return String(value);
-}
-
-function pickBestEvidence(rows, defaultEvidenceId) {
-  if (!rows || rows.length === 0) return null;
-  const byId = rows.find((r) => r.evidenceId === defaultEvidenceId);
-  if (byId) return byId;
-  const flagged = rows.find((r) => r.selectedByDefault === true);
-  if (flagged) return flagged;
-  return rows[0];
-}
-
 // DOM bootstrap (browser only). Pure helpers above are referenced here.
 if (typeof document !== "undefined") {
+  suppressInternalCaseChrome(document);
   if (window.parent !== window) {
     document.documentElement.classList.add("is-embedded");
   }
@@ -164,6 +118,7 @@ if (typeof document !== "undefined") {
     throw new Error("family case bootstrap missing");
   }
   const bootstrap = JSON.parse(bootstrapNode.textContent);
+  const matrixFamily = requestedMatrixFamily(window.location.search);
   bootstrap.evidenceRows = Array.isArray(bootstrap.evidenceRows) ? bootstrap.evidenceRows : [];
   bootstrap.evidenceChainMap = bootstrap.evidenceChainMap && typeof bootstrap.evidenceChainMap === "object"
     ? bootstrap.evidenceChainMap
@@ -401,82 +356,13 @@ if (typeof document !== "undefined") {
   }
 
   function updateFrame() {
-    const selected = evidenceById(state.selectedEvidenceId);
-    const selectedChainId = selected ? bootstrap.evidenceChainMap[selected.evidenceId] : "";
-    const activeEvidence = selected && selectedChainId === state.activeChainId
-      ? selected
-      : defaultEvidenceForChain(state.activeChainId);
-    const profileId = activeEvidence?.trackProfileId || activeEvidence?.profileKey || "";
     // family(?family=E|F) 从案级页 URL 透传到内层 chain 页 iframe，供 workbench 选 E/F 2D 产物。
-    const family = new URLSearchParams(window.location.search || "").get("family");
-    const params = new URLSearchParams();
-    if (profileId) params.set("profileId", profileId);
-    if (family === "E" || family === "F") params.set("family", family);
-    const query = params.toString() ? `?${params.toString()}` : "";
-    const chainPage = bootstrap.chainPageById[state.activeChainId] || "";
     resetCaseDownloadActions();
-    frame.src = `${chainPage}${query}`;
-  }
-
-  function loadEvidence(evidenceId) {
-    state.selectedEvidenceId = evidenceId;
-    const chainId = bootstrap.evidenceChainMap[evidenceId];
-    if (chainId && chainId !== state.activeChainId) {
-      state.activeChainId = chainId;
-    }
-    syncUi();
-  }
-
-  function el(tag, className, text) {
-    const node = document.createElement(tag);
-    if (className) node.className = className;
-    if (text !== undefined && text !== null) node.textContent = text;
-    return node;
-  }
-  // GUARD_PLACEHOLDER_2
-  function renderEnrichment(bootstrap) {
-    const rows = bootstrap.evidenceRows;
-    if (!rows || rows.length === 0) return;
-
-    document.querySelector(".hero .meta")?.remove();
-
-    // Evidence stays visible; scroll the table after ten rows instead of hiding it.
-    const evidenceTable = el("section", "fb-evtable");
-    const scroll = el("div", "fb-evidence-scroll");
-    scroll.setAttribute("aria-label", "Evidence rows");
-    const table = el("table");
-    const thead = el("thead");
-    const headRow = el("tr");
-    for (const h of ["Family", "Technology", "Tier", "Metric", "p", "n", "Profile"]) {
-      headRow.appendChild(el("th", null, h));
-    }
-    thead.appendChild(headRow);
-    table.appendChild(thead);
-
-    const tbody = el("tbody");
-    for (const row of rows) {
-      const tr = el("tr");
-      tr.dataset.evidenceId = row.evidenceId;
-      tr.appendChild(el("td", null, row.family));
-      tr.appendChild(el("td", null, row.technology));
-      const rd = tierDisplay(row.lssTierCalibrated);
-      tr.appendChild(el("td", null, rd.label));
-      tr.appendChild(el("td", null, fmtMetric(row.aucDirectional)));
-      tr.appendChild(el("td", null, fmtP(row.aucEmpiricalPValue)));
-      tr.appendChild(el("td", null, fmtCount(row.nEvaluable)));
-      tr.appendChild(el("td", null, row.profileKey || row.trackProfileId || ""));
-      tr.addEventListener("click", () => loadEvidence(row.evidenceId));
-      tbody.appendChild(tr);
-    }
-    table.appendChild(tbody);
-    scroll.appendChild(table);
-    evidenceTable.appendChild(scroll);
-
-    // Mount before the .layout section.
-    const wrapper = el("div", "fb-enrichment");
-    wrapper.appendChild(evidenceTable);
-    const layout = document.querySelector(".layout");
-    if (layout && layout.parentNode) layout.parentNode.insertBefore(wrapper, layout);
+    frame.src = resolveCaseFrameHref(bootstrap, {
+      activeChainId: state.activeChainId,
+      selectedEvidenceId: state.selectedEvidenceId,
+      matrixFamily,
+    });
   }
 
   let deferredEvidenceStarted = false;
@@ -494,33 +380,8 @@ if (typeof document !== "undefined") {
       const fallback = defaultEvidenceForChain(state.activeChainId);
       state.selectedEvidenceId = fallback?.evidenceId || "";
     }
-    renderEnrichment(bootstrap);
-    refreshEvidenceHighlight(state.selectedEvidenceId);
+    syncUi();
     reportEmbeddedCaseHeightSoon();
-  }
-
-  function loadDeferredEvidenceWhenReady() {
-    const status = frame?.contentDocument?.querySelector("#assetStatus");
-    if (!status) throw new Error("Active chain asset status is unavailable");
-    let observer = null;
-    const startWhenLinked = () => {
-      if (status.textContent?.trim() === "EF assets linked") {
-        observer?.disconnect();
-        loadDeferredEvidence().catch((error) => console.error("Deferred case evidence failed", error));
-        return true;
-      }
-      return false;
-    };
-    if (startWhenLinked()) return;
-    observer = new MutationObserver(startWhenLinked);
-    observer.observe(status, { childList: true, characterData: true, subtree: true });
-  }
-
-  function refreshEvidenceHighlight(selectedId) {
-    const trs = document.querySelectorAll(".fb-evtable tr[data-evidence-id]");
-    for (const tr of trs) {
-      tr.classList.toggle("is-active", tr.dataset.evidenceId === selectedId);
-    }
   }
 
   function syncUi() {
@@ -529,9 +390,6 @@ if (typeof document !== "undefined") {
     }
     if (chainStatus) chainStatus.textContent = state.activeChainId;
     updateFrame();
-    if (typeof refreshEvidenceHighlight === "function") {
-      refreshEvidenceHighlight(state.selectedEvidenceId);
-    }
   }
 
   for (const button of chainButtons) {
@@ -554,22 +412,24 @@ if (typeof document !== "undefined") {
       state.selectedEvidenceId = fallback?.evidenceId || state.selectedEvidenceId;
     }
   }
-  renderEnrichment(bootstrap);
-  syncUi();
-  if (bootstrap.evidenceUrl && frame) {
-    frame.addEventListener("load", () => {
-      loadDeferredEvidenceWhenReady();
-    }, { once: true });
+  if (bootstrap.evidenceUrl && frame && !matrixFamily) {
+    loadDeferredEvidence().catch((error) => {
+      console.error("Deferred case evidence failed", error);
+      syncUi();
+    });
+  } else {
+    syncUi();
   }
 }
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
-    familyCounts, tierCounts, distinctChains, familyLabel, tierDisplay,
-    fmtMetric, fmtP, fmtFraction, fmtCount, pickBestEvidence,
     measureEmbeddedCaseHeight, postEmbeddedCaseHeight,
     initialChainId,
+    requestedMatrixFamily,
+    suppressInternalCaseChrome,
     mergeDeferredEvidence,
+    resolveCaseFrameHref,
     matchesCaseDownloadMessage,
   };
 }

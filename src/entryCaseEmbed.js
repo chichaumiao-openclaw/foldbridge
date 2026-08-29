@@ -4,6 +4,16 @@ const MIN_ENTRY_CASE_HEIGHT = 320;
 const MAX_ENTRY_CASE_HEIGHT = 100_000;
 const FRAME_HEIGHT_PADDING = 2;
 
+export function parseEntryCaseMatrixFamily(queryString = '') {
+  const params = new URLSearchParams(queryString);
+  const families = params.getAll('family');
+  if (families.length === 0) return null;
+  if (families.length !== 1) throw new Error('Case matrix family must appear exactly once');
+  const [family] = families;
+  if (family !== 'E' && family !== 'F') throw new Error(`Invalid Case matrix family "${family}"`);
+  return family;
+}
+
 export function normalizeEntryCaseHeight(value) {
   const height = Number(value);
   if (!Number.isFinite(height) || height < MIN_ENTRY_CASE_HEIGHT || height > MAX_ENTRY_CASE_HEIGHT) {

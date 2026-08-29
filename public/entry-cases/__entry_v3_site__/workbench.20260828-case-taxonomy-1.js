@@ -8,6 +8,8 @@ import {
   buildPublicTechniqueFilterOptions,
   categoryBadgeMarkup,
   mountPublicProfileSelectorDom,
+  parseCaseMatrixFamilyQuery,
+  resolveCaseViewMode,
   resolvePublicProfileSelector,
   selectPublicProfileSelectorOption,
 } from "./workbench-pure.20260828-case-taxonomy-1.mjs";
@@ -33,14 +35,15 @@ const efManifestUrl = new URL('../../browser-manifest.json', window.location.hre
 let detectedEfChain = null;
 let manifestDetectionError = null;
 try {
+  const requestedMatrixFamily = parseCaseMatrixFamilyQuery(window.location.search || "");
   const response = await fetch(efManifestUrl);
   if (!response.ok) throw new Error(`Case manifest load failed: HTTP ${response.status}`);
   const manifest = await response.json();
   const chainId = config.chainId || '';
-  if (!chainId) throw new Error("Case manifest detection missing selected chain id");
-  const chain = manifest?.chains?.[chainId];
-  if (!chain) throw new Error(`Case manifest missing selected chain ${chainId}`);
-  if (chain.efMatrixPath || chain.efMatrixPathF) detectedEfChain = { manifest, chain };
+  const viewMode = resolveCaseViewMode({ manifest, chainId, requestedFamily: requestedMatrixFamily });
+  if (viewMode.mode === "matrix") {
+    detectedEfChain = { manifest, chain: manifest.chains[chainId], family: viewMode.family };
+  }
 } catch (error) {
   manifestDetectionError = error instanceof Error ? error : new Error(String(error));
 }
@@ -1968,7 +1971,7 @@ function recolorVarnaSvg(template, strand, normalized, profile) {
   svg.setAttribute("data-view", "varna");
   svg.setAttribute("data-layout-source", "VARNA");
   svg.setAttribute("role", "img");
-  svg.setAttribute("aria-label", "VARNA secondary structure");
+  svg.setAttribute("aria-label", "Secondary structure");
   if (!svg.getAttribute("viewBox")) {
     // VARNA templates ship width/height="100%" but no viewBox, so the old
     // hardcoded "0 0 1270 355" fallback clipped large molecules (real content
@@ -2700,12 +2703,10 @@ function nextMatrixLockedEvent(event, lockedEvent = null) {
   return lockedEvent;
 }
 
-async function initEfMode(chainId, manifestUrl) {
+async function initEfMode(chainId, manifestUrl, family) {
   const caseId = config.caseId || '';
   const hosts = prepareEfWorkbenchShell(document, { caseId, chainId });
-  // family(?family=E|F) 来自案级壳透传的 URL query；选 E(MOHCA)/F(M2) 2D 产物。
-  const urlFamily = new URLSearchParams(window.location.search || "").get("family");
-  const family = urlFamily === "E" || urlFamily === "F" ? urlFamily : null;
+  // family(E|F) 只来自矩阵徽标链接；普通 Case 链接即使存在矩阵产物也保留 Profile 模式。
   window.__FOLDBRIDGE_EF_CASE_CONFIG__ = {
     caseId,
     chainId,
@@ -2753,7 +2754,7 @@ async function init() {
   if (detectedEfChain) {
     try {
       reportWorkbenchProgress(80, "Preparing the Case view…");
-      await initEfMode(config.chainId || '', efManifestUrl);
+      await initEfMode(config.chainId || '', efManifestUrl, detectedEfChain.family);
       reportWorkbenchProgress(100, "Case ready", "ready");
       return; // Skip normal workbench initialization
     } catch (error) {
