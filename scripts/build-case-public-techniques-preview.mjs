@@ -38,7 +38,7 @@ import {
   PREVIEW_PROVENANCE_SCHEMA,
   PREVIEW_SOURCE_CLOSURE_PATHS,
   PREVIEW_SOURCE_MANIFEST_SCHEMA,
-  SOURCE_MANIFEST_SCHEMA,
+  LEGACY_SOURCE_MANIFEST_SCHEMA,
   captureAnchoredFile,
   classifyTechniqueToken,
   committedPreviewGlobalAssets,
@@ -125,7 +125,10 @@ export function parsePreviewBuilderArgs(argv, {
     seen.add(key);
   }
   const runId = values.get('--run-id');
-  validateRunId(runId);
+  const runIdParts = validateRunId(runId);
+  if (runIdParts.kind !== 'pilot') {
+    throw new Error('Preview run-id must match pilot-<real YYYYMMDDTHHMMSSZ UTC>-<12 lowercase hex>');
+  }
   if (values.get('--baseline-run') !== baselineAnchor.run) {
     throw new Error('--baseline-run must equal the approved immutable baseline');
   }
@@ -500,7 +503,7 @@ function assertDeterministicProjection({ python, baseline, projectionRun, cases 
 function moveProjectionIntoPartial(projectionRun, partialPath) {
   for (const name of ['data', 'reports', 'selection.json']) renameSync(path.join(projectionRun, name), path.join(partialPath, name));
   const sourceManifest = parseJsonBytes(readFileSync(path.join(projectionRun, 'source-manifest.json')), 'Rebuilt v2 source manifest');
-  if (sourceManifest.schemaVersion !== SOURCE_MANIFEST_SCHEMA) throw new Error('Rebuilt projection did not use the v2 data-only schema');
+  if (sourceManifest.schemaVersion !== LEGACY_SOURCE_MANIFEST_SCHEMA) throw new Error('Rebuilt projection did not use the v2 data-only schema');
   rmSync(path.dirname(projectionRun), { recursive: true, force: false });
   return sourceManifest;
 }
@@ -561,7 +564,7 @@ export async function buildPreviewRun(argv, { baselineAnchor = APPROVED_BASELINE
   await verifyRun(['--run', resolved.baselineRun, '--db', resolved.db, '--case-root', resolved.caseRoot, '--python', resolved.python], { baselineAnchor });
   const baselineManifestCapture = captureAnchoredFile({ python: resolved.python, root: resolved.baselineRun, segments: ['source-manifest.json'], maxBytes: MAX_SOURCE_MANIFEST_BYTES, includeBytes: true });
   const baselineManifest = parseJsonBytes(baselineManifestCapture.bytes, 'Baseline source manifest');
-  if (baselineManifest.schemaVersion !== SOURCE_MANIFEST_SCHEMA) throw new Error('Approved baseline must use the v2 data-only schema');
+  if (baselineManifest.schemaVersion !== LEGACY_SOURCE_MANIFEST_SCHEMA) throw new Error('Approved baseline must use the v2 data-only schema');
   if (deterministicJson(baselineManifest.selection) !== deterministicJson(parsed.cases)) throw new Error('Requested case identities and order must exactly match the approved baseline selection');
   const baseline = {
     sidecars: baselineSidecarCaptures({ python: resolved.python, baselineRun: resolved.baselineRun, cases: parsed.cases }),
@@ -595,7 +598,7 @@ export async function buildPreviewRun(argv, { baselineAnchor = APPROVED_BASELINE
     mkdirSync(projectionParent);
     const projectionArgs = ['--db', resolved.db, '--case-root', resolved.caseRoot, '--out-parent', projectionParent, '--run-id', parsed.runId, '--python', resolved.python];
     for (const { pdbId, authChain } of parsed.cases) projectionArgs.push('--case', `${pdbId}/${authChain}`);
-    const projectionResult = await buildRun(projectionArgs);
+    const projectionResult = await buildRun(projectionArgs, { legacyDataOnlyV2: true });
     assertDeterministicProjection({ python: resolved.python, baseline, projectionRun: projectionResult.run, cases: parsed.cases });
     const projectionManifest = moveProjectionIntoPartial(projectionResult.run, assemblyRoot);
 

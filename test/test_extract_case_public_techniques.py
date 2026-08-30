@@ -180,6 +180,72 @@ class ExtractCasePublicTechniquesTest(unittest.TestCase):
         )
         self.assertEqual(self.file_fingerprint(), before)
 
+    def test_global_summary_preserves_raw_anomalies_and_exact_chain_identity(self):
+        con = duckdb.connect(str(self.db_path))
+        try:
+            con.execute(
+                "INSERT INTO chain VALUES (?, ?, ?)",
+                ["3GHI", "Z", "3GHI|Z"],
+            )
+            con.executemany(
+                "INSERT INTO profile VALUES (?, ?, ?, ?, ?)",
+                [
+                    ("3GHI", "3GHI|Z", "cirs-1", "CIRS-seq", False),
+                    ("3GHI", "3GHI|Z", "cirs-2", "CIRS-seq", False),
+                    ("3GHI", "3GHI|Z", "glyoxal", "Glyoxal", False),
+                    ("3GHI", "3GHI|Z", "terbium", "Terbium", None),
+                    ("3GHI", "3GHI|Z", "null-nonbackground", None, False),
+                    ("3GHI", "3GHI|Z", "null-background", None, True),
+                ],
+            )
+        finally:
+            con.close()
+
+        before = self.file_fingerprint()
+        rows = extractor.extract_global_technique_summary(self.db_path)
+        selected = [row for row in rows if row["pdbId"] == "3GHI"]
+        self.assertEqual(
+            selected,
+            [
+                {
+                    "pdbId": "3GHI",
+                    "authChain": "Z",
+                    "techFilter": None,
+                    "isBackgroundChannel": False,
+                    "profileCount": 1,
+                },
+                {
+                    "pdbId": "3GHI",
+                    "authChain": "Z",
+                    "techFilter": None,
+                    "isBackgroundChannel": True,
+                    "profileCount": 1,
+                },
+                {
+                    "pdbId": "3GHI",
+                    "authChain": "Z",
+                    "techFilter": "CIRS-seq",
+                    "isBackgroundChannel": False,
+                    "profileCount": 2,
+                },
+                {
+                    "pdbId": "3GHI",
+                    "authChain": "Z",
+                    "techFilter": "Glyoxal",
+                    "isBackgroundChannel": False,
+                    "profileCount": 1,
+                },
+                {
+                    "pdbId": "3GHI",
+                    "authChain": "Z",
+                    "techFilter": "Terbium",
+                    "isBackgroundChannel": None,
+                    "profileCount": 1,
+                },
+            ],
+        )
+        self.assertEqual(self.file_fingerprint(), before)
+
     def test_rejects_duplicate_selection(self):
         with self.assertRaises(ValueError):
             list(

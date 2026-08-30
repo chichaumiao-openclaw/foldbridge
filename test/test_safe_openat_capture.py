@@ -8,6 +8,8 @@ import subprocess
 import tempfile
 import unittest
 
+import duckdb
+
 
 ROOT = Path(__file__).resolve().parents[1]
 HELPER_PATH = ROOT / "scripts" / "safe-openat-capture.py"
@@ -465,6 +467,65 @@ class SafeOpenatCaptureTests(unittest.TestCase):
             finally:
                 helper.os.fstat = original_fstat
                 os.close(parent_fd)
+
+    def test_anchored_database_connection_reads_original_inode_across_path_aba(self):
+        helper = self.require_helper()
+        with tempfile.TemporaryDirectory(prefix=".safe-openat-db-fd-", dir=ROOT) as temporary:
+            root = Path(temporary).resolve()
+            source = root / "source.duckdb"
+            malicious = root / "malicious.duckdb"
+            for database, marker in ((source, "ORIGINAL"), (malicious, "MALICIOUS")):
+                connection = duckdb.connect(str(database))
+                connection.execute("CREATE TABLE marker(value VARCHAR)")
+                connection.execute("INSERT INTO marker VALUES (?)", [marker])
+                connection.close()
+            original_away = root / "source-original-away.duckdb"
+            handle = helper.open_database_source_anchored(
+                str(root),
+                [source.name],
+                max_bytes=16 * 1024 * 1024,
+            )
+            connection = duckdb.connect(handle["fdPath"], read_only=True)
+            connection.execute("BEGIN TRANSACTION")
+            source.rename(original_away)
+            malicious.rename(source)
+            self.assertEqual(connection.execute("SELECT value FROM marker").fetchone()[0], "ORIGINAL")
+            source.rename(malicious)
+            original_away.rename(source)
+            connection.execute("ROLLBACK")
+            connection.close()
+            final_record = helper.close_database_source_anchored(
+                handle,
+                expected_record=handle["record"],
+            )
+            self.assertEqual(final_record, handle["record"])
+            self.assertFalse(original_away.exists())
+            self.assertEqual(list(root.glob(".database-snapshot-*")), [])
+
+    def test_anchored_database_source_cap_and_mutation_failure_close_all_fds(self):
+        helper = self.require_helper()
+        if not Path("/dev/fd").is_dir():
+            self.skipTest("/dev/fd is required for deterministic descriptor accounting")
+        with tempfile.TemporaryDirectory(prefix=".safe-openat-db-cap-", dir=ROOT) as temporary:
+            root = Path(temporary).resolve()
+            source = root / "source.duckdb"
+            source.write_bytes(b"original bytes\n")
+            baseline = len(os.listdir("/dev/fd"))
+            with self.assertRaisesRegex(Exception, "exceeds.*0 bytes"):
+                helper.open_database_source_anchored(str(root), [source.name], max_bytes=1)
+            self.assertLessEqual(len(os.listdir("/dev/fd")), baseline + 1)
+
+            handle = helper.open_database_source_anchored(
+                str(root), [source.name], max_bytes=1024,
+            )
+            source.write_bytes(b"mutated bytes!\n")
+            with self.assertRaisesRegex(Exception, "changed|content"):
+                helper.close_database_source_anchored(
+                    handle,
+                    expected_record=handle["record"],
+                )
+            self.assertLessEqual(len(os.listdir("/dev/fd")), baseline + 1)
+            self.assertEqual(list(root.glob(".database-snapshot-*")), [])
 
     def materialize_inventory(self, source):
         payload = (source / "nested" / "file.txt").read_bytes()

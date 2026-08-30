@@ -16,7 +16,7 @@ import {
 } from 'node:fs';
 import path from 'node:path';
 import test from 'node:test';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { gzipSync, gunzipSync } from 'node:zlib';
 
 import * as previewBuilder from '../scripts/build-case-public-techniques-preview.mjs';
@@ -39,6 +39,7 @@ const SEALED_V2_RUNS = [
 ];
 const PYTHON_CANDIDATES = [
   process.env.CASE_PUBLIC_TECHNIQUES_TEST_PYTHON,
+  SEALED_V2_PYTHON,
   process.env.HOME && path.join(process.env.HOME, 'miniforge3', 'bin', 'python'),
   '/opt/homebrew/bin/python3',
   '/usr/local/bin/python3',
@@ -591,14 +592,22 @@ function createPreviewFixture(testContext, { gatedExtractor = false, taxonomyDri
 
   const baselineRunId = `pilot-20260828T120000Z-${commit.slice(0, 12)}`;
   const selectionArgs = ['--case', '9WNR/A', '--case', '9WNR/a'];
-  const baselineResult = spawnSync(process.execPath, [
-    path.join(repo, 'scripts', 'build-case-public-techniques.mjs'),
+  const baselineArgs = [
     '--db', db,
     '--case-root', caseRoot,
     '--out-parent', outParent,
     '--run-id', baselineRunId,
     '--python', python,
     ...selectionArgs,
+  ];
+  const baselineProgram = `
+import { buildRun } from ${JSON.stringify(pathToFileURL(path.join(repo, 'scripts', 'build-case-public-techniques.mjs')).href)};
+await buildRun(JSON.parse(process.argv[1]), { legacyDataOnlyV2: true });
+`;
+  const baselineResult = spawnSync(process.execPath, [
+    '--input-type=module',
+    '--eval', baselineProgram,
+    JSON.stringify(baselineArgs),
   ], { cwd: repo, encoding: 'utf8' });
   assert.equal(baselineResult.status, 0, baselineResult.stderr || baselineResult.stdout);
   const baselineRun = path.join(outParent, baselineRunId);

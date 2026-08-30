@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { spawnSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import {
   lstatSync,
@@ -12,17 +12,16 @@ import {
 } from 'node:fs';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
+import { createInterface } from 'node:readline';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { gunzipSync } from 'node:zlib';
 
 import {
-  BUILDER_VERSION,
   COVERAGE_SCHEMA,
   MAX_DB_ONLY_AUDIT_SUMMARY_BYTES,
   MAX_PROFILE_INDEX_BYTES,
   MAX_SOURCE_MANIFEST_BYTES,
   REPORT_HEADERS,
-  SOURCE_MANIFEST_SCHEMA,
   STATUS_NAMES,
   assertExactFields,
   assertStrictIdentity,
@@ -47,20 +46,28 @@ import {
   validateDbOnlyAuditSummary,
   validateIsoUtcInstant,
   validateProfileIndex,
-  validateRunId,
 } from './case-public-techniques-lib.mjs';
 const SCRIPT_PATH = fileURLToPath(import.meta.url);
 const REPO_ROOT = path.resolve(path.dirname(SCRIPT_PATH), '..');
 const BUILDER_PATH = path.join(REPO_ROOT, 'scripts', 'build-case-public-techniques.mjs');
 const PREVIEW_BUILDER_PATH = path.join(REPO_ROOT, 'scripts', 'build-case-public-techniques-preview.mjs');
 const BUILDER_EXTRACTOR_PATH = path.join(REPO_ROOT, 'scripts', 'extract-case-public-techniques.py');
+const SAFE_OPENAT_HELPER_PATH = path.join(REPO_ROOT, 'scripts', 'safe-openat-capture.py');
 const REQUIRED_FLAGS = ['--run', '--db', '--case-root', '--python'];
 const MAX_CHAIN_QUERY_STDOUT_BYTES = 32 * 1024 * 1024;
+const MAX_DATABASE_INPUT_BYTES = 8 * 1024 * 1024 * 1024;
+const MAX_DATABASE_BROKER_STDERR_BYTES = 1024 * 1024;
 const VERIFIER_APPROVED_PREVIEW_BASELINE_RUN = '/Volumes/tianyi/foldbridge_staging/case-public-taxonomy-20260828/runs/pilot-20260828T160812Z-f53fbdb138d2';
 const VERIFIER_APPROVED_PREVIEW_BASELINE_SHA256 = 'c0e5c91055d49c1503944551fb198e45fa07153862e1f0a9634692d1d136a65e';
 const VERIFIER_PREVIEW_SOURCE_MANIFEST_SCHEMA = 'case-public-techniques-source-manifest.v3';
 const VERIFIER_PREVIEW_PROVENANCE_SCHEMA = 'case-public-techniques-preview.v2';
 const VERIFIER_PREVIEW_BUILDER_VERSION = 'case-public-techniques-preview-builder.v2';
+const VERIFIER_LEGACY_SOURCE_MANIFEST_SCHEMA = 'case-public-techniques-source-manifest.v2';
+const VERIFIER_LEGACY_BUILDER_VERSION = 'case-public-techniques-builder.v1';
+const VERIFIER_CURRENT_SOURCE_MANIFEST_SCHEMA = 'case-public-techniques-source-manifest.v4';
+const VERIFIER_CURRENT_BUILDER_VERSION = 'case-public-techniques-builder.v2';
+const VERIFIER_MAX_GLOBAL_AUDIT_STDOUT_BYTES = 64 * 1024 * 1024;
+const VERIFIER_MAX_CLASSIFICATION_EXCEPTION_REPORT_BYTES = 8 * 1024 * 1024;
 const VERIFIER_PREVIEW_ARTIFACT_KIND = 'pilot-preview';
 const VERIFIER_MAX_PREVIEW_FILE_BYTES = 64 * 1024 * 1024;
 const VERIFIER_MAX_PREVIEW_MANIFEST_BYTES = 64 * 1024 * 1024;
@@ -134,7 +141,7 @@ const PREVIEW_MANIFEST_FIELDS = [
   'totals',
   'preview',
 ];
-const MANIFEST_FIELDS = [
+const LEGACY_MANIFEST_FIELDS = [
   'schemaVersion',
   'builderVersion',
   'runId',
@@ -154,6 +161,12 @@ const MANIFEST_FIELDS = [
   'execution',
   'totals',
 ];
+const CURRENT_MANIFEST_FIELDS = [
+  ...LEGACY_MANIFEST_FIELDS,
+  'runKind',
+  'caseInventory',
+  'classificationExceptionAudit',
+];
 const INPUT_RECORD_FIELDS = ['path', 'size', 'mtimeNs', 'inode', 'device', 'sha256'];
 const PROFILE_RECORD_FIELDS = ['ordinal', 'pdbId', 'authChain', ...INPUT_RECORD_FIELDS];
 const EXECUTION_FIELDS = [
@@ -163,6 +176,36 @@ const EXECUTION_FIELDS = [
   'maxDbOnlyAuditSummaryBytes',
   'maxSourceManifestBytes',
   'maxProfileIndexBytes',
+];
+const CURRENT_EXECUTION_FIELDS = [
+  ...EXECUTION_FIELDS,
+  'maxGlobalAuditStdoutBytes',
+  'maxClassificationExceptionReportBytes',
+];
+const VERIFIER_GLOBAL_AUDIT_FIELDS = [
+  'pdbId',
+  'authChain',
+  'techFilter',
+  'isBackgroundChannel',
+  'profileCount',
+];
+const VERIFIER_CLASSIFICATION_EXCEPTION_FIELDS = [
+  'scope',
+  'exceptionType',
+  'techniqueLabel',
+  'profileCount',
+  'chainCount',
+];
+const VERIFIER_CLASSIFICATION_EXCEPTION_SCOPES = [
+  'global',
+  'selected-public-sidecar',
+  'selected-chain-db-only',
+  'unselected-profile-index-chain',
+  'no-profile-index-chain',
+];
+const VERIFIER_CLASSIFICATION_EXCEPTION_TYPES = [
+  'unmapped-technique',
+  'non-background-null',
 ];
 const PREVIEW_EXECUTION_FIELDS = [
   ...EXECUTION_FIELDS,
@@ -199,6 +242,69 @@ export function parseVerifierArgs(argv) {
     if (!values.has(flag)) throw new Error(`Missing required argument ${flag}`);
   }
   return Object.fromEntries(REQUIRED_FLAGS.map((flag) => [flag.slice(2).replace('-', ''), values.get(flag)]));
+}
+
+export function validateRunKindIndependently({
+  runId,
+  selectionMode,
+  manifestRunKind,
+  requiresManifestRunKind,
+  isPreview,
+  isLegacyData = false,
+} = {}) {
+  if (typeof runId !== 'string') throw new TypeError('Verifier run-id must be a string');
+  const match = /^(?<kind>pilot|full)-(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})T(?<hour>\d{2})(?<minute>\d{2})(?<second>\d{2})Z-(?<git12>[0-9a-f]{12})$/.exec(runId);
+  if (!match?.groups) throw new Error('Verifier run-id has an invalid independent run kind or timestamp shape');
+  const fields = Object.fromEntries(
+    ['year', 'month', 'day', 'hour', 'minute', 'second']
+      .map((field) => [field, Number(match.groups[field])]),
+  );
+  const instant = new Date(Date.UTC(
+    fields.year,
+    fields.month - 1,
+    fields.day,
+    fields.hour,
+    fields.minute,
+    fields.second,
+  ));
+  if (
+    !Number.isFinite(instant.getTime())
+    || instant.getUTCFullYear() !== fields.year
+    || instant.getUTCMonth() + 1 !== fields.month
+    || instant.getUTCDate() !== fields.day
+    || instant.getUTCHours() !== fields.hour
+    || instant.getUTCMinutes() !== fields.minute
+    || instant.getUTCSeconds() !== fields.second
+  ) throw new Error('Verifier run-id contains an impossible UTC timestamp');
+  const kind = match.groups.kind;
+  if (selectionMode !== 'cases' && selectionMode !== 'all') {
+    throw new Error('Verifier selectionMode is invalid');
+  }
+  if (isPreview) {
+    if (kind !== 'pilot' || selectionMode !== 'cases') {
+      throw new Error('Preview run kind must be pilot with explicit case selection');
+    }
+  } else if (isLegacyData) {
+    if (kind !== 'pilot' || selectionMode !== 'cases') {
+      throw new Error('Legacy v2 run kind must be pilot with explicit case selection');
+    }
+  } else if (
+    (kind === 'pilot' && selectionMode !== 'cases')
+    || (kind === 'full' && selectionMode !== 'all')
+  ) {
+    throw new Error(`${kind} run kind does not match selection mode ${selectionMode}`);
+  }
+  if (requiresManifestRunKind) {
+    if (manifestRunKind !== kind) throw new Error('Source manifest runKind does not match directory run kind');
+  } else if (manifestRunKind !== undefined) {
+    throw new Error('Legacy or preview manifest must not declare runKind');
+  }
+  return {
+    kind,
+    timestamp: `${match.groups.year}${match.groups.month}${match.groups.day}`
+      + `T${match.groups.hour}${match.groups.minute}${match.groups.second}Z`,
+    git12: match.groups.git12,
+  };
 }
 
 function requireDirectory(directory, label) {
@@ -274,12 +380,25 @@ function validateSelection(selection) {
   });
 }
 
-function independentlyEnumerateAllSelection(caseRoot, python) {
+function independentlyCaptureCaseInventory(caseRoot, python) {
   return enumerateAnchoredCaseInventory({
     python,
     caseRoot,
     profileIndexMaxBytes: MAX_PROFILE_INDEX_BYTES,
-  }).map(({ pdbId, authChain }) => ({ pdbId, authChain }));
+  });
+}
+
+function independentlyEnumerateAllSelection(caseRoot, python) {
+  return independentlyCaptureCaseInventory(caseRoot, python)
+    .map(({ pdbId, authChain }) => ({ pdbId, authChain }));
+}
+
+function independentlyDescribeCaseInventory(inventory) {
+  if (!Array.isArray(inventory)) throw new TypeError('Verifier complete Case inventory must be an array');
+  return {
+    profileIndexCount: inventory.length,
+    sha256: createHash('sha256').update(deterministicJson(inventory)).digest('hex'),
+  };
 }
 
 function gitBuffer(args, label) {
@@ -509,6 +628,181 @@ function classifyRawRow(row, techniqueReplay) {
   return { status, methods };
 }
 
+function independentClassificationExceptionEvents(row, techniqueReplay) {
+  if (row.techFilter === null) {
+    return row.isBackgroundChannel === true
+      ? []
+      : [{ exceptionType: 'non-background-null', techniqueLabel: '' }];
+  }
+  if (typeof row.techFilter !== 'string') {
+    throw new TypeError('Verifier classification exception techFilter must be string or null');
+  }
+  if (row.techFilter.trim().length === 0) return [];
+  const classified = techniqueReplay.classifyTechniqueFilter(row.techFilter);
+  if (!isRecord(classified) || !Array.isArray(classified.methods)) {
+    throw new Error('Verifier classifier returned malformed exception audit data');
+  }
+  return classified.methods
+    .filter((method) => method.mappingStatus === 'unmapped')
+    .map((method) => ({ exceptionType: 'unmapped-technique', techniqueLabel: method.label }));
+}
+
+function independentClassificationExceptionComparator(left, right) {
+  const scopeDelta = VERIFIER_CLASSIFICATION_EXCEPTION_SCOPES.indexOf(left.scope)
+    - VERIFIER_CLASSIFICATION_EXCEPTION_SCOPES.indexOf(right.scope);
+  if (scopeDelta !== 0) return scopeDelta;
+  const typeDelta = VERIFIER_CLASSIFICATION_EXCEPTION_TYPES.indexOf(left.exceptionType)
+    - VERIFIER_CLASSIFICATION_EXCEPTION_TYPES.indexOf(right.exceptionType);
+  if (typeDelta !== 0) return typeDelta;
+  return compareUtf8(left.techniqueLabel, right.techniqueLabel);
+}
+
+function independentChainIdentitySet(items, label) {
+  if (!Array.isArray(items)) throw new TypeError(`${label} must be an array`);
+  const identities = new Set();
+  items.forEach((item, index) => {
+    if (!isRecord(item)) throw new TypeError(`${label}[${index}] must be an object`);
+    assertStrictIdentity(item.pdbId, `${label}[${index}].pdbId`);
+    assertStrictIdentity(item.authChain, `${label}[${index}].authChain`);
+    const identity = `${item.pdbId}\0${item.authChain}`;
+    if (identities.has(identity)) throw new Error(`${label} contains duplicate chain ${item.pdbId}/${item.authChain}`);
+    identities.add(identity);
+  });
+  return identities;
+}
+
+function createIndependentClassificationExceptionAudit({
+  globalRows,
+  caseInventory,
+  selections,
+  techniqueReplay,
+}) {
+  if (!Array.isArray(globalRows)) throw new TypeError('Verifier globalRows must be an array');
+  const inventoryIdentities = independentChainIdentitySet(caseInventory, 'Verifier case inventory');
+  const selectedIdentities = independentChainIdentitySet(selections, 'Verifier selections');
+  for (const selection of selections) {
+    const identity = `${selection.pdbId}\0${selection.authChain}`;
+    if (!inventoryIdentities.has(identity)) {
+      throw new Error(`Verifier selected chain lacks profile-index: ${selection.pdbId}/${selection.authChain}`);
+    }
+  }
+  const groups = new Map();
+  const appendGroup = (scope, exception, pdbId, authChain, profileCount) => {
+    if (!VERIFIER_CLASSIFICATION_EXCEPTION_SCOPES.includes(scope)) {
+      throw new Error(`Verifier classification exception scope is invalid: ${scope}`);
+    }
+    if (!Number.isSafeInteger(profileCount) || profileCount <= 0) {
+      throw new TypeError('Verifier classification exception count must be a positive safe integer');
+    }
+    const key = JSON.stringify([scope, exception.exceptionType, exception.techniqueLabel]);
+    let group = groups.get(key);
+    if (!group) {
+      group = {
+        scope,
+        exceptionType: exception.exceptionType,
+        techniqueLabel: exception.techniqueLabel,
+        profileCount: 0,
+        chains: new Set(),
+      };
+      groups.set(key, group);
+    }
+    group.profileCount += profileCount;
+    if (!Number.isSafeInteger(group.profileCount)) {
+      throw new Error('Verifier classification exception count overflow');
+    }
+    group.chains.add(`${pdbId}\0${authChain}`);
+  };
+
+  const seenGlobal = new Set();
+  globalRows.forEach((row, index) => {
+    assertExactFields(row, VERIFIER_GLOBAL_AUDIT_FIELDS, `Verifier global audit row ${index}`);
+    assertStrictIdentity(row.pdbId, `Verifier global audit row ${index}.pdbId`);
+    assertStrictIdentity(row.authChain, `Verifier global audit row ${index}.authChain`);
+    if (row.techFilter !== null && typeof row.techFilter !== 'string') {
+      throw new TypeError(`Verifier global audit row ${index}.techFilter must be string or null`);
+    }
+    if (row.isBackgroundChannel !== null && typeof row.isBackgroundChannel !== 'boolean') {
+      throw new TypeError(`Verifier global audit row ${index}.isBackgroundChannel must be boolean or null`);
+    }
+    if (!Number.isSafeInteger(row.profileCount) || row.profileCount <= 0) {
+      throw new TypeError(`Verifier global audit row ${index}.profileCount is invalid`);
+    }
+    const groupIdentity = JSON.stringify([
+      row.pdbId,
+      row.authChain,
+      row.techFilter,
+      row.isBackgroundChannel,
+    ]);
+    if (seenGlobal.has(groupIdentity)) throw new Error(`Verifier global audit row ${index} is duplicated`);
+    seenGlobal.add(groupIdentity);
+    const chainIdentity = `${row.pdbId}\0${row.authChain}`;
+    for (const exception of independentClassificationExceptionEvents(row, techniqueReplay)) {
+      appendGroup('global', exception, row.pdbId, row.authChain, row.profileCount);
+      if (!selectedIdentities.has(chainIdentity)) {
+        appendGroup(
+          inventoryIdentities.has(chainIdentity)
+            ? 'unselected-profile-index-chain'
+            : 'no-profile-index-chain',
+          exception,
+          row.pdbId,
+          row.authChain,
+          row.profileCount,
+        );
+      }
+    }
+  });
+
+  let finished = false;
+  const appendSelected = (rows, scope) => {
+    if (finished) throw new Error('Verifier classification exception audit is finished');
+    if (!Array.isArray(rows)) throw new TypeError(`Verifier ${scope} rows must be an array`);
+    const seenProfiles = new Set();
+    rows.forEach((row, index) => {
+      validateExtractorRow(row, { rowIndex: index });
+      const chainIdentity = `${row.pdbId}\0${row.authChain}`;
+      if (!selectedIdentities.has(chainIdentity)) throw new Error(`Verifier ${scope} row is not selected`);
+      const profileIdentity = `${chainIdentity}\0${row.profileId}`;
+      if (seenProfiles.has(profileIdentity)) throw new Error(`Verifier ${scope} row duplicates ${row.profileId}`);
+      seenProfiles.add(profileIdentity);
+      for (const exception of independentClassificationExceptionEvents(row, techniqueReplay)) {
+        appendGroup(scope, exception, row.pdbId, row.authChain, 1);
+      }
+    });
+  };
+  return {
+    append({ publicRows = [], dbOnlyRows = [] } = {}) {
+      appendSelected(publicRows, 'selected-public-sidecar');
+      appendSelected(dbOnlyRows, 'selected-chain-db-only');
+    },
+    finish() {
+      if (finished) throw new Error('Verifier classification exception audit is finished');
+      finished = true;
+      const anomalyKeys = new Set(
+        [...groups.values()].map((row) => JSON.stringify([row.exceptionType, row.techniqueLabel])),
+      );
+      for (const anomalyKey of anomalyKeys) {
+        const [exceptionType, techniqueLabel] = JSON.parse(anomalyKey);
+        const countFor = (scope) => groups.get(
+          JSON.stringify([scope, exceptionType, techniqueLabel]),
+        )?.profileCount || 0;
+        const globalCount = countFor('global');
+        const ownedCount = VERIFIER_CLASSIFICATION_EXCEPTION_SCOPES.slice(1)
+          .reduce((sum, scope) => sum + countFor(scope), 0);
+        if (globalCount !== ownedCount) {
+          throw new Error(
+            `Verifier global classification ownership does not close for ${exceptionType}/${techniqueLabel}: `
+            + `global=${globalCount}, owned=${ownedCount}`,
+          );
+        }
+      }
+      return [...groups.values()].map(({ chains, ...row }) => ({
+        ...row,
+        chainCount: chains.size,
+      })).sort(independentClassificationExceptionComparator);
+    },
+  };
+}
+
 function independentlyProjectChain({ selection, profileIndex, rows, techniqueReplay }) {
   const profileIds = validateProfileIndex(profileIndex, `profile-index for ${selection.pdbId}/${selection.authChain}`);
   const byProfileId = new Map();
@@ -534,6 +828,7 @@ function independentlyProjectChain({ selection, profileIndex, rows, techniqueRep
   if (missing.length > 0) throw new Error(`Verifier exact join is missing published profiles: ${missing.join(', ')}`);
   const profileIdSet = new Set(profileIds);
   const dbOnlyRows = rows.filter((row) => !profileIdSet.has(row.profileId)).map((row) => ({ ...row }));
+  const publicRows = rows.filter((row) => profileIdSet.has(row.profileId)).map((row) => ({ ...row }));
   const profiles = profileIds.map((profileId) => {
     const classified = classifications.get(profileId);
     return { profileId, classificationStatus: classified.status, methods: classified.methods.map((method) => ({ ...method })) };
@@ -556,6 +851,12 @@ function independentlyProjectChain({ selection, profileIndex, rows, techniqueRep
   return {
     payload,
     dbOnlyRows: dbOnlyRows.sort(compareAuditRows),
+    publicClassificationExceptionRows: publicRows
+      .filter((row) => independentClassificationExceptionEvents(row, techniqueReplay).length > 0)
+      .sort(compareAuditRows),
+    dbOnlyClassificationExceptionRows: dbOnlyRows
+      .filter((row) => independentClassificationExceptionEvents(row, techniqueReplay).length > 0)
+      .sort(compareAuditRows),
     unmappedRows: unmappedRows.sort(compareAuditRows),
     nullRows: nullRows.sort(compareAuditRows),
     statusCounts,
@@ -643,7 +944,17 @@ async function assertReportDigest({ python, run, relativePath, expected, label }
   }
 }
 
-function expectedCommands({ run, runId, db, caseRoot, python, selections, selectionMode }) {
+function expectedCommands({
+  run,
+  runId,
+  db,
+  caseRoot,
+  python,
+  selections,
+  selectionMode,
+  includeGlobalAudit = false,
+  anchoredDatabaseConnection = false,
+}) {
   const builder = [
     process.execPath,
     BUILDER_PATH,
@@ -655,18 +966,30 @@ function expectedCommands({ run, runId, db, caseRoot, python, selections, select
   ];
   if (selectionMode === 'all') builder.push('--all');
   else for (const { pdbId, authChain } of selections) builder.push('--case', `${pdbId}/${authChain}`);
+  const extractor = {
+    strategy: anchoredDatabaseConnection ? 'anchored-fd-readonly-transaction' : 'per-chain',
+    maxStdoutBytes: MAX_CHAIN_QUERY_STDOUT_BYTES,
+    argvTemplate: anchoredDatabaseConnection ? [
+      python,
+      BUILDER_EXTRACTOR_PATH,
+      '--db', '<anchored-database-input>',
+      '--serve-anchored',
+      '--safe-helper', SAFE_OPENAT_HELPER_PATH,
+      '--max-db-bytes', String(MAX_DATABASE_INPUT_BYTES),
+    ] : [
+      python,
+      BUILDER_EXTRACTOR_PATH,
+      '--db', db,
+      '--selection-json', '<per-chain-selection.json>',
+    ],
+  };
+  if (includeGlobalAudit) {
+    extractor.queryProtocol = 'bounded-jsonl-v1';
+    extractor.maxGlobalSummaryStdoutBytes = VERIFIER_MAX_GLOBAL_AUDIT_STDOUT_BYTES;
+  }
   return {
     builder,
-    extractor: {
-      strategy: 'per-chain',
-      maxStdoutBytes: MAX_CHAIN_QUERY_STDOUT_BYTES,
-      argvTemplate: [
-        python,
-        BUILDER_EXTRACTOR_PATH,
-        '--db', db,
-        '--selection-json', '<per-chain-selection.json>',
-      ],
-    },
+    extractor,
   };
 }
 
@@ -696,7 +1019,7 @@ function expectedPreviewCommands({ run, runId, db, caseRoot, python, selections,
   };
 }
 
-function expectedFiles(selections) {
+function expectedFiles(selections, { includeClassificationExceptions = false } = {}) {
   return [
     ...selections.map(({ pdbId, authChain }) => sidecarRelativePath(pdbId, authChain)),
     'reports/coverage.json',
@@ -704,6 +1027,7 @@ function expectedFiles(selections) {
     'reports/db-only-profiles.tsv',
     'reports/unmapped-techniques.tsv',
     'reports/null-techniques.tsv',
+    ...(includeClassificationExceptions ? ['reports/classification-exceptions.tsv'] : []),
     'reports/sha256.txt',
     'selection.json',
     'source-manifest.json',
@@ -975,87 +1299,364 @@ async function validatePreviewBaseline({ baseline, baselineAnchor, db, caseRoot,
   } catch (error) {
     throw new Error(`Approved baseline source manifest is not valid JSON: ${error.message}`);
   }
-  if (sourceManifestPayload.schemaVersion !== SOURCE_MANIFEST_SCHEMA) {
+  if (sourceManifestPayload.schemaVersion !== VERIFIER_LEGACY_SOURCE_MANIFEST_SCHEMA) {
     throw new Error('Approved baseline source manifest must use the v2 schema');
   }
   return validateSelection(sourceManifestPayload.selection);
 }
 
-export function extractRowsIndependently({ python, db, selection }) {
-  if (!Array.isArray(selection) || selection.length !== 1) {
-    throw new Error('Independent verifier query accepts exactly one chain per bounded call');
-  }
-  const temporary = mkdtempSync(path.join(tmpdir(), 'case-public-techniques-verify-'));
-  try {
-    const selectionPath = path.join(temporary, 'selection.json');
-    writeFileSync(selectionPath, deterministicJson(selection));
-    const program = String.raw`
-import duckdb
+const INDEPENDENT_DATABASE_BROKER_PROGRAM = String.raw`
+import importlib.util
 import json
+import os
 import sys
+import duckdb
 
-OUTPUT_FIELDS = ("ordinal", "pdbId", "authChain", "chainKey", "profileId", "techFilter", "isBackgroundChannel")
+MAX_REQUEST_BYTES = 1024 * 1024
+MAX_CHAIN_BYTES = 32 * 1024 * 1024
+MAX_GLOBAL_BYTES = 64 * 1024 * 1024
+CHAIN_FIELDS = ("ordinal", "pdbId", "authChain", "chainKey", "profileId", "techFilter", "isBackgroundChannel")
+GLOBAL_FIELDS = ("pdbId", "authChain", "techFilter", "isBackgroundChannel", "profileCount")
 
-def fail(message):
-    print(f"error: {message}", file=sys.stderr)
-    raise SystemExit(1)
+def unique_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate JSON object key: {key!r}")
+        result[key] = value
+    return result
+
+def frame(value):
+    sys.stdout.write(json.dumps(value, ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n")
+    sys.stdout.flush()
+
+def load_helper(path):
+    if os.path.realpath(path) != path or not os.path.isfile(path):
+        raise ValueError("independent safe-openat helper path is invalid")
+    spec = importlib.util.spec_from_file_location("independent_case_public_safe_openat", path)
+    if spec is None or spec.loader is None:
+        raise ValueError("cannot load independent safe-openat helper")
+    module = importlib.util.module_from_spec(spec)
+    previous_dont_write_bytecode = sys.dont_write_bytecode
+    sys.dont_write_bytecode = True
+    try:
+        spec.loader.exec_module(module)
+    finally:
+        sys.dont_write_bytecode = previous_dont_write_bytecode
+    return module
+
+def read_request():
+    raw = sys.stdin.buffer.readline(MAX_REQUEST_BYTES + 1)
+    if raw == b"":
+        return None
+    if len(raw) > MAX_REQUEST_BYTES or not raw.endswith(b"\n"):
+        raise ValueError("independent broker request exceeds line limit")
+    return json.loads(raw, object_pairs_hook=unique_object)
+
+def validate_identity(value, label):
+    if type(value) is not str or not value or value.strip() != value:
+        raise ValueError(f"{label} is invalid")
+    return value
+
+def global_rows(connection):
+    duplicate = connection.execute(
+        "SELECT pdb_id, auth, COUNT(*) AS n FROM chain "
+        "GROUP BY pdb_id, auth HAVING COUNT(*) <> 1 "
+        "ORDER BY pdb_id, auth LIMIT 1"
+    ).fetchone()
+    if duplicate is not None:
+        raise ValueError(
+            f"global audit chain identity is duplicated: pdbId={duplicate[0]!r}, "
+            f"authChain={duplicate[1]!r}, count={duplicate[2]}"
+        )
+    unresolved = connection.execute(
+        "WITH profile_chain_keys AS (SELECT DISTINCT pdb_id, chain_key FROM profile) "
+        "SELECT p.pdb_id, p.chain_key, COUNT(c.chain_key) AS n FROM profile_chain_keys p "
+        "LEFT JOIN chain c ON c.pdb_id = p.pdb_id AND c.chain_key = p.chain_key "
+        "GROUP BY p.pdb_id, p.chain_key HAVING COUNT(c.chain_key) <> 1 "
+        "ORDER BY p.pdb_id, p.chain_key LIMIT 1"
+    ).fetchone()
+    if unresolved is not None:
+        raise ValueError(
+            f"global audit profile chain does not resolve exactly once: pdbId={unresolved[0]!r}, "
+            f"chainKey={unresolved[1]!r}, count={unresolved[2]}"
+        )
+    cursor = connection.execute(
+        "SELECT p.pdb_id, c.auth, p.tech_filter, p.is_background_channel, COUNT(*) AS profile_count "
+        "FROM profile p JOIN chain c ON c.pdb_id = p.pdb_id AND c.chain_key = p.chain_key "
+        "GROUP BY p.pdb_id, c.auth, p.tech_filter, p.is_background_channel "
+        "ORDER BY p.pdb_id, c.auth, "
+        "CASE WHEN p.tech_filter IS NULL THEN 0 ELSE 1 END, p.tech_filter, "
+        "CASE WHEN p.is_background_channel IS NULL THEN 0 WHEN p.is_background_channel = FALSE THEN 1 ELSE 2 END"
+    )
+    while True:
+        batch = cursor.fetchmany(1024)
+        if not batch:
+            return
+        for row in batch:
+            yield dict(zip(GLOBAL_FIELDS, row))
+
+def chain_rows(connection, pdb_id, auth_chain):
+    pdb_id = validate_identity(pdb_id, "pdbId")
+    auth_chain = validate_identity(auth_chain, "authChain")
+    count = connection.execute(
+        "SELECT COUNT(*) FROM chain WHERE pdb_id = ? AND auth = ?",
+        [pdb_id, auth_chain],
+    ).fetchone()[0]
+    if count != 1:
+        raise ValueError(
+            f"selection requires exactly one DB chain; pdbId={pdb_id!r}, authChain={auth_chain!r}, count={count}"
+        )
+    cursor = connection.execute(
+        "SELECT p.pdb_id, c.auth, p.chain_key, p.profile_key, p.tech_filter, p.is_background_channel "
+        "FROM chain c JOIN profile p ON p.pdb_id = c.pdb_id AND p.chain_key = c.chain_key "
+        "WHERE c.pdb_id = ? AND c.auth = ? ORDER BY p.profile_key",
+        [pdb_id, auth_chain],
+    )
+    while True:
+        batch = cursor.fetchmany(1024)
+        if not batch:
+            return
+        for row in batch:
+            yield dict(zip(CHAIN_FIELDS, (0,) + tuple(row)))
+
+def serve(db_path, helper_path, max_bytes):
+    if os.path.realpath(db_path) != db_path or not os.path.isfile(db_path):
+        raise ValueError("independent database path must be a canonical regular file")
+    helper = load_helper(helper_path)
+    handle = helper.open_database_source_anchored(
+        os.path.dirname(db_path),
+        [os.path.basename(db_path)],
+        max_bytes=max_bytes,
+    )
+    connection = None
+    transaction_open = False
+    source_closed = False
+    try:
+        connection = duckdb.connect(handle["fdPath"], read_only=True)
+        connection.execute("BEGIN TRANSACTION")
+        transaction_open = True
+        frame({"type": "ready", "sourceRecord": handle["record"], "strategy": "anchored-fd-readonly-transaction"})
+        while True:
+            request = read_request()
+            if request is None:
+                raise ValueError("independent broker stdin closed before close request")
+            if type(request) is not dict:
+                raise ValueError("independent broker request must be an object")
+            request_id = request.get("id")
+            operation = request.get("operation")
+            if type(request_id) is not int or isinstance(request_id, bool) or request_id < 1:
+                raise ValueError("independent broker id is invalid")
+            if operation == "global":
+                if set(request) != {"id", "operation"}:
+                    raise ValueError("independent global request fields differ")
+                rows = global_rows(connection)
+                limit = MAX_GLOBAL_BYTES
+            elif operation == "chain":
+                if set(request) != {"id", "operation", "pdbId", "authChain"}:
+                    raise ValueError("independent chain request fields differ")
+                rows = chain_rows(connection, request["pdbId"], request["authChain"])
+                limit = MAX_CHAIN_BYTES
+            elif operation == "close":
+                if set(request) != {"id", "operation"}:
+                    raise ValueError("independent close request fields differ")
+                connection.execute("ROLLBACK")
+                transaction_open = False
+                connection.close()
+                connection = None
+                source_closed = True
+                final_record = helper.close_database_source_anchored(handle, expected_record=handle["record"])
+                frame({"id": request_id, "type": "closed", "sourceRecord": final_record})
+                return
+            else:
+                raise ValueError("independent broker operation is invalid")
+            size = 0
+            count = 0
+            for row in rows:
+                size += len((json.dumps(row, ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n").encode("utf-8"))
+                if size > limit:
+                    raise ValueError(f"independent broker response exceeds {limit} bytes")
+                frame({"id": request_id, "type": "row", "row": row})
+                count += 1
+            frame({"id": request_id, "type": "end", "count": count})
+    finally:
+        if connection is not None:
+            try:
+                if transaction_open:
+                    connection.execute("ROLLBACK")
+            finally:
+                connection.close()
+        if not source_closed:
+            helper.close_database_source_anchored(handle, expected_record=handle["record"])
 
 try:
-    with open(sys.argv[2], encoding="utf-8") as handle:
-        selection = json.load(handle)
-    if type(selection) is not list or len(selection) != 1:
-        fail("selection must contain exactly one chain")
-    item = selection[0]
-    if type(item) is not dict or set(item) != {"pdbId", "authChain"}:
-        fail("selection item must have exactly pdbId and authChain")
-    pdb_id = item["pdbId"]
-    auth_chain = item["authChain"]
-    if type(pdb_id) is not str or not pdb_id or pdb_id.strip() != pdb_id:
-        fail("selection pdbId is invalid")
-    if type(auth_chain) is not str or not auth_chain or auth_chain.strip() != auth_chain:
-        fail("selection authChain is invalid")
-
-    connection = duckdb.connect(sys.argv[1], read_only=True)
-    try:
-        chain_count = connection.execute(
-            "SELECT COUNT(*) FROM chain WHERE pdb_id = ? AND auth = ?",
-            [pdb_id, auth_chain],
-        ).fetchone()[0]
-        if chain_count != 1:
-            fail(f"selection requires exactly one DB chain; pdbId={pdb_id!r}, authChain={auth_chain!r}, count={chain_count}")
-        cursor = connection.execute(
-            "SELECT p.pdb_id, c.auth, p.chain_key, p.profile_key, p.tech_filter, p.is_background_channel "
-            "FROM chain c JOIN profile p ON p.pdb_id = c.pdb_id AND p.chain_key = c.chain_key "
-            "WHERE c.pdb_id = ? AND c.auth = ? ORDER BY p.profile_key",
-            [pdb_id, auth_chain],
-        )
-        while True:
-            rows = cursor.fetchmany(1024)
-            if not rows:
-                break
-            for row in rows:
-                output = (0,) + tuple(row)
-                sys.stdout.write(json.dumps(dict(zip(OUTPUT_FIELDS, output)), ensure_ascii=False, allow_nan=False, separators=(",", ":")) + "\n")
-    finally:
-        connection.close()
-except SystemExit:
-    raise
+    serve(sys.argv[1], sys.argv[2], int(sys.argv[3]))
 except Exception as error:
-    fail(error)
+    print(f"error: {error}", file=sys.stderr)
+    raise SystemExit(1)
 `;
-    const result = spawnSync(python, ['-c', program, db, selectionPath], {
-      cwd: REPO_ROOT,
-      encoding: 'utf8',
-      maxBuffer: MAX_CHAIN_QUERY_STDOUT_BYTES,
-    });
-    if (result.error) throw new Error(`Verifier per-chain query launch failed: ${result.error.message}`);
-    if (result.status !== 0) throw new Error(`Verifier per-chain query failed with exit ${result.status}: ${result.stderr || '(empty stderr)'}`);
-    if (result.signal !== null) throw new Error(`Verifier per-chain query terminated by signal ${result.signal}`);
-    if (result.stderr !== '') throw new Error(`Verifier per-chain query emitted stderr on success: ${result.stderr}`);
-    return parseNdjsonStrict(result.stdout);
-  } finally {
-    rmSync(temporary, { recursive: true, force: true });
+
+function validateIndependentBrokerRecord(record, label) {
+  assertExactFields(record, INPUT_RECORD_FIELDS, label);
+  if (typeof record.path !== 'string' || !path.isAbsolute(record.path)) throw new Error(`${label}.path is invalid`);
+  if (!Number.isSafeInteger(record.size) || record.size < 0) throw new Error(`${label}.size is invalid`);
+  for (const field of ['mtimeNs', 'inode', 'device']) {
+    if (typeof record[field] !== 'string' || !/^\d+$/.test(record[field])) throw new Error(`${label}.${field} is invalid`);
   }
+  if (typeof record.sha256 !== 'string' || !/^[0-9a-f]{64}$/.test(record.sha256)) {
+    throw new Error(`${label}.sha256 is invalid`);
+  }
+  return record;
+}
+
+async function startIndependentDatabaseSession({ python, db }) {
+  const child = spawn(
+    python,
+    ['-c', INDEPENDENT_DATABASE_BROKER_PROGRAM, db, SAFE_OPENAT_HELPER_PATH, String(MAX_DATABASE_INPUT_BYTES)],
+    { cwd: REPO_ROOT, stdio: ['pipe', 'pipe', 'pipe'] },
+  );
+  child.stdin.on('error', () => {});
+  const lines = createInterface({ input: child.stdout, crlfDelay: Infinity })[Symbol.asyncIterator]();
+  let stderr = '';
+  let stderrOverflow = false;
+  let exited = false;
+  const completion = new Promise((resolve) => {
+    child.stderr.on('data', (chunk) => {
+      if (stderrOverflow) return;
+      stderr += chunk.toString('utf8');
+      if (Buffer.byteLength(stderr, 'utf8') > MAX_DATABASE_BROKER_STDERR_BYTES) {
+        stderrOverflow = true;
+        stderr = 'independent database broker stderr exceeded its byte contract';
+        child.kill('SIGTERM');
+      }
+    });
+    child.once('error', (error) => {
+      exited = true;
+      resolve({ error, code: null, signal: null });
+    });
+    child.once('close', (code, signal) => {
+      exited = true;
+      resolve({ error: null, code, signal });
+    });
+  });
+  let nextId = 1;
+  let closed = false;
+
+  async function nextFrame(label) {
+    const item = await lines.next();
+    if (item.done) {
+      const outcome = await completion;
+      const detail = outcome.error?.message || stderr || outcome.signal || `exit ${outcome.code}`;
+      throw new Error(`${label} ended before a complete response: ${detail}`);
+    }
+    try {
+      return JSON.parse(item.value);
+    } catch (error) {
+      throw new Error(`${label} emitted invalid JSON: ${error.message}`);
+    }
+  }
+
+  async function writeRequest(request) {
+    await new Promise((resolve, reject) => {
+      child.stdin.write(
+        deterministicJson(request),
+        'utf8',
+        (error) => (error ? reject(error) : resolve()),
+      );
+    });
+  }
+
+  async function requestRows(request, maxBytes, label) {
+    await writeRequest(request);
+    const rows = [];
+    let bytes = 0;
+    while (true) {
+      const frame = await nextFrame(label);
+      if (!isRecord(frame) || frame.id !== request.id) throw new Error(`${label} response identity drifted`);
+      if (frame.type === 'row') {
+        assertExactFields(frame, ['id', 'type', 'row'], `${label} row frame`);
+        bytes += Buffer.byteLength(deterministicJson(frame.row), 'utf8');
+        if (bytes > maxBytes) throw new Error(`${label} exceeds ${maxBytes} bytes`);
+        rows.push(frame.row);
+      } else if (frame.type === 'end') {
+        assertExactFields(frame, ['id', 'type', 'count'], `${label} end frame`);
+        if (frame.count !== rows.length) throw new Error(`${label} row count drifted`);
+        return rows;
+      } else {
+        throw new Error(`${label} response type is invalid`);
+      }
+    }
+  }
+
+  let sourceRecord;
+  try {
+    const ready = await nextFrame('Independent database broker startup');
+    assertExactFields(ready, ['type', 'sourceRecord', 'strategy'], 'Independent database broker ready frame');
+    if (ready.type !== 'ready' || ready.strategy !== 'anchored-fd-readonly-transaction') {
+      throw new Error('Independent database broker strategy is invalid');
+    }
+    sourceRecord = validateIndependentBrokerRecord(ready.sourceRecord, 'Independent database broker source record');
+  } catch (error) {
+    child.stdin.destroy();
+    if (!exited) child.kill('SIGTERM');
+    await completion;
+    throw error;
+  }
+
+  return {
+    sourceRecord,
+    async globalRows() {
+      const id = nextId++;
+      const rows = await requestRows({ id, operation: 'global' }, VERIFIER_MAX_GLOBAL_AUDIT_STDOUT_BYTES, 'Independent global audit broker');
+      return parseIndependentGlobalAuditRows(rows);
+    },
+    async chainRows(selection) {
+      const id = nextId++;
+      const rows = await requestRows(
+        { id, operation: 'chain', pdbId: selection.pdbId, authChain: selection.authChain },
+        MAX_CHAIN_QUERY_STDOUT_BYTES,
+        `Independent per-chain broker ${selection.pdbId}/${selection.authChain}`,
+      );
+      return parseNdjsonStrict(rows.map((row) => deterministicJson(row)).join(''));
+    },
+    async close() {
+      if (closed) return;
+      closed = true;
+      try {
+        const id = nextId++;
+        await writeRequest({ id, operation: 'close' });
+        const frame = await nextFrame('Independent database broker close');
+        assertExactFields(frame, ['id', 'type', 'sourceRecord'], 'Independent database broker close frame');
+        if (frame.id !== id || frame.type !== 'closed') throw new Error('Independent database broker close identity drifted');
+        sameRecord(sourceRecord, validateIndependentBrokerRecord(frame.sourceRecord, 'Independent database broker final record'), 'Independent database broker source');
+        child.stdin.end();
+        const outcome = await completion;
+        if (outcome.error || outcome.code !== 0 || outcome.signal !== null || stderrOverflow || stderr !== '') {
+          const detail = outcome.error?.message || stderr || outcome.signal || `exit ${outcome.code}`;
+          throw new Error(`Independent database broker failed during close: ${detail}`);
+        }
+      } catch (error) {
+        child.stdin.destroy();
+        if (!exited) child.kill('SIGTERM');
+        await completion;
+        throw error;
+      }
+    },
+    async abort() {
+      if (closed) return;
+      closed = true;
+      child.stdin.destroy();
+      if (!exited) child.kill('SIGTERM');
+      await completion;
+    },
+  };
+}
+
+function parseIndependentGlobalAuditRows(rows) {
+  return rows.map((row, index) => {
+    assertExactFields(row, VERIFIER_GLOBAL_AUDIT_FIELDS, `Verifier global audit row ${index + 1}`);
+    return row;
+  });
 }
 
 export async function verifyRun(argv, {
@@ -1075,13 +1676,23 @@ export async function verifyRun(argv, {
     }
   }
   const runId = path.basename(commandRun);
-  const runIdParts = validateRunId(runId);
 
   const runBefore = await snapshotRunTreeStreaming(run, { python });
-  const dbBefore = captureAbsoluteAnchored({ python, filePath: db }).record;
+  const dbPreflight = captureAbsoluteAnchored({
+    python,
+    filePath: db,
+    maxBytes: MAX_DATABASE_INPUT_BYTES,
+    includeBytes: false,
+  }).record;
+  let databaseSession = null;
+  let dbBefore = dbPreflight;
   let profileSnapshots = [];
-  let allInventoryBefore = null;
+  let caseInventoryBefore = null;
+  let primaryError = null;
   try {
+    databaseSession = await startIndependentDatabaseSession({ python, db });
+    sameRecord(dbPreflight, databaseSession.sourceRecord, 'Verifier database preflight');
+    dbBefore = databaseSession.sourceRecord;
     const manifestCapture = parseJsonFileBounded({
       python,
       root: run,
@@ -1092,14 +1703,24 @@ export async function verifyRun(argv, {
     const manifest = manifestCapture.payload;
     assertBytes(manifestCapture.bytes, deterministicJson(manifest), 'source-manifest canonical JSON');
     const isPreview = manifest.schemaVersion === VERIFIER_PREVIEW_SOURCE_MANIFEST_SCHEMA;
+    const isLegacyData = manifest.schemaVersion === VERIFIER_LEGACY_SOURCE_MANIFEST_SCHEMA;
+    const isCurrentData = manifest.schemaVersion === VERIFIER_CURRENT_SOURCE_MANIFEST_SCHEMA;
     if (logicalRun !== null && !isPreview) {
       throw new Error('Verifier logicalRun is allowed only for private preview assembly verification');
     }
-    if (!isPreview && manifest.schemaVersion !== SOURCE_MANIFEST_SCHEMA) {
+    if (!isPreview && !isLegacyData && !isCurrentData) {
       throw new Error('Source manifest schemaVersion is invalid');
     }
-    assertExactFields(manifest, isPreview ? PREVIEW_MANIFEST_FIELDS : MANIFEST_FIELDS, 'Source manifest');
-    assertExactFields(manifest.execution, isPreview ? PREVIEW_EXECUTION_FIELDS : EXECUTION_FIELDS, 'Source manifest execution');
+    assertExactFields(
+      manifest,
+      isPreview ? PREVIEW_MANIFEST_FIELDS : isCurrentData ? CURRENT_MANIFEST_FIELDS : LEGACY_MANIFEST_FIELDS,
+      'Source manifest',
+    );
+    assertExactFields(
+      manifest.execution,
+      isPreview ? PREVIEW_EXECUTION_FIELDS : isCurrentData ? CURRENT_EXECUTION_FIELDS : EXECUTION_FIELDS,
+      'Source manifest execution',
+    );
     if (manifest.execution.maxDbOnlyAuditSummaryBytes !== MAX_DB_ONLY_AUDIT_SUMMARY_BYTES) {
       throw new Error('Source manifest execution.maxDbOnlyAuditSummaryBytes is invalid');
     }
@@ -1111,7 +1732,18 @@ export async function verifyRun(argv, {
         'Source manifest execution.maxProfileIndexBytes compressed/decompressed ceiling is invalid',
       );
     }
-    if (manifest.builderVersion !== (isPreview ? VERIFIER_PREVIEW_BUILDER_VERSION : BUILDER_VERSION)) {
+    if (isCurrentData) {
+      if (manifest.execution.maxGlobalAuditStdoutBytes !== VERIFIER_MAX_GLOBAL_AUDIT_STDOUT_BYTES) {
+        throw new Error('Source manifest execution.maxGlobalAuditStdoutBytes is invalid');
+      }
+      if (manifest.execution.maxClassificationExceptionReportBytes !== VERIFIER_MAX_CLASSIFICATION_EXCEPTION_REPORT_BYTES) {
+        throw new Error('Source manifest execution.maxClassificationExceptionReportBytes is invalid');
+      }
+    }
+    const expectedBuilderVersion = isPreview
+      ? VERIFIER_PREVIEW_BUILDER_VERSION
+      : isCurrentData ? VERIFIER_CURRENT_BUILDER_VERSION : VERIFIER_LEGACY_BUILDER_VERSION;
+    if (manifest.builderVersion !== expectedBuilderVersion) {
       throw new Error('Source manifest builderVersion is invalid');
     }
     if (isPreview) {
@@ -1121,6 +1753,17 @@ export async function verifyRun(argv, {
       if (manifest.execution.maxPreviewManifestBytes !== VERIFIER_MAX_PREVIEW_MANIFEST_BYTES) throw new Error('Preview manifest byte cap is invalid');
     }
     if (manifest.runId !== runId) throw new Error('Source manifest runId does not match run directory');
+    if (manifest.selectionMode !== 'cases' && manifest.selectionMode !== 'all') {
+      throw new Error('Source manifest selectionMode is invalid');
+    }
+    const runIdParts = validateRunKindIndependently({
+      runId,
+      selectionMode: manifest.selectionMode,
+      manifestRunKind: manifest.runKind,
+      requiresManifestRunKind: isCurrentData,
+      isPreview,
+      isLegacyData,
+    });
     const commit = resolveRecordedCommit(runIdParts.git12, manifest.gitCommit);
     const expectedClosure = independentlyRebuildSourceClosure(
       commit,
@@ -1143,10 +1786,7 @@ export async function verifyRun(argv, {
     if (manifest.taxonomySnapshotSha256 !== committedTaxonomySnapshotSha256) {
       throw new Error('Source manifest taxonomy snapshot hash does not match committed taxonomy');
     }
-    if (manifest.selectionMode !== 'cases' && manifest.selectionMode !== 'all') throw new Error('Source manifest selectionMode is invalid');
-
-    const currentDb = captureAbsoluteAnchored({ python, filePath: db }).record;
-    sameRecord(manifest.database, currentDb, 'Source manifest database');
+    sameRecord(manifest.database, dbPreflight, 'Source manifest database');
     const selections = validateSelection(manifest.selection);
     if (isPreview) {
       if (manifest.selectionMode !== 'cases') throw new Error('Preview manifest selectionMode must be cases');
@@ -1161,10 +1801,23 @@ export async function verifyRun(argv, {
         throw new Error('Preview selection must exactly match the approved baseline selection and order');
       }
     }
+    if (isCurrentData || manifest.selectionMode === 'all') {
+      caseInventoryBefore = independentlyCaptureCaseInventory(caseRoot, python);
+    }
     if (manifest.selectionMode === 'all') {
-      allInventoryBefore = independentlyEnumerateAllSelection(caseRoot, python);
-      if (deterministicJson(manifest.selection) !== deterministicJson(allInventoryBefore)) {
+      const completeSelection = caseInventoryBefore
+        .map(({ pdbId, authChain }) => ({ pdbId, authChain }));
+      if (deterministicJson(manifest.selection) !== deterministicJson(completeSelection)) {
         throw new Error('Source manifest --all selection does not match complete safe case-root inventory');
+      }
+    }
+    const expectedCaseInventory = isCurrentData
+      ? independentlyDescribeCaseInventory(caseInventoryBefore)
+      : null;
+    if (isCurrentData) {
+      assertExactFields(manifest.caseInventory, ['profileIndexCount', 'sha256'], 'Source manifest caseInventory');
+      if (deterministicJson(manifest.caseInventory) !== deterministicJson(expectedCaseInventory)) {
+        throw new Error('Source manifest caseInventory differs from complete current Case inventory');
       }
     }
     assertBytes(
@@ -1222,7 +1875,7 @@ export async function verifyRun(argv, {
       defaultMaxBytes: isPreview ? VERIFIER_MAX_PREVIEW_FILE_BYTES : null,
     });
     const expectedRunFiles = [
-      ...expectedFiles(selections),
+      ...expectedFiles(selections, { includeClassificationExceptions: isCurrentData }),
       ...(previewInventory?.files || []).map((file) => path.posix.join('pilot-preview', file.path)),
     ].sort(compareUtf8);
     if (deterministicJson(layout.files.map(({ path: relative }) => relative).sort(compareUtf8)) !== deterministicJson(expectedRunFiles)) {
@@ -1254,6 +1907,14 @@ export async function verifyRun(argv, {
       selection: manifest.selection,
       maxBytes: MAX_DB_ONLY_AUDIT_SUMMARY_BYTES,
     });
+    const expectedClassificationAuditAccumulator = isCurrentData
+      ? createIndependentClassificationExceptionAudit({
+        globalRows: await databaseSession.globalRows(),
+        caseInventory: caseInventoryBefore,
+        selections: manifest.selection,
+        techniqueReplay,
+      })
+      : null;
     let unmappedTechniqueCount = 0;
     let nullTechniqueCount = 0;
     const executionState = await processSequentiallyBounded(profileInputs, async (input) => {
@@ -1266,11 +1927,10 @@ export async function verifyRun(argv, {
       });
       sameRecord(profileCapture.record, input.inputRecord, `Profile-index processing record ${input.ordinal}`);
       const profileIndex = parseProfileIndexGzipBytes(profileCapture.bytes, input.path);
-      const queried = extractRowsIndependently({
-        python,
-        db,
-        selection: [{ pdbId: input.pdbId, authChain: input.authChain }],
-      }).map((row, rowIndex) => {
+      const queried = (await databaseSession.chainRows({
+        pdbId: input.pdbId,
+        authChain: input.authChain,
+      })).map((row, rowIndex) => {
         if (row.ordinal !== 0 || row.pdbId !== input.pdbId || row.authChain !== input.authChain) {
           throw new Error(`Verifier per-chain row ${rowIndex} identity drift`);
         }
@@ -1298,6 +1958,10 @@ export async function verifyRun(argv, {
       }
       assertBytes(decompressed, deterministicJson(projection.payload), `Sidecar ${relative}`);
       reports.dbOnly.append(projection.dbOnlyRows);
+      expectedClassificationAuditAccumulator?.append({
+        publicRows: projection.publicClassificationExceptionRows,
+        dbOnlyRows: projection.dbOnlyClassificationExceptionRows,
+      });
       expectedDbOnlyAuditAccumulator.append(
         independentlySummarizeDbOnlyRows(projection.dbOnlyRows, input),
       );
@@ -1311,11 +1975,47 @@ export async function verifyRun(argv, {
       for (const status of STATUS_NAMES) statusCounts[status] += projection.statusCounts[status];
     });
     const expectedDbOnlyAuditSummary = expectedDbOnlyAuditAccumulator.finish();
+    const expectedClassificationExceptionAudit = expectedClassificationAuditAccumulator?.finish() || null;
 
     await assertReportDigest({ python, run, relativePath: 'reports/profile-join-failures.tsv', expected: reports.joinFailures.finish(), label: 'join-failures report' });
     await assertReportDigest({ python, run, relativePath: 'reports/db-only-profiles.tsv', expected: reports.dbOnly.finish(), label: 'DB-only report' });
     await assertReportDigest({ python, run, relativePath: 'reports/unmapped-techniques.tsv', expected: reports.unmapped.finish(), label: 'unmapped report' });
     await assertReportDigest({ python, run, relativePath: 'reports/null-techniques.tsv', expected: reports.nullTechniques.finish(), label: 'null-techniques report' });
+    if (isCurrentData) {
+      const classificationReportBytes = Buffer.from(verifierTsv(
+        VERIFIER_CLASSIFICATION_EXCEPTION_FIELDS,
+        expectedClassificationExceptionAudit,
+      ));
+      if (classificationReportBytes.length > VERIFIER_MAX_CLASSIFICATION_EXCEPTION_REPORT_BYTES) {
+        throw new Error('Verifier classification exception report exceeds its byte contract');
+      }
+      await assertReportDigest({
+        python,
+        run,
+        relativePath: 'reports/classification-exceptions.tsv',
+        expected: {
+          size: classificationReportBytes.length,
+          sha256: createHash('sha256').update(classificationReportBytes).digest('hex'),
+        },
+        label: 'classification-exceptions report',
+      });
+      if (!Array.isArray(manifest.classificationExceptionAudit)) {
+        throw new TypeError('Source manifest classificationExceptionAudit must be an array');
+      }
+      manifest.classificationExceptionAudit.forEach((row, index) => {
+        assertExactFields(
+          row,
+          VERIFIER_CLASSIFICATION_EXCEPTION_FIELDS,
+          `Source manifest classificationExceptionAudit[${index}]`,
+        );
+      });
+      if (
+        deterministicJson(manifest.classificationExceptionAudit)
+        !== deterministicJson(expectedClassificationExceptionAudit)
+      ) {
+        throw new Error('Source manifest classification exception audit differs from independent DuckDB audit');
+      }
+    }
 
     const coverage = {
       schemaVersion: COVERAGE_SCHEMA,
@@ -1361,7 +2061,7 @@ export async function verifyRun(argv, {
       projectionCompletedAt: manifest.projectionCompletedAt,
       finalizedAt: manifest.finalizedAt,
       sourceClosure: expectedClosure,
-      database: currentDb,
+      database: dbPreflight,
       caseRoot,
       profileIndexes: profileInputs.map((input) => ({
         ordinal: input.ordinal,
@@ -1405,11 +2105,42 @@ export async function verifyRun(argv, {
         maxPreviewManifestBytes: VERIFIER_MAX_PREVIEW_MANIFEST_BYTES,
       },
       preview: manifest.preview,
-    } : {
-      schemaVersion: SOURCE_MANIFEST_SCHEMA,
-      builderVersion: BUILDER_VERSION,
+    } : isCurrentData ? {
+      schemaVersion: VERIFIER_CURRENT_SOURCE_MANIFEST_SCHEMA,
+      builderVersion: VERIFIER_CURRENT_BUILDER_VERSION,
+      runKind: runIdParts.kind,
       ...commonExpectedManifest,
-      commands: expectedCommands({ run: commandRun, runId, db, caseRoot, python, selections, selectionMode: manifest.selectionMode }),
+      caseInventory: expectedCaseInventory,
+      classificationExceptionAudit: expectedClassificationExceptionAudit,
+      commands: expectedCommands({
+        run: commandRun,
+        runId,
+        db,
+        caseRoot,
+        python,
+        selections,
+        selectionMode: manifest.selectionMode,
+        includeGlobalAudit: true,
+        anchoredDatabaseConnection: true,
+      }),
+      execution: {
+        ...baseExecution,
+        maxGlobalAuditStdoutBytes: VERIFIER_MAX_GLOBAL_AUDIT_STDOUT_BYTES,
+        maxClassificationExceptionReportBytes: VERIFIER_MAX_CLASSIFICATION_EXCEPTION_REPORT_BYTES,
+      },
+    } : {
+      schemaVersion: VERIFIER_LEGACY_SOURCE_MANIFEST_SCHEMA,
+      builderVersion: VERIFIER_LEGACY_BUILDER_VERSION,
+      ...commonExpectedManifest,
+      commands: expectedCommands({
+        run: commandRun,
+        runId,
+        db,
+        caseRoot,
+        python,
+        selections,
+        selectionMode: manifest.selectionMode,
+      }),
       execution: baseExecution,
     };
     if (deterministicJson(manifest) !== deterministicJson(expectedManifest)) {
@@ -1434,32 +2165,60 @@ export async function verifyRun(argv, {
       }),
       'SHA-256 manifest',
     );
-    if (allInventoryBefore !== null) {
-      const allInventoryAfter = independentlyEnumerateAllSelection(caseRoot, python);
-      if (deterministicJson(allInventoryBefore) !== deterministicJson(allInventoryAfter)) {
-        throw new Error('Verifier --all inventory changed during verification');
+    if (caseInventoryBefore !== null) {
+      const caseInventoryAfter = independentlyCaptureCaseInventory(caseRoot, python);
+      if (deterministicJson(caseInventoryBefore) !== deterministicJson(caseInventoryAfter)) {
+        throw new Error('Verifier complete Case inventory changed during verification');
       }
     }
+    await databaseSession.close();
+    databaseSession = null;
+  } catch (error) {
+    primaryError = error;
+    throw error;
   } finally {
-    const changes = [];
-    if (await snapshotRunTreeStreaming(run, { python }) !== runBefore) {
-      changes.push('run tree');
+    let cleanupError = null;
+    try {
+      if (databaseSession !== null) {
+        try {
+          await databaseSession.close();
+        } catch (error) {
+          cleanupError = error;
+          await databaseSession.abort();
+        } finally {
+          databaseSession = null;
+        }
+      }
+      const changes = [];
+      if (await snapshotRunTreeStreaming(run, { python }) !== runBefore) {
+        changes.push('run tree');
+      }
+      const dbAfter = captureAbsoluteAnchored({ python, filePath: db }).record;
+      if (deterministicJson(dbAfter) !== deterministicJson(dbBefore)) changes.push('database');
+      for (const { segments, inputRecord } of profileSnapshots) {
+        const after = captureAnchoredFile({
+          python,
+          root: caseRoot,
+          segments,
+          maxBytes: MAX_PROFILE_INDEX_BYTES,
+          includeBytes: false,
+        }).record;
+        if (deterministicJson(after) !== deterministicJson(inputRecord)) {
+          changes.push(`profile-index ${path.join(caseRoot, ...segments)}`);
+        }
+      }
+      if (changes.length > 0) throw new Error(`Verifier mutated immutable inputs: ${changes.join(', ')}`);
+    } catch (error) {
+      if (cleanupError === null) cleanupError = error;
+      else cleanupError = new Error(`${cleanupError.message}; cleanup verification also failed: ${error.message}`);
     }
-    const dbAfter = captureAbsoluteAnchored({ python, filePath: db }).record;
-    if (deterministicJson(dbAfter) !== deterministicJson(dbBefore)) changes.push('database');
-    for (const { segments, inputRecord } of profileSnapshots) {
-      const after = captureAnchoredFile({
-        python,
-        root: caseRoot,
-        segments,
-        maxBytes: MAX_PROFILE_INDEX_BYTES,
-        includeBytes: false,
-      }).record;
-      if (deterministicJson(after) !== deterministicJson(inputRecord)) {
-        changes.push(`profile-index ${path.join(caseRoot, ...segments)}`);
+    if (cleanupError !== null) {
+      if (primaryError !== null) {
+        primaryError.message = `${primaryError.message}; cleanup verification also failed: ${cleanupError.message}`;
+      } else {
+        throw cleanupError;
       }
     }
-    if (changes.length > 0) throw new Error(`Verifier mutated immutable inputs: ${changes.join(', ')}`);
   }
   return { run, runId };
 }

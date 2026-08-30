@@ -3,7 +3,6 @@
 
 import base64
 import ctypes
-import errno
 import hashlib
 import json
 import os
@@ -20,6 +19,7 @@ MAX_SAFE_INTEGER = 9_007_199_254_740_991
 READ_CHUNK_BYTES = 1024 * 1024
 MAX_MATERIALIZE_ENTRIES = 200_000
 MAX_MATERIALIZE_FILE_BYTES = 64 * 1024 * 1024
+MAX_DATABASE_SOURCE_BYTES = 8 * 1024 * 1024 * 1024
 FIXED_DIAGNOSTIC_TEXT = "Preview build failed.\n"
 
 DIRECTORY_FLAGS = os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW | os.O_CLOEXEC
@@ -180,6 +180,24 @@ def _file_record(root, segments, file_stat, digest):
         "device": str(file_stat.st_dev),
         "sha256": digest,
     }
+
+
+def _validate_file_record(record, label):
+    _exact_keys(record, ["path", "size", "mtimeNs", "inode", "device", "sha256"], label)
+    if not isinstance(record["path"], str) or not record["path"].startswith("/"):
+        raise SafeOpenatError(f"{label}.path is invalid")
+    if isinstance(record["size"], bool) or not isinstance(record["size"], int) or record["size"] < 0:
+        raise SafeOpenatError(f"{label}.size is invalid")
+    for field in ("mtimeNs", "inode", "device"):
+        value = record[field]
+        if not isinstance(value, str) or not value.isdigit():
+            raise SafeOpenatError(f"{label}.{field} is invalid")
+    digest = record["sha256"]
+    if not isinstance(digest, str) or len(digest) != 64 or any(
+        character not in "0123456789abcdef" for character in digest
+    ):
+        raise SafeOpenatError(f"{label}.sha256 is invalid")
+    return record
 
 
 def capture_anchored(root, segments, *, max_bytes, include_bytes, hook=None):
@@ -1054,6 +1072,195 @@ def materialize_anchored(
             os.close(fd)
 
 
+def _open_database_source(root, segments, hook=None):
+    if not isinstance(segments, list) or not segments:
+        raise SafeOpenatError("sourceSegments must be a non-empty array")
+    segments = tuple(
+        _validate_segment(value, f"sourceSegments[{index}]")
+        for index, value in enumerate(segments)
+    )
+    fds, root_edges = _open_canonical_root(root)
+    # The source file descriptor is the authority for this operation. A transient
+    # rename of another entry in the source root cannot change the pinned bytes.
+    if root_edges:
+        root_edges[-1]["child_metadata"] = None
+    request_edges = []
+    file_fd = None
+    try:
+        relative = ()
+        for segment in segments[:-1]:
+            edge = _open_directory_edge(
+                fds[-1],
+                segment,
+                watch_parent=True,
+                relative_segments=relative,
+                watch_child_metadata=True,
+            )
+            request_edges.append(edge)
+            fds.append(edge["child_fd"])
+            relative += (segment,)
+        parent_fd = fds[-1]
+        try:
+            file_fd = os.open(segments[-1], FILE_FLAGS, dir_fd=parent_fd)
+        except OSError as error:
+            raise SafeOpenatError(
+                f"cannot open anchored database source {'/'.join(segments)}: {error}"
+            ) from error
+        source_stat = os.fstat(file_fd)
+        if not stat.S_ISREG(source_stat.st_mode):
+            raise SafeOpenatError(
+                f"anchored database source is not a regular file: {'/'.join(segments)}"
+            )
+        if hook is not None:
+            hook("after_database_source_open", segments)
+        return {
+            "root": root,
+            "fds": fds,
+            "root_edges": root_edges,
+            "request_edges": request_edges,
+            "parent_fd": parent_fd,
+            "segments": segments,
+            "file_fd": file_fd,
+            "source_stat": source_stat,
+        }
+    except Exception:
+        if file_fd is not None:
+            os.close(file_fd)
+        for fd in reversed(fds):
+            os.close(fd)
+        raise
+
+
+def _close_database_source(source):
+    os.close(source["file_fd"])
+    for fd in reversed(source["fds"]):
+        os.close(fd)
+
+
+def _verify_database_source(source, final_stat, *, allow_path_rename=False):
+    named = _named_stat(
+        source["parent_fd"],
+        source["segments"][-1],
+        "/".join(source["segments"]),
+    )
+    before = source["source_stat"]
+    if (
+        not _same_identity(before, final_stat)
+        or not _same_identity(final_stat, named)
+        or before.st_size != final_stat.st_size
+        or before.st_mtime_ns != final_stat.st_mtime_ns
+        or (not allow_path_rename and before.st_ctime_ns != final_stat.st_ctime_ns)
+    ):
+        raise SafeOpenatError("anchored database source content or edge changed")
+    _verify_edges(source["request_edges"])
+    _verify_edges(source["root_edges"])
+
+
+def open_database_source_anchored(root, segments, *, max_bytes, hook=None):
+    """Open and hash a database through canonical dirfd/openat edges.
+
+    The returned descriptor remains the authority until
+    ``close_database_source_anchored`` is called.  Callers may open the database
+    through ``fdPath`` without resolving the original pathname again.
+    """
+    _validate_root(root)
+    max_bytes = _validate_max_bytes(max_bytes)
+    if max_bytes > MAX_DATABASE_SOURCE_BYTES:
+        raise SafeOpenatError(
+            f"database source maxBytes exceeds helper limit {MAX_DATABASE_SOURCE_BYTES}"
+        )
+    source = _open_database_source(root, segments, hook=hook)
+    try:
+        record = hash_database_source_anchored(source, max_bytes=max_bytes)
+        fd_path = f"/dev/fd/{source['file_fd']}"
+        probe_fd = None
+        try:
+            probe_fd = os.open(fd_path, FILE_FLAGS)
+            fd_path_stat = os.fstat(probe_fd)
+        except OSError as error:
+            raise SafeOpenatError(
+                f"database descriptor path is unavailable: {error}"
+            ) from error
+        finally:
+            if probe_fd is not None:
+                os.close(probe_fd)
+        if not _same_identity(fd_path_stat, os.fstat(source["file_fd"])):
+            raise SafeOpenatError("database descriptor path does not reopen the anchored file")
+        return {
+            "source": source,
+            "record": record,
+            "fdPath": fd_path,
+            "maxBytes": max_bytes,
+            "allowPathRename": True,
+        }
+    except Exception:
+        _close_database_source(source)
+        raise
+
+
+def hash_database_source_anchored(handle, *, max_bytes=None):
+    """Re-hash a still-open database descriptor and verify its original edge."""
+    if not isinstance(handle, dict) or "file_fd" not in handle:
+        if not isinstance(handle, dict) or "source" not in handle:
+            raise SafeOpenatError("database source handle is invalid")
+        source = handle["source"]
+        if max_bytes is None:
+            max_bytes = handle.get("maxBytes")
+    else:
+        source = handle
+    max_bytes = _validate_max_bytes(max_bytes)
+    before = os.fstat(source["file_fd"])
+    if before.st_size > max_bytes:
+        raise SafeOpenatError(
+            f"database source exceeds {max_bytes} bytes after reading 0 bytes"
+        )
+    os.lseek(source["file_fd"], 0, os.SEEK_SET)
+    digest = hashlib.sha256()
+    bytes_read = 0
+    while bytes_read < before.st_size:
+        chunk = os.read(
+            source["file_fd"],
+            min(READ_CHUNK_BYTES, before.st_size - bytes_read),
+        )
+        if not chunk:
+            break
+        digest.update(chunk)
+        bytes_read += len(chunk)
+        if bytes_read > max_bytes:
+            raise SafeOpenatError(
+                f"database source exceeds {max_bytes} bytes after reading {bytes_read} bytes"
+            )
+    after = os.fstat(source["file_fd"])
+    if bytes_read != after.st_size:
+        raise SafeOpenatError("database source hash did not consume the complete file")
+    _verify_database_source(
+        source,
+        after,
+        allow_path_rename=bool(handle.get("allowPathRename", False))
+        if isinstance(handle, dict)
+        else False,
+    )
+    return _file_record(
+        source["root"],
+        source["segments"],
+        after,
+        digest.hexdigest(),
+    )
+
+
+def close_database_source_anchored(handle, *, expected_record):
+    """Verify the pinned descriptor one final time, then close every owned fd."""
+    if not isinstance(handle, dict) or "source" not in handle or "maxBytes" not in handle:
+        raise SafeOpenatError("database source handle is invalid")
+    try:
+        record = hash_database_source_anchored(handle, max_bytes=handle["maxBytes"])
+        if record != expected_record:
+            raise SafeOpenatError("database source changed while its read-only connection was active")
+        return record
+    finally:
+        _close_database_source(handle["source"])
+
+
 def _parse_request(raw):
     if len(raw) > MAX_REQUEST_BYTES:
         raise SafeOpenatError("request exceeds input limit")
@@ -1164,7 +1371,11 @@ def _dispatch(request):
 
 def encode_response(response, *, max_output_bytes=None):
     if not isinstance(response, dict) or response.get("operation") not in (
-        "capture", "inventory", "tree", "sha256", "materialize"
+        "capture",
+        "inventory",
+        "tree",
+        "sha256",
+        "materialize",
     ):
         raise SafeOpenatError("response operation is invalid")
     if max_output_bytes is None:

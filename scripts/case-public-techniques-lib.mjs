@@ -27,9 +27,11 @@ import {
   validateProfilePublicTechniques,
 } from '../public/entry-cases/__entry_v3_site__/workbench-pure.mjs';
 
-export const BUILDER_VERSION = 'case-public-techniques-builder.v1';
-// V2 remains the immutable data-only contract used by the two Task 5 runs.
-export const SOURCE_MANIFEST_SCHEMA = 'case-public-techniques-source-manifest.v2';
+export const LEGACY_BUILDER_VERSION = 'case-public-techniques-builder.v1';
+export const BUILDER_VERSION = 'case-public-techniques-builder.v2';
+// V2 remains the immutable data-only contract used by the historical Task 5 runs.
+export const LEGACY_SOURCE_MANIFEST_SCHEMA = 'case-public-techniques-source-manifest.v2';
+export const SOURCE_MANIFEST_SCHEMA = 'case-public-techniques-source-manifest.v4';
 export const PREVIEW_BUILDER_VERSION = 'case-public-techniques-preview-builder.v2';
 export const PREVIEW_SOURCE_MANIFEST_SCHEMA = 'case-public-techniques-source-manifest.v3';
 export const PREVIEW_PROVENANCE_SCHEMA = 'case-public-techniques-preview.v2';
@@ -67,6 +69,8 @@ export const PREVIEW_SOURCE_CLOSURE_PATHS = Object.freeze([
 ]);
 export const COVERAGE_SCHEMA = 'case-public-techniques-coverage.v1';
 export const MAX_DB_ONLY_AUDIT_SUMMARY_BYTES = 32 * 1024 * 1024;
+export const MAX_GLOBAL_AUDIT_STDOUT_BYTES = 64 * 1024 * 1024;
+export const MAX_CLASSIFICATION_EXCEPTION_REPORT_BYTES = 8 * 1024 * 1024;
 export const MAX_SOURCE_MANIFEST_BYTES = 64 * 1024 * 1024;
 export const MAX_PREVIEW_FILE_BYTES = 64 * 1024 * 1024;
 export const MAX_PREVIEW_MANIFEST_BYTES = 64 * 1024 * 1024;
@@ -75,7 +79,7 @@ export const MAX_PROFILE_INDEX_BYTES = 32 * 1024 * 1024;
 export const MAX_SAFE_HELPER_STRUCTURED_OUTPUT_BYTES = 32 * 1024 * 1024;
 export const MAX_SAFE_HELPER_CAPTURE_OUTPUT_BYTES = 96 * 1024 * 1024;
 export const SAFE_OPENAT_HELPER_PATH = fileURLToPath(new URL('./safe-openat-capture.py', import.meta.url));
-export const RUN_ID_PATTERN = /^pilot-(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})T(?<hour>\d{2})(?<minute>\d{2})(?<second>\d{2})Z-(?<git12>[0-9a-f]{12})$/;
+export const RUN_ID_PATTERN = /^(?<kind>pilot|full)-(?<year>\d{4})(?<month>\d{2})(?<day>\d{2})T(?<hour>\d{2})(?<minute>\d{2})(?<second>\d{2})Z-(?<git12>[0-9a-f]{12})$/;
 export const STATUS_NAMES = ['mapped', 'partially_mapped', 'unmapped', 'background', 'missing'];
 export const EXTRACTOR_ROW_FIELDS = [
   'ordinal',
@@ -86,12 +90,32 @@ export const EXTRACTOR_ROW_FIELDS = [
   'techFilter',
   'isBackgroundChannel',
 ];
+export const GLOBAL_AUDIT_ROW_FIELDS = [
+  'pdbId',
+  'authChain',
+  'techFilter',
+  'isBackgroundChannel',
+  'profileCount',
+];
+
+export const CLASSIFICATION_EXCEPTION_SCOPES = Object.freeze([
+  'global',
+  'selected-public-sidecar',
+  'selected-chain-db-only',
+  'unselected-profile-index-chain',
+  'no-profile-index-chain',
+]);
+export const CLASSIFICATION_EXCEPTION_TYPES = Object.freeze([
+  'unmapped-technique',
+  'non-background-null',
+]);
 
 export const REPORT_HEADERS = Object.freeze({
   joinFailures: ['ordinal', 'pdbId', 'authChain', 'error'],
   dbOnly: ['ordinal', 'pdbId', 'authChain', 'profileId', 'techFilter', 'isBackgroundChannel'],
   unmapped: ['ordinal', 'pdbId', 'authChain', 'profileId', 'label'],
   nullTechniques: ['ordinal', 'pdbId', 'authChain', 'profileId', 'isBackgroundChannel'],
+  classificationExceptions: ['scope', 'exceptionType', 'techniqueLabel', 'profileCount', 'chainCount'],
 });
 
 const textEncoder = new TextEncoder();
@@ -225,7 +249,7 @@ export function validateRunId(runId) {
   if (typeof runId !== 'string') throw new TypeError('run-id must be a string');
   const match = RUN_ID_PATTERN.exec(runId);
   if (!match?.groups) {
-    throw new Error('run-id must match pilot-<real YYYYMMDDTHHMMSSZ UTC>-<12 lowercase hex>');
+    throw new Error('run-id must match <pilot|full>-<real YYYYMMDDTHHMMSSZ UTC>-<12 lowercase hex>');
   }
   const fields = Object.fromEntries(
     ['year', 'month', 'day', 'hour', 'minute', 'second']
@@ -251,6 +275,7 @@ export function validateRunId(runId) {
     throw new Error(`run-id contains an impossible UTC calendar timestamp: ${runId}`);
   }
   return {
+    kind: match.groups.kind,
     timestamp: `${match.groups.year}${match.groups.month}${match.groups.day}`
       + `T${match.groups.hour}${match.groups.minute}${match.groups.second}Z`,
     git12: match.groups.git12,
@@ -662,6 +687,223 @@ export function committedPreviewGlobalAssets({
   return entries;
 }
 
+function classificationExceptionEvents({ techFilter, isBackgroundChannel }) {
+  if (techFilter === null) {
+    return isBackgroundChannel === true
+      ? []
+      : [{ exceptionType: 'non-background-null', techniqueLabel: '' }];
+  }
+  if (typeof techFilter !== 'string') throw new TypeError('Classification audit techFilter must be a string or null');
+  if (techFilter.trim().length === 0) return [];
+  const classified = classifyTechniqueFilter(techFilter);
+  if (!isRecord(classified) || !Array.isArray(classified.methods)) {
+    throw new Error('Shared technique classifier returned malformed global audit data');
+  }
+  return classified.methods
+    .filter((method) => method.mappingStatus === 'unmapped')
+    .map((method) => ({ exceptionType: 'unmapped-technique', techniqueLabel: method.label }));
+}
+
+function classificationAuditIdentitySet(items, label) {
+  if (!Array.isArray(items)) throw new TypeError(`${label} must be an array`);
+  const identities = new Set();
+  items.forEach((item, index) => {
+    if (!isRecord(item)) throw new TypeError(`${label}[${index}] must be an object`);
+    assertStrictIdentity(item.pdbId, `${label}[${index}].pdbId`);
+    assertStrictIdentity(item.authChain, `${label}[${index}].authChain`);
+    const key = `${item.pdbId}\0${item.authChain}`;
+    if (identities.has(key)) throw new Error(`${label} contains duplicate chain ${item.pdbId}/${item.authChain}`);
+    identities.add(key);
+  });
+  return identities;
+}
+
+export function validateGlobalAuditRow(row, label = 'Global audit row') {
+  assertExactFields(row, GLOBAL_AUDIT_ROW_FIELDS, label);
+  assertStrictIdentity(row.pdbId, `${label}.pdbId`);
+  assertStrictIdentity(row.authChain, `${label}.authChain`);
+  if (row.techFilter !== null && typeof row.techFilter !== 'string') {
+    throw new TypeError(`${label}.techFilter must be a string or null`);
+  }
+  if (row.isBackgroundChannel !== null && typeof row.isBackgroundChannel !== 'boolean') {
+    throw new TypeError(`${label}.isBackgroundChannel must be boolean or null`);
+  }
+  if (!Number.isSafeInteger(row.profileCount) || row.profileCount <= 0) {
+    throw new TypeError(`${label}.profileCount must be a positive safe integer`);
+  }
+  return row;
+}
+
+export function validateClassificationExceptionAudit(rows) {
+  if (!Array.isArray(rows)) throw new TypeError('classificationExceptionAudit must be an array');
+  let previous = null;
+  for (const [index, row] of rows.entries()) {
+    assertExactFields(row, REPORT_HEADERS.classificationExceptions, `classificationExceptionAudit[${index}]`);
+    if (!CLASSIFICATION_EXCEPTION_SCOPES.includes(row.scope)) {
+      throw new Error(`classificationExceptionAudit[${index}].scope is invalid`);
+    }
+    if (!CLASSIFICATION_EXCEPTION_TYPES.includes(row.exceptionType)) {
+      throw new Error(`classificationExceptionAudit[${index}].exceptionType is invalid`);
+    }
+    if (typeof row.techniqueLabel !== 'string') {
+      throw new TypeError(`classificationExceptionAudit[${index}].techniqueLabel must be a string`);
+    }
+    if (row.exceptionType === 'unmapped-technique') {
+      assertStrictIdentity(row.techniqueLabel, `classificationExceptionAudit[${index}].techniqueLabel`);
+    } else if (row.techniqueLabel !== '') {
+      throw new Error(`classificationExceptionAudit[${index}] null exception must use an empty techniqueLabel`);
+    }
+    for (const field of ['profileCount', 'chainCount']) {
+      if (!Number.isSafeInteger(row[field]) || row[field] <= 0) {
+        throw new TypeError(`classificationExceptionAudit[${index}].${field} must be a positive safe integer`);
+      }
+    }
+    if (previous !== null && compareClassificationExceptionRows(previous, row) >= 0) {
+      throw new Error(`classificationExceptionAudit[${index}] is duplicated or not deterministically sorted`);
+    }
+    previous = row;
+  }
+  return rows;
+}
+
+function compareClassificationExceptionRows(left, right) {
+  const scopeOrder = CLASSIFICATION_EXCEPTION_SCOPES.indexOf(left.scope)
+    - CLASSIFICATION_EXCEPTION_SCOPES.indexOf(right.scope);
+  if (scopeOrder !== 0) return scopeOrder;
+  const typeOrder = CLASSIFICATION_EXCEPTION_TYPES.indexOf(left.exceptionType)
+    - CLASSIFICATION_EXCEPTION_TYPES.indexOf(right.exceptionType);
+  if (typeOrder !== 0) return typeOrder;
+  return compareUtf8(left.techniqueLabel, right.techniqueLabel);
+}
+
+export function createClassificationExceptionAuditAccumulator({
+  globalRows,
+  caseInventory,
+  selections,
+} = {}) {
+  if (!Array.isArray(globalRows)) throw new TypeError('globalRows must be an array');
+  const inventoryIdentities = classificationAuditIdentitySet(caseInventory, 'caseInventory');
+  const selectedIdentities = classificationAuditIdentitySet(selections, 'selections');
+  for (const selection of selections) {
+    const key = `${selection.pdbId}\0${selection.authChain}`;
+    if (!inventoryIdentities.has(key)) {
+      throw new Error(`Selected chain lacks a profile-index identity: ${selection.pdbId}/${selection.authChain}`);
+    }
+  }
+
+  const groups = new Map();
+  const append = (scope, exception, pdbId, authChain, count) => {
+    const key = JSON.stringify([scope, exception.exceptionType, exception.techniqueLabel]);
+    let group = groups.get(key);
+    if (!group) {
+      group = {
+        scope,
+        exceptionType: exception.exceptionType,
+        techniqueLabel: exception.techniqueLabel,
+        profileCount: 0,
+        chains: new Set(),
+      };
+      groups.set(key, group);
+    }
+    group.profileCount += count;
+    if (!Number.isSafeInteger(group.profileCount)) throw new Error('Classification exception profileCount overflow');
+    group.chains.add(`${pdbId}\0${authChain}`);
+  };
+
+  const seenGlobalGroups = new Set();
+  globalRows.forEach((row, index) => {
+    validateGlobalAuditRow(row, `globalRows[${index}]`);
+    const groupKey = JSON.stringify([
+      row.pdbId,
+      row.authChain,
+      row.techFilter,
+      row.isBackgroundChannel,
+    ]);
+    if (seenGlobalGroups.has(groupKey)) throw new Error(`globalRows contains duplicate group at index ${index}`);
+    seenGlobalGroups.add(groupKey);
+    const identity = `${row.pdbId}\0${row.authChain}`;
+    for (const exception of classificationExceptionEvents(row)) {
+      append('global', exception, row.pdbId, row.authChain, row.profileCount);
+      if (!selectedIdentities.has(identity)) {
+        append(
+          inventoryIdentities.has(identity) ? 'unselected-profile-index-chain' : 'no-profile-index-chain',
+          exception,
+          row.pdbId,
+          row.authChain,
+          row.profileCount,
+        );
+      }
+    }
+  });
+
+  let finished = false;
+  const appendSelectedRows = (rows, scope) => {
+    if (finished) throw new Error('Classification exception audit accumulator is already finished');
+    if (!Array.isArray(rows)) throw new TypeError(`${scope} rows must be an array`);
+    const seenProfilesInBatch = new Set();
+    rows.forEach((row, index) => {
+      validateExtractorRow(row, { rowIndex: index });
+      const identity = `${row.pdbId}\0${row.authChain}`;
+      if (!selectedIdentities.has(identity)) throw new Error(`${scope} row references an unselected chain`);
+      const profileKey = `${identity}\0${row.profileId}`;
+      if (seenProfilesInBatch.has(profileKey)) throw new Error(`${scope} contains duplicate profile ${row.profileId}`);
+      seenProfilesInBatch.add(profileKey);
+      for (const exception of classificationExceptionEvents(row)) {
+        append(scope, exception, row.pdbId, row.authChain, 1);
+      }
+    });
+  };
+
+  return {
+    append({ publicRows = [], dbOnlyRows = [] } = {}) {
+      appendSelectedRows(publicRows, 'selected-public-sidecar');
+      appendSelectedRows(dbOnlyRows, 'selected-chain-db-only');
+    },
+    finish() {
+      if (finished) throw new Error('Classification exception audit accumulator is already finished');
+      finished = true;
+      const anomalyKeys = new Set();
+      for (const group of groups.values()) anomalyKeys.add(JSON.stringify([group.exceptionType, group.techniqueLabel]));
+      for (const anomalyKey of anomalyKeys) {
+        const [exceptionType, techniqueLabel] = JSON.parse(anomalyKey);
+        const countFor = (scope) => groups.get(JSON.stringify([scope, exceptionType, techniqueLabel]))?.profileCount || 0;
+        const globalCount = countFor('global');
+        const ownedCount = CLASSIFICATION_EXCEPTION_SCOPES.slice(1)
+          .reduce((sum, scope) => sum + countFor(scope), 0);
+        if (globalCount !== ownedCount) {
+          throw new Error(
+            `Global classification exception ownership does not close for ${exceptionType}/${techniqueLabel}: `
+            + `global=${globalCount}, owned=${ownedCount}`,
+          );
+        }
+      }
+      const rows = [...groups.values()].map(({ chains, ...group }) => ({
+        ...group,
+        chainCount: chains.size,
+      })).sort(compareClassificationExceptionRows);
+      return validateClassificationExceptionAudit(rows);
+    },
+  };
+}
+
+export function buildClassificationExceptionAudit({
+  globalRows,
+  caseInventory,
+  selections,
+  selectedPublicRows,
+  selectedDbOnlyRows,
+} = {}) {
+  if (!Array.isArray(selectedPublicRows)) throw new TypeError('selectedPublicRows must be an array');
+  if (!Array.isArray(selectedDbOnlyRows)) throw new TypeError('selectedDbOnlyRows must be an array');
+  const accumulator = createClassificationExceptionAuditAccumulator({
+    globalRows,
+    caseInventory,
+    selections,
+  });
+  accumulator.append({ publicRows: selectedPublicRows, dbOnlyRows: selectedDbOnlyRows });
+  return accumulator.finish();
+}
+
 export function compareAuditRows(left, right) {
   const ordinalDelta = left.ordinal - right.ordinal;
   if (ordinalDelta !== 0) return ordinalDelta;
@@ -832,11 +1074,21 @@ export function buildChainSidecar({ profileIndex, dbRows, pdbId, authChain, ordi
     .filter((row) => !published.has(row.profileId))
     .map((row) => ({ ...row }))
     .sort(compareAuditRows);
+  const publicRows = dbRows
+    .filter((row) => published.has(row.profileId))
+    .map((row) => ({ ...row }))
+    .sort(compareAuditRows);
+  const publicClassificationExceptionRows = publicRows
+    .filter((row) => classificationExceptionEvents(row).length > 0);
+  const dbOnlyClassificationExceptionRows = dbOnlyRows
+    .filter((row) => classificationExceptionEvents(row).length > 0);
   const statusCounts = emptyStatusCounts();
   for (const profile of profiles) statusCounts[profile.classificationStatus] += 1;
   return {
     payload,
     dbOnlyRows,
+    publicClassificationExceptionRows,
+    dbOnlyClassificationExceptionRows,
     unmappedTechniqueRows: unmappedTechniqueRows.sort(compareAuditRows),
     nullTechniqueRows: nullTechniqueRows.sort(compareAuditRows),
     statusCounts,
@@ -861,6 +1113,22 @@ export function parseNdjsonStrict(stdout) {
     rows.push(row);
   });
   return rows;
+}
+
+export function parseGlobalAuditNdjsonStrict(stdout) {
+  if (typeof stdout !== 'string') throw new TypeError('Global audit stdout must be a string');
+  if (stdout.length === 0) return [];
+  if (!stdout.endsWith('\n')) throw new Error('Global audit NDJSON must end with a newline');
+  return stdout.slice(0, -1).split('\n').map((line, index) => {
+    if (line.length === 0) throw new Error(`Global audit NDJSON line ${index + 1} is empty`);
+    let row;
+    try {
+      row = JSON.parse(line);
+    } catch (error) {
+      throw new Error(`Global audit NDJSON line ${index + 1} is invalid JSON: ${error.message}`);
+    }
+    return validateGlobalAuditRow(row, `Global audit NDJSON line ${index + 1}`);
+  });
 }
 
 export function parseProfileIndexGzipBytes(bytes, label = 'profile-index') {
