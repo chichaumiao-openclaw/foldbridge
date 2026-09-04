@@ -2501,7 +2501,10 @@ function mountTechniqueFilter() {
     chip.dataset.category = category.id;
     chip.setAttribute("aria-pressed", "false");
     chip.disabled = !category.enabled;
-    chip.innerHTML = categoryBadgeMarkup({ categories: [category] });
+    chip.innerHTML = categoryBadgeMarkup(
+      { categories: [category] },
+      { fullLabel: true },
+    );
     chip.addEventListener("click", () => {
       const on = !selection.categories.has(category.id);
       chip.setAttribute("aria-pressed", on ? "true" : "false");

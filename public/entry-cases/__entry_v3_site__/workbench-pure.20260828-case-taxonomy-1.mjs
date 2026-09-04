@@ -715,14 +715,15 @@ export function resolvePublicProfileSelector(profileIndex, sidecarResult, contex
   };
 }
 
-export function categoryBadgeMarkup(meta) {
+export function categoryBadgeMarkup(meta, { fullLabel = false } = {}) {
   if (!Array.isArray(meta?.categories) || meta.categories.length === 0) return "";
   const seen = new Set();
   return meta.categories.map((category) => {
     if (!isRecord(category) || seen.has(category.id)) return "";
     seen.add(category.id);
+    const visibleLabel = fullLabel ? category.label : category.shortLabel;
     return `<span class="category-badge" data-category="${esc(category.id)}"`
-      + ` title="${esc(category.label)}">${esc(category.shortLabel)}</span>`;
+      + ` title="${esc(category.label)}">${esc(visibleLabel)}</span>`;
   }).join("");
 }
 
