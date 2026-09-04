@@ -260,6 +260,24 @@ test('Case shell removes internal Family and Tier chrome without changing routin
   assert.match(styles, /\.hero\s+\.meta\s*\{[^}]*display:\s*none/s);
 });
 
+test('Case workbench never creates the RMDB raw reactivity heatmap', () => {
+  const assetNames = [
+    'workbench.js',
+    'workbench.20260828-case-taxonomy-1.js',
+  ];
+
+  for (const assetName of assetNames) {
+    const workbench = readFileSync(
+      new URL(`../public/entry-cases/__entry_v3_site__/${assetName}`, import.meta.url),
+      'utf8',
+    );
+    const profileRenderer = workbench.match(/async function renderProfile\([\s\S]*?\n}\n\nfunction profileIndexForId/)?.[0] || '';
+
+    assert.doesNotMatch(profileRenderer, /\brenderRmdbHeatmap\s*\(/, assetName);
+    assert.equal([...workbench.matchAll(/\brenderRmdbHeatmap\s*\(/g)].length, 1, assetName);
+  }
+});
+
 test('Case shell shows staged loading progress until the first profile is ready', () => {
   const shell = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
   const shellStyles = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.css', import.meta.url), 'utf8');

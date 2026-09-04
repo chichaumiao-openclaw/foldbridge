@@ -2353,7 +2353,6 @@ async function renderProfile(index) {
   ].join("");
   updateView();
   renderTrackRail();
-  void renderRmdbHeatmap(profile);
   renderInspector(state.selectedResidueKey);
   applyMolstarTargetDisplay(state.selectedResidueKey);
 }
