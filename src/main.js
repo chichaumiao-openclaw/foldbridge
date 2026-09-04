@@ -2216,7 +2216,7 @@ function downloadPage() {
     <section class="card bundle-wide-card download-page-card">
       <header class="page-card-heading">
         <h1>Download</h1>
-        <p class="download-page-intro">FoldBridge indexes source data in their authoritative repositories. Use the links below to browse and download the original records.</p>
+        <p class="download-page-intro">Browse original records in their authoritative repositories or download FoldBridge-organized registries for downstream training.</p>
       </header>
       <div class="download-center-grid">
         <section class="download-center-section">
@@ -2232,9 +2232,23 @@ function downloadPage() {
             <a class="download-center-button" href="https://rasp2.zhanglab.net/download/" target="_blank" rel="noopener noreferrer">RASP downloads</a>
           </div>
         </section>
-        <section class="download-center-section download-center-section--geo">
+        <section class="download-center-section download-center-section--training">
           <div class="download-center-heading">
             <span class="download-center-number">02</span>
+            <div>
+              <h2>Processed training data</h2>
+              <p>Download the chain-aligned profile catalog, reactivity registration, and PDB residue alignment.</p>
+            </div>
+          </div>
+          <div class="download-center-actions">
+            <a class="download-center-button" href="https://foldbridge.sunhao.uk/training-data/alignment/" target="_blank" rel="noopener noreferrer">Alignment</a>
+            <a class="download-center-button" href="https://foldbridge.sunhao.uk/training-data/profiles/" target="_blank" rel="noopener noreferrer">Profiles</a>
+            <a class="download-center-button" href="https://foldbridge.sunhao.uk/training-data/reactivity/" target="_blank" rel="noopener noreferrer">Reactivity registration</a>
+          </div>
+        </section>
+        <section class="download-center-section download-center-section--geo">
+          <div class="download-center-heading">
+            <span class="download-center-number">03</span>
             <div>
               <h2>GEO / external datasets</h2>
               <p>41 NCBI GEO Series represented in the current FoldBridge entry atlas. Each link opens the authoritative GEO record and its available files.</p>

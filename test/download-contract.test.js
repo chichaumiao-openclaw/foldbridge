@@ -146,3 +146,17 @@ test('Download page links the primary archives and every GEO series in the curre
   assert.match(main, /https:\/\/www\.ncbi\.nlm\.nih\.gov\/geo\/query\/acc\.cgi\?acc=\$\{encodeURIComponent\(accession\)\}/);
   assert.doesNotMatch(main, /function bindDownloadPageControls/);
 });
+
+test('Download page exposes only the public processed training registries', () => {
+  const main = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
+  const section = main.match(/<section class="download-center-section download-center-section--training">([\s\S]*?)<\/section>/)?.[1] || '';
+
+  assert.match(section, /<h2>Processed training data<\/h2>/);
+  assert.match(section, /href="https:\/\/foldbridge\.sunhao\.uk\/training-data\/alignment\/"/);
+  assert.match(section, /href="https:\/\/foldbridge\.sunhao\.uk\/training-data\/profiles\/"/);
+  assert.match(section, /href="https:\/\/foldbridge\.sunhao\.uk\/training-data\/reactivity\/"/);
+  assert.match(section, />Alignment<\/a>/);
+  assert.match(section, />Profiles<\/a>/);
+  assert.match(section, />Reactivity registration<\/a>/);
+  assert.doesNotMatch(section, /quality|threshold|tier|schema|version|hash|manifest|processing|conversion/i);
+});
