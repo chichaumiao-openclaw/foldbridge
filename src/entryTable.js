@@ -31,7 +31,12 @@ export function normalizeEntryRows(payload) {
     confidenceClass: text(row.entry_confidence_class),
     probingCategory: text(row.probing_category),
     sourceLanes: text(row.source_lanes),
-    hasGeo: text(row.has_geo)
+    hasGeo: text(row.has_geo),
+    // 空 profile 降级：该链所有 profile 在 render-strand 窗口内全空
+    // （全 NaN 源 / 信号落在对齐窗口外）。据此视图层置灰 + 详情链接降级为纯文本。
+    // 判定源=LIVE shard 扫描，见 scripts/annotate-entry-table-empty-profiles.py。
+    emptyProfiles: row.empty_profiles === true,
+    emptyProfileType: text(row.empty_profile_type)
   }));
 }
 

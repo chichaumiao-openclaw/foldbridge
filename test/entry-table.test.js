@@ -5,6 +5,7 @@ import {
   normalizeEntryRows,
   entryCaseHref
 } from '../src/entryTable.js';
+import { renderEntryTablePage } from '../src/entryTableView.js';
 
 test('normalizeEntryRows reads the v1 payload rows', () => {
   const payload = {
@@ -54,4 +55,26 @@ test('entryCaseHref returns empty string when pdb or auth missing', () => {
 test('ENTRY_TABLE_COLUMNS is the frozen display column order', () => {
   assert.ok(Array.isArray(ENTRY_TABLE_COLUMNS));
   assert.ok(ENTRY_TABLE_COLUMNS.length >= 1);
+});
+
+test('normalizeEntryRows reads empty_profiles / empty_profile_type flags', () => {
+  const rows = normalizeEntryRows({
+    rows: [
+      { pdb_id: '8F0N', auth: 'B', empty_profiles: true, empty_profile_type: 'window_empty' },
+      { pdb_id: '10FZ', auth: 'A' }
+    ]
+  });
+  assert.equal(rows[0].emptyProfiles, true);
+  assert.equal(rows[0].emptyProfileType, 'window_empty');
+  assert.equal(rows[1].emptyProfiles, false);
+  assert.equal(rows[1].emptyProfileType, '');
+});
+
+test('renderRow: empty-profile chain grays the row and degrades the PDB link', () => {
+  const row = { pdbId: '8F0N', auth: 'B', chainKey: 'B[B]', sciName: 'x', partition: 'p', nProfiles: 2, emptyProfiles: true, emptyProfileType: 'window_empty' };
+  const html = renderEntryTablePage({ rows: [row] });
+  // 整行置灰类 + 悬浮说明
+  assert.match(html, /<tr class="entry-row-empty-profiles" title="[^"]*aligned chain window[^"]*">/);
+  // PDB 列降级为纯文本：无 entry-table-link <a>
+  assert.doesNotMatch(html, /<a class="entry-table-link"[^>]*>8F0N<\/a>/);
 });

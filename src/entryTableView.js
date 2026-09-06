@@ -28,18 +28,26 @@ function renderRow(row, caseBase, missingSet) {
   const href = entryCaseHref(caseBase, row);
   // 缺页降级：命中缺页集合（逐字节精确，不折叠大小写）则强制纯文本，不渲染死链 <a>。
   const isMissing = missingSet.has(row.pdbId);
+  // 空 profile 降级：该链所有 profile 在目标链窗口内全空（全 NaN / 窗口内全 0）。
+  // 与缺页同款处理——置灰整行 + 详情链接降级为纯文本（进去也看不到反应强度）。
+  const isEmptyProfiles = row.emptyProfiles === true;
+  const emptyTitle = row.emptyProfileType === 'all_NaN'
+    ? 'No reactivity data in source profiles'
+    : 'Reactivity signal falls outside the aligned chain window';
   const cells = ENTRY_TABLE_COLUMNS.map((col) => {
     if (col.id === 'pdbId') {
-      // PDB 列作为跳转入口：有链接且非缺页则渲染 <a>，否则纯文本（占位不可跳）。
+      // PDB 列作为跳转入口：有链接、非缺页、非空 profile 才渲染 <a>，否则纯文本。
       const label = escapeHtml(row.pdbId);
-      const inner = href && !isMissing
+      const inner = href && !isMissing && !isEmptyProfiles
         ? `<a class="entry-table-link" href="${escapeHtml(href)}">${label}</a>`
         : label;
       return `<td>${inner}</td>`;
     }
     return `<td>${cellValue(row, col.id)}</td>`;
   }).join('');
-  return `<tr>${cells}</tr>`;
+  const rowClass = isEmptyProfiles ? ' class="entry-row-empty-profiles"' : '';
+  const rowTitle = isEmptyProfiles ? ` title="${escapeHtml(emptyTitle)}"` : '';
+  return `<tr${rowClass}${rowTitle}>${cells}</tr>`;
 }
 
 // 主渲染。rows=null → loading/error 态由 statusMessage 承载。
