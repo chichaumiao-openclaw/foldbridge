@@ -36,6 +36,12 @@ function renderRow(row, caseBase, missingSet) {
   const rcsbHref = rcsbStructureHref(row);
   // 缺页降级：命中缺页集合（逐字节精确，不折叠大小写）则详情页链接强制纯文本，不渲染死链 <a>。
   const isMissing = missingSet.has(row.pdbId);
+  // 空 profile 降级：该链所有 profile 在目标链窗口内全空（全 NaN / 窗口内全 0），进详情页
+  // 也看不到反应强度。与缺页同款——置灰整行 + 详情(Molecule)链接降级为纯文本；RCSB 外链保留。
+  const isEmptyProfiles = row.emptyProfiles === true;
+  const emptyTitle = row.emptyProfileType === 'all_NaN'
+    ? 'No reactivity data in source profiles'
+    : 'Reactivity signal falls outside the aligned chain window';
   const cells = ENTRY_TABLE_COLUMNS.map((col) => {
     if (col.id === 'pdbId') {
       // PDB 列 → RCSB 结构页外链（新窗口）。RCSB 永不缺页，无需降级。
@@ -48,7 +54,7 @@ function renderRow(row, caseBase, missingSet) {
     if (col.id === 'sciName') {
       // Molecule 列 → 站内详情页链接（#entry-case）。有链接且非缺页则 <a>，否则纯文本。
       const label = escapeHtml(row.sciName ?? '');
-      const inner = caseHref && !isMissing
+      const inner = caseHref && !isMissing && !isEmptyProfiles
         ? `<a class="entry-table-link" href="${escapeHtml(caseHref)}">${label}</a>`
         : label;
       // E/F 2D 热图徽标：按产物存在性渲染，不受 missingSet 影响(产物存在=页面存在)。
@@ -60,7 +66,9 @@ function renderRow(row, caseBase, missingSet) {
     }
     return `<td>${cellValue(row, col.id)}</td>`;
   }).join('');
-  return `<tr>${cells}</tr>`;
+  const rowClass = isEmptyProfiles ? ' class="entry-row-empty-profiles"' : '';
+  const rowTitle = isEmptyProfiles ? ` title="${escapeHtml(emptyTitle)}"` : '';
+  return `<tr${rowClass}${rowTitle}>${cells}</tr>`;
 }
 
 // 两层折叠分组渲染：外层 partition(RNA class)，内层 sciName(分子名)。

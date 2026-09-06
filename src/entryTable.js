@@ -119,7 +119,12 @@ export function normalizeEntryRows(payload) {
       sourceLanes: text(row.source_lanes),
       hasGeo: text(row.has_geo),
       hasEfE: row.has_ef_e === true,
-      hasEfF: row.has_ef_f === true
+      hasEfF: row.has_ef_f === true,
+      // 空 profile 降级：该链所有 profile 在目标链窗口内全空（全 NaN 源 / 信号落在
+      // BLAST 对齐窗口外）。据此视图层置灰整行 + 详情链接降级为纯文本（进去也看不到反应强度）。
+      // 判定源=LIVE case shard 扫描，见 scripts/annotate-entry-table-empty-profiles.py。
+      emptyProfiles: row.empty_profiles === true,
+      emptyProfileType: text(row.empty_profile_type)
     };
   });
 }

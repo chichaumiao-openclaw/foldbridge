@@ -2602,6 +2602,17 @@ tbody tr:hover {
   padding: 28px 12px;
 }
 
+/* 空 profile 行降级：该链所有 profile 在目标链窗口内全空（全 NaN / 窗口内全 0）。
+   整行置灰 + 斜体，Molecule 详情链接已在视图层降级为纯文本（进去也看不到反应强度）。 */
+.entry-table tbody tr.entry-row-empty-profiles td {
+  background: rgba(240, 240, 240, 0.75);
+  color: var(--textMuted, #9aa0a6);
+  font-style: italic;
+}
+.entry-table tbody tr.entry-row-empty-profiles:hover td {
+  background: rgba(232, 232, 232, 0.9);
+}
+
 /* Entry 浏览入口页（entryTableView.js 产出的 entry-table-page 一套类名）。
    复用 browse 页金色表格视觉，但为 8 列改自适应布局，避免 7 列固定宽错位。 */
 .entry-table-page {
