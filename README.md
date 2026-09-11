@@ -2,54 +2,39 @@
 
 Static website for the FoldBridge RNA probing-to-structure demo. The site is plain ES modules under `src/`.
 
-## Docker quick start
+## Docker status
 
-```bash
-docker compose up --build
-```
-
-Open:
-
-- Main site: `http://localhost:8081/dist/`
-
-The Docker image installs the root package, builds the static site, and serves the repository with `scripts/serve.mjs`.
-
-This checkout includes `.env` with the current local port. Set `FOLDBRIDGE_PORT` there if the port needs to change.
-
-For the ANNOCONFIDENCE / ANNOJOIN Atlas route, Docker compose mounts the data
-root read-only at `/annojoin-data` and serves mmCIF structures through the
-local API instead of copying the structure tree into static assets. Open:
-
-- ANNOJOIN Atlas: `http://localhost:8081/dist/#annojoin-atlas`
-
-Use `FOLDBRIDGE_ANNO_ROOT` to point Docker at a different local mirror of the
-stage package.
+The historical Dockerfile still calls `npm run build` and `npm run serve`, but
+their entry scripts are absent from the current `main` branch. Do not use the
+Docker path for development or production release until the build toolchain is
+restored in a separate, reviewed change.
 
 ## Local development
 
 ```bash
 npm ci
 npm test
-npm run build:annojoin-atlas
-npm run build
-npm run verify:mvp
-npm run verify:annojoin-atlas -- --sample-size 20
-npm run serve -- --port 8080
 ```
 
-Open `http://127.0.0.1:8080/dist/`.
+The current `main` branch no longer contains several legacy entry scripts still
+named in `package.json`, including `scripts/build.mjs`, `scripts/build-pages.mjs`,
+and `scripts/verify-mvp.mjs`. Do not use `npm run build:pages` or
+`npm run verify:mvp` as production acceptance until those scripts are restored in
+a separate, reviewed change.
 
-Search is built with Pagefind during `npm run build`. The build writes lightweight
-search documents to `dist/search-docs/` and the browser search bundle to
-`dist/pagefind/`.
+## Production release
 
-## Fast release
+Production GitHub Pages publishes directly from the repository root of
+`ghhttps/main`. The checked-in `.github/workflows/pages.yml` workflow is disabled
+and is not the production acceptance signal. Verify the remote SHA, native Pages
+build, public URL, and browser behavior as described in the handbook below.
 
-```bash
-npm run build:pages
-```
+## Maintenance and release
 
-This writes the publishable static artifact to `_site/`. GitHub Pages uses the same command through `.github/workflows/pages.yml`.
+Use [`docs/网站更新手册_DEPLOYMENT_HANDBOOK.md`](docs/网站更新手册_DEPLOYMENT_HANDBOOK.md)
+as the canonical maintenance runbook. Unless a task explicitly names another
+target, GitHub Pages work uses `ghhttps/main`; Case and training-data assets use
+the separate Cloudflare Tunnel docroot documented there.
 
 ## Build outputs
 
@@ -63,11 +48,11 @@ Runtime data is kept in source control:
 - `src/assets/data/`
 
 ANNOJOIN Atlas assets under `src/assets/generated/annojoin-atlas/` are generated
-from the stage package and can be large. Rebuild them with
-`npm run build:annojoin-atlas`; see
+from the stage package and can be large. The historical
+`scripts/build-annojoin-atlas.mjs` entry is absent from current `main`; see
 [`docs/annojoin-atlas-web-handoff-20260618.md`](docs/annojoin-atlas-web-handoff-20260618.md)
-for the data-entry contract, Docker mount, structure API, and verification
-gates.
+for the historical data-entry contract and verification gates.
+
 ## Included pages
 
 - Home: project overview, bundled RNA database links, and visualization modules.
@@ -94,4 +79,7 @@ gates.
 
 ## Verification
 
-`npm test` checks the source-level contracts. `npm run verify:mvp` checks that the built site artifacts, required themes, routes, and visualization modules are present.
+`npm test` checks the available source-level contracts. The historical
+`npm run verify:mvp` entry is currently unavailable because
+`scripts/verify-mvp.mjs` is absent. Use the scoped checks and production
+acceptance gates in the maintenance handbook.
