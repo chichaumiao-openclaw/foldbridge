@@ -179,15 +179,27 @@ test('Case shell reports its stable content height to a cross-origin parent', ()
 test('entry Case layout uses the shared centered width and content-driven height bridge', () => {
   const main = readFileSync(new URL('../src/main.js', import.meta.url), 'utf8');
   const styles = readFileSync(new URL('../src/styles.css', import.meta.url), 'utf8');
+  const heightBridge = readFileSync(new URL('../src/entryCaseEmbed.js', import.meta.url), 'utf8');
   const shell = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
   const shellStyles = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.css', import.meta.url), 'utf8');
-  const embedStyles = styles.match(/\.entry-case-embed\s*\{[^}]+\}/s)?.[0] || '';
-  const frameStyles = styles.match(/\.entry-case-embed-frame\s*\{[^}]+\}/s)?.[0] || '';
+  const embedRules = [...styles.matchAll(/\.entry-case-embed\s*\{[^}]+\}/gs)].map((match) => match[0]);
+  const frameRules = [...styles.matchAll(/\.entry-case-embed-frame\s*\{[^}]+\}/gs)].map((match) => match[0]);
+  const embedStyles = embedRules.join('\n');
+  const frameStyles = frameRules.join('\n');
+  const heightListener = heightBridge.match(/export function mountEntryCaseHeightListener[\s\S]*?(?=export function mountEntryCaseLoadingIndicator)/)?.[0] || '';
 
+  assert.ok(embedRules.length > 0);
+  assert.ok(frameRules.length > 0);
   assert.match(embedStyles, /width:\s*var\(--feature-card-width\)/);
   assert.match(embedStyles, /max-width:\s*var\(--feature-card-width\)/);
   assert.match(embedStyles, /margin:\s*0 auto/);
+  assert.match(frameStyles, /width:\s*100%/);
+  assert.doesNotMatch(embedStyles, /(?:min-|max-)?width:\s*[^;]*100vw/);
+  assert.doesNotMatch(frameStyles, /(?:min-|max-)?width:\s*[^;]*100vw/);
   assert.doesNotMatch(frameStyles, /height:\s*calc\(100vh/);
+  assert.match(heightListener, /applyEntryCaseHeightMessage\(\{ event, frame, expectedOrigin \}\)/);
+  assert.match(heightBridge, /frame\.style\.height\s*=\s*`\$\{height\}px`/);
+  assert.doesNotMatch(heightBridge, /calc\(100vh/);
   assert.match(main, /mountEntryCaseHeightListener\(\{/);
   assert.match(main, /mountEntryCaseLoadingIndicator\(\{/);
   assert.match(main, /class="entry-case-loading"/);

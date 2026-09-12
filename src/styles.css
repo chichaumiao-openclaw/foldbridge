@@ -2616,7 +2616,9 @@ tbody tr:hover {
 /* Entry 浏览入口页（entryTableView.js 产出的 entry-table-page 一套类名）。
    复用 browse 页金色表格视觉，但为 8 列改自适应布局，避免 7 列固定宽错位。 */
 .entry-table-page {
+  width: 100%;
   max-width: 1400px;
+  min-width: 0;
   margin: 0 auto;
   padding: 32px 24px 64px;
 }
@@ -4824,8 +4826,8 @@ main.page-annojoin-confidence {
 
 .bundle-home-header {
   position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  width: 100%;
+  margin-left: 0;
   padding: 20px 0 16px;
   border-top: 1px solid rgba(126, 197, 219, 0.32);
   border-bottom: 0;
@@ -5114,7 +5116,7 @@ main.page-annojoin-confidence {
 }
 
 .bundle-home-route-nav {
-  width: 100%;
+  width: calc(100% - 220px);
   max-width: 100%;
   justify-content: flex-end;
   gap: 18px;
@@ -5520,6 +5522,8 @@ body[data-mode="dark"] .mode-toggle:hover {
 
   .bundle-home-route-nav {
     justify-content: flex-start;
+    width: 100%;
+    left: 0;
   }
 
   .bundle-hero-card {
@@ -5574,6 +5578,7 @@ body[data-mode="dark"] .mode-toggle:hover {
 
   .bundle-home-switches {
     flex-direction: column;
+    flex-wrap: nowrap;
   }
 
   .bundle-home-route-nav .nav-btn,
