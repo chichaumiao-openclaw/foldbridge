@@ -153,6 +153,8 @@ test('narrow Case controls shrink or wrap while Technique chips remain within th
   assert.ok(blocks.length >= 3, 'all existing 900px blocks participate in the ordered narrow cascade');
   assert.deepEqual(blocks.map(({ index }) => index), [...blocks].map(({ index }) => index).sort((a, b) => a - b));
   const narrow = blocks.map(({ body }) => body).join('\n');
+  assert.equal(values(ruleBodies(narrow, '.controls'), 'grid-template-columns').at(-1), 'minmax(0, 1fr)',
+    'the final narrow controls track must opt out of grid auto-min overflow');
   assertNarrowControlLayout(narrow, '.viewport-controls');
   assertNarrowControlLayout(narrow, '.varna-zoom-controls');
   assert.equal(displayedAs('.technique-chip-row', narrow), 'flex');
