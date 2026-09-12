@@ -347,10 +347,10 @@ button:focus-visible {
 }
 .varna-viewport {
   width: 100%;
-  height: auto;
+  block-size: clamp(220px, 32vw, 404px);
   border: 1px solid #d8dee5;
   background: #fff;
-  overflow: visible;
+  overflow: auto;
 }
 .varna-frame svg {
   width: 100%;
@@ -567,7 +567,10 @@ pre {
     grid-template-columns: 1fr;
   }
   .viewport-controls {
-    grid-template-columns: repeat(5, 36px) minmax(96px, 1fr);
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .varna-zoom-controls {
+    flex-wrap: wrap;
   }
   .molstar-host,
   .molstar-host canvas {
@@ -952,6 +955,7 @@ pre {
 }
 .workbench-shell.is-ef-mode .varna-viewport {
   height: 404px;
+  overflow: visible;
   aspect-ratio: auto;
   display: flex;
   align-items: center;

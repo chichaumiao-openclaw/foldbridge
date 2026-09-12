@@ -2088,6 +2088,9 @@ function recolorVarnaViewportLink() {
 function fitVarnaSvg() {
   const svg = el.varnaViewport.querySelector("svg");
   if (!svg) return null;
+  el.varnaViewport.tabIndex = 0;
+  el.varnaViewport.setAttribute("role", "region");
+  el.varnaViewport.setAttribute("aria-label", "Secondary structure scroll viewport");
   const viewBox = svg.getAttribute("viewBox") || "0 0 1270 355";
   const [, , width, height] = viewBox.split(/\s+/).map(Number);
   const aspect = width > 0 && height > 0 ? width / height : 1270 / 355;
@@ -2120,6 +2123,10 @@ function applyVarnaZoom() {
 function setVarnaZoom(next) {
   state.varnaZoom = Math.min(VARNA_ZOOM_MAX, Math.max(VARNA_ZOOM_MIN, next));
   applyVarnaZoom();
+  if (state.varnaZoom === 1 && el.varnaViewport?.querySelector("svg")) {
+    el.varnaViewport.scrollLeft = 0;
+    el.varnaViewport.scrollTop = 0;
+  }
 }
 
 function zoomVarna(direction) {
