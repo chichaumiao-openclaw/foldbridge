@@ -383,8 +383,8 @@ a { color: inherit; }
 }
 .fb-detail-nav .bundle-home-header {
   position: relative;
-  width: 100vw;
-  margin-left: calc(50% - 50vw);
+  width: 100%;
+  margin-left: 0;
   padding: 20px 0 16px;
   border-top: 1px solid rgba(126, 197, 219, 0.32);
   background: #ffffff;
