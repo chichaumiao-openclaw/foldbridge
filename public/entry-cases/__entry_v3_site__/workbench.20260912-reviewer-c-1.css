@@ -214,6 +214,7 @@ button:focus-visible {
   height: 182px;
   overflow-x: auto;
   overflow-y: hidden;
+  contain: paint;
   background: #fff;
 }
 .track-viewport svg {

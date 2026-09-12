@@ -60,16 +60,16 @@ function effectiveOverflowAxes(bodies) {
   return axes;
 }
 
-function mediaBodies(maxWidth) {
+function mediaBodies(maxWidth, source = css) {
   const pattern = new RegExp(`@media\\s*\\(max-width:\\s*${maxWidth}px\\)\\s*\\{`, 'g');
   const bodies = [];
-  for (const match of css.matchAll(pattern)) {
+  for (const match of source.matchAll(pattern)) {
     const open = match.index + match[0].length - 1;
     let depth = 0;
-    for (let index = open; index < css.length; index += 1) {
-      if (css[index] === '{') depth += 1;
-      if (css[index] === '}' && --depth === 0) {
-        bodies.push({ index: match.index, body: css.slice(open + 1, index) });
+    for (let index = open; index < source.length; index += 1) {
+      if (source[index] === '{') depth += 1;
+      if (source[index] === '}' && --depth === 0) {
+        bodies.push({ index: match.index, body: source.slice(open + 1, index) });
         break;
       }
     }
@@ -98,6 +98,18 @@ test('Case shell portal header uses document width without scrollbar-gutter over
   assert.deepEqual(values(rules, 'margin-left'), ['0'], 'desktop header must not use a viewport-centering offset');
 });
 
+test('Case shell switch pills form one shrinkable column at the phone breakpoint', () => {
+  const narrow = mediaBodies(720, shellCss).map(({ body }) => body).join('\n');
+  const switches = ruleBodies(narrow, '.fb-detail-nav .bundle-home-switches');
+  const pills = ruleBodies(narrow, '.fb-detail-nav .bundle-switch-pill');
+  assert.equal(values(switches, 'flex-direction').at(-1), 'column');
+  assert.equal(values(switches, 'flex-wrap').at(-1), 'nowrap',
+    'column switches must not wrap into horizontal columns');
+  assert.equal(values(pills, 'flex').at(-1), '0 0 auto',
+    'the 1100px half-width basis must be reset on phones');
+  assert.equal(values(pills, 'width').at(-1), '100%');
+});
+
 test('VARNA has one fixed-height native two-axis scroll viewport, not nested scrollers', () => {
   const viewport = ruleBodies(css, '.varna-viewport');
   const frame = ruleBodies(css, '.varna-frame');
@@ -113,6 +125,14 @@ test('VARNA has one fixed-height native two-axis scroll viewport, not nested scr
   }
   assert.deepEqual(values(ruleBodies(css, '.track-viewport'), 'overflow-x'), ['auto'],
     '1D rail retains only its own local horizontal scroll');
+});
+
+test('the oversized 1D SVG is paint-contained by its local horizontal scroller', () => {
+  const viewport = ruleBodies(css, '.track-viewport');
+  assert.equal(values(viewport, 'overflow-x').at(-1), 'auto');
+  assert.equal(values(viewport, 'overflow-y').at(-1), 'hidden');
+  assert.equal(values(viewport, 'contain').at(-1), 'paint',
+    'SVG descendant ink must not enlarge the workbench document');
 });
 
 test('VARNA zoom grows both axes at 140% and 1:1 restores both scroll offsets', () => {

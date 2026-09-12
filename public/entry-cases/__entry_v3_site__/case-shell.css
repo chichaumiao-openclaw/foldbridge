@@ -663,10 +663,16 @@ a { color: inherit; }
   .fb-detail-nav .bundle-home-route-nav {
     flex-direction: column;
   }
+  .fb-detail-nav .bundle-home-switches {
+    flex-wrap: nowrap;
+  }
   .fb-detail-nav .bundle-switch-pill,
   .fb-detail-nav .bundle-home-route-nav .nav-btn {
     width: 100%;
     justify-content: center;
+  }
+  .fb-detail-nav .bundle-switch-pill {
+    flex: 0 0 auto;
   }
 }
 
