@@ -4,6 +4,7 @@ import test from 'node:test';
 import vm from 'node:vm';
 
 const css = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/workbench.css', import.meta.url), 'utf8');
+const shellCss = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.css', import.meta.url), 'utf8');
 const js = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/workbench.js', import.meta.url), 'utf8');
 
 function ruleBodies(source, selector) {
@@ -88,6 +89,14 @@ function functionSource(name) {
   }
   assert.fail(`unclosed ${name}`);
 }
+
+test('Case shell portal header uses document width without scrollbar-gutter overflow', () => {
+  const selector = '.fb-detail-nav .bundle-home-header';
+  const rules = ruleBodies(shellCss, selector);
+  assert.ok(rules.length > 0, 'Case shell must style the shared portal header');
+  assert.deepEqual(values(rules, 'width'), ['100%'], 'desktop header must use the document content width');
+  assert.deepEqual(values(rules, 'margin-left'), ['0'], 'desktop header must not use a viewport-centering offset');
+});
 
 test('VARNA has one fixed-height native two-axis scroll viewport, not nested scrollers', () => {
   const viewport = ruleBodies(css, '.varna-viewport');
