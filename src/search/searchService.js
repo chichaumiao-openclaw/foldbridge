@@ -1,6 +1,13 @@
 import { MECHANISM_FAMILIES } from '../techniqueFilterModel.js';
 
 const SEARCH_FILTER_KEYS = ['type', 'tag', 'technique'];
+const LEGACY_EXTENDED_PDB_ID = /^pdb_0000([0-9a-z]{4})$/i;
+
+export function normalizeSearchQuery(value = '') {
+  const query = String(value || '').trim();
+  const match = LEGACY_EXTENDED_PDB_ID.exec(query);
+  return match ? match[1].toUpperCase() : query;
+}
 
 const PAGEFIND_TECHNIQUE_FACETS = {
   dms: ['dms-based-probing'],
@@ -167,6 +174,7 @@ export function createSearchService({ pagefindLoader = defaultPagefindLoader } =
 
   async function search({ q = '', filters = {}, page = 1, pageSize = 10 } = {}) {
     const query = String(q || '').trim();
+    const pagefindQuery = normalizeSearchQuery(query);
     const normalizedFilters = normalizeFilters(filters);
     const hasFilters = Object.keys(normalizedFilters).length > 0;
     const availableFilters = await getFilters();
@@ -184,7 +192,7 @@ export function createSearchService({ pagefindLoader = defaultPagefindLoader } =
     }
 
     const pagefind = await getPagefind();
-    const raw = await pagefind.search(query || null, { filters: normalizedFilters });
+    const raw = await pagefind.search(pagefindQuery || null, { filters: normalizedFilters });
     const start = Math.max(0, (Number(page) - 1) * Number(pageSize));
     const end = start + Number(pageSize);
     const items = await Promise.all(raw.results.slice(start, end).map(async (result) => mapResult(await result.data())));
