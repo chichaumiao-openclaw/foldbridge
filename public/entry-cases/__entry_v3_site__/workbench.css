@@ -606,12 +606,19 @@ pre {
 .category-badge[data-category="interaction"] { color: var(--textAccent); background: #fff2bf; }
 
 /* One visible profile listbox; the native select stays as the state backing. */
-.profile-dropdown { position: relative; width: 100%; }
+.profile-dropdown {
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  max-width: 100%;
+}
 .profile-dropdown-trigger {
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 0;
   width: 100%;
+  max-width: 100%;
   height: 44px;
   padding: 0 10px;
   border: 1px solid #aeb7c1;

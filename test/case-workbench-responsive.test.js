@@ -8,7 +8,8 @@ const shellCss = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/c
 const js = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/workbench.js', import.meta.url), 'utf8');
 
 function ruleBodies(source, selector) {
-  return [...source.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
+  const withoutComments = source.replace(/\/\*[\s\S]*?\*\//g, '');
+  return [...withoutComments.matchAll(/([^{}]+)\{([^{}]*)\}/g)]
     .filter((match) => match[1].split(',').some((part) => part.trim() === selector))
     .map((match) => match[2]);
 }
@@ -133,6 +134,20 @@ test('the oversized 1D SVG is paint-contained by its local horizontal scroller',
   assert.equal(values(viewport, 'overflow-y').at(-1), 'hidden');
   assert.equal(values(viewport, 'contain').at(-1), 'paint',
     'SVG descendant ink must not enlarge the workbench document');
+});
+
+test('the Profile dropdown and trigger cannot widen a narrow controls track', () => {
+  for (const selector of ['.profile-dropdown', '.profile-dropdown-trigger']) {
+    const rules = ruleBodies(css, selector);
+    assert.equal(values(rules, 'min-width').at(-1), '0', `${selector} must opt out of intrinsic min-width`);
+    assert.equal(values(rules, 'width').at(-1), '100%');
+    assert.equal(values(rules, 'max-width').at(-1), '100%', `${selector} must remain within the controls track`);
+  }
+  const text = ruleBodies(css, '.profile-dropdown-text');
+  assert.equal(values(text, 'min-width').at(-1), '0');
+  assert.equal(values(text, 'overflow').at(-1), 'hidden');
+  assert.equal(values(text, 'text-overflow').at(-1), 'ellipsis');
+  assert.equal(values(text, 'white-space').at(-1), 'nowrap');
 });
 
 test('VARNA zoom grows both axes at 140% and 1:1 restores both scroll offsets', () => {
