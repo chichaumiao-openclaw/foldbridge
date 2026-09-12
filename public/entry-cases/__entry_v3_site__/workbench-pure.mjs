@@ -9,6 +9,100 @@ export function esc(value) {
 
 export const PROFILE_PUBLIC_TECHNIQUES_SCHEMA = "profile-public-techniques.v1";
 
+export const REACTIVITY_STATES = Object.freeze({
+  MISSING: "missing",
+  NONPOSITIVE: "nonpositive",
+  POSITIVE: "positive",
+});
+
+const REACTIVITY_MISSING_COLOR = "#b8b8b8";
+const REACTIVITY_NONPOSITIVE_COLOR = "#dbeef8";
+
+function percentile(values, quantile) {
+  const sorted = [...values].sort((left, right) => left - right);
+  if (sorted.length === 0) return 0;
+  const index = (sorted.length - 1) * quantile;
+  const lower = Math.floor(index);
+  const upper = Math.min(lower + 1, sorted.length - 1);
+  const weight = index - lower;
+  return sorted[lower] * (1 - weight) + sorted[upper] * weight;
+}
+
+function positiveReactivityColor(norm) {
+  const value = Math.max(0, Math.min(1, norm));
+  const start = [255, 242, 0];
+  const end = [215, 25, 28];
+  const channels = start.map((channel, index) => (
+    Math.round(channel + (end[index] - channel) * value)
+  ));
+  return `#${channels.map((channel) => channel.toString(16).padStart(2, "0")).join("")}`;
+}
+
+export function normalizeReactivityProfile(values) {
+  if (!Array.isArray(values) && !(ArrayBuffer.isView(values) && !(values instanceof DataView))) {
+    throw new TypeError("Reactivity values must be an Array or TypedArray");
+  }
+  const rawValues = Array.from(values);
+  const positives = rawValues.filter((value) => Number.isFinite(value) && value > 0);
+  const cap = percentile(positives, 0.95);
+  const byPosition = new Map();
+  let missingCount = 0;
+  let nonpositiveCount = 0;
+  let positiveCount = 0;
+  let cappedCount = 0;
+
+  rawValues.forEach((raw, index) => {
+    let norm = 0;
+    let state = REACTIVITY_STATES.MISSING;
+    let color = REACTIVITY_MISSING_COLOR;
+    if (Number.isFinite(raw) && raw <= 0) {
+      state = REACTIVITY_STATES.NONPOSITIVE;
+      color = REACTIVITY_NONPOSITIVE_COLOR;
+      nonpositiveCount += 1;
+    } else if (Number.isFinite(raw)) {
+      state = REACTIVITY_STATES.POSITIVE;
+      norm = cap > 0 ? Math.min(raw / cap, 1) : 0;
+      color = positiveReactivityColor(norm);
+      positiveCount += 1;
+      if (norm >= 1) cappedCount += 1;
+    } else {
+      missingCount += 1;
+    }
+    byPosition.set(index + 1, { raw, norm, state, color });
+  });
+
+  return {
+    cap,
+    byPosition,
+    mappedCount: nonpositiveCount + positiveCount,
+    missingCount,
+    nonpositiveCount,
+    positiveCount,
+    cappedCount,
+  };
+}
+
+export function publicTechniqueFilterStatus({
+  active,
+  hitCount,
+  totalCount,
+  metadataAvailable,
+}) {
+  if (!Number.isInteger(totalCount) || totalCount < 0) {
+    throw new TypeError("totalCount must be a non-negative integer");
+  }
+  if (!Number.isInteger(hitCount) || hitCount < 0) {
+    throw new TypeError("hitCount must be a non-negative integer");
+  }
+  if (hitCount > totalCount) {
+    throw new RangeError("hitCount cannot exceed totalCount");
+  }
+  if (!metadataAvailable) return "Technique metadata unavailable";
+  if (!active) return `显示全部 ${totalCount} 个 Profile`;
+  if (hitCount === 0) return "无匹配 Profile";
+  return `匹配 ${hitCount} 个 Profile；请在 Profile 下拉列表中选择`;
+}
+
 const PROFILE_PUBLIC_TECHNIQUES_TOP_FIELDS = [
   "schemaVersion",
   "pdbId",
