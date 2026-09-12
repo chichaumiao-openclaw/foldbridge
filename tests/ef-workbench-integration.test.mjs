@@ -4,6 +4,7 @@ import test from "node:test";
 import vm from "node:vm";
 
 import * as MatrixShell from "../public/entry-cases/__entry_v3_site__/ef-workbench-shell.mjs";
+import { EF_ASSET_VERSION, versionedAssetName } from "../scripts/version-ef-entry-assets.mjs";
 
 const read = (relative) => fs.readFileSync(new URL(`../${relative}`, import.meta.url), "utf8");
 
@@ -440,10 +441,10 @@ test("EF component chrome is entirely Workbench-token driven", () => {
 
 test("EF dependency paths are fingerprinted for caches that ignore query strings", () => {
   const source = read("public/entry-cases/__entry_v3_site__/workbench.js");
-  assert.match(source, /const EF_ASSET_VERSION\s*=\s*["']20260828-case-taxonomy-1["']/);
-  assert.match(source, /ef-heatmap-core\.20260828-case-taxonomy-1\.js/);
-  assert.match(source, /ef-heatmap\.20260828-case-taxonomy-1\.js/);
-  assert.match(source, /ef-case\.20260828-case-taxonomy-1\.js/);
+  assert.match(source, new RegExp(`const EF_ASSET_VERSION\\s*=\\s*["']${EF_ASSET_VERSION}["']`));
+  for (const assetName of ["ef-heatmap-core.js", "ef-heatmap.js", "ef-case.js"]) {
+    assert.match(source, new RegExp(versionedAssetName(assetName).replaceAll(".", "\\.")));
+  }
   assert.doesNotMatch(source, /20260826-ef-ui-8/);
   assert.doesNotMatch(source, /scriptUrl\.searchParams\.set\(["']v["']/);
 });

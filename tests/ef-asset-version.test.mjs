@@ -14,6 +14,8 @@ import {
 } from "../scripts/version-ef-entry-assets.mjs";
 
 const CLASSIFIER_ASSET = "technique-filter-model.mjs";
+const EXPECTED_EF_ASSET_VERSION = "20260912-reviewer-c-1";
+const PREVIOUS_EF_ASSET_VERSION = "20260828-case-taxonomy-1";
 const WORKBENCH_IMPORT_ASSETS = [
   CLASSIFIER_ASSET,
   "workbench-pure.mjs",
@@ -169,7 +171,8 @@ test("EF versioning mirrors the classifier source and fingerprints every global 
   const { repoSourceRoot, publicRoot, classifierSource } = await makeRepoFixture();
 
   const result = await versionEfEntryAssets(publicRoot, { repoSourceRoot });
-  assert.equal(result.version, "20260828-case-taxonomy-1");
+  assert.equal(EF_ASSET_VERSION, EXPECTED_EF_ASSET_VERSION);
+  assert.equal(result.version, EF_ASSET_VERSION);
   assert.equal(result.changedFiles, VERSIONED_ASSETS.length + 1, "mirror plus every fingerprint must be written");
   assert.equal(result.checkedFiles, VERSIONED_ASSETS.length + 1);
 
@@ -272,7 +275,7 @@ test("workbench dynamic EF script URLs must use the current version before any w
 
   await assert.rejects(
     versionEfEntryAssets(publicRoot, { repoSourceRoot }),
-    /must reference.*ef-heatmap-core\.20260828-case-taxonomy-1\.js/i,
+    new RegExp(`must reference.*${versionedAssetName("ef-heatmap-core.js").replaceAll(".", "\\.")}`, "i"),
   );
   assert.deepEqual(await snapshotTree(publicRoot), before);
 });
@@ -661,5 +664,27 @@ test("Workbench imports every static dependency from the same deploy version", a
       new RegExp(`new\\s+URL\\(["']\\.\\./__entry_ef_site__/${targetName.replaceAll(".", "\\.")}["']`),
     );
     await fs.access(new URL(`../__entry_ef_site__/${targetName}`, assetDir));
+  }
+});
+
+test("the current fingerprint closure has no previous-version references and retains rollback assets", async () => {
+  const publicRoot = new URL("../public/entry-cases/", import.meta.url);
+  const versionedNameFor = (assetName, version) => {
+    const extension = path.extname(assetName);
+    return `${assetName.slice(0, -extension.length)}.${version}${extension}`;
+  };
+
+  for (const { directory, assetName } of VERSIONED_ASSETS) {
+    const currentName = versionedAssetName(assetName);
+    const previousName = versionedNameFor(assetName, PREVIOUS_EF_ASSET_VERSION);
+    const currentUrl = new URL(`${directory}/${currentName}`, publicRoot);
+    const previousUrl = new URL(`${directory}/${previousName}`, publicRoot);
+    const currentSource = await fs.readFile(currentUrl, "utf8");
+    assert.equal(
+      currentSource.includes(PREVIOUS_EF_ASSET_VERSION),
+      false,
+      `${currentName} cannot reach the previous fingerprint closure`,
+    );
+    await fs.access(previousUrl);
   }
 });

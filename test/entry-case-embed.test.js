@@ -273,9 +273,15 @@ test('Case shell removes internal Family and Tier chrome without changing routin
 });
 
 test('Case workbench never creates the RMDB raw reactivity heatmap', () => {
+  const currentWorkbench = readFileSync(
+    new URL('../public/entry-cases/__entry_v3_site__/workbench.js', import.meta.url),
+    'utf8',
+  );
+  const assetVersion = currentWorkbench.match(/const EF_ASSET_VERSION\s*=\s*["']([^"']+)["']/)?.[1];
+  assert.ok(assetVersion, 'current workbench must declare its generated asset version');
   const assetNames = [
     'workbench.js',
-    'workbench.20260828-case-taxonomy-1.js',
+    `workbench.${assetVersion}.js`,
   ];
 
   for (const assetName of assetNames) {
@@ -284,9 +290,24 @@ test('Case workbench never creates the RMDB raw reactivity heatmap', () => {
       'utf8',
     );
     const profileRenderer = workbench.match(/async function renderProfile\([\s\S]*?\n}\n\nfunction profileIndexForId/)?.[0] || '';
+    const init = workbench.match(/async function init\([\s\S]*?\nel\.select\.addEventListener\("change"/)?.[0] || '';
+    const profileChange = workbench.match(/el\.select\.addEventListener\("change"[\s\S]*?\nel\.zoomIn\?\.addEventListener/)?.[0] || '';
+    const filterMount = workbench.match(/function mountTechniqueFilter\([\s\S]*?\n\/\/ Choose the default profile/)?.[0] || '';
+    const refilter = filterMount.match(/const refilter = \(\) => \{[\s\S]*?\n  };/)?.[0] || '';
 
-    assert.doesNotMatch(profileRenderer, /\brenderRmdbHeatmap\s*\(/, assetName);
-    assert.equal([...workbench.matchAll(/\brenderRmdbHeatmap\s*\(/g)].length, 1, assetName);
+    for (const [entrypoint, source] of [
+      ['init', init],
+      ['renderProfile', profileRenderer],
+      ['Profile change', profileChange],
+      ['Technique refilter', refilter],
+    ]) {
+      assert.ok(source, `${assetName} exposes ${entrypoint}`);
+      assert.doesNotMatch(
+        source,
+        /\brenderRmdbHeatmap\s*\(|\bfetchRmdbRdatText\s*\(|PDB130_DMS_0000\.rdat|\/api\/rmdb\/rdat\//,
+        `${assetName} ${entrypoint}`,
+      );
+    }
   }
 });
 
