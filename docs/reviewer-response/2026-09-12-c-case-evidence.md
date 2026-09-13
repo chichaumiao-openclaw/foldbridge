@@ -5,8 +5,8 @@
 - 分支：`codex/reviewer-c-fixes`
 - 覆盖项：C1.5、C1.7、C1.8、C1.9、C3.2
 - 状态：**候选通过；Case/Tunnel 已于 2026-09-13 上线并复验**
-- 候选目录：`/tmp/foldbridge-reviewer-c-case.uI7d0z`
-- 生产目录：`/Volumes/tianyi/Server/public`；2026-09-12 候选验收阶段只读，
+- 候选目录：本机临时候选（对外路径省略）
+- 生产目录：Tunnel Case document root（对外路径省略）；2026-09-12 候选验收阶段只读，
   2026-09-13 按维护手册发布 17 个共享资产
 
 2026-09-12 的验收只在临时候选目录完成静态资源闭包、自动测试和真实浏览器测量；原始
@@ -19,11 +19,10 @@
 - 发布版本：`20260912-reviewer-c-1`。
 - 发布范围：12 个新增指纹资产、5 个无版本共享入口，共 17 个精确路径；未替换任何
   `entry-cases/cases/<PDB>` 数据目录，也未删除旧指纹资产。
-- 发布方式：先在同卷候选目录
-  `/Volumes/tianyi/Server/staging/foldbridge-reviewer-c.SJNmKe` 验证闭包和逐文件字节，再对
-  17 个目标逐文件使用同目录临时文件与原子重命名。
-- 回滚点：`/Volumes/tianyi/Server/rollback/foldbridge/reviewer-c-20260913T035135Z`；
-  `manifest.tsv` 记录每个目标的发布前后 SHA-256、大小和新增/替换状态。
+- 发布方式：先在与生产目录同卷的隔离候选中验证闭包和逐文件字节，再对 17 个目标逐文件
+  使用同目录临时文件与原子重命名。
+- 回滚：发布前无版本入口和旧指纹均已保留；本机带 UTC 时间戳的运维清单记录每个目标的
+  发布前后 SHA-256、大小和新增/替换状态。精确本机路径不作为对外 reviewer 证据公开。
 - 静态闭包：生产目录执行版本检查得到 `checkedFiles=13`、`changedFiles=0`；17 个生产文件
   与仓库候选逐文件 `cmp` 一致。
 - 公网字节：仓库、本机生产服务和公网返回的 `workbench.js` SHA-256 均为
@@ -44,16 +43,17 @@
 
 ## 复现实验协议
 
-以下命令只在新建的 `/tmp` 候选写入。先在仓库根目录执行；生产目录仅作为 `rsync`
-源目录读取，不使用 `--delete`，也不写回生产。九项全局依赖由仓库的
+以下命令只在新建的临时候选写入。执行者先把干净工作树和私有生产根目录分别赋给
+`FOLDBRIDGE_CLEAN_WORKTREE` 与 `FOLDBRIDGE_CASE_DOCROOT`；生产目录仅作为 `rsync` 源目录
+读取，不使用 `--delete`，也不写回生产。九项全局依赖由仓库的
 `PREVIEW_GLOBAL_FILES` 精确列出，复制后检查指纹闭包与 fixture 字节：
 
 ```bash
-cd /Users/joseperezmartinez/docs/foldbridge/.worktrees/ef-unified-main-sparse
-FOLDBRIDGE_C_CANDIDATE="$(mktemp -d /tmp/foldbridge-reviewer-c-repro.XXXXXX)"
+cd "$FOLDBRIDGE_CLEAN_WORKTREE"
+FOLDBRIDGE_C_CANDIDATE="$(mktemp -d "${TMPDIR%/}/foldbridge-reviewer-c-repro.XXXXXX")"
 mkdir -p "$FOLDBRIDGE_C_CANDIDATE/entry-cases/cases"
-rsync -a /Volumes/tianyi/Server/public/entry-cases/cases/8SQ9 \
-  /Volumes/tianyi/Server/public/entry-cases/cases/10FZ \
+rsync -a "$FOLDBRIDGE_CASE_DOCROOT/entry-cases/cases/8SQ9" \
+  "$FOLDBRIDGE_CASE_DOCROOT/entry-cases/cases/10FZ" \
   "$FOLDBRIDGE_C_CANDIDATE/entry-cases/cases/"
 mkdir -p "$FOLDBRIDGE_C_CANDIDATE/entry-cases/__entry_v3_site__" \
   "$FOLDBRIDGE_C_CANDIDATE/entry-cases/__entry_ef_site__"
@@ -299,10 +299,10 @@ npm test
 | 失败类别 | 数量 | 原因 |
 | --- | ---: | --- |
 | sealed v2 provenance commands 漂移 | 1 | 已封存运行的 `commands` 声明与当前独立重放结果不一致 |
-| `/Volumes/tianyi` 权限失败 | 5 | 测试尝试在 `/Volumes/tianyi/foldbridge_staging/...` 执行 `mkdtemp`，当前只读权限返回 `EPERM` |
+| 外接卷权限失败 | 5 | 测试尝试在私有外接卷 staging 根执行 `mkdtemp`，当前只读权限返回 `EPERM` |
 
 其中唯一非权限失败为 `verifier replays committed taxonomy for both sealed v2 Task 5 runs`；
-其余 5 项均在 fixture 创建阶段因 `/Volumes/tianyi` 的 `EPERM` 失败。失败集合没有新增
+其余 5 项均在 fixture 创建阶段因私有外接卷的 `EPERM` 失败。失败集合没有新增
 Case UI、响应式、三状态、Technique 或网络边界回归。
 
 定向自包含套件运行：
@@ -431,5 +431,5 @@ SVG 视图只为 missing 使用纹理，Mol* 按 3D 渲染约束始终使用对�
 | `workbench.20260828-case-taxonomy-1.css` | `2511d03f06d45ff342ccc6068137d4caa5d79472ced9bfe216726d26e57b25cd` |
 
 因此，候选阶段结论为「候选通过，生产未替换」；2026-09-13 的独立发布记录把结论更新为
-「同一候选字节已上线并复验」。上一版本指纹和发布前无版本入口均已保留，可按顶部记录的
-回滚点恢复。
+「同一候选字节已上线并复验」。上一版本指纹和发布前无版本入口均已保留，可按本机运维
+清单恢复。

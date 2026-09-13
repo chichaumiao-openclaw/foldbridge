@@ -8,7 +8,7 @@
 - D3.4：E/F 二维接触矩阵，以及当前单 Profile 1D/2D/3D 视图的下载与交互。
 - D3.6：同一 PDB×chain 下多个 Profile 的比较、描述统计与显著性边界。
 - 永久排除 RMDB 原始反应性热图；不恢复其 UI、RDAT 请求或公开 RDAT 资源。
-- 所有生产目录和 DuckDB 检查均为只读；没有修改 `/Volumes/tianyi/Server/public`、数据库或 Case 数据。
+- 所有生产目录和 DuckDB 检查均为只读；没有修改私有 Case document root、数据库或 Case 数据。
 
 “当前能力”只指 2026-09-12 检查到的生产 Case 资产和 `ghhttps/main` 基线。当前分支上的 C 类候选不计作已上线能力。
 
@@ -20,10 +20,10 @@
 |---|---|
 | 生产源码基线 | `ghhttps/main` = `1fb837b7c17cd97761df457b560eb65d9499f46b` |
 | 评估时工作提交 | `7d3c22ceec4025ac43a24621a2fc536a6dc48728`；仅用于读取计划与写报告 |
-| Entry Atlas | `/Volumes/tainyissd/foldbridge_1D_pool/entry_rollup/entry_atlas.duckdb`；764,424,192 bytes；mtime `2026-08-24 17:28:12 +0200`（mtime_ns `1787585292000000000`） |
-| 生产 Case 根 | `/Volumes/tianyi/Server/public/entry-cases/cases`；只读全量清单审计 |
-| 发布手册 | `/Users/joseperezmartinez/docs/foldbridge/.worktrees/update-deployment-handbook/docs/网站更新手册_DEPLOYMENT_HANDBOOK.md`；26,395 bytes；mtime `2026-09-11 12:46:24 +0200`（mtime_ns `1789123584445334084`） |
-| 几何覆盖审计 | `/tmp/foldbridge-d3-3-coverage.json` 与 `/tmp/foldbridge-d3-3-coverage.tsv`；临时证据，不纳入仓库 |
+| Entry Atlas | 本机只读快照（对外路径省略）；764,424,192 bytes；mtime `2026-08-24 17:28:12 +0200`（mtime_ns `1787585292000000000`） |
+| 生产 Case 根 | 私有 Case document root 下的 `entry-cases/cases`；只读全量清单审计 |
+| 发布手册 | [网站更新手册](../网站更新手册_DEPLOYMENT_HANDBOOK.md)；26,395 bytes；mtime `2026-09-11 12:46:24 +0200`（mtime_ns `1789123584445334084`） |
+| 几何覆盖审计 | 本机临时 JSON 与 TSV（对外路径省略）；不纳入仓库 |
 
 数据库快照包含 5,321 个 entry、17,843 条 chain 和 20,550,014 条 chain–profile 关联。数据库通过 `duckdb.connect(path, read_only=True)` 打开；源码能力通过 `git show ghhttps/main:<path>` 检查。只读唯一性复算确认 `COUNT(*) = COUNT(DISTINCT (pdb_id, chain_key, profile_key)) = 20,550,014`，因此这些行不是位点行；但它们属于 Atlas 候选关联，也不能直接当作每个生产 Case 页面已发布的 Profile 数。全库共有 260,441 个全局 distinct `profile_key`，同一个 profile 可关联多个结构链。
 
@@ -108,7 +108,7 @@
 
 生产页 `1GID/A?family=E` 的实测结果：matrix 呈现为 158×158，范围 `-0.6967…11.7703`，hit grid 可聚焦。Arrow 键移动到有效 cell 后显示 `i 9 × j 1 · 0.031`，并在序列/VARNA 标记 12 个联动节点；Enter/click 后显示 cell/row/column 选择并同步 Mol* 至 `PDB 7 C`；Escape 清除全部选择。页面没有 Download/Export 控件。
 
-生产 payload `/Volumes/tianyi/Server/public/entry-cases/cases/1GID/chains/A/ef-matrix.json.gz` 的核心字段为：
+生产 payload `entry-cases/cases/1GID/chains/A/ef-matrix.json.gz` 的核心字段为：
 
 - `header`：`pdb_id=1GID`、`chain=A`、`family=E`、`technology=MCA`（UI 公共标签 MOHCA）、`value_kind=cohcoa_contact`、`n_rows=n_cols=203`、`symmetric=false`、`render_scope=mapped_chain`、`color_scale=matrix_extent`，并含 exact RMDB profile/HSP/mapped counts。
 - `axis_i`/`axis_j`：`matrix_index`、`construct_pos`、`pdb_pos`、`varna_index`、`observed`、`is_adapter`、`base`。

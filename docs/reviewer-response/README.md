@@ -8,16 +8,19 @@
 
 | 评审项 | 当前结论 | 证据与复现入口 |
 | --- | --- | --- |
-| C1.5 主站与 Case 响应式布局 | 主站候选已验收，等待本轮 Pages 发布；Case/Tunnel 已上线并复验 | [主站 C1.5 / C1.6 证据](2026-09-12-c1.5-c1.6-spa-evidence.md)、[Case C 类证据与复现协议](2026-09-12-c-case-evidence.md) |
-| C1.6 旧式 Extended PDB ID 搜索 | `pdb_00001ddy` 在 Pagefind 边界规范化为 `1DDY`；候选已验收，等待本轮 Pages 发布 | [主站 C1.5 / C1.6 证据](2026-09-12-c1.5-c1.6-spa-evidence.md) |
+| C1.5 主站与 Case 响应式布局 | GitHub Pages 与 Case/Tunnel 均已上线并复验 | [主站 C1.5 / C1.6 证据](2026-09-12-c1.5-c1.6-spa-evidence.md)、[Case C 类证据与复现协议](2026-09-12-c-case-evidence.md) |
+| C1.6 旧式 Extended PDB ID 搜索 | 已上线；`pdb_00001ddy` 与 `1DDY` 在公网返回同一组 4 条链结果 | [主站 C1.5 / C1.6 证据](2026-09-12-c1.5-c1.6-spa-evidence.md) |
 | C1.7 VARNA 缩放与双轴滚动 | Case/Tunnel 已上线；140% 双轴滚动与 1:1 复位已复验 | [Case C 类证据与复现协议](2026-09-12-c-case-evidence.md) |
 | C1.8 Technique 筛选反馈 | Case/Tunnel 已上线；提示筛选结果，不自动切换 Profile 或重绘其他视图 | [Case C 类证据与复现协议](2026-09-12-c-case-evidence.md) |
 | C1.9 废弃 RDAT / RMDB raw heatmap | Case/Tunnel 已上线；不公开 RDAT，也不请求退役资源 | [Case C 类证据与复现协议](2026-09-12-c-case-evidence.md) |
 | C3.2 反应性三状态 | Case/Tunnel 已上线；missing、finite `<= 0`、positive 在 1D/2D/3D 使用同一分类 | [Case C 类证据与复现协议](2026-09-12-c-case-evidence.md) |
 
 主站与 Case 使用两条独立发布链：主站由 `ghhttps/main` 的 GitHub Pages 提供，Case 由
-`/Volumes/tianyi/Server/public` 经本机 `127.0.0.1:8888` 和 Tunnel 提供。因此上表分别记录
-上线状态，不能用其中一条链的成功代替另一条链的验收。
+私有 Case document root 经本机静态服务和 Tunnel 提供。因此上表分别记录上线状态，不能用
+其中一条链的成功代替另一条链的验收；本机绝对路径不进入对外 reviewer 索引。
+
+本批次两条生产链的提交、运行、哈希、回滚点和已知限制统一记录在
+[2026-09-13 C 类生产发布记录](2026-09-13-c-production-release.md)。
 
 ## D 类范围评估
 
