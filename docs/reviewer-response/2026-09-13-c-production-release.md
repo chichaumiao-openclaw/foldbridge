@@ -10,7 +10,7 @@ C 类第一批修复已分别通过主站 GitHub Pages 与 Case/Tunnel 两条生
 
 - 首次上线应用提交：`747ba87d398af4128a09422047a5cd53302a1f54`。
 - Pages run：`34736893873`；build 与 deploy 均成功。
-- Pages source：`main` 分支仓库根目录；latest build commit 与首次上线应用提交一致。
+- Pages source：`main` 分支仓库根目录；run `34736893873` 的 head 与首次上线应用提交一致。
 - 公网根页面：`https://foldbridge.ribocentre.org/`，HTTP 200。
 - 搜索源码 SHA-256：
   `de5f970b621161d46abec1496bf3fa6b741dab7d597e0c1e01f9e4cf88415665`，仓库与公网一致。
