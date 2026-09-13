@@ -381,6 +381,36 @@ test('residue component is authoritative while optional context identities are s
   );
 });
 
+test('production sequence_only residues are accepted only when atom-site coordinates are absent', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
+    'ATOM 5 C "C1\'" . C A 1 3 ? 3.0 4.0 5.0 103 C X 2\n',
+    '',
+  ));
+  const prepared = prepareDssrInput(structureBytes);
+  const value = linkedView();
+  value.structureContexts.loci[2].coordinateStatus = 'sequence_only';
+  const dssr = dssrJson({ omitThirdNt: true });
+  dssr.nonPairs = [];
+  const payload = buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+    linkedView: value,
+    dssr,
+  }));
+  assert.equal(payload.residues[2].pucker.status, 'not_computable');
+  assert.equal(payload.residues[2].stacking.status, 'not_computable');
+
+  value.structureContexts.loci[2].coordinateStatus = 'sequence_only_no_atom_site_coordinate';
+  assert.throws(() => buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+    linkedView: value,
+    dssr,
+  })), /recognized linked-view status/i);
+});
+
 test('source.tool is required by the library and never defaulted', () => {
   const options = buildOptions();
   delete options.tool;

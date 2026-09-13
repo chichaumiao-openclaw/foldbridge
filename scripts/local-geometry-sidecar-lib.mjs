@@ -10,7 +10,7 @@ const textDecoder = new TextDecoder('utf-8', { fatal: true });
 const STACK_CLASS = /^(?:pm|mp|mm|pp)\((?:>>|<<|><|<>),(?:forward|backward|inward|outward)\)$/;
 const LINKED_COORDINATE_STATUSES = new Set([
   'resolved',
-  'sequence_only_no_atom_site_coordinate',
+  'sequence_only',
 ]);
 const PREPARE_META_FIELDS = [
   'modelId',
