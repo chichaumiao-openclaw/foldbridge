@@ -2369,8 +2369,10 @@ function updateComparisonContext() {
 function renderComparisonControls() {
   if (!comparisonUi || !state.lastRender) return;
   comparisonUi.detail.textContent = "";
-  const {search, select, list, summary, message} = comparisonUi;
+  const {search, select, list, summary, message, toggle, warning} = comparisonUi;
   const entries = comparisonController.snapshot();
+  toggle.textContent = `Compare profiles (${entries.length}/3)`;
+  warning.hidden = entries.length === 0;
   const candidates = eligibleComparisonProfiles({...comparisonContext(),selectedIds:entries.map(e=>e.profile.profile_id)});
   const query = search.value.toLowerCase();
   select.replaceChildren(new Option("Add comparison…", ""));
@@ -2405,15 +2407,19 @@ function renderComparisonControls() {
 function mountProfileComparisons() {
   if (detectedEfChain || comparisonUi || !el.select) return;
   const root=document.createElement("section"); root.className="profile-comparisons";
+  const disclosure=document.createElement("details"), toggle=document.createElement("summary");
+  toggle.textContent="Compare profiles (0/3)";
   const summary=document.createElement("p"), warning=document.createElement("p"), message=document.createElement("p"), detail=document.createElement("p");
   const search=document.createElement("input"), select=document.createElement("select"), list=document.createElement("ol");
   search.type="search"; search.placeholder="Search comparison Profiles"; search.setAttribute("aria-label","Search comparison Profiles");
   select.setAttribute("aria-label","Add comparison");
   warning.textContent="Each profile is scaled independently for display. Compare positional patterns, not absolute signal magnitudes.";
   message.setAttribute("role","status"); detail.setAttribute("aria-live","polite");
-  root.append(summary,search,select,message,list,warning,detail);
+  warning.hidden=true;
+  disclosure.append(toggle,summary,search,select,message,list);
+  root.append(disclosure,warning,detail);
   el.track.before(root);
-  comparisonUi={root,summary,search,select,message,list,detail};
+  comparisonUi={root,summary,search,select,message,list,detail,toggle,warning};
   comparisonController=createProfileComparisonController({load:async profile=>profileValues(profile,await loadShard(profile.shard_id)),
     onChange:()=>{renderComparisonControls();renderTrackRail();}});
   search.addEventListener("input",renderComparisonControls);

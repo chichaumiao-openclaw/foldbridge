@@ -3,6 +3,14 @@ import test from 'node:test';
 import fs from 'node:fs';
 import vm from 'node:vm';
 const source=fs.readFileSync(new URL('../public/entry-cases/__entry_v3_site__/workbench.js',import.meta.url),'utf8');
+test('comparison controls use a closed native disclosure without clearing selected tracks',()=>{
+  const body=source.slice(source.indexOf('function mountProfileComparisons()'),source.indexOf('\nfunction showPrimaryError'));
+  assert.ok(body.includes('document.createElement("details")'));
+  assert.ok(body.includes('document.createElement("summary")'));
+  assert.ok(!body.includes('.open = true'));
+  assert.ok(body.includes('root.append(disclosure,warning,detail)'));
+  assert.ok(source.includes('warning.hidden = entries.length === 0'));
+});
 test('comparison controls constrain long labels and expose keyboard focus',()=>{
   const css=fs.readFileSync(new URL('../public/entry-cases/__entry_v3_site__/workbench.css',import.meta.url),'utf8');
   assert.ok(css.includes('.profile-comparisons'));
