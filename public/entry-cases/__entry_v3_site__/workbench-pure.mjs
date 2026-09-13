@@ -82,6 +82,111 @@ export function normalizeReactivityProfile(values) {
   };
 }
 
+export function comparisonCoverage(primary, comparison) {
+  for (const values of [primary, comparison]) {
+    if (!Array.isArray(values) && !(ArrayBuffer.isView(values) && !(values instanceof DataView))) {
+      throw new TypeError("Comparison values must be arrays");
+    }
+  }
+  if (primary.length !== comparison.length) throw new Error("Comparison strand lengths differ");
+  let primaryFinite = 0, comparisonFinite = 0, sharedFinite = 0;
+  for (let i = 0; i < primary.length; i++) {
+    const a = Number.isFinite(primary[i]), b = Number.isFinite(comparison[i]);
+    primaryFinite += Number(a); comparisonFinite += Number(b); sharedFinite += Number(a && b);
+  }
+  return { length: primary.length, primaryFinite, comparisonFinite, sharedFinite };
+}
+
+export function eligibleComparisonProfiles({ profiles, primary, selectedIds = [], strandId }) {
+  if (!profiles.includes(primary)) throw new Error("Primary is not in the current Profile index");
+  return profiles.filter(profile => profile !== primary
+    && profile.render_strand_id === strandId
+    && !selectedIds.includes(profile.profile_id));
+}
+
+export function readProfileShardRow(profile, shard, { caseId, length }) {
+  const m = shard.meta;
+  if (m.case_id !== caseId || m.shard_id !== profile.shard_id || m.format !== "float32_le_row_major"
+    || !Number.isInteger(m.strand_length) || m.strand_length < 1 || m.strand_length !== length
+    || !Number.isInteger(m.profile_count) || m.profile_count < 1
+    || !Number.isInteger(profile.row_index) || profile.row_index < 0 || profile.row_index >= m.profile_count
+    || !(shard.values instanceof Float32Array) || shard.values.length !== m.strand_length * m.profile_count) {
+    throw new Error("Invalid Profile shard identity, row or strand length");
+  }
+  const start = profile.row_index * m.strand_length;
+  return shard.values.subarray(start, start + m.strand_length);
+}
+
+export function createCachedLoader(read) {
+  const pending = new Map(), cache = new Map();
+  return key => {
+    if (cache.has(key)) return Promise.resolve(cache.get(key));
+    if (pending.has(key)) return pending.get(key);
+    const request = (async () => {
+      const value = await read(key);
+      cache.set(key, value);
+      return value;
+    })();
+    pending.set(key, request);
+    void request.then(() => pending.delete(key), () => pending.delete(key));
+    return request;
+  };
+}
+
+export function createProfileComparisonController({ load, onChange }) {
+  let context = null, entries = [], disposed = false;
+  const snapshot = () => entries.map(entry => ({ ...entry }));
+  const notify = () => { if (!disposed) onChange(snapshot()); };
+  const start = entry => {
+    const token = {};
+    entry.token = token;
+    entry.status = "loading";
+    delete entry.values; delete entry.normalized; delete entry.coverage; delete entry.error;
+    const requestContext = context;
+    const current = () => !disposed && context === requestContext && entries.includes(entry) && entry.token === token;
+    let request;
+    try { request = load(entry.profile); } catch (error) { request = Promise.reject(error); }
+    void Promise.resolve(request).then(values => {
+      if (!current()) return;
+      entry.coverage = comparisonCoverage(context.values, values);
+      entry.values = Array.from(values);
+      entry.normalized = normalizeReactivityProfile(values);
+      entry.status = "ready";
+      notify();
+    }).catch(error => {
+      if (!current()) return;
+      entry.status = "error"; entry.error = String(error.message || error);
+      notify();
+    });
+  };
+  return {
+    snapshot,
+    setContext(next) {
+      if (disposed) return [];
+      const allowed = eligibleComparisonProfiles(next);
+      const removed = entries.filter(entry => next.key !== context?.key || !allowed.includes(entry.profile));
+      entries = entries.filter(entry => !removed.includes(entry));
+      context = next;
+      for (const entry of entries) {
+        if (entry.status === "ready") entry.coverage = comparisonCoverage(next.values, entry.values);
+        else if (entry.status === "loading") start(entry);
+      }
+      notify();
+      return removed.map(entry => entry.profile.profile_id);
+    },
+    add(profile) {
+      if (disposed || !context) throw new Error("No active comparison context");
+      if (entries.length >= 3) throw new Error("Maximum 3 comparison Profiles");
+      const allowed = eligibleComparisonProfiles({...context,selectedIds:entries.map(e => e.profile.profile_id)});
+      if (!allowed.includes(profile)) throw new Error("Profile is already selected or not comparable");
+      const entry = { profile, status: "loading" };
+      entries.push(entry); start(entry); notify();
+    },
+    remove(id) { entries = entries.filter(entry => entry.profile.profile_id !== id); notify(); },
+    dispose() { disposed = true; entries = []; context = null; },
+  };
+}
+
 export function publicTechniqueFilterStatus({
   active,
   hitCount,
