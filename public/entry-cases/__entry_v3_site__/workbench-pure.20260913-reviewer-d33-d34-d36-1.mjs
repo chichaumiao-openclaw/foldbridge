@@ -319,6 +319,7 @@ const LOCAL_GEOMETRY_TOPOLOGIES = new Set([
   "interchain",
 ]);
 const LOCAL_GEOMETRY_DSSR_STACK_CLASS = /^(?:pm|mp|mm|pp)\((?:>>|<<|><|<>),(?:forward|backward|inward|outward)\)$/;
+const LOCAL_GEOMETRY_CANONICAL_COMPONENTS = new Set(["A", "C", "G", "U", "T", "I", "N"]);
 
 function assertFiniteNumber(value, path) {
   if (typeof value !== "number" || !Number.isFinite(value)) {
@@ -332,12 +333,14 @@ function assertPositiveInteger(value, path) {
   }
 }
 
-function validateLocalGeometryLocator(locator, path) {
+function validateLocalGeometryLocator(locator, path, { allowNullLabelSeq = false } = {}) {
   assertExactFields(locator, LOCAL_GEOMETRY_LOCATOR_FIELDS, path);
   for (const field of ["modelId", "labelAsymId", "authAsymId", "componentId"]) {
     assertStrictIdentity(locator[field], `${path}.${field}`);
   }
-  assertPositiveInteger(locator.labelSeqId, `${path}.labelSeqId`);
+  if (!(allowNullLabelSeq && locator.labelSeqId === null)) {
+    assertPositiveInteger(locator.labelSeqId, `${path}.labelSeqId`);
+  }
   if (!Number.isInteger(locator.authSeqId)) {
     throw new TypeError(`${path}.authSeqId must be an integer`);
   }
@@ -413,14 +416,16 @@ function localGeometryLocatorIdentity(locator) {
 
 function validateLocalGeometryPartner(partner, path, sourceModelId) {
   assertExactFields(partner, LOCAL_GEOMETRY_PARTNER_FIELDS, path);
-  validateLocalGeometryLocator(partner.partnerLocator, `${path}.partnerLocator`);
+  if (!LOCAL_GEOMETRY_TOPOLOGIES.has(partner.topology)) {
+    throw new Error(`${path}.topology has invalid value "${partner.topology}"`);
+  }
+  validateLocalGeometryLocator(partner.partnerLocator, `${path}.partnerLocator`, {
+    allowNullLabelSeq: partner.topology === "interchain",
+  });
   if (partner.partnerLocator.modelId !== sourceModelId) {
     throw new Error(`${path}.partnerLocator.modelId must match source.modelId`);
   }
   assertStrictIdentity(partner.partnerBase, `${path}.partnerBase`);
-  if (!LOCAL_GEOMETRY_TOPOLOGIES.has(partner.topology)) {
-    throw new Error(`${path}.topology has invalid value "${partner.topology}"`);
-  }
   assertStrictIdentity(partner.dssrStackClass, `${path}.dssrStackClass`);
   if (!LOCAL_GEOMETRY_DSSR_STACK_CLASS.test(partner.dssrStackClass)) {
     throw new Error(`${path}.dssrStackClass must use DSSR pm/mp/mm/pp stacking syntax`);
@@ -630,6 +635,10 @@ export function validateLocalGeometrySidecar(payload, context) {
     }
     for (const field of LOCAL_GEOMETRY_CONTEXT_LOCATOR_FIELDS) {
       if (residue.locator[field] !== expected.locator[field]) {
+        const isModifiedComponentMapping = field === "componentId"
+          && (expected.locator.componentId === expected.base || expected.locator.componentId === "N")
+          && !LOCAL_GEOMETRY_CANONICAL_COMPONENTS.has(residue.locator.componentId);
+        if (isModifiedComponentMapping) continue;
         throw new Error(`Local geometry context residue locator.${field} must exactly match ${path}.locator.${field}`);
       }
     }
