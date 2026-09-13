@@ -381,6 +381,77 @@ test('residue component is authoritative while optional context identities are s
   );
 });
 
+test('digit-suffixed modified nucleotide keeps linked parent base and parses DSSR slash numbering', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF
+    .replace('ATOM 1 C "C1\'" . G A 1 1 ? 1.0 2.0 3.0 101 G X 2',
+      'ATOM 1 C "C1\'" . A23 A 1 1 ? 1.0 2.0 3.0 101 A23 X 2')
+    .replace('ATOM 2 C "C2\'" A G A 1 1 ? 1.1 2.1 3.1 101 G X 2',
+      'ATOM 2 C "C2\'" A A23 A 1 1 ? 1.1 2.1 3.1 101 A23 X 2')
+    .replace('ATOM 3 C "C2\'" B G A 1 1 ? 1.2 2.2 3.2 101 G X 2',
+      'ATOM 3 C "C2\'" B A23 A 1 1 ? 1.2 2.2 3.2 101 A23 X 2'));
+  const prepared = prepareDssrInput(structureBytes);
+  const linked = linkedView();
+  linked.residueIndex.residues[0].compId = 'A';
+  linked.residueIndex.residues[0].parentBase = 'A';
+  const dssr = dssrJson();
+  dssr.nts[0] = {
+    ...dssr.nts[0],
+    nt_id: 'X.A23/101',
+    nt_name: 'A23',
+    nt_code: 'a',
+  };
+  dssr.nonPairs[0].nt1 = 'X.A23/101';
+  dssr.nonPairs[1].nt1 = 'X.A23/101';
+
+  const payload = buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+    linkedView: linked,
+    dssr,
+  }));
+
+  assert.equal(payload.residues[0].base, 'A');
+  assert.equal(payload.residues[0].locator.componentId, 'A23');
+});
+
+test('interchain nucleotide ligand without label_seq_id remains an exact DSSR stacking partner', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
+    'ATOM 8 C "C1\'" . U B 2 9 ? 9.0 9.0 9.0 9 U Y 1\n',
+    'ATOM 8 C "C1\'" . U B 2 9 ? 9.0 9.0 9.0 9 U Y 1\n'
+      + 'HETATM 9 C "C1\'" . WSB L 3 . ? 5.0 6.0 7.0 1005 WSB Z 2\n',
+  ));
+  const prepared = prepareDssrInput(structureBytes);
+  const dssr = dssrJson();
+  dssr.nts[3] = {
+    ...dssr.nts[3],
+    nt_id: 'Z.WSB1005',
+    chain_name: 'Z',
+    nt_resnum: '1005',
+    nt_name: 'WSB',
+    nt_code: 'u',
+  };
+  dssr.nonPairs[2].nt2 = 'Z.WSB1005';
+  dssr.nonPairs[3].nt2 = 'Z.WSB1005';
+
+  const payload = buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+    dssr,
+  }));
+  const ligand = payload.residues[1].stacking.partners.find((partner) => partner.topology === 'interchain');
+  assert.deepEqual(ligand.partnerLocator, {
+    modelId: '2',
+    labelAsymId: 'L',
+    authAsymId: 'Z',
+    labelSeqId: null,
+    authSeqId: 1005,
+    insertionCode: '',
+    componentId: 'WSB',
+  });
+});
+
 test('production sequence_only residues are accepted only when atom-site coordinates are absent', () => {
   const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
     'ATOM 5 C "C1\'" . C A 1 3 ? 3.0 4.0 5.0 103 C X 2\n',

@@ -184,8 +184,27 @@ test('modified nucleotides keep parent base and chemical component as distinct i
   payload.residues[0].base = 'U';
   payload.residues[0].locator.componentId = 'PSU';
   const context = contextFor(payload);
+  context.residues[0].locator.componentId = 'U';
 
   assert.doesNotThrow(() => validateLocalGeometrySidecar(payload, context));
+});
+
+test('interchain nucleotide ligand may use an author locator without polymer label_seq_id', () => {
+  const payload = makePayload();
+  const partner = payload.residues[5].stacking.partners[2];
+  partner.partnerLocator.labelAsymId = 'L';
+  partner.partnerLocator.labelSeqId = null;
+  partner.partnerLocator.componentId = 'WSB';
+  partner.partnerBase = 'u';
+
+  assert.doesNotThrow(() => validateLocalGeometrySidecar(payload, contextFor(payload)));
+
+  const invalidSameChain = clone(payload);
+  invalidSameChain.residues[5].stacking.partners[0].partnerLocator.labelSeqId = null;
+  assert.throws(
+    () => validateLocalGeometrySidecar(invalidSameChain, contextFor(payload)),
+    /labelSeqId.*positive integer/i,
+  );
 });
 
 test('pucker and stacking statuses are independent and computed values must be finite', () => {

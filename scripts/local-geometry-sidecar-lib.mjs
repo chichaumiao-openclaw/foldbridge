@@ -8,6 +8,7 @@ export const ALTLOC_POLICY = 'preserve_input_altlocs_dssr_managed';
 
 const textDecoder = new TextDecoder('utf-8', { fatal: true });
 const STACK_CLASS = /^(?:pm|mp|mm|pp)\((?:>>|<<|><|<>),(?:forward|backward|inward|outward)\)$/;
+const CANONICAL_NUCLEOTIDE_COMPONENTS = new Set(['A', 'C', 'G', 'U', 'T', 'I', 'N']);
 const LINKED_COORDINATE_STATUSES = new Set([
   'resolved',
   'sequence_only',
@@ -475,10 +476,11 @@ export function parseAtomSiteResidues(cifBytes) {
   }
   if (modelId === null) throw new Error('DSSR input mmCIF has no atom-site rows');
   const residuesByIdentity = new Map();
+  const dssrResiduesByIdentity = new Map();
   const labels = new Map();
   const authors = new Map();
   for (const row of atomRows) {
-    if (row.labelSeqId === null || row.authSeqId === null) continue;
+    if (row.authSeqId === null) continue;
     const identity = residueLocatorIdentity(row);
     const locator = {
       modelId: row.modelId,
@@ -490,24 +492,31 @@ export function parseAtomSiteResidues(cifBytes) {
       componentId: row.componentId,
       authComponentId: row.authComponentId,
     };
-    if (!residuesByIdentity.has(identity)) residuesByIdentity.set(identity, locator);
-    const labelKey = labelLocatorIdentity(locator);
+    // DSSR can classify nucleotide-like ligands that have an author residue number but no
+    // polymer label_seq_id. Keep them available as read-only interchain partners.
+    if (!dssrResiduesByIdentity.has(identity)) dssrResiduesByIdentity.set(identity, locator);
     const authorKey = authorLocatorIdentity(locator);
-    const priorLabel = labels.get(labelKey);
     const priorAuthor = authors.get(authorKey);
-    if (priorLabel && residueLocatorIdentity(priorLabel) !== identity) {
-      throw new Error(`ambiguous _atom_site label residue identity ${labelKey}`);
-    }
     if (priorAuthor && residueLocatorIdentity(priorAuthor) !== identity) {
       throw new Error(`ambiguous _atom_site author residue identity ${authorKey}`);
     }
-    labels.set(labelKey, locator);
     authors.set(authorKey, locator);
+    if (row.labelSeqId === null) continue;
+    if (!residuesByIdentity.has(identity)) residuesByIdentity.set(identity, locator);
+    const labelKey = labelLocatorIdentity(locator);
+    const priorLabel = labels.get(labelKey);
+    if (priorLabel && residueLocatorIdentity(priorLabel) !== identity) {
+      throw new Error(`ambiguous _atom_site label residue identity ${labelKey}`);
+    }
+    labels.set(labelKey, locator);
   }
   const residues = [...residuesByIdentity.values()].sort((left, right) => {
     return compareUtf8(labelLocatorIdentity(left), labelLocatorIdentity(right));
   });
-  return { modelId, atomRows, residues };
+  const dssrResidues = [...dssrResiduesByIdentity.values()].sort((left, right) => {
+    return compareUtf8(authorLocatorIdentity(left), authorLocatorIdentity(right));
+  });
+  return { modelId, atomRows, residues, dssrResidues };
 }
 
 function linkedField(record, names, label, { optional = false } = {}) {
@@ -657,7 +666,14 @@ function buildLinkedChain(linkedView, caseId, chainId, atomSite) {
     }
     const matched = matches[0];
     if (matched && candidate.componentId !== matched.componentId) {
-      throw new Error(`linked component identity does not match atom-site for ${key}`);
+      // Linked-view stores the canonical sequence identity while atom_site retains modified
+      // chemical components (for example U/PSU). Never accept a canonical-to-canonical drift.
+      const linkedIsCanonicalParent = candidate.componentId === candidate.residueBase
+        || candidate.componentId === 'N';
+      const atomSiteIsModified = !CANONICAL_NUCLEOTIDE_COMPONENTS.has(matched.componentId);
+      if (!linkedIsCanonicalParent || !atomSiteIsModified) {
+        throw new Error(`linked component identity does not match atom-site for ${key}`);
+      }
     }
     if (matched) matchedAtomIdentities.add(residueLocatorIdentity(matched));
     const finalLocator = matched ?? candidate;
@@ -695,7 +711,12 @@ function parseDssrNtId(ntId, component) {
   const chain = ntId.slice(0, dot);
   const residue = ntId.slice(dot + 1);
   if (!residue.startsWith(component)) throw new Error(`DSSR nt_id ${ntId} does not match nt_name ${component}`);
-  const parsed = parseDssrResidueNumber(residue.slice(component.length), `DSSR nt_id ${ntId}`);
+  const suffix = residue.slice(component.length);
+  // Digit-suffixed components are separated from the author number by DSSR, e.g. A23/84.
+  const parsed = parseDssrResidueNumber(
+    suffix.startsWith('/') ? suffix.slice(1) : suffix,
+    `DSSR nt_id ${ntId}`,
+  );
   return { chain, ...parsed };
 }
 
@@ -725,7 +746,7 @@ function buildDssrIndex(dssr, atomSite) {
       authSeqId: residueNumber.number,
       insertionCode,
     }, component);
-    const matches = atomSite.residues.filter((locator) => authorLocatorIdentity(locator) === authorKey);
+    const matches = atomSite.dssrResidues.filter((locator) => authorLocatorIdentity(locator) === authorKey);
     if (matches.length !== 1) throw new Error(`DSSR nucleotide ${ntId} has ${matches.length} atom-site identities; expected one`);
     const locator = matches[0];
     const identity = residueLocatorIdentity(locator);
