@@ -89,13 +89,13 @@
 - 新建：`scripts/local-geometry-batch-lib.mjs`
 - 新建：`scripts/build-local-geometry-batch.mjs`
 
-- [ ] 写失败测试：只从 `cases/<PDB>/structure.cif.gz` 和 `chains/<CHAIN>/linked-view/linked-view.json.gz` 建立大小写敏感、稳定排序的 PDB×Chain 清单；拒绝重复 Case/Chain、符号链接和输出逃逸。
-- [ ] 写失败测试：每个 PDB 只调用一次 DSSR，并将同一 DSSR JSON 严格构建为其全部 Chain sidecar；一个 Chain 的身份失败不能被记为成功。
-- [ ] 写失败测试：固定并核对容器镜像 ID、DSSR v1.9.10 与命令；只允许显式 allowlist 中的结构级不可计算项，其余失败使批次非零退出。
-- [ ] 写失败测试：每个 Case 写入带输入摘要和输出摘要的 receipt；`--resume` 仅在 receipt、输入摘要、参数和全部输出字节都一致时跳过，任何漂移都重新计算或失败。
-- [ ] 写失败测试：启动时即由当前大小写敏感清单原子写出每 PDB 状态；每次尝试持久化 `pending/running/computed/not_computable/failed`、失败阶段、稳定错误码、输入摘要和尝试次数。非零退出或中断后，状态文件仍覆盖完整初始清单，不能只在成功结束时才生成 ledger。
-- [ ] 实现批处理库和 CLI，支持有界并发、每 Case 临时目录、原子输出、逐 PDB 状态与确定性汇总 ledger；候选输出只包含 `local-geometry.json.gz`、receipts、状态和 ledger，不写生产树。
-- [ ] 运行 `node --test test/local-geometry-batch.test.js test/local-geometry-sidecar-builder.test.js`，确认全部通过。
+- [x] 写失败测试：只从 `cases/<PDB>/structure.cif.gz` 和 `chains/<CHAIN>/linked-view/linked-view.json.gz` 建立大小写敏感、稳定排序的 PDB×Chain 清单；拒绝重复 Case/Chain、符号链接和输出逃逸。
+- [x] 写失败测试：每个 PDB 只调用一次 DSSR，并将同一 DSSR JSON 严格构建为其全部 Chain sidecar；一个 Chain 的身份失败不能被记为成功。
+- [x] 写失败测试：固定并核对容器镜像 ID、DSSR v1.9.10 与命令；只允许显式 allowlist 中的结构级不可计算项，其余失败使批次非零退出。
+- [x] 写失败测试：每个 Case 写入带输入摘要和输出摘要的 receipt；`--resume` 仅在 receipt、输入摘要、参数和全部输出字节都一致时跳过，任何漂移都重新计算或失败。
+- [x] 写失败测试：启动时即由当前大小写敏感清单原子写出每 PDB 状态；每次尝试持久化 `pending/running/computed/not_computable/failed`、失败阶段、稳定错误码、输入摘要和尝试次数。非零退出或中断后，状态文件仍覆盖完整初始清单，不能只在成功结束时才生成 ledger。
+- [x] 实现批处理库和 CLI，支持有界并发、每 Case 临时目录、原子输出、逐 PDB 状态与确定性汇总 ledger；候选输出只包含 `local-geometry.json.gz`、receipts、状态和 ledger，不写生产树。
+- [x] 运行 `node --test test/local-geometry-batch.test.js test/local-geometry-sidecar-builder.test.js`，确认 34/34 通过。
 
 ## 任务 7：在 10.40.0.132 完成全量候选
 
