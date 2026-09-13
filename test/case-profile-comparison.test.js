@@ -25,6 +25,13 @@ test('comparison eligibility uses exact index membership and strand identity', (
   assert.throws(()=>api.eligibleComparisonProfiles({...context({...profiles[0]}),selectedIds:[]}));
 });
 
+test('index lengths must agree with the current materialized strand',()=>{
+  const bad={...profiles[1],length:3};
+  assert.deepEqual(api.eligibleComparisonProfiles({...context(),profiles:[profiles[0],bad]}),[]);
+  const shard={meta:{case_id:'case',shard_id:'0',format:'float32_le_row_major',strand_length:4,profile_count:1},values:new Float32Array(4)};
+  assert.throws(()=>api.readProfileShardRow(bad,shard,{caseId:'case',length:4}));
+});
+
 test('comparison controller enforces order, cap, removal and isolated failure', async () => {
   assert.equal(typeof api.createProfileComparisonController,'function');
   const requests=[];

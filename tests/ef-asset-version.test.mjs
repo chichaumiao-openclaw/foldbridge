@@ -14,8 +14,8 @@ import {
 } from "../scripts/version-ef-entry-assets.mjs";
 
 const CLASSIFIER_ASSET = "technique-filter-model.mjs";
-const EXPECTED_EF_ASSET_VERSION = "20260913-reviewer-d34-1";
-const PREVIOUS_EF_ASSET_VERSION = "20260912-reviewer-c-1";
+const EXPECTED_EF_ASSET_VERSION = "20260913-reviewer-d36-1";
+const PREVIOUS_EF_ASSET_VERSION = "20260913-reviewer-d34-1";
 const WORKBENCH_IMPORT_ASSETS = [
   CLASSIFIER_ASSET,
   "workbench-pure.mjs",
