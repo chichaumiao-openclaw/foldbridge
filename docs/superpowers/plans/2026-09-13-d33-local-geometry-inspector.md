@@ -101,10 +101,10 @@
 
 **远端隔离根：** `/data/sunhao/foldbridge-d33-full-20260913/`
 
-- [ ] 在远端隔离根创建独立 Node 22 运行时；不修改系统 Node，不覆盖现有环境。
-- [ ] 先从当前生产树生成大小写敏感、稳定排序的 source manifest，分母由该清单现场推导，不使用手册历史数量；清单记录每个 PDB 的 structure 与每个 PDB×Chain 的 linked-view 路径、大小和 SHA-256。
+- [x] 在远端隔离根创建独立 Node 22 运行时；不修改系统 Node，不覆盖现有环境。
+- [x] 先从当前生产树生成大小写敏感、稳定排序的 source manifest，分母由该清单现场推导，不使用手册历史数量；清单记录每个 PDB 的 structure 与每个 PDB×Chain 的 linked-view 路径、大小和 SHA-256。
 - [ ] 使用同一 source manifest 驱动 rsync，把清单中的 `structure.cif.gz` 和 `linked-view.json.gz` 只读复制到远端 input；以路径、数量、大小和 SHA-256 逐项验收。
-- [ ] 先运行代表样本（普通、多链、大结构、modified residue、缺 `_atom_site` 的 9A0D），确认输出、allowlist 和 resume 行为。
+- [x] 先运行代表样本（普通、多链、大结构、modified residue、缺 `_atom_site` 的 9A0D），确认输出、allowlist 和 resume 行为。样本清单为 6 Case/9 Chain：5 Case/7 Chain computed，9A0D 的 2 Chain 仅以 `PREPARE_NO_ATOM_SITE` 显式不可计算，0 failed；独立 verify 返回 true。样本同时验证 7UPH 的 U/PSU 等修饰身份、DSSR 斜杠编号和 8SQ9/P 的跨链核苷配体堆叠。
 - [ ] 以镜像 `rnark-structure-tools:phase6b-rnaview2-dssr`、镜像 ID `sha256:f5ee5eb16e5638cbd81c16dc6e224feac392754349c8a3956a2941b9a351feaf`、DSSR v1.9.10 执行全量；每个 PDB 只运行一次 DSSR。
 - [ ] 验收 ledger 恒等式：当前 source manifest 的全部声明 Chain = computed sidecar + 显式不可计算 Chain + 失败 Chain；失败 Chain 必须为 0，9A0D 只能按本次审计事实进入显式不可计算。
 - [ ] 重跑 `--resume`，确认 0 次 DSSR 新调用且输出 SHA-256 清单不变。
