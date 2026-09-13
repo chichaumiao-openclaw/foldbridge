@@ -4,12 +4,43 @@
 - 候选代码基准：`7d3c22ceec4025ac43a24621a2fc536a6dc48728`
 - 分支：`codex/reviewer-c-fixes`
 - 覆盖项：C1.5、C1.7、C1.8、C1.9、C3.2
-- 状态：**候选通过，生产未替换**
+- 状态：**候选通过；Case/Tunnel 已于 2026-09-13 上线并复验**
 - 候选目录：`/tmp/foldbridge-reviewer-c-case.uI7d0z`
-- 生产目录：`/Volumes/tianyi/Server/public`，本轮始终只读
+- 生产目录：`/Volumes/tianyi/Server/public`；2026-09-12 候选验收阶段只读，
+  2026-09-13 按维护手册发布 17 个共享资产
 
-本轮仅在临时候选目录完成静态资源闭包、自动测试和真实浏览器验收。未向生产目录写入，
-未推送、未发布；因此本文结论只适用于上述候选字节，不表示线上生产内容已经替换。
+2026-09-12 的验收只在临时候选目录完成静态资源闭包、自动测试和真实浏览器测量；原始
+测量仍只证明候选字节。2026-09-13 另按维护手册将同一组候选字节发布到生产目录，并完成
+本机、公网和真实浏览器复验。下文保留候选阶段的复现协议，以便 reviewer 回复材料能区分
+“候选证据”与“线上发布证据”。
+
+## 发布状态更新（2026-09-13）
+
+- 发布版本：`20260912-reviewer-c-1`。
+- 发布范围：12 个新增指纹资产、5 个无版本共享入口，共 17 个精确路径；未替换任何
+  `entry-cases/cases/<PDB>` 数据目录，也未删除旧指纹资产。
+- 发布方式：先在同卷候选目录
+  `/Volumes/tianyi/Server/staging/foldbridge-reviewer-c.SJNmKe` 验证闭包和逐文件字节，再对
+  17 个目标逐文件使用同目录临时文件与原子重命名。
+- 回滚点：`/Volumes/tianyi/Server/rollback/foldbridge/reviewer-c-20260913T035135Z`；
+  `manifest.tsv` 记录每个目标的发布前后 SHA-256、大小和新增/替换状态。
+- 静态闭包：生产目录执行版本检查得到 `checkedFiles=13`、`changedFiles=0`；17 个生产文件
+  与仓库候选逐文件 `cmp` 一致。
+- 公网字节：仓库、本机生产服务和公网返回的 `workbench.js` SHA-256 均为
+  `33818f44eda0ad4236080174532f48e441ec136577994526fb476eded997f721`；公网当前指纹
+  `case-shell.20260912-reviewer-c-1.css` SHA-256 为
+  `c3add5e9df990f8f2e69dfeae3ed7b53c4f901a94a778989911dcef430e4a7f0`。
+- 服务边界：本机与公网 8SQ9/P 均返回 HTTP 200；公网 CORS OPTIONS 返回 HTTP 204，
+  `Access-Control-Allow-Origin: https://foldbridge.ribocentre.org`。
+- 线上交互：8SQ9/P 达到 `Case ready`；选择 DMS 后提示
+  `匹配 1 个 Profile；请在 Profile 下拉列表中选择`，Profile、1D、VARNA、Mol* 保持不变，
+  清空后恢复 `显示全部 2 个 Profile`。VARNA 从 100% 的 `537 × 374` 放大到 140% 时，
+  内容为 `731 × 502`、容器为 `522 × 359`，两轴均可滚动；1:1 后回到
+  `537 × 374` 且滚动位置为 `0 / 0`。
+- 线上三状态：10FZ/A 显式选择 Profile 1 后，统计和 1D、VARNA 实际填充均为
+  `missing=1488`、`measured <= 0=3`、`positive=51`，各自节点数为 1,542。
+- 线上网络边界：发布后 8SQ9/P 冷启动访问日志按 URL `pathname` 检查，没有 `.rdat`、
+  `/api/` 或 RMDB 资源路径；`profileId=...rdat#...` 只出现在页面查询参数中，不计为资源请求。
 
 ## 复现实验协议
 
@@ -399,5 +430,6 @@ SVG 视图只为 missing 使用纹理，Mol* 按 3D 渲染约束始终使用对�
 | `case-shell.20260828-case-taxonomy-1.css` | `119c2a26994a1b78eb4c33779ca71e4ffea3b1f323ec1f8be87ca636258bc759` |
 | `workbench.20260828-case-taxonomy-1.css` | `2511d03f06d45ff342ccc6068137d4caa5d79472ced9bfe216726d26e57b25cd` |
 
-因此，当前结论是「候选通过，生产未替换」：临时候选具备可审计的响应式、滚动、筛选、
-三状态与网络边界证据，同时仍保留上一版本指纹用于回滚；生产发布需另行授权和执行。
+因此，候选阶段结论为「候选通过，生产未替换」；2026-09-13 的独立发布记录把结论更新为
+「同一候选字节已上线并复验」。上一版本指纹和发布前无版本入口均已保留，可按顶部记录的
+回滚点恢复。
