@@ -4,7 +4,7 @@ import path from "node:path";
 import { randomUUID } from "node:crypto";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
-export const EF_ASSET_VERSION = "20260913-reviewer-d36-1";
+export const EF_ASSET_VERSION = "20260913-reviewer-d33-d34-d36-1";
 export const VERSIONING_CONCURRENCY_CONTRACT =
   "versionEfEntryAssets requires an exclusive single-writer; no concurrent writers may modify the repository source or public asset tree during a run.";
 

@@ -1,5 +1,5 @@
 import "./site-nav.js";
-import { classifyTechniqueFilter, MECHANISM_FAMILIES } from "./technique-filter-model.20260913-reviewer-d33-d34-d36-1.mjs";
+import { classifyTechniqueFilter, MECHANISM_FAMILIES } from "./technique-filter-model.20260913-reviewer-d33-d34-1.mjs";
 import {
   applyPublicProfileSelectorVisibility,
   applyPublicTechniqueFilter,
@@ -17,17 +17,13 @@ import {
   resolvePublicProfileSelector,
   selectPublicProfileSelectorOption,
   normalizeReactivityProfile,
-  eligibleComparisonProfiles,
-  createProfileComparisonController,
-  createCachedLoader,
-  readProfileShardRow,
   validateLocalGeometrySidecar,
-} from "./workbench-pure.20260913-reviewer-d33-d34-d36-1.mjs";
-import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260913-reviewer-d33-d34-d36-1.mjs";
-import * as ResidueLinkage from "./residue-linkage.20260913-reviewer-d33-d34-d36-1.mjs";
-import { createResidueRail, RESIDUE_RAIL_GEOMETRY } from "./residue-rail.20260913-reviewer-d33-d34-d36-1.mjs";
+} from "./workbench-pure.20260913-reviewer-d33-d34-1.mjs";
+import { prepareEfWorkbenchShell, renderEfWorkbenchMetadata, renderEfInteraction } from "./ef-workbench-shell.20260913-reviewer-d33-d34-1.mjs";
+import * as ResidueLinkage from "./residue-linkage.20260913-reviewer-d33-d34-1.mjs";
+import { createResidueRail, RESIDUE_RAIL_GEOMETRY } from "./residue-rail.20260913-reviewer-d33-d34-1.mjs";
 
-const EF_ASSET_VERSION = "20260913-reviewer-d33-d34-d36-1";
+const EF_ASSET_VERSION = "20260913-reviewer-d33-d34-1";
 window.FoldBridgeResidueLinkage = ResidueLinkage;
 window.FoldBridgeResidueRail = { createResidueRail, RESIDUE_RAIL_GEOMETRY };
 
@@ -870,7 +866,7 @@ async function loadOptionalLocalGeometry(url, contextPromise) {
   }
 }
 
-const cachedShardLoad = createCachedLoader(async (shardId) => {
+async function loadShard(shardId) {
   if (state.shards.has(shardId)) return state.shards.get(shardId);
   const shardInfo = state.profileIndex.shards[shardId];
   const meta = await fetchJsonMaybeGzip(shardInfo.meta_path);
@@ -880,16 +876,12 @@ const cachedShardLoad = createCachedLoader(async (shardId) => {
   const shard = { meta, values, decodeMode: "gzip", gzipBytes: gzipBuffer.byteLength, rawBytes: valueBuffer.byteLength };
   state.shards.set(shardId, shard);
   return shard;
-});
-
-function loadShard(shardId) { return cachedShardLoad(shardId); }
+}
 
 function profileValues(profile, shard) {
-  if (!state.profiles.includes(profile)) throw new Error("Profile is not in current index");
-  const strandId = profile.render_strand_id || state.caseData.default_render_strand_id;
-  const strand = state.caseData.strands.find(item => item.strand_id === strandId);
-  if (!strand) throw new Error("Profile render strand unavailable");
-  return readProfileShardRow(profile, shard, {caseId: state.caseData.case_id, length: strand.sequence.length});
+  const start = profile.row_index * shard.meta.strand_length;
+  const end = start + shard.meta.strand_length;
+  return shard.values.subarray(start, end);
 }
 
 function parsePairs(dotbracket) {
@@ -1980,16 +1972,13 @@ function renderTrackRail() {
   state.viewport = { start: 1, end: strand.sequence.length };
   const { start, end } = state.viewport;
   const positions = Array.from({ length: end - start + 1 }, (_, idx) => start + idx);
-  const comparisons = primaryLoading ? [] : (comparisonController?.snapshot() || []);
-  const readyComparisons = comparisons.map((entry, index) => ({...entry, number:index + 1})).filter(entry => entry.status === "ready");
-  const height = 182 + readyComparisons.length * 32;
+  const height = 182;
   const rows = [
     ["Profile pos", 24],
     ["Profile/RMDB seq", 52],
     ["PDB polymer alignment", 84],
     ["Structure state", 116],
-    [comparisons.length ? "Primary" : "reactivity", 148],
-    ...readyComparisons.map((entry,index) => [`Comparison ${entry.number}`,180 + index * 32]),
+    ["reactivity", 148],
   ];
   const rail = createResidueRail(document, { positions, rows, height, positionLabel: (position) => String(position) });
   const { svg, cellWidth: cellW } = rail;
@@ -2064,22 +2053,7 @@ function renderTrackRail() {
       svg.appendChild(createSvgNode(svg, "rect", { x: x - 2, y: 159 - barH, width: 4, height: barH, fill: "#17212b", opacity: 0.35 }));
     }
   }
-  readyComparisons.forEach((entry,index) => {
-    for (const position of positions) {
-      const row = entry.normalized.byPosition.get(position);
-      const description = `Comparison ${entry.number}, position ${position}; stored ${Number.isFinite(row.raw) ? row.raw : "missing"}; display ${row.norm}; ${row.state}`;
-      const mark = createSvgNode(svg,"rect",{x:xFor(position)-cellW/2,y:168+index*32,width:cellW,height:24,
-        fill:reactivitySvgFill(row,REACTIVITY_MISSING_PATTERN_IDS.track),stroke:"#aeb7c1","stroke-width":0.5,
-        tabindex:0,role:"img","aria-label":description,"data-comparison-profile":entry.profile.profile_id,"data-position":position});
-      const title = createSvgNode(svg,"title",{}); title.textContent=description; mark.appendChild(title);
-      mark.addEventListener("focus",()=>{ if(comparisonUi) comparisonUi.detail.textContent=description; });
-      mark.addEventListener("mouseenter",()=>{ if(comparisonUi) comparisonUi.detail.textContent=description; });
-      svg.appendChild(mark);
-    }
-  });
-  const scrollLeft = el.track.scrollLeft;
   el.track.replaceChildren(svg);
-  el.track.scrollLeft = scrollLeft;
   if (el.viewportStatus) el.viewportStatus.textContent = `${start}-${end} / ${strand.sequence.length}`;
   syncViewportSlider(start, end, strand.sequence.length);
   recolorVarnaViewportLink();
@@ -2455,104 +2429,11 @@ async function initMolstarViewer() {
   }
 }
 
-let primaryRequestId = 0;
-let primaryLoading = false;
-let comparisonController = null;
-let comparisonUi = null;
-
-function comparisonContext() {
-  const strand = activeStrand();
-  return {key: `${state.caseData.case_id}/${config.chainId}`, profiles:state.profiles,
-    primary:state.lastRender.profile, strandId:strand.strand_id, length:strand.sequence.length,
-    values:profileValues(state.lastRender.profile,state.lastRender.shard)};
-}
-
-function updateComparisonContext() {
-  if (!comparisonController) return;
-  const removed = comparisonController.setContext(comparisonContext());
-  if (removed.length) comparisonUi.message.textContent = `Removed ${removed.length} comparison(s): now primary or incompatible with its strand.`;
-}
-
-function renderComparisonControls() {
-  if (!comparisonUi || !state.lastRender) return;
-  comparisonUi.detail.textContent = "";
-  const {search, select, list, summary, message, toggle, warning} = comparisonUi;
-  const entries = comparisonController.snapshot();
-  toggle.textContent = `Compare profiles (${entries.length}/3)`;
-  warning.hidden = entries.length === 0;
-  const candidates = eligibleComparisonProfiles({...comparisonContext(),selectedIds:entries.map(e=>e.profile.profile_id)});
-  const query = search.value.toLowerCase();
-  select.replaceChildren(new Option("Add comparison…", ""));
-  for (const profile of candidates) {
-    const index = state.profiles.indexOf(profile);
-    const label = state.profileSelectorItems[index]?.label || profile.profile_id;
-    if (!`${label} ${profile.profile_id}`.toLowerCase().includes(query)) continue;
-    select.add(new Option(label, String(index)));
-  }
-  select.disabled = primaryLoading || entries.length === 3 || select.options.length === 1;
-  search.disabled = primaryLoading || entries.length === 3;
-  summary.textContent = `${entries.length}/3 comparisons · Primary: ${state.lastRender.profile.profile_id} · P95 ${state.lastRender.normalized.cap > 0 ? state.lastRender.normalized.cap.toPrecision(4) : "n/a"} · finite ${state.lastRender.normalized.mappedCount}/${activeStrand().sequence.length}`;
-  if (primaryLoading) message.textContent = "Loading primary Profile…";
-  else if (entries.length === 3) message.textContent = "Maximum 3 comparisons. Remove one to add another.";
-  else if (!candidates.length) message.textContent = "No other comparable Profiles.";
-  else message.textContent = "";
-  list.replaceChildren();
-  entries.forEach((entry,index) => {
-    const item=document.createElement("li"), label=document.createElement("span"), remove=document.createElement("button");
-    const selectorItem=state.profileSelectorItems[state.profiles.indexOf(entry.profile)];
-    const coverage=entry.coverage;
-    label.textContent=`Comparison ${index+1}: ${selectorItem?.label || entry.profile.profile_id} · ${entry.profile.profile_id} · `;
-    label.textContent+=primaryLoading ? "Waiting for primary" : entry.status === "ready"
-      ? `P95 ${entry.normalized.cap > 0 ? entry.normalized.cap.toPrecision(4) : "n/a"} · finite ${coverage.comparisonFinite}/${coverage.length} · shared with primary ${coverage.sharedFinite}/${coverage.length}${coverage.sharedFinite===0 ? " · No common finite positions" : ""}`
-      : entry.status === "error" ? `Error: ${entry.error}` : "Loading…";
-    remove.type="button"; remove.textContent="Remove"; remove.setAttribute("aria-label",`Remove comparison ${index+1}`);
-    remove.addEventListener("click",()=>comparisonController.remove(entry.profile.profile_id));
-    item.append(label,remove); list.append(item);
-  });
-}
-
-function mountProfileComparisons() {
-  if (detectedEfChain || comparisonUi || !el.select) return;
-  const root=document.createElement("section"); root.className="profile-comparisons";
-  const disclosure=document.createElement("details"), toggle=document.createElement("summary");
-  toggle.textContent="Compare profiles (0/3)";
-  const summary=document.createElement("p"), warning=document.createElement("p"), message=document.createElement("p"), detail=document.createElement("p");
-  const search=document.createElement("input"), select=document.createElement("select"), list=document.createElement("ol");
-  search.type="search"; search.placeholder="Search comparison Profiles"; search.setAttribute("aria-label","Search comparison Profiles");
-  select.setAttribute("aria-label","Add comparison");
-  warning.textContent="Each profile is scaled independently for display. Compare positional patterns, not absolute signal magnitudes.";
-  message.setAttribute("role","status"); detail.setAttribute("aria-live","polite");
-  warning.hidden=true;
-  disclosure.append(toggle,summary,search,select,message,list);
-  root.append(disclosure,warning,detail);
-  el.track.before(root);
-  comparisonUi={root,summary,search,select,message,list,detail,toggle,warning};
-  comparisonController=createProfileComparisonController({load:async profile=>profileValues(profile,await loadShard(profile.shard_id)),
-    onChange:()=>{renderComparisonControls();renderTrackRail();}});
-  search.addEventListener("input",renderComparisonControls);
-  select.addEventListener("change",()=>{
-    if (primaryLoading || select.value === "") return;
-    try { comparisonController.add(state.profiles[Number(select.value)]); }
-    catch(error) {message.textContent=error.message;}
-  });
-  window.addEventListener("pagehide",()=>{primaryRequestId++;comparisonController.dispose();},{once:true});
-}
-
-function showPrimaryError(error) {
-  if (state.lastRender) { el.select.value=String(state.profiles.indexOf(state.lastRender.profile)); refreshProfileDropdownTrigger(); }
-  if (comparisonUi) comparisonUi.message.textContent=`Primary Profile could not load: ${error.message || error}`;
-}
-
 async function renderProfile(index) {
   const started = performance.now();
   const profile = state.profiles[index];
   if (!profile) return;
-  const requestId = ++primaryRequestId;
-  primaryLoading = true;
-  renderComparisonControls();
-  try {
   const shard = await loadShard(profile.shard_id);
-  if (requestId !== primaryRequestId) return;
   const values = profileValues(profile, shard);
   const strandId = profile.render_strand_id || state.caseData.default_render_strand_id;
   const strand = state.caseData.strands.find((item) => item.strand_id === strandId);
@@ -2592,17 +2473,6 @@ async function renderProfile(index) {
   renderTrackRail();
   renderInspector(state.selectedResidueKey);
   applyMolstarTargetDisplay(state.selectedResidueKey);
-  primaryLoading = false;
-  updateComparisonContext();
-  refreshProfileDropdownTrigger();
-  } catch (error) {
-    if (requestId !== primaryRequestId) return;
-    primaryLoading = false;
-    renderComparisonControls();
-    renderTrackRail();
-    showPrimaryError(error);
-    if (!state.lastRender) throw error;
-  }
 }
 
 function profileIndexForId(profileId) {
@@ -2994,9 +2864,9 @@ async function initEfMode(chainId, manifestUrl, family) {
   // Locate shared assets from workbench.js itself. This is independent of the
   // current chain page depth and works for both 7SYS/z and 9WNR/a.
   const scripts = [
-    new URL('../__entry_ef_site__/ef-heatmap-core.20260913-reviewer-d33-d34-d36-1.js', import.meta.url),
-    new URL('../__entry_ef_site__/ef-heatmap.20260913-reviewer-d33-d34-d36-1.js', import.meta.url),
-    new URL('../__entry_ef_site__/ef-case.20260913-reviewer-d33-d34-d36-1.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap-core.20260913-reviewer-d33-d34-1.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-heatmap.20260913-reviewer-d33-d34-1.js', import.meta.url),
+    new URL('../__entry_ef_site__/ef-case.20260913-reviewer-d33-d34-1.js', import.meta.url),
   ];
 
   // Keep the working 1D DOM intact until every EF dependency is available.
@@ -3193,7 +3063,6 @@ async function init() {
   el.select.innerHTML = buildPublicProfileSelectMarkup(state.profileSelectorItems);
   mountProfileDropdown();
   mountTechniqueFilter();
-  mountProfileComparisons();
   if (el.status) {
     el.status.textContent = `loaded profile index for ${state.profiles.length} profiles in ${(performance.now() - started).toFixed(1)} ms`;
   }

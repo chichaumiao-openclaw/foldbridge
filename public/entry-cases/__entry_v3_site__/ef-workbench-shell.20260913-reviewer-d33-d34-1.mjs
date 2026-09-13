@@ -1,4 +1,4 @@
-import { classifyTechniqueFilter } from "./technique-filter-model.20260913-reviewer-d33-d34-d36-1.mjs";
+import { classifyTechniqueFilter } from "./technique-filter-model.20260913-reviewer-d33-d34-1.mjs";
 
 export const MATRIX_PUBLIC_COPY = Object.freeze({
   subtitle: "Explore experimental contacts across sequence, secondary structure, and 3D structure.",

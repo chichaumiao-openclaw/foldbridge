@@ -311,6 +311,35 @@ test('Case workbench never creates the RMDB raw reactivity heatmap', () => {
   }
 });
 
+test('ordinary embedded Case keeps the public compact Inspector while E/F routing stays isolated', () => {
+  const source = readFileSync(
+    new URL('../public/entry-cases/__entry_v3_site__/workbench.js', import.meta.url),
+    'utf8',
+  );
+  const start = source.indexOf('function renderInspector(');
+  const end = source.indexOf('\nfunction activeResidues(', start);
+  const inspector = source.slice(start, end);
+  const initStart = source.indexOf('async function init()');
+  const initEnd = source.indexOf('\nel.select.addEventListener', initStart);
+  const init = source.slice(initStart, initEnd);
+
+  assert.ok(start >= 0 && end > start);
+  assert.match(inspector, /Local context/);
+  assert.match(inspector, /Reactivity/);
+  assert.match(inspector, /Local geometry/);
+  assert.match(inspector, /Interactions/);
+  assert.match(inspector, /Annotation details/);
+  for (const privateLabel of [
+    'Bridge membership', 'Interaction endpoint', 'Observed mask', 'Join status',
+    'Join key', 'LSS context', 'FEC/LSS', 'ANNOCONFIDENCE',
+  ]) {
+    assert.doesNotMatch(inspector, new RegExp(`<dt>${privateLabel}`, 'i'), privateLabel);
+  }
+  assert.match(init, /if \(detectedEfChain\)[\s\S]*?return; \/\/ Skip normal workbench initialization/);
+  assert.ok(init.indexOf('if (detectedEfChain)') < init.indexOf('const localGeometryPromise ='),
+    'E/F mode must return before ordinary local-geometry loading starts');
+});
+
 test('Case shell shows staged loading progress until the first profile is ready', () => {
   const shell = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.js', import.meta.url), 'utf8');
   const shellStyles = readFileSync(new URL('../public/entry-cases/__entry_v3_site__/case-shell.css', import.meta.url), 'utf8');

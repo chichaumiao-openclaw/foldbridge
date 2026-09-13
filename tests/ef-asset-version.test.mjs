@@ -14,8 +14,8 @@ import {
 } from "../scripts/version-ef-entry-assets.mjs";
 
 const CLASSIFIER_ASSET = "technique-filter-model.mjs";
-const EXPECTED_EF_ASSET_VERSION = "20260913-reviewer-d36-1";
-const PREVIOUS_EF_ASSET_VERSION = "20260913-reviewer-d34-1";
+const EXPECTED_EF_ASSET_VERSION = "20260913-reviewer-d33-d34-d36-1";
+const PREVIOUS_EF_ASSET_VERSION = "20260913-reviewer-d36-1";
 const WORKBENCH_IMPORT_ASSETS = [
   CLASSIFIER_ASSET,
   "workbench-pure.mjs",
@@ -34,11 +34,14 @@ const TASK9_REFRESH_ASSETS = [
 ];
 const VERSION_SCRIPT = new URL("../scripts/version-ef-entry-assets.mjs", import.meta.url);
 
-test("the fingerprinted Workbench pure module exports the Case view router used by production", async () => {
+test("the fingerprinted Workbench pure module exports the Case view router and local geometry helpers used by production", async () => {
   const fingerprintedPure = await import(
-    `../public/entry-cases/__entry_v3_site__/${versionedAssetName("workbench-pure.mjs")}`
+    `../public/entry-cases/__entry_v3_site__/workbench-pure.${EXPECTED_EF_ASSET_VERSION}.mjs`
   );
   assert.equal(typeof fingerprintedPure.resolveCaseViewMode, "function");
+  assert.equal(fingerprintedPure.LOCAL_GEOMETRY_SCHEMA, "foldbridge-local-geometry.v1");
+  assert.equal(typeof fingerprintedPure.validateLocalGeometrySidecar, "function");
+  assert.equal(typeof fingerprintedPure.buildLocalGeometryWindow, "function");
 });
 
 test("checked-in classifier source, mirror, and fingerprint share the real F-payload MAP alias", async () => {

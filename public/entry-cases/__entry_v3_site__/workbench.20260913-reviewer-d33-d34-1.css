@@ -197,15 +197,6 @@ button:focus-visible {
   color: var(--muted);
   font-size: 12px;
 }
-.profile-comparisons { min-width: 0; max-width: 100%; padding: 10px 0; font-size: 12px; }
-.profile-comparisons summary { cursor: pointer; padding: 6px 0; font-weight: 600; }
-.profile-comparisons summary:focus-visible { outline: 2px solid #174b84; outline-offset: 2px; }
-.profile-comparisons p, .profile-comparisons li { overflow-wrap: anywhere; }
-.profile-comparisons input, .profile-comparisons select { box-sizing: border-box; width: 100%; max-width: 100%; min-width: 0; margin: 4px 0; }
-.profile-comparisons li { display: flex; gap: 8px; align-items: baseline; margin: 6px 0; }
-.profile-comparisons li span { min-width: 0; flex: 1; }
-.profile-comparisons button { flex-shrink: 0; }
-[data-comparison-profile]:focus { outline: 2px solid #174b84; outline-offset: 1px; }
 .track-panel {
   margin-top: 12px;
 }
