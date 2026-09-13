@@ -161,7 +161,19 @@ class FakeElement {
   setAttribute(name, value) { this.attrs[name] = String(value); }
   getAttribute(name) { return this.attrs[name] ?? null; }
   removeAttribute(name) { delete this.attrs[name]; }
-  appendChild(child) { this.children.push(child); return child; }
+  appendChild(child) { child.parentNode = this; this.children.push(child); return child; }
+  get firstChild() { return this.children[0] || null; }
+  insertBefore(child, before) { child.parentNode = this; this.children.splice(this.children.indexOf(before), 0, child); }
+  remove() { if (this.parentNode) this.parentNode.children = this.parentNode.children.filter(child => child !== this); }
+  cloneNode(deep) {
+    const copy = new FakeElement(this.name);
+    copy.attrs = { ...this.attrs };
+    copy.className = this.className;
+    copy.textContent = this.textContent;
+    if (deep) this.children.forEach(child => copy.appendChild(child.cloneNode(true)));
+    return copy;
+  }
+  click() { this.handlers.click?.(); }
   addEventListener(name, fn) { this.handlers[name] = fn; }
   removeEventListener(name) { delete this.handlers[name]; }
   getBoundingClientRect() { return { left: 0, top: 0, width: 390, height: 340 }; }
@@ -177,6 +189,7 @@ class FakeElement {
     return null;
   }
   querySelectorAll(selector) {
+    if (selector.includes(",")) return selector.split(",").flatMap(part => this.querySelectorAll(part.trim()));
     if (selector === 'circle[stroke="none"][r="5.0"]') return this.circles || [];
     const className = selector.startsWith(".") ? selector.slice(1) : null;
     const dataLayer = selector.match(/^circle\[data-layer="([^"]+)"\]/)?.[1] || null;
@@ -220,6 +233,7 @@ const heatmapSource = fs.readFileSync(
   "utf8"
 );
 const integrationSandbox = {
+  URL,
   window: {
     EfHeatmapCore: core,
     FoldBridgeResidueLinkage: ResidueLinkage,
@@ -278,6 +292,7 @@ const controller = integrationSandbox.window.createEfHeatmap({
   molstarHost,
   molstarPlugin,
   payload: constructPayload,
+  matrixUrl: "https://example.test/entry-cases/cases/9WNR/chains/a/ef-matrix.json.gz",
   residues: linkedResidues,
 });
 assert.equal(controller.viewHeader.n_rows, 2);
@@ -515,4 +530,46 @@ assert.ok(fInteractions.some((event) => event.source === "sequence"), "sequence 
 assert.ok(fInteractions.some((event) => event.source === "varna"), "VARNA path emits a normalized interaction event");
 assert.ok(fInteractions.some((event) => event.source === "3d"), "3D path emits a normalized interaction event");
 
-console.log("ok - EF chain view uses one 2D/3D coordinate system");
+// Exercise the actual download handler with a detached DOM and captured Blob.
+const blobs = [];
+const exportedTrees = [];
+const scheduledCleanup = [];
+integrationSandbox.Blob = Blob;
+integrationSandbox.URL = URL;
+integrationSandbox.console = console;
+integrationSandbox.XMLSerializer = class {
+  serializeToString(tree) { exportedTrees.push(tree); return JSON.stringify(treeSnapshot(tree)); }
+};
+integrationSandbox.window.getComputedStyle = () => ({getPropertyValue: () => "none"});
+integrationSandbox.window.setTimeout = callback => scheduledCleanup.push(callback);
+integrationSandbox.document.body = new FakeElement("body");
+integrationSandbox.URL = {
+  createObjectURL(blob) { blobs.push(blob); return "blob:test-export"; },
+  revokeObjectURL() {},
+};
+function treeSnapshot(node) {
+  return {name:node.name,attrs:node.attrs,text:node.textContent,children:node.children.map(treeSnapshot)};
+}
+const dataLink = descendants(heatmapHost, node => node.name === "a")[0];
+assert.equal(dataLink.href, "https://example.test/entry-cases/cases/9WNR/chains/a/ef-matrix.json.gz");
+assert.equal(dataLink.download, "9WNR_a_E_matrix.json.gz", "download preserves case-sensitive chain and matrix family");
+for (const [host, expectedCells, family] of [[heatmapHost, 1, "E"], [fHeatmapHost, 8, "F"]]) {
+  const button = descendants(host, node => node.name === "button")[0];
+  const matrix = host.querySelector(".ef-matrix-svg");
+  const before = JSON.stringify(treeSnapshot(matrix));
+  button.click();
+  assert.equal(host.querySelector(".ef-download-status").textContent, "Heatmap download started.");
+  assert.equal(JSON.stringify(treeSnapshot(matrix)), before, "download preserves the live DOM and selection");
+  const exported = exportedTrees.at(-1);
+  assert.equal(exported.querySelectorAll(".ef-hover, .ef-selection, .ef-hitgrid").length, 0);
+  assert.equal(exported.querySelector(".ef-cells").children.length, expectedCells);
+  assert.ok(exported.querySelector(".ef-axes"));
+  const metadata = JSON.parse(descendants(exported, node => node.name === "metadata")[0].textContent);
+  assert.equal(metadata.sourceHeader.family, family);
+  assert.equal(metadata.displayedCells, expectedCells);
+  assert.ok(descendants(exported, node => node.name === "text").some(node => node.textContent === integrationSandbox.window.FoldBridgeMatrixPublicCopy.signalLegend));
+  assert.equal(blobs.at(-1).type, "image/svg+xml;charset=utf-8");
+  assert.equal(integrationSandbox.document.body.children.length, 0, "temporary download link is removed");
+}
+scheduledCleanup.forEach(fn => fn());
+console.log("ok - EF chain view uses one 2D/3D coordinate system and exports E/F without changing it");
