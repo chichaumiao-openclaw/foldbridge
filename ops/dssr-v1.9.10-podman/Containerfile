@@ -1,0 +1,6 @@
+FROM public.ecr.aws/docker/library/python:3.12-slim-bookworm
+
+COPY x3dna-dssr /usr/local/bin/x3dna-dssr
+RUN chmod 0555 /usr/local/bin/x3dna-dssr
+
+ENTRYPOINT ["/usr/local/bin/x3dna-dssr"]

@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "foldbridge-dssr-runtime-build.v1",
+  "host": "10.40.0.133",
+  "runtime": "podman",
+  "archive": {
+    "path": "/data/hsBack/mytoo/DSSR-v1.9.10-linux.zip",
+    "sha256": "3f9b8615caacd6372f3a900e77f2985b9190bc8e69f5dbc29d5b2be15908348b"
+  },
+  "binary": {
+    "path": "/usr/local/bin/x3dna-dssr",
+    "sha256": "c7261c0ab099e1f70c508c51363c7aa6915e216a78bb6d65ccda533092d6c39a",
+    "version": "v1.9.10-2020apr23"
+  },
+  "containerfileSha256": "0be5bc13aa883a11d98b3c2e1ef763be0ad19912d84520edb63c63eb4314b43f",
+  "baseImage": "public.ecr.aws/docker/library/python:3.12-slim-bookworm",
+  "baseImageId": "sha256:8d1235d196ae8b86c5fcef26bce1c43109bf7d7d5e789403e3d166ef97110c12",
+  "image": "localhost/foldbridge-dssr:v1.9.10-c7261c0a",
+  "imageId": "sha256:259aba597ceac6d3072cc08585fa5284db8d4712cb768a02b7ef3471b8aa0853",
+  "command": "/usr/local/bin/x3dna-dssr --json --more --non-pair -i=/work/input.cif -o=/work/output.json"
+}
