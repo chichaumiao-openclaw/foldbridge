@@ -82,7 +82,10 @@ async function runManifest(argv) {
 }
 
 export function assertPinnedDssrRuntime({ actualImageId, versionOutput }) {
-  if (actualImageId !== DSSR_CONTAINER_IMAGE_ID) {
+  const normalizedImageId = /^[0-9a-f]{64}$/.test(actualImageId)
+    ? `sha256:${actualImageId}`
+    : actualImageId;
+  if (normalizedImageId !== DSSR_CONTAINER_IMAGE_ID) {
     throw new Error(`container image ID mismatch: expected ${DSSR_CONTAINER_IMAGE_ID}, got ${actualImageId}`);
   }
   if (typeof versionOutput !== 'string' || !versionOutput.includes(`v${DSSR_TOOL_VERSION.replace(/^v/, '')}`)) {
@@ -91,13 +94,20 @@ export function assertPinnedDssrRuntime({ actualImageId, versionOutput }) {
   return true;
 }
 
-function assertDockerRuntime() {
+export function requireContainerRuntime(value) {
+  if (value !== 'docker' && value !== 'podman') {
+    throw new Error('container runtime must be docker or podman');
+  }
+  return value;
+}
+
+function assertContainerRuntime(containerRuntime) {
   const actualImageId = execFileSync(
-    'docker',
+    containerRuntime,
     ['image', 'inspect', DSSR_CONTAINER_IMAGE, '--format', '{{.Id}}'],
     { encoding: 'utf8' },
   ).trim();
-  const version = spawnSync('docker', [
+  const version = spawnSync(containerRuntime, [
     'run', '--rm', '--entrypoint', '/usr/local/bin/x3dna-dssr',
     DSSR_CONTAINER_IMAGE_ID, '--version',
   ], { encoding: 'utf8' });
@@ -106,7 +116,7 @@ function assertDockerRuntime() {
   assertPinnedDssrRuntime({ actualImageId, versionOutput: `${version.stdout || ''}\n${version.stderr || ''}` });
 }
 
-export function buildDssrDockerRunArgs(jobDirectory) {
+export function buildDssrContainerRunArgs(jobDirectory) {
   const mount = `${path.resolve(jobDirectory)}:/work`;
   return [
     'run', '--rm', '--volume', mount, '--entrypoint', 'sh',
@@ -117,12 +127,14 @@ export function buildDssrDockerRunArgs(jobDirectory) {
 async function runBuild(argv) {
   const flags = parseFlags(argv, [
     'case-root', 'output-root', 'work-root', 'manifest', 'expected-unavailable',
-    'container-image', 'container-image-id', 'tool-version', 'concurrency', 'resume',
+    'container-image', 'container-image-id', 'tool-version', 'container-runtime',
+    'concurrency', 'resume',
   ]);
   const sourceManifest = readJson(flags.manifest, 'source manifest');
   const expectedUnavailable = readExpectedUnavailable(flags['expected-unavailable']);
   const sourceProvenance = provenance(flags);
-  assertDockerRuntime();
+  const containerRuntime = requireContainerRuntime(flags['container-runtime']);
+  assertContainerRuntime(containerRuntime);
   const resume = flags.resume === 'true' ? true : flags.resume === 'false' ? false : null;
   if (resume === null) throw new Error('--resume must be true or false');
   const controller = new AbortController();
@@ -145,7 +157,7 @@ async function runBuild(argv) {
       resume,
       abortSignal: controller.signal,
       runDssr: async ({ jobDirectory, signal }) => {
-        await execFileAsync('docker', buildDssrDockerRunArgs(jobDirectory), {
+        await execFileAsync(containerRuntime, buildDssrContainerRunArgs(jobDirectory), {
           maxBuffer: 64 * 1024 * 1024,
           signal,
         });

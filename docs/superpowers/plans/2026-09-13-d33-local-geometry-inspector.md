@@ -62,10 +62,10 @@
 - 生成：`public/entry-cases/__entry_v3_site__/*.<新版本>.*`
 - 生成：`public/entry-cases/__entry_ef_site__/*.<新版本>.*`
 
-- [x] 写失败断言，把版本从现有 D3.4 候选固定提升为联合版本 `20260913-reviewer-d33-d34-1`。
+- [x] 写失败断言，把版本从现有 D3.4 候选固定提升为 D3.3、D3.4 与 D3.6 联合版本 `20260913-reviewer-d33-d34-d36-1`。
 - [x] 运行版本测试，确认旧版本断言失败。
 - [x] 更新版本常量并运行 `node scripts/version-ef-entry-assets.mjs` 生成完整闭包。
-- [x] 直接 import `workbench-pure.20260913-reviewer-d33-d34-1.mjs`，确认新 geometry 导出真实存在。
+- [x] 直接 import `workbench-pure.20260913-reviewer-d33-d34-d36-1.mjs`，确认新 geometry 与 Profile comparison 导出真实存在。
 - [x] 重跑版本、Case UI 和 E/F 回归测试；只有此时才把任务 3 的运行时 UI 契约标为通过。
 
 ## 任务 5：真实 1DDY/A 试跑与本地验收
@@ -78,9 +78,9 @@
 - [x] 通过受控第一阶段生成“首 model、保留所有链和全部 altloc”的 DSSR 输入，记录 SHA-256；在固定镜像运行 DSSR 后，由第二阶段验证该 SHA-256 并生成 1DDY/A sidecar。
 - [x] 校验 sidecar schema、residue 全集、pucker 状态、stacking partner、来源 SHA-256 和稳定重建哈希。
 - [x] 在 staging 启动本地静态服务，并准备互不覆盖的可用、404 未物化、非法 schema、residue 级 `not_computable`、`stacking.status=computed` 且 `partners=[]` 五个测试入口。
-- [ ] 用浏览器逐项验证五种状态、同链窗口外 partner 跳转、跨链 partner 只读，以及既有 1D/2D/3D selection 仍联动；当前只完成真实 1DDY/A 可用状态。
+- [x] 用浏览器逐项验证五种状态、同链窗口外 partner 跳转、跨链 partner 只读，以及既有 1D/2D/3D selection 仍联动；8SQ9/P 与 10FZ/A 候选验收通过，浏览器 warning/error 日志为空。
 - [x] 运行完整定向回归：`node --test test/case-workbench-pure.test.js test/case-local-geometry.test.js test/local-geometry-sidecar-builder.test.js test/case-workbench-ui.test.js test/entry-case-embed.test.js tests/ef-asset-version.test.mjs tests/ef-chain-view.test.mjs tests/ef-workbench-integration.test.mjs`，129/129 通过。
-- [ ] 记录实际通过数、真实样本统计和仍未授权的生产发布边界。
+- [x] 在 D3.3 生产证据文档记录 141/141 联合回归、真实样本统计和候选/生产边界；生产证据仅在两条发布链闭合后更新为「已上线」。
 
 ## 任务 6：实现可恢复的全站批处理器
 
@@ -103,11 +103,41 @@
 
 - [x] 在远端隔离根创建独立 Node 22 运行时；不修改系统 Node，不覆盖现有环境。
 - [x] 先从当前生产树生成大小写敏感、稳定排序的 source manifest，分母由该清单现场推导，不使用手册历史数量；清单记录每个 PDB 的 structure 与每个 PDB×Chain 的 linked-view 路径、大小和 SHA-256。
-- [ ] 使用同一 source manifest 驱动 rsync，把清单中的 `structure.cif.gz` 和 `linked-view.json.gz` 只读复制到远端 input；以路径、数量、大小和 SHA-256 逐项验收。
+- [x] 使用同一 source manifest 建立只含清单文件的同卷硬链接 staging，并以 4 路互不重叠的并行 `scp` 把 `structure.cif.gz` 和 `linked-view.json.gz` 只读复制到远端 input；20,273 个文件、14,138,773,275 bytes 已按路径、数量、大小和 SHA-256 逐项验收，三份 manifest 字节一致，SHA-256 为 `6db80118d7db98ed0b9e83cf75bf3e79c3ad6a4c3b4a7503927a838c1e62f706`。
 - [x] 先运行代表样本（普通、多链、大结构、modified residue、缺 `_atom_site` 的 9A0D），确认输出、allowlist 和 resume 行为。样本清单为 6 Case/9 Chain：5 Case/7 Chain computed，9A0D 的 2 Chain 仅以 `PREPARE_NO_ATOM_SITE` 显式不可计算，0 failed；独立 verify 返回 true。样本同时验证 7UPH 的 U/PSU 等修饰身份、DSSR 斜杠编号和 8SQ9/P 的跨链核苷配体堆叠。
 - [ ] 以镜像 `rnark-structure-tools:phase6b-rnaview2-dssr`、镜像 ID `sha256:f5ee5eb16e5638cbd81c16dc6e224feac392754349c8a3956a2941b9a351feaf`、DSSR v1.9.10 执行全量；每个 PDB 只运行一次 DSSR。
 - [ ] 验收 ledger 恒等式：当前 source manifest 的全部声明 Chain = computed sidecar + 显式不可计算 Chain + 失败 Chain；失败 Chain 必须为 0，9A0D 只能按本次审计事实进入显式不可计算。
 - [ ] 重跑 `--resume`，确认 0 次 DSSR 新调用且输出 SHA-256 清单不变。
+
+### 任务 7A：132 不可达时切换到 133
+
+**规格：** `docs/superpowers/specs/2026-09-14-d33-host-switch-133-design.md`
+
+**文件：**
+- 修改：`scripts/build-local-geometry-batch.mjs`
+- 修改：`scripts/local-geometry-batch-lib.mjs`
+- 修改：`test/local-geometry-batch.test.js`
+- 新建：`ops/dssr-v1.9.10-podman/Containerfile`
+
+- [x] 写失败测试并执行红灯：容器运行时必须显式为 `docker` 或 `podman`，缺失/非法值在
+  启动子进程前失败；inspect、version 与 run 使用同一运行时，run 只接受不可变 image ID。
+- [x] 在 133 从给定 zip 构建固定 Podman 镜像；构建回执为
+  `ops/dssr-v1.9.10-podman/build-receipt-133.json`，包含 host/runtime、zip/binary、
+  Containerfile/base image/final image ID、版本和命令。
+- [x] 更新 pinned provenance 为 133 镜像；运行
+  `node --test test/local-geometry-batch.test.js test/local-geometry-sidecar-builder.test.js`，
+  38/38 通过。
+- [x] 在 `/data/sunhao/foldbridge-d33-full-20260913/sample-fast-133-input` 以 `--resume false`
+  运行 1DDY + 9A0D 双门槛，输出到 `sample-fast-133-candidate`，work 为
+  `/tmp/foldbridge-d33-sample-fast-133-work`；要求 1DDY/A computed、9A0D 两个 Chain
+  not_computable、0 failed、verify=true。实测 1DDY 的 4 个网站 Chain 均 computed，
+  9A0D 的 2 个 Chain 均 not_computable，0 failed，verify=true。
+- [ ] 从 133 input 重新生成 manifest 并与密封清单字节一致；在
+  `/data/sunhao/foldbridge-d33-full-20260913/full-candidate-133-v1910` 以 `--resume false`
+  启动全量，work 为 `/tmp/foldbridge-d33-full-133-v1910-work`，锁由该新 output 自动派生；
+  禁止对 132 执行 SSH、`unlock`、resume 或覆盖其候选。后台 PID `3978477` 已于
+  `2026-09-14T09:15:01Z` 在 133 持新锁启动；启动前的当前输入重建与密封清单比较由批处理
+  硬门槛执行，完成后才进入 32 路 Podman 计算。
 
 ## 任务 8：形成同卷候选并发布 Git/Pages
 
@@ -121,7 +151,7 @@
 ## 任务 9：原子发布 Case/Tunnel 并形成 reviewer 证据
 
 - [ ] 在任何生产写入前完成任务 5 的五种候选浏览器状态验收，包括同链窗口外跳转、跨链只读和既有 1D/2D/3D 联动；不以源码测试代替该硬门槛。
-- [ ] 在候选根准备 12 个共享无版本资产及其 `20260913-reviewer-d33-d34-1` 指纹副本；在候选树运行 versioner `--check`，不直接对生产树运行写模式。
+- [ ] 在候选根准备 12 个共享无版本资产及其 `20260913-reviewer-d33-d34-d36-1` 指纹副本；在候选树运行 versioner `--check`，不直接对生产树运行写模式。
 - [ ] 发布前重新生成当前生产 source manifest，并与任务 7 receipts 中的 structure/linked-view 路径、大小和 SHA-256 逐项比较；任何新增、删除、大小写或字节漂移都终止发布并重建受影响候选。
 - [ ] 获取独占发布锁；预检 docroot、候选根、每个目标及父目录均为预期的真实目录/普通文件且无符号链接或路径逃逸。锁持有期间禁止其他任务修改生产 `entry-cases` 树。
 - [ ] 记录生产目标路径、大小和 SHA-256；创建 `/Volumes/tianyi/Server/rollback/foldbridge/<UTC>/`，备份所有将替换的共享资产和任何已有 sidecar，并为原先不存在的 sidecar、指纹资产记录精确新增清单。

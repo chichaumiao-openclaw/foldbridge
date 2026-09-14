@@ -28,8 +28,8 @@ export const BATCH_RECEIPT_SCHEMA = 'foldbridge-local-geometry-batch-receipt.v1'
 export const BATCH_LEDGER_SCHEMA = 'foldbridge-local-geometry-batch-ledger.v1';
 export const DSSR_TOOL = 'x3dna-dssr';
 export const DSSR_TOOL_VERSION = 'v1.9.10-2020apr23';
-export const DSSR_CONTAINER_IMAGE = 'rnark-structure-tools:phase6b-rnaview2-dssr';
-export const DSSR_CONTAINER_IMAGE_ID = 'sha256:f5ee5eb16e5638cbd81c16dc6e224feac392754349c8a3956a2941b9a351feaf';
+export const DSSR_CONTAINER_IMAGE = 'localhost/foldbridge-dssr:v1.9.10-c7261c0a';
+export const DSSR_CONTAINER_IMAGE_ID = 'sha256:259aba597ceac6d3072cc08585fa5284db8d4712cb768a02b7ef3471b8aa0853';
 export const DSSR_COMMAND = '/usr/local/bin/x3dna-dssr --json --more --non-pair -i=/work/input.cif -o=/work/output.json';
 const ALLOWED_UNAVAILABLE_CODES = new Set(['PREPARE_NO_ATOM_SITE']);
 

@@ -26,14 +26,15 @@ import {
 } from '../scripts/local-geometry-batch-lib.mjs';
 import {
   assertPinnedDssrRuntime,
-  buildDssrDockerRunArgs,
+  buildDssrContainerRunArgs,
+  requireContainerRuntime,
 } from '../scripts/build-local-geometry-batch.mjs';
 
-const IMAGE_ID = 'sha256:f5ee5eb16e5638cbd81c16dc6e224feac392754349c8a3956a2941b9a351feaf';
+const IMAGE_ID = 'sha256:259aba597ceac6d3072cc08585fa5284db8d4712cb768a02b7ef3471b8aa0853';
 const PROVENANCE = {
   tool: 'x3dna-dssr',
   toolVersion: 'v1.9.10-2020apr23',
-  containerImage: 'rnark-structure-tools:phase6b-rnaview2-dssr',
+  containerImage: 'localhost/foldbridge-dssr:v1.9.10-c7261c0a',
   containerImageId: IMAGE_ID,
   command: '/usr/local/bin/x3dna-dssr --json --more --non-pair -i=/work/input.cif -o=/work/output.json',
 };
@@ -392,9 +393,21 @@ test('only the pinned DSSR provenance and structural unavailable code are accept
   }), /unknown unavailable case UNKNOWN/i);
 });
 
-test('Docker runtime check pins the approved image ID, tool version, and immutable run target', () => {
+test('container runtime is explicit and never falls back between Docker and Podman', () => {
+  assert.equal(requireContainerRuntime('docker'), 'docker');
+  assert.equal(requireContainerRuntime('podman'), 'podman');
+  assert.throws(() => requireContainerRuntime(''), /container runtime must be docker or podman/i);
+  assert.throws(() => requireContainerRuntime('container'), /container runtime must be docker or podman/i);
+  assert.throws(() => requireContainerRuntime(undefined), /container runtime must be docker or podman/i);
+});
+
+test('container runtime check pins the approved image ID, tool version, and immutable run target', () => {
   assert.equal(assertPinnedDssrRuntime({
     actualImageId: IMAGE_ID,
+    versionOutput: 'DSSR v1.9.10-2020apr23, by xiangjun@x3dna.org',
+  }), true);
+  assert.equal(assertPinnedDssrRuntime({
+    actualImageId: IMAGE_ID.slice('sha256:'.length),
     versionOutput: 'DSSR v1.9.10-2020apr23, by xiangjun@x3dna.org',
   }), true);
   assert.throws(() => assertPinnedDssrRuntime({
@@ -405,7 +418,7 @@ test('Docker runtime check pins the approved image ID, tool version, and immutab
     actualImageId: IMAGE_ID,
     versionOutput: 'DSSR v2.0.0',
   }), /DSSR version mismatch/i);
-  const args = buildDssrDockerRunArgs('/tmp/foldbridge-job');
+  const args = buildDssrContainerRunArgs('/tmp/foldbridge-job');
   assert.ok(args.includes(IMAGE_ID));
   assert.ok(!args.includes(PROVENANCE.containerImage));
 });
