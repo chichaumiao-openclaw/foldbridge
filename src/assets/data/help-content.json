@@ -8,7 +8,7 @@
       "id": "about",
       "title": "About FoldBridge",
       "kind": "prose",
-      "body": "FoldBridge connects residue-level RNA chemical-probing profiles from RMDB and RASP to experimentally resolved PDB chains. Each Entry keeps the source signal, sequence mapping, structure state, and confidence evidence together so you can move from an observed probing signal to the structure it maps onto."
+      "body": "Ribocentre-FoldBridge (FoldBridge) connects residue-level RNA chemical-probing profiles from RMDB and RASP to experimentally resolved PDB chains. Each Entry keeps the source signal, sequence mapping, structure state, and confidence evidence together so you can move from an observed probing signal to the structure it maps onto."
     },
     {
       "id": "usage",
@@ -90,6 +90,14 @@
       "title": "Data collection and alignment",
       "kind": "prose",
       "body": "FoldBridge combines per-residue chemical-probing data from RMDB / RASP with experimentally resolved PDB chains. Each probing sequence is aligned to its corresponding chain, and only residues with resolved structural coordinates enter confidence scoring. Records without a usable mapping or signal are flagged or excluded rather than force-scored."
+    },
+    {
+      "id": "data-submission",
+      "title": "Data submission",
+      "kind": "feedback",
+      "body": "To discuss submitting data to Ribocentre-FoldBridge, please contact Dr. Zhichao Miao by email.",
+      "route": "mailto:miao_zhichao@gzlab.ac.cn",
+      "linkLabel": "miao_zhichao@gzlab.ac.cn"
     },
     {
       "id": "feedback",

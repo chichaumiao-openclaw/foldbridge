@@ -56,7 +56,7 @@ export function renderBundleHeader({ mode = 'light', navHtml = '' } = {}) {
         <div class="bundle-home-brand">
           <div class="bundle-home-mark">FB</div>
           <div class="bundle-home-brand-copy">
-            <p class="bundle-home-bundle-label">FoldBridge axis</p>
+            <p class="bundle-home-bundle-label">Ribocentre-FoldBridge</p>
             <h1>FoldBridge</h1>
             <span>A curated database that links RNA chemical probing data with experimentally resolved tertiary structures.</span>
           </div>

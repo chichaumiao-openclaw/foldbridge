@@ -1,4 +1,5 @@
 import { emptyStatsFilters, summarizeStatsFacet, summarizeStatsRows } from './statsDashboard.js';
+import { renderScientificProse } from './scientificProse.js';
 
 // 站点骨架纯渲染片段。从 main.js 抽出以便 node --test 可 import 测试。
 // 所有函数必须是纯函数：入参 → 返回 HTML 字符串，禁止访问模块级 window/route/mode。
@@ -60,7 +61,7 @@ export function renderHomeHero(dashboardView) {
   return `<section class="bundle-hero-card bundle-wide-card">
         <div class="bundle-hero-copy">
           <p class="bundle-kicker">RNA structure-linked database</p>
-          <h2>FoldBridge</h2>
+          <h2>Ribocentre-FoldBridge (FoldBridge)</h2>
           <p class="bundle-hero-summary">
             A curated database that links RNA chemical probing data with experimentally resolved tertiary structures.
           </p>
@@ -745,7 +746,7 @@ export function renderProbingFamilyIndex(families, { embedded = false } = {}) {
       : fam.summary;
     return `<a class="probing-family-card" href="#probing-family-${id}" data-probing-family-link="${id}">
         <h3 class="probing-family-card-title">${escapeProbingHtml(title)}</h3>
-        <p class="probing-family-card-summary">${escapeProbingHtml(summary)}</p>
+          <p class="probing-family-card-summary">${renderScientificProse(summary)}</p>
       </a>`;
   }).join('');
   const tag = embedded ? 'div' : 'section';

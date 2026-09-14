@@ -8,6 +8,8 @@
 //   renderProbingUnavailablePage(error)     — 索引不可用时的明确错误边界
 //   renderProbingArticlePage(detail, index) — 单篇阅读页（标题 + 有序 block + 图注）
 
+import { renderScientificProse } from './scientificProse.js';
+
 const ENLARGED_FIGURE_ARTICLE_SLUGS = new Set([
   'structure-seq',
   'structure-seq2',
@@ -34,17 +36,19 @@ function shortArticleName(article) {
 
 // 行内 markdown：先转义，再恢复 `code` 与 **bold**。
 function renderInline(text) {
-  let out = escapeHtml(text);
-  out = out.replace(/`([^`]+)`/g, (_m, c) => `<code class="article-code">${c}</code>`);
-  out = out.replace(/\*\*([^*]+)\*\*/g, (_m, c) => `<strong>${c}</strong>`);
-  return out;
+  return String(text ?? '').split(/(`[^`]+`)/g).map((part) => {
+    if (part.startsWith('`') && part.endsWith('`') && part.length > 2) {
+      return `<code class="article-code">${escapeHtml(part.slice(1, -1))}</code>`;
+    }
+    return renderScientificProse(part).replace(/\*\*([^*]+)\*\*/g, (_m, c) => `<strong>${c}</strong>`);
+  }).join('');
 }
 
 function renderFigureLegend(text) {
   const legend = String(text == null ? '' : text);
   const titleMatch = legend.match(/^\*\*([^*]+)\*\*(.*)$/s);
   if (!titleMatch) return renderInline(legend);
-  const title = `<strong>${escapeHtml(titleMatch[1])}</strong>`;
+  const title = `<strong>${renderInline(titleMatch[1])}</strong>`;
   const description = titleMatch[2].trimStart();
   return description ? `${title}<br />${renderInline(description)}` : title;
 }
@@ -300,7 +304,7 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
           <div class="probing-article-card-head">
             <h3>${escapeHtml(a.title)}</h3>
           </div>
-          <p class="probing-article-card-summary">${escapeHtml(a.description || a.summary)}${a.description ? '' : '…'}</p>
+          <p class="probing-article-card-summary">${renderScientificProse(a.description || a.summary)}${a.description ? '' : '…'}</p>
           <div class="probing-article-card-meta">
             ${meta.map((m) => `<span>${m}</span>`).join('')}
           </div>
@@ -314,7 +318,7 @@ export function renderProbingArticleIndex(index, headerHtml = '', extraSectionsH
             <div>
               <h2>${escapeHtml(family.title)}</h2>
             </div>
-            <p>${escapeHtml(family.summary)}</p>
+            <p>${renderScientificProse(family.summary)}</p>
           </div>
         </summary>
         <div class="probing-article-grid">${cards}</div>
@@ -412,9 +416,9 @@ function renderPptOverview(detail, assetBase, introHtml = '', footerHtml = '') {
       <div class="article-ppt-grid">
         ${items.map((item) => `
           <article class="article-ppt-item">
-            <h2>${escapeHtml(item.title || '')}</h2>
+            <h2>${renderInline(item.title || '')}</h2>
             <img src="${assetBase}/${escapeHtml(item.srcBasename || '')}" alt="${escapeHtml(item.alt || item.title || '')}" loading="lazy" />
-          <p>${item.captionTitle ? `<strong>${escapeHtml(item.captionTitle)}</strong><br />` : ''}${escapeHtml(item.text || '')}</p>
+          <p>${item.captionTitle ? `<strong>${renderScientificProse(item.captionTitle)}</strong><br />` : ''}${renderInline(item.text || '')}</p>
           </article>`).join('')}
       </div>
       ${footerHtml}
@@ -488,7 +492,7 @@ export function renderProbingArticlePage(detail, index, headerHtml = '') {
   const keyInnovation = detail.key_innovation ? `
       <section class="article-key-innovation">
         <h2>Key innovation</h2>
-        <p>${escapeHtml(detail.key_innovation)}</p>
+        <p>${renderScientificProse(detail.key_innovation)}</p>
       </section>` : '';
   const hasPptOverview = Array.isArray(detail.ppt_overview) && detail.ppt_overview.length > 0;
   const readingBody = body ? `
