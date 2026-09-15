@@ -17,7 +17,6 @@ test('Entry export contains the filtered table rows and matching profile metadat
       partition: 'rRNA',
       probingCategory: 'shape-based-probing',
       nProfiles: 2,
-      confidenceClass: 'high',
       sourceLanes: 'geo,rmdb',
       hasGeo: 'yes',
       techniqueNames: ['SHAPE', 'SHAPE-MaP'],
@@ -37,7 +36,6 @@ test('Entry export contains the filtered table rows and matching profile metadat
         rna_class: 'rRNA',
         technique: 'shape-based-probing',
         profiles: 2,
-        confidence: 'high',
         source: 'geo,rmdb',
       },
       profile_meta: {

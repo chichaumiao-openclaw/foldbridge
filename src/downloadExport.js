@@ -21,7 +21,6 @@ export function buildEntryExport(rows = [], { generatedAt = new Date().toISOStri
         rna_class: text(row.partition),
         technique: text(row.probingCategory),
         profiles: Number(row.nProfiles) || 0,
-        confidence: text(row.confidenceClass),
         source: text(row.sourceLanes),
       },
       profile_meta: {
