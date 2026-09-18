@@ -80,6 +80,42 @@ const DSSR = {
   }],
 };
 
+const P_ONLY_STRUCTURE = `data_p_only
+loop_
+_entity_poly.entity_id
+_entity_poly.type
+1 polyribonucleotide
+#
+loop_
+_struct_asym.id
+_struct_asym.entity_id
+A 1
+#
+loop_
+_atom_site.group_PDB
+_atom_site.id
+_atom_site.type_symbol
+_atom_site.label_atom_id
+_atom_site.auth_atom_id
+_atom_site.label_alt_id
+_atom_site.label_comp_id
+_atom_site.label_asym_id
+_atom_site.label_entity_id
+_atom_site.label_seq_id
+_atom_site.pdbx_PDB_ins_code
+_atom_site.Cartn_x
+_atom_site.Cartn_y
+_atom_site.Cartn_z
+_atom_site.auth_seq_id
+_atom_site.auth_comp_id
+_atom_site.auth_asym_id
+_atom_site.pdbx_PDB_model_num
+ATOM 1 P P P . G A 1 1 ? 1 2 3 101 G X 1
+#
+`;
+
+const DSSR_NO_NUCLEOTIDES = { warning: 'no nucleotides found' };
+
 function linkedView(caseId, chainId, { componentId, authSeqId }) {
   const chainKey = `${caseId}|chain|${chainId}`;
   const residueKey = `${chainKey}|1`;
@@ -193,6 +229,115 @@ test('batch runs DSSR once per PDB, reuses it for every chain, and resumes only 
   });
   assert.deepEqual(calls, ['DEMO'], 'one drifted output invalidates the entire PDB receipt');
   assert.equal(await verifyBatchOutput({ caseRoot, outputRoot, sourceManifest: manifest, provenance: PROVENANCE, expectedUnavailable: new Map([['FAIL', 'PREPARE_NO_ATOM_SITE']]) }), true);
+});
+
+test('exact DSSR no-nucleotides warning is auditable not_computable only for P-only nucleic polymer input', async () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'foldbridge-d33-p-only-'));
+  const caseRoot = path.join(root, 'cases');
+  const outputRoot = path.join(root, 'candidate');
+  const workRoot = path.join(root, 'work');
+  writeCase(caseRoot, 'PONLY', P_ONLY_STRUCTURE, {
+    X: linkedView('PONLY', 'X', { componentId: 'G', authSeqId: 101 }),
+  });
+  const manifest = await buildSourceManifest(caseRoot);
+  const calls = [];
+  const runDssr = async ({ caseId }) => {
+    calls.push(caseId);
+    return DSSR_NO_NUCLEOTIDES;
+  };
+
+  const ledger = await runLocalGeometryBatch({
+    caseRoot, outputRoot, workRoot, sourceManifest: manifest, provenance: PROVENANCE,
+    concurrency: 1, expectedUnavailable: new Map(), runDssr, resume: false,
+  });
+  assert.deepEqual(ledger.counts, {
+    computedCases: 0, unavailableCases: 1, failedCases: 0, computedChains: 0, unavailableChains: 1,
+  });
+  const receipt = JSON.parse(readFileSync(path.join(outputRoot, '_batch', 'receipts', 'PONLY.json'), 'utf8'));
+  assert.equal(receipt.status, 'not_computable');
+  assert.equal(receipt.errorCode, 'DSSR_NO_NUCLEOTIDES_P_ONLY');
+  assert.equal(receipt.evidence.dssrOutput.path, '_batch/evidence/PONLY.dssr.json');
+  assert.equal(await verifyBatchOutput({
+    caseRoot, outputRoot, sourceManifest: manifest, provenance: PROVENANCE, expectedUnavailable: new Map(),
+  }), true);
+
+  calls.length = 0;
+  await runLocalGeometryBatch({
+    caseRoot, outputRoot, workRoot, sourceManifest: manifest, provenance: PROVENANCE,
+    concurrency: 1, expectedUnavailable: new Map(), runDssr, resume: true,
+  });
+  assert.deepEqual(calls, [], 'verified P-only evidence makes resume skip DSSR');
+
+  writeFileSync(path.join(outputRoot, '_batch', 'evidence', 'PONLY.dssr.json'), '{}\n');
+  await assert.rejects(() => verifyBatchOutput({
+    caseRoot, outputRoot, sourceManifest: manifest, provenance: PROVENANCE, expectedUnavailable: new Map(),
+  }), /receipt or output verification failed/i);
+});
+
+test('DSSR warning variants and non-P-only structures remain hard failures', async () => {
+  for (const [name, structure, dssr] of [
+    ['extra warning field', P_ONLY_STRUCTURE, { ...DSSR_NO_NUCLEOTIDES, nts: [] }],
+    ['non-P atom', P_ONLY_STRUCTURE.replace('ATOM 1 P P P', 'ATOM 1 C "C1\'" "C1\'"'), DSSR_NO_NUCLEOTIDES],
+  ]) {
+    const root = mkdtempSync(path.join(tmpdir(), 'foldbridge-d33-p-only-negative-'));
+    const caseRoot = path.join(root, 'cases');
+    const outputRoot = path.join(root, 'candidate');
+    const workRoot = path.join(root, 'work');
+    writeCase(caseRoot, 'PONLY', structure, {
+      X: linkedView('PONLY', 'X', { componentId: 'G', authSeqId: 101 }),
+    });
+    const manifest = await buildSourceManifest(caseRoot);
+    await assert.rejects(() => runLocalGeometryBatch({
+      caseRoot, outputRoot, workRoot, sourceManifest: manifest, provenance: PROVENANCE,
+      concurrency: 1, expectedUnavailable: new Map(), runDssr: async () => dssr, resume: false,
+    }), /unexpected batch failures/i, name);
+    const receipt = JSON.parse(readFileSync(path.join(outputRoot, '_batch', 'receipts', 'PONLY.json'), 'utf8'));
+    assert.equal(receipt.status, 'failed', name);
+  }
+});
+
+test('malformed atom_site remains a typed failure and cannot pass unavailable verification', async () => {
+  const root = mkdtempSync(path.join(tmpdir(), 'foldbridge-d33-malformed-atom-site-'));
+  const caseRoot = path.join(root, 'cases');
+  const outputRoot = path.join(root, 'candidate');
+  const workRoot = path.join(root, 'work');
+  writeCase(caseRoot, 'MALFORMED', `data_malformed
+loop_
+_atom_site.group_PDB
+_atom_site.id
+ATOM 1 orphan
+`, {
+    X: linkedView('MALFORMED', 'X', { componentId: 'G', authSeqId: 101 }),
+  });
+  const manifest = await buildSourceManifest(caseRoot);
+  const calls = [];
+  const options = {
+    caseRoot, outputRoot, workRoot, sourceManifest: manifest, provenance: PROVENANCE,
+    concurrency: 1, expectedUnavailable: new Map(),
+    runDssr: async () => { calls.push('called'); return DSSR; },
+  };
+
+  await assert.rejects(() => runLocalGeometryBatch({ ...options, resume: false }), /unexpected batch failures/);
+  const ledger = JSON.parse(readFileSync(path.join(outputRoot, '_batch', 'ledger.json'), 'utf8'));
+  assert.deepEqual(calls, []);
+  assert.deepEqual(ledger.counts, {
+    computedCases: 0, unavailableCases: 0, failedCases: 1, computedChains: 0, unavailableChains: 0,
+  });
+  const receipt = JSON.parse(readFileSync(
+    path.join(outputRoot, '_batch', 'receipts', 'MALFORMED.json'), 'utf8',
+  ));
+  assert.equal(receipt.status, 'failed');
+  assert.equal(receipt.errorCode, 'PREPARE_MALFORMED_ATOM_SITE');
+  assert.match(receipt.message, /loop _atom_site\.[^ ]+ value count/i);
+  await assert.rejects(() => verifyBatchOutput({
+    caseRoot, outputRoot, sourceManifest: manifest, provenance: PROVENANCE,
+    expectedUnavailable: new Map(),
+  }), /verification failed/);
+
+  receipt.status = 'not_computable';
+  writeFileSync(path.join(outputRoot, '_batch', 'receipts', 'MALFORMED.json'), JSON.stringify(receipt));
+  await assert.rejects(() => runLocalGeometryBatch({ ...options, resume: true }), /unexpected batch failures/);
+  assert.deepEqual(calls, [], 'malformed input is rejected before DSSR on every attempt');
 });
 
 test('unexpected failure persists a complete state inventory and a non-success ledger', async () => {

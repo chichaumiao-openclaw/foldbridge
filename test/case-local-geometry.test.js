@@ -61,6 +61,28 @@ function crossChainPartner(position) {
   };
 }
 
+function nonTargetIntrachainPartner() {
+  return {
+    partnerResidueKey: null,
+    partnerLocator: {
+      modelId: '1',
+      labelAsymId: 'L',
+      authAsymId: CHAIN_ID,
+      labelSeqId: null,
+      authSeqId: 1005,
+      insertionCode: '',
+      componentId: 'AMP',
+    },
+    partnerPosition: null,
+    partnerBase: 'a',
+    topology: 'non_target_intrachain',
+    dssrStackClass: 'pp(><,inward)',
+    overlapArea: 5.566,
+    ringOverlapArea: 4.544,
+    sourcePairIndex: 102,
+  };
+}
+
 function makePayload(length = 13) {
   const residues = Array.from({ length }, (_, index) => {
     const position = index + 1;
@@ -79,6 +101,7 @@ function makePayload(length = 13) {
     sameChainPartner(8, 'pm(>>,forward)'),
     sameChainPartner(13, 'pp(>>,forward)'),
     crossChainPartner(4),
+    nonTargetIntrachainPartner(),
   ];
   return {
     schemaVersion: 'foldbridge-local-geometry.v1',
@@ -207,6 +230,35 @@ test('interchain nucleotide ligand may use an author locator without polymer lab
   );
 });
 
+test('same-author-chain non-target partner requires null navigation and non-polymer identity', () => {
+  const payload = makePayload();
+  const context = contextFor(payload);
+  assert.doesNotThrow(() => validateLocalGeometrySidecar(payload, context));
+
+  const invalidNavigation = clone(payload);
+  const navigable = invalidNavigation.residues[5].stacking.partners[3];
+  navigable.partnerResidueKey = `${CASE_ID}|${CHAIN_ID}|8`;
+  navigable.partnerPosition = 8;
+  assert.throws(
+    () => validateLocalGeometrySidecar(invalidNavigation, context),
+    /non.target.*null/i,
+  );
+
+  const invalidPolymer = clone(payload);
+  invalidPolymer.residues[5].stacking.partners[3].partnerLocator.labelSeqId = 1005;
+  assert.throws(
+    () => validateLocalGeometrySidecar(invalidPolymer, context),
+    /non.target.*labelSeqId.*null/i,
+  );
+
+  const invalidChain = clone(payload);
+  invalidChain.residues[5].stacking.partners[3].partnerLocator.authAsymId = 'B';
+  assert.throws(
+    () => validateLocalGeometrySidecar(invalidChain, context),
+    /non.target.*same author chain/i,
+  );
+});
+
 test('pucker and stacking statuses are independent and computed values must be finite', () => {
   const payload = makePayload();
   const model = validateLocalGeometrySidecar(payload, contextFor(payload));
@@ -287,6 +339,20 @@ test('same residue keys cannot hide position, base, or linked locator identity d
       label,
     );
   }
+});
+
+test('validated sidecar may enrich an omitted context insertion code but never contradict one', () => {
+  const payload = makePayload();
+  payload.residues[2].locator.insertionCode = 'A';
+  const context = contextFor(payload);
+  context.residues[2].locator.insertionCode = '';
+  assert.doesNotThrow(() => validateLocalGeometrySidecar(payload, context));
+
+  context.residues[2].locator.insertionCode = 'B';
+  assert.throws(
+    () => validateLocalGeometrySidecar(payload, context),
+    /context.*insertionCode.*match/i,
+  );
 });
 
 test('context residue identity is exact, complete, unique, and internally consistent', () => {
@@ -486,6 +552,7 @@ test('local window is centered, capped at 11 nt, sorted, and classifies selected
   assert.deepEqual(window.withinWindowPartners.map(({ partnerPosition }) => partnerPosition), [8]);
   assert.deepEqual(window.sameChainOutsideWindowPartners.map(({ partnerPosition }) => partnerPosition), [13]);
   assert.deepEqual(window.crossChainPartners.map(({ partnerPosition }) => partnerPosition), [null]);
+  assert.deepEqual(window.nonTargetIntrachainPartners.map(({ partnerPosition }) => partnerPosition), [null]);
   assert.equal(Object.isFrozen(window), true);
   assert.equal(Object.isFrozen(window.residues), true);
   assert.equal(Object.isFrozen(window.withinWindowPartners), true);

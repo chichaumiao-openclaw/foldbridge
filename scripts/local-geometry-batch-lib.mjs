@@ -16,6 +16,7 @@ import path from 'node:path';
 import { gunzipSync } from 'node:zlib';
 
 import {
+  assertDssrNoNucleotidesPOnly,
   buildLocalGeometrySidecar,
   deterministicGzip,
   deterministicJson,
@@ -439,6 +440,10 @@ function stateRelativePath(caseId) {
   return path.posix.join('_batch', 'status', `${caseId}.json`);
 }
 
+function dssrEvidenceRelativePath(caseId) {
+  return path.posix.join('_batch', 'evidence', `${caseId}.dssr.json`);
+}
+
 function sameJson(left, right) {
   return deterministicJson(left) === deterministicJson(right);
 }
@@ -459,7 +464,39 @@ function outputDescriptor(outputRoot, relativePath) {
   return readFileMetadata(outputRoot, relativePath, `batch output ${relativePath}`);
 }
 
-function verifiedReceipt(outputRoot, caseEntry, provenance, expectedUnavailable) {
+function verifyPOnlyReceipt(caseRoot, outputRoot, caseEntry, receipt) {
+  if (!receipt.evidence || Object.keys(receipt.evidence).join(',') !== 'dssrOutput') return false;
+  const expectedPath = dssrEvidenceRelativePath(caseEntry.caseId);
+  if (receipt.evidence.dssrOutput?.path !== expectedPath) return false;
+  let evidenceBytes;
+  try {
+    const current = fileSnapshot(outputRoot, expectedPath, `${caseEntry.caseId} DSSR evidence`);
+    if (!sameJson(current.descriptor, receipt.evidence.dssrOutput)) return false;
+    evidenceBytes = current.bytes;
+    const dssr = parseJsonBytes(evidenceBytes, `${caseEntry.caseId} DSSR evidence`);
+    const structureBytes = readVerifiedInput(caseRoot, caseEntry.structure, `${caseEntry.caseId} structure`);
+    const prepared = prepareDssrInput(structureBytes);
+    for (const chain of caseEntry.chains) {
+      const linkedBytes = readVerifiedInput(
+        caseRoot,
+        chain.linkedView,
+        `${caseEntry.caseId}/${chain.chainId} linked-view`,
+      );
+      assertDssrNoNucleotidesPOnly({
+        dssr,
+        dssrInputBytes: prepared.bytes,
+        linkedView: parseJsonBytes(linkedBytes, `${caseEntry.caseId}/${chain.chainId} linked-view`),
+        caseId: caseEntry.caseId,
+        chainId: chain.chainId,
+      });
+    }
+  } catch (_error) {
+    return false;
+  }
+  return true;
+}
+
+function verifiedReceipt(caseRoot, outputRoot, caseEntry, provenance, expectedUnavailable) {
   const relativePath = receiptRelativePath(caseEntry.caseId);
   let receipt;
   try {
@@ -472,7 +509,11 @@ function verifiedReceipt(outputRoot, caseEntry, provenance, expectedUnavailable)
   if (!sameJson(receipt.inputs, expectedReceiptInputs(caseEntry, provenance))) return null;
   const allowedCode = expectedUnavailable.get(caseEntry.caseId);
   if (receipt.status === 'not_computable') {
-    if (receipt.errorCode !== allowedCode || !Array.isArray(receipt.outputs) || receipt.outputs.length !== 0) return null;
+    const isExpectedUnavailable = receipt.errorCode === allowedCode && receipt.evidence === undefined;
+    const isVerifiedPOnly = receipt.errorCode === 'DSSR_NO_NUCLEOTIDES_P_ONLY'
+      && verifyPOnlyReceipt(caseRoot, outputRoot, caseEntry, receipt);
+    if ((!isExpectedUnavailable && !isVerifiedPOnly)
+        || !Array.isArray(receipt.outputs) || receipt.outputs.length !== 0) return null;
     for (const { chainId } of caseEntry.chains) {
       const outputPath = outputRelativePath(caseEntry.caseId, chainId);
       if (containedFileExists(outputRoot, outputPath, `batch output ${outputPath}`)) return null;
@@ -497,6 +538,9 @@ function verifiedReceipt(outputRoot, caseEntry, provenance, expectedUnavailable)
 
 function classifyError(stage, error) {
   const message = error?.message || String(error);
+  if (stage === 'prepare' && /mmCIF loop _atom_site\.[^ ]+ value count .* does not form complete rows/i.test(message)) {
+    return { errorCode: 'PREPARE_MALFORMED_ATOM_SITE', message };
+  }
   if (stage === 'prepare' && /no _atom_site loop|_atom_site contains no rows/i.test(message)) {
     return { errorCode: 'PREPARE_NO_ATOM_SITE', message };
   }
@@ -606,6 +650,7 @@ function possibleCandidateFiles(sourceManifest) {
   for (const caseEntry of sourceManifest.cases) {
     files.add(receiptRelativePath(caseEntry.caseId));
     files.add(stateRelativePath(caseEntry.caseId));
+    files.add(dssrEvidenceRelativePath(caseEntry.caseId));
     for (const { chainId } of caseEntry.chains) files.add(outputRelativePath(caseEntry.caseId, chainId));
   }
   return files;
@@ -748,7 +793,7 @@ export async function runLocalGeometryBatch({
     async function processCase(caseEntry) {
     const previous = states.get(caseEntry.caseId);
     if (resume) {
-      const receipt = verifiedReceipt(outputRoot, caseEntry, provenance, expectedUnavailable);
+      const receipt = verifiedReceipt(caseRoot, outputRoot, caseEntry, provenance, expectedUnavailable);
       if (receipt) {
         writeState(outputRoot, states, {
           ...previous,
@@ -781,6 +826,40 @@ export async function runLocalGeometryBatch({
         : rawDssr;
       stage = 'build';
       writeState(outputRoot, states, { ...states.get(caseEntry.caseId), stage });
+      if (dssr && typeof dssr === 'object' && !Array.isArray(dssr)
+          && Object.prototype.hasOwnProperty.call(dssr, 'warning')) {
+        for (const chain of caseEntry.chains) {
+          const linkedBytes = readVerifiedInput(caseRoot, chain.linkedView, `${caseEntry.caseId}/${chain.chainId} linked-view`);
+          assertDssrNoNucleotidesPOnly({
+            dssr,
+            dssrInputBytes: prepared.bytes,
+            linkedView: parseJsonBytes(linkedBytes, `${caseEntry.caseId}/${chain.chainId} linked-view`),
+            caseId: caseEntry.caseId,
+            chainId: chain.chainId,
+          });
+        }
+        const evidencePath = dssrEvidenceRelativePath(caseEntry.caseId);
+        atomicJson(outputRoot, evidencePath, dssr);
+        const receipt = {
+          schemaVersion: BATCH_RECEIPT_SCHEMA,
+          caseId: caseEntry.caseId,
+          status: 'not_computable',
+          errorCode: 'DSSR_NO_NUCLEOTIDES_P_ONLY',
+          message: 'DSSR reported no nucleotides for structurally verified P-only nucleic polymer input',
+          inputs: expectedReceiptInputs(caseEntry, provenance),
+          outputs: [],
+          evidence: { dssrOutput: outputDescriptor(outputRoot, evidencePath) },
+        };
+        atomicJson(outputRoot, receiptRelativePath(caseEntry.caseId), receipt);
+        writeState(outputRoot, states, {
+          ...states.get(caseEntry.caseId),
+          status: 'not_computable',
+          stage,
+          errorCode: receipt.errorCode,
+          message: receipt.message,
+        });
+        return;
+      }
       const pendingOutputs = [];
       for (const chain of caseEntry.chains) {
         const linkedBytes = readVerifiedInput(caseRoot, chain.linkedView, `${caseEntry.caseId}/${chain.chainId} linked-view`);
@@ -820,6 +899,7 @@ export async function runLocalGeometryBatch({
       for (const { chainId } of caseEntry.chains) {
         removeCandidateOutput(outputRoot, outputRelativePath(caseEntry.caseId, chainId));
       }
+      removeCandidateOutput(outputRoot, dssrEvidenceRelativePath(caseEntry.caseId));
       const receipt = {
         schemaVersion: BATCH_RECEIPT_SCHEMA,
         caseId: caseEntry.caseId,
@@ -863,17 +943,17 @@ export async function runLocalGeometryBatch({
         throw new Error(`expected unavailable case ${caseId} did not finish as not_computable`);
       }
     }
-    verifyCandidateOutput(outputRoot, sourceManifest, provenance, expectedUnavailable);
+    verifyCandidateOutput(caseRoot, outputRoot, sourceManifest, provenance, expectedUnavailable);
     return ledger;
   });
 }
 
-function verifyCandidateOutput(outputRoot, sourceManifest, provenance, expectedUnavailable) {
+function verifyCandidateOutput(caseRoot, outputRoot, sourceManifest, provenance, expectedUnavailable) {
   const receipts = new Map();
   const states = new Map();
   const expectedFiles = new Set(['_batch/ledger.json']);
   for (const caseEntry of sourceManifest.cases) {
-    const receipt = verifiedReceipt(outputRoot, caseEntry, provenance, expectedUnavailable);
+    const receipt = verifiedReceipt(caseRoot, outputRoot, caseEntry, provenance, expectedUnavailable);
     if (!receipt) {
       throw new Error(`batch receipt or output verification failed for ${caseEntry.caseId}`);
     }
@@ -881,6 +961,7 @@ function verifyCandidateOutput(outputRoot, sourceManifest, provenance, expectedU
     expectedFiles.add(receiptRelativePath(caseEntry.caseId));
     expectedFiles.add(stateRelativePath(caseEntry.caseId));
     for (const output of receipt.outputs) expectedFiles.add(output.path);
+    if (receipt.evidence?.dssrOutput) expectedFiles.add(receipt.evidence.dssrOutput.path);
     const state = validateState(
       readCandidateJson(outputRoot, stateRelativePath(caseEntry.caseId), `${caseEntry.caseId} state`),
       caseEntry,
@@ -923,6 +1004,6 @@ export async function verifyBatchOutput({
   validateExpectedUnavailable(expectedUnavailable, sourceManifest);
   return withCandidateLock(outputRoot, async () => {
     await assertCurrentSourceInventory(caseRoot, sourceManifest);
-    return verifyCandidateOutput(outputRoot, sourceManifest, provenance, expectedUnavailable);
+    return verifyCandidateOutput(caseRoot, outputRoot, sourceManifest, provenance, expectedUnavailable);
   });
 }

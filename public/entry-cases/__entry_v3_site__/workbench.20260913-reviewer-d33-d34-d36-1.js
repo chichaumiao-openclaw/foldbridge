@@ -1328,9 +1328,11 @@ function renderInspector(residueKey = state.selectedResidueKey) {
       `<button type="button" class="local-geometry-jump" data-residue-key="${escapeHtml(partner.partnerResidueKey)}" aria-label="Jump to stacking partner ${escapeHtml(`${partner.partnerBase}${partner.partnerPosition}`)}">${escapeHtml(`${partner.partnerBase}${partner.partnerPosition}`)} outside window</button>`
     )).join("");
     const crossChainPartnerMarkup = geometryWindow.crossChainPartners.map((partner) => `<span class="cross-chain-partner">${escapeHtml(`${partner.partnerBase} at ${partner.partnerLocator.authAsymId}:${partner.partnerLocator.authSeqId}${partner.partnerLocator.insertionCode || ""}`)} (cross-chain; read only)</span>`).join("");
+    const nonTargetIntrachainPartnerMarkup = geometryWindow.nonTargetIntrachainPartners.map((partner) => `<span class="non-target-intrachain-partner">${escapeHtml(`${partner.partnerBase} at ${partner.partnerLocator.authAsymId}:${partner.partnerLocator.authSeqId}${partner.partnerLocator.insertionCode || ""}`)} (same-author-chain non-target; read only)</span>`).join("");
     localContextMarkup = `<div class="local-context-rail" role="group" aria-label="Local geometry sequence window">${residueButtons}</div>
       ${outsidePartnerMarkup ? `<div class="outside-window-partners"><span>Stacking beyond this window</span>${outsidePartnerMarkup}</div>` : ""}
-      ${crossChainPartnerMarkup ? `<div class="cross-chain-partners"><span>Cross-chain stacking</span>${crossChainPartnerMarkup}</div>` : ""}`;
+      ${crossChainPartnerMarkup ? `<div class="cross-chain-partners"><span>Cross-chain stacking</span>${crossChainPartnerMarkup}</div>` : ""}
+      ${nonTargetIntrachainPartnerMarkup ? `<div class="non-target-intrachain-partners"><span>Non-target stacking</span>${nonTargetIntrachainPartnerMarkup}</div>` : ""}`;
 
     const pucker = details.localGeometry.pucker;
     puckerMarkup = pucker.status === "computed"
@@ -1347,7 +1349,12 @@ function renderInspector(residueKey = state.selectedResidueKey) {
         const identity = partner.partnerResidueKey
           ? `${partner.partnerBase}${partner.partnerPosition}`
           : `${partner.partnerBase} at ${partner.partnerLocator.authAsymId}:${partner.partnerLocator.authSeqId}${partner.partnerLocator.insertionCode || ""}`;
-        return `<li${partner.partnerResidueKey ? "" : ' class="cross-chain-partner"'}>${escapeHtml(identity)} · ${escapeHtml(partner.dssrStackClass)} · ${escapeHtml(partner.topology)}</li>`;
+        const partnerClass = partner.topology === "non_target_intrachain"
+          ? ' class="non-target-intrachain-partner"'
+          : partner.topology === "interchain"
+            ? ' class="cross-chain-partner"'
+            : "";
+        return `<li${partnerClass}>${escapeHtml(identity)} · ${escapeHtml(partner.dssrStackClass)} · ${escapeHtml(partner.topology)}</li>`;
       }).join("")}</ul>`;
     }
 

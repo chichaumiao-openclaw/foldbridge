@@ -66,8 +66,10 @@ provenance、完整 inventory 和独立全量 verify。
   并确认 Node、Podman、DSSR 子进程全部退出。允许正常退出自动释放锁；不得人工 unlock、
   删除候选或重启该批次。
 - 输入 manifest、镜像、版本或门槛任一不一致即停止，不启动正式分片。
-- 现有 BUILD_FAILED 不能加入 allowlist。先按失败类型修复映射语义并通过回归测试，再重新
-  运行受影响分片。
+- 现有 BUILD_FAILED 不能仅按 Case ID 加入 allowlist。先按失败类型修复映射语义并通过
+  回归测试，再重新运行受影响分片。对于只有 P 原子骨架或缺少碱基/糖环原子、因而 DSSR
+  合法返回零核苷酸的结构，应由输入原子组成和 DSSR 输出共同判定为可审计的
+  `not_computable`；格式损坏、身份歧义或不满足该结构条件的空输出仍然是失败。
 - 分片失败保留 receipt、状态和日志；禁止用空值、零值或邻近残基替代缺失几何。
 - 只有预先定义且经验证的结构不可计算情况可以是 `not_computable`；最终 unexpected
   `failedCases` 必须为 0。

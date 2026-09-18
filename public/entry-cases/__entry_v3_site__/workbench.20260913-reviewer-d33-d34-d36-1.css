@@ -635,7 +635,8 @@ svg {
   color: var(--muted);
 }
 .workbench-shell:not(.is-ef-mode) .outside-window-partners,
-.workbench-shell:not(.is-ef-mode) .cross-chain-partners {
+.workbench-shell:not(.is-ef-mode) .cross-chain-partners,
+.workbench-shell:not(.is-ef-mode) .non-target-intrachain-partners {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -652,7 +653,8 @@ svg {
   color: var(--accent-strong);
   font-size: 12px;
 }
-.workbench-shell:not(.is-ef-mode) .cross-chain-partner {
+.workbench-shell:not(.is-ef-mode) .cross-chain-partner,
+.workbench-shell:not(.is-ef-mode) .non-target-intrachain-partner {
   padding: 4px 7px;
   border: 1px solid var(--line);
   border-radius: 4px;

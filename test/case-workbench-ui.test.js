@@ -406,7 +406,7 @@ test('Annotation details prefer the complete validated sidecar locator and label
   assert.match(inspector, /full model and component identity unavailable/i);
 });
 
-test('Local context navigation uses native buttons, exposes selection states, and keeps cross-chain partners read-only', () => {
+test('Local context navigation keeps cross-chain and same-author-chain non-target partners distinct and read-only', () => {
   const inspector = between(workbench, 'function renderInspector(', '\nfunction activeResidues(');
   const listeners = workbench.slice(workbench.indexOf('el.select.addEventListener("change"'));
 
@@ -417,8 +417,14 @@ test('Local context navigation uses native buttons, exposes selection states, an
   assert.match(inspector, /sameChainOutsideWindowPartners/);
   assert.match(inspector, /class="local-geometry-jump"/);
   assert.match(inspector, /crossChainPartners[\s\S]*?<span[^>]*class="cross-chain-partner"/);
+  assert.match(inspector, /nonTargetIntrachainPartners[\s\S]*?<span[^>]*class="non-target-intrachain-partner"/);
+  assert.match(inspector, /same-author-chain non-target; read only/i);
   assert.doesNotMatch(
     inspector.match(/const crossChainPartnerMarkup[\s\S]*?;\n/)?.[0] || '',
+    /button|data-residue-key/,
+  );
+  assert.doesNotMatch(
+    inspector.match(/const nonTargetIntrachainPartnerMarkup[\s\S]*?;\n/)?.[0] || '',
     /button|data-residue-key/,
   );
 
@@ -437,6 +443,8 @@ test('Local geometry Inspector CSS is compact, scrollable, responsive, and scope
   assert.match(css, /\.workbench-shell:not\(\.is-ef-mode\) \.local-context-residue\.is-selected/);
   assert.match(css, /\.workbench-shell:not\(\.is-ef-mode\) \.local-context-residue\.is-stacking-partner/);
   assert.match(css, /\.workbench-shell:not\(\.is-ef-mode\) \.is-not-computable/);
+  assert.match(css, /\.workbench-shell:not\(\.is-ef-mode\) \.non-target-intrachain-partners/);
+  assert.match(css, /\.workbench-shell:not\(\.is-ef-mode\) \.non-target-intrachain-partner/);
   assert.match(css, /\.workbench-shell:not\(\.is-ef-mode\) \.geometry-status\.is-invalid/);
   assert.match(css, /\.local-context-residue:focus-visible/);
   assert.match(css, /@media \(max-width:\s*900px\)[\s\S]*?\.inspector-groups/);

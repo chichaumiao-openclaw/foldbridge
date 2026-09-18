@@ -219,6 +219,16 @@ invalid
   );
 });
 
+test('prepare rejects a malformed atom_site_anisotrop loop without silently dropping evidence', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
+    '#\n_audit_conform.dict_name mmcif_pdbx.dic',
+    '#\nloop_\n_atom_site_anisotrop.id\n_atom_site_anisotrop.U[1][1]\n1 0.1 orphan\n#\n'
+      + '_audit_conform.dict_name mmcif_pdbx.dic',
+  ));
+
+  assert.throws(() => prepareDssrInput(structureBytes), /loop _atom_site_anisotrop\.id value count/);
+});
+
 test('build materializes DSSR pucker and one pair per nonPair with independent topology', () => {
   const payload = buildLocalGeometrySidecar(buildOptions());
   const expectedLinkedView = linkedView();
@@ -286,6 +296,35 @@ test('build materializes DSSR pucker and one pair per nonPair with independent t
   });
 });
 
+test('unique polymer label identity restores an omitted author insertion code from atom_site', () => {
+  const linked = linkedView();
+  delete linked.structureContexts.loci[1].locator.pdbx_PDB_ins_code;
+
+  const payload = buildLocalGeometrySidecar(buildOptions({ linkedView: linked }));
+
+  assert.equal(payload.residues[1].locator.labelAsymId, 'A');
+  assert.equal(payload.residues[1].locator.labelSeqId, 2);
+  assert.equal(payload.residues[1].locator.authAsymId, 'X');
+  assert.equal(payload.residues[1].locator.authSeqId, 102);
+  assert.equal(payload.residues[1].locator.insertionCode, 'A');
+});
+
+test('label identity never masks explicit insertion-code or author-identity conflicts', () => {
+  const wrongInsertion = linkedView();
+  wrongInsertion.structureContexts.loci[1].locator.pdbx_PDB_ins_code = 'B';
+  assert.throws(
+    () => buildLocalGeometrySidecar(buildOptions({ linkedView: wrongInsertion })),
+    /insertion.code|identity/i,
+  );
+
+  const wrongAuthorSequence = linkedView();
+  wrongAuthorSequence.structureContexts.loci[1].locator.auth_seq_id = 999;
+  assert.throws(
+    () => buildLocalGeometrySidecar(buildOptions({ linkedView: wrongAuthorSequence })),
+    /author.*identity|auth.*sequence|identity/i,
+  );
+});
+
 test('analyzed nucleotide with no edges is computed empty while missing nucleotide is not computable', () => {
   const dssr = dssrJson({ omitThirdNt: true });
   dssr.nonPairs = [];
@@ -317,6 +356,46 @@ test('identity ambiguity and a mismatched controlled-input digest fail the whole
   const options = buildOptions();
   options.prepareMeta = { ...options.prepareMeta, dssrInputSha256: 'f'.repeat(64) };
   assert.throws(() => buildLocalGeometrySidecar(options), /DSSR input SHA-256 mismatch/i);
+});
+
+test('unrelated polymer microheterogeneity does not block the linked RNA target', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
+    'ATOM 6 C "C1\'" . U B 2 9 ? 4.0 5.0 6.0 9 U Y 2\n',
+    'ATOM 6 C "C1\'" . U B 2 9 ? 4.0 5.0 6.0 9 U Y 2\n'
+      + 'ATOM 9 C CA A VAL P 3 1 ? 5.0 6.0 7.0 3 VAL BO 2\n'
+      + 'ATOM 10 C CA B SER P 3 1 ? 5.1 6.1 7.1 3 SER BO 2\n',
+  ));
+  const prepared = prepareDssrInput(structureBytes);
+
+  const payload = buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+  }));
+
+  assert.deepEqual(payload.residues.map((residue) => residue.position), [1, 2, 3]);
+});
+
+test('target polymer microheterogeneity still rejects two label identities', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
+    'ATOM 7 C',
+    'ATOM 9 C CA B A A 1 1 ? 5.0 6.0 7.0 101 A X 2\nATOM 7 C',
+  ));
+  const prepared = prepareDssrInput(structureBytes);
+  assert.throws(() => buildLocalGeometrySidecar(buildOptions({
+    structureBytes, dssrInputBytes: prepared.bytes, prepareMeta: prepared.meta,
+  })), /resolved linked residue .* has 2 atom-site identities/);
+});
+
+test('DSSR author identity shared by different label residues remains ambiguous', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
+    'ATOM 7 C',
+    'ATOM 9 C CA . G Q 3 1 ? 5.0 6.0 7.0 101 G X 2\nATOM 7 C',
+  ));
+  const prepared = prepareDssrInput(structureBytes);
+  assert.throws(() => buildLocalGeometrySidecar(buildOptions({
+    structureBytes, dssrInputBytes: prepared.bytes, prepareMeta: prepared.meta,
+  })), /DSSR nucleotide X.G101 has 2 atom-site identities/);
 });
 
 test('case, chain, and residue-index coverage must bind exactly to linked-view identity', () => {
@@ -415,6 +494,141 @@ test('digit-suffixed modified nucleotide keeps linked parent base and parses DSS
   assert.equal(payload.residues[0].locator.componentId, 'A23');
 });
 
+test('modified atom component is accepted only when DSSR canonical code matches linked compId', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF
+    .replace('ATOM 1 C "C1\'" . G A 1 1 ? 1.0 2.0 3.0 101 G X 2',
+      'ATOM 1 C "C1\'" . 2MG A 1 1 ? 1.0 2.0 3.0 101 2MG X 2')
+    .replace('ATOM 2 C "C2\'" A G A 1 1 ? 1.1 2.1 3.1 101 G X 2',
+      'ATOM 2 C "C2\'" A 2MG A 1 1 ? 1.1 2.1 3.1 101 2MG X 2')
+    .replace('ATOM 3 C "C2\'" B G A 1 1 ? 1.2 2.2 3.2 101 G X 2',
+      'ATOM 3 C "C2\'" B 2MG A 1 1 ? 1.2 2.2 3.2 101 2MG X 2'));
+  const prepared = prepareDssrInput(structureBytes);
+  const linked = linkedView();
+  linked.residueIndex.residues[0].compId = 'G';
+  linked.residueIndex.residues[0].parentBase = 'A';
+  const dssr = dssrJson();
+  dssr.nts[0] = {
+    ...dssr.nts[0],
+    nt_id: 'X.2MG101',
+    nt_name: '2MG',
+    nt_code: 'g',
+  };
+  dssr.nonPairs[0].nt1 = 'X.2MG101';
+  dssr.nonPairs[1].nt1 = 'X.2MG101';
+
+  const payload = buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+    linkedView: linked,
+    dssr,
+  }));
+
+  assert.equal(payload.residues[0].base, 'A');
+  assert.equal(payload.residues[0].locator.componentId, '2MG');
+
+  dssr.nts[0].nt_code = 'c';
+  assert.throws(() => buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+    linkedView: linked,
+    dssr,
+  })), /component identity does not match atom-site/i);
+});
+
+test('DSSR three-character component truncation maps only to one exact author-locus prefix', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF
+    .replace('ATOM 1 C "C1\'" . G A 1 1 ? 1.0 2.0 3.0 101 G X 2',
+      'ATOM 1 C "C1\'" . A1LZ3 A 1 1 ? 1.0 2.0 3.0 101 A1LZ3 X 2')
+    .replace('ATOM 2 C "C2\'" A G A 1 1 ? 1.1 2.1 3.1 101 G X 2',
+      'ATOM 2 C "C2\'" A A1LZ3 A 1 1 ? 1.1 2.1 3.1 101 A1LZ3 X 2')
+    .replace('ATOM 3 C "C2\'" B G A 1 1 ? 1.2 2.2 3.2 101 G X 2',
+      'ATOM 3 C "C2\'" B A1LZ3 A 1 1 ? 1.2 2.2 3.2 101 A1LZ3 X 2'));
+  const prepared = prepareDssrInput(structureBytes);
+  const linked = linkedView();
+  linked.residueIndex.residues[0].compId = 'A';
+  linked.residueIndex.residues[0].parentBase = 'A';
+  const dssr = dssrJson();
+  dssr.nts[0] = {
+    ...dssr.nts[0],
+    nt_id: 'X.A1L101',
+    nt_name: 'A1L',
+    nt_code: 'a',
+  };
+  dssr.nonPairs[0].nt1 = 'X.A1L101';
+  dssr.nonPairs[1].nt1 = 'X.A1L101';
+
+  const payload = buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+    linkedView: linked,
+    dssr,
+  }));
+  assert.equal(payload.residues[0].locator.componentId, 'A1LZ3');
+
+  dssr.nts[0].nt_name = 'A1X';
+  dssr.nts[0].nt_id = 'X.A1X101';
+  dssr.nonPairs[0].nt1 = 'X.A1X101';
+  dssr.nonPairs[1].nt1 = 'X.A1X101';
+  assert.throws(() => buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+    linkedView: linked,
+    dssr,
+  })), /DSSR nucleotide .* has 0 atom-site identities/i);
+});
+
+test('mmCIF entity canonical sequence verifies a modified residue absent from DSSR', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF
+    .replace('. C A 1 3 ? 3.0 4.0 5.0 103 C X 2', '. PSU A 1 3 ? 3.0 4.0 5.0 103 PSU X 2')
+    + '\nloop_\n_struct_asym.id\n_struct_asym.entity_id\nA 1\n#\n'
+    + 'loop_\n_entity_poly.entity_id\n_entity_poly.type\n_entity_poly.pdbx_seq_one_letter_code_can\n'
+    + '1 polyribonucleotide GAU\n#\n'
+    + 'loop_\n_entity_poly_seq.entity_id\n_entity_poly_seq.num\n_entity_poly_seq.mon_id\n'
+    + '1 1 G\n1 2 A\n1 3 PSU\n#\n');
+  const prepared = prepareDssrInput(structureBytes);
+  const linked = linkedView();
+  linked.residueIndex.residues[2].compId = 'U';
+  linked.residueIndex.residues[2].parentBase = 'C';
+  const dssr = dssrJson({ omitThirdNt: true });
+  dssr.nonPairs = [];
+  const options = buildOptions({ structureBytes, dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta, linkedView: linked, dssr });
+  const payload = buildLocalGeometrySidecar(options);
+  assert.equal(payload.residues[2].locator.componentId, 'PSU');
+  assert.equal(payload.residues[2].base, 'C');
+  assert.deepEqual(payload.residues[2].pucker,
+    { status: 'not_computable', reason: 'DSSR nucleotide absent' });
+  for (const [before, after] of [
+    ['A 1\n#', 'A 1\nA 2\n#'],
+    ['1 3 PSU\n#', '1 3 C\n#'],
+    ['. PSU A 1 3', '. PSU A 2 3'],
+  ]) {
+    const conflictingBytes = Buffer.from(structureBytes.toString().replace(before, after));
+    const conflictingPrepared = prepareDssrInput(conflictingBytes);
+    assert.throws(() => buildLocalGeometrySidecar({ ...options,
+      structureBytes: conflictingBytes, dssrInputBytes: conflictingPrepared.bytes,
+      prepareMeta: conflictingPrepared.meta }), /component identity/);
+  }
+  const conflictingDssr = structuredClone(dssr);
+  conflictingDssr.nts.push({ ...dssrJson().nts[2], nt_id: 'X.PSU103',
+    nt_name: 'PSU', nt_code: 'c' });
+  assert.throws(() => buildLocalGeometrySidecar({ ...options, dssr: conflictingDssr }), /component identity/);
+  const modifiedCodeDssr = structuredClone(conflictingDssr);
+  modifiedCodeDssr.nts.at(-1).nt_code = 'P';
+  assert.equal(buildLocalGeometrySidecar({ ...options, dssr: modifiedCodeDssr })
+    .residues[2].locator.componentId, 'PSU');
+  linked.residueIndex.residues[2].compId = 'N';
+  linked.residueIndex.residues[2].parentBase = 'U';
+  assert.equal(buildLocalGeometrySidecar({ ...options, dssr: modifiedCodeDssr })
+    .residues[2].base, 'U');
+  linked.residueIndex.residues[2].compId = 'G';
+  assert.throws(() => buildLocalGeometrySidecar(options), /component identity/);
+});
+
 test('interchain nucleotide ligand without label_seq_id remains an exact DSSR stacking partner', () => {
   const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
     'ATOM 8 C "C1\'" . U B 2 9 ? 9.0 9.0 9.0 9 U Y 1\n',
@@ -450,6 +664,88 @@ test('interchain nucleotide ligand without label_seq_id remains an exact DSSR st
     insertionCode: '',
     componentId: 'WSB',
   });
+});
+
+test('same-author-chain non-polymer ligand is a read-only non-target stacking partner', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
+    'ATOM 8 C "C1\'" . U B 2 9 ? 9.0 9.0 9.0 9 U Y 1\n',
+    'ATOM 8 C "C1\'" . U B 2 9 ? 9.0 9.0 9.0 9 U Y 1\n'
+      + 'HETATM 9 C "C1\'" . AMP L 3 . ? 5.0 6.0 7.0 1005 AMP X 2\n',
+  ));
+  const prepared = prepareDssrInput(structureBytes);
+  const dssr = dssrJson();
+  dssr.nts.push({
+    nt_id: 'X.AMP1005', chain_name: 'X', nt_resnum: '1005', nt_name: 'AMP', nt_code: 'a',
+    puckering: "C3'-endo", phase_angle: 12, amplitude: 39,
+  });
+  dssr.nonPairs[0].nt2 = 'X.AMP1005';
+
+  const payload = buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+    dssr,
+  }));
+  const ligand = payload.residues[0].stacking.partners.find(
+    (partner) => partner.partnerLocator.componentId === 'AMP',
+  );
+  assert.ok(ligand);
+
+  assert.equal(ligand.topology, 'non_target_intrachain');
+  assert.equal(ligand.partnerResidueKey, null);
+  assert.equal(ligand.partnerPosition, null);
+  assert.equal(ligand.partnerBase, 'a');
+  assert.equal(ligand.dssrStackClass, 'pm(>>,forward)');
+  assert.equal(ligand.overlapArea, 2.5);
+  assert.equal(ligand.ringOverlapArea, 1.25);
+  assert.deepEqual(ligand.partnerLocator, {
+    modelId: '2',
+    labelAsymId: 'L',
+    authAsymId: 'X',
+    labelSeqId: null,
+    authSeqId: 1005,
+    insertionCode: '',
+    componentId: 'AMP',
+  });
+});
+
+test('extra same-author-chain polymer coordinates remain a coverage failure without DSSR edges', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
+    'ATOM 8 C "C1\'" . U B 2 9 ? 9.0 9.0 9.0 9 U Y 1\n',
+    'ATOM 8 C "C1\'" . U B 2 9 ? 9.0 9.0 9.0 9 U Y 1\n'
+      + 'ATOM 9 C "C1\'" . A L 3 4 ? 5.0 6.0 7.0 1005 A X 2\n',
+  ));
+  const prepared = prepareDssrInput(structureBytes);
+  assert.throws(() => buildLocalGeometrySidecar(buildOptions({
+    structureBytes,
+    dssrInputBytes: prepared.bytes,
+    prepareMeta: prepared.meta,
+  })), /target-chain residue coverage mismatch; 1 extra atom-site residues/);
+});
+
+test('same-author-chain polymer residue absent from linked-view remains a build failure', () => {
+  const structureBytes = Buffer.from(STRUCTURE_CIF.replace(
+    'ATOM 8 C "C1\'" . U B 2 9 ? 9.0 9.0 9.0 9 U Y 1\n',
+    'ATOM 8 C "C1\'" . U B 2 9 ? 9.0 9.0 9.0 9 U Y 1\n'
+      + 'ATOM 9 C "C1\'" . A L 3 4 ? 5.0 6.0 7.0 1005 A X 2\n',
+  ));
+  const prepared = prepareDssrInput(structureBytes);
+  const dssr = dssrJson();
+  dssr.nts.push({
+    nt_id: 'X.A1005', chain_name: 'X', nt_resnum: '1005', nt_name: 'A', nt_code: 'A',
+    puckering: "C3'-endo", phase_angle: 12, amplitude: 39,
+  });
+  dssr.nonPairs[0].nt2 = 'X.A1005';
+
+  assert.throws(
+    () => buildLocalGeometrySidecar(buildOptions({
+      structureBytes,
+      dssrInputBytes: prepared.bytes,
+      prepareMeta: prepared.meta,
+      dssr,
+    })),
+    /linked-view and atom-site target-chain residue coverage mismatch|same-chain DSSR partner/i,
+  );
 });
 
 test('production sequence_only residues are accepted only when atom-site coordinates are absent', () => {

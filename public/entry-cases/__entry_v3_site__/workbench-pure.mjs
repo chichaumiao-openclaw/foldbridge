@@ -316,6 +316,7 @@ const LOCAL_GEOMETRY_TOPOLOGIES = new Set([
   "three_prime_adjacent",
   "five_prime_adjacent",
   "non_adjacent_intrachain",
+  "non_target_intrachain",
   "interchain",
 ]);
 const LOCAL_GEOMETRY_DSSR_STACK_CLASS = /^(?:pm|mp|mm|pp)\((?:>>|<<|><|<>),(?:forward|backward|inward|outward)\)$/;
@@ -420,7 +421,7 @@ function validateLocalGeometryPartner(partner, path, sourceModelId) {
     throw new Error(`${path}.topology has invalid value "${partner.topology}"`);
   }
   validateLocalGeometryLocator(partner.partnerLocator, `${path}.partnerLocator`, {
-    allowNullLabelSeq: partner.topology === "interchain",
+    allowNullLabelSeq: partner.topology === "interchain" || partner.topology === "non_target_intrachain",
   });
   if (partner.partnerLocator.modelId !== sourceModelId) {
     throw new Error(`${path}.partnerLocator.modelId must match source.modelId`);
@@ -435,9 +436,12 @@ function validateLocalGeometryPartner(partner, path, sourceModelId) {
   if (!Number.isInteger(partner.sourcePairIndex) || partner.sourcePairIndex < 0) {
     throw new TypeError(`${path}.sourcePairIndex must be a non-negative integer`);
   }
-  if (partner.topology === "interchain") {
+  if (partner.topology === "interchain" || partner.topology === "non_target_intrachain") {
     if (partner.partnerResidueKey !== null || partner.partnerPosition !== null) {
-      throw new Error(`${path} interchain partnerResidueKey and partnerPosition must be null`);
+      throw new Error(`${path} ${partner.topology} partnerResidueKey and partnerPosition must be null`);
+    }
+    if (partner.topology === "non_target_intrachain" && partner.partnerLocator.labelSeqId !== null) {
+      throw new Error(`${path} non-target partnerLocator.labelSeqId must be null`);
     }
     return;
   }
@@ -504,6 +508,19 @@ function localGeometryReadonlyMap(entries) {
 }
 
 function assertMatchingLocalPartner(residue, partner, byResidueKey, path) {
+  if (partner.topology === "non_target_intrachain") {
+    if (partner.partnerLocator.authAsymId !== residue.locator.authAsymId) {
+      throw new Error(`${path} non-target partner must use the same author chain as the current residue`);
+    }
+    const partnerLocatorIdentity = localGeometryLocatorIdentity(partner.partnerLocator);
+    const matchesCurrentCoverage = [...byResidueKey.values()].some(
+      (target) => localGeometryLocatorIdentity(target.locator) === partnerLocatorIdentity,
+    );
+    if (matchesCurrentCoverage) {
+      throw new Error(`${path} non-target partner locator must not belong to residue coverage`);
+    }
+    return;
+  }
   if (partner.topology === "interchain") {
     const partnerLocatorIdentity = localGeometryLocatorIdentity(partner.partnerLocator);
     const matchesCurrentChain = [...byResidueKey.values()].some(
@@ -638,7 +655,10 @@ export function validateLocalGeometrySidecar(payload, context) {
         const isModifiedComponentMapping = field === "componentId"
           && (expected.locator.componentId === expected.base || expected.locator.componentId === "N")
           && !LOCAL_GEOMETRY_CANONICAL_COMPONENTS.has(residue.locator.componentId);
-        if (isModifiedComponentMapping) continue;
+        const isEnrichedInsertionCode = field === "insertionCode"
+          && expected.locator.insertionCode === ""
+          && residue.locator.insertionCode !== "";
+        if (isModifiedComponentMapping || isEnrichedInsertionCode) continue;
         throw new Error(`Local geometry context residue locator.${field} must exactly match ${path}.locator.${field}`);
       }
     }
@@ -710,7 +730,10 @@ export function buildLocalGeometryWindow(model, selectedResidueKey, radius = 5) 
     partners.filter((partner) => partner.partnerResidueKey !== null && !windowKeys.has(partner.partnerResidueKey)),
   );
   const crossChainPartners = Object.freeze(
-    partners.filter((partner) => partner.partnerResidueKey === null),
+    partners.filter((partner) => partner.topology === "interchain"),
+  );
+  const nonTargetIntrachainPartners = Object.freeze(
+    partners.filter((partner) => partner.topology === "non_target_intrachain"),
   );
   return Object.freeze({
     selectedResidueKey,
@@ -720,6 +743,7 @@ export function buildLocalGeometryWindow(model, selectedResidueKey, radius = 5) 
     withinWindowPartners,
     sameChainOutsideWindowPartners,
     crossChainPartners,
+    nonTargetIntrachainPartners,
   });
 }
 

@@ -29,11 +29,22 @@
 
 ### 任务 2：修复已知 BUILD_FAILED
 
-- [ ] 按错误签名汇总全部 339 个失败并选择每类真实代表 Case。
+2026-09-17 更正：五类候选方案及代码状态以残留失败审计的“后续审查更正与当前修复方向”
+为准。已恢复 coverage gate、撤回 malformed 放行和 anisotrop 静默丢弃；本地定向测试
+85/85 通过，真实 Case gate 尚未通过。先完成 component 实例审计、linked-view 上游编号
+修复、DSSR 截断冲突负例及微异质目标负例，再启动定向重跑。全量状态计数需额外按 Case ID
+去重和哈希验收，不以目录计数相加代替。
+
+- [x] 按错误签名汇总第一轮修复重跑后的 241 个失败并选择每类真实代表 Case；冻结证据见
+  `docs/reviewer-response/2026-09-17-d33-residual-failure-audit.md`。
+- [x] 对 DSSR 零核苷酸样本核对 mmCIF 原子组成；仅将 P-only 或缺少必要糖环/碱基原子的
+  合法输出分类为 `not_computable`，不得按 Case ID 静态放行。
+- [x] 完成 P-only、缺失 insertion code 和同作者链非 polymer partner 三类修复，定向测试
+  79/79 通过；第一轮重跑产生 5,043 computed、37 not_computable、241 failed。
 - [ ] 为第一类根因添加最小失败测试并运行，确认 RED。
 - [ ] 实施单一最小修复并运行测试，确认 GREEN。
 - [ ] 逐类重复，禁止把异常加入 allowlist。
-- [ ] 对 339 个已知失败 Case 运行门槛，要求 0 unexpected failures。
+- [ ] 对 241 个残留失败 Case 运行门槛，要求 0 unexpected failures。
 - [ ] 提交代码与测试。
 
 ### 任务 3：实现分区与合并验证

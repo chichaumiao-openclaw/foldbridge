@@ -253,7 +253,7 @@ function parseCifDocument(source) {
         index += 1;
       }
       if (values.length % tags.length !== 0) {
-        throw new Error(`mmCIF loop value count ${values.length} does not form complete rows of ${tags.length}`);
+        throw new Error(`mmCIF loop ${tags[0]} value count ${values.length} does not form complete rows of ${tags.length}`);
       }
       const rows = [];
       for (let offset = 0; offset < values.length; offset += tags.length) {
@@ -461,6 +461,7 @@ export function parseAtomSiteResidues(cifBytes) {
       const authSeqText = normalizeMissing(row['_atom_site.auth_seq_id']);
       const atomRow = {
         modelId: rowModel,
+        labelEntityId: normalizeMissing(row['_atom_site.label_entity_id']),
         labelAsymId: requireCifValue(row['_atom_site.label_asym_id'], '_atom_site label asym id'),
         authAsymId: requireCifValue(row['_atom_site.auth_asym_id'], '_atom_site auth asym id'),
         labelSeqId: labelSeqText ? requireInteger(labelSeqText, '_atom_site label seq id', { positive: true }) : null,
@@ -477,8 +478,6 @@ export function parseAtomSiteResidues(cifBytes) {
   if (modelId === null) throw new Error('DSSR input mmCIF has no atom-site rows');
   const residuesByIdentity = new Map();
   const dssrResiduesByIdentity = new Map();
-  const labels = new Map();
-  const authors = new Map();
   for (const row of atomRows) {
     if (row.authSeqId === null) continue;
     const identity = residueLocatorIdentity(row);
@@ -495,20 +494,8 @@ export function parseAtomSiteResidues(cifBytes) {
     // DSSR can classify nucleotide-like ligands that have an author residue number but no
     // polymer label_seq_id. Keep them available as read-only interchain partners.
     if (!dssrResiduesByIdentity.has(identity)) dssrResiduesByIdentity.set(identity, locator);
-    const authorKey = authorLocatorIdentity(locator);
-    const priorAuthor = authors.get(authorKey);
-    if (priorAuthor && residueLocatorIdentity(priorAuthor) !== identity) {
-      throw new Error(`ambiguous _atom_site author residue identity ${authorKey}`);
-    }
-    authors.set(authorKey, locator);
     if (row.labelSeqId === null) continue;
     if (!residuesByIdentity.has(identity)) residuesByIdentity.set(identity, locator);
-    const labelKey = labelLocatorIdentity(locator);
-    const priorLabel = labels.get(labelKey);
-    if (priorLabel && residueLocatorIdentity(priorLabel) !== identity) {
-      throw new Error(`ambiguous _atom_site label residue identity ${labelKey}`);
-    }
-    labels.set(labelKey, locator);
   }
   const residues = [...residuesByIdentity.values()].sort((left, right) => {
     return compareUtf8(labelLocatorIdentity(left), labelLocatorIdentity(right));
@@ -516,7 +503,48 @@ export function parseAtomSiteResidues(cifBytes) {
   const dssrResidues = [...dssrResiduesByIdentity.values()].sort((left, right) => {
     return compareUtf8(authorLocatorIdentity(left), authorLocatorIdentity(right));
   });
-  return { modelId, atomRows, residues, dssrResidues };
+  const canonicalByAtomIdentity = new Map();
+  const entitiesByAtomIdentity = new Map();
+  for (const row of atomRows) {
+    const identity = residueLocatorIdentity(row);
+    if (!entitiesByAtomIdentity.has(identity)) entitiesByAtomIdentity.set(identity, new Set());
+    entitiesByAtomIdentity.get(identity).add(row.labelEntityId);
+  }
+  const asymEntities = new Map();
+  for (const row of cifCategoryRecords(nodes, 'struct_asym')) {
+    const asym = row['_struct_asym.id'];
+    const entity = row['_struct_asym.entity_id'];
+    if (!asymEntities.has(asym)) asymEntities.set(asym, new Set());
+    asymEntities.get(asym).add(entity);
+  }
+  const polymers = cifCategoryRecords(nodes, 'entity_poly');
+  const monomers = cifCategoryRecords(nodes, 'entity_poly_seq');
+  for (const [asym, entities] of asymEntities) {
+    if (entities.size !== 1) continue;
+    const [entity] = entities;
+    const records = polymers.filter((row) => row['_entity_poly.entity_id'] === entity);
+    if (records.length !== 1 || records[0]['_entity_poly.type'] !== 'polyribonucleotide') continue;
+    const sequence = normalizeMissing(records[0]['_entity_poly.pdbx_seq_one_letter_code_can']).replace(/\s/g, '');
+    if (!/^[ACGUTIN]+$/.test(sequence)) continue;
+    const byPosition = new Map();
+    for (const row of monomers.filter((item) => item['_entity_poly_seq.entity_id'] === entity)) {
+      const position = Number(row['_entity_poly_seq.num']);
+      if (!byPosition.has(position)) byPosition.set(position, new Set());
+      byPosition.get(position).add(row['_entity_poly_seq.mon_id']);
+    }
+    if (byPosition.size !== sequence.length
+        || [...byPosition.keys()].some((position) => !Number.isInteger(position) || position < 1 || position > sequence.length)) continue;
+    for (const locator of residues.filter((item) => item.labelAsymId === asym)) {
+      const components = byPosition.get(locator.labelSeqId);
+      const atomEntities = entitiesByAtomIdentity.get(residueLocatorIdentity(locator));
+      const entityMatches = atomEntities?.size === 1 && atomEntities.has(entity);
+      if (entityMatches && components?.size === 1 && components.has(locator.componentId)) {
+        canonicalByAtomIdentity.set(residueLocatorIdentity(locator), sequence[locator.labelSeqId - 1]);
+      }
+    }
+  }
+  return { modelId, atomRows, residues, dssrResidues, canonicalByAtomIdentity,
+    hasCanonicalMetadata: polymers.length > 0 || monomers.length > 0 || asymEntities.size > 0 };
 }
 
 function linkedField(record, names, label, { optional = false } = {}) {
@@ -588,14 +616,7 @@ function linkedLocator(locus, residue, modelId) {
   };
 }
 
-function locatorWithoutComponentIdentity(locator) {
-  return [
-    locator.modelId, locator.labelAsymId, locator.authAsymId,
-    locator.labelSeqId, locator.authSeqId, locator.insertionCode,
-  ].map((value) => JSON.stringify(value)).join('|');
-}
-
-function buildLinkedChain(linkedView, caseId, chainId, atomSite) {
+function buildLinkedChain(linkedView, caseId, chainId, atomSite, dssrIndex = null) {
   requireRecord(linkedView, 'linked-view bundle');
   const residues = linkedView.residueIndex?.residues;
   const loci = linkedView.structureContexts?.loci;
@@ -657,7 +678,7 @@ function buildLinkedChain(linkedView, caseId, chainId, atomSite) {
       throw new Error(`coordinateStatus for ${key} must be a recognized linked-view status`);
     }
     const resolved = coordinateStatus === 'resolved';
-    const matches = atomTarget.filter((locator) => locatorWithoutComponentIdentity(locator) === locatorWithoutComponentIdentity(candidate));
+    const matches = atomTarget.filter((locator) => labelLocatorIdentity(locator) === labelLocatorIdentity(candidate));
     if (resolved && matches.length !== 1) {
       throw new Error(`resolved linked residue ${key} has ${matches.length} atom-site identities; expected one`);
     }
@@ -665,13 +686,36 @@ function buildLinkedChain(linkedView, caseId, chainId, atomSite) {
       throw new Error(`unresolved linked residue ${key} unexpectedly maps to atom-site coordinates`);
     }
     const matched = matches[0];
+    if (matched && candidate.authAsymId !== matched.authAsymId) {
+      throw new Error(`linked author chain identity does not match atom-site for ${key}`);
+    }
+    if (matched && candidate.authSeqId !== matched.authSeqId) {
+      throw new Error(`linked author sequence identity does not match atom-site for ${key}`);
+    }
+    if (matched && candidate.insertionCode && candidate.insertionCode !== matched.insertionCode) {
+      throw new Error(`linked insertion-code identity does not match atom-site for ${key}`);
+    }
     if (matched && candidate.componentId !== matched.componentId) {
-      // Linked-view stores the canonical sequence identity while atom_site retains modified
-      // chemical components (for example U/PSU). Never accept a canonical-to-canonical drift.
-      const linkedIsCanonicalParent = candidate.componentId === candidate.residueBase
-        || candidate.componentId === 'N';
+      // Linked-view can store the canonical nucleotide while atom_site retains the modified
+      // component. Polymer metadata, when present, must prove the exact component and
+      // position. Independently reported DSSR canonical identity must never contradict it.
+      const dssrNt = dssrIndex?.byAtomIdentity.get(residueLocatorIdentity(matched));
+      const dssrCanonical = typeof dssrNt?.base === 'string' ? dssrNt.base.toUpperCase() : '';
+      const linkedIsCanonical = CANONICAL_NUCLEOTIDE_COMPONENTS.has(candidate.componentId);
       const atomSiteIsModified = !CANONICAL_NUCLEOTIDE_COMPONENTS.has(matched.componentId);
-      if (!linkedIsCanonicalParent || !atomSiteIsModified) {
+      const structuralCanonical = atomSite.canonicalByAtomIdentity.get(residueLocatorIdentity(matched));
+      // Linked-view uses N as an explicit unknown/modified placeholder. When the sealed
+      // mmCIF polymer sequence proves the parent base, compare that evidence to residueBase.
+      const expectedCanonical = candidate.componentId === 'N'
+        ? candidate.residueBase
+        : candidate.componentId;
+      const canonicalMatches = atomSite.hasCanonicalMetadata
+        ? structuralCanonical === expectedCanonical
+        : dssrCanonical === expectedCanonical;
+      // DSSR uses noncanonical symbols too (PSU -> P); these are not parent-base claims.
+      const conflictingDssr = /^[ACGUT]$/.test(dssrCanonical)
+        && dssrCanonical !== expectedCanonical;
+      if (!linkedIsCanonical || !atomSiteIsModified || !canonicalMatches || conflictingDssr) {
         throw new Error(`linked component identity does not match atom-site for ${key}`);
       }
     }
@@ -696,6 +740,120 @@ function buildLinkedChain(linkedView, caseId, chainId, atomSite) {
     positions.add(residue.position);
   }
   return chain.sort((left, right) => left.position - right.position || compareUtf8(left.residueKey, right.residueKey));
+}
+
+function cifCategoryRecords(nodes, category) {
+  const normalizedCategory = category.toLowerCase();
+  const loops = nodes.filter((node) => node.kind === 'loop'
+    && node.tags.some((tag) => tagCategory(tag) === normalizedCategory));
+  for (const loop of loops) {
+    if (!loop.tags.every((tag) => tagCategory(tag) === normalizedCategory)) {
+      throw new Error(`an _${category} loop must not mix mmCIF categories`);
+    }
+  }
+  const items = nodes.filter((node) => node.kind === 'item'
+    && tagCategory(node.tag) === normalizedCategory);
+  if (loops.length && items.length) throw new Error(`_${category} must not mix item and loop representations`);
+  if (loops.length) {
+    return loops.flatMap((loop) => {
+      const tags = loop.tags.map((tag) => tag.toLowerCase());
+      if (new Set(tags).size !== tags.length) throw new Error(`_${category} loop contains duplicate tags`);
+      return loop.rows.map((row) => rowObject(tags, row));
+    });
+  }
+  if (!items.length) return [];
+  return [Object.fromEntries(items.map((item) => [item.tag.toLowerCase(), item.value]))];
+}
+
+export function assertDssrNoNucleotidesPOnly({
+  dssr,
+  dssrInputBytes,
+  linkedView,
+  caseId,
+  chainId,
+}) {
+  requireRecord(dssr, 'DSSR JSON');
+  const dssrFields = Object.keys(dssr).sort(compareUtf8);
+  if (dssrFields.length !== 1 || dssrFields[0] !== 'warning'
+      || dssr.warning !== 'no nucleotides found') {
+    throw new Error('DSSR no-nucleotides outcome must be the exact warning object');
+  }
+  const input = decodedBytes(dssrInputBytes, 'DSSR input mmCIF');
+  const nodes = parseCifDocument(input.text);
+  const entityRows = cifCategoryRecords(nodes, 'entity_poly');
+  const nucleicTypes = new Set([
+    'polyribonucleotide',
+    'polydeoxyribonucleotide',
+    'polydeoxyribonucleotide/polyribonucleotide hybrid',
+  ]);
+  const nucleicEntities = new Set();
+  for (const row of entityRows) {
+    const entityId = requireCifValue(row['_entity_poly.entity_id'], '_entity_poly.entity_id');
+    const type = requireCifValue(row['_entity_poly.type'], '_entity_poly.type').toLowerCase();
+    if (nucleicTypes.has(type)) nucleicEntities.add(entityId);
+  }
+  if (nucleicEntities.size === 0) throw new Error('DSSR no-nucleotides input declares no nucleic polymer entity');
+
+  const asymRows = cifCategoryRecords(nodes, 'struct_asym');
+  const asymToEntity = new Map();
+  for (const row of asymRows) {
+    const asymId = requireCifValue(row['_struct_asym.id'], '_struct_asym.id');
+    const entityId = requireCifValue(row['_struct_asym.entity_id'], '_struct_asym.entity_id');
+    if (asymToEntity.has(asymId) && asymToEntity.get(asymId) !== entityId) {
+      throw new Error(`_struct_asym ${asymId} has conflicting entity mappings`);
+    }
+    asymToEntity.set(asymId, entityId);
+  }
+  for (const entityId of nucleicEntities) {
+    if (![...asymToEntity.values()].includes(entityId)) {
+      throw new Error(`nucleic polymer entity ${entityId} has no _struct_asym mapping`);
+    }
+  }
+
+  let nucleicAtomCount = 0;
+  const nucleicEntitiesWithAtoms = new Set();
+  for (const node of nodes) {
+    const info = atomSiteLoopInfo(node);
+    if (!info) continue;
+    for (const tag of [
+      '_atom_site.label_entity_id',
+      '_atom_site.label_asym_id',
+      '_atom_site.type_symbol',
+      '_atom_site.label_atom_id',
+    ]) {
+      if (!info.tags.includes(tag)) throw new Error(`_atom_site loop is missing ${tag}`);
+    }
+    const hasAuthAtomId = info.tags.includes('_atom_site.auth_atom_id');
+    for (const row of node.rows.map((values) => rowObject(info.tags, values))) {
+      const entityId = requireCifValue(row['_atom_site.label_entity_id'], '_atom_site.label_entity_id');
+      const asymId = requireCifValue(row['_atom_site.label_asym_id'], '_atom_site.label_asym_id');
+      const mappedEntity = asymToEntity.get(asymId);
+      if ((nucleicEntities.has(entityId) || nucleicEntities.has(mappedEntity)) && mappedEntity !== entityId) {
+        throw new Error(`nucleic atom-site asym ${asymId} does not match its entity mapping`);
+      }
+      if (!nucleicEntities.has(entityId)) continue;
+      nucleicAtomCount += 1;
+      nucleicEntitiesWithAtoms.add(entityId);
+      const typeSymbol = requireCifValue(row['_atom_site.type_symbol'], '_atom_site.type_symbol').toUpperCase();
+      const labelAtomId = requireCifValue(row['_atom_site.label_atom_id'], '_atom_site.label_atom_id').toUpperCase();
+      const authAtomId = hasAuthAtomId
+        ? requireCifValue(row['_atom_site.auth_atom_id'], '_atom_site.auth_atom_id').toUpperCase()
+        : 'P';
+      if (typeSymbol !== 'P' || labelAtomId !== 'P' || authAtomId !== 'P') {
+        throw new Error('DSSR no-nucleotides nucleic polymer input is not P-only');
+      }
+    }
+  }
+  if (nucleicAtomCount === 0) throw new Error('DSSR no-nucleotides input has no nucleic polymer atom-site rows');
+  for (const entityId of nucleicEntities) {
+    if (!nucleicEntitiesWithAtoms.has(entityId)) {
+      throw new Error(`nucleic polymer entity ${entityId} has no selected-model atom-site rows`);
+    }
+  }
+
+  const atomSite = parseAtomSiteResidues(dssrInputBytes);
+  buildLinkedChain(linkedView, requireString(caseId, 'caseId'), requireString(chainId, 'chainId'), atomSite);
+  return true;
 }
 
 function parseDssrResidueNumber(value, label) {
@@ -746,7 +904,18 @@ function buildDssrIndex(dssr, atomSite) {
       authSeqId: residueNumber.number,
       insertionCode,
     }, component);
-    const matches = atomSite.dssrResidues.filter((locator) => authorLocatorIdentity(locator) === authorKey);
+    let matches = atomSite.dssrResidues.filter((locator) => authorLocatorIdentity(locator) === authorKey);
+    if (matches.length === 0 && component.length === 3) {
+      matches = atomSite.dssrResidues.filter((locator) => {
+        const atomComponent = locator.authComponentId ?? locator.componentId;
+        return locator.modelId === atomSite.modelId
+          && locator.authAsymId === chain
+          && locator.authSeqId === residueNumber.number
+          && locator.insertionCode === insertionCode
+          && atomComponent.length > component.length
+          && atomComponent.startsWith(component);
+      });
+    }
     if (matches.length !== 1) throw new Error(`DSSR nucleotide ${ntId} has ${matches.length} atom-site identities; expected one`);
     const locator = matches[0];
     const identity = residueLocatorIdentity(locator);
@@ -812,25 +981,28 @@ function buildStacking(dssr, dssrIndex, linkedChain) {
       for (const [currentNt, partnerNt] of [[nt1, nt2], [nt2, nt1]]) {
         const current = linkedByAtom.get(residueLocatorIdentity(currentNt.locator));
         if (!current) continue;
-        const sameChain = partnerNt.locator.authAsymId === current.locator.authAsymId;
-        const partnerResidue = sameChain
-          ? linkedByAtom.get(residueLocatorIdentity(partnerNt.locator))
-          : null;
-        if (sameChain && !partnerResidue) {
+        const sameAuthorChain = partnerNt.locator.authAsymId === current.locator.authAsymId;
+        const partnerResidue = linkedByAtom.get(residueLocatorIdentity(partnerNt.locator)) ?? null;
+        const nonTargetIntrachain = sameAuthorChain
+          && !partnerResidue
+          && partnerNt.locator.labelSeqId === null;
+        if (sameAuthorChain && !partnerResidue && !nonTargetIntrachain) {
           throw new Error(`same-chain DSSR partner ${partnerNt.ntId} is absent from linked-view target residues`);
         }
-        const topology = !sameChain
-          ? 'interchain'
-          : partnerResidue.position === current.position + 1
+        const topology = nonTargetIntrachain
+          ? 'non_target_intrachain'
+          : !sameAuthorChain
+            ? 'interchain'
+            : partnerResidue.position === current.position + 1
             ? 'three_prime_adjacent'
             : partnerResidue.position === current.position - 1
               ? 'five_prime_adjacent'
               : 'non_adjacent_intrachain';
         partnersByResidue.get(current.residueKey).push({
-          partnerResidueKey: sameChain ? partnerResidue.residueKey : null,
+          partnerResidueKey: partnerResidue ? partnerResidue.residueKey : null,
           partnerLocator: publicLocator(partnerNt.locator),
-          partnerPosition: sameChain ? partnerResidue.position : null,
-          partnerBase: sameChain ? partnerResidue.base : partnerNt.base,
+          partnerPosition: partnerResidue ? partnerResidue.position : null,
+          partnerBase: partnerResidue ? partnerResidue.base : partnerNt.base,
           topology,
           dssrStackClass: stackClass,
           overlapArea: stacking.oArea,
@@ -884,8 +1056,8 @@ export function buildLocalGeometrySidecar(options) {
   if (atomSite.modelId !== prepareMeta.modelId) throw new Error('DSSR input modelId mismatch');
   const caseId = requireString(options.caseId, 'caseId');
   const chainId = requireString(options.chainId, 'chainId');
-  const linkedChain = buildLinkedChain(options.linkedView, caseId, chainId, atomSite);
   const dssrIndex = buildDssrIndex(options.dssr, atomSite);
+  const linkedChain = buildLinkedChain(options.linkedView, caseId, chainId, atomSite, dssrIndex);
   const stacking = buildStacking(options.dssr, dssrIndex, linkedChain);
   const residues = linkedChain.map((residue) => {
     const nt = residue.atomLocator

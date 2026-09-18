@@ -29,12 +29,18 @@
 
 ## D 类范围评估
 
+- **D3.3 接手入口**：[2026-09-18 修复与上线交接](2026-09-18-d33-handoff.md)。包含目标、字段语义更正、代码/远端证据路径和下一步验收顺序；当前三个真实样本 0/3 整体通过，未上线。
+
 [D 类功能实现范围评估](2026-09-12-d-class-scope-assessment.md)覆盖 D3.3、D3.4、D3.6。
 当前状态：D3.4 已在 Case/Tunnel 上线，E 的两个下载均已在主站 iframe 保存完成；F 保存和 SVG 独立查看待验收。D3.3、D3.6 不在本次发布范围。
 
 - D3.4 按后续讨论实现 SVG 热图与原 JSON.gz 直接下载，详见 [D3.4 下载证据](2026-09-13-d3.4-download-evidence.md)；初始评估中的 CSV 未纳入本次范围；
 - D3.6 已实现本地候选：1 个主 Profile 加最多 3 个自选比较，独立显示尺度，不作差异统计；未上线，详见 [D3.6 候选证据与验收边界](2026-09-13-d36-profile-comparison-evidence.md)；
-- D3.3 先做离线几何 sidecar pilot，并在开始前通过工具许可和科学验证 gate；
+- D3.3 已进入全量离线 sidecar 修复：历史目录汇总报告 5,043 computed、37 个
+  `not_computable`、241 个 unexpected failed，跨目录互斥和输出哈希仍待统一审计；
+  本地四文件定向测试上轮 88/88，真实 Case gate 尚未通过；测试时间与边界见交接文档。
+  尚未 merge、全量验收或上线。完整状态、
+  失败分类和修复边界见 [D3.3 残留失败审计](2026-09-17-d33-residual-failure-audit.md)；
 - 显著性检验暂不承诺，需先补齐 condition、replicate、sample size 和 per-position error。
 
 ## Rebuttal 引用边界
