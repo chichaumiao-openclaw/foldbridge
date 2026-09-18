@@ -1,4 +1,17 @@
-# D3.6 一主多比较：本地候选证据
+# D3.6 一主多比较：候选与生产发布证据
+
+## 生产发布补记（2026-09-13）
+
+用户授权后，已将 Git 提交 `eb9c01ffb070665d314a030448aad23dcdea9bc4` 对应的 D3.6 共享资产发布到 Case/Tunnel。版本 `20260913-reviewer-d36-1`，发布时间约 17:26 UTC。下方原候选记录保留作为历史，不再代表当前发布状态。
+
+- 发布前全部共享源文件与 D3.4 基线 `7d46c23f64bb48d3b0e3f837e4472f14b7cd4550` 一致，没有覆盖 D3.3 改动。
+- 精确发布 16 个文件：12 个新指纹文件和 workbench-pure.mjs、ef-workbench-shell.mjs、workbench.css、workbench.js；不改 Case 数据或 per-case HTML。
+- 候选：`/Volumes/tianyi/Server/staging/foldbridge-reviewer-d36.uhuwEh`。
+- 回滚：`/Volumes/tianyi/Server/rollback/foldbridge/reviewer-d36-2026-09-13T17-26-43-583Z.X7neEH`。目录内 release-manifest.json 记录各文件发布前后大小与 SHA-256；4 个旧文件均已备份，旧指纹保留。
+- 候选和生产指纹闭包各检查 13 个文件通过；本机 `127.0.0.1:8888` 与公网 `foldbridge.sunhao.uk` 的 16 个发布文件全部 SHA-256 匹配。
+- CORS OPTIONS 返回 204，允许主站 origin。1GID/A E/F 数据哈希仍与 D3.4 记录一致。
+- 主站 `https://foldbridge.ribocentre.org/#entry-case?pdb=8SQ9&chain=P` 的双层 iframe 实测：默认仅显示 Compare profiles (0/3)；展开后选择 DMS，显示 finite/shared 35/35、P95 4.004；再次折叠后选择器不可见，35 个比较标记仍在，计数 1/3、独立尺度说明保留。浏览器错误日志为空。
+- 本次未等待 Pages，也不以 Pages 构建成功证明 Case 生效。其余专项验收限制仍以下文为准。
 
 ## 状态与边界
 
