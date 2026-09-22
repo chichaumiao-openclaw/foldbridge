@@ -321,7 +321,6 @@ export function renderHomeScrollStory(caseData, opts = {}) {
       </div>`;
     return `
     <div class="hss-scene${i === 0 ? ' is-active' : ''}" data-scene="${i}">
-      <div class="hss-scene-num">${s.n || ''}</div>
       <h3 class="hss-scene-title">${s.title || ''}</h3>
       <p class="hss-scene-body">${s.body || ''}</p>${stageReadout}${chip}
     </div>`;
