@@ -273,7 +273,7 @@ export function renderHomeScrollStory(caseData, opts = {}) {
       <p class="hss-scene-body">${s.body || ''}</p>${chip}
     </div>`;
   }).join('');
-  const legend = `<div class="hss-legend"><span>low</span><span class="hss-legend-bar"></span><span>high reactivity</span></div>`;
+  const legend = `<div class="hss-legend"><span>high reactivity</span><span class="hss-legend-bar"></span><span>low</span></div>`;
   const records = dashboardMetricState(opts.dashboardView, 'entry', opts.dashboardView?.entryMetrics?.pdbStructures);
   const intro = `<header class="hss-intro">
       <h1 class="hss-headline">Follow one RNA from probing signal to 3D fold</h1>

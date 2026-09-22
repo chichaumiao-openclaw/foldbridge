@@ -7960,7 +7960,7 @@ main.page-detail.page-search > .site-search-card {
   background: var(--panel-card-bg); border: var(--panel-card-border);
   box-shadow: none; backdrop-filter: blur(8px); overflow: hidden; }
 .hss-layer { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-  padding: 32px 20px 34px; opacity: 0; transform: scale(.97);
+  padding: 28px 64px 28px 20px; opacity: 0; transform: scale(.97);
   transition: opacity .6s ease, transform .6s ease; }
 .hss-layer.is-active { opacity: 1; transform: scale(1); }
 .hss-snapshot { max-width: 100%; max-height: 100%; object-fit: contain; }
@@ -8007,10 +8007,11 @@ main.page-detail.page-search > .site-search-card {
 .hss-match-tick { height: 10px; line-height: 10px; text-align: center; font-size: 9px; color: var(--textAccent); }
 
 /* legend */
-.hss-legend { position: absolute; bottom: 16px; left: 50%; transform: translateX(-50%);
-  display: flex; align-items: center; gap: 8px; font-size: 0.76rem; font-weight: 400; color: var(--textPrimary); }
-.hss-legend-bar { width: 120px; height: 8px; border-radius: 6px;
-  background: linear-gradient(90deg, #174B3A, #E6C260, #E8743E); }
+.hss-legend { position: absolute; top: 50%; right: 12px; transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-size: 0.76rem; font-weight: 400; color: var(--textPrimary); }
+.hss-legend-bar { width: 8px; height: 96px; border-radius: 6px;
+  background: linear-gradient(180deg, #174B3A, #E6C260, #E8743E); }
 
 /* right scenes */
 .hss-scenes { padding: 16px 0 32px; }
@@ -8051,7 +8052,7 @@ main.page-detail.page-search > .site-search-card {
   .hss-intro { padding: 26px 16px 14px; }
   .hss-grid { grid-template-columns: 1fr; gap: 16px; }
   .hss-sticky { position: relative; top: 0; height: 280px; min-height: 0; }
-  .hss-layer { padding: 24px 16px 28px; }
+  .hss-layer { padding: 24px 50px 28px 16px; }
   .hss-layer[data-stage="1"] .hss-snapshot { transform: scale(1.08); }
   .hss-layer[data-stage="2"] .hss-snapshot { transform: translateY(-3%) scale(1.48); }
   .hss-layer[data-stage="0"] .hss-alignment { transform: translateY(-2%) scale(.9); }
