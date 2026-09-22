@@ -7983,11 +7983,11 @@ main.page-detail.page-search > .site-search-card {
    whole columns wrap together (bars never drift out of alignment with cells).
    Top row is a per-base reactivity bar chart; bottom row the colored chain. */
 .hss-alignment { display: flex; flex-direction: column; gap: 14px; width: 100%; max-width: 380px; }
-.hss-aln-key { display: flex; flex-direction: row; align-items: baseline; gap: 14px;
-  text-align: left; white-space: nowrap; }
+.hss-aln-key { display: flex; flex-direction: row; align-items: center; gap: 14px;
+  text-align: left; white-space: nowrap; flex-wrap: nowrap; }
 .hss-aln-label { font-size: var(--type-footnote-size) !important; line-height: var(--type-footnote-line-height);
   font-weight: 400; color: var(--textPrimary); }
-.hss-aln-label-pdb { display: inline-flex; align-items: center; gap: 0.35em; }
+.hss-aln-label-pdb { display: inline-flex; align-items: center; gap: 0.35em; white-space: nowrap; }
 .hss-aln-arrow {
   display: block;
   width: 1.15em;
@@ -8053,7 +8053,7 @@ main.page-detail.page-search > .site-search-card {
   .hss-layer[data-stage="1"] .hss-snapshot { transform: scale(1.08); }
   .hss-layer[data-stage="2"] .hss-snapshot { transform: translateY(-3%) scale(1.48); }
   .hss-layer[data-stage="0"] .hss-alignment { transform: translateY(-2%) scale(.9); }
-  .hss-aln-key { gap: 8px; white-space: normal; }
+  .hss-aln-key { gap: 8px; white-space: nowrap; }
   .hss-scene { min-height: auto; opacity: 1; transform: none; padding: 20px 0; }
   .hss-headline { font-size: var(--page-title-size); white-space: normal; }
 }
