@@ -54,6 +54,48 @@ export function mountEntryCaseHeightListener({ windowObject, frame, expectedOrig
   };
 }
 
+export const ENTRY_CASE_VIEW_MODE_MESSAGE = 'foldbridge-view-mode-change';
+
+// Rewrite an #entry-case hash so its family param matches `family` (E|F to set,
+// null to clear). Returns the new hash string (with leading '#'), or null when
+// the hash is not an entry-case route or already matches — so callers can skip
+// a no-op navigation.
+export function entryCaseHashWithFamily(hash, family) {
+  const raw = String(hash || '').replace(/^#/, '');
+  const [route, queryString = ''] = raw.split('?');
+  if (route !== 'entry-case') return null;
+  const normalized = family === 'E' || family === 'F' ? family : null;
+  const params = new URLSearchParams(queryString);
+  const current = params.get('family');
+  if ((current || null) === normalized) return null;
+  if (normalized) params.set('family', normalized);
+  else params.delete('family');
+  const next = params.toString();
+  return next ? `#${route}?${next}` : `#${route}`;
+}
+
+export function mountEntryCaseViewModeListener({ windowObject, frame, expectedOrigin }) {
+  if (!windowObject || typeof windowObject.addEventListener !== 'function' || !frame) {
+    return () => {};
+  }
+  const handler = (event) => {
+    if (expectedOrigin && event?.origin !== expectedOrigin) return;
+    if (event?.source !== frame.contentWindow) return;
+    if (event?.data?.type !== ENTRY_CASE_VIEW_MODE_MESSAGE) return;
+    const family = event.data.family === 'E' || event.data.family === 'F' ? event.data.family : null;
+    const nextHash = entryCaseHashWithFamily(windowObject.location.hash, family);
+    if (nextHash === null) return;
+    windowObject.location.hash = nextHash;
+  };
+  let mounted = true;
+  windowObject.addEventListener('message', handler);
+  return () => {
+    if (!mounted) return;
+    mounted = false;
+    windowObject.removeEventListener('message', handler);
+  };
+}
+
 export function mountEntryCaseLoadingIndicator({ frame, indicator }) {
   if (!frame || typeof frame.addEventListener !== 'function' || !indicator) {
     return () => {};
