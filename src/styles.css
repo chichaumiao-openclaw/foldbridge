@@ -11415,3 +11415,12 @@ body[data-mode="dark"] .annojoin-child-group-row button:focus-visible {
   border-color: var(--foldbridge-gold) !important;
   color: var(--onPrimary) !important;
 }
+
+body[data-mode="dark"] .entry-table-intro {
+  color: #ffffff !important;
+}
+
+body[data-mode="dark"] .bundle-home-brand-copy span,
+body[data-mode="dark"] .bundle-switch-pill span {
+  color: #ffffff !important;
+}

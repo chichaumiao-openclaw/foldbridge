@@ -1,4 +1,4 @@
-name: Deploy FoldBridge preview
+name: pages build and deployment
 
 on:
   push:
@@ -11,7 +11,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: foldbridge-preview-pages
+  group: pages
   cancel-in-progress: true
 
 jobs:
@@ -43,6 +43,8 @@ jobs:
             --exclude=docs \
             ./ _site/
           cp -R dist/pagefind _site/dist/
+      - name: Verify the search index is included
+        run: test -f _site/dist/pagefind/pagefind.js
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
