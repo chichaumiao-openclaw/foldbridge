@@ -231,6 +231,9 @@ export function renderReactivityAlignment(caseData = {}) {
   const seq = Array.isArray(caseData.sequence) ? caseData.sequence : [];
   const react = Array.isArray(caseData.reactivity) ? caseData.reactivity : [];
   const ceiling = Number(caseData.norm_ceiling) || 1;
+  const pdbId = caseData.pdb_id || '';
+  const chain = caseData.chain || '';
+  const pdbLabel = `PDB ${pdbId} · chain ${chain}`.replace(/\s+$/, '').replace(/·\s*chain\s*$/, '· chain');
   const columns = seq.map((base, i) => {
     const bar = alignmentBarHtml(react[i], ceiling);
     const cell = alignmentCellHtml(base, react[i], ceiling);
@@ -238,7 +241,8 @@ export function renderReactivityAlignment(caseData = {}) {
   }).join('');
   return `<div class="hss-alignment" role="img" aria-label="Per-base probing reactivity (bars) aligned to the PDB chain residues">
     <div class="hss-aln-key">
-      <span class="hss-aln-label">1D reactivity signal</span>
+      <span class="hss-aln-label">Probing signal (reactivity)</span>
+      <span class="hss-aln-label hss-aln-label-pdb"><img class="hss-aln-arrow" src="./src/assets/probing-arrow-right.svg" alt="" aria-hidden="true" />${pdbLabel}</span>
     </div>
     <div class="hss-aln-columns">${columns}</div>
   </div>`;
