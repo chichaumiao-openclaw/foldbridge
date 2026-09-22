@@ -8056,6 +8056,7 @@ main.page-detail.page-search > .site-search-card {
 .hss-key-swatch { width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex: 0 0 auto; }
 .hss-key-warm { background: #e8743e; }
 .hss-key-cool { background: #477963; }
+.hss-key-neutral { background: var(--textAccent); }
 
 /* closing CTA */
 .hss-closing { text-align: center; padding: 34px 20px 56px; }

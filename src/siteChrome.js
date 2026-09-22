@@ -270,8 +270,8 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     ? `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><img class="hss-snapshot" src="${base}/${caseData.png_3d}" alt="${caseData.pdb_id || ''} tertiary structure, reactivity-colored" loading="lazy"></div>`
     : `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><div class="hss-missing">3D snapshot unavailable</div></div>`;
   const scenes = caseData.scenes.map((s, i) => {
-    const chip = s.chip && i !== 0 ? `\n      <span class="hss-chip">${s.chip}</span>` : '';
-    const alignmentReadout = i === 0 ? `
+    const chip = s.chip ? `\n      <span class="hss-chip">${s.chip}</span>` : '';
+    const stageReadout = i === 0 ? `
       <div class="hss-scene-mapline">
         <span>Probing signal</span>
         <span class="hss-scene-map-arrow" aria-hidden="true">→</span>
@@ -287,12 +287,43 @@ export function renderHomeScrollStory(caseData, opts = {}) {
       <div class="hss-scene-key">
         <span><i class="hss-key-swatch hss-key-warm" aria-hidden="true"></i>Warm · flexible / unpaired</span>
         <span><i class="hss-key-swatch hss-key-cool" aria-hidden="true"></i>Cool · constrained / paired</span>
-      </div>` : '';
+      </div>` : i === 1 ? `
+      <div class="hss-scene-mapline">
+        <span>1D signal</span>
+        <span class="hss-scene-map-arrow" aria-hidden="true">→</span>
+        <strong>2D secondary structure</strong>
+      </div>
+      <div class="hss-scene-flow" aria-label="Carry each reactivity color into the secondary structure and read stems and loops">
+        <div class="hss-flow-step"><span class="hss-flow-index">01</span><strong>Carry</strong><small>each color</small></div>
+        <span class="hss-flow-arrow" aria-hidden="true">→</span>
+        <div class="hss-flow-step"><span class="hss-flow-index">02</span><strong>Fold</strong><small>into stems &amp; loops</small></div>
+        <span class="hss-flow-arrow" aria-hidden="true">→</span>
+        <div class="hss-flow-step"><span class="hss-flow-index">03</span><strong>Read</strong><small>the 2D pattern</small></div>
+      </div>
+      <div class="hss-scene-key">
+        <span><i class="hss-key-swatch hss-key-warm" aria-hidden="true"></i>Warm signal tends to sit in loops</span>
+        <span><i class="hss-key-swatch hss-key-cool" aria-hidden="true"></i>Cool signal marks paired stems</span>
+      </div>` : `
+      <div class="hss-scene-mapline">
+        <span>2D cloverleaf</span>
+        <span class="hss-scene-map-arrow" aria-hidden="true">→</span>
+        <strong>3D PDB fold</strong>
+      </div>
+      <div class="hss-scene-flow" aria-label="Carry the same residues into the deposited three-dimensional fold">
+        <div class="hss-flow-step"><span class="hss-flow-index">01</span><strong>Keep</strong><small>each residue</small></div>
+        <span class="hss-flow-arrow" aria-hidden="true">→</span>
+        <div class="hss-flow-step"><span class="hss-flow-index">02</span><strong>Fold</strong><small>in 3D space</small></div>
+        <span class="hss-flow-arrow" aria-hidden="true">→</span>
+        <div class="hss-flow-step"><span class="hss-flow-index">03</span><strong>Compare</strong><small>with the PDB model</small></div>
+      </div>
+      <div class="hss-scene-key">
+        <span><i class="hss-key-swatch hss-key-neutral" aria-hidden="true"></i>Same reactivity values, now carried into 3D</span>
+      </div>`;
     return `
     <div class="hss-scene${i === 0 ? ' is-active' : ''}" data-scene="${i}">
       <div class="hss-scene-num">${s.n || ''}</div>
       <h3 class="hss-scene-title">${s.title || ''}</h3>
-      <p class="hss-scene-body">${s.body || ''}</p>${alignmentReadout}${chip}
+      <p class="hss-scene-body">${s.body || ''}</p>${stageReadout}${chip}
     </div>`;
   }).join('');
   const legend = `<div class="hss-legend"><span>low</span><span class="hss-legend-bar"></span><span>high reactivity</span></div>`;
