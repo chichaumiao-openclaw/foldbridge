@@ -321,7 +321,6 @@ export function renderHomeScrollStory(caseData, opts = {}) {
       </div>`;
     return `
     <div class="hss-scene${i === 0 ? ' is-active' : ''}" data-scene="${i}">
-      <div class="hss-scene-meta">${meta}</div>
       <h3 class="hss-scene-title">${s.title || ''}</h3>
       <p class="hss-scene-body">${s.body || ''}</p>${stageReadout}${chip}
     </div>`;
@@ -340,7 +339,7 @@ export function renderHomeScrollStory(caseData, opts = {}) {
   return `<section class="home-scroll-story" aria-label="From probing signal to 3D fold">
     ${intro}
     <div class="hss-grid">
-      <div class="hss-sticky"><div class="hss-card">${layer0}${layer1}${layer2}${legend}</div></div>
+      <div class="hss-sticky"><div class="hss-card"><div class="hss-meta">${meta}</div>${layer0}${layer1}${layer2}${legend}</div></div>
       <div class="hss-scenes">${scenes}</div>
     </div>
     ${closing}
