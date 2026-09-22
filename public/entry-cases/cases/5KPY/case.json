@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5KPY",
+  "biologicalMoleculeName": "5KPY",
+  "moleculeDisplayName": "5-HTP aptamer",
+  "caseId": "5KPY",
+  "caseKey": "5KPY",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "5KPY",
+  "profileCount": 245
+}
