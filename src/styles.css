@@ -7959,9 +7959,6 @@ main.page-detail.page-search > .site-search-card {
 .hss-card { position: relative; width: 100%; height: 100%; border-radius: 30px;
   background: var(--panel-card-bg); border: var(--panel-card-border);
   box-shadow: none; backdrop-filter: blur(8px); overflow: hidden; }
-.hss-meta { position: absolute; top: 16px; left: 16px; font-size: 0.76rem; font-weight: 400;
-  color: var(--textPrimary); z-index: 2; letter-spacing: -.015em;
-  transform: scaleX(.94); transform-origin: left center; }
 .hss-tag { position: absolute; top: 16px; right: 16px; font-size: 0.76rem; font-weight: 400;
   color: var(--textAccent); text-transform: uppercase; letter-spacing: 0;
   transform: scaleX(.92); transform-origin: right center; }
@@ -8027,7 +8024,8 @@ main.page-detail.page-search > .site-search-card {
   .home-scroll-story.hss-js .hss-scene { opacity: .35; transform: translateY(18px); }
   .home-scroll-story.hss-js .hss-scene.is-active { opacity: 1; transform: translateY(0); }
 }
-.hss-scene-title { font-size: 2rem; margin: 8px 0 0; letter-spacing: -.5px; color: var(--textPrimary); max-width: 700px; }
+.hss-scene-meta { margin: 0 0 8px; color: var(--textMuted); letter-spacing: -.015em; }
+.hss-scene-title { font-size: 2rem; margin: 0; letter-spacing: -.5px; color: var(--textPrimary); max-width: 700px; }
 .hss-scene-body { font-size: 1.08rem; line-height: 1.7; color: var(--textPrimary);
   margin: 14px 0 0; max-width: 660px; }
 .hss-chip { display: inline-block; margin-top: 16px; font-size: 1.08rem;
@@ -10689,7 +10687,7 @@ figcaption,
 .technology-detail-meta,
 .footer-heading,
 .footer-address-text,
-.hss-meta,
+.hss-scene-meta,
 .hss-legend {
   font-family: var(--fontFamily);
   font-size: var(--type-footnote-size) !important;
@@ -10736,7 +10734,6 @@ figcaption,
 
 /* Home scroll-story labels all use the body role: case metadata, stage tags,
    alignment labels, and the reactivity legend should read as one visual tier. */
-.hss-meta,
 .hss-tag,
 .hss-aln-label,
 .hss-legend {
@@ -10746,7 +10743,6 @@ figcaption,
 
 .hss-lede,
 .hss-scrollcue,
-.hss-scene-num,
 .hss-scene-body,
 .hss-chip {
   font-size: var(--type-body-size) !important;
