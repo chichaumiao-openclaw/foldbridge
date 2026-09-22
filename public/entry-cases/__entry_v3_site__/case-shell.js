@@ -2,6 +2,7 @@
 
 const ENTRY_CASE_HEIGHT_MESSAGE = "foldbridge-case-height";
 const WORKBENCH_PROGRESS_MESSAGE = "foldbridge-workbench-progress";
+const ENTRY_CASE_MODE_MESSAGE = "foldbridge:set-mode";
 
 function measureEmbeddedCaseHeight(shell, scrollY = 0, marginBottom = 0) {
   if (!shell || typeof shell.getBoundingClientRect !== "function") return null;
@@ -30,6 +31,33 @@ function initialChainId(bootstrap, search = "") {
   return bootstrap?.defaultChainId || "";
 }
 
+function formatCasePageTitle(moleculeName, pdbId, chainId) {
+  const molecule = String(moleculeName || '').trim();
+  const pdb = String(pdbId || '').trim();
+  const chain = String(chainId || '').trim();
+  const moleculePart = molecule && molecule.toUpperCase() !== pdb.toUpperCase() ? molecule : '';
+  return [moleculePart, pdb, chain ? `chain ${chain}` : ''].filter(Boolean).join('_');
+}
+
+async function loadCaseMoleculeName(caseId, chainId) {
+  const response = await fetch(new URL('./case.json', window.location.href));
+  if (response.ok) {
+    const payload = await response.json();
+    const directName = String(
+      payload?.moleculeDisplayName
+        || payload?.biologicalMoleculeName
+        || payload?.pdbMoleculeName
+        || ''
+    ).trim();
+    if (directName && directName.toUpperCase() !== String(caseId).toUpperCase()) return directName;
+  }
+
+  const mapResponse = await fetch(new URL('../../case-metadata.json', window.location.href));
+  if (!mapResponse.ok) throw new Error(`Case molecule metadata HTTP ${mapResponse.status}`);
+  const map = await mapResponse.json();
+  return String(map?.cases?.[caseId]?.[chainId] || map?.cases?.[caseId]?.[''] || '').trim();
+}
+
 function requestedMatrixFamily(search = "") {
   const params = new URLSearchParams(search);
   const families = params.getAll("family");
@@ -43,6 +71,7 @@ function requestedMatrixFamily(search = "") {
 function suppressInternalCaseChrome(documentNode) {
   documentNode?.querySelector?.(".hero .meta")?.remove();
   documentNode?.querySelector?.(".fb-enrichment")?.remove();
+  documentNode?.querySelector?.(".viewer > .panel")?.remove();
 }
 
 function mergeDeferredEvidence(bootstrap, payload) {
@@ -125,6 +154,8 @@ if (typeof document !== "undefined") {
     : {};
   const hero = document.querySelector(".hero");
   const caseId = String(bootstrap.caseId || "").trim();
+  const heroTitle = hero?.querySelector("h1");
+  hero?.querySelector(":scope > p")?.remove();
   if (hero && caseId && !hero.querySelector(".fb-entry-return-link")) {
     const link = document.createElement("a");
     link.className = "fb-entry-return-link";
@@ -154,9 +185,37 @@ if (typeof document !== "undefined") {
     selectedEvidenceId: bootstrap.defaultEvidenceId || "",
   };
 
+  let moleculeName = String(bootstrap.moleculeDisplayName || '').trim();
+  function syncCaseTitle() {
+    const title = formatCasePageTitle(moleculeName, caseId, state.activeChainId);
+    if (heroTitle && title) heroTitle.textContent = title;
+    if (title) document.title = title;
+  }
+  syncCaseTitle();
+  loadCaseMoleculeName(caseId, state.activeChainId).then((loadedMoleculeName) => {
+    if (!loadedMoleculeName) return;
+    moleculeName = loadedMoleculeName;
+    syncCaseTitle();
+    reportEmbeddedCaseHeightSoon();
+  }).catch(() => {});
+
   const chainButtons = [...document.querySelectorAll("[data-chain-id]")];
   const frame = document.getElementById("chainFrame");
   const chainStatus = document.querySelector("#chainStatus");
+  let caseMode = new URLSearchParams(window.location.search).get("mode") === "dark" ? "dark" : "light";
+
+  function setCaseMode(nextMode) {
+    caseMode = nextMode === "dark" ? "dark" : "light";
+    document.body.dataset.mode = caseMode;
+    document.documentElement.style.colorScheme = caseMode;
+    if (!frame) return;
+    const nextFrameUrl = new URL(frame.getAttribute("src") || frame.src, window.location.href);
+    nextFrameUrl.searchParams.set("mode", caseMode);
+    const nextHref = nextFrameUrl.href;
+    if (frame.src !== nextHref) frame.src = nextHref;
+  }
+
+  setCaseMode(caseMode);
   let embeddedCaseHeightRequest = null;
   let caseProgressValue = 15;
   let caseProgressTimer = null;
@@ -324,6 +383,10 @@ if (typeof document !== "undefined") {
 
   if (typeof window !== "undefined") {
     window.addEventListener("message", (event) => {
+      if (event.source === window.parent && event.data?.type === ENTRY_CASE_MODE_MESSAGE) {
+        setCaseMode(event.data.mode);
+        return;
+      }
       if (event.source !== frame?.contentWindow) return;
       if (event.origin !== window.location.origin) return;
       if (event.data?.type === "foldbridge-case-download-ready") {
@@ -363,6 +426,9 @@ if (typeof document !== "undefined") {
       selectedEvidenceId: state.selectedEvidenceId,
       matrixFamily,
     });
+    const nextFrameUrl = new URL(frame.src, window.location.href);
+    nextFrameUrl.searchParams.set("mode", caseMode);
+    frame.src = nextFrameUrl.href;
   }
 
   let deferredEvidenceStarted = false;
@@ -389,6 +455,7 @@ if (typeof document !== "undefined") {
       button.classList.toggle("is-active", button.dataset.chainId === state.activeChainId);
     }
     if (chainStatus) chainStatus.textContent = state.activeChainId;
+    syncCaseTitle();
     updateFrame();
   }
 
@@ -426,6 +493,7 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     measureEmbeddedCaseHeight, postEmbeddedCaseHeight,
     initialChainId,
+    formatCasePageTitle,
     requestedMatrixFamily,
     suppressInternalCaseChrome,
     mergeDeferredEvidence,
