@@ -258,14 +258,13 @@ export function renderHomeScrollStory(caseData, opts = {}) {
   if (!caseData || !Array.isArray(caseData.scenes) || caseData.scenes.length === 0) {
     return `<section class="home-scroll-story hss-placeholder" aria-hidden="true"></section>`;
   }
-  const meta = `${caseData.molecule_label || ''} · PDB ${caseData.pdb_id || ''} · ${caseData.confidence_label || ''}`;
-  const layer0 = `<div class="hss-layer is-active" data-stage="0"><div class="hss-tag">1 · Alignment</div>${renderReactivityAlignment(caseData)}</div>`;
+  const layer0 = `<div class="hss-layer is-active" data-stage="0">${renderReactivityAlignment(caseData)}</div>`;
   const layer1 = caseData.svg_2d
-    ? `<div class="hss-layer" data-stage="1"><div class="hss-tag">2 · Secondary structure</div><img class="hss-snapshot" src="${base}/${caseData.svg_2d}" alt="${caseData.pdb_id || ''} secondary structure, reactivity-colored" loading="lazy"></div>`
-    : `<div class="hss-layer" data-stage="1"><div class="hss-tag">2 · Secondary structure</div><div class="hss-missing">2D snapshot unavailable</div></div>`;
+    ? `<div class="hss-layer" data-stage="1"><img class="hss-snapshot" src="${base}/${caseData.svg_2d}" alt="${caseData.pdb_id || ''} secondary structure, reactivity-colored" loading="lazy"></div>`
+    : `<div class="hss-layer" data-stage="1"><div class="hss-missing">2D snapshot unavailable</div></div>`;
   const layer2 = caseData.png_3d
-    ? `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><img class="hss-snapshot" src="${base}/${caseData.png_3d}" alt="${caseData.pdb_id || ''} tertiary structure, reactivity-colored" loading="lazy"></div>`
-    : `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><div class="hss-missing">3D snapshot unavailable</div></div>`;
+    ? `<div class="hss-layer" data-stage="2"><img class="hss-snapshot" src="${base}/${caseData.png_3d}" alt="${caseData.pdb_id || ''} tertiary structure, reactivity-colored" loading="lazy"></div>`
+    : `<div class="hss-layer" data-stage="2"><div class="hss-missing">3D snapshot unavailable</div></div>`;
   const scenes = caseData.scenes.map((s, i) => {
     const chip = s.chip ? `\n      <span class="hss-chip">${s.chip}</span>` : '';
     return `
@@ -288,7 +287,7 @@ export function renderHomeScrollStory(caseData, opts = {}) {
   return `<section class="home-scroll-story" aria-label="From probing signal to 3D fold">
     ${intro}
     <div class="hss-grid">
-      <div class="hss-sticky"><div class="hss-card"><div class="hss-meta">${meta}</div>${layer0}${layer1}${layer2}${legend}</div></div>
+      <div class="hss-sticky"><div class="hss-card">${layer0}${layer1}${layer2}${legend}</div></div>
       <div class="hss-scenes">${scenes}</div>
     </div>
     ${closing}
