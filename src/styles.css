@@ -7952,7 +7952,7 @@ main.page-detail.page-search > .site-search-card {
 @keyframes hss-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 
 /* two-column scroll narrative */
-.hss-grid { display: grid; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); gap: clamp(36px, 4.5vw, 76px); align-items: start; }
+.hss-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 32px; align-items: start; }
 .hss-sticky { position: sticky; top: 120px; height: clamp(360px, 56vh, 600px); min-height: 360px;
   display: flex; align-items: center; }
 /* glassmorphism card（招牌质感） */
@@ -8027,9 +8027,9 @@ main.page-detail.page-search > .site-search-card {
   .home-scroll-story.hss-js .hss-scene { opacity: .35; transform: translateY(18px); }
   .home-scroll-story.hss-js .hss-scene.is-active { opacity: 1; transform: translateY(0); }
 }
-.hss-scene-title { font-size: 2rem; margin: 8px 0 0; letter-spacing: -.5px; color: var(--textPrimary); max-width: 700px; }
+.hss-scene-title { font-size: 2rem; margin: 8px 0 0; letter-spacing: -.5px; color: var(--textPrimary); }
 .hss-scene-body { font-size: 1.08rem; line-height: 1.7; color: var(--textPrimary);
-  margin: 14px 0 0; max-width: 660px; }
+  margin: 14px 0 0; max-width: 440px; }
 .hss-chip { display: inline-block; margin-top: 16px; font-size: 1.08rem;
   background: var(--primarySoft); color: var(--textAccent); padding: 5px 12px;
   border-radius: 980px; font-weight: 400; }

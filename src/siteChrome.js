@@ -268,7 +268,7 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     : `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><div class="hss-missing">3D snapshot unavailable</div></div>`;
   const scenes = caseData.scenes.map((s, i) => {
     const chip = s.chip ? `\n      <span class="hss-chip">${s.chip}</span>` : '';
-    const stageReadout = i === 1 ? `
+    const stageReadout = i === 0 ? '' : i === 1 ? `
       <div class="hss-scene-mapline">
         <span>1D signal</span>
         <span class="hss-scene-map-arrow" aria-hidden="true">→</span>
