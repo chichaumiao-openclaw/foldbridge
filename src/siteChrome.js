@@ -259,9 +259,6 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     return `<section class="home-scroll-story hss-placeholder" aria-hidden="true"></section>`;
   }
   const meta = `${caseData.molecule_label || ''} · PDB ${caseData.pdb_id || ''} · ${caseData.confidence_label || ''}`;
-  const pdbLabel = `PDB ${caseData.pdb_id || ''} · chain ${caseData.chain || ''}`
-    .replace(/\s+$/, '')
-    .replace(/·\s*chain\s*$/, '· chain');
   const layer0 = `<div class="hss-layer is-active" data-stage="0"><div class="hss-tag">1 · Alignment</div>${renderReactivityAlignment(caseData)}</div>`;
   const layer1 = caseData.svg_2d
     ? `<div class="hss-layer" data-stage="1"><div class="hss-tag">2 · Secondary structure</div><img class="hss-snapshot" src="${base}/${caseData.svg_2d}" alt="${caseData.pdb_id || ''} secondary structure, reactivity-colored" loading="lazy"></div>`
@@ -271,23 +268,7 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     : `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><div class="hss-missing">3D snapshot unavailable</div></div>`;
   const scenes = caseData.scenes.map((s, i) => {
     const chip = s.chip ? `\n      <span class="hss-chip">${s.chip}</span>` : '';
-    const stageReadout = i === 0 ? `
-      <div class="hss-scene-mapline">
-        <span>Probing signal</span>
-        <span class="hss-scene-map-arrow" aria-hidden="true">→</span>
-        <strong>${pdbLabel}</strong>
-      </div>
-      <div class="hss-scene-flow" aria-label="Measure reactivity, align the sequence, and map each value to a PDB residue">
-        <div class="hss-flow-step"><span class="hss-flow-index">01</span><strong>Measure</strong><small>reactivity</small></div>
-        <span class="hss-flow-arrow" aria-hidden="true">→</span>
-        <div class="hss-flow-step"><span class="hss-flow-index">02</span><strong>Align</strong><small>the sequence</small></div>
-        <span class="hss-flow-arrow" aria-hidden="true">→</span>
-        <div class="hss-flow-step"><span class="hss-flow-index">03</span><strong>Map</strong><small>to each residue</small></div>
-      </div>
-      <div class="hss-scene-key">
-        <span><i class="hss-key-swatch hss-key-warm" aria-hidden="true"></i>Warm · flexible / unpaired</span>
-        <span><i class="hss-key-swatch hss-key-cool" aria-hidden="true"></i>Cool · constrained / paired</span>
-      </div>` : i === 1 ? `
+    const stageReadout = i === 1 ? `
       <div class="hss-scene-mapline">
         <span>1D signal</span>
         <span class="hss-scene-map-arrow" aria-hidden="true">→</span>
