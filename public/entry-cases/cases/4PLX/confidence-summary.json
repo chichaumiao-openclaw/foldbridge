@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4PLX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 855,
+  "defaultEvidenceId": "annojoin:4PLX:confidence:B:data-eterna/OK45LIB_2A3_0000.rdat#2274",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 849
+  },
+  "generatedAt": "2026-08-17T12:35:20.277790Z",
+  "materializedEvidenceCount": 855,
+  "pdbId": "4PLX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 775,
+    "LOW": 58,
+    "NOT_SUPPORTED": 22
+  },
+  "totalEvidenceCount": 855
+}

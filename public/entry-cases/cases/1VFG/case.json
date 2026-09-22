@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1VFG",
+  "biologicalMoleculeName": "1VFG",
+  "caseId": "1VFG",
+  "caseKey": "1VFG",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "1VFG",
+  "profileCount": 12
+}

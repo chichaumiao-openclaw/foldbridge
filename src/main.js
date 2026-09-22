@@ -3396,8 +3396,14 @@ function render(options = {}) {
   }
   // entry 表两层折叠：委托绑定分组表头的展开/收起（parent:<id> / child:<id>）。
   document.querySelectorAll('[data-entry-group-toggle]').forEach((button) => {
-    button.addEventListener('click', () => {
+    button.addEventListener('click', (event) => {
+      event.stopPropagation();
       toggleEntryGroup(button.getAttribute('data-entry-group-toggle'));
+    });
+  });
+  document.querySelectorAll('[data-entry-group-row]').forEach((row) => {
+    row.addEventListener('click', () => {
+      toggleEntryGroup(row.getAttribute('data-entry-group-row'));
     });
   });
   // entry 表旧版 family + detail technique 两级筛选。

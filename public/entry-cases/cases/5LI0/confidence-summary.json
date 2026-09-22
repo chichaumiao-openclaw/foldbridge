@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5LI0",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6002,
+  "defaultEvidenceId": "annojoin:5LI0:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#10601",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3000,
+    "B": 3002
+  },
+  "generatedAt": "2026-08-17T12:21:44.256242Z",
+  "materializedEvidenceCount": 6002,
+  "pdbId": "5LI0",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 56,
+    "LOW": 1533,
+    "NOT_SUPPORTED": 4413
+  },
+  "totalEvidenceCount": 6002
+}

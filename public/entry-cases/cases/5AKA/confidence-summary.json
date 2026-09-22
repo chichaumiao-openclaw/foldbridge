@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5AKA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 517,
+  "defaultEvidenceId": "annojoin:5AKA:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#2627",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 177,
+    "B": 340
+  },
+  "generatedAt": "2026-08-17T12:12:38.856048Z",
+  "materializedEvidenceCount": 517,
+  "pdbId": "5AKA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 79,
+    "LOW": 124,
+    "NOT_SUPPORTED": 314
+  },
+  "totalEvidenceCount": 517
+}

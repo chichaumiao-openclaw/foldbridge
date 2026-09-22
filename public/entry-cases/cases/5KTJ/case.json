@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5KTJ",
+  "biologicalMoleculeName": "5KTJ",
+  "caseId": "5KTJ",
+  "caseKey": "5KTJ",
+  "chains": [
+    "A",
+    "C"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "5KTJ",
+  "profileCount": 12
+}

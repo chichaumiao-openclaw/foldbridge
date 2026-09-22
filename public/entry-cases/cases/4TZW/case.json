@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4TZW",
+  "biologicalMoleculeName": "4TZW",
+  "caseId": "4TZW",
+  "caseKey": "4TZW",
+  "chains": [
+    "B",
+    "C"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "4TZW",
+  "profileCount": 46
+}

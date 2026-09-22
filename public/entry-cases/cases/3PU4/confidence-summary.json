@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3PU4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 348,
+  "defaultEvidenceId": "annojoin:3PU4:confidence:B:data-eterna/ETERNA_R81_0001.rdat#1345",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 95,
+    "B": 253
+  },
+  "generatedAt": "2026-08-17T13:04:21.164543Z",
+  "materializedEvidenceCount": 348,
+  "pdbId": "3PU4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 51,
+    "NOT_SUPPORTED": 297
+  },
+  "totalEvidenceCount": 348
+}

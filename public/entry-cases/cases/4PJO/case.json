@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4PJO",
+  "biologicalMoleculeName": "4PJO",
+  "caseId": "4PJO",
+  "caseKey": "4PJO",
+  "chains": [
+    "1",
+    "2",
+    "3",
+    "4"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "4PJO",
+  "profileCount": 2
+}

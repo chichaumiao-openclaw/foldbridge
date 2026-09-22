@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4PLX",
+  "biologicalMoleculeName": "4PLX",
+  "caseId": "4PLX",
+  "caseKey": "4PLX",
+  "chains": [
+    "A",
+    "B",
+    "C"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "4PLX",
+  "profileCount": 285
+}

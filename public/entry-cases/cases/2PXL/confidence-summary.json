@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "2PXL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 66,
+  "defaultEvidenceId": "annojoin:2PXL:confidence:B:data-rna-structures/M2PK90_2A3_0000.rdat#63161",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 32,
+    "B": 34
+  },
+  "generatedAt": "2026-08-17T12:30:27.895034Z",
+  "materializedEvidenceCount": 66,
+  "pdbId": "2PXL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 66
+  },
+  "totalEvidenceCount": 66
+}

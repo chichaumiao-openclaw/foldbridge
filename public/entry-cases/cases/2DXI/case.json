@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2DXI",
+  "biologicalMoleculeName": "2DXI",
+  "caseId": "2DXI",
+  "caseKey": "2DXI",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "2DXI",
+  "profileCount": 2
+}

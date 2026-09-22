@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "28UJ",
+  "biologicalMoleculeName": "28UJ",
+  "caseId": "28UJ",
+  "caseKey": "28UJ",
+  "chains": [
+    "A",
+    "Y",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "28UJ",
+  "profileCount": 467
+}

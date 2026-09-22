@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1TTT",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4386,
+  "defaultEvidenceId": "annojoin:1TTT:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#36191",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2049,
+    "B": 2337
+  },
+  "generatedAt": "2026-08-17T11:02:10.009471Z",
+  "materializedEvidenceCount": 4386,
+  "pdbId": "1TTT",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 672,
+    "LOW": 1357,
+    "NOT_SUPPORTED": 2357
+  },
+  "totalEvidenceCount": 4386
+}

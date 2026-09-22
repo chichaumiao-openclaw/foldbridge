@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5HKV",
+  "biologicalMoleculeName": "5HKV",
+  "caseId": "5HKV",
+  "caseKey": "5HKV",
+  "chains": [
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5HKV",
+  "profileCount": 3994
+}

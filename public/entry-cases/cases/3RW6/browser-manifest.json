@@ -1,0 +1,32 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "F": {
+      "case2dPath": "chains/F/case-2d-structure.json.gz",
+      "chainId": "F",
+      "chainRoot": "chains/F",
+      "linkedViewBundlePath": "chains/F/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/F/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/F/varna-template.svg.gz"
+    },
+    "H": {
+      "case2dPath": "chains/H/case-2d-structure.json.gz",
+      "chainId": "H",
+      "chainRoot": "chains/H",
+      "linkedViewBundlePath": "chains/H/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/H/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/H/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "F",
+  "evidenceChainMap": {
+    "annojoin:3RW6:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#12379": "H",
+    "annojoin:3RW6:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12379": "H"
+  }
+}

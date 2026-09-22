@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5NDV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 16576,
+  "defaultEvidenceId": "annojoin:5NDV:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#10970",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8284,
+    "B": 8292
+  },
+  "generatedAt": "2026-08-17T11:09:30.598638Z",
+  "materializedEvidenceCount": 16576,
+  "pdbId": "5NDV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 290,
+    "LOW": 3760,
+    "NOT_SUPPORTED": 12526
+  },
+  "totalEvidenceCount": 16576
+}

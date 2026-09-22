@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5FVC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 128,
+  "defaultEvidenceId": "annojoin:5FVC:confidence:B:data-eterna/ETERNA_R81_0000.rdat#376",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 124
+  },
+  "generatedAt": "2026-08-17T12:58:31.235657Z",
+  "materializedEvidenceCount": 128,
+  "pdbId": "5FVC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 128
+  },
+  "totalEvidenceCount": 128
+}

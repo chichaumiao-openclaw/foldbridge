@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4R4P",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 392,
+  "defaultEvidenceId": "annojoin:4R4P:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1372",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 196,
+    "B": 196
+  },
+  "generatedAt": "2026-08-17T11:17:37.724985Z",
+  "materializedEvidenceCount": 392,
+  "pdbId": "4R4P",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 392
+  },
+  "totalEvidenceCount": 392
+}

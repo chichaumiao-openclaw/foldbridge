@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4AS1",
+  "biologicalMoleculeName": "4AS1",
+  "caseId": "4AS1",
+  "caseKey": "4AS1",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4AS1",
+  "profileCount": 4
+}

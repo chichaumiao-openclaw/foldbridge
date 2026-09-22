@@ -1,0 +1,279 @@
+{
+  "protocolVersion": "annojoin-technology-family-smoke.v0.1",
+  "caseSet": "annojoin-technology-family-smoke",
+  "generatedAt": "2026-06-26T00:00:00+08:00",
+  "sources": {
+    "knowledgeSource": "docs/技术沉淀/RNA探针技术特性.tsv",
+    "registry": "task_packages/fec_lss_rc3_release_20260623/probe_confidence_method_registry.tsv",
+    "raspAtlas": "src/assets/generated/annojoin-atlas/index.json",
+    "rmdbSmoke": "public/annojoin-smoke/5gag"
+  },
+  "axisPolicy": {
+    "rmdbCoverageAxis": "rmdb_profile_query_to_pdb_subject",
+    "raspCoverageAxis": "rasp_feature_query_to_pdb_subject",
+    "structureCoverageAxis": "sequence_alignment_and_atom_site_coordinates_only"
+  },
+  "registrySummary": {
+    "technologyCount": 33,
+    "familyCounts": {
+      "A": 10,
+      "B": 14,
+      "C": 3,
+      "D": 4,
+      "E": 2,
+      "F": 1
+    },
+    "unknownFamilyCount": 0
+  },
+  "controls": {
+    "negativeAssayLabels": [
+      "None"
+    ],
+    "negativeAssayPolicy": "do_not_assign_to_measurement_family",
+    "rmdbCoarseLabel": "rmdb_chemical_probing",
+    "rmdbCoarseLabelPolicy": "requires_profile_provenance_split"
+  },
+  "aliases": {
+    "Structure-seq": "Structure-Seq"
+  },
+  "families": [
+    {
+      "id": "A",
+      "slug": "wc-face-pairing",
+      "pageHref": "family-a.html",
+      "title": "Family A - WC-face pairing-state probes",
+      "shortLabel": "WC-face pairing state",
+      "description": "Base-selective chemistry whose primary interpretation is paired versus unpaired state on Watson-Crick faces.",
+      "signalDirection": "unpaired_positive",
+      "referenceQuantity": "rnaview_dssr_paired_unpaired_label",
+      "recallMetric": "auc_unpaired_vs_paired",
+      "conflictMetric": "paired_high_fraction",
+      "visualChannel": "residue_reactivity",
+      "technologies": [
+        "DMS",
+        "DMS-seq",
+        "DMS-MaPseq",
+        "Structure-Seq",
+        "Structure-seq2",
+        "Mod-seq",
+        "DIM-2P-seq",
+        "CMC",
+        "CMCT",
+        "Keth-seq"
+      ],
+      "displayPolicy": {
+        "primaryLayer": "residue_reactivity",
+        "referenceLayer": "paired_unpaired_state",
+        "coverageWarning": "RMDB profile query coverage and RASP feature query coverage are different axes."
+      },
+      "representativeCases": [
+        {
+          "sourceFamily": "RMDB2PDB",
+          "caseKey": "RMDB2PDB:5GAG",
+          "pdbId": "5GAG",
+          "technology": "DMS",
+          "profileId": "data-rna-structures/SRPECLI_DMS_0001.rdat#DATA:262",
+          "coverageAxis": "rmdb_profile_query_to_pdb_subject",
+          "coverageSource": "PIPLINE/rmdb2pdb_v3_exact_query_vs_pdb_normalized_acgun_rasp_params_20260612",
+          "status": "smoke_ready",
+          "href": "../5gag/index.html"
+        },
+        {
+          "sourceFamily": "RASP2PDB",
+          "caseKey": "RASP2PDB:10FZ",
+          "pdbId": "10FZ",
+          "technology": "DMS-seq",
+          "coverageAxis": "rasp_feature_query_to_pdb_subject",
+          "status": "current_atlas_case",
+          "href": "../../annojoin-atlas/#annojoin-case=10FZ"
+        }
+      ]
+    },
+    {
+      "id": "B",
+      "slug": "backbone-flexibility",
+      "pageHref": "family-b.html",
+      "title": "Family B - backbone flexibility probes",
+      "shortLabel": "Backbone flexibility",
+      "description": "SHAPE-like reagents whose residue signal is interpreted as local nucleotide flexibility rather than base identity.",
+      "signalDirection": "unpaired_positive",
+      "referenceQuantity": "rnaview_dssr_paired_unpaired_label",
+      "recallMetric": "auc_unpaired_vs_paired",
+      "conflictMetric": "paired_high_fraction",
+      "visualChannel": "residue_reactivity",
+      "technologies": [
+        "SHAPE",
+        "NMIA",
+        "1M7",
+        "BzCN",
+        "2A3",
+        "NAI-MaP",
+        "icSHAPE",
+        "icSHAPE-MaP",
+        "smartSHAPE",
+        "Nuc-SHAPE-Structure-Seq",
+        "Cotranscriptional_SHAPE-seq",
+        "SHAPE-MaP",
+        "tNet-MaPseq",
+        "ChemModSeq"
+      ],
+      "displayPolicy": {
+        "primaryLayer": "residue_reactivity",
+        "referenceLayer": "paired_unpaired_state",
+        "coverageWarning": "Do not merge RMDB coarse labels into this family without profile-level provenance."
+      },
+      "representativeCases": [
+        {
+          "sourceFamily": "RMDB2PDB",
+          "caseKey": "RMDB2PDB:5GAG",
+          "pdbId": "5GAG",
+          "technology": "BzCN",
+          "profileId": "data-rna-structures/SRPECLI_DMS_0001.rdat#DATA:286",
+          "coverageAxis": "rmdb_profile_query_to_pdb_subject",
+          "coverageSource": "PIPLINE/rmdb2pdb_v3_exact_query_vs_pdb_normalized_acgun_rasp_params_20260612",
+          "status": "smoke_candidate",
+          "href": "../5gag/index.html"
+        },
+        {
+          "sourceFamily": "RASP2PDB",
+          "caseKey": "RASP2PDB:10FZ",
+          "pdbId": "10FZ",
+          "technology": "SHAPE-MaP",
+          "coverageAxis": "rasp_feature_query_to_pdb_subject",
+          "status": "current_atlas_case",
+          "href": "../../annojoin-atlas/#annojoin-case=10FZ"
+        }
+      ]
+    },
+    {
+      "id": "C",
+      "slug": "enzymatic-pairing",
+      "pageHref": "family-c.html",
+      "title": "Family C - enzymatic pairing-enrichment probes",
+      "shortLabel": "Enzymatic pairing enrichment",
+      "description": "Nuclease-based assays whose positive signal can enrich paired or structured regions and therefore reverses the usual residue-reactivity interpretation.",
+      "signalDirection": "paired_positive",
+      "referenceQuantity": "rnaview_dssr_paired_unpaired_label",
+      "recallMetric": "auc_paired_vs_unpaired",
+      "conflictMetric": "unpaired_high_fraction",
+      "visualChannel": "reversed_residue_reactivity",
+      "technologies": [
+        "PARS",
+        "PARTE",
+        "tNet-RNase-seq"
+      ],
+      "displayPolicy": {
+        "primaryLayer": "paired_positive_signal",
+        "referenceLayer": "paired_unpaired_state",
+        "coverageWarning": "High signal is not residue reactivity in the SHAPE/DMS sense."
+      },
+      "representativeCases": [
+        {
+          "sourceFamily": "RASP2PDB",
+          "caseKey": "RASP2PDB:1ASY",
+          "pdbId": "1ASY",
+          "technology": "PARS",
+          "coverageAxis": "rasp_feature_query_to_pdb_subject",
+          "status": "current_atlas_case",
+          "href": "../../annojoin-atlas/#annojoin-case=1ASY"
+        }
+      ]
+    },
+    {
+      "id": "D",
+      "slug": "solvent-accessibility",
+      "pageHref": "family-d.html",
+      "title": "Family D - solvent-accessibility probes",
+      "shortLabel": "Solvent accessibility",
+      "description": "Hydroxyl-radical and related probing where the primary structural reference is residue solvent accessibility.",
+      "signalDirection": "high_reactivity_high_sasa",
+      "referenceQuantity": "pdb_shrake_rupley_residue_sasa",
+      "recallMetric": "spearman_reactivity_vs_sasa",
+      "conflictMetric": "pairing_proxy_auc_fallback",
+      "visualChannel": "sasa_accessibility",
+      "technologies": [
+        "HRF",
+        "RL-Seq",
+        "Lead-seq",
+        "icLASER"
+      ],
+      "displayPolicy": {
+        "primaryLayer": "sasa_accessibility",
+        "referenceLayer": "pdb_shrake_rupley_residue_sasa",
+        "coverageWarning": "This family should not be scored as paired/unpaired recall when SASA is available."
+      },
+      "representativeCases": [
+        {
+          "sourceFamily": "RASP2PDB",
+          "caseKey": "RASP2PDB:11DG",
+          "pdbId": "11DG",
+          "technology": "RL-Seq",
+          "coverageAxis": "rasp_feature_query_to_pdb_subject",
+          "status": "current_atlas_case",
+          "href": "../../annojoin-atlas/#annojoin-case=11DG"
+        }
+      ]
+    },
+    {
+      "id": "E",
+      "slug": "contact-proximity",
+      "pageHref": "family-e.html",
+      "title": "Family E - proximity/contact probes",
+      "shortLabel": "Contact proximity",
+      "description": "Crosslinking or proximity assays whose native display is a contact-map layer rather than per-residue intensity.",
+      "signalDirection": "signal_pair_spatial_proximity",
+      "referenceQuantity": "pdb_residue_pair_distance",
+      "recallMetric": "contact_pair_auc",
+      "conflictMetric": "contact_map_precision",
+      "visualChannel": "contact_map",
+      "technologies": [
+        "MCA",
+        "MOHCA_candidate"
+      ],
+      "displayPolicy": {
+        "primaryLayer": "contact_map",
+        "referenceLayer": "residue_pair_distance",
+        "coverageWarning": "Current atlas has no materialized contact-map smoke case for this family."
+      },
+      "representativeCases": [
+        {
+          "sourceFamily": "RASP2PDB",
+          "caseKey": "RASP2PDB:family-E-unmaterialized",
+          "technology": "MCA",
+          "coverageAxis": "rasp_feature_query_to_pdb_subject",
+          "status": "not_materialized_in_current_atlas"
+        }
+      ]
+    },
+    {
+      "id": "F",
+      "slug": "pair-constraint",
+      "pageHref": "family-f.html",
+      "title": "Family F - pair-constraint probes",
+      "shortLabel": "Pair constraints",
+      "description": "Mutate-and-map style information whose display should be an inferred pair set or pair-confidence matrix.",
+      "signalDirection": "mutation_releases_partner_pairing",
+      "referenceQuantity": "known_or_inferred_base_pair_set",
+      "recallMetric": "pair_f1",
+      "conflictMetric": "pair_precision",
+      "visualChannel": "pair_set",
+      "technologies": [
+        "mutate-and-map_candidate"
+      ],
+      "displayPolicy": {
+        "primaryLayer": "pair_set",
+        "referenceLayer": "base_pair_set",
+        "coverageWarning": "Current atlas has no materialized pair-constraint smoke case for this family."
+      },
+      "representativeCases": [
+        {
+          "sourceFamily": "RASP2PDB",
+          "caseKey": "RASP2PDB:family-F-unmaterialized",
+          "technology": "mutate-and-map_candidate",
+          "coverageAxis": "rasp_feature_query_to_pdb_subject",
+          "status": "not_materialized_in_current_atlas"
+        }
+      ]
+    }
+  ]
+}

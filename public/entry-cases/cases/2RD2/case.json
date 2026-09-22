@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2RD2",
+  "biologicalMoleculeName": "2RD2",
+  "caseId": "2RD2",
+  "caseKey": "2RD2",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "2RD2",
+  "profileCount": 12
+}

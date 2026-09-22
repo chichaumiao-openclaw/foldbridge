@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3EPH",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8,
+  "defaultEvidenceId": "annojoin:3EPH:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#3542",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 4
+  },
+  "generatedAt": "2026-08-17T12:28:01.660367Z",
+  "materializedEvidenceCount": 8,
+  "pdbId": "3EPH",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 3,
+    "NOT_SUPPORTED": 5
+  },
+  "totalEvidenceCount": 8
+}

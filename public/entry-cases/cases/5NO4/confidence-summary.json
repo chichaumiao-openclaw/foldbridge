@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5NO4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3794,
+  "defaultEvidenceId": "annojoin:5NO4:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#3206",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1628,
+    "B": 2166
+  },
+  "generatedAt": "2026-08-17T12:06:37.774269Z",
+  "materializedEvidenceCount": 3794,
+  "pdbId": "5NO4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 428,
+    "LOW": 1112,
+    "NOT_SUPPORTED": 2254
+  },
+  "totalEvidenceCount": 3794
+}

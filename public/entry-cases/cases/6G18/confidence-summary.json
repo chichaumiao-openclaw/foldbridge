@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6G18",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2098,
+  "defaultEvidenceId": "annojoin:6G18:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#8454",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1047,
+    "B": 1051
+  },
+  "generatedAt": "2026-08-17T12:33:28.063985Z",
+  "materializedEvidenceCount": 2098,
+  "pdbId": "6G18",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 28,
+    "LOW": 415,
+    "NOT_SUPPORTED": 1655
+  },
+  "totalEvidenceCount": 2098
+}

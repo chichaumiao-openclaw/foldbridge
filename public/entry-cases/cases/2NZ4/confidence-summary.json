@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2NZ4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 92,
+  "defaultEvidenceId": "annojoin:2NZ4:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#3334",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 12,
+    "B": 80
+  },
+  "generatedAt": "2026-08-17T11:02:24.167440Z",
+  "materializedEvidenceCount": 92,
+  "pdbId": "2NZ4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 34,
+    "NOT_SUPPORTED": 55
+  },
+  "totalEvidenceCount": 92
+}

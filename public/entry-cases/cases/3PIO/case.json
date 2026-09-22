@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3PIO",
+  "biologicalMoleculeName": "3PIO",
+  "caseId": "3PIO",
+  "caseKey": "3PIO",
+  "chains": [
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "3PIO",
+  "profileCount": 1548
+}

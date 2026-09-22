@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "2IL9",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1174,
+  "defaultEvidenceId": "annojoin:2IL9:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1414",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 584,
+    "B": 590
+  },
+  "generatedAt": "2026-08-17T12:28:01.660367Z",
+  "materializedEvidenceCount": 1174,
+  "pdbId": "2IL9",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 1174
+  },
+  "totalEvidenceCount": 1174
+}

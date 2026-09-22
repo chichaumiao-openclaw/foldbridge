@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "5XWY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:5XWY:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#4222",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T12:46:13.329069Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "5XWY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 1,
+    "NOT_SUPPORTED": 3
+  },
+  "totalEvidenceCount": 4
+}

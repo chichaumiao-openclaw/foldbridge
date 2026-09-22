@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1EXD",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8,
+  "defaultEvidenceId": "annojoin:1EXD:confidence:B:data-general/ARCHII_2A3_0000.rdat#18248",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4,
+    "B": 4
+  },
+  "generatedAt": "2026-08-17T12:19:44.171112Z",
+  "materializedEvidenceCount": 8,
+  "pdbId": "1EXD",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 8
+  },
+  "totalEvidenceCount": 8
+}

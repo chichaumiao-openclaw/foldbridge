@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5X8P",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1224,
+  "defaultEvidenceId": "annojoin:5X8P:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#32610",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 612,
+    "B": 612
+  },
+  "generatedAt": "2026-08-17T12:29:17.501284Z",
+  "materializedEvidenceCount": 1224,
+  "pdbId": "5X8P",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 91,
+    "LOW": 424,
+    "NOT_SUPPORTED": 709
+  },
+  "totalEvidenceCount": 1224
+}

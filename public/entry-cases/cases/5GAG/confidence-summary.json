@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5GAG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 962,
+  "defaultEvidenceId": "annojoin:5GAG:confidence:B:data-rna-structures/5SRRNA_DCP_0000.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 392,
+    "B": 570
+  },
+  "generatedAt": "2026-08-17T13:04:21.164543Z",
+  "materializedEvidenceCount": 962,
+  "pdbId": "5GAG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 14,
+    "LOW": 173,
+    "NOT_SUPPORTED": 775
+  },
+  "totalEvidenceCount": 962
+}

@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "5UZ9",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:5UZ9:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#4873",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "5UZ9",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 1,
+    "NOT_SUPPORTED": 5
+  },
+  "totalEvidenceCount": 6
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5XYU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1221,
+  "defaultEvidenceId": "annojoin:5XYU:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#78241",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 610,
+    "B": 611
+  },
+  "generatedAt": "2026-08-17T12:19:44.171112Z",
+  "materializedEvidenceCount": 1221,
+  "pdbId": "5XYU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 27,
+    "LOW": 392,
+    "NOT_SUPPORTED": 802
+  },
+  "totalEvidenceCount": 1221
+}

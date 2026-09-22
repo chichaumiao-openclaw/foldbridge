@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5NWY",
+  "biologicalMoleculeName": "5NWY",
+  "caseId": "5NWY",
+  "caseKey": "5NWY",
+  "chains": [
+    "0",
+    "M",
+    "N",
+    "O"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5NWY",
+  "profileCount": 4679
+}

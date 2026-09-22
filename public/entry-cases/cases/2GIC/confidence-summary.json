@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2GIC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 348,
+  "defaultEvidenceId": "annojoin:2GIC:confidence:B:data-eterna/ETERNA_R69_0001.rdat#3457",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 95,
+    "B": 253
+  },
+  "generatedAt": "2026-08-17T11:43:43.312761Z",
+  "materializedEvidenceCount": 348,
+  "pdbId": "2GIC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 44,
+    "NOT_SUPPORTED": 304
+  },
+  "totalEvidenceCount": 348
+}

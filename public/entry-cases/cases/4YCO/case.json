@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4YCO",
+  "biologicalMoleculeName": "4YCO",
+  "caseId": "4YCO",
+  "caseKey": "4YCO",
+  "chains": [
+    "D",
+    "E",
+    "F"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "4YCO",
+  "profileCount": 7
+}

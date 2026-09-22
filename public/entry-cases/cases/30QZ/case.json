@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "30QZ",
+  "biologicalMoleculeName": "30QZ",
+  "caseId": "30QZ",
+  "caseKey": "30QZ",
+  "chains": [
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "30QZ",
+  "profileCount": 419
+}

@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "4DR4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 26,
+  "defaultEvidenceId": "annojoin:4DR4:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#16215",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 13,
+    "B": 13
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 26,
+  "pdbId": "4DR4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 3,
+    "NOT_SUPPORTED": 23
+  },
+  "totalEvidenceCount": 26
+}

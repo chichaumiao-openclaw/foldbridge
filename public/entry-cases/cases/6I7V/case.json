@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6I7V",
+  "biologicalMoleculeName": "6I7V",
+  "caseId": "6I7V",
+  "caseKey": "6I7V",
+  "chains": [
+    "AA",
+    "BA",
+    "CA",
+    "CB",
+    "DA",
+    "DB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6I7V",
+  "profileCount": 12085
+}

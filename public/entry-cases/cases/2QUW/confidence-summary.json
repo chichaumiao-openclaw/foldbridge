@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2QUW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 292,
+  "defaultEvidenceId": "annojoin:2QUW:confidence:B:data-eterna/ETERNA_R74_0000.rdat#1043",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 286
+  },
+  "generatedAt": "2026-08-17T12:06:37.774269Z",
+  "materializedEvidenceCount": 292,
+  "pdbId": "2QUW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 208,
+    "NOT_SUPPORTED": 81
+  },
+  "totalEvidenceCount": 292
+}

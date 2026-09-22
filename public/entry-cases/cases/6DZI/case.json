@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6DZI",
+  "biologicalMoleculeName": "6DZI",
+  "caseId": "6DZI",
+  "caseKey": "6DZI",
+  "chains": [
+    "A",
+    "B",
+    "h"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "6DZI",
+  "profileCount": 4011
+}

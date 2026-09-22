@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3IGI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 186,
+  "defaultEvidenceId": "annojoin:3IGI:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#3363",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 93,
+    "B": 93
+  },
+  "generatedAt": "2026-08-17T11:52:21.352142Z",
+  "materializedEvidenceCount": 186,
+  "pdbId": "3IGI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 11,
+    "LOW": 49,
+    "NOT_SUPPORTED": 126
+  },
+  "totalEvidenceCount": 186
+}

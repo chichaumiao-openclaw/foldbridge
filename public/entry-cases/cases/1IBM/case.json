@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1IBM",
+  "biologicalMoleculeName": "1IBM",
+  "caseId": "1IBM",
+  "caseKey": "1IBM",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "1IBM",
+  "profileCount": 38
+}

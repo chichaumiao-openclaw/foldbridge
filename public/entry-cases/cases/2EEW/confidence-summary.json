@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2EEW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18,
+  "defaultEvidenceId": "annojoin:2EEW:confidence:B:data-rna-structures/RFMREP_2A3_0000.rdat#766",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 9,
+    "B": 9
+  },
+  "generatedAt": "2026-08-17T12:18:57.850374Z",
+  "materializedEvidenceCount": 18,
+  "pdbId": "2EEW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 4,
+    "NOT_SUPPORTED": 14
+  },
+  "totalEvidenceCount": 18
+}

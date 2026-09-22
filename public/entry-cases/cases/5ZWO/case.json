@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5ZWO",
+  "biologicalMoleculeName": "5ZWO",
+  "caseId": "5ZWO",
+  "caseKey": "5ZWO",
+  "chains": [
+    "B",
+    "F",
+    "H",
+    "I"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5ZWO",
+  "profileCount": 222
+}

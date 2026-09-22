@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "5ZEY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 604,
+  "defaultEvidenceId": "annojoin:5ZEY:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#77023",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 302,
+    "B": 302
+  },
+  "generatedAt": "2026-08-17T11:37:53.237503Z",
+  "materializedEvidenceCount": 604,
+  "pdbId": "5ZEY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 72,
+    "NOT_SUPPORTED": 532
+  },
+  "totalEvidenceCount": 604
+}

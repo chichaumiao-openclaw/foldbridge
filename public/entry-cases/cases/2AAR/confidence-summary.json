@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2AAR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1540,
+  "defaultEvidenceId": "annojoin:2AAR:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#5842",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 770,
+    "B": 770
+  },
+  "generatedAt": "2026-08-17T13:14:39.572696Z",
+  "materializedEvidenceCount": 1540,
+  "pdbId": "2AAR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 71,
+    "LOW": 504,
+    "NOT_SUPPORTED": 965
+  },
+  "totalEvidenceCount": 1540
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1K8A",
+  "biologicalMoleculeName": "1K8A",
+  "caseId": "1K8A",
+  "caseKey": "1K8A",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "1K8A",
+  "profileCount": 1934
+}

@@ -1,0 +1,22 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6C5L",
+  "biologicalMoleculeName": "6C5L",
+  "caseId": "6C5L",
+  "caseKey": "6C5L",
+  "chains": [
+    "AA",
+    "AV",
+    "AW",
+    "BA",
+    "BB",
+    "CA",
+    "CV",
+    "CW",
+    "DA",
+    "DB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6C5L",
+  "profileCount": 2766
+}

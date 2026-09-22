@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5GMK",
+  "biologicalMoleculeName": "5GMK",
+  "caseId": "5GMK",
+  "caseKey": "5GMK",
+  "chains": [
+    "D",
+    "E",
+    "L"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5GMK",
+  "profileCount": 222
+}

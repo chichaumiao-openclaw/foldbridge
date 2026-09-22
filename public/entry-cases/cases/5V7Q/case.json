@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5V7Q",
+  "biologicalMoleculeName": "5V7Q",
+  "caseId": "5V7Q",
+  "caseKey": "5V7Q",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5V7Q",
+  "profileCount": 2726
+}

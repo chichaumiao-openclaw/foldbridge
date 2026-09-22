@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1MMS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 42,
+  "defaultEvidenceId": "annojoin:1MMS:confidence:B:data-eterna/SHAPE_RYOS_0620.rdat#461",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 20,
+    "B": 22
+  },
+  "generatedAt": "2026-08-17T11:43:36.994359Z",
+  "materializedEvidenceCount": 42,
+  "pdbId": "1MMS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 42
+  },
+  "totalEvidenceCount": 42
+}

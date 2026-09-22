@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3OWI",
+  "biologicalMoleculeName": "3OWI",
+  "caseId": "3OWI",
+  "caseKey": "3OWI",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "3OWI",
+  "profileCount": 620
+}

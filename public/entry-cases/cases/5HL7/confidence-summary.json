@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5HL7",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3994,
+  "defaultEvidenceId": "annojoin:5HL7:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#27063",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1996,
+    "B": 1998
+  },
+  "generatedAt": "2026-08-17T12:37:01.878381Z",
+  "materializedEvidenceCount": 3994,
+  "pdbId": "5HL7",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 192,
+    "LOW": 1108,
+    "NOT_SUPPORTED": 2694
+  },
+  "totalEvidenceCount": 3994
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4V75",
+  "biologicalMoleculeName": "4V75",
+  "caseId": "4V75",
+  "caseKey": "4V75",
+  "chains": [
+    "A1",
+    "BA"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4V75",
+  "profileCount": 29
+}

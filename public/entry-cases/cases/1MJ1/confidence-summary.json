@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1MJ1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2924,
+  "defaultEvidenceId": "annojoin:1MJ1:confidence:A:data-rna-structures/TRNAPH_DMS_0006.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1366,
+    "B": 1558
+  },
+  "generatedAt": "2026-08-17T12:40:31.784927Z",
+  "materializedEvidenceCount": 2924,
+  "pdbId": "1MJ1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 269,
+    "LOW": 854,
+    "NOT_SUPPORTED": 1801
+  },
+  "totalEvidenceCount": 2924
+}

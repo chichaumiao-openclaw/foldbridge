@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2NZ4",
+  "biologicalMoleculeName": "2NZ4",
+  "caseId": "2NZ4",
+  "caseKey": "2NZ4",
+  "chains": [
+    "P",
+    "Q",
+    "R",
+    "S"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "2NZ4",
+  "profileCount": 23
+}

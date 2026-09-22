@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2XD0",
+  "biologicalMoleculeName": "2XD0",
+  "caseId": "2XD0",
+  "caseKey": "2XD0",
+  "chains": [
+    "G",
+    "H",
+    "I",
+    "U",
+    "V",
+    "W"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "2XD0",
+  "profileCount": 158
+}

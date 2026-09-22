@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3PDR",
+  "biologicalMoleculeName": "3PDR",
+  "caseId": "3PDR",
+  "caseKey": "3PDR",
+  "chains": [
+    "A",
+    "X"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "3PDR",
+  "profileCount": 28
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "2K95",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3000,
+  "defaultEvidenceId": "annojoin:2K95:confidence:B:data-eterna/ETERNA_P50_0001.rdat#1527",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1494,
+    "B": 1506
+  },
+  "generatedAt": "2026-08-17T12:11:32.389421Z",
+  "materializedEvidenceCount": 3000,
+  "pdbId": "2K95",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 3000
+  },
+  "totalEvidenceCount": 3000
+}

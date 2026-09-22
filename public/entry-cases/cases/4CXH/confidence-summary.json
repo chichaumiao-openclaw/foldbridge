@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4CXH",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 434,
+  "defaultEvidenceId": "annojoin:4CXH:confidence:B:data-rna-structures/TRNAPH_SHP_0002.rdat#11",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 169,
+    "B": 265
+  },
+  "generatedAt": "2026-08-17T11:17:37.724985Z",
+  "materializedEvidenceCount": 434,
+  "pdbId": "4CXH",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 120,
+    "LOW": 97,
+    "NOT_SUPPORTED": 217
+  },
+  "totalEvidenceCount": 434
+}

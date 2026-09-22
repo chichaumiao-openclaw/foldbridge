@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "1FFY",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 26,
+  "defaultEvidenceId": "annojoin:1FFY:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#6459",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 13,
+    "B": 13
+  },
+  "generatedAt": "2026-08-17T12:58:30.448085Z",
+  "materializedEvidenceCount": 26,
+  "pdbId": "1FFY",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 11,
+    "NOT_SUPPORTED": 15
+  },
+  "totalEvidenceCount": 26
+}

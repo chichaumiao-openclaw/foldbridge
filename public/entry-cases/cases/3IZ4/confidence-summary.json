@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3IZ4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4864,
+  "defaultEvidenceId": "annojoin:3IZ4:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1791",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2427,
+    "B": 2437
+  },
+  "generatedAt": "2026-08-17T11:11:01.230105Z",
+  "materializedEvidenceCount": 4864,
+  "pdbId": "3IZ4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 25,
+    "LOW": 768,
+    "NOT_SUPPORTED": 4071
+  },
+  "totalEvidenceCount": 4864
+}

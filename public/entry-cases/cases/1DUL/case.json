@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1DUL",
+  "biologicalMoleculeName": "1DUL",
+  "caseId": "1DUL",
+  "caseKey": "1DUL",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1DUL",
+  "profileCount": 182
+}

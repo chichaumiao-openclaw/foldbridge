@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "22TU",
+  "biologicalMoleculeName": "22TU",
+  "caseId": "22TU",
+  "caseKey": "22TU",
+  "chains": [
+    "B4",
+    "C4",
+    "L5",
+    "L7",
+    "L8",
+    "S2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "22TU",
+  "profileCount": 3562
+}

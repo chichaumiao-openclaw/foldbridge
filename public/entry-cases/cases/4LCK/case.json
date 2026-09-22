@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4LCK",
+  "biologicalMoleculeName": "4LCK",
+  "caseId": "4LCK",
+  "caseKey": "4LCK",
+  "chains": [
+    "B",
+    "C",
+    "E",
+    "F"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "4LCK",
+  "profileCount": 46
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5VZL",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1486,
+  "defaultEvidenceId": "annojoin:5VZL:confidence:B:data-eterna/ETERNA_R77_0000.rdat#1061",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 17,
+    "B": 1469
+  },
+  "generatedAt": "2026-08-17T12:11:32.389421Z",
+  "materializedEvidenceCount": 1486,
+  "pdbId": "5VZL",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 128,
+    "LOW": 1140,
+    "NOT_SUPPORTED": 218
+  },
+  "totalEvidenceCount": 1486
+}

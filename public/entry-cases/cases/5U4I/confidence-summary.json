@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5U4I",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3877,
+  "defaultEvidenceId": "annojoin:5U4I:confidence:B:data-eterna/RYOS2_1M7_0000.rdat#2627",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1658,
+    "B": 2219
+  },
+  "generatedAt": "2026-08-17T12:42:08.809790Z",
+  "materializedEvidenceCount": 3877,
+  "pdbId": "5U4I",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 111,
+    "LOW": 1232,
+    "NOT_SUPPORTED": 2534
+  },
+  "totalEvidenceCount": 3877
+}

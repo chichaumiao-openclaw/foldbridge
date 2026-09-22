@@ -66,7 +66,7 @@ export function renderBundleHeader({ mode = 'light', navHtml = '' } = {}) {
       <div class="bundle-home-nav-column">
         <div class="bundle-home-topline">
           <div class="bundle-home-bundle-block">
-            <p class="bundle-home-switch-label">RNA database bundle</p>
+            <p class="bundle-home-switch-label">RNA Center databases</p>
             <div class="bundle-home-switches">
               ${featuredNames}
             </div>

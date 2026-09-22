@@ -1,0 +1,22 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4W29",
+  "biologicalMoleculeName": "4W29",
+  "caseId": "4W29",
+  "caseKey": "4W29",
+  "chains": [
+    "AA",
+    "AW",
+    "AX",
+    "BA",
+    "BB",
+    "CA",
+    "CW",
+    "CX",
+    "DA",
+    "DB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4W29",
+  "profileCount": 1584
+}

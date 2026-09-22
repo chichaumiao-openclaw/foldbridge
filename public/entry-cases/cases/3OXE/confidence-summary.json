@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3OXE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1240,
+  "defaultEvidenceId": "annojoin:3OXE:confidence:A:data-riboswitches/VCKTGLY_DMS_0000.rdat#295",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1224,
+    "B": 16
+  },
+  "generatedAt": "2026-08-17T12:12:38.856048Z",
+  "materializedEvidenceCount": 1240,
+  "pdbId": "3OXE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 289,
+    "LOW": 906,
+    "NOT_SUPPORTED": 45
+  },
+  "totalEvidenceCount": 1240
+}

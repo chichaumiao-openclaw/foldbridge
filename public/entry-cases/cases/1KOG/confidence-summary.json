@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1KOG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 16,
+  "defaultEvidenceId": "annojoin:1KOG:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#6476",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8,
+    "B": 8
+  },
+  "generatedAt": "2026-08-17T11:02:27.253733Z",
+  "materializedEvidenceCount": 16,
+  "pdbId": "1KOG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 16
+  },
+  "totalEvidenceCount": 16
+}

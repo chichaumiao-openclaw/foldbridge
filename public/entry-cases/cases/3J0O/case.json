@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3J0O",
+  "biologicalMoleculeName": "3J0O",
+  "caseId": "3J0O",
+  "caseKey": "3J0O",
+  "chains": [
+    "2",
+    "h"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "3J0O",
+  "profileCount": 90
+}

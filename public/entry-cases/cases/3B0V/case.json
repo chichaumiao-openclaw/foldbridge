@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3B0V",
+  "biologicalMoleculeName": "3B0V",
+  "caseId": "3B0V",
+  "caseKey": "3B0V",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "3B0V",
+  "profileCount": 6
+}

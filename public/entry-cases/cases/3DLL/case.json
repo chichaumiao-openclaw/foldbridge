@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3DLL",
+  "biologicalMoleculeName": "3DLL",
+  "caseId": "3DLL",
+  "caseKey": "3DLL",
+  "chains": [
+    "X",
+    "Z"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "3DLL",
+  "profileCount": 1548
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4FAQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 178,
+  "defaultEvidenceId": "annojoin:4FAQ:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#3342",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 89,
+    "B": 89
+  },
+  "generatedAt": "2026-08-17T11:24:40.294608Z",
+  "materializedEvidenceCount": 178,
+  "pdbId": "4FAQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 30,
+    "NOT_SUPPORTED": 145
+  },
+  "totalEvidenceCount": 178
+}

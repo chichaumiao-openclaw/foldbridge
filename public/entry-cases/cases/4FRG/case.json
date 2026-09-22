@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4FRG",
+  "biologicalMoleculeName": "4FRG",
+  "caseId": "4FRG",
+  "caseKey": "4FRG",
+  "chains": [
+    "B",
+    "X"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4FRG",
+  "profileCount": 2
+}

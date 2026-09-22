@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1N77",
+  "biologicalMoleculeName": "1N77",
+  "caseId": "1N77",
+  "caseKey": "1N77",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1N77",
+  "profileCount": 2
+}

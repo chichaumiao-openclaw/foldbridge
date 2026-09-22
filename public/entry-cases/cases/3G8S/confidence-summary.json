@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3G8S",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 92,
+  "defaultEvidenceId": "annojoin:3G8S:confidence:B:data-eterna/OK7BLIB_2A3_0000.rdat#3572",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 12,
+    "B": 80
+  },
+  "generatedAt": "2026-08-17T13:14:41.178795Z",
+  "materializedEvidenceCount": 92,
+  "pdbId": "3G8S",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 38,
+    "NOT_SUPPORTED": 52
+  },
+  "totalEvidenceCount": 92
+}

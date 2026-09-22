@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5MMI",
+  "biologicalMoleculeName": "5MMI",
+  "caseId": "5MMI",
+  "caseKey": "5MMI",
+  "chains": [
+    "A",
+    "W"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5MMI",
+  "profileCount": 902
+}

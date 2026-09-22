@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6CHR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 102,
+  "defaultEvidenceId": "annojoin:6CHR:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#16182",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 51,
+    "B": 51
+  },
+  "generatedAt": "2026-08-17T11:29:37.042961Z",
+  "materializedEvidenceCount": 102,
+  "pdbId": "6CHR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 4,
+    "LOW": 17,
+    "NOT_SUPPORTED": 81
+  },
+  "totalEvidenceCount": 102
+}

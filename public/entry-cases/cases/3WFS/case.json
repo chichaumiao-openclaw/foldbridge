@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3WFS",
+  "biologicalMoleculeName": "3WFS",
+  "caseId": "3WFS",
+  "caseKey": "3WFS",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "3WFS",
+  "profileCount": 10
+}

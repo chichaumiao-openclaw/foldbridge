@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3JAP",
+  "biologicalMoleculeName": "3JAP",
+  "caseId": "3JAP",
+  "caseKey": "3JAP",
+  "chains": [
+    "1",
+    "2"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "3JAP",
+  "profileCount": 4222
+}

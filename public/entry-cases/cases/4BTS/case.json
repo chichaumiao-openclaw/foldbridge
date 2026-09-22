@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4BTS",
+  "biologicalMoleculeName": "4BTS",
+  "caseId": "4BTS",
+  "caseKey": "4BTS",
+  "chains": [
+    "AA",
+    "BA",
+    "CA",
+    "DA"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4BTS",
+  "profileCount": 1556
+}

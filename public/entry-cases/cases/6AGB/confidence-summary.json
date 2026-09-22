@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6AGB",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 48,
+  "defaultEvidenceId": "annojoin:6AGB:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#4172",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 24,
+    "B": 24
+  },
+  "generatedAt": "2026-08-17T12:29:17.501284Z",
+  "materializedEvidenceCount": 48,
+  "pdbId": "6AGB",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 17,
+    "NOT_SUPPORTED": 28
+  },
+  "totalEvidenceCount": 48
+}

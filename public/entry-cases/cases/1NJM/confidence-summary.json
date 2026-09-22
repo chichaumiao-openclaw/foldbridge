@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1NJM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1544,
+  "defaultEvidenceId": "annojoin:1NJM:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#1751",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 772,
+    "B": 772
+  },
+  "generatedAt": "2026-08-17T12:37:01.878381Z",
+  "materializedEvidenceCount": 1544,
+  "pdbId": "1NJM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 53,
+    "LOW": 598,
+    "NOT_SUPPORTED": 893
+  },
+  "totalEvidenceCount": 1544
+}

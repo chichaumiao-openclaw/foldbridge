@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3EPL",
+  "biologicalMoleculeName": "3EPL",
+  "caseId": "3EPL",
+  "caseKey": "3EPL",
+  "chains": [
+    "E",
+    "F"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "3EPL",
+  "profileCount": 4
+}

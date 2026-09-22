@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3JCE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 413,
+  "defaultEvidenceId": "annojoin:3JCE:confidence:B:data-eterna/OK2TST_2A3_0000.rdat#104324",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 144,
+    "B": 269
+  },
+  "generatedAt": "2026-08-17T13:14:41.178795Z",
+  "materializedEvidenceCount": 413,
+  "pdbId": "3JCE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 120,
+    "NOT_SUPPORTED": 293
+  },
+  "totalEvidenceCount": 413
+}

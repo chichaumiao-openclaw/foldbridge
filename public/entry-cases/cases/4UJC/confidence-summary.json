@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4UJC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5316,
+  "defaultEvidenceId": "annojoin:4UJC:confidence:B:data-rna-structures/HCIRES_1M7_0001.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2541,
+    "B": 2775
+  },
+  "generatedAt": "2026-08-17T12:46:12.664339Z",
+  "materializedEvidenceCount": 5316,
+  "pdbId": "4UJC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5316
+  },
+  "totalEvidenceCount": 5316
+}

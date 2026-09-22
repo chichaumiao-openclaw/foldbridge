@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5DAR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 170,
+  "defaultEvidenceId": "annojoin:5DAR:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#9420",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 84,
+    "B": 86
+  },
+  "generatedAt": "2026-08-17T12:00:38.806516Z",
+  "materializedEvidenceCount": 170,
+  "pdbId": "5DAR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 170
+  },
+  "totalEvidenceCount": 170
+}

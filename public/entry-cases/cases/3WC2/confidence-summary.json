@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3WC2",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2516,
+  "defaultEvidenceId": "annojoin:3WC2:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#36145",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1162,
+    "B": 1354
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 2516,
+  "pdbId": "3WC2",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 127,
+    "LOW": 946,
+    "NOT_SUPPORTED": 1443
+  },
+  "totalEvidenceCount": 2516
+}

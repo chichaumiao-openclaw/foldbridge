@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5MYJ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4517,
+  "defaultEvidenceId": "annojoin:5MYJ:confidence:B:data-eterna/OK3TST_2A3_0001.rdat#22323",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2258,
+    "B": 2259
+  },
+  "generatedAt": "2026-08-17T12:58:31.235657Z",
+  "materializedEvidenceCount": 4517,
+  "pdbId": "5MYJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 4517
+  },
+  "totalEvidenceCount": 4517
+}

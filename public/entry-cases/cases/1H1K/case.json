@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1H1K",
+  "biologicalMoleculeName": "1H1K",
+  "caseId": "1H1K",
+  "caseKey": "1H1K",
+  "chains": [
+    "I",
+    "J",
+    "K",
+    "L",
+    "M",
+    "N"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1H1K",
+  "profileCount": 3265
+}

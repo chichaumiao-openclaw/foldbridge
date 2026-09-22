@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4IOA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1548,
+  "defaultEvidenceId": "annojoin:4IOA:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#3039",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 774,
+    "B": 774
+  },
+  "generatedAt": "2026-08-17T13:04:21.288699Z",
+  "materializedEvidenceCount": 1548,
+  "pdbId": "4IOA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 89,
+    "LOW": 382,
+    "NOT_SUPPORTED": 1077
+  },
+  "totalEvidenceCount": 1548
+}

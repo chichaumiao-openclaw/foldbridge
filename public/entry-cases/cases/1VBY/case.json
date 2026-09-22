@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1VBY",
+  "biologicalMoleculeName": "1VBY",
+  "caseId": "1VBY",
+  "caseKey": "1VBY",
+  "chains": [
+    "B"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1VBY",
+  "profileCount": 5931
+}

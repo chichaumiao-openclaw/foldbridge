@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4P8Z",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1712,
+  "defaultEvidenceId": "annojoin:4P8Z:confidence:A:data-puzzle/RNAPZ5_STD_0000.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1034,
+    "B": 678
+  },
+  "generatedAt": "2026-08-17T11:02:07.037170Z",
+  "materializedEvidenceCount": 1712,
+  "pdbId": "4P8Z",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 641,
+    "LOW": 610,
+    "NOT_SUPPORTED": 461
+  },
+  "totalEvidenceCount": 1712
+}

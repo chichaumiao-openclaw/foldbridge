@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3LWV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2,
+  "defaultEvidenceId": "annojoin:3LWV:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#3591",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1,
+    "B": 1
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 2,
+  "pdbId": "3LWV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 1
+  },
+  "totalEvidenceCount": 2
+}

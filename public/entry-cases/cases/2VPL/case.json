@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2VPL",
+  "biologicalMoleculeName": "2VPL",
+  "caseId": "2VPL",
+  "caseKey": "2VPL",
+  "chains": [
+    "B",
+    "D"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "2VPL",
+  "profileCount": 4
+}

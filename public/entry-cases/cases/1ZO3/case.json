@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1ZO3",
+  "biologicalMoleculeName": "1ZO3",
+  "caseId": "1ZO3",
+  "caseKey": "1ZO3",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "1ZO3",
+  "profileCount": 1462
+}

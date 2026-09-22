@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4MGN",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 96,
+  "defaultEvidenceId": "annojoin:4MGN:confidence:B:data-puzzle/RNAPZ10_STD_0002.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 44,
+    "B": 52
+  },
+  "generatedAt": "2026-08-17T12:40:31.784927Z",
+  "materializedEvidenceCount": 96,
+  "pdbId": "4MGN",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 7,
+    "LOW": 18,
+    "NOT_SUPPORTED": 71
+  },
+  "totalEvidenceCount": 96
+}

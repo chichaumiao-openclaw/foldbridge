@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1H1K",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 9801,
+  "defaultEvidenceId": "annojoin:1H1K:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#13178",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3405,
+    "B": 6396
+  },
+  "generatedAt": "2026-08-17T11:27:19.881483Z",
+  "materializedEvidenceCount": 9801,
+  "pdbId": "1H1K",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 9801
+  },
+  "totalEvidenceCount": 9801
+}

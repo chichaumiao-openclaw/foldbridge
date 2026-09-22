@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1EHZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1462,
+  "defaultEvidenceId": "annojoin:1EHZ:confidence:B:data-rna-structures/TRNAPH_SHP_0002.rdat#47",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 683,
+    "B": 779
+  },
+  "generatedAt": "2026-08-17T12:52:13.016002Z",
+  "materializedEvidenceCount": 1462,
+  "pdbId": "1EHZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 131,
+    "LOW": 253,
+    "NOT_SUPPORTED": 1078
+  },
+  "totalEvidenceCount": 1462
+}

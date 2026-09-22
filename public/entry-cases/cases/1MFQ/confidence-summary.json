@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1MFQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1814,
+  "defaultEvidenceId": "annojoin:1MFQ:confidence:A:data-rna-structures/POS240_DMS_0000.rdat#1420",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 907,
+    "B": 907
+  },
+  "generatedAt": "2026-08-17T11:06:33.567203Z",
+  "materializedEvidenceCount": 1814,
+  "pdbId": "1MFQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 4,
+    "LOW": 70,
+    "NOT_SUPPORTED": 1740
+  },
+  "totalEvidenceCount": 1814
+}

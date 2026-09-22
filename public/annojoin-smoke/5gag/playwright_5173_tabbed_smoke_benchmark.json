@@ -1,0 +1,58 @@
+{
+  "browser": {
+    "engine": "chromium",
+    "headless": true,
+    "mcp_image": "mcp/playwright:latest",
+    "url": "http://host.docker.internal:5173/annojoin-smoke/5gag/index.html"
+  },
+  "before": {
+    "active": "VARNA stem-loop",
+    "benchmarkText": "Run profile benchmark",
+    "coloredCount": 56,
+    "linearHidden": true,
+    "profileOptions": 27,
+    "renderButtonPresent": false,
+    "shardDecodeMode": "gzip",
+    "varnaHidden": false,
+    "varnaView": "varna",
+    "whiteCount": 57
+  },
+  "afterTab": {
+    "active": "Linear / debug",
+    "linearHidden": false,
+    "linearSvgPresent": true,
+    "varnaHidden": true
+  },
+  "afterProfile": {
+    "pair_id": "5GAG:sequence_000011",
+    "meaning": "profile selection auto-refreshed without a Render button"
+  },
+  "fit": [
+    {
+      "bodyHorizontalOverflow": 0,
+      "documentScrollWidth": 1280,
+      "innerWidth": 1280,
+      "label": "desktop",
+      "profileClientWidth": 1193,
+      "profileOverflowsBox": false,
+      "profileScrollWidth": 1193,
+      "varnaHorizontalOverflow": -1,
+      "varnaSvgHeight": 518,
+      "varnaSvgWidth": 1238,
+      "varnaViewportWidth": 1240
+    },
+    {
+      "bodyHorizontalOverflow": 0,
+      "documentScrollWidth": 390,
+      "innerWidth": 390,
+      "label": "mobile",
+      "profileClientWidth": 303,
+      "profileOverflowsBox": true,
+      "profileScrollWidth": 307,
+      "varnaHorizontalOverflow": -1,
+      "varnaSvgHeight": 258,
+      "varnaSvgWidth": 348,
+      "varnaViewportWidth": 350
+    }
+  ]
+}

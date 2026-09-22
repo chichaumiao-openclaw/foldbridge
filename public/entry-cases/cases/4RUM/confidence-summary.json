@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4RUM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:4RUM:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#14354",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T12:12:38.856048Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "4RUM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 6
+  },
+  "totalEvidenceCount": 6
+}

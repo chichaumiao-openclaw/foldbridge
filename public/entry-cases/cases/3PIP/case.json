@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3PIP",
+  "biologicalMoleculeName": "3PIP",
+  "caseId": "3PIP",
+  "caseKey": "3PIP",
+  "chains": [
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "3PIP",
+  "profileCount": 1548
+}

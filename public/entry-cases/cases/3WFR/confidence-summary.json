@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3WFR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 44,
+  "defaultEvidenceId": "annojoin:3WFR:confidence:A:data-general/ARCHII_DMS_0000.rdat#17956",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 22,
+    "B": 22
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 44,
+  "pdbId": "3WFR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 27,
+    "NOT_SUPPORTED": 17
+  },
+  "totalEvidenceCount": 44
+}

@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5NRG",
+  "biologicalMoleculeName": "5NRG",
+  "caseId": "5NRG",
+  "caseKey": "5NRG",
+  "chains": [
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5NRG",
+  "profileCount": 4002
+}

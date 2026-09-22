@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5KTJ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 24,
+  "defaultEvidenceId": "annojoin:5KTJ:confidence:A:data-general/P50LIB_DMS_0001.rdat#1877",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 10,
+    "B": 14
+  },
+  "generatedAt": "2026-08-17T11:17:37.724985Z",
+  "materializedEvidenceCount": 24,
+  "pdbId": "5KTJ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 24
+  },
+  "totalEvidenceCount": 24
+}

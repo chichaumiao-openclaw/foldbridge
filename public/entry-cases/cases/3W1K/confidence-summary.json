@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "3W1K",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 10,
+  "defaultEvidenceId": "annojoin:3W1K:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12391",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 5,
+    "B": 5
+  },
+  "generatedAt": "2026-08-17T13:10:52.621679Z",
+  "materializedEvidenceCount": 10,
+  "pdbId": "3W1K",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 10
+  },
+  "totalEvidenceCount": 10
+}

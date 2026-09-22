@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3IYR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 208,
+  "defaultEvidenceId": "annojoin:3IYR:confidence:B:data-general/ARCHII_2A3_0000.rdat#23901",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 104,
+    "B": 104
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 208,
+  "pdbId": "3IYR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 52,
+    "NOT_SUPPORTED": 153
+  },
+  "totalEvidenceCount": 208
+}

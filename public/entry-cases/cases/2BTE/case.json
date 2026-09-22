@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2BTE",
+  "biologicalMoleculeName": "2BTE",
+  "caseId": "2BTE",
+  "caseKey": "2BTE",
+  "chains": [
+    "B",
+    "E"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "2BTE",
+  "profileCount": 2
+}

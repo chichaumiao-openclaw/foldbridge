@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2QUS",
+  "biologicalMoleculeName": "2QUS",
+  "caseId": "2QUS",
+  "caseKey": "2QUS",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "2QUS",
+  "profileCount": 146
+}

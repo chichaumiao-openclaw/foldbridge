@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2GTT",
+  "biologicalMoleculeName": "2GTT",
+  "caseId": "2GTT",
+  "caseKey": "2GTT",
+  "chains": [
+    "W",
+    "X"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "2GTT",
+  "profileCount": 8
+}

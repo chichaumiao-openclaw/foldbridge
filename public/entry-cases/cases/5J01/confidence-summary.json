@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5J01",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 178,
+  "defaultEvidenceId": "annojoin:5J01:confidence:A:data-rna-structures/PKBLNG_DMS_0000.rdat#39",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 89,
+    "B": 89
+  },
+  "generatedAt": "2026-08-17T13:04:21.288699Z",
+  "materializedEvidenceCount": 178,
+  "pdbId": "5J01",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 11,
+    "LOW": 43,
+    "NOT_SUPPORTED": 124
+  },
+  "totalEvidenceCount": 178
+}

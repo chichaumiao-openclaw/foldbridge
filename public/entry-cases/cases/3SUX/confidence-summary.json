@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3SUX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 18,
+  "defaultEvidenceId": "annojoin:3SUX:confidence:B:data-general/P90LIB_2A3_0002.rdat#261",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 8,
+    "B": 10
+  },
+  "generatedAt": "2026-08-17T12:01:49.841754Z",
+  "materializedEvidenceCount": 18,
+  "pdbId": "3SUX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 7,
+    "LOW": 9,
+    "NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 18
+}

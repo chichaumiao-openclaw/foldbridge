@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4V6S",
+  "biologicalMoleculeName": "4V6S",
+  "caseId": "4V6S",
+  "caseKey": "4V6S",
+  "chains": [
+    "AA",
+    "AB",
+    "BA",
+    "BC"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4V6S",
+  "profileCount": 480
+}

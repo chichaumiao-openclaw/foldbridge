@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4ZNP",
+  "biologicalMoleculeName": "4ZNP",
+  "caseId": "4ZNP",
+  "caseKey": "4ZNP",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "4ZNP",
+  "profileCount": 244
+}

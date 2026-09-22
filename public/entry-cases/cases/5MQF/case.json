@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5MQF",
+  "biologicalMoleculeName": "5MQF",
+  "caseId": "5MQF",
+  "caseKey": "5MQF",
+  "chains": [
+    "2",
+    "5",
+    "6",
+    "Y",
+    "Z"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5MQF",
+  "profileCount": 274
+}

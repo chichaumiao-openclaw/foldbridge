@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3WFS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 20,
+  "defaultEvidenceId": "annojoin:3WFS:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#12340",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 10,
+    "B": 10
+  },
+  "generatedAt": "2026-08-17T13:10:54.484222Z",
+  "materializedEvidenceCount": 20,
+  "pdbId": "3WFS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 16,
+    "NOT_SUPPORTED": 4
+  },
+  "totalEvidenceCount": 20
+}

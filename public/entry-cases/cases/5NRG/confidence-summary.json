@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5NRG",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4002,
+  "defaultEvidenceId": "annojoin:5NRG:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#8638",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2000,
+    "B": 2002
+  },
+  "generatedAt": "2026-08-17T12:23:25.221146Z",
+  "materializedEvidenceCount": 4002,
+  "pdbId": "5NRG",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 164,
+    "LOW": 1213,
+    "NOT_SUPPORTED": 2625
+  },
+  "totalEvidenceCount": 4002
+}

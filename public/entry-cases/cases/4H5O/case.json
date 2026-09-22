@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4H5O",
+  "biologicalMoleculeName": "4H5O",
+  "caseId": "4H5O",
+  "caseKey": "4H5O",
+  "chains": [
+    "K",
+    "L"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "4H5O",
+  "profileCount": 331
+}

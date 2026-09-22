@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6C64",
+  "biologicalMoleculeName": "6C64",
+  "caseId": "6C64",
+  "caseKey": "6C64",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "6C64",
+  "profileCount": 2
+}

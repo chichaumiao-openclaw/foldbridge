@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "2WWA",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 84,
+  "defaultEvidenceId": "annojoin:2WWA:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#4276",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 42,
+    "B": 42
+  },
+  "generatedAt": "2026-08-17T12:46:12.664339Z",
+  "materializedEvidenceCount": 84,
+  "pdbId": "2WWA",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 3,
+    "LOW": 38,
+    "NOT_SUPPORTED": 43
+  },
+  "totalEvidenceCount": 84
+}

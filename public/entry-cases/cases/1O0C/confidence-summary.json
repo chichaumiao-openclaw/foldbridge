@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1O0C",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 12,
+  "defaultEvidenceId": "annojoin:1O0C:confidence:B:data-general/ARCHII_2A3_0000.rdat#18248",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 6
+  },
+  "generatedAt": "2026-08-17T13:14:39.572696Z",
+  "materializedEvidenceCount": 12,
+  "pdbId": "1O0C",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 12
+  },
+  "totalEvidenceCount": 12
+}

@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2QBZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 28,
+  "defaultEvidenceId": "annojoin:2QBZ:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#12238",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 14,
+    "B": 14
+  },
+  "generatedAt": "2026-08-17T12:46:09.508388Z",
+  "materializedEvidenceCount": 28,
+  "pdbId": "2QBZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 7,
+    "NOT_SUPPORTED": 21
+  },
+  "totalEvidenceCount": 28
+}

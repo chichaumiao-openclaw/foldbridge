@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1ASZ",
+  "biologicalMoleculeName": "1ASZ",
+  "caseId": "1ASZ",
+  "caseKey": "1ASZ",
+  "chains": [
+    "R",
+    "S"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1ASZ",
+  "profileCount": 48
+}

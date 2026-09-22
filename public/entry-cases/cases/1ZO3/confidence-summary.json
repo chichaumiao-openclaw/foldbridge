@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1ZO3",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2924,
+  "defaultEvidenceId": "annojoin:1ZO3:confidence:B:data-eterna/ETERNA_P90_0002.rdat#294",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1366,
+    "B": 1558
+  },
+  "generatedAt": "2026-08-17T11:43:43.312761Z",
+  "materializedEvidenceCount": 2924,
+  "pdbId": "1ZO3",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 206,
+    "LOW": 363,
+    "NOT_SUPPORTED": 2355
+  },
+  "totalEvidenceCount": 2924
+}

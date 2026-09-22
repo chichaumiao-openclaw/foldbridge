@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2HOP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 510,
+  "defaultEvidenceId": "annojoin:2HOP:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#3922",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 495,
+    "B": 15
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 510,
+  "pdbId": "2HOP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 5,
+    "NOT_SUPPORTED": 505
+  },
+  "totalEvidenceCount": 510
+}

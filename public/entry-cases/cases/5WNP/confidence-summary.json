@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5WNP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1139,
+  "defaultEvidenceId": "annojoin:5WNP:confidence:B:data-eterna/OK45LIB_2A3_0000.rdat#6126",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 569,
+    "B": 570
+  },
+  "generatedAt": "2026-08-17T11:17:37.724985Z",
+  "materializedEvidenceCount": 1139,
+  "pdbId": "5WNP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 5,
+    "LOW": 89,
+    "NOT_SUPPORTED": 1045
+  },
+  "totalEvidenceCount": 1139
+}

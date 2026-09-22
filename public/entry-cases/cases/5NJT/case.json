@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5NJT",
+  "biologicalMoleculeName": "5NJT",
+  "caseId": "5NJT",
+  "caseKey": "5NJT",
+  "chains": [
+    "A",
+    "U",
+    "V"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5NJT",
+  "profileCount": 7578
+}

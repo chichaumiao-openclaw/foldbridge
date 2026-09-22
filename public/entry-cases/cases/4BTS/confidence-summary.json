@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4BTS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6224,
+  "defaultEvidenceId": "annojoin:4BTS:confidence:B:data-eterna/OK3TST_2A3_0000.rdat#43463",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3112,
+    "B": 3112
+  },
+  "generatedAt": "2026-08-17T11:37:53.237503Z",
+  "materializedEvidenceCount": 6224,
+  "pdbId": "4BTS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 6224
+  },
+  "totalEvidenceCount": 6224
+}

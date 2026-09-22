@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3JBV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 459,
+  "defaultEvidenceId": "annojoin:3JBV:confidence:B:data-rna-structures/5SRRNA_SHP_0002.rdat#119",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 165,
+    "B": 294
+  },
+  "generatedAt": "2026-08-17T13:15:46.196997Z",
+  "materializedEvidenceCount": 459,
+  "pdbId": "3JBV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 9,
+    "LOW": 147,
+    "NOT_SUPPORTED": 303
+  },
+  "totalEvidenceCount": 459
+}

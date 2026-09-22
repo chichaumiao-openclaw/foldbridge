@@ -1,0 +1,22 @@
+{
+  "case_id": "5GAG",
+  "compact_profile_index_meta_gzip_bytes": 19949,
+  "linked_view_asset_bytes": {
+    "bridges.json": 1595,
+    "confidence-summary.json": 999,
+    "interactions.json": 8980,
+    "lss-context.json": 10941,
+    "profile-joins.json": 1809657,
+    "raw-alignment-coverage.json": 581,
+    "residue-index.json": 47677,
+    "structure-contexts.json": 43592,
+    "structure-coverage.json": 1938
+  },
+  "linked_view_asset_count": 9,
+  "linked_view_total_bytes": 1925960,
+  "raw_over_gzip_ratio": 1.643,
+  "typed_array_gzip_bytes": 7428,
+  "typed_array_raw_bytes": 12204,
+  "verbose_over_compact_ratio": 37.829,
+  "verbose_profile_json_bytes": 754658
+}

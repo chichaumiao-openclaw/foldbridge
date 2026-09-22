@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6GZX",
+  "biologicalMoleculeName": "6GZX",
+  "caseId": "6GZX",
+  "caseKey": "6GZX",
+  "chains": [
+    "A1",
+    "A2",
+    "A3",
+    "A4",
+    "B1",
+    "B2"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "6GZX",
+  "profileCount": 2638
+}

@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3W1K",
+  "biologicalMoleculeName": "3W1K",
+  "caseId": "3W1K",
+  "caseKey": "3W1K",
+  "chains": [
+    "F",
+    "G",
+    "H",
+    "I",
+    "J"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "3W1K",
+  "profileCount": 2
+}

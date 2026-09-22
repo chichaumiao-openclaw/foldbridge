@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1GRZ",
+  "biologicalMoleculeName": "1GRZ",
+  "caseId": "1GRZ",
+  "caseKey": "1GRZ",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "1GRZ",
+  "profileCount": 4920
+}

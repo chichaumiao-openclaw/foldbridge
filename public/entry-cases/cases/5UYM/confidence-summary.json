@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5UYM",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4945,
+  "defaultEvidenceId": "annojoin:5UYM:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#9313",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2194,
+    "B": 2751
+  },
+  "generatedAt": "2026-08-17T12:04:11.962344Z",
+  "materializedEvidenceCount": 4945,
+  "pdbId": "5UYM",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 196,
+    "LOW": 1054,
+    "NOT_SUPPORTED": 3695
+  },
+  "totalEvidenceCount": 4945
+}

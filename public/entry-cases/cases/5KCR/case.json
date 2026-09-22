@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5KCR",
+  "biologicalMoleculeName": "5KCR",
+  "caseId": "5KCR",
+  "caseKey": "5KCR",
+  "chains": [
+    "1A",
+    "1B",
+    "1a",
+    "1x"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "5KCR",
+  "profileCount": 795
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4W29",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3168,
+  "defaultEvidenceId": "annojoin:4W29:confidence:B:data-eterna/OK3TST_2A3_0003.rdat#64336",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1580,
+    "B": 1588
+  },
+  "generatedAt": "2026-08-17T11:26:25.684564Z",
+  "materializedEvidenceCount": 3168,
+  "pdbId": "4W29",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 3168
+  },
+  "totalEvidenceCount": 3168
+}

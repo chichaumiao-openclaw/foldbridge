@@ -1,0 +1,20 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4RMO",
+  "biologicalMoleculeName": "4RMO",
+  "caseId": "4RMO",
+  "caseKey": "4RMO",
+  "chains": [
+    "B",
+    "D",
+    "F",
+    "H",
+    "J",
+    "L",
+    "N",
+    "P"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "4RMO",
+  "profileCount": 118
+}

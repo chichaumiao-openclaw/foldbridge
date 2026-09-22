@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4QJD",
+  "biologicalMoleculeName": "4QJD",
+  "caseId": "4QJD",
+  "caseKey": "4QJD",
+  "chains": [
+    "B",
+    "D",
+    "F",
+    "H"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4QJD",
+  "profileCount": 4
+}

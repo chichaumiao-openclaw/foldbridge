@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5SWD",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7648,
+  "defaultEvidenceId": "annojoin:5SWD:confidence:B:data-riboswitches/ADD140_1M7_0012.rdat#16",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 72,
+    "B": 7576
+  },
+  "generatedAt": "2026-08-17T13:13:20.457130Z",
+  "materializedEvidenceCount": 7648,
+  "pdbId": "5SWD",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 393,
+    "LOW": 5251,
+    "NOT_SUPPORTED": 2004
+  },
+  "totalEvidenceCount": 7648
+}

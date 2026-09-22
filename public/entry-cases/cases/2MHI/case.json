@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2MHI",
+  "biologicalMoleculeName": "2MHI",
+  "caseId": "2MHI",
+  "caseKey": "2MHI",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "2MHI",
+  "profileCount": 2
+}

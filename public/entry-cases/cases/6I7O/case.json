@@ -1,0 +1,25 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6I7O",
+  "biologicalMoleculeName": "6I7O",
+  "caseId": "6I7O",
+  "caseKey": "6I7O",
+  "chains": [
+    "2",
+    "2b",
+    "BQ",
+    "BR",
+    "BS",
+    "YQ",
+    "YR",
+    "YS",
+    "l",
+    "m",
+    "mb",
+    "n",
+    "nb"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "6I7O",
+  "profileCount": 8418
+}

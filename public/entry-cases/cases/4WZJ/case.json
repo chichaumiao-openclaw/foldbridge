@@ -1,0 +1,24 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4WZJ",
+  "biologicalMoleculeName": "4WZJ",
+  "caseId": "4WZJ",
+  "caseKey": "4WZJ",
+  "chains": [
+    "V",
+    "VV",
+    "VVV",
+    "VVVV",
+    "X",
+    "XX",
+    "XXX",
+    "XXXX",
+    "Y",
+    "YY",
+    "YYY",
+    "YYYY"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "4WZJ",
+  "profileCount": 10
+}

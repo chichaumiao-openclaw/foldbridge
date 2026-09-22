@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "1EFW",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 12,
+  "defaultEvidenceId": "annojoin:1EFW:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#15318",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 6
+  },
+  "generatedAt": "2026-08-17T12:46:12.664339Z",
+  "materializedEvidenceCount": 12,
+  "pdbId": "1EFW",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "NOT_SUPPORTED": 10
+  },
+  "totalEvidenceCount": 12
+}

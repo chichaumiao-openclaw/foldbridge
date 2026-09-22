@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5UYQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5975,
+  "defaultEvidenceId": "annojoin:5UYQ:confidence:B:data-eterna/ETERNA_P90_0002.rdat#1881",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2698,
+    "B": 3277
+  },
+  "generatedAt": "2026-08-17T13:04:21.288699Z",
+  "materializedEvidenceCount": 5975,
+  "pdbId": "5UYQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 327,
+    "LOW": 1030,
+    "NOT_SUPPORTED": 4618
+  },
+  "totalEvidenceCount": 5975
+}

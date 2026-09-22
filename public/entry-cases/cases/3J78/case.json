@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3J78",
+  "biologicalMoleculeName": "3J78",
+  "caseId": "3J78",
+  "caseKey": "3J78",
+  "chains": [
+    "1S",
+    "2S",
+    "5S",
+    "8S"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "3J78",
+  "profileCount": 8104
+}

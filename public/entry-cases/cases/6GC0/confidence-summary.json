@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6GC0",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4839,
+  "defaultEvidenceId": "annojoin:6GC0:confidence:B:data-rna-structures/M2PK90_2A3_0000.rdat#35029",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2327,
+    "B": 2512
+  },
+  "generatedAt": "2026-08-17T12:52:08.699221Z",
+  "materializedEvidenceCount": 4839,
+  "pdbId": "6GC0",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 6,
+    "LOW": 410,
+    "NOT_SUPPORTED": 4423
+  },
+  "totalEvidenceCount": 4839
+}

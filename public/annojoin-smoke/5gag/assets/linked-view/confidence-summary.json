@@ -1,0 +1,25 @@
+{
+  "protocolVersion": "linked-view-v0.1",
+  "caseId": "5GAG",
+  "scope": "5GAG linked-view smoke",
+  "profileJoinConfidence": {
+    "status": "materialized",
+    "displayLabel": "Profile join confidence",
+    "explanation": "The smoke profile joins map 113 profile positions to strand_1. This is not FEC/LSS or ANNOCONFIDENCE positive confidence."
+  },
+  "fec": {
+    "status": "not_materialized_in_smoke",
+    "displayLabel": "FEC",
+    "explanation": "No FEC evidence table is packaged with this 5GAG linked-view smoke."
+  },
+  "lss": {
+    "status": "not_materialized_in_smoke",
+    "displayLabel": "LSS",
+    "explanation": "No local_structure_signal_support.tsv-derived LSS rows are packaged with this 5GAG linked-view smoke."
+  },
+  "annoconfidence": {
+    "status": "not_materialized_in_smoke",
+    "displayLabel": "ANNOCONFIDENCE",
+    "explanation": "ANNOCONFIDENCE is not bundled into this smoke asset set; the page must not present profile join confidence as positive confidence."
+  }
+}

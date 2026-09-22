@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5LZC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3771,
+  "defaultEvidenceId": "annojoin:5LZC:confidence:B:data-rna-structures/PKBLNG_2A3_0000.rdat#181",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1594,
+    "B": 2177
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 3771,
+  "pdbId": "5LZC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 137,
+    "LOW": 1029,
+    "NOT_SUPPORTED": 2605
+  },
+  "totalEvidenceCount": 3771
+}

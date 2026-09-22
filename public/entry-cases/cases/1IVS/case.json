@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1IVS",
+  "biologicalMoleculeName": "1IVS",
+  "caseId": "1IVS",
+  "caseKey": "1IVS",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1IVS",
+  "profileCount": 2
+}

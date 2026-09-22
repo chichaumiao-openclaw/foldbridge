@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1QZW",
+  "biologicalMoleculeName": "1QZW",
+  "caseId": "1QZW",
+  "caseKey": "1QZW",
+  "chains": [
+    "B",
+    "D",
+    "F",
+    "H"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1QZW",
+  "profileCount": 46
+}

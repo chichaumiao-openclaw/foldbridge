@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "4FEP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 14,
+  "defaultEvidenceId": "annojoin:4FEP:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#37005",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 7,
+    "B": 7
+  },
+  "generatedAt": "2026-08-17T12:52:15.874142Z",
+  "materializedEvidenceCount": 14,
+  "pdbId": "4FEP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 4,
+    "NOT_SUPPORTED": 10
+  },
+  "totalEvidenceCount": 14
+}

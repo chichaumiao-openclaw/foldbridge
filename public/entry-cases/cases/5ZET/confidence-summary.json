@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5ZET",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2808,
+  "defaultEvidenceId": "annojoin:5ZET:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#14191",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1404,
+    "B": 1404
+  },
+  "generatedAt": "2026-08-17T11:55:49.970020Z",
+  "materializedEvidenceCount": 2808,
+  "pdbId": "5ZET",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 138,
+    "LOW": 810,
+    "NOT_SUPPORTED": 1860
+  },
+  "totalEvidenceCount": 2808
+}

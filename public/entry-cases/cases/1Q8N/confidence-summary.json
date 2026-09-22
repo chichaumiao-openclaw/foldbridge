@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1Q8N",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 7,
+  "defaultEvidenceId": "annojoin:1Q8N:confidence:A:data-eterna/ETERNA_R00_0002.rdat#15446",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 4
+  },
+  "generatedAt": "2026-08-17T11:29:37.042961Z",
+  "materializedEvidenceCount": 7,
+  "pdbId": "1Q8N",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 7
+  },
+  "totalEvidenceCount": 7
+}

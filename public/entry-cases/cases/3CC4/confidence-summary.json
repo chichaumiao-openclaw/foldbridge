@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3CC4",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1956,
+  "defaultEvidenceId": "annojoin:3CC4:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#27423",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 978,
+    "B": 978
+  },
+  "generatedAt": "2026-08-17T12:39:28.893021Z",
+  "materializedEvidenceCount": 1956,
+  "pdbId": "3CC4",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 160,
+    "LOW": 591,
+    "NOT_SUPPORTED": 1205
+  },
+  "totalEvidenceCount": 1956
+}

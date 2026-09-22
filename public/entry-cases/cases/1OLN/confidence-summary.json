@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "1OLN",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 21,
+  "defaultEvidenceId": "annojoin:1OLN:confidence:B:data-eterna/SHAPE_RYOS_0620.rdat#461",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 10,
+    "B": 11
+  },
+  "generatedAt": "2026-08-17T11:09:41.751286Z",
+  "materializedEvidenceCount": 21,
+  "pdbId": "1OLN",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 21
+  },
+  "totalEvidenceCount": 21
+}

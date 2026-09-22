@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "3JA1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 454,
+  "defaultEvidenceId": "annojoin:3JA1:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#9274",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 163,
+    "B": 291
+  },
+  "generatedAt": "2026-08-17T11:15:08.119192Z",
+  "materializedEvidenceCount": 454,
+  "pdbId": "3JA1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 454
+  },
+  "totalEvidenceCount": 454
+}

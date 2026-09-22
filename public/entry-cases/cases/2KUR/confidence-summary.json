@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "2KUR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 12,
+  "defaultEvidenceId": "annojoin:2KUR:confidence:B:data-rna-structures/RFM100_2A3_0000.rdat#36759",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 6
+  },
+  "generatedAt": "2026-08-17T13:10:50.762864Z",
+  "materializedEvidenceCount": 12,
+  "pdbId": "2KUR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 1,
+    "NOT_SUPPORTED": 11
+  },
+  "totalEvidenceCount": 12
+}

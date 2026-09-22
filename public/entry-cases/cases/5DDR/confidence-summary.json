@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5DDR",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 528,
+  "defaultEvidenceId": "annojoin:5DDR:confidence:B:data-puzzle/RNAPZ14_1M7_0007.rdat#24",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 20,
+    "B": 508
+  },
+  "generatedAt": "2026-08-17T11:43:43.312761Z",
+  "materializedEvidenceCount": 528,
+  "pdbId": "5DDR",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 478,
+    "LOW": 36,
+    "NOT_SUPPORTED": 14
+  },
+  "totalEvidenceCount": 528
+}

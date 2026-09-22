@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4RMO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 944,
+  "defaultEvidenceId": "annojoin:4RMO:confidence:B:data-eterna/ETERNA_P50_0002.rdat#286",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 464,
+    "B": 480
+  },
+  "generatedAt": "2026-08-17T12:52:08.699221Z",
+  "materializedEvidenceCount": 944,
+  "pdbId": "4RMO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 11,
+    "LOW": 93,
+    "NOT_SUPPORTED": 840
+  },
+  "totalEvidenceCount": 944
+}

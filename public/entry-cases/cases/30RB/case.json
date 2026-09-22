@@ -1,0 +1,16 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "30RB",
+  "biologicalMoleculeName": "30RB",
+  "caseId": "30RB",
+  "caseKey": "30RB",
+  "chains": [
+    "A",
+    "Z",
+    "a",
+    "b"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "30RB",
+  "profileCount": 448
+}

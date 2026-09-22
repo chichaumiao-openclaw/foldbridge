@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "10ZT",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 173,
+  "defaultEvidenceId": "annojoin:10ZT:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#5914",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 86,
+    "B": 87
+  },
+  "generatedAt": "2026-08-17T11:34:49.607826Z",
+  "materializedEvidenceCount": 173,
+  "pdbId": "10ZT",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "NOT_SUPPORTED": 172
+  },
+  "totalEvidenceCount": 173
+}

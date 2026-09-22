@@ -315,13 +315,15 @@ export function renderProbingArticleIndex(index, headerHtml = '') {
         </a>`;
     }).join('');
 
+    const familyTitle = escapeHtml(family.title);
+
     return `
       <details id="probing-family-${escapeHtml(family.id)}" class="technology-section-card" data-probing-family="${escapeHtml(family.id)}">
         <summary class="technology-section-summary">
           <div class="technology-section-heading">
             <div class="probing-method-section-title">
-              <h2>${escapeHtml(family.title)}</h2>
-              <span class="probing-method-section-count">${family.methods.length} methods</span>
+              <h2>${familyTitle}</h2>
+              <span class="probing-method-section-count" aria-label="${family.methods.length} methods">${family.methods.length} methods</span>
             </div>
             <p>${renderScientificProse(family.summary)}</p>
             <span class="probing-method-section-action" aria-hidden="true"><img src="./src/assets/probing-arrow-right.svg" alt="" /></span>
@@ -333,7 +335,8 @@ export function renderProbingArticleIndex(index, headerHtml = '') {
 
   return `${headerHtml}
   <main class="page-detail page-probing-index">
-    <section class="card bundle-wide-card technology-hero-card probing-hero-card">
+    <section class="card bundle-wide-card probing-page-shell" aria-label="Chemical probing methods">
+      <div class="probing-page-hero probing-hero-card">
       <div class="technology-hero-copy">
         <h1>Chemical probing methods</h1>
         <p class="technology-intro">Browse RNA structure probing methods by the chemical event they measure.</p>
@@ -348,8 +351,8 @@ export function renderProbingArticleIndex(index, headerHtml = '') {
           <span>families</span>
         </div>
       </aside>
-    </section>
-    <section class="card bundle-wide-card probing-overview-card" aria-label="Probing mechanism families and methods">
+      </div>
+    <div class="probing-page-directory">
       <div class="probing-method-directory-heading">
         <h2>Browse by mechanism</h2>
         <p>Select a family to view its methods.</p>
@@ -357,6 +360,7 @@ export function renderProbingArticleIndex(index, headerHtml = '') {
       <div class="probing-family-collection">
         ${familySections}
       </div>
+    </div>
     </section>
   </main>`;
 }

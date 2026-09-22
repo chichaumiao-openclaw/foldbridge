@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "6IFO",
+  "biologicalMoleculeName": "6IFO",
+  "caseId": "6IFO",
+  "caseKey": "6IFO",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "6IFO",
+  "profileCount": 1863
+}

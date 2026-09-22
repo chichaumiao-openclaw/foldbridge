@@ -1,0 +1,17 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1ET4",
+  "biologicalMoleculeName": "1ET4",
+  "caseId": "1ET4",
+  "caseKey": "1ET4",
+  "chains": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "1ET4",
+  "profileCount": 26
+}

@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "5KH8",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:5KH8:confidence:A:data-rna-structures/POS240_DMS_0000.rdat#1507",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T11:27:19.881483Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "5KH8",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 2,
+    "NOT_SUPPORTED": 2
+  },
+  "totalEvidenceCount": 4
+}

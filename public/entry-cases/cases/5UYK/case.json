@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5UYK",
+  "biologicalMoleculeName": "5UYK",
+  "caseId": "5UYK",
+  "caseKey": "5UYK",
+  "chains": [
+    "01",
+    "02",
+    "A",
+    "W",
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5UYK",
+  "profileCount": 4939
+}

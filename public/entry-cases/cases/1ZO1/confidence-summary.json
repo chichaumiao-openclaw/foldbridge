@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1ZO1",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1462,
+  "defaultEvidenceId": "annojoin:1ZO1:confidence:A:data-rna-structures/M2PK90_DMS_0000.rdat#36191",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 683,
+    "B": 779
+  },
+  "generatedAt": "2026-08-17T12:30:27.895034Z",
+  "materializedEvidenceCount": 1462,
+  "pdbId": "1ZO1",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 235,
+    "LOW": 581,
+    "NOT_SUPPORTED": 646
+  },
+  "totalEvidenceCount": 1462
+}

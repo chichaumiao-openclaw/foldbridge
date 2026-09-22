@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3OWI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1240,
+  "defaultEvidenceId": "annojoin:3OWI:confidence:A:data-riboswitches/VCKTGLY_DMS_0000.rdat#295",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1224,
+    "B": 16
+  },
+  "generatedAt": "2026-08-17T12:30:27.895034Z",
+  "materializedEvidenceCount": 1240,
+  "pdbId": "3OWI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 167,
+    "LOW": 1024,
+    "NOT_SUPPORTED": 49
+  },
+  "totalEvidenceCount": 1240
+}

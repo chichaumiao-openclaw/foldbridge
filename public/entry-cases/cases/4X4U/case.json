@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4X4U",
+  "biologicalMoleculeName": "4X4U",
+  "caseId": "4X4U",
+  "caseKey": "4X4U",
+  "chains": [
+    "B",
+    "D",
+    "G"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "4X4U",
+  "profileCount": 2
+}

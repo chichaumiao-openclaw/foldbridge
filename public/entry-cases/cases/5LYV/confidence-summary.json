@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "5LYV",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 490,
+  "defaultEvidenceId": "annojoin:5LYV:confidence:A:data-puzzle/RNAPZ11_STD_0002.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 484
+  },
+  "generatedAt": "2026-08-17T12:52:15.874142Z",
+  "materializedEvidenceCount": 490,
+  "pdbId": "5LYV",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 1,
+    "NOT_SUPPORTED": 489
+  },
+  "totalEvidenceCount": 490
+}

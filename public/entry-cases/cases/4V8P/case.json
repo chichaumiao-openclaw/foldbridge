@@ -1,0 +1,24 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4V8P",
+  "biologicalMoleculeName": "4V8P",
+  "caseId": "4V8P",
+  "caseKey": "4V8P",
+  "chains": [
+    "A1",
+    "B2",
+    "B3",
+    "C2",
+    "C3",
+    "D1",
+    "E2",
+    "E3",
+    "F1",
+    "G2",
+    "G3",
+    "H1"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "4V8P",
+  "profileCount": 1438
+}

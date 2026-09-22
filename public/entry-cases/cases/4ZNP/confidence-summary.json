@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4ZNP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 488,
+  "defaultEvidenceId": "annojoin:4ZNP:confidence:B:data-eterna/OK7ALIB_2A3_0000.rdat#6409",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 192,
+    "B": 296
+  },
+  "generatedAt": "2026-08-17T11:20:56.972842Z",
+  "materializedEvidenceCount": 488,
+  "pdbId": "4ZNP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 32,
+    "LOW": 59,
+    "NOT_SUPPORTED": 397
+  },
+  "totalEvidenceCount": 488
+}

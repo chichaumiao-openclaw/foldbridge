@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5WLC",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 5100,
+  "defaultEvidenceId": "annojoin:5WLC:confidence:B:data-eterna/OK3TST_2A3_0000.rdat#43463",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2550,
+    "B": 2550
+  },
+  "generatedAt": "2026-08-17T13:04:21.164543Z",
+  "materializedEvidenceCount": 5100,
+  "pdbId": "5WLC",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 5100
+  },
+  "totalEvidenceCount": 5100
+}

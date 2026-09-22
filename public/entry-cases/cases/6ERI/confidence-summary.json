@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "6ERI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1220,
+  "defaultEvidenceId": "annojoin:6ERI:confidence:B:data-eterna/OK3TST_2A3_0000.rdat#15327",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 610,
+    "B": 610
+  },
+  "generatedAt": "2026-08-17T11:20:56.972842Z",
+  "materializedEvidenceCount": 1220,
+  "pdbId": "6ERI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 1220
+  },
+  "totalEvidenceCount": 1220
+}

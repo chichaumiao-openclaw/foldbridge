@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4FAX",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 178,
+  "defaultEvidenceId": "annojoin:4FAX:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#3348",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 89,
+    "B": 89
+  },
+  "generatedAt": "2026-08-17T12:46:13.329069Z",
+  "materializedEvidenceCount": 178,
+  "pdbId": "4FAX",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 11,
+    "NOT_SUPPORTED": 166
+  },
+  "totalEvidenceCount": 178
+}

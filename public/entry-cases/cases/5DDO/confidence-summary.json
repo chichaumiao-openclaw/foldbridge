@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5DDO",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 528,
+  "defaultEvidenceId": "annojoin:5DDO:confidence:B:data-puzzle/RNAPZ14_1M7_0007.rdat#45",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 20,
+    "B": 508
+  },
+  "generatedAt": "2026-08-17T11:34:49.607826Z",
+  "materializedEvidenceCount": 528,
+  "pdbId": "5DDO",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 479,
+    "LOW": 40,
+    "NOT_SUPPORTED": 9
+  },
+  "totalEvidenceCount": 528
+}

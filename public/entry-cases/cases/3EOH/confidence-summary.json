@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3EOH",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 186,
+  "defaultEvidenceId": "annojoin:3EOH:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#3338",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 93,
+    "B": 93
+  },
+  "generatedAt": "2026-08-17T11:32:33.512835Z",
+  "materializedEvidenceCount": 186,
+  "pdbId": "3EOH",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 1,
+    "LOW": 42,
+    "NOT_SUPPORTED": 143
+  },
+  "totalEvidenceCount": 186
+}

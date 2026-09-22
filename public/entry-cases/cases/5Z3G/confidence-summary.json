@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5Z3G",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4066,
+  "defaultEvidenceId": "annojoin:5Z3G:confidence:A:data-rna-structures/RFM100_DMS_0000.rdat#26684",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2031,
+    "B": 2035
+  },
+  "generatedAt": "2026-08-17T12:40:31.784927Z",
+  "materializedEvidenceCount": 4066,
+  "pdbId": "5Z3G",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 94,
+    "LOW": 668,
+    "NOT_SUPPORTED": 3304
+  },
+  "totalEvidenceCount": 4066
+}

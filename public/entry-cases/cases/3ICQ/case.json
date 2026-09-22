@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3ICQ",
+  "biologicalMoleculeName": "3ICQ",
+  "caseId": "3ICQ",
+  "caseKey": "3ICQ",
+  "chains": [
+    "D",
+    "E"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "3ICQ",
+  "profileCount": 12
+}

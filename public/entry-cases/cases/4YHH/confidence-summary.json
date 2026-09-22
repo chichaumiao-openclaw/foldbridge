@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4YHH",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 999,
+  "defaultEvidenceId": "annojoin:4YHH:confidence:A:data-eterna/OK1LIB_DMS_0000.rdat#70107",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 499,
+    "B": 500
+  },
+  "generatedAt": "2026-08-17T13:05:06.246706Z",
+  "materializedEvidenceCount": 999,
+  "pdbId": "4YHH",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 12,
+    "LOW": 220,
+    "NOT_SUPPORTED": 767
+  },
+  "totalEvidenceCount": 999
+}

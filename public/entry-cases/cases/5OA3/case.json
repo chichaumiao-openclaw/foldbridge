@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5OA3",
+  "biologicalMoleculeName": "5OA3",
+  "caseId": "5OA3",
+  "caseKey": "5OA3",
+  "chains": [
+    "1",
+    "2",
+    "3"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "5OA3",
+  "profileCount": 3330
+}

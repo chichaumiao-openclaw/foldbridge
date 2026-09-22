@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5GAP",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 44,
+  "defaultEvidenceId": "annojoin:5GAP:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#9273",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 22,
+    "B": 22
+  },
+  "generatedAt": "2026-08-17T13:04:20.107274Z",
+  "materializedEvidenceCount": 44,
+  "pdbId": "5GAP",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 8,
+    "NOT_SUPPORTED": 34
+  },
+  "totalEvidenceCount": 44
+}

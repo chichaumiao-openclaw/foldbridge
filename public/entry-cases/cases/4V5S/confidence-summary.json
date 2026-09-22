@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4V5S",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1256,
+  "defaultEvidenceId": "annojoin:4V5S:confidence:B:data-eterna/OK3TST_2A3_0003.rdat#64335",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 628,
+    "B": 628
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 1256,
+  "pdbId": "4V5S",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 1256
+  },
+  "totalEvidenceCount": 1256
+}

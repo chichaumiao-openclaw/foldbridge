@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "1B23",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 6,
+  "defaultEvidenceId": "annojoin:1B23:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#7803",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 3,
+    "B": 3
+  },
+  "generatedAt": "2026-08-17T12:58:32.114596Z",
+  "materializedEvidenceCount": 6,
+  "pdbId": "1B23",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 2,
+    "NOT_SUPPORTED": 4
+  },
+  "totalEvidenceCount": 6
+}

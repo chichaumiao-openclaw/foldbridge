@@ -1,0 +1,46 @@
+{
+  "browserEntry": "index.html",
+  "chains": {
+    "A": {
+      "case2dPath": "chains/A/case-2d-structure.json.gz",
+      "chainId": "A",
+      "chainRoot": "chains/A",
+      "linkedViewBundlePath": "chains/A/linked-view/linked-view.json.gz",
+      "profileIndexPath": "chains/A/profiles/profile-index.json.gz",
+      "varnaTemplatePath": "chains/A/varna-template.svg.gz"
+    }
+  },
+  "commonAssets": {
+    "case": "case.json",
+    "confidenceEvidence": "confidence-evidence.json",
+    "confidenceSummary": "confidence-summary.json",
+    "structure": "structure.cif.gz"
+  },
+  "defaultChainId": "A",
+  "evidenceChainMap": {
+    "annojoin:2N4L:confidence:A:data-eterna/OK3TST_DMS_0003.rdat#52727": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24326": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24327": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24328": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24329": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24330": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24331": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24332": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24333": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24334": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24335": "A",
+    "annojoin:2N4L:confidence:A:data-rna-structures/VIRWIN_DMS_0001.rdat#24336": "A",
+    "annojoin:2N4L:confidence:B:data-eterna/OK3TST_2A3_0003.rdat#52727": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24326": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24327": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24328": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24329": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24330": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24331": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24332": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24333": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24334": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24335": "A",
+    "annojoin:2N4L:confidence:B:data-rna-structures/VIRWIN_2A3_0001.rdat#24336": "A"
+  }
+}

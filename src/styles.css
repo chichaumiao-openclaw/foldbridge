@@ -7034,8 +7034,13 @@ main.page-probing-index .technology-section-heading h2 {
   box-shadow: 0 10px 24px rgba(155, 122, 38, 0.1);
 }
 
-.site-search-form button:hover {
-  background: linear-gradient(135deg, rgba(255, 232, 163, 0.95) 0%, rgba(255, 244, 202, 0.96) 52%, rgba(255, 250, 232, 0.98) 100%);
+.site-search-form button:hover,
+.site-search-form button:focus-visible,
+.site-search-form button:active {
+  background: var(--foldbridge-gold);
+  border-color: var(--foldbridge-gold-border);
+  color: var(--textPrimary);
+  box-shadow: 0 10px 24px rgba(196, 148, 16, 0.22);
 }
 
 .site-search-card,
@@ -7099,11 +7104,13 @@ main.page-detail.page-search > .site-search-card {
   box-shadow: 0 10px 24px rgba(155, 122, 38, 0.1);
 }
 
-.site-search-save-button:hover {
-  border-color: rgba(227, 191, 92, 0.46);
-  background: linear-gradient(135deg, rgba(255, 232, 163, 0.95) 0%, rgba(255, 244, 202, 0.96) 52%, rgba(255, 250, 232, 0.98) 100%);
+.site-search-save-button:hover,
+.site-search-save-button:focus-visible,
+.site-search-save-button:active {
+  border-color: var(--foldbridge-gold-border);
+  background: var(--foldbridge-gold);
   color: var(--textPrimary);
-  box-shadow: 0 10px 24px rgba(155, 122, 38, 0.1);
+  box-shadow: 0 10px 24px rgba(196, 148, 16, 0.22);
 }
 
 .page-search .download-outline-btn {
@@ -7210,8 +7217,9 @@ main.page-detail.page-search > .site-search-card {
 }
 
 .site-search-form .site-search-submit-icon:hover,
-.site-search-form .site-search-submit-icon:focus-visible {
-  background: #fff2bf;
+.site-search-form .site-search-submit-icon:focus-visible,
+.site-search-form .site-search-submit-icon:active {
+  background: var(--foldbridge-gold);
   color: var(--textPrimary);
   box-shadow: none;
 }
@@ -7375,14 +7383,16 @@ main.page-detail.page-search > .site-search-card {
 }
 
 .site-search-filter.active {
-  border-color: #AA7A38;
-  background: linear-gradient(180deg, #ffe8a3 0%, #f2cd63 100%);
+  border-color: var(--foldbridge-gold-border);
+  background: var(--foldbridge-gold);
+  color: var(--textPrimary);
 }
 
 .site-search-filter:hover,
 .site-search-filter:focus-visible {
-  border-color: #AA7A38;
-  background: #fff2bf;
+  border-color: var(--foldbridge-gold-border);
+  background: var(--foldbridge-gold);
+  color: var(--textPrimary);
 }
 
 .site-search-filter:hover small,
@@ -8121,6 +8131,25 @@ body[data-mode="dark"] #V-TABLE-001 {
   background: transparent !important;
 }
 
+/* Keep the two home hero actions visually consistent in dark mode.
+   The generic ghost-button treatment should not turn only the secondary
+   hero action into a green filled pill. */
+body[data-mode="dark"] .bundle-hero-actions button.ghost {
+  background: transparent !important;
+  color: var(--textPrimary) !important;
+  border-color: var(--foldbridge-gold) !important;
+  box-shadow: none !important;
+}
+
+body[data-mode="dark"] .bundle-hero-actions button.ghost:hover,
+body[data-mode="dark"] .bundle-hero-actions button.ghost:focus-visible,
+body[data-mode="dark"] .bundle-hero-actions button.ghost:active {
+  background: var(--foldbridge-gold) !important;
+  color: var(--textPrimary) !important;
+  border-color: var(--foldbridge-gold) !important;
+  box-shadow: 0 10px 24px rgba(196, 148, 16, 0.22) !important;
+}
+
 body[data-mode="dark"] button.ghost,
 body[data-mode="dark"] .filter-btn,
 body[data-mode="dark"] .legend-item,
@@ -8156,10 +8185,51 @@ body[data-mode="dark"] textarea {
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
+body[data-mode="dark"] .page-search .site-search-page-jump input {
+  border-color: var(--foldbridge-gold-border) !important;
+  background: var(--surface) !important;
+  color: #ffffff !important;
+}
+
+body[data-mode="dark"] .page-search .site-search-page-jump input:focus-visible {
+  border-color: var(--foldbridge-gold) !important;
+  background: var(--surface) !important;
+  color: #ffffff !important;
+  box-shadow: 0 0 0 2px rgba(229, 193, 90, 0.22) !important;
+}
+
+body[data-mode="dark"] .page-search .site-search-pagination-button {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+  border-color: var(--foldbridge-gold-border) !important;
+  opacity: 1;
+}
+
+body[data-mode="dark"] .page-search .site-search-pagination-button:hover:not(:disabled),
+body[data-mode="dark"] .page-search .site-search-pagination-button:focus-visible,
+body[data-mode="dark"] .page-search .site-search-pagination-button.active {
+  background: var(--foldbridge-gold) !important;
+  color: var(--onPrimary) !important;
+  border-color: var(--foldbridge-gold) !important;
+}
+
+body[data-mode="dark"] .page-search .site-search-pagination-button:disabled {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
 body[data-mode="dark"] input::placeholder,
 body[data-mode="dark"] textarea::placeholder {
   color: var(--textMuted) !important;
   opacity: 1;
+}
+
+body[data-mode="dark"] .page-search .site-search-input::placeholder {
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+body[data-mode="dark"] .page-search .site-search-filter small {
+  color: #ffffff !important;
 }
 
 body[data-mode="dark"] .global-search-form input,
@@ -8307,6 +8377,17 @@ body[data-mode="dark"] .probing-article-card {
   background: var(--surface) !important;
   border-color: rgba(125, 212, 170, 0.22) !important;
   color: var(--textPrimary);
+}
+
+/* Search result cards use the same gold outline as the rest of the
+   FoldBridge dark-mode panels, rather than the generic green card border. */
+body[data-mode="dark"] .site-search-result {
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] .site-search-result:hover,
+body[data-mode="dark"] .site-search-result:focus-visible {
+  border-color: var(--foldbridge-gold) !important;
 }
 
 body[data-mode="dark"] .stats-dashboard-toolbar {
@@ -8953,8 +9034,10 @@ body[data-mode="dark"] .article-ppt-overview .article-sibling-nav {
   text-decoration-color: rgba(154, 123, 24, 0.42);
   text-underline-offset: 3px;
 }
-.help-member-link:hover {
-  color: var(--primary);
+.help-member-link:hover,
+.help-member-link:focus-visible,
+.help-member-link:active {
+  color: var(--foldbridge-gold-deep);
   text-decoration-color: currentColor;
 }
 .help-member-label {
@@ -10152,13 +10235,25 @@ body[data-mode="dark"] .probing-family-method-list span {
 }
 
 body[data-mode="dark"] .probing-family-collection .technology-section-summary {
-  background: var(--surfaceAlt);
+  background: var(--surface);
   border-color: rgba(125, 212, 170, 0.24);
 }
 
+body[data-mode="dark"] main.page-probing-index .probing-method-section-count {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+  color: var(--textAccent) !important;
+}
+
 body[data-mode="dark"] .probing-family-collection .technology-section-summary:hover {
-  background: rgba(125, 212, 170, 0.14);
-  border-color: rgba(125, 212, 170, 0.46);
+  background: rgba(229, 193, 90, 0.16);
+  border-color: rgba(229, 193, 90, 0.62);
+}
+
+body[data-mode="dark"] .probing-family-collection > .technology-section-card[open] .technology-section-summary {
+  background: rgba(229, 193, 90, 0.12);
+  border-color: rgba(229, 193, 90, 0.46);
 }
 
 body[data-mode="dark"] .technology-back-link-icon,
@@ -10968,6 +11063,15 @@ body[data-mode="dark"] .mode-toggle {
   box-shadow: none !important;
 }
 
+body[data-mode="dark"] #global-search-input::placeholder {
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+body[data-mode="dark"] .global-search-submit img {
+  filter: brightness(0) invert(1);
+}
+
 /* Entry reuses the Annojoin technique filter. Its original card treatment
    uses literal light gradients, so the parent-level dark override alone
    leaves bright cards and nearly invisible option labels in dark mode. */
@@ -11036,4 +11140,184 @@ body[data-mode="dark"] .annojoin-family-badge-nucleotide {
 body[data-mode="dark"] .annojoin-family-badge-interaction {
   color: #f5d778;
   background: rgba(227, 191, 92, 0.20);
+}
+
+/* Keep the probing method directory separators on the same gold system as
+   the interactive rows instead of the legacy green dark-mode borders. */
+body[data-mode="dark"] .probing-family-collection > .technology-section-card {
+  border-color: rgba(229, 193, 90, 0.46) !important;
+}
+
+body[data-mode="dark"] .probing-family-collection > .technology-section-card + .technology-section-card {
+  border-top-color: rgba(229, 193, 90, 0.46) !important;
+}
+
+body[data-mode="dark"] .probing-family-collection .probing-article-card {
+  border-color: rgba(229, 193, 90, 0.36) !important;
+  border-top-color: rgba(229, 193, 90, 0.46) !important;
+}
+
+body[data-mode="dark"] .probing-family-collection .probing-article-card:hover,
+body[data-mode="dark"] .probing-family-collection .probing-article-card:focus-visible {
+  background: rgba(229, 193, 90, 0.18) !important;
+  border-color: var(--foldbridge-gold) !important;
+  color: var(--textPrimary) !important;
+  box-shadow: 0 14px 30px rgba(229, 193, 90, 0.10) !important;
+}
+
+body[data-mode="dark"] .probing-family-collection .probing-article-card:hover h3,
+body[data-mode="dark"] .probing-family-collection .probing-article-card:hover p,
+body[data-mode="dark"] .probing-family-collection .probing-article-card:hover span,
+body[data-mode="dark"] .probing-family-collection .probing-article-card:focus-visible h3,
+body[data-mode="dark"] .probing-family-collection .probing-article-card:focus-visible p,
+body[data-mode="dark"] .probing-family-collection .probing-article-card:focus-visible span {
+  color: var(--textPrimary) !important;
+}
+
+body[data-mode="dark"] .article-reading-card .article-sibling-nav,
+body[data-mode="dark"] .article-ppt-overview .article-sibling-nav {
+  border-top-color: rgba(229, 193, 90, 0.46) !important;
+}
+
+body[data-mode="dark"] .stats-head > p {
+  color: var(--textPrimary) !important;
+}
+
+body[data-mode="dark"] .stats-reset:not(:disabled),
+body[data-mode="dark"] .stats-entry-link {
+  background: var(--surface) !important;
+  color: var(--textPrimary) !important;
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] .stats-reset:disabled {
+  background: var(--surface) !important;
+  color: var(--textSecondary) !important;
+  border-color: var(--foldbridge-gold-border) !important;
+  opacity: 1 !important;
+}
+
+body[data-mode="dark"] .stats-reset:not(:disabled):hover,
+body[data-mode="dark"] .stats-reset:not(:disabled):focus-visible,
+body[data-mode="dark"] .stats-reset:not(:disabled):active,
+body[data-mode="dark"] .stats-entry-link:hover,
+body[data-mode="dark"] .stats-entry-link:focus-visible,
+body[data-mode="dark"] .stats-entry-link:active {
+  background: var(--foldbridge-gold) !important;
+  color: var(--onPrimary) !important;
+  border-color: var(--foldbridge-gold) !important;
+}
+
+body[data-mode="dark"] main.page-download .download-center-section,
+body[data-mode="dark"] main.page-download .raw-data-geo-panel {
+  border-top-color: rgba(229, 193, 90, 0.46) !important;
+}
+
+body[data-mode="dark"] main.page-download .download-center-button,
+body[data-mode="dark"] main.page-download .download-geo-series-link,
+body[data-mode="dark"] main.page-download .download-outline-btn {
+  background: var(--surface) !important;
+  color: var(--textPrimary) !important;
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] main.page-download .download-center-button:hover,
+body[data-mode="dark"] main.page-download .download-center-button:focus-visible,
+body[data-mode="dark"] main.page-download .download-center-button:active,
+body[data-mode="dark"] main.page-download .download-geo-series-link:hover,
+body[data-mode="dark"] main.page-download .download-geo-series-link:focus-visible,
+body[data-mode="dark"] main.page-download .download-outline-btn:hover,
+body[data-mode="dark"] main.page-download .download-outline-btn:focus-visible,
+body[data-mode="dark"] main.page-download .download-outline-btn:active {
+  background: var(--foldbridge-gold) !important;
+  color: var(--onPrimary) !important;
+  border-color: var(--foldbridge-gold) !important;
+}
+
+body[data-mode="dark"] main.page-download #pdb-download-search {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] main.page-download #pdb-download-search::placeholder {
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+body[data-mode="dark"] main.page-download #pdb-download-search:focus-visible {
+  border-color: var(--foldbridge-gold) !important;
+  outline-color: var(--foldbridge-gold) !important;
+}
+
+body[data-mode="dark"] main.page-download .pdb-download-page-button {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+  border-color: var(--foldbridge-gold-border) !important;
+  opacity: 1;
+}
+
+body[data-mode="dark"] main.page-download .pdb-download-page-button:hover:not(:disabled),
+body[data-mode="dark"] main.page-download .pdb-download-page-button:focus-visible,
+body[data-mode="dark"] main.page-download .pdb-download-page-button.active {
+  background: var(--foldbridge-gold) !important;
+  color: var(--onPrimary) !important;
+  border-color: var(--foldbridge-gold) !important;
+}
+
+body[data-mode="dark"] main.page-download .pdb-download-page-button:disabled {
+  color: rgba(255, 255, 255, 0.68) !important;
+}
+
+body[data-mode="dark"] main.page-download .pdb-download-pagination .site-search-page-jump input {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] main.page-download .pdb-download-pagination .site-search-page-jump input:focus-visible {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+  border-color: var(--foldbridge-gold) !important;
+  box-shadow: 0 0 0 2px rgba(229, 193, 90, 0.22) !important;
+}
+
+body[data-mode="dark"] main.page-download .pdb-download-cif-link {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] main.page-download .pdb-download-cif-link:hover,
+body[data-mode="dark"] main.page-download .pdb-download-cif-link:focus-visible,
+body[data-mode="dark"] main.page-download .pdb-download-cif-link:active {
+  background: var(--foldbridge-gold) !important;
+  color: var(--onPrimary) !important;
+  border-color: var(--foldbridge-gold) !important;
+}
+
+body[data-mode="dark"] .help-feedback-button {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] .help-feedback-button:hover,
+body[data-mode="dark"] .help-feedback-button:focus-visible,
+body[data-mode="dark"] .help-feedback-button:active {
+  background: var(--foldbridge-gold) !important;
+  color: var(--onPrimary) !important;
+  border-color: var(--foldbridge-gold) !important;
+}
+
+body[data-mode="dark"] .help-member-link {
+  color: #ffffff !important;
+  text-decoration-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] .help-member-link:hover,
+body[data-mode="dark"] .help-member-link:focus-visible,
+body[data-mode="dark"] .help-member-link:active {
+  color: var(--textAccent) !important;
+  text-decoration-color: var(--foldbridge-gold) !important;
 }

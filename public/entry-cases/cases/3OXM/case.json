@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3OXM",
+  "biologicalMoleculeName": "3OXM",
+  "caseId": "3OXM",
+  "caseKey": "3OXM",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "3OXM",
+  "profileCount": 620
+}

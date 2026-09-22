@@ -1,0 +1,15 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5GAP",
+  "biologicalMoleculeName": "5GAP",
+  "caseId": "5GAP",
+  "caseKey": "5GAP",
+  "chains": [
+    "U",
+    "V",
+    "W"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5GAP",
+  "profileCount": 44
+}

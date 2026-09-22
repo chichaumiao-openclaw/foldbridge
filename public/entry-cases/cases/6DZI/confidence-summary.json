@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "6DZI",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4011,
+  "defaultEvidenceId": "annojoin:6DZI:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#80860",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2005,
+    "B": 2006
+  },
+  "generatedAt": "2026-08-17T12:06:36.970820Z",
+  "materializedEvidenceCount": 4011,
+  "pdbId": "6DZI",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 96,
+    "LOW": 1214,
+    "NOT_SUPPORTED": 2701
+  },
+  "totalEvidenceCount": 4011
+}

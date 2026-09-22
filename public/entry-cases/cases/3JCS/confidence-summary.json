@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3JCS",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 574,
+  "defaultEvidenceId": "annojoin:3JCS:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#4287",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 287,
+    "B": 287
+  },
+  "generatedAt": "2026-08-17T11:42:15.821771Z",
+  "materializedEvidenceCount": 574,
+  "pdbId": "3JCS",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 6,
+    "LOW": 125,
+    "NOT_SUPPORTED": 443
+  },
+  "totalEvidenceCount": 574
+}

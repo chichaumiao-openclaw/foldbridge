@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "1P6V",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 52,
+  "defaultEvidenceId": "annojoin:1P6V:confidence:A:data-rna-structures/RSTRND_DMS_0000.rdat#1433",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 24,
+    "B": 28
+  },
+  "generatedAt": "2026-08-17T12:46:07.647795Z",
+  "materializedEvidenceCount": 52,
+  "pdbId": "1P6V",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 9,
+    "NOT_SUPPORTED": 43
+  },
+  "totalEvidenceCount": 52
+}

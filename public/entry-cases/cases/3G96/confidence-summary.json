@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "3G96",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 92,
+  "defaultEvidenceId": "annojoin:3G96:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#3334",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 12,
+    "B": 80
+  },
+  "generatedAt": "2026-08-17T12:24:04.370987Z",
+  "materializedEvidenceCount": 92,
+  "pdbId": "3G96",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 38,
+    "NOT_SUPPORTED": 52
+  },
+  "totalEvidenceCount": 92
+}

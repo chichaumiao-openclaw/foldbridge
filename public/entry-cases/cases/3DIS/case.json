@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3DIS",
+  "biologicalMoleculeName": "3DIS",
+  "caseId": "3DIS",
+  "caseKey": "3DIS",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "3DIS",
+  "profileCount": 22
+}

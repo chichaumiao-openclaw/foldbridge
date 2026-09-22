@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5BR8",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1117,
+  "defaultEvidenceId": "annojoin:5BR8:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#84194",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 558,
+    "B": 559
+  },
+  "generatedAt": "2026-08-17T11:59:32.100172Z",
+  "materializedEvidenceCount": 1117,
+  "pdbId": "5BR8",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 5,
+    "LOW": 123,
+    "NOT_SUPPORTED": 989
+  },
+  "totalEvidenceCount": 1117
+}

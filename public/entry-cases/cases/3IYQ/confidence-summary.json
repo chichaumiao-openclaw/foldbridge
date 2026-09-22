@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3IYQ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 208,
+  "defaultEvidenceId": "annojoin:3IYQ:confidence:B:data-rna-structures/RSTRND_2A3_0000.rdat#6524",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 104,
+    "B": 104
+  },
+  "generatedAt": "2026-08-17T12:12:50.614199Z",
+  "materializedEvidenceCount": 208,
+  "pdbId": "3IYQ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 46,
+    "NOT_SUPPORTED": 162
+  },
+  "totalEvidenceCount": 208
+}

@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5J88",
+  "biologicalMoleculeName": "5J88",
+  "caseId": "5J88",
+  "caseKey": "5J88",
+  "chains": [
+    "AA",
+    "BA",
+    "CA",
+    "CB",
+    "DA",
+    "DB"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "5J88",
+  "profileCount": 901
+}

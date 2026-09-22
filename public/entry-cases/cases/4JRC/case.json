@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4JRC",
+  "biologicalMoleculeName": "4JRC",
+  "caseId": "4JRC",
+  "caseKey": "4JRC",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "4JRC",
+  "profileCount": 4
+}

@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5MC6",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 8290,
+  "defaultEvidenceId": "annojoin:5MC6:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#7544",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 4143,
+    "B": 4147
+  },
+  "generatedAt": "2026-08-17T11:06:33.567203Z",
+  "materializedEvidenceCount": 8290,
+  "pdbId": "5MC6",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 87,
+    "LOW": 1066,
+    "NOT_SUPPORTED": 7137
+  },
+  "totalEvidenceCount": 8290
+}

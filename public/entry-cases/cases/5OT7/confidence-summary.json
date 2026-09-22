@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5OT7",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 2552,
+  "defaultEvidenceId": "annojoin:5OT7:confidence:A:data-rna-structures/POS240_DMS_0000.rdat#1424",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 1275,
+    "B": 1277
+  },
+  "generatedAt": "2026-08-17T12:52:51.132170Z",
+  "materializedEvidenceCount": 2552,
+  "pdbId": "5OT7",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 13,
+    "LOW": 345,
+    "NOT_SUPPORTED": 2194
+  },
+  "totalEvidenceCount": 2552
+}

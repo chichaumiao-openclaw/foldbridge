@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1P5P",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 364,
+  "defaultEvidenceId": "annojoin:1P5P:confidence:B:data-rna-structures/HCVDM2_DCP_0000.rdat#1",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 178,
+    "B": 186
+  },
+  "generatedAt": "2026-08-17T11:32:33.512835Z",
+  "materializedEvidenceCount": 364,
+  "pdbId": "1P5P",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 78,
+    "LOW": 109,
+    "NOT_SUPPORTED": 177
+  },
+  "totalEvidenceCount": 364
+}

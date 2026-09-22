@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2GDI",
+  "biologicalMoleculeName": "2GDI",
+  "caseId": "2GDI",
+  "caseKey": "2GDI",
+  "chains": [
+    "X",
+    "Y"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "2GDI",
+  "profileCount": 510
+}

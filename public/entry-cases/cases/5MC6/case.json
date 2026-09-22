@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5MC6",
+  "biologicalMoleculeName": "5MC6",
+  "caseId": "5MC6",
+  "caseKey": "5MC6",
+  "chains": [
+    "2",
+    "BQ",
+    "BR",
+    "BS",
+    "m",
+    "n"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "5MC6",
+  "profileCount": 8290
+}

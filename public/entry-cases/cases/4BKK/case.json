@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "4BKK",
+  "biologicalMoleculeName": "4BKK",
+  "caseId": "4BKK",
+  "caseKey": "4BKK",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A NOT_SUPPORTED",
+  "pdbId": "4BKK",
+  "profileCount": 128
+}

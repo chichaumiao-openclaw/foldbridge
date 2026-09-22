@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4LX6",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 3660,
+  "defaultEvidenceId": "annojoin:4LX6:confidence:B:data-riboswitches/ADD140_1M7_0012.rdat#8",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 36,
+    "B": 3624
+  },
+  "generatedAt": "2026-08-17T10:56:07.108683Z",
+  "materializedEvidenceCount": 3660,
+  "pdbId": "4LX6",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 138,
+    "LOW": 2292,
+    "NOT_SUPPORTED": 1230
+  },
+  "totalEvidenceCount": 3660
+}

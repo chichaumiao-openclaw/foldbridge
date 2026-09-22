@@ -91,13 +91,31 @@ function renderGroups(rows, caseBase, missingSet, expandedSet) {
     const nestedChildren = parent.children.filter((child) =>
       String(child.label).trim().toLowerCase() !== String(parent.label).trim().toLowerCase()
     );
+    // Keep the classification bar for a singleton, but show its only row
+    // immediately instead of making the user expand it first.
+    if (parent.count <= 1) {
+      out.push(`<tr class="entry-parent-group-row is-expanded-group" data-entry-group-state="expanded">
+        <td class="entry-group-cell" colspan="${colCount}">
+          <div class="entry-group-head">
+            <span class="entry-group-label">${escapeHtml(parent.label)}</span>
+            <span class="entry-group-count">${parent.count.toLocaleString()}</span>
+          </div>
+        </td>
+      </tr>`);
+      parent.children.forEach((child) => child.rows.forEach((row) => {
+        out.push(renderRow(row, caseBase, missingSet));
+      }));
+      continue;
+    }
     const parentToggleId = `parent:${parent.id}`;
     const parentExpanded = expandedSet.has(parentToggleId);
-    out.push(`<tr class="entry-parent-group-row${parentExpanded ? ' is-expanded-group' : ''}" data-entry-group-state="${parentExpanded ? 'expanded' : 'collapsed'}">
-      <td class="entry-group-head" colspan="${colCount}">
-        <button type="button" class="entry-group-toggle" data-entry-group-toggle="${escapeHtml(parentToggleId)}" aria-expanded="${parentExpanded ? 'true' : 'false'}">${renderDisclosureIcon(parentExpanded)}</button>
-        <span class="entry-group-label">${escapeHtml(parent.label)}</span>
-        <span class="entry-group-count">${parent.count.toLocaleString()}</span>
+    out.push(`<tr class="entry-parent-group-row${parentExpanded ? ' is-expanded-group' : ''}" data-entry-group-state="${parentExpanded ? 'expanded' : 'collapsed'}" data-entry-group-row="${escapeHtml(parentToggleId)}">
+      <td class="entry-group-cell" colspan="${colCount}">
+        <div class="entry-group-head">
+          <button type="button" class="entry-group-toggle" data-entry-group-toggle="${escapeHtml(parentToggleId)}" aria-expanded="${parentExpanded ? 'true' : 'false'}">${renderDisclosureIcon(parentExpanded)}</button>
+          <span class="entry-group-label">${escapeHtml(parent.label)}</span>
+          <span class="entry-group-count">${parent.count.toLocaleString()}</span>
+        </div>
       </td>
     </tr>`);
     if (!parentExpanded) continue;
@@ -106,12 +124,18 @@ function renderGroups(rows, caseBase, missingSet, expandedSet) {
     }
     for (const child of nestedChildren) {
       const childToggleId = `child:${child.id}`;
-      const childExpanded = expandedSet.has(childToggleId);
-      out.push(`<tr class="entry-child-group-row${childExpanded ? ' is-expanded-group' : ''}" data-entry-group-state="${childExpanded ? 'expanded' : 'collapsed'}">
-        <td class="entry-group-head entry-group-head-child" colspan="${colCount}">
-          <button type="button" class="entry-group-toggle" data-entry-group-toggle="${escapeHtml(childToggleId)}" aria-expanded="${childExpanded ? 'true' : 'false'}">${renderDisclosureIcon(childExpanded)}</button>
-          <span class="entry-group-label">${escapeHtml(child.label)}</span>
-          <span class="entry-group-count">${child.count.toLocaleString()}</span>
+      const childExpanded = child.count <= 1 || expandedSet.has(childToggleId);
+      const childToggle = child.count <= 1
+        ? ''
+        : `<button type="button" class="entry-group-toggle" data-entry-group-toggle="${escapeHtml(childToggleId)}" aria-expanded="${childExpanded ? 'true' : 'false'}">${renderDisclosureIcon(childExpanded)}</button>`;
+      const childRowToggle = child.count <= 1 ? '' : ` data-entry-group-row="${escapeHtml(childToggleId)}"`;
+      out.push(`<tr class="entry-child-group-row${childExpanded ? ' is-expanded-group' : ''}" data-entry-group-state="${childExpanded ? 'expanded' : 'collapsed'}"${childRowToggle}>
+        <td class="entry-group-cell entry-group-head-child" colspan="${colCount}">
+          <div class="entry-group-head">
+            ${childToggle}
+            <span class="entry-group-label">${escapeHtml(child.label)}</span>
+            <span class="entry-group-count">${child.count.toLocaleString()}</span>
+          </div>
         </td>
       </tr>`);
       if (!childExpanded) continue;

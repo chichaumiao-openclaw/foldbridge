@@ -1,0 +1,13 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3DIR",
+  "biologicalMoleculeName": "3DIR",
+  "caseId": "3DIR",
+  "caseKey": "3DIR",
+  "chains": [
+    "A"
+  ],
+  "confidenceDisplayLabel": "A HIGH",
+  "pdbId": "3DIR",
+  "profileCount": 22
+}

@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "4WC6",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 12,
+  "defaultEvidenceId": "annojoin:4WC6:confidence:A:data-eterna/OK2TST_DMS_0000.rdat#97692",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 6
+  },
+  "generatedAt": "2026-08-17T12:33:28.063985Z",
+  "materializedEvidenceCount": 12,
+  "pdbId": "4WC6",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 6,
+    "NOT_SUPPORTED": 6
+  },
+  "totalEvidenceCount": 12
+}

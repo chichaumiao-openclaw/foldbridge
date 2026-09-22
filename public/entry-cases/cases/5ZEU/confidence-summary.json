@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5ZEU",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1225,
+  "defaultEvidenceId": "annojoin:5ZEU:confidence:A:data-eterna/OK2TRN_DMS_0000.rdat#81357",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 612,
+    "B": 613
+  },
+  "generatedAt": "2026-08-17T11:42:15.821771Z",
+  "materializedEvidenceCount": 1225,
+  "pdbId": "5ZEU",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 98,
+    "LOW": 388,
+    "NOT_SUPPORTED": 739
+  },
+  "totalEvidenceCount": 1225
+}

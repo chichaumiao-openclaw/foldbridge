@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "5NZD",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 524,
+  "defaultEvidenceId": "annojoin:5NZD:confidence:B:data-rna-structures/M2PK50_2A3_0000.rdat#43320",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 256,
+    "B": 268
+  },
+  "generatedAt": "2026-08-17T12:35:20.277790Z",
+  "materializedEvidenceCount": 524,
+  "pdbId": "5NZD",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 7,
+    "LOW": 76,
+    "NOT_SUPPORTED": 441
+  },
+  "totalEvidenceCount": 524
+}

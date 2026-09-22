@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "1GID",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 9560,
+  "defaultEvidenceId": "annojoin:1GID:confidence:B:data-rna-structures/PDB130_2A3_0000.rdat#6380",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 7224,
+    "B": 2336
+  },
+  "generatedAt": "2026-08-17T11:58:31.097187Z",
+  "materializedEvidenceCount": 9560,
+  "pdbId": "1GID",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 5,
+    "LOW": 247,
+    "NOT_SUPPORTED": 9308
+  },
+  "totalEvidenceCount": 9560
+}

@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "4YYE",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 4,
+  "defaultEvidenceId": "annojoin:4YYE:confidence:A:data-rna-structures/PDB130_DMS_0000.rdat#9397",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 2,
+    "B": 2
+  },
+  "generatedAt": "2026-08-17T11:27:19.881483Z",
+  "materializedEvidenceCount": 4,
+  "pdbId": "4YYE",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 4
+  },
+  "totalEvidenceCount": 4
+}

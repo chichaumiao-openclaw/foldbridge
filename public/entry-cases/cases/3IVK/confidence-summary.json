@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3IVK",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 270,
+  "defaultEvidenceId": "annojoin:3IVK:confidence:B:data-riboswitches/CL1LIG_1M7_0001.rdat#43",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 6,
+    "B": 264
+  },
+  "generatedAt": "2026-08-17T10:56:06.713584Z",
+  "materializedEvidenceCount": 270,
+  "pdbId": "3IVK",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "LOW": 242,
+    "NOT_SUPPORTED": 28
+  },
+  "totalEvidenceCount": 270
+}

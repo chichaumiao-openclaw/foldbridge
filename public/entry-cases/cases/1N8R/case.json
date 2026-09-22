@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "1N8R",
+  "biologicalMoleculeName": "1N8R",
+  "caseId": "1N8R",
+  "caseKey": "1N8R",
+  "chains": [
+    "A",
+    "B"
+  ],
+  "confidenceDisplayLabel": "B HIGH",
+  "pdbId": "1N8R",
+  "profileCount": 1934
+}

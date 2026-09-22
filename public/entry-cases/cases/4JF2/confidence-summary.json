@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4JF2",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1004,
+  "defaultEvidenceId": "annojoin:4JF2:confidence:B:data-eterna/ETERNA_P90_0002.rdat#1464",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 499,
+    "B": 505
+  },
+  "generatedAt": "2026-08-17T12:29:17.501284Z",
+  "materializedEvidenceCount": 1004,
+  "pdbId": "4JF2",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 55,
+    "LOW": 193,
+    "NOT_SUPPORTED": 756
+  },
+  "totalEvidenceCount": 1004
+}

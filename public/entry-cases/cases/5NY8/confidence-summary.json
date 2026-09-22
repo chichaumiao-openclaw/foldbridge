@@ -1,0 +1,23 @@
+{
+  "atlasCaseKey": "5NY8",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 524,
+  "defaultEvidenceId": "annojoin:5NY8:confidence:A:data-rna-structures/M2PK50_DMS_0000.rdat#43300",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 256,
+    "B": 268
+  },
+  "generatedAt": "2026-08-17T12:46:12.664339Z",
+  "materializedEvidenceCount": 524,
+  "pdbId": "5NY8",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "NOT_SUPPORTED": 524
+  },
+  "totalEvidenceCount": 524
+}

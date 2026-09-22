@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2CV2",
+  "biologicalMoleculeName": "2CV2",
+  "caseId": "2CV2",
+  "caseKey": "2CV2",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "2CV2",
+  "profileCount": 2
+}

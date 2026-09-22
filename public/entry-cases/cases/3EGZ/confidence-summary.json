@@ -1,0 +1,24 @@
+{
+  "atlasCaseKey": "3EGZ",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 194,
+  "defaultEvidenceId": "annojoin:3EGZ:confidence:B:data-rna-structures/POS240_2A3_0000.rdat#1480",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 96,
+    "B": 98
+  },
+  "generatedAt": "2026-08-17T11:36:33.593526Z",
+  "materializedEvidenceCount": 194,
+  "pdbId": "3EGZ",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 10,
+    "NOT_SUPPORTED": 184
+  },
+  "totalEvidenceCount": 194
+}

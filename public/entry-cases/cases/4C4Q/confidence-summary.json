@@ -1,0 +1,25 @@
+{
+  "atlasCaseKey": "4C4Q",
+  "availableFamilies": [
+    "A",
+    "B"
+  ],
+  "bridgeMissingCount": 1234,
+  "defaultEvidenceId": "annojoin:4C4Q:confidence:A:data-rna-structures/RFMREP_DMS_0000.rdat#56001",
+  "defaultSelectionRuleVersion": "tier_auc_p_n_v3",
+  "familyCounts": {
+    "A": 611,
+    "B": 623
+  },
+  "generatedAt": "2026-08-17T12:06:37.774269Z",
+  "materializedEvidenceCount": 1234,
+  "pdbId": "4C4Q",
+  "schemaVersion": "family-case-bundle.v3",
+  "status": "materialized",
+  "tierCounts": {
+    "HIGH": 2,
+    "LOW": 132,
+    "NOT_SUPPORTED": 1100
+  },
+  "totalEvidenceCount": 1234
+}

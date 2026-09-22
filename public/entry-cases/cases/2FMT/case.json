@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "2FMT",
+  "biologicalMoleculeName": "2FMT",
+  "caseId": "2FMT",
+  "caseKey": "2FMT",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "B LOW",
+  "pdbId": "2FMT",
+  "profileCount": 4
+}

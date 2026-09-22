@@ -1,0 +1,14 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "3A2K",
+  "biologicalMoleculeName": "3A2K",
+  "caseId": "3A2K",
+  "caseKey": "3A2K",
+  "chains": [
+    "C",
+    "D"
+  ],
+  "confidenceDisplayLabel": "A LOW",
+  "pdbId": "3A2K",
+  "profileCount": 4
+}

@@ -1,0 +1,18 @@
+{
+  "assetFamily": "MERGED",
+  "atlasCaseKey": "5VYC",
+  "biologicalMoleculeName": "5VYC",
+  "caseId": "5VYC",
+  "caseKey": "5VYC",
+  "chains": [
+    "i1",
+    "i2",
+    "i3",
+    "i4",
+    "i5",
+    "i6"
+  ],
+  "confidenceDisplayLabel": "B NOT_SUPPORTED",
+  "pdbId": "5VYC",
+  "profileCount": 1978
+}
