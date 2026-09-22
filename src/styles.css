@@ -11321,3 +11321,97 @@ body[data-mode="dark"] .help-member-link:active {
   color: var(--textAccent) !important;
   text-decoration-color: var(--foldbridge-gold) !important;
 }
+
+/* The ANNOJOIN table header uses the same yellow as light mode. It should not
+   inherit the green data-table treatment or the gold reversal used by rows. */
+body[data-mode="dark"] main.page-annojoin-atlas .annojoin-master-table thead th,
+body[data-mode="dark"] main.page-annojoin-atlas .annojoin-master-table th:nth-child(2) {
+  background: #9A7B18 !important;
+  color: #1A1A1A !important;
+}
+
+/* Chrome/WebKit autofill was repainting the Search page input pale yellow
+   after a query was entered. Keep typed and autofilled values on the dark
+   card surface with white text. */
+body[data-mode="dark"] main.page-search .site-search-input,
+body[data-mode="dark"] main.page-search .site-search-input:focus {
+  background: var(--surface) !important;
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] main.page-search .site-search-input::placeholder {
+  color: #ffffff !important;
+  opacity: 1;
+}
+
+body[data-mode="dark"] main.page-search .site-search-input:-webkit-autofill,
+body[data-mode="dark"] main.page-search .site-search-input:-webkit-autofill:hover,
+body[data-mode="dark"] main.page-search .site-search-input:-webkit-autofill:focus,
+body[data-mode="dark"] main.page-search .site-search-input:-webkit-autofill:active {
+  -webkit-text-fill-color: #ffffff !important;
+  -webkit-box-shadow: 0 0 0 1000px var(--surface) inset,
+    0 0 0 2px rgba(229, 193, 90, 0.22) !important;
+  box-shadow: 0 0 0 1000px var(--surface) inset,
+    0 0 0 2px rgba(229, 193, 90, 0.22) !important;
+  background-color: var(--surface) !important;
+  color: #ffffff !important;
+}
+
+body[data-mode="dark"] main.page-search .site-search-input:focus-visible {
+  border-color: var(--foldbridge-gold) !important;
+  box-shadow: 0 0 0 2px rgba(229, 193, 90, 0.22) !important;
+}
+
+body[data-mode="dark"] main.page-search .site-search-active .chip {
+  background: transparent !important;
+  color: #ffffff !important;
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+main.page-search .site-search-active .chip {
+  background: transparent !important;
+  color: #1A1A1A !important;
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+/* Entry/ANNOJOIN table chrome uses the shared yellow accent throughout dark
+   mode: the header, group separators, disclosure circles, and count pills. */
+body[data-mode="dark"] .entry-table-page .entry-table thead,
+body[data-mode="dark"] .entry-table-page .entry-table thead th,
+body[data-mode="dark"] main.page-annojoin-atlas .annojoin-master-table thead,
+body[data-mode="dark"] main.page-annojoin-atlas .annojoin-master-table thead th {
+  background: #9A7B18 !important;
+  color: #1A1A1A !important;
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] .entry-table-page .entry-table tbody td,
+body[data-mode="dark"] main.page-annojoin-atlas .annojoin-master-table tbody td,
+body[data-mode="dark"] .entry-parent-group-row td,
+body[data-mode="dark"] .entry-child-group-row td,
+body[data-mode="dark"] .annojoin-parent-group-row td,
+body[data-mode="dark"] .annojoin-child-group-row td {
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] .entry-group-toggle,
+body[data-mode="dark"] .entry-group-count,
+body[data-mode="dark"] .annojoin-parent-group-row button,
+body[data-mode="dark"] .annojoin-child-group-row button,
+body[data-mode="dark"] .annojoin-parent-group-row span,
+body[data-mode="dark"] .annojoin-child-group-row small {
+  border-color: var(--foldbridge-gold-border) !important;
+}
+
+body[data-mode="dark"] .entry-group-toggle:hover,
+body[data-mode="dark"] .entry-group-toggle:focus-visible,
+body[data-mode="dark"] .annojoin-parent-group-row button:hover,
+body[data-mode="dark"] .annojoin-child-group-row button:hover,
+body[data-mode="dark"] .annojoin-parent-group-row button:focus-visible,
+body[data-mode="dark"] .annojoin-child-group-row button:focus-visible {
+  background: var(--foldbridge-gold) !important;
+  border-color: var(--foldbridge-gold) !important;
+  color: var(--onPrimary) !important;
+}
