@@ -67,7 +67,7 @@ export function renderHomeHero(dashboardView) {
           </p>
           <div class="bundle-hero-actions">
             <button type="button" class="bundle-hero-primary" data-route="entry">Browse Entry table <img class="inline-arrow-icon" src="./src/assets/probing-arrow-right.svg" alt="" aria-hidden="true" /></button>
-            <button type="button" class="ghost" data-route="probing">Explore probing methods</button>
+            <button type="button" class="ghost" data-route="probing">Explore probing methods <img class="inline-arrow-icon" src="./src/assets/probing-arrow-right.svg" alt="" aria-hidden="true" /></button>
           </div>
         </div>
 
@@ -231,9 +231,6 @@ export function renderReactivityAlignment(caseData = {}) {
   const seq = Array.isArray(caseData.sequence) ? caseData.sequence : [];
   const react = Array.isArray(caseData.reactivity) ? caseData.reactivity : [];
   const ceiling = Number(caseData.norm_ceiling) || 1;
-  const pdbId = caseData.pdb_id || '';
-  const chain = caseData.chain || '';
-  const pdbLabel = `PDB ${pdbId} · chain ${chain}`.replace(/\s+$/,'').replace(/·\s*chain\s*$/,'· chain');
   const columns = seq.map((base, i) => {
     const bar = alignmentBarHtml(react[i], ceiling);
     const cell = alignmentCellHtml(base, react[i], ceiling);
@@ -241,8 +238,7 @@ export function renderReactivityAlignment(caseData = {}) {
   }).join('');
   return `<div class="hss-alignment" role="img" aria-label="Per-base probing reactivity (bars) aligned to the PDB chain residues">
     <div class="hss-aln-key">
-      <span class="hss-aln-label">Probing signal (reactivity)</span>
-      <span class="hss-aln-label hss-aln-label-pdb">${pdbLabel}</span>
+      <span class="hss-aln-label">1D reactivity signal</span>
     </div>
     <div class="hss-aln-columns">${columns}</div>
   </div>`;
@@ -263,6 +259,9 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     return `<section class="home-scroll-story hss-placeholder" aria-hidden="true"></section>`;
   }
   const meta = `${caseData.molecule_label || ''} · PDB ${caseData.pdb_id || ''} · ${caseData.confidence_label || ''}`;
+  const pdbLabel = `PDB ${caseData.pdb_id || ''} · chain ${caseData.chain || ''}`
+    .replace(/\s+$/, '')
+    .replace(/·\s*chain\s*$/, '· chain');
   const layer0 = `<div class="hss-layer is-active" data-stage="0"><div class="hss-tag">1 · Alignment</div>${renderReactivityAlignment(caseData)}</div>`;
   const layer1 = caseData.svg_2d
     ? `<div class="hss-layer" data-stage="1"><div class="hss-tag">2 · Secondary structure</div><img class="hss-snapshot" src="${base}/${caseData.svg_2d}" alt="${caseData.pdb_id || ''} secondary structure, reactivity-colored" loading="lazy"></div>`
@@ -271,12 +270,29 @@ export function renderHomeScrollStory(caseData, opts = {}) {
     ? `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><img class="hss-snapshot" src="${base}/${caseData.png_3d}" alt="${caseData.pdb_id || ''} tertiary structure, reactivity-colored" loading="lazy"></div>`
     : `<div class="hss-layer" data-stage="2"><div class="hss-tag">3 · Tertiary structure</div><div class="hss-missing">3D snapshot unavailable</div></div>`;
   const scenes = caseData.scenes.map((s, i) => {
-    const chip = s.chip ? `\n      <span class="hss-chip">${s.chip}</span>` : '';
+    const chip = s.chip && i !== 0 ? `\n      <span class="hss-chip">${s.chip}</span>` : '';
+    const alignmentReadout = i === 0 ? `
+      <div class="hss-scene-mapline">
+        <span>Probing signal</span>
+        <span class="hss-scene-map-arrow" aria-hidden="true">→</span>
+        <strong>${pdbLabel}</strong>
+      </div>
+      <div class="hss-scene-flow" aria-label="Measure reactivity, align the sequence, and map each value to a PDB residue">
+        <div class="hss-flow-step"><span class="hss-flow-index">01</span><strong>Measure</strong><small>reactivity</small></div>
+        <span class="hss-flow-arrow" aria-hidden="true">→</span>
+        <div class="hss-flow-step"><span class="hss-flow-index">02</span><strong>Align</strong><small>the sequence</small></div>
+        <span class="hss-flow-arrow" aria-hidden="true">→</span>
+        <div class="hss-flow-step"><span class="hss-flow-index">03</span><strong>Map</strong><small>to each residue</small></div>
+      </div>
+      <div class="hss-scene-key">
+        <span><i class="hss-key-swatch hss-key-warm" aria-hidden="true"></i>Warm · flexible / unpaired</span>
+        <span><i class="hss-key-swatch hss-key-cool" aria-hidden="true"></i>Cool · constrained / paired</span>
+      </div>` : '';
     return `
     <div class="hss-scene${i === 0 ? ' is-active' : ''}" data-scene="${i}">
       <div class="hss-scene-num">${s.n || ''}</div>
       <h3 class="hss-scene-title">${s.title || ''}</h3>
-      <p class="hss-scene-body">${s.body || ''}</p>${chip}
+      <p class="hss-scene-body">${s.body || ''}</p>${alignmentReadout}${chip}
     </div>`;
   }).join('');
   const legend = `<div class="hss-legend"><span>low</span><span class="hss-legend-bar"></span><span>high reactivity</span></div>`;
