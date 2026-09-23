@@ -61,7 +61,7 @@ export function renderHomeHero(dashboardView) {
   return `<section class="bundle-hero-card bundle-wide-card">
         <div class="bundle-hero-copy">
           <p class="bundle-kicker">RNA structure-linked database</p>
-          <h2>FoldBridge</h2>
+          <h2>Ribocentre-FoldBridge</h2>
           <p class="bundle-hero-summary">
             A curated database that links RNA chemical probing data with experimentally resolved tertiary structures.
           </p>

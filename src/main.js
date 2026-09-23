@@ -40,7 +40,7 @@ import {
   buildAtlasSearchState
 } from './annojoinAtlasData.js';
 import { renderAnnojointAtlasPage } from './annojoinAtlasView.js';
-import { bindAnnojointAtlasTable } from './annojoinAtlasController.js';
+import { bindAnnojointAtlasTable, syncTechniqueLabelTooltips } from './annojoinAtlasController.js';
 import {
   buildAnnojointTableGroups,
   isAnnojointSearchActive,
@@ -3387,6 +3387,7 @@ function render(options = {}) {
   clearEntryCaseEmbed();
   setTheme(theme, mode);
   document.getElementById('app').innerHTML = `${nav()}${pageFor(route)}${renderFooter()}`;
+  syncTechniqueLabelTooltips(document);
   if (route === 'entry' && Number.isFinite(entryTableViewportHeight)) {
     const entryTableWrap = document.querySelector('.entry-table-page .entry-table-wrap');
     entryTableWrap?.style.setProperty('--entry-table-viewport-height', `${entryTableViewportHeight}px`);

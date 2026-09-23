@@ -679,6 +679,7 @@ main.page-sequence-detail {
 }
 
 .annojoin-technique-option {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -703,6 +704,33 @@ main.page-sequence-detail {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.annojoin-technique-option::after {
+  content: attr(data-technique-label);
+  display: none;
+  position: absolute;
+  z-index: 10;
+  left: 22px;
+  top: calc(100% + 4px);
+  width: max-content;
+  max-width: min(320px, calc(100vw - 32px));
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface, #fff);
+  color: var(--textPrimary);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.16);
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.25;
+  white-space: normal;
+  pointer-events: none;
+}
+
+.annojoin-technique-option.has-technique-tooltip:hover::after,
+.annojoin-technique-option.has-technique-tooltip:focus-within::after {
+  display: block;
 }
 
 @media (max-width: 520px) {
@@ -5025,7 +5053,7 @@ main.page-annojoin-confidence {
 
 .bundle-home-header-inner {
   display: grid;
-  grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+  grid-template-columns: minmax(380px, 400px) minmax(0, 1fr);
   gap: 24px;
   align-items: start;
   /* Use the same outer rails as the cards below so both edges line up. */
@@ -5058,6 +5086,10 @@ main.page-annojoin-confidence {
 /* On the wide desktop layout, the control/navigation rail needs to extend
    to the same right edge as the feature card below. */
 @media (min-width: 1401px) {
+  .bundle-home-header-inner {
+    transform: translateX(-16px);
+  }
+
   .bundle-home-nav-column {
     width: calc(100% + 32px);
   }
@@ -5142,6 +5174,12 @@ main.page-annojoin-confidence {
   line-height: 1.14;
   font-weight: 700;
   letter-spacing: -0.02em;
+}
+
+@media (min-width: 1101px) {
+  .bundle-home-brand-copy h1 {
+    white-space: nowrap;
+  }
 }
 
 .bundle-home-brand-copy span,
@@ -7988,8 +8026,8 @@ main.page-detail.page-search > .site-search-card {
 @keyframes hss-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
 
 /* two-column scroll narrative */
-.hss-grid { display: grid; grid-template-columns: 0.92fr 1.08fr; gap: 32px; align-items: start; }
-.hss-sticky { position: sticky; top: 120px; height: clamp(320px, 50vh, 540px); min-height: 320px;
+.hss-grid { position: relative; left: clamp(0px, 1.7vw, 38px); display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+.hss-sticky { position: sticky; top: 120px; height: clamp(320px, 45vh, 500px); min-height: 320px;
   display: flex; align-items: center; }
 /* glassmorphism card（招牌质感） */
 .hss-card { position: relative; width: 100%; height: 100%; border-radius: 30px;
@@ -8001,11 +8039,11 @@ main.page-detail.page-search > .site-search-card {
 .hss-layer.is-active { opacity: 1; transform: scale(1); }
 .hss-snapshot { max-width: 100%; max-height: 100%; object-fit: contain; }
 .hss-layer[data-stage="1"] .hss-snapshot {
-  transform: scale(1.12);
+  transform: scale(1.18);
   transform-origin: center center;
 }
 .hss-layer[data-stage="2"] .hss-snapshot {
-  transform: translateY(-4%) scale(1.85);
+  transform: translateY(-4%) scale(2.1);
   transform-origin: center center;
 }
 .hss-layer[data-stage="0"] .hss-alignment {
@@ -8057,8 +8095,9 @@ main.page-detail.page-search > .site-search-card {
 }
 .hss-scene-title { font-size: 2rem; margin: 8px 0 0; letter-spacing: -.5px; color: var(--textPrimary); }
 .hss-scene-body { font-size: 1.08rem; line-height: 1.7; color: var(--textPrimary);
+  text-align: justify;
   margin: 14px 0 0; max-width: 440px; }
-.hss-chip { display: inline-block; margin-top: 16px; font-size: 1.08rem;
+.hss-chip { display: inline-block; align-self: flex-start; width: 100%; max-width: 440px; box-sizing: border-box; margin-top: 16px; font-size: 1.08rem;
   background: var(--primarySoft); color: var(--textAccent); padding: 5px 12px;
   border-radius: 980px; font-weight: 400; }
 
@@ -8083,7 +8122,7 @@ main.page-detail.page-search > .site-search-card {
 
 @media (max-width: 820px) {
   .hss-intro { padding: 26px 16px 14px; }
-  .hss-grid { grid-template-columns: 1fr; gap: 16px; }
+  .hss-grid { left: 0; grid-template-columns: 1fr; gap: 16px; }
   .hss-sticky { position: relative; top: 0; height: 280px; min-height: 0; }
   .hss-layer { padding: 24px 50px 28px 16px; }
   .hss-layer[data-stage="1"] .hss-snapshot { transform: scale(1.08); }

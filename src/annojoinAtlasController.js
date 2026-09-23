@@ -1,3 +1,18 @@
+let techniqueTooltipResizeBound = false;
+
+export function syncTechniqueLabelTooltips(root = document) {
+  root.querySelectorAll?.('[data-technique-label]').forEach((label) => {
+    const text = label.querySelector?.('span');
+    const isOverflowing = Boolean(text && text.scrollWidth > text.clientWidth);
+    label.classList.toggle('has-technique-tooltip', isOverflowing);
+  });
+
+  if (!techniqueTooltipResizeBound && typeof document !== 'undefined' && root === document && typeof window !== 'undefined') {
+    window.addEventListener('resize', () => syncTechniqueLabelTooltips(document), { passive: true });
+    techniqueTooltipResizeBound = true;
+  }
+}
+
 export function bindAnnojointAtlasTable({
   root = document,
   setQuery,
@@ -10,6 +25,8 @@ export function bindAnnojointAtlasTable({
   toggleTechniqueFamily,
   toggleTechniqueName
 } = {}) {
+  syncTechniqueLabelTooltips(root);
+
   const searchInput = root.getElementById?.('annojoin-search-input');
   if (searchInput) {
     let debounceTimer = null;

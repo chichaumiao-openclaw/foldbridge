@@ -514,7 +514,7 @@ export function renderTechniqueFilterControls(cases = [], filters = {}) {
   const familyBlocks = model.families.map((family) => {
     const familyActive = selectedFamilies.has(family.id);
     const techOptions = family.techniques.map((name) => `
-      <label class="annojoin-technique-option">
+      <label class="annojoin-technique-option" data-technique-label="${escapeHtml(name)}">
         <input type="checkbox" data-technique-name="${escapeHtml(name)}"${selectedNames.has(name) ? ' checked' : ''} />
         <span>${escapeHtml(name)}</span>
       </label>`).join('');

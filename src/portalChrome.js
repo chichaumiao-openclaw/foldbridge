@@ -57,7 +57,7 @@ export function renderBundleHeader({ mode = 'light', navHtml = '' } = {}) {
           <div class="bundle-home-mark">FB</div>
           <div class="bundle-home-brand-copy">
             <p class="bundle-home-bundle-label">Ribocentre-FoldBridge</p>
-            <h1>FoldBridge</h1>
+            <h1>Ribocentre-FoldBridge</h1>
             <span>A curated database that links RNA chemical probing data with experimentally resolved tertiary structures.</span>
           </div>
         </div>
@@ -66,7 +66,7 @@ export function renderBundleHeader({ mode = 'light', navHtml = '' } = {}) {
       <div class="bundle-home-nav-column">
         <div class="bundle-home-topline">
           <div class="bundle-home-bundle-block">
-            <p class="bundle-home-switch-label">RNA Center databases</p>
+            <p class="bundle-home-switch-label">RNA Centre databases</p>
             <div class="bundle-home-switches">
               ${featuredNames}
             </div>
