@@ -57,6 +57,7 @@ import { toggleTechniqueSelection } from './techniqueFilterModel.js';
 import {
   mountEntryCaseHeightListener,
   mountEntryCaseLoadingIndicator,
+  mountEntryCaseViewModeListener,
   parseEntryCaseMatrixFamily,
 } from './entryCaseEmbed.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
@@ -3010,9 +3011,17 @@ function initEntryCaseEmbed() {
     frame,
     indicator: document.querySelector('.entry-case-loading'),
   });
+  // Relay the chain workbench's profile<->matrix toggle up to the top hash so the
+  // address bar becomes a shareable deep link (#entry-case?...&family=E).
+  const disposeViewMode = mountEntryCaseViewModeListener({
+    windowObject: window,
+    frame,
+    expectedOrigin: new URL(entryCaseOriginForCurrentHost()).origin,
+  });
   disposeEntryCaseHeightListener = () => {
     disposeHeight();
     disposeLoading();
+    disposeViewMode();
   };
 }
 
