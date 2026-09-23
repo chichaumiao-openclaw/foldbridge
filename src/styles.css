@@ -5260,7 +5260,23 @@ main.page-annojoin-confidence {
 }
 
 .bundle-switch-pill:not(.active) span {
-  color: var(--textSecondary);
+  color: #000000;
+}
+
+/* Keep the light-mode header labels and search prompt true black instead of
+   inheriting the muted gray secondary text color. */
+body:not([data-mode="dark"]) .bundle-switch-pill span,
+body:not([data-mode="dark"]) .global-search-form input,
+body:not([data-mode="dark"]) .global-search-form input::placeholder,
+body:not([data-mode="dark"]) #global-search-input,
+body:not([data-mode="dark"]) #global-search-input::placeholder {
+  color: #000000;
+  opacity: 1;
+}
+
+body:not([data-mode="dark"]) .global-search-form input,
+body:not([data-mode="dark"]) #global-search-input {
+  -webkit-text-fill-color: #000000;
 }
 
 .bundle-switch-pill.active.tone-gold {
@@ -7461,8 +7477,9 @@ main.page-detail.page-search > .site-search-card {
 
 .site-search-pagination-button:hover:not(:disabled),
 .site-search-pagination-button.active {
-  border-color: #AA7A38;
-  background: #fff2bf;
+  border-color: var(--foldbridge-gold);
+  background: var(--foldbridge-gold);
+  color: #1A1A1A;
 }
 
 .site-search-pagination-button.active {
@@ -7471,7 +7488,11 @@ main.page-detail.page-search > .site-search-card {
 
 .site-search-pagination-button:disabled {
   cursor: default;
-  opacity: 0.45;
+  background: #d6d6d6 !important;
+  border-color: #b8b8b8 !important;
+  color: #777777 !important;
+  opacity: 1;
+  box-shadow: none;
 }
 
 .site-search-pagination-gap {
@@ -9241,9 +9262,9 @@ main.page-detail > .stats-page {
 }
 .pdb-download-cif-link:hover,
 .pdb-download-cif-link:focus-visible {
-  border-color: #d7b451;
-  background: #fff2bf;
-  color: var(--textPrimary);
+  border-color: var(--foldbridge-gold);
+  background: var(--foldbridge-gold);
+  color: #1A1A1A;
 }
 .pdb-download-cif-link:focus-visible {
   outline: 2px solid #edc457;
