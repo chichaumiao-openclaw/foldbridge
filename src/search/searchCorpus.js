@@ -1,4 +1,5 @@
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import { moleculeName, rowCaseId, rowCaseKey } from '../annojoinAtlasTableModel.js';
 
 const ANNOJOIN_ATLAS_BASE = new URL('../assets/generated/annojoin-atlas/', import.meta.url);
@@ -15,28 +16,11 @@ function escapeHtml(value) {
 
 const CLEAN_TOKEN_PLACEHOLDERS = new Set(['', '未注释', 'not annotated', 'missing source']);
 const CLEAN_TOKEN_NULLISH = new Set(['none', 'null', 'nan']);
-const SEARCH_METHOD_LABELS = {
-  'carbodiimide': 'Carbodiimide',
-  'cleavage-footprinting': 'Cleavage',
-  'dms-based-probing': 'DMS',
-  'enzymatic-probing': 'Cleavage',
-  'guanine-specific-probing': 'Guanine-specific',
-  'rna-protein-interaction': 'RNA interaction',
-  'shape-based-probing': 'SHAPE'
-};
-
 function cleanToken(value) {
   const token = String(value ?? '').trim();
   if (CLEAN_TOKEN_PLACEHOLDERS.has(token)) return '';
   if (CLEAN_TOKEN_NULLISH.has(token.toLowerCase())) return '';
   return token;
-}
-
-function summaryMethods(row) {
-  const methods = Array.isArray(row.techniqueFamilies)
-    ? row.techniqueFamilies
-    : (Array.isArray(row.assayFamilies) ? row.assayFamilies : []);
-  return [...new Set(methods.map((method) => SEARCH_METHOD_LABELS[cleanToken(method)]).filter(Boolean))].slice(0, 2);
 }
 
 function caseDocId(caseKey, caseId) {
@@ -46,13 +30,14 @@ function caseDocId(caseKey, caseId) {
   return `pdb-case-${slug}-${identity}`;
 }
 
-// 与 Entry 表保持同一条已部署的 chain-grain case 路由。
-function caseDetailHref(caseId, chain) {
+// 详情链接走站内 hash 路由 #annojoin-case；只有已经物化到 served store 的
+// case/chain 才进入搜索语料，避免搜索结果指向空 iframe 或缺失静态页。
+function caseDetailHref(caseId, caseKey) {
   const query = new URLSearchParams();
-  if (caseId) query.set('pdb', caseId);
-  if (chain) query.set('chain', chain);
+  if (caseId) query.set('caseId', caseId);
+  if (caseKey && caseKey !== caseId) query.set('caseKey', caseKey);
   const suffix = query.toString();
-  return `#entry-case${suffix ? `?${suffix}` : ''}`;
+  return `#annojoin-case${suffix ? `?${suffix}` : ''}`;
 }
 
 function tagForCase(row) {
@@ -67,32 +52,32 @@ function tagForCase(row) {
 }
 
 // pdb-case 文档来自新的 annojoin-atlas index.json（displayCases，链身份口径）。
-// 资产缺失时静默降级为空集，搜索语料仍可构建。
+// 资产缺失的 displayCase 会被过滤，搜索语料仍可构建。
 // 标题/摘要/正文各司其职、互不重复：title=分子名，summary=PDB+结构类别，
 // content=可检索 token（PDB id、RNA family、motif、assay 等），避免 pagefind 摘要堆叠。
-function buildPdbCaseDocs() {
+export function hasMaterializedCasePage(row = {}, publicRoot = path.join(process.cwd(), 'public')) {
+  const caseId = cleanToken(row.caseId || row.pdbId);
+  const chains = Array.isArray(row.chains) ? row.chains : [];
+  if (!caseId || chains.length !== 1 || !chains[0]) return false;
+  const caseRoot = path.join(publicRoot, 'entry-cases', 'cases', caseId);
+  return existsSync(path.join(caseRoot, 'index.html'))
+    && existsSync(path.join(caseRoot, 'chains', String(chains[0]), 'index.html'));
+}
+
+function buildPdbCaseDocs(publicRoot = path.join(process.cwd(), 'public')) {
   let index;
   try {
     index = JSON.parse(readFileSync(new URL('index.json', ANNOJOIN_ATLAS_BASE), 'utf8'));
   } catch {
     return [];
   }
-  return (index.displayCases || []).map((row) => {
+  return (index.displayCases || []).filter((row) => hasMaterializedCasePage(row, publicRoot)).map((row) => {
     const caseId = rowCaseId(row);
     const caseKey = rowCaseKey(row);
     const title = moleculeName(row);
     const structureClass = cleanToken(row.structureClass);
     const rnaFamily = cleanToken(row.rnaFamily);
-    const summaryParts = [
-      caseId ? `PDB ${caseId}` : '',
-      Array.isArray(row.chains) && row.chains[0] ? `Chain ${row.chains[0]}` : '',
-      structureClass || rnaFamily
-    ].filter(Boolean);
-    const detailParts = [
-      row.profileCount ? `${row.profileCount} profiles` : '',
-      summaryMethods(row).join(' / '),
-      (Array.isArray(row.sourceDatabases) ? row.sourceDatabases.map(cleanToken).filter(Boolean) : []).join(' / ')
-    ].filter(Boolean);
+    const summaryParts = [caseId ? `PDB ${caseId}` : '', structureClass || rnaFamily].filter(Boolean);
     const contentTokens = [
       caseId,
       cleanToken(row.pdbId),
@@ -108,14 +93,13 @@ function buildPdbCaseDocs() {
       id: caseDocId(caseKey, caseId),
       type: 'pdb-case',
       title,
-      href: caseDetailHref(caseId, Array.isArray(row.chains) ? row.chains[0] : ''),
+      href: caseDetailHref(caseId, caseKey),
       tags: tagForCase(row),
       techniques: (Array.isArray(row.techniqueFamilies) && row.techniqueFamilies.length
         ? row.techniqueFamilies
         : (Array.isArray(row.assayFamilies) ? row.assayFamilies : [])
       ).map((t) => cleanToken(t)).filter(Boolean),
       summary: summaryParts.join(' · '),
-      details: detailParts.join(' · '),
       content: [...new Set(contentTokens)].join(' ')
     };
   });
@@ -148,8 +132,8 @@ function buildProbingArticleDocs() {
   });
 }
 
-export function buildSearchDocuments() {
-  return [...buildPdbCaseDocs(), ...buildProbingArticleDocs()];
+export function buildSearchDocuments({ publicRoot = path.join(process.cwd(), 'public') } = {}) {
+  return [...buildPdbCaseDocs(publicRoot), ...buildProbingArticleDocs()];
 }
 
 export function renderSearchDocumentHtml(doc) {
@@ -178,8 +162,7 @@ export function renderSearchDocumentHtml(doc) {
       <span data-pagefind-meta="type:${escapeHtml(doc.type)}"></span>
       <span data-pagefind-meta="tags:${escapeHtml((doc.tags ?? []).join(','))}"></span>
       <h1 data-pagefind-meta="title">${escapeHtml(doc.title)}</h1>
-      <p data-pagefind-meta="summary">${escapeHtml(doc.summary)}</p>
-      <p data-pagefind-meta="details">${escapeHtml(doc.details)}</p>
+      <p>${escapeHtml(doc.summary)}</p>
       <p>${escapeHtml(doc.content)}</p>
     </main>
   </body>

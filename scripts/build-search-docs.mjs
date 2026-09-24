@@ -1,38 +1,37 @@
-import fs from 'node:fs';
+import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import { buildSearchDocuments, renderSearchDocumentHtml } from '../src/search/searchCorpus.js';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const outputDir = path.join(root, 'dist', 'search-docs');
+const root = process.cwd();
+const dist = path.join(root, 'dist');
+const searchDocsDir = path.join(dist, 'search-docs');
 
-function documentFileName(id) {
-  const value = String(id || '');
-  if (!/^[a-z0-9-]+$/i.test(value)) {
-    throw new Error(`unsafe search document id: ${value}`);
-  }
-  return `${value}.html`;
+if (!existsSync(dist)) {
+  console.error('Missing dist/. Run npm run build:site after the static site build step.');
+  process.exit(1);
 }
 
-function buildSearchDocs() {
-  const documents = buildSearchDocuments();
-  fs.mkdirSync(outputDir, { recursive: true });
+await rm(searchDocsDir, { recursive: true, force: true });
+await mkdir(searchDocsDir, { recursive: true });
 
-  for (const document of documents) {
-    fs.writeFileSync(
-      path.join(outputDir, documentFileName(document.id)),
-      renderSearchDocumentHtml(document),
-      'utf8',
-    );
-  }
+const docs = buildSearchDocuments({ publicRoot: path.join(dist, 'public') });
 
-  fs.writeFileSync(
-    path.join(outputDir, 'manifest.json'),
-    `${JSON.stringify(documents.map(({ id, href, type }) => ({ id, href, type })), null, 2)}\n`,
-    'utf8',
-  );
-  process.stdout.write(`[build-search-docs] wrote ${documents.length} documents to ${outputDir}\n`);
+for (const doc of docs) {
+  await writeFile(path.join(searchDocsDir, `${doc.id}.html`), renderSearchDocumentHtml(doc));
 }
 
-buildSearchDocs();
+await writeFile(
+  path.join(searchDocsDir, 'manifest.json'),
+  JSON.stringify(
+    {
+      generatedAt: new Date().toISOString(),
+      count: docs.length,
+      ids: docs.map((doc) => doc.id)
+    },
+    null,
+    2
+  )
+);
+
+console.log(`Search corpus complete: ${docs.length} documents in dist/search-docs/`);
