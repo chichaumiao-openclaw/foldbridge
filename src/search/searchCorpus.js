@@ -44,7 +44,6 @@ function tagForCase(row) {
     'rna',
     'structure',
     'pdb',
-    cleanToken(row.assetFamily).toLowerCase(),
     structureClass.replace(/\s+/g, '-')
   ].filter(Boolean);
 }
@@ -70,7 +69,6 @@ function buildPdbCaseDocs() {
     const contentTokens = [
       caseId,
       cleanToken(row.pdbId),
-      cleanToken(row.assetFamily),
       rnaFamily,
       cleanToken(row.motif),
       structureClass,
@@ -83,6 +81,7 @@ function buildPdbCaseDocs() {
       type: 'pdb-case',
       title,
       href: caseDetailHref(caseId, Array.isArray(row.chains) ? row.chains[0] : ''),
+      chain: Array.isArray(row.chains) ? cleanToken(row.chains[0]) : '',
       tags: tagForCase(row),
       techniques: (Array.isArray(row.techniqueFamilies) && row.techniqueFamilies.length
         ? row.techniqueFamilies
@@ -149,6 +148,7 @@ export function renderSearchDocumentHtml(doc) {
       ${tags}
       ${techniqueFacets}
       <span data-pagefind-meta="type:${escapeHtml(doc.type)}"></span>
+      <span data-pagefind-meta="chain:${escapeHtml(doc.chain ?? '')}"></span>
       <span data-pagefind-meta="tags:${escapeHtml((doc.tags ?? []).join(','))}"></span>
       <span data-pagefind-meta="summary:${escapeHtml(doc.summary ?? '')}"></span>
       <h1 data-pagefind-meta="title">${escapeHtml(doc.title)}</h1>

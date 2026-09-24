@@ -149,6 +149,7 @@ function mapResult(data) {
     summary: data.meta?.summary ?? '',
     excerpt: data.excerpt ?? data.plain_excerpt ?? '',
     type: data.meta?.type,
+    chain: data.meta?.chain ?? '',
     tags
   };
 }

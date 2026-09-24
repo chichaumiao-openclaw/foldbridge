@@ -2997,6 +2997,7 @@ function toggleSearchFilter(key, value) {
 
 function renderSearchFilters(filters, activeFilters) {
   return SEARCH_FILTER_GROUPS
+    .filter(({ key }) => key !== 'type')
     .map(({ key }) => {
       const buttons = visibleSearchFilterEntries(filters, key)
         .map(({ value, label, count }) => `<button
@@ -3043,8 +3044,8 @@ function renderSearchResults(result) {
         <p>${item.excerpt}</p>
       </div>
       <div class="site-search-result-tags">
-        ${item.type ? `<span>${escapeHtml(item.type)}</span>` : ''}
-        ${item.tags.slice(0, 4).map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}
+        ${item.chain ? `<span>Chain ${escapeHtml(item.chain)}</span>` : ''}
+        ${!item.chain && item.type !== 'pdb-case' ? item.tags.slice(0, 4).map((tag) => `<span>${escapeHtml(tag)}</span>`).join('') : ''}
       </div>
     </article>`)
     .join('');
