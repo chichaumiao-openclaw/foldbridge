@@ -52,6 +52,29 @@ async function loadCaseMoleculeName(caseId, chainId) {
     if (directName && directName.toUpperCase() !== String(caseId).toUpperCase()) return directName;
   }
 
+  // Some older materialized case.json files use the PDB ID as a placeholder.
+  // Recover the authoritative molecule name from the atlas display-case index
+  // before falling back to the legacy case metadata map.
+  const atlasResponse = await fetch(new URL('../../../src/assets/generated/annojoin-atlas/index.json', window.location.href));
+  if (atlasResponse.ok) {
+    const atlas = await atlasResponse.json();
+    const normalizedCaseId = String(caseId || '').trim().toUpperCase();
+    const normalizedChainId = String(chainId || '').trim();
+    const row = (atlas?.displayCases || []).find((candidate) => {
+      const candidateCaseId = String(candidate?.caseId || candidate?.pdbId || '').trim().toUpperCase();
+      const chains = Array.isArray(candidate?.chains) ? candidate.chains.map((chain) => String(chain).trim()) : [];
+      return candidateCaseId === normalizedCaseId
+        && (!normalizedChainId || chains.includes(normalizedChainId));
+    });
+    const atlasName = String(
+      row?.moleculeDisplayName
+        || row?.biologicalMoleculeName
+        || row?.pdbMoleculeName
+        || ''
+    ).trim();
+    if (atlasName && atlasName.toUpperCase() !== normalizedCaseId) return atlasName;
+  }
+
   const mapResponse = await fetch(new URL('../../case-metadata.json', window.location.href));
   if (!mapResponse.ok) throw new Error(`Case molecule metadata HTTP ${mapResponse.status}`);
   const map = await mapResponse.json();
