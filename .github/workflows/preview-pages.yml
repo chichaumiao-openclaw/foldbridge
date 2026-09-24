@@ -26,6 +26,8 @@ jobs:
       - run: npm ci
       - name: Build the search index
         run: |
+          mkdir -p dist
+          ln -s ../public dist/public
           node scripts/build-search-docs.mjs
           npm exec pagefind -- --site dist/search-docs --output-path dist/pagefind
       - name: Assemble the static portal
