@@ -1,5 +1,4 @@
-import { existsSync, readFileSync } from 'node:fs';
-import path from 'node:path';
+import { readFileSync } from 'node:fs';
 import { moleculeName, rowCaseId, rowCaseKey } from '../annojoinAtlasTableModel.js';
 
 const ANNOJOIN_ATLAS_BASE = new URL('../assets/generated/annojoin-atlas/', import.meta.url);
@@ -30,10 +29,8 @@ function caseDocId(caseKey, caseId) {
   return `pdb-case-${slug}-${identity}`;
 }
 
-// 详情链接走站内 hash 路由 #entry-case；只有已经物化到 served store 的
-// case/chain 才进入搜索语料，避免搜索结果指向空 iframe 或缺失静态页。
-function caseDetailHref(caseId, caseKey) {
-  const chain = String(caseKey || '').split(':').pop().trim();
+// 与 Entry 表保持同一条已部署的 chain-grain case 路由。
+function caseDetailHref(caseId, chain) {
   const query = new URLSearchParams();
   if (caseId) query.set('pdb', caseId);
   if (chain) query.set('chain', chain);
@@ -53,26 +50,17 @@ function tagForCase(row) {
 }
 
 // pdb-case 文档来自新的 annojoin-atlas index.json（displayCases，链身份口径）。
-// 资产缺失的 displayCase 会被过滤，搜索语料仍可构建。
+// 资产缺失时静默降级为空集，搜索语料仍可构建。
 // 标题/摘要/正文各司其职、互不重复：title=分子名，summary=PDB+结构类别，
 // content=可检索 token（PDB id、RNA family、motif、assay 等），避免 pagefind 摘要堆叠。
-export function hasMaterializedCasePage(row = {}, publicRoot = path.join(process.cwd(), 'public')) {
-  const caseId = cleanToken(row.caseId || row.pdbId);
-  const chains = Array.isArray(row.chains) ? row.chains : [];
-  if (!caseId || chains.length !== 1 || !chains[0]) return false;
-  const caseRoot = path.join(publicRoot, 'entry-cases', 'cases', caseId);
-  return existsSync(path.join(caseRoot, 'index.html'))
-    && existsSync(path.join(caseRoot, 'chains', String(chains[0]), 'index.html'));
-}
-
-function buildPdbCaseDocs(publicRoot = path.join(process.cwd(), 'public')) {
+function buildPdbCaseDocs() {
   let index;
   try {
     index = JSON.parse(readFileSync(new URL('index.json', ANNOJOIN_ATLAS_BASE), 'utf8'));
   } catch {
     return [];
   }
-  return (index.displayCases || []).filter((row) => hasMaterializedCasePage(row, publicRoot)).map((row) => {
+  return (index.displayCases || []).map((row) => {
     const caseId = rowCaseId(row);
     const caseKey = rowCaseKey(row);
     const title = moleculeName(row);
@@ -94,7 +82,7 @@ function buildPdbCaseDocs(publicRoot = path.join(process.cwd(), 'public')) {
       id: caseDocId(caseKey, caseId),
       type: 'pdb-case',
       title,
-      href: caseDetailHref(caseId, caseKey),
+      href: caseDetailHref(caseId, Array.isArray(row.chains) ? row.chains[0] : ''),
       tags: tagForCase(row),
       techniques: (Array.isArray(row.techniqueFamilies) && row.techniqueFamilies.length
         ? row.techniqueFamilies
@@ -133,8 +121,8 @@ function buildProbingArticleDocs() {
   });
 }
 
-export function buildSearchDocuments({ publicRoot = path.join(process.cwd(), 'public') } = {}) {
-  return [...buildPdbCaseDocs(publicRoot), ...buildProbingArticleDocs()];
+export function buildSearchDocuments() {
+  return [...buildPdbCaseDocs(), ...buildProbingArticleDocs()];
 }
 
 export function renderSearchDocumentHtml(doc) {
@@ -162,6 +150,7 @@ export function renderSearchDocumentHtml(doc) {
       ${techniqueFacets}
       <span data-pagefind-meta="type:${escapeHtml(doc.type)}"></span>
       <span data-pagefind-meta="tags:${escapeHtml((doc.tags ?? []).join(','))}"></span>
+      <span data-pagefind-meta="summary:${escapeHtml(doc.summary ?? '')}"></span>
       <h1 data-pagefind-meta="title">${escapeHtml(doc.title)}</h1>
       <p>${escapeHtml(doc.summary)}</p>
       <p>${escapeHtml(doc.content)}</p>

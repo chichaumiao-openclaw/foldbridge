@@ -15,7 +15,7 @@ import {
   initSequenceDetailMolstar,
   initSequenceDetailSecondaryHeatmap
 } from './modules.js';
-import { renderPrimaryNav, renderHomeHero, renderHelpPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage } from './siteChrome.js';
+import { renderPrimaryNav, renderHomeHero, renderHomeModuleCards, renderHelpPage, renderHomeProbingCarousel, renderHomeScrollStory, pickFeaturedCase, renderStatsPage, renderProbingFamilyIndex } from './siteChrome.js';
 import {
   dataTypeCards,
   detailRecord,
@@ -40,7 +40,7 @@ import {
   buildAtlasSearchState
 } from './annojoinAtlasData.js';
 import { renderAnnojointAtlasPage } from './annojoinAtlasView.js';
-import { bindAnnojointAtlasTable, syncTechniqueLabelTooltips } from './annojoinAtlasController.js';
+import { bindAnnojointAtlasTable } from './annojoinAtlasController.js';
 import {
   buildAnnojointTableGroups,
   isAnnojointSearchActive,
@@ -57,7 +57,6 @@ import { toggleTechniqueSelection } from './techniqueFilterModel.js';
 import {
   mountEntryCaseHeightListener,
   mountEntryCaseLoadingIndicator,
-  mountEntryCaseViewModeListener,
   parseEntryCaseMatrixFamily,
 } from './entryCaseEmbed.js';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
@@ -69,11 +68,10 @@ import {
   buildSearchHash,
   createSearchService,
   filtersFromSearchParams,
-  pageFromSearchParams,
   SEARCH_FILTER_GROUPS,
   searchParamsFromHash,
   visibleSearchFilterEntries
-} from './search/searchService.js?v=20260917-search-index';
+} from './search/searchService.js';
 let sequenceRows = [];
 let browseEntryRows = [];
 let expandedAnnojointGroupIds = new Set();
@@ -107,11 +105,8 @@ let entryTableState = null; // null=未加载, 'loading', 'error', 或归一化�
 let entryMissingPdbsState = new Set(); // 缺页 PDB 集合（降级：命中行只渲染纯文本，不渲染死链）；fetch 失败降级为空集合
 let expandedEntryGroupIds = new Set(); // entry 表两层折叠（partition→分子名）已展开的分组 id：parent:<id> / child:<id>
 let entryTechniqueSelection = { families: new Set(), techniques: new Set() }; // 旧版 family + detail technique 两级筛选
-let pdbDownloadQuery = '';
-let pdbDownloadPage = 1;
 let entryExportObjectUrl = '';
 let entryExportSignature = '';
-let entryTableViewportHeight = null;
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let disposeEntryCaseHeightListener = null;
@@ -1024,7 +1019,7 @@ async function loadBrowseEntryRows() {
   }
 }
 
-const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'about', 'stats', 'download', 'pdb-downloads', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case', 'annojoin-confidence'];
+const routes = ['home', 'browse', 'sequence', 'structure', 'probing', 'about', 'stats', 'download', 'search', 'help', 'pdb-case', 'annojoin-atlas', 'annojoin-case', 'annojoin-confidence'];
 let route = routeFromHash(window.location.hash);
 let theme = 'ribocentre';
 let mode = localStorage.getItem('foldbridge-mode') === 'dark' ? 'dark' : 'light';
@@ -1128,7 +1123,7 @@ function renderFooter() {
           <a href="http://github.com/chichaumiao-openclaw/foldbridge" target="_blank" rel="noopener noreferrer">http://github.com/chichaumiao-openclaw/foldbridge</a>
           <span class="sep">|</span>
           <span class="footer-heading">Custom domain</span>
-          <strong>foldbridge.ribocentre.org</strong>
+          <strong>foldbridge.gznl.org</strong>
         </div>
       </div>
     </div>
@@ -1282,7 +1277,6 @@ function homePage() {
   const articles = (probingArticleIndexState && typeof probingArticleIndexState === 'object')
     ? (probingArticleIndexState.articles || [])
     : [];
-  const carouselHtml = renderHomeProbingCarousel(articles);
 
   if (homeScrollStoryState === null) {
     loadHomeScrollStory();
@@ -1293,11 +1287,8 @@ function homePage() {
     const featured = pickFeaturedCase(homeScrollStoryState.cases || [], visitIndex);
     scrollStoryHtml = renderHomeScrollStory(featured, {
       assetBase: homeScrollStoryStore.assetBase,
-      dashboardView,
-      carouselHtml
+      dashboardView
     });
-  } else {
-    scrollStoryHtml = carouselHtml;
   }
 
   const bundleHeader = renderBundleHeader();
@@ -1307,6 +1298,8 @@ function homePage() {
     <section class="bundle-home-shell">
       ${renderHomeHero(dashboardView)}
       ${scrollStoryHtml}
+      ${renderHomeProbingCarousel(articles)}
+      ${renderHomeModuleCards(dashboardView)}
     </section>
   </main>`;
 }
@@ -1402,7 +1395,7 @@ function renderTechnologyMethodPage(method) {
   return `${renderBundleHeader()}
   <main class="page-detail">
     <section class="card bundle-wide-card technology-detail-hero">
-      <a class="technology-back-link" href="#probing"><img class="technology-back-link-icon" src="./src/assets/probing-arrow-left.svg" alt="" aria-hidden="true" />Back to technology overview</a>
+      <a class="technology-back-link" href="#probing">Back to technology overview</a>
       <div class="technology-detail-header">
         <div>
           <h1>${method.title}</h1>
@@ -1527,12 +1520,12 @@ function detailPage() {
     // index 已加载但无此 slug → 回退到旧占位方法页（保留 legacy 方法目录）
     const method = technologyMethods.find((item) => item.slug === slug);
     if (method) return renderTechnologyMethodPage(method);
-    return renderProbingArticleIndex(probingArticleIndexState, header);
+    return renderProbingArticleIndex(probingArticleIndexState, header, buildProbingHubSections());
   }
 
   // 无 slug：总览页。优先真实文章索引；未加载则后台拉取并显示原 technology 总览作为占位。
   if (hasIndex) {
-    return renderProbingArticleIndex(probingArticleIndexState, header);
+    return renderProbingArticleIndex(probingArticleIndexState, header, buildProbingHubSections());
   }
   if (probingArticleIndexState !== 'loading' && probingArticleIndexState !== 'error') {
     loadProbingArticleIndex();
@@ -1546,7 +1539,7 @@ function renderProbingArticleLoadingPage(slug, headerHtml, isError) {
   return `${headerHtml}
   <main class="page-detail page-probing-article">
     <section class="card bundle-wide-card technology-detail-hero">
-      <a class="technology-back-link" href="#probing"><img class="technology-back-link-icon" src="./src/assets/probing-arrow-left.svg" alt="" aria-hidden="true" />Back to probing methods overview</a>
+      <a class="technology-back-link" href="#probing">← Back to probing methods overview</a>
       <div class="technology-detail-header">
         <div>
           <p class="technology-kicker">probing article</p>
@@ -1608,7 +1601,7 @@ function renderPdbCaseLoadingPage(message, headerHtml = '') {
   return `${headerHtml}
   <main class="page-pdb-case">
     <section class="card bundle-wide-card pdb-case-hero">
-      <a class="technology-back-link" href="#pdb-case"><img class="technology-back-link-icon" src="./src/assets/probing-arrow-left.svg" alt="" aria-hidden="true" />Back to PDB case index</a>
+      <a class="technology-back-link" href="#pdb-case">Back to PDB case index</a>
       <p class="technology-kicker">PDB case</p>
       <h1>${message}</h1>
       <div class="pdb-case-track-empty">Loading…</div>
@@ -1726,6 +1719,15 @@ function initStatsDashboard() {
   });
 }
 
+// 组装探针 hub 的家族索引，注入文章总览页。
+function buildProbingHubSections() {
+  const dashboardView = buildDashboardViewModel(siteStatsState, probingArticleIndexState);
+  const families = dashboardView.probingStatus === 'ready'
+    ? (dashboardView.probingOverview?.families || [])
+    : [];
+  return renderProbingFamilyIndex(families, { embedded: true });
+}
+
 // 访问计数：每次成功加载招牌 story 自增（localStorage），用于 pickFeaturedCase 轮换。
 // 隐私模式 localStorage 抛错 → 退回 0，绝不报错（规格 §8 降级）。
 function readHomeScrollVisitIndex() {
@@ -1795,7 +1797,7 @@ async function loadEntryTable() {
     console.error('[main] 加载 entry 缺页清单失败（降级为空集合）', err);
     entryMissingPdbsState = new Set();
   }
-  if (route === 'entry' || route === 'pdb-downloads') render({ preserveScroll: true });
+  if (route === 'entry') render({ preserveScroll: true });
 }
 
 function entryTablePage() {
@@ -2131,37 +2133,12 @@ function setAnnojointAtlasQuery(query) {
   setAnnojointAtlasFilter('q', query, { replace: true });
 }
 
-function revealEntryGroupInTable(groupId) {
-  requestAnimationFrame(() => {
-    const tableWrap = document.querySelector('.entry-table-page .entry-table-wrap');
-    const target = [...document.querySelectorAll('.entry-table-page [data-entry-group-toggle]')]
-      .find((button) => button.getAttribute('data-entry-group-toggle') === groupId);
-    const targetRow = target?.closest('tr');
-    if (!tableWrap || !targetRow || tableWrap.scrollHeight <= tableWrap.clientHeight) return;
-
-    // Move only the table viewport. scrollIntoView() would also move the
-    // document and make the surrounding page jump while a group is opened.
-    const wrapRect = tableWrap.getBoundingClientRect();
-    const rowRect = targetRow.getBoundingClientRect();
-    const rowTop = tableWrap.scrollTop + rowRect.top - wrapRect.top;
-    const desiredTop = rowTop - Math.max(16, (tableWrap.clientHeight - rowRect.height) * 0.28);
-    const maxTop = tableWrap.scrollHeight - tableWrap.clientHeight;
-    tableWrap.scrollTop = Math.max(0, Math.min(desiredTop, maxTop));
-  });
-}
-
 // entry 表折叠：切换某个分组 id（parent:<id> / child:<id>）的展开状态，整页重渲染。
 function toggleEntryGroup(groupId) {
   if (!groupId) return;
-  if (route === 'entry' && entryTableViewportHeight === null) {
-    const tableWrap = document.querySelector('.entry-table-page .entry-table-wrap');
-    if (tableWrap) entryTableViewportHeight = Math.round(tableWrap.getBoundingClientRect().height);
-  }
-  const isExpanding = !expandedEntryGroupIds.has(groupId);
-  if (!isExpanding) expandedEntryGroupIds.delete(groupId);
+  if (expandedEntryGroupIds.has(groupId)) expandedEntryGroupIds.delete(groupId);
   else expandedEntryGroupIds.add(groupId);
   render({ preserveScroll: true });
-  if (isExpanding && route === 'entry') revealEntryGroupInTable(groupId);
 }
 
 function getFilteredEntryRows() {
@@ -2242,141 +2219,49 @@ function downloadPage() {
         <p class="download-page-intro">Browse original records in their authoritative repositories or download FoldBridge-organized registries for downstream training.</p>
       </header>
       <div class="download-center-grid">
-        <section class="download-center-section download-center-section--training">
+        <section class="download-center-section">
           <div class="download-center-heading">
+            <span class="download-center-number">01</span>
             <div>
-              <h2>Processed data</h2>
-              <p>Download the chain-aligned profile catalog, reactivity registration, and PDB residue alignment.</p>
-            </div>
-          </div>
-          <div class="download-center-actions">
-            <a class="download-center-button" href="https://foldbridge.sunhao.uk/training-data/profiles/" target="_blank" rel="noopener noreferrer">Profiles</a>
-            <a class="download-center-button" href="#pdb-downloads">PDB</a>
-            <a class="download-center-button" href="https://foldbridge.sunhao.uk/training-data/reactivity/" target="_blank" rel="noopener noreferrer">Reactivity registration</a>
-            <a class="download-center-button" href="https://foldbridge.sunhao.uk/training-data/alignment/" target="_blank" rel="noopener noreferrer">Alignment</a>
-          </div>
-        </section>
-        <section class="download-center-section download-center-section--raw-data">
-          <div class="download-center-heading">
-            <div>
-              <h2>Raw data</h2>
-              <p>Access original records from RMDB, RASP, and the GEO datasets represented in FoldBridge.</p>
+              <h2>Primary data repositories</h2>
+              <p>Open the official RMDB and RASP download directories. FoldBridge does not duplicate these large source archives.</p>
             </div>
           </div>
           <div class="download-center-actions">
             <a class="download-center-button" href="https://rmdb.stanford.edu/about/#download-all-data" target="_blank" rel="noopener noreferrer">RMDB downloads</a>
             <a class="download-center-button" href="https://rasp2.zhanglab.net/download/" target="_blank" rel="noopener noreferrer">RASP downloads</a>
-            <details class="download-geo-disclosure" data-geo-disclosure="raw-data-geo">
-              <summary class="download-center-button">
-                <span class="download-geo-disclosure-show">GEO datasets (41)</span>
-              </summary>
-            </details>
           </div>
-          <nav class="download-geo-series-links raw-data-geo-panel" data-geo-panel="raw-data-geo" aria-label="NCBI GEO Series downloads" hidden>
+        </section>
+        <section class="download-center-section download-center-section--training">
+          <div class="download-center-heading">
+            <span class="download-center-number">02</span>
+            <div>
+              <h2>Processed training data</h2>
+              <p>Download the chain-aligned profile catalog, reactivity registration, and PDB residue alignment.</p>
+            </div>
+          </div>
+          <div class="download-center-actions">
+            <a class="download-center-button" href="https://foldbridge.sunhao.uk/training-data/alignment/" target="_blank" rel="noopener noreferrer">Alignment</a>
+            <a class="download-center-button" href="https://foldbridge.sunhao.uk/training-data/profiles/" target="_blank" rel="noopener noreferrer">Profiles</a>
+            <a class="download-center-button" href="https://foldbridge.sunhao.uk/training-data/reactivity/" target="_blank" rel="noopener noreferrer">Reactivity registration</a>
+          </div>
+        </section>
+        <section class="download-center-section download-center-section--geo">
+          <div class="download-center-heading">
+            <span class="download-center-number">03</span>
+            <div>
+              <h2>GEO / external datasets</h2>
+              <p>41 NCBI GEO Series represented in the current FoldBridge entry atlas. Each link opens the authoritative GEO record and its available files.</p>
+            </div>
+          </div>
+          <nav class="download-geo-series-links" aria-label="NCBI GEO Series downloads">
             ${renderDownloadGeoSeries()}
           </nav>
         </section>
       </div>
+      <p class="download-page-footnote">Source snapshot: FoldBridge entry atlas, 24 August 2026.</p>
     </section>
   </main>`;
-}
-
-const PDB_DOWNLOAD_PAGE_SIZE = 48;
-
-function getPdbDownloadRecords(rows = []) {
-  const byId = new Map();
-  rows.forEach((row) => {
-    const pdbId = String(row?.pdbId || '').trim().toUpperCase();
-    if (!pdbId) return;
-    const existing = byId.get(pdbId);
-    if (existing) {
-      existing.chainCount += 1;
-      return;
-    }
-    byId.set(pdbId, {
-      pdbId,
-      molecule: String(row?.sciName || '').trim(),
-      chainCount: 1
-    });
-  });
-  return [...byId.values()].sort((a, b) => a.pdbId.localeCompare(b.pdbId));
-}
-
-function renderPdbDownloadsPage() {
-  if (!Array.isArray(entryTableState)) {
-    if (entryTableState !== 'loading') loadEntryTable();
-    const message = entryTableState === 'error'
-      ? 'The PDB catalogue could not be loaded. Refresh to try again.'
-      : 'Loading the PDB catalogue…';
-    return `${renderBundleHeader()}
-      <main class="page-download page-pdb-downloads" aria-label="PDB CIF downloads">
-        <section class="card bundle-wide-card pdb-download-page-card">
-          <header class="page-card-heading">
-            <h1>PDB CIF downloads</h1>
-            <p class="pdb-download-intro">${message}</p>
-          </header>
-        </section>
-      </main>`;
-  }
-
-  const allRecords = getPdbDownloadRecords(entryTableState);
-  const query = pdbDownloadQuery.trim().toUpperCase();
-  const filteredRecords = query
-    ? allRecords.filter((record) => record.pdbId.includes(query) || record.molecule.toUpperCase().includes(query))
-    : allRecords;
-  const totalPages = Math.max(1, Math.ceil(filteredRecords.length / PDB_DOWNLOAD_PAGE_SIZE));
-  const page = Math.min(Math.max(1, pdbDownloadPage), totalPages);
-  const pageRecords = filteredRecords.slice((page - 1) * PDB_DOWNLOAD_PAGE_SIZE, page * PDB_DOWNLOAD_PAGE_SIZE);
-  const list = pageRecords.map((record) => {
-    const pdbId = escapeHtml(record.pdbId);
-    const cifUrl = `https://files.rcsb.org/download/${encodeURIComponent(record.pdbId)}.cif`;
-    const detailLabel = record.molecule ? escapeHtml(record.molecule) : `${record.chainCount} chain${record.chainCount === 1 ? '' : 's'} in FoldBridge`;
-    return `<li class="pdb-download-item">
-      <div class="pdb-download-record">
-        <strong>${pdbId}</strong>
-        <span>${detailLabel}</span>
-      </div>
-      <a class="pdb-download-cif-link" href="${cifUrl}" target="_blank" rel="noopener noreferrer" aria-label="Download ${pdbId} as CIF from RCSB">CIF</a>
-    </li>`;
-  }).join('');
-  const resultLabel = query
-    ? `${filteredRecords.length.toLocaleString()} matching structures`
-    : `${allRecords.length.toLocaleString()} structures`;
-  const paginationPages = [...new Set([1, page - 1, page, page + 1, totalPages])]
-    .filter((value) => value >= 1 && value <= totalPages)
-    .sort((a, b) => a - b);
-  const paginationButtons = paginationPages.map((value, index) => {
-    const gap = index && value - paginationPages[index - 1] > 1
-      ? '<span class="site-search-pagination-gap" aria-hidden="true">…</span>'
-      : '';
-    return `${gap}<button type="button" class="site-search-pagination-button pdb-download-page-button${value === page ? ' active' : ''}" data-pdb-download-page="${value}"${value === page ? ' aria-current="page"' : ''}>${value}</button>`;
-  }).join('');
-
-  return `${renderBundleHeader()}
-    <main class="page-download page-pdb-downloads" aria-label="PDB CIF downloads">
-      <section class="card bundle-wide-card pdb-download-page-card">
-        <header class="page-card-heading">
-          <a class="pdb-download-back-link" href="#download"><img class="inline-arrow-icon" src="./src/assets/probing-arrow-left.svg" alt="" aria-hidden="true" />Back to Download</a>
-          <h1>PDB CIF downloads</h1>
-          <p class="pdb-download-intro">Download the structure CIF for any PDB record represented in FoldBridge. Files are delivered directly by RCSB PDB.</p>
-        </header>
-        <div class="pdb-download-toolbar">
-          <label class="pdb-download-search-label" for="pdb-download-search">Find a PDB ID or molecule</label>
-          <input id="pdb-download-search" type="search" value="${escapeHtml(pdbDownloadQuery)}" placeholder="e.g. 5HC9" autocomplete="off" />
-          <p class="pdb-download-count" aria-live="polite">${resultLabel}</p>
-        </div>
-        <ul class="pdb-download-list" aria-label="PDB CIF files">${list || '<li class="pdb-download-empty">No PDB records match this search.</li>'}</ul>
-        ${filteredRecords.length > PDB_DOWNLOAD_PAGE_SIZE ? `<nav class="site-search-pagination pdb-download-pagination" aria-label="PDB download pages">
-          <button type="button" class="site-search-pagination-button pdb-download-page-button" data-pdb-download-page="${page - 1}" ${page === 1 ? 'disabled' : ''}>Previous</button>
-          <div class="site-search-pagination-pages">${paginationButtons}</div>
-          <button type="button" class="site-search-pagination-button pdb-download-page-button" data-pdb-download-page="${page + 1}" ${page === totalPages ? 'disabled' : ''}>Next</button>
-          <form class="site-search-page-jump" data-pdb-download-page-jump aria-label="Jump to page">
-            <input name="page" type="number" inputmode="numeric" min="1" max="${totalPages}" value="${page}" aria-label="Page number; press Enter to jump" title="Enter a page number and press Enter" />
-            <span aria-hidden="true">/ ${totalPages}</span>
-          </form>
-        </nav>` : ''}
-      </section>
-    </main>`;
 }
 
 function searchPage() {
@@ -2390,29 +2275,22 @@ function searchPage() {
   <main class="page-detail page-browse page-search">
     <section class="card bundle-wide-card site-search-card">
       <div class="site-search-header">
-        <div class="site-search-title-row">
+        <div>
           <h1>Search</h1>
         </div>
+        <button id="save-search-query" type="button" class="download-outline-btn">Save Search</button>
       </div>
       <form class="site-search-form" id="site-search-form">
-        <div class="site-search-input-wrap">
-          <input
-            id="site-search-input"
-            class="site-search-input"
-            type="search"
-            placeholder="Search probing methods, PDB ID, molecule name..."
-            value="${escapeHtml(query)}"
-            aria-label="Search query"
-          />
-          <button type="submit" class="site-search-submit-icon" aria-label="Search">
-            <img src="./src/assets/search.svg" alt="" aria-hidden="true" />
-          </button>
-        </div>
-        <button id="save-search-query" type="button" class="download-outline-btn site-search-save-button">Save search</button>
+        <input
+          id="site-search-input"
+          class="site-search-input"
+          type="search"
+          placeholder="Search probing methods, PDB ID, molecule name..."
+          value="${escapeHtml(query)}"
+          aria-label="Search query"
+        />
+        <button type="submit">Search</button>
       </form>
-      <div class="site-search-saved-actions">
-        <div id="site-search-saved" class="site-search-saved" aria-label="Saved searches"></div>
-      </div>
       <div class="site-search-active">
         ${activeType ? `<span class="chip">type: ${escapeHtml(activeType)}</span>` : ''}
         ${activeTags.map((tag) => `<span class="chip">tag: ${escapeHtml(tag)}</span>`).join('')}
@@ -2425,6 +2303,8 @@ function searchPage() {
         <div id="site-search-filters" class="site-search-filters">
           <span class="mini-note">Loading filters...</span>
         </div>
+        <h2>Saved</h2>
+        <div id="site-search-saved" class="site-search-saved"></div>
       </aside>
       <section class="card site-search-results-card">
         <div id="site-search-summary" class="mini-note">Loading search index...</div>
@@ -2577,7 +2457,7 @@ function annojoinConfidencePage() {
             <rect x="22" y="78" width="60" height="32" rx="8" fill="var(--primarySoft)" stroke="var(--border)"/>
             <text x="52" y="100" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">A</text>
             <text x="100" y="99" font-size="12.5" fill="var(--textPrimary)">WC-face base-specific (DMS/CMCT/Keth)</text>
-            <text x="335" y="99" font-size="12" style="font-family:Arial,sans-serif" fill="var(--textPrimary)">auc_unpaired_vs_paired</text>
+            <text x="335" y="99" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">auc_unpaired_vs_paired</text>
             <text x="600" y="99" font-size="12.5" fill="var(--textPrimary)">unpaired</text>
             <text x="668" y="99" font-size="16" font-weight="700" fill="var(--accent)">&#8594;</text>
             <title>Family A: Watson-Crick face base-specific reagents, unpaired-positive</title>
@@ -2587,7 +2467,7 @@ function annojoinConfidencePage() {
             <rect x="22" y="138" width="60" height="32" rx="8" fill="var(--accentSoft)" stroke="var(--border)"/>
             <text x="52" y="160" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">B</text>
             <text x="100" y="159" font-size="12.5" fill="var(--textPrimary)">SHAPE 2&#8242;-OH flexibility (ACGU)</text>
-            <text x="335" y="159" font-size="12" style="font-family:Arial,sans-serif" fill="var(--textPrimary)">auc_unpaired_vs_paired</text>
+            <text x="335" y="159" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">auc_unpaired_vs_paired</text>
             <text x="600" y="159" font-size="12.5" fill="var(--textPrimary)">unpaired</text>
             <text x="668" y="159" font-size="16" font-weight="700" fill="var(--accent)">&#8594;</text>
             <title>Family B: SHAPE flexibility proxy, unpaired-positive</title>
@@ -2598,7 +2478,7 @@ function annojoinConfidencePage() {
             <text x="52" y="220" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">C</text>
             <text x="100" y="214" font-size="12.5" fill="var(--textPrimary)">enzymatic (PARS/PARTE)</text>
             <text x="100" y="232" font-size="10.5" font-weight="700" fill="var(--accent)">REVERSED &#183; V1 cleaves paired stems</text>
-            <text x="335" y="219" font-size="12" style="font-family:Arial,sans-serif" fill="var(--textPrimary)">auc_paired_vs_unpaired (1&#8722;AUC)</text>
+            <text x="335" y="219" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">auc_paired_vs_unpaired (1&#8722;AUC)</text>
             <text x="600" y="219" font-size="12.5" fill="var(--textPrimary)">paired</text>
             <text x="654" y="219" font-size="16" font-weight="700" fill="var(--accent)">&#8592;</text>
             <title>Family C: enzymatic, REVERSED direction, paired-positive</title>
@@ -2609,7 +2489,7 @@ function annojoinConfidencePage() {
             <text x="52" y="280" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">D</text>
             <text x="100" y="274" font-size="12.5" fill="var(--textPrimary)">SASA solvent accessibility</text>
             <text x="100" y="292" font-size="10.5" font-weight="700" fill="var(--accent)">DUAL PATH &#183; fallback never STRONG</text>
-            <text x="335" y="279" font-size="12" style="font-family:Arial,sans-serif" fill="var(--textPrimary)">spearman(reactivity, sasa)</text>
+            <text x="335" y="279" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">spearman(reactivity, sasa)</text>
             <text x="600" y="279" font-size="12.5" fill="var(--textPrimary)">high</text>
             <text x="638" y="279" font-size="15" font-weight="700" fill="var(--accent)">&#8596;</text>
             <text x="660" y="279" font-size="12.5" fill="var(--textPrimary)">high</text>
@@ -2620,7 +2500,7 @@ function annojoinConfidencePage() {
             <rect x="22" y="318" width="60" height="32" rx="8" fill="var(--primarySoft)" stroke="var(--border)"/>
             <text x="52" y="340" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">E</text>
             <text x="100" y="339" font-size="12.5" fill="var(--textPrimary)">contact map (MCA/MOHCA)</text>
-            <text x="335" y="339" font-size="12" style="font-family:Arial,sans-serif" fill="var(--textPrimary)">contact_pair_auc</text>
+            <text x="335" y="339" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">contact_pair_auc</text>
             <text x="600" y="339" font-size="12.5" fill="var(--textPrimary)">near = hit</text>
             <title>Family E: contact map, near = hit</title>
           </g>
@@ -2629,7 +2509,7 @@ function annojoinConfidencePage() {
             <rect x="22" y="378" width="60" height="32" rx="8" fill="var(--accentSoft)" stroke="var(--border)"/>
             <text x="52" y="400" text-anchor="middle" font-size="17" font-weight="700" fill="var(--textPrimary)">F</text>
             <text x="100" y="399" font-size="12.5" fill="var(--textPrimary)">pair-set F1 (mutate-and-map)</text>
-            <text x="335" y="399" font-size="12" style="font-family:Arial,sans-serif" fill="var(--textPrimary)">pair_set_prf</text>
+            <text x="335" y="399" font-size="12" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">pair_set_prf</text>
             <text x="600" y="399" font-size="12.5" fill="var(--textPrimary)">F1 inferred vs ref</text>
             <title>Family F: pair-set F1 of inferred vs reference pairs</title>
           </g>
@@ -2788,7 +2668,7 @@ function annojoinConfidencePage() {
             <rect x="40" y="44" width="60" height="220" rx="8" fill="var(--surfaceAlt)" stroke="var(--border)"/>
             <rect x="58" y="60" width="24" height="18" rx="3" fill="var(--primary)"/>
             <path d="M 63 60 V 53 a 7 7 0 0 1 14 0 V 60" fill="none" stroke="var(--primary)" stroke-width="2.5"/>
-            <g font-size="11" style="font-family:Arial,sans-serif" fill="var(--textPrimary)" text-anchor="middle">
+            <g font-size="11" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)" text-anchor="middle">
               <text x="70" y="104">0.81</text><text x="70" y="128">0.12</text><text x="70" y="152">0.64</text>
               <text x="70" y="176">0.05</text><text x="70" y="200">0.77</text><text x="70" y="224">0.21</text><text x="70" y="248">0.58</text>
             </g>
@@ -2820,7 +2700,7 @@ function annojoinConfidencePage() {
           </g>
           <line x1="596" y1="70" x2="596" y2="250" stroke="var(--primary)" stroke-width="2.5"/>
           <text x="596" y="64" text-anchor="middle" font-size="10.5" font-weight="700" fill="var(--primary)">observed</text>
-          <text x="350" y="284" font-size="11.5" style="font-family:Arial,sans-serif" fill="var(--textPrimary)">p = (1 + #{null &#8805; obs}) / (1 + n_perm)</text>
+          <text x="350" y="284" font-size="11.5" style="font-family:ui-monospace,Menlo,monospace" fill="var(--textPrimary)">p = (1 + #{null &#8805; obs}) / (1 + n_perm)</text>
           <text x="350" y="304" font-size="10.5" fill="var(--textMuted)">1000 permutations &#183; seed 12345 &#183; p never zero</text>
         </svg>
         <figcaption>To test whether a score is luck, reactivity values are held fixed while paired/unpaired labels are reshuffled 1000 times to build a null distribution. The histogram is schematic. This label-shuffle applies to A/B/C and Family D&#8217;s pairing-proxy fallback; D&#8217;s SASA-Spearman main path has its own calibration path.</figcaption>
@@ -2975,21 +2855,8 @@ function annojoinConfidencePage() {
 }
 
 
-// Case data is hosted with the complete deployed Case bundle. The checked-in
-// local preview is intentionally incomplete, so using it for localhost would
-// turn otherwise valid search results into 404s.
 const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/entry-cases';
-
-function entryCaseOriginForCurrentHost() {
-  if (typeof window === 'undefined') return ENTRY_CASE_ORIGIN;
-  const hostname = window.location.hostname.toLowerCase();
-  const isLocalPreview = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
-  // A local preview must use the checked-in Case bundle; otherwise the remote
-  // Tunnel bundle masks stylesheet and script changes made in this workspace.
-  return isLocalPreview
-    ? new URL('/public/entry-cases', window.location.origin).href.replace(/\/$/, '')
-    : ENTRY_CASE_ORIGIN;
-}
+const ENTRY_CASE_FRAME_ORIGIN = new URL(ENTRY_CASE_ORIGIN).origin;
 
 function clearEntryCaseEmbed() {
   if (!disposeEntryCaseHeightListener) return;
@@ -3005,23 +2872,15 @@ function initEntryCaseEmbed() {
   const disposeHeight = mountEntryCaseHeightListener({
     windowObject: window,
     frame,
-    expectedOrigin: new URL(entryCaseOriginForCurrentHost()).origin,
+    expectedOrigin: ENTRY_CASE_FRAME_ORIGIN,
   });
   const disposeLoading = mountEntryCaseLoadingIndicator({
     frame,
     indicator: document.querySelector('.entry-case-loading'),
   });
-  // Relay the chain workbench's profile<->matrix toggle up to the top hash so the
-  // address bar becomes a shareable deep link (#entry-case?...&family=E).
-  const disposeViewMode = mountEntryCaseViewModeListener({
-    windowObject: window,
-    frame,
-    expectedOrigin: new URL(entryCaseOriginForCurrentHost()).origin,
-  });
   disposeEntryCaseHeightListener = () => {
     disposeHeight();
     disposeLoading();
-    disposeViewMode();
   };
 }
 
@@ -3042,11 +2901,7 @@ function entryCasePage() {
   const safeChain = String(chain || '').trim();
   // 所有 case（含 EF）走无版本 index.html；EF 由无版本 family-aware 壳按 ?family= 选 2D 产物。
   // 缓存击穿靠全局壳子模块的版本化文件名（VERSIONED_ASSETS），与 case 数量无关，新增 EF case 零改动。
-  const entryCaseOrigin = entryCaseOriginForCurrentHost();
-  const srcUrl = new URL(`${entryCaseOrigin}/cases/${encodeURIComponent(safePdb)}/index.html`);
-  // Entry Case is rendered in a separate iframe, so the parent document's
-  // data-mode attribute cannot style it. Pass the persisted theme explicitly.
-  srcUrl.searchParams.set('mode', mode);
+  const srcUrl = new URL(`${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/index.html`);
   if (safeChain && /^[A-Za-z0-9._-]+$/.test(safeChain)) {
     srcUrl.searchParams.set('chain', safeChain);
   }
@@ -3075,7 +2930,6 @@ function pageFor(name) {
   if (safeRoute === 'sequence') return annojoinAtlasPage();
   if (safeRoute === 'structure') return structurePage();
   if (safeRoute === 'pdb-case') return pdbCasePage();
-  if (safeRoute === 'pdb-downloads') return renderPdbDownloadsPage();
   if (safeRoute === 'annojoin-atlas') return annojoinAtlasPage();
   if (safeRoute === 'annojoin-case') return annojoinCasePage();
   if (safeRoute === 'annojoin-confidence') return annojoinConfidencePage();
@@ -3107,8 +2961,7 @@ function currentSearchState() {
   const params = searchParamsFromHash(window.location.hash);
   return {
     q: params.get('q') ?? '',
-    filters: filtersFromSearchParams(params),
-    page: pageFromSearchParams(params)
+    filters: filtersFromSearchParams(params)
   };
 }
 
@@ -3139,17 +2992,12 @@ function toggleSearchFilter(key, value) {
     filters[key] = [...values];
   }
 
-  setSearchState({ q: state.q, filters, page: 1 });
+  setSearchState({ q: state.q, filters });
 }
 
 function renderSearchFilters(filters, activeFilters) {
   return SEARCH_FILTER_GROUPS
     .map(({ key }) => {
-      const groupLabel = key === 'tag'
-        ? 'RNA TYPE'
-        : key === 'type'
-          ? 'ENTRY TYPE'
-          : key;
       const buttons = visibleSearchFilterEntries(filters, key)
         .map(({ value, label, count }) => `<button
           type="button"
@@ -3162,8 +3010,8 @@ function renderSearchFilters(filters, activeFilters) {
         </button>`)
         .join('');
 
-      return `<div class="site-search-filter-group site-search-filter-group--${escapeHtml(key)}">
-        <h3>${escapeHtml(groupLabel)}</h3>
+      return `<div class="site-search-filter-group">
+        <h3>${escapeHtml(key)}</h3>
         <div>${buttons || '<span class="mini-note">No filters yet.</span>'}</div>
       </div>`;
     })
@@ -3172,7 +3020,7 @@ function renderSearchFilters(filters, activeFilters) {
 
 function renderSavedSearches() {
   const saved = readSavedSearches();
-  if (!saved.length) return '';
+  if (!saved.length) return '<span class="mini-note">No saved searches.</span>';
 
   return saved
     .map((item, index) => `<div class="saved-search-item">
@@ -3182,50 +3030,24 @@ function renderSavedSearches() {
     .join('');
 }
 
-function renderSearchResults(result, hasSearchCriteria = false) {
+function renderSearchResults(result) {
   if (!result.items.length) {
-    const heading = hasSearchCriteria ? 'No matching entries' : 'Start a search';
-    const message = hasSearchCriteria
-      ? 'Try another keyword or remove a filter.'
-      : 'Search by PDB ID, molecule name, or probing method.';
-    return `<div class="site-search-empty" role="status">
-      <strong>${heading}</strong>
-      <p>${message}</p>
-    </div>`;
+    return '<div class="entry-table-empty">No results.</div>';
   }
 
   return result.items
-    .map((item) => {
-      const summary = item.summary || (item.type === 'probing-article' ? 'RNA probing method article.' : 'Open this RNA structure entry for details.');
-      const details = item.details ? `<span class="site-search-result-details"> · ${escapeHtml(item.details)}</span>` : '';
-      return `<a class="site-search-result" href="${escapeHtml(item.href)}">
-      <strong class="site-search-result-title">${escapeHtml(item.title)}</strong>
-      <span class="site-search-result-summary">${escapeHtml(summary)}${details}</span>
-    </a>`;
-    })
+    .map((item) => `<article class="site-search-result">
+      <div>
+        <a href="${escapeHtml(item.href)}">${escapeHtml(item.title)}</a>
+        ${item.summary ? `<p class="site-search-result-summary">${escapeHtml(item.summary)}</p>` : ''}
+        <p>${item.excerpt}</p>
+      </div>
+      <div class="site-search-result-tags">
+        ${item.type ? `<span>${escapeHtml(item.type)}</span>` : ''}
+        ${item.tags.slice(0, 4).map((tag) => `<span>${escapeHtml(tag)}</span>`).join('')}
+      </div>
+    </article>`)
     .join('');
-}
-
-function renderSearchPagination({ page, totalPages }) {
-  if (totalPages <= 1) return '';
-
-  const pages = [...new Set([1, page - 1, page, page + 1, totalPages])]
-    .filter((value) => value >= 1 && value <= totalPages)
-    .sort((a, b) => a - b);
-  const buttons = pages.map((value, index) => {
-    const gap = index && value - pages[index - 1] > 1 ? '<span class="site-search-pagination-gap" aria-hidden="true">…</span>' : '';
-    return `${gap}<button type="button" class="site-search-pagination-button${value === page ? ' active' : ''}" data-search-page="${value}"${value === page ? ' aria-current="page"' : ''}>${value}</button>`;
-  }).join('');
-
-  return `<nav class="site-search-pagination" aria-label="Search result pages">
-    <button type="button" class="site-search-pagination-button" data-search-page="${page - 1}"${page === 1 ? ' disabled' : ''}>Previous</button>
-    <div class="site-search-pagination-pages">${buttons}</div>
-    <button type="button" class="site-search-pagination-button" data-search-page="${page + 1}"${page === totalPages ? ' disabled' : ''}>Next</button>
-    <form class="site-search-page-jump" data-search-page-jump aria-label="Jump to page">
-      <input id="site-search-page-jump-input" name="page" type="number" inputmode="numeric" min="1" max="${totalPages}" value="${page}" aria-label="Page number; press Enter to jump" title="Enter a page number and press Enter" />
-      <span aria-hidden="true">/ ${totalPages}</span>
-    </form>
-  </nav>`;
 }
 
 function bindSearchPageControls() {
@@ -3237,7 +3059,7 @@ function bindSearchPageControls() {
   form?.addEventListener('submit', (event) => {
     event.preventDefault();
     const state = currentSearchState();
-    setSearchState({ q: input?.value ?? '', filters: state.filters, page: 1 });
+    setSearchState({ q: input?.value ?? '', filters: state.filters });
   });
 
   saveButton?.addEventListener('click', () => {
@@ -3279,56 +3101,16 @@ async function initSearchPage() {
   const state = currentSearchState();
 
   try {
-    const isProbingArticleSearch = state.filters.type === 'probing-article';
-    const result = await siteSearchService.search({
-      q: state.q,
-      filters: state.filters,
-      page: state.page,
-      pageSize: isProbingArticleSearch ? 8 : 10
-    });
+    const result = await siteSearchService.search({ q: state.q, filters: state.filters, pageSize: 20 });
     filterHost.innerHTML = renderSearchFilters(result.availableFilters, state.filters);
-    const hasSearchCriteria = Boolean(state.q || Object.keys(state.filters).length);
-    resultHost.innerHTML = `${renderSearchResults(result, hasSearchCriteria)}${renderSearchPagination(result)}`;
-    summaryHost.textContent = hasSearchCriteria
+    resultHost.innerHTML = renderSearchResults(result);
+    summaryHost.textContent = state.q || Object.keys(state.filters).length
       ? `${result.total} results`
-      : 'Search the catalogue by PDB ID, molecule name, or probing method.';
+      : 'Enter a query or choose a filter.';
 
     filterHost.querySelectorAll('[data-search-filter-key]').forEach((button) => {
       button.addEventListener('click', () => {
         toggleSearchFilter(button.getAttribute('data-search-filter-key'), button.getAttribute('data-search-filter-value'));
-      });
-    });
-
-    resultHost.querySelectorAll('[data-search-page]').forEach((button) => {
-      button.addEventListener('click', () => {
-        const page = Number(button.getAttribute('data-search-page'));
-        if (!Number.isSafeInteger(page) || page < 1 || page > result.totalPages || page === result.page) return;
-        setSearchState({ q: state.q, filters: state.filters, page });
-        requestAnimationFrame(() => document.querySelector('.site-search-results-card')?.scrollIntoView({ block: 'start' }));
-      });
-    });
-    resultHost.querySelectorAll('[data-search-page-jump]').forEach((jumpForm) => {
-      const pageInput = jumpForm.elements.namedItem('page');
-      const jumpToEnteredPage = () => {
-        const page = Number(pageInput?.value);
-        if (!Number.isSafeInteger(page) || page < 1 || page > result.totalPages) {
-          pageInput?.setCustomValidity(`Enter a page from 1 to ${result.totalPages}.`);
-          pageInput?.reportValidity();
-          return;
-        }
-        pageInput?.setCustomValidity('');
-        if (page === result.page) return;
-        setSearchState({ q: state.q, filters: state.filters, page });
-        requestAnimationFrame(() => document.querySelector('.site-search-results-card')?.scrollIntoView({ block: 'start' }));
-      };
-      jumpForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        jumpToEnteredPage();
-      });
-      pageInput?.addEventListener('keydown', (event) => {
-        if (event.key !== 'Enter') return;
-        event.preventDefault();
-        jumpToEnteredPage();
       });
     });
   } catch (_error) {
@@ -3363,10 +3145,6 @@ function render(options = {}) {
   const previousTableScroll = previousTableWrap
     ? { left: previousTableWrap.scrollLeft, top: previousTableWrap.scrollTop }
     : null;
-  const previousEntryTableWrap = document.querySelector('.entry-table-page .entry-table-wrap');
-  const previousEntryTableScroll = previousEntryTableWrap
-    ? { left: previousEntryTableWrap.scrollLeft, top: previousEntryTableWrap.scrollTop }
-    : null;
   let activeSearch = null;
   if (document.activeElement?.id === 'annojoin-search-input') {
     const el = document.activeElement;
@@ -3375,23 +3153,10 @@ function render(options = {}) {
       selectionEnd: el.selectionEnd ?? null
     };
   }
-  let activePdbDownloadSearch = null;
-  if (document.activeElement?.id === 'pdb-download-search') {
-    const el = document.activeElement;
-    activePdbDownloadSearch = {
-      selectionStart: el.selectionStart ?? null,
-      selectionEnd: el.selectionEnd ?? null
-    };
-  }
 
   clearEntryCaseEmbed();
   setTheme(theme, mode);
   document.getElementById('app').innerHTML = `${nav()}${pageFor(route)}${renderFooter()}`;
-  syncTechniqueLabelTooltips(document);
-  if (route === 'entry' && Number.isFinite(entryTableViewportHeight)) {
-    const entryTableWrap = document.querySelector('.entry-table-page .entry-table-wrap');
-    entryTableWrap?.style.setProperty('--entry-table-viewport-height', `${entryTableViewportHeight}px`);
-  }
   if (route === 'entry-case') initEntryCaseEmbed();
   if (route === 'entry' || route === 'sequence') {
     const targetPdbId = new URLSearchParams(window.location.hash.split('?')[1] || '').get('pdbId')?.trim();
@@ -3406,14 +3171,8 @@ function render(options = {}) {
   }
   // entry 表两层折叠：委托绑定分组表头的展开/收起（parent:<id> / child:<id>）。
   document.querySelectorAll('[data-entry-group-toggle]').forEach((button) => {
-    button.addEventListener('click', (event) => {
-      event.stopPropagation();
+    button.addEventListener('click', () => {
       toggleEntryGroup(button.getAttribute('data-entry-group-toggle'));
-    });
-  });
-  document.querySelectorAll('[data-entry-group-row]').forEach((row) => {
-    row.addEventListener('click', () => {
-      toggleEntryGroup(row.getAttribute('data-entry-group-row'));
     });
   });
   // entry 表旧版 family + detail technique 两级筛选。
@@ -3496,8 +3255,6 @@ function render(options = {}) {
   initHomeProbingCarousel();
   initHomeScrollStory();
   initPdbCasePage();
-  initPdbDownloadsPage();
-  initDownloadGeoDisclosure();
   initSearchPage();
 
 const subnavMenuToggle = document.getElementById('subnav-menu-toggle');
@@ -3568,16 +3325,6 @@ document.addEventListener('click', () => {
     }
   }
 
-  if (activePdbDownloadSearch) {
-    const el = document.getElementById('pdb-download-search');
-    if (el) {
-      el.focus();
-      if (typeof activePdbDownloadSearch.selectionStart === 'number' && typeof activePdbDownloadSearch.selectionEnd === 'number') {
-        el.setSelectionRange(activePdbDownloadSearch.selectionStart, activePdbDownloadSearch.selectionEnd);
-      }
-    }
-  }
-
   if (previousTableScroll) {
     const nextTableWrap = document.querySelector('.annojoin-master-table-wrap');
     if (nextTableWrap) {
@@ -3586,68 +3333,9 @@ document.addEventListener('click', () => {
     }
   }
 
-  if (previousEntryTableScroll) {
-    const nextEntryTableWrap = document.querySelector('.entry-table-page .entry-table-wrap');
-    if (nextEntryTableWrap) {
-      nextEntryTableWrap.scrollLeft = previousEntryTableScroll.left;
-      nextEntryTableWrap.scrollTop = previousEntryTableScroll.top;
-    }
-  }
-
   if (preserveScroll) {
     requestAnimationFrame(() => window.scrollTo(previousScrollX, previousScrollY));
   }
-}
-
-function initPdbDownloadsPage() {
-  const search = document.getElementById('pdb-download-search');
-  if (search) {
-    search.addEventListener('input', () => {
-      pdbDownloadQuery = search.value;
-      pdbDownloadPage = 1;
-      render({ preserveScroll: true });
-    });
-  }
-  document.querySelectorAll('[data-pdb-download-page]').forEach((button) => {
-    button.addEventListener('click', () => {
-      const nextPage = Number(button.getAttribute('data-pdb-download-page'));
-      if (!Number.isSafeInteger(nextPage) || nextPage < 1 || button.disabled) return;
-      pdbDownloadPage = nextPage;
-      render({ preserveScroll: true });
-    });
-  });
-  const pageJumpForm = document.querySelector('[data-pdb-download-page-jump]');
-  const pageJumpInput = pageJumpForm?.elements.namedItem('page');
-  if (pageJumpForm && pageJumpInput instanceof HTMLInputElement) {
-    pageJumpForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const requestedPage = Number(pageJumpInput.value);
-      const totalPages = Number(pageJumpInput.max);
-      if (!Number.isSafeInteger(requestedPage) || requestedPage < 1 || requestedPage > totalPages) {
-        pageJumpInput.setCustomValidity(`Enter a whole number from 1 to ${totalPages}.`);
-        pageJumpInput.reportValidity();
-        return;
-      }
-      pageJumpInput.setCustomValidity('');
-      if (requestedPage === pdbDownloadPage) return;
-      pdbDownloadPage = requestedPage;
-      render({ preserveScroll: true });
-    });
-    pageJumpInput.addEventListener('input', () => pageJumpInput.setCustomValidity(''));
-  }
-}
-
-function initDownloadGeoDisclosure() {
-  document.querySelectorAll('[data-geo-disclosure]').forEach((disclosure) => {
-    const panelId = disclosure.getAttribute('data-geo-disclosure');
-    const panel = panelId
-      ? document.querySelector(`[data-geo-panel="${CSS.escape(panelId)}"]`)
-      : null;
-    if (!panel) return;
-    const sync = () => { panel.hidden = !disclosure.open; };
-    sync();
-    disclosure.addEventListener('toggle', sync);
-  });
 }
 
 function initPdbCasePage() {

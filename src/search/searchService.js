@@ -2,6 +2,7 @@ import { MECHANISM_FAMILIES } from '../techniqueFilterModel.js';
 
 const SEARCH_FILTER_KEYS = ['type', 'tag', 'technique'];
 const LEGACY_EXTENDED_PDB_ID = /^pdb_0000([0-9a-z]{4})$/i;
+const PDB_ID_QUERY = /^[0-9][0-9a-z]{3}$/i;
 
 export function normalizeSearchQuery(value = '') {
   const query = String(value || '').trim();
@@ -26,8 +27,8 @@ const TECHNIQUE_FILTER_OPTIONS = MECHANISM_FAMILIES.map(({ id, label }) => {
 const RNA_TYPE_FILTER_OPTIONS = [
   { value: 'rrna', label: 'rRNA' },
   { value: 'trna', label: 'tRNA' },
-  { value: 'mrna', label: 'mRNA' },
   { value: 'other_rna', label: 'Other RNA' },
+  { value: 'mrna', label: 'mRNA' },
   { value: 'ribozyme', label: 'Ribozyme' },
   { value: 'riboswitch', label: 'Riboswitch' },
   { value: 'snrna', label: 'snRNA' },
@@ -40,8 +41,8 @@ const RNA_TYPE_FILTER_OPTIONS = [
 
 export const SEARCH_FILTER_GROUPS = [
   { key: 'technique', options: TECHNIQUE_FILTER_OPTIONS },
-  { key: 'tag', options: RNA_TYPE_FILTER_OPTIONS },
-  { key: 'type' }
+  { key: 'type' },
+  { key: 'tag', options: RNA_TYPE_FILTER_OPTIONS }
 ];
 
 const TECHNIQUE_FILTER_BY_VALUE = new Map(TECHNIQUE_FILTER_OPTIONS.map((option) => [option.value, option]));
@@ -81,12 +82,7 @@ export function filtersFromSearchParams(params) {
   return filters;
 }
 
-export function pageFromSearchParams(params) {
-  const page = Number(params?.get?.('page'));
-  return Number.isSafeInteger(page) && page > 0 ? page : 1;
-}
-
-export function buildSearchHash({ q = '', filters = {}, page = 1 } = {}) {
+export function buildSearchHash({ q = '', filters = {} } = {}) {
   const params = new URLSearchParams();
   const query = String(q || '').trim();
   if (query) params.set('q', query);
@@ -97,11 +93,6 @@ export function buildSearchHash({ q = '', filters = {}, page = 1 } = {}) {
     for (const item of values.filter(Boolean)) {
       params.append(key, item);
     }
-  }
-
-  const normalizedPage = Number(page);
-  if (Number.isSafeInteger(normalizedPage) && normalizedPage > 1) {
-    params.set('page', String(normalizedPage));
   }
 
   const queryString = params.toString();
@@ -134,9 +125,12 @@ function normalizeFilters(filters = {}) {
 }
 
 function getPagefindBundlePath() {
-  // Resolve from this module instead of the domain root so Search also works
-  // when the portal is served from a GitHub Pages project path.
-  return new URL('../../dist/pagefind/pagefind.js', import.meta.url).href;
+  if (typeof window === 'undefined') return '/dist/pagefind/pagefind.js';
+  const marker = '/dist/';
+  const path = window.location.pathname;
+  const index = path.indexOf(marker);
+  if (index >= 0) return `${path.slice(0, index + marker.length)}pagefind/pagefind.js`;
+  return '/dist/pagefind/pagefind.js';
 }
 
 async function defaultPagefindLoader() {
@@ -153,10 +147,17 @@ function mapResult(data) {
     title: data.meta?.title ?? data.title ?? 'Untitled result',
     href: data.meta?.href ?? data.url,
     summary: data.meta?.summary ?? '',
-    details: data.meta?.details ?? '',
+    excerpt: data.excerpt ?? data.plain_excerpt ?? '',
     type: data.meta?.type,
     tags
   };
+}
+
+function exactPdbMatch(item, query) {
+  if (!PDB_ID_QUERY.test(query)) return true;
+  const href = String(item.href || '');
+  const params = new URLSearchParams(href.includes('?') ? href.slice(href.indexOf('?') + 1) : '');
+  return String(params.get('pdb') || '').toUpperCase() === query.toUpperCase();
 }
 
 export function createSearchService({ pagefindLoader = defaultPagefindLoader } = {}) {
@@ -185,7 +186,6 @@ export function createSearchService({ pagefindLoader = defaultPagefindLoader } =
     const pagefindQuery = normalizeSearchQuery(query);
     const normalizedFilters = normalizeFilters(filters);
     const hasFilters = Object.keys(normalizedFilters).length > 0;
-    const normalizedPageSize = Math.max(1, Number(pageSize) || 10);
     const availableFilters = await getFilters();
 
     if (!query && !hasFilters) {
@@ -194,9 +194,6 @@ export function createSearchService({ pagefindLoader = defaultPagefindLoader } =
         filters: normalizedFilters,
         items: [],
         total: 0,
-        page: 1,
-        pageSize: normalizedPageSize,
-        totalPages: 0,
         unfilteredTotal: 0,
         availableFilters,
         resultFilters: {}
@@ -205,25 +202,18 @@ export function createSearchService({ pagefindLoader = defaultPagefindLoader } =
 
     const pagefind = await getPagefind();
     const raw = await pagefind.search(pagefindQuery || null, { filters: normalizedFilters });
-    const total = raw.results.length;
-    const totalPages = Math.max(1, Math.ceil(total / normalizedPageSize));
-    const requestedPage = Number(page);
-    const currentPage = Number.isSafeInteger(requestedPage) && requestedPage > 0
-      ? Math.min(requestedPage, totalPages)
-      : 1;
-    const start = (currentPage - 1) * normalizedPageSize;
-    const end = start + normalizedPageSize;
-    const items = await Promise.all(raw.results.slice(start, end).map(async (result) => mapResult(await result.data())));
+    const allItems = await Promise.all(raw.results.map(async (result) => mapResult(await result.data())));
+    const matchedItems = allItems.filter((item) => exactPdbMatch(item, query));
+    const start = Math.max(0, (Number(page) - 1) * Number(pageSize));
+    const end = start + Number(pageSize);
+    const items = matchedItems.slice(start, end);
 
     return {
       query,
       filters: normalizedFilters,
       items,
-      total,
-      page: currentPage,
-      pageSize: normalizedPageSize,
-      totalPages,
-      unfilteredTotal: raw.unfilteredResultCount ?? total,
+      total: matchedItems.length,
+      unfilteredTotal: raw.unfilteredResultCount ?? raw.results.length,
       availableFilters,
       resultFilters: raw.filters ?? {},
       totalFilters: raw.totalFilters ?? {}
