@@ -14,7 +14,6 @@ import {
   mechanismFamiliesForRow,
   MECHANISM_FAMILIES
 } from './techniqueFilterModel.js';
-import { renderDisclosureIcon } from './disclosureIcon.js';
 
 const DEFAULT_GROUP_ROW_LIMIT = 5;
 
@@ -173,7 +172,7 @@ function renderTableBody({
     rows.push(`<tr class="annojoin-parent-group-row${parentExpanded ? ' is-expanded-group' : ''}" data-annojoin-parent-group="${escapeHtml(parent.id)}" data-annojoin-group-state="${parentExpanded ? 'expanded' : 'collapsed'}">
       <td colspan="${visibleColumns.length}">
         <div class="annojoin-group-row-inner">
-          <button type="button" data-annojoin-group-toggle="${escapeHtml(parentToggleId)}" aria-expanded="${parentExpanded ? 'true' : 'false'}">${renderDisclosureIcon(parentExpanded)}</button>
+          <button type="button" data-annojoin-group-toggle="${escapeHtml(parentToggleId)}" aria-expanded="${parentExpanded ? 'true' : 'false'}">${parentExpanded ? '-' : '+'}</button>
           <strong>${escapeHtml(parent.label)}</strong>
           <span>${escapeHtml(parent.count)} cases</span>
         </div>
@@ -194,7 +193,7 @@ function renderTableBody({
       rows.push(`<tr class="annojoin-child-group-row${childExpanded ? ' is-expanded-group' : ''}" data-annojoin-child-group="${escapeHtml(child.id)}" data-annojoin-group-state="${childExpanded ? 'expanded' : 'collapsed'}">
         <td colspan="${visibleColumns.length}">
           <div class="annojoin-group-row-inner">
-            <button type="button" data-annojoin-group-toggle="${escapeHtml(childToggleId)}" aria-expanded="${childExpanded ? 'true' : 'false'}">${renderDisclosureIcon(childExpanded)}</button>
+            <button type="button" data-annojoin-group-toggle="${escapeHtml(childToggleId)}" aria-expanded="${childExpanded ? 'true' : 'false'}">${childExpanded ? '-' : '+'}</button>
             <span>${escapeHtml(child.label)}</span>
             <small>${escapeHtml(child.count)} cases</small>
           </div>
@@ -273,7 +272,7 @@ function renderMoleculePanel(row, routeName) {
       ${sidebarField('Molecule name', moleculeName(row), row.biologicalMoleculeNameSource || row.pdbMoleculeNameSource)}
       ${sidebarField('Biological source value', row.biologicalMoleculeName, row.biologicalMoleculeNameSource)}
       ${sidebarField('PDB source value', row.pdbMoleculeName, row.pdbMoleculeNameSource)}
-      ${sidebarField('Confidence distribution', row.confidenceDisplayLabel || row.fecClaimCeilingDistribution, row.confidenceSource || 'fec_claim_ceiling_distribution')}
+      ${sidebarField('Confidence distribution', row.confidenceDisplayLabel || row.fecClaimCeilingDistribution)}
       <dt>Profiles</dt><dd>${escapeHtml(profileValue(row))}</dd>
       <dt>Chains</dt><dd>${escapeHtml((row.chains || []).join(', ') || 'not annotated')}</dd>
     </dl>
@@ -387,7 +386,7 @@ function renderConfidencePanel(row) {
     <h2>${escapeHtml(row.confidenceDisplayLabel || 'not annotated')}</h2>
     <p>This is a case-level distribution, not a best-profile confidence score.</p>
     <dl>
-      ${sidebarField('Current case', row.confidenceDisplayLabel || row.fecClaimCeilingDistribution, row.confidenceSource || 'fec_claim_ceiling_distribution')}
+      ${sidebarField('Current case', row.confidenceDisplayLabel || row.fecClaimCeilingDistribution)}
       <dt>Annotation coverage</dt><dd>${escapeHtml(`${hasContext}; ${hasLss}`)}</dd>
       <dt>Coverage topology</dt><dd>${escapeHtml(coverageTopologyValue(row))}</dd>
     </dl>
@@ -465,7 +464,7 @@ function renderChainsPanel(row) {
   const body = count
     ? chains.map((chain) => `<details class="annojoin-chain-seq">
         <summary>${escapeHtml(chain)}</summary>
-        <a class="download-outline-btn" href="${escapeHtml(rcsbHref)}" target="_blank" rel="noopener noreferrer">View sequence on RCSB <img class="inline-arrow-icon" src="./src/assets/probing-arrow-right.svg" alt="" aria-hidden="true" /></a>
+        <a class="download-outline-btn" href="${escapeHtml(rcsbHref)}" target="_blank" rel="noopener noreferrer">View sequence on RCSB →</a>
       </details>`).join('')
     : '<p class="mini-note">No PDB chain identifiers are annotated for this case in the current index asset.</p>';
   return `<aside class="annojoin-detail-sidebar" aria-label="ANNOJOIN chain definitions">
@@ -514,7 +513,7 @@ export function renderTechniqueFilterControls(cases = [], filters = {}) {
   const familyBlocks = model.families.map((family) => {
     const familyActive = selectedFamilies.has(family.id);
     const techOptions = family.techniques.map((name) => `
-      <label class="annojoin-technique-option" data-technique-label="${escapeHtml(name)}">
+      <label class="annojoin-technique-option">
         <input type="checkbox" data-technique-name="${escapeHtml(name)}"${selectedNames.has(name) ? ' checked' : ''} />
         <span>${escapeHtml(name)}</span>
       </label>`).join('');
