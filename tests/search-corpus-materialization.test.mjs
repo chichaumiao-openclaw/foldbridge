@@ -16,8 +16,16 @@ test('excludes a chain whose case page is not materialized', async () => {
 });
 
 test('search corpus omits the unmaterialized 28NT/B display case', () => {
-  const publicRoot = path.resolve('../../public');
+  const publicRoot = path.resolve('../public');
   const docs = buildSearchDocuments({ publicRoot });
   const broken = docs.filter((doc) => doc.content.includes('28NT') && doc.content.includes('5S rRNA'));
   assert.equal(broken.length, 0);
+});
+
+test('search results use the materialized entry-case route', () => {
+  const publicRoot = path.resolve('../public');
+  const docs = buildSearchDocuments({ publicRoot });
+  const doc = docs.find((item) => item.content.includes('3DIQ'));
+  assert.ok(doc);
+  assert.match(doc.href, /^#entry-case\?pdb=3DIQ&chain=A$/);
 });

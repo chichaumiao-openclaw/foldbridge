@@ -30,14 +30,15 @@ function caseDocId(caseKey, caseId) {
   return `pdb-case-${slug}-${identity}`;
 }
 
-// 详情链接走站内 hash 路由 #annojoin-case；只有已经物化到 served store 的
+// 详情链接走站内 hash 路由 #entry-case；只有已经物化到 served store 的
 // case/chain 才进入搜索语料，避免搜索结果指向空 iframe 或缺失静态页。
 function caseDetailHref(caseId, caseKey) {
+  const chain = String(caseKey || '').split(':').pop().trim();
   const query = new URLSearchParams();
-  if (caseId) query.set('caseId', caseId);
-  if (caseKey && caseKey !== caseId) query.set('caseKey', caseKey);
+  if (caseId) query.set('pdb', caseId);
+  if (chain) query.set('chain', chain);
   const suffix = query.toString();
-  return `#annojoin-case${suffix ? `?${suffix}` : ''}`;
+  return `#entry-case${suffix ? `?${suffix}` : ''}`;
 }
 
 function tagForCase(row) {
