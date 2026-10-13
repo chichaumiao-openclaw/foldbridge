@@ -2860,6 +2860,15 @@ function annojoinConfidencePage() {
 const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/entry-cases';
 const ENTRY_CASE_FRAME_ORIGIN = new URL(ENTRY_CASE_ORIGIN).origin;
 
+function entryCaseOriginForCurrentHost() {
+  if (typeof window === 'undefined') return ENTRY_CASE_ORIGIN;
+  const hostname = window.location.hostname.toLowerCase();
+  const isLocalPreview = hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
+  return isLocalPreview
+    ? new URL('/public/entry-cases', window.location.origin).href.replace(/\/$/, '')
+    : ENTRY_CASE_ORIGIN;
+}
+
 function clearEntryCaseEmbed() {
   disposeEntryCaseHeightListener?.();
   disposeEntryCaseHeightListener = null;
@@ -2875,7 +2884,7 @@ function initEntryCaseEmbed() {
   const disposeHeight = mountEntryCaseHeightListener({
     windowObject: window,
     frame,
-    expectedOrigin: ENTRY_CASE_FRAME_ORIGIN,
+    expectedOrigin: new URL(entryCaseOriginForCurrentHost()).origin,
   });
   const disposeLoading = mountEntryCaseLoadingIndicator({
     frame,
@@ -2887,7 +2896,7 @@ function initEntryCaseEmbed() {
     fallback: document.querySelector('.entry-case-fallback'),
     retryButton: document.querySelector('.entry-case-retry'),
     windowObject: window,
-    expectedOrigin: ENTRY_CASE_FRAME_ORIGIN,
+    expectedOrigin: new URL(entryCaseOriginForCurrentHost()).origin,
   });
   disposeEntryCaseHeightListener = () => {
     disposeHeight();
@@ -2913,7 +2922,7 @@ function entryCasePage() {
   const safeChain = String(chain || '').trim();
   // 所有 case（含 EF）走无版本 index.html；EF 由无版本 family-aware 壳按 ?family= 选 2D 产物。
   // 缓存击穿靠全局壳子模块的版本化文件名（VERSIONED_ASSETS），与 case 数量无关，新增 EF case 零改动。
-  const srcUrl = new URL(`${ENTRY_CASE_ORIGIN}/cases/${encodeURIComponent(safePdb)}/index.html`);
+  const srcUrl = new URL(`${entryCaseOriginForCurrentHost()}/cases/${encodeURIComponent(safePdb)}/index.html`);
   if (safeChain && /^[A-Za-z0-9._-]+$/.test(safeChain)) {
     srcUrl.searchParams.set('chain', safeChain);
   }

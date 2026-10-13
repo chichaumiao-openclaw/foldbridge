@@ -1,4 +1,5 @@
 export const ENTRY_CASE_HEIGHT_MESSAGE = 'foldbridge-case-height';
+export const ENTRY_CASE_READY_MESSAGE = 'foldbridge-case-ready';
 
 const MIN_ENTRY_CASE_HEIGHT = 320;
 const MAX_ENTRY_CASE_HEIGHT = 100_000;
@@ -117,6 +118,8 @@ export function mountEntryCaseFailureFallback({
   indicator,
   fallback,
   retryButton,
+  windowObject = typeof window !== 'undefined' ? window : null,
+  expectedOrigin = '',
   timeoutMs = 15_000,
   setTimeoutFn = setTimeout,
   clearTimeoutFn = clearTimeout,
@@ -144,6 +147,16 @@ export function mountEntryCaseFailureFallback({
     timerId = setTimeoutFn(showFailure, timeoutMs);
   };
   const handleLoad = () => {
+    // A cross-origin iframe fires `load` for HTTP error pages too. Wait for
+    // the case shell's trusted ready message before declaring success.
+  };
+  const handleReady = (event) => {
+    if (expectedOrigin && event?.origin !== expectedOrigin) return;
+    if (event?.source !== frame.contentWindow) return;
+    const type = event?.data?.type;
+    const hasTrustedReadySignal = type === ENTRY_CASE_READY_MESSAGE
+      || (type === ENTRY_CASE_HEIGHT_MESSAGE && normalizeEntryCaseHeight(event?.data?.height) !== null);
+    if (!hasTrustedReadySignal) return;
     clearTimer();
     indicator.hidden = true;
     fallback.hidden = true;
@@ -159,6 +172,7 @@ export function mountEntryCaseFailureFallback({
   frame.addEventListener('load', handleLoad);
   frame.addEventListener('error', showFailure);
   retryButton?.addEventListener?.('click', handleRetry);
+  windowObject?.addEventListener?.('message', handleReady);
   showLoading();
 
   let mounted = true;
@@ -169,5 +183,6 @@ export function mountEntryCaseFailureFallback({
     frame.removeEventListener('load', handleLoad);
     frame.removeEventListener('error', showFailure);
     retryButton?.removeEventListener?.('click', handleRetry);
+    windowObject?.removeEventListener?.('message', handleReady);
   };
 }

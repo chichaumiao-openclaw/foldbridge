@@ -1,6 +1,7 @@
 // --- Pure shell helpers (DOM-free; safe to load under node for testing) ---
 
 const ENTRY_CASE_HEIGHT_MESSAGE = "foldbridge-case-height";
+const ENTRY_CASE_READY_MESSAGE = "foldbridge-case-ready";
 const WORKBENCH_PROGRESS_MESSAGE = "foldbridge-workbench-progress";
 const ENTRY_CASE_MODE_MESSAGE = "foldbridge:set-mode";
 
@@ -20,6 +21,12 @@ function postEmbeddedCaseHeight(parentWindow, height) {
   // The containing site can run on production, preview, or localhost origins.
   // The payload is only a numeric layout hint; the parent validates origin and source.
   parentWindow.postMessage({ type: ENTRY_CASE_HEIGHT_MESSAGE, height: nextHeight }, "*");
+  return true;
+}
+
+function postEmbeddedCaseReady(parentWindow) {
+  if (!parentWindow || typeof parentWindow.postMessage !== "function") return false;
+  parentWindow.postMessage({ type: ENTRY_CASE_READY_MESSAGE }, "*");
   return true;
 }
 
@@ -503,18 +510,21 @@ if (typeof document !== "undefined") {
     }
   }
   if (bootstrap.evidenceUrl && frame && !matrixFamily) {
+    syncUi();
+    if (window.parent !== window) postEmbeddedCaseReady(window.parent);
     loadDeferredEvidence().catch((error) => {
       console.error("Deferred case evidence failed", error);
       syncUi();
     });
   } else {
     syncUi();
+    if (window.parent !== window) postEmbeddedCaseReady(window.parent);
   }
 }
 
 if (typeof module !== "undefined" && module.exports) {
   module.exports = {
-    measureEmbeddedCaseHeight, postEmbeddedCaseHeight,
+    measureEmbeddedCaseHeight, postEmbeddedCaseHeight, postEmbeddedCaseReady,
     initialChainId,
     formatCasePageTitle,
     requestedMatrixFamily,

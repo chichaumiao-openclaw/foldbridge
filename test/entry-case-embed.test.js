@@ -49,10 +49,12 @@ test('entry Case loading indicator stays visible until the iframe loads', () => 
 
 test('entry Case fallback appears on iframe failure or timeout and retries from the Pages shell', () => {
   const handlers = new Map();
+  const windowHandlers = new Map();
   let scheduled;
   let cleared = false;
   const frame = {
     src: 'https://foldbridge.sunhao.uk/entry-cases/cases/9ZC6/index.html',
+    contentWindow: {},
     addEventListener(type, handler) { handlers.set(type, handler); },
     removeEventListener(type, handler) { if (handlers.get(type) === handler) handlers.delete(type); },
   };
@@ -62,12 +64,18 @@ test('entry Case fallback appears on iframe failure or timeout and retries from 
     addEventListener(type, handler) { if (type === 'click') handlers.set(type, handler); },
     removeEventListener(type, handler) { if (handlers.get(type) === handler) handlers.delete(type); },
   };
+  const windowObject = {
+    addEventListener(type, handler) { windowHandlers.set(type, handler); },
+    removeEventListener(type, handler) { if (windowHandlers.get(type) === handler) windowHandlers.delete(type); },
+  };
 
   const dispose = mountEntryCaseFailureFallback({
     frame,
     indicator,
     fallback,
     retryButton,
+    windowObject,
+    expectedOrigin: 'https://foldbridge.sunhao.uk',
     timeoutMs: 15_000,
     setTimeoutFn(handler) { scheduled = handler; return 7; },
     clearTimeoutFn() { cleared = true; },
@@ -89,11 +97,18 @@ test('entry Case fallback appears on iframe failure or timeout and retries from 
   assert.equal(fallback.hidden, false);
   handlers.get('load')();
   assert.equal(indicator.hidden, true);
+  assert.equal(fallback.hidden, false);
+  windowHandlers.get('message')({
+    origin: 'https://foldbridge.sunhao.uk',
+    source: frame.contentWindow,
+    data: { type: 'foldbridge-case-ready' },
+  });
   assert.equal(fallback.hidden, true);
   assert.equal(cleared, true);
 
   dispose();
   assert.equal(handlers.size, 0);
+  assert.equal(windowHandlers.size, 0);
 });
 
 test('entry Case iframe accepts a valid height only from its own trusted child', () => {
@@ -267,6 +282,7 @@ test('entry Case layout uses the shared centered width and content-driven height
   assert.match(shellStyles, /html\.is-embedded body\[data-mode="dark"\] \.shell\s*\{\s*box-shadow:\s*none;/s);
   assert.match(shell, /ResizeObserver/);
   assert.match(shell, /foldbridge-case-height/);
+  assert.match(shell, /foldbridge-case-ready/);
 });
 
 test('light Case canvas is transparent so the portal background stays continuous', () => {
