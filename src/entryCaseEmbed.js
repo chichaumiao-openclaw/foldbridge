@@ -120,6 +120,7 @@ export function mountEntryCaseFailureFallback({
   retryButton,
   windowObject = typeof window !== 'undefined' ? window : null,
   expectedOrigin = '',
+  fetchFn = typeof window !== 'undefined' ? window.fetch.bind(window) : null,
   timeoutMs = 15_000,
   setTimeoutFn = setTimeout,
   clearTimeoutFn = clearTimeout,
@@ -129,56 +130,104 @@ export function mountEntryCaseFailureFallback({
     return () => {};
   }
 
+  let mounted = true;
   let timerId = null;
+  let request = null;
+  let generation = 0;
+  let frameLoaded = false;
+  let probeAvailable = false;
+  let ready = false;
+  const title = fallback.querySelector?.('[data-fallback-title]');
+  const copy = fallback.querySelector?.('[data-fallback-copy]');
   const clearTimer = () => {
     if (timerId === null) return;
     clearTimeoutFn(timerId);
     timerId = null;
   };
-  const showFailure = () => {
+  const showFailure = (status = 0) => {
+    if (!mounted || ready) return;
+    const notFound = status === 404;
     clearTimer();
+    request?.abort();
     indicator.hidden = true;
     fallback.hidden = false;
+    frame.hidden = true;
+    if (title) title.textContent = notFound ? 'Case page not found' : 'Case data is temporarily unavailable';
+    if (copy) copy.textContent = notFound
+      ? 'This case page is not available. Return to the Entry table to choose another case.'
+      : 'We could not reach the case service. Please try again in a moment.';
+  };
+  const finishReady = () => {
+    if (!mounted) return;
+    ready = true;
+    generation += 1;
+    request?.abort();
+    clearTimer();
+    indicator.hidden = true;
+    fallback.hidden = true;
+    frame.hidden = false;
   };
   const showLoading = () => {
     clearTimer();
+    request?.abort();
+    generation += 1;
+    const attempt = generation;
+    frameLoaded = false;
+    probeAvailable = false;
+    ready = false;
     indicator.hidden = false;
     fallback.hidden = true;
-    timerId = setTimeoutFn(showFailure, timeoutMs);
+    frame.hidden = false;
+    timerId = setTimeoutFn(() => showFailure(), timeoutMs);
+    if (!fetchFn) return;
+    request = new AbortController();
+    const signal = request.signal;
+    // HEAD is CORS-enabled by the origin. It distinguishes a real 404 or
+    // Cloudflare error from the iframe's unconditional load event.
+    Promise.resolve(fetchFn(frame.src, { method: 'HEAD', cache: 'no-store', signal }))
+      .then((response) => {
+        if (!mounted || attempt !== generation || signal.aborted || ready) return;
+        if (!response.ok) { showFailure(response.status); return; }
+        probeAvailable = true;
+        if (frameLoaded) finishReady();
+      })
+      .catch(() => {
+        if (mounted && attempt === generation && !signal.aborted && !ready) showFailure();
+      });
   };
   const handleLoad = () => {
-    // A cross-origin iframe fires `load` for HTTP error pages too. Wait for
-    // the case shell's trusted ready message before declaring success.
+    if (!mounted || ready) return;
+    frameLoaded = true;
+    if (probeAvailable) finishReady();
   };
   const handleReady = (event) => {
-    if (expectedOrigin && event?.origin !== expectedOrigin) return;
+    if (!mounted || !expectedOrigin || event?.origin !== expectedOrigin) return;
     if (event?.source !== frame.contentWindow) return;
     const type = event?.data?.type;
     const hasTrustedReadySignal = type === ENTRY_CASE_READY_MESSAGE
       || (type === ENTRY_CASE_HEIGHT_MESSAGE && normalizeEntryCaseHeight(event?.data?.height) !== null);
-    if (!hasTrustedReadySignal) return;
-    clearTimer();
-    indicator.hidden = true;
-    fallback.hidden = true;
+    if (hasTrustedReadySignal) finishReady();
   };
   const handleRetry = (event) => {
+    if (!mounted) return;
     event?.preventDefault?.();
-    const separator = String(frame.src || '').includes('?') ? '&' : '?';
-    frame.src = `${frame.src}${separator}_foldbridge_retry=${encodeURIComponent(now())}`;
+    const url = new URL(frame.src);
+    url.searchParams.set('_foldbridge_retry', String(now()));
+    frame.src = url.href;
     showLoading();
   };
 
-  fallback.hidden = true;
   frame.addEventListener('load', handleLoad);
   frame.addEventListener('error', showFailure);
   retryButton?.addEventListener?.('click', handleRetry);
   windowObject?.addEventListener?.('message', handleReady);
   showLoading();
 
-  let mounted = true;
   return () => {
     if (!mounted) return;
     mounted = false;
+    generation += 1;
+    request?.abort();
     clearTimer();
     frame.removeEventListener('load', handleLoad);
     frame.removeEventListener('error', showFailure);

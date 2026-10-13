@@ -11516,3 +11516,5 @@ body[data-mode="dark"] .bundle-home-brand-copy span,
 body[data-mode="dark"] .bundle-switch-pill span {
   color: #ffffff !important;
 }
+
+.entry-case-embed-frame[hidden] { display: none; }

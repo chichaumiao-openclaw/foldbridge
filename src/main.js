@@ -59,7 +59,7 @@ import {
   mountEntryCaseFailureFallback,
   mountEntryCaseLoadingIndicator,
   parseEntryCaseMatrixFamily,
-} from './entryCaseEmbed.js';
+} from './entryCaseEmbed.js?v=20261012-case-maintenance';
 import { initAnnojointStructureViewers } from './annojoinStructureViewer.js';
 import {
   initAnnojointCasePage,
@@ -2940,8 +2940,8 @@ function entryCasePage() {
     </div>
     <section class="entry-case-fallback" hidden role="status" aria-live="polite">
       <p class="technology-kicker">Case service</p>
-      <h2>Case data is temporarily unavailable</h2>
-      <p>We could not reach the case service. Please try again in a moment.</p>
+      <h2 data-fallback-title>Case data is temporarily unavailable</h2>
+      <p data-fallback-copy>We could not reach the case service. Please try again in a moment.</p>
       <div class="entry-case-fallback-actions">
         <button class="download-outline-btn entry-case-retry" type="button">Try again</button>
         <a class="download-outline-btn" href="#entry">Back to Entry table</a>

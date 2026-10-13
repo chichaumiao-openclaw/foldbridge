@@ -8,6 +8,20 @@
 
 本手册是 FoldBridge 网站维护的默认操作契约。除非用户明确指定其他远端、分支或发布目标，否则所有 GitHub Pages 相关工作均按本文执行，不再重复询问是否使用 `ghhttps/main`。
 
+## Host 15 与维护页更新（2026-10-13 UTC）
+
+当前 Case 生产源为 `15:/home/sunhao/Server15/public`（2026-09-16 起），Mac `/Volumes/tianyi/Server/public` 为手动热备。本文下方保留的 2026-09-11 Mac 服务快照只描述当时状态，不作为当前生产 Tunnel 的运行判据。
+
+- Host 15 的 Docker origin 监听 `127.0.0.1:8888`，cloudflared 已升级到 `2026.10.0`。
+- `auto`/QUIC 已测试，出现连接/注册超时和 2/4 条连接；已回滚并保存 `http2` 为生产默认值。想再测试需显式设置 `FOLDBRIDGE_HOST15_TUNNEL_PROTOCOL=auto`。
+- `/home/sunhao/.local/bin/foldbridge-host15-watchdog` 由用户 cron 每分钟运行；连续三次全断后允许重启，10 分钟冷却、每小时最多 3 次。重启失败也记录并消耗额度。origin 单独探测。
+- metrics 仅绑定 `127.0.0.1:20241`；`/ready`、`/metrics` 和 `/diag/tunnel` 同时确认连接，不以容器 running 代替。
+- Pages 当前使用 `.github/workflows/preview-pages.yml`（`pages build and deployment`）；旧 `pages.yml` 的历史 run 不能代表本次发布。
+- 主站维护卡片与独立 `/maintenance.html` 为全英文，沿用共享样式。可信 case 高度/ready 消息或 HEAD=200 加 iframe load 确认加载；HTTP 404 显示 `Case page not found`，503/隧道错误显示维护提示。重试保留 chain/family，过期探针不能覆盖新页面。
+- 此次没有替换 Host 15 或 Mac 的 case 数据与共享脚本，不触发双源资产发布；门户兼容现有高度消息。
+
+运维安装、检查及回滚见 [Host 15 runbook](runbooks/foldbridge-host15-tunnel-runbook.md)。完整 npm suite 仍可能因本机 sealed-run 外接卷/fixture 失败，按原契约报告；本次使用实际 Pages workflow 的构建/部署结果，不声称缺失的 `scripts/build.mjs` 已通过。
+
 ## 零、默认发布契约（强制）
 
 ### 0.1 Git 默认值

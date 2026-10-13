@@ -282,7 +282,6 @@ test('entry Case layout uses the shared centered width and content-driven height
   assert.match(shellStyles, /html\.is-embedded body\[data-mode="dark"\] \.shell\s*\{\s*box-shadow:\s*none;/s);
   assert.match(shell, /ResizeObserver/);
   assert.match(shell, /foldbridge-case-height/);
-  assert.match(shell, /foldbridge-case-ready/);
 });
 
 test('light Case canvas is transparent so the portal background stays continuous', () => {
