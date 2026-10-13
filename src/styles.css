@@ -10614,6 +10614,37 @@ main .technology-method-pill {
   background: var(--accent, #b47c00);
   animation: entry-case-loading-slide 1.15s ease-in-out infinite;
 }
+.entry-case-fallback {
+  position: relative;
+  z-index: 2;
+  margin: 18px auto;
+  padding: 28px clamp(22px, 5vw, 44px);
+  border: 1px solid var(--border, #e0ce8f);
+  border-radius: var(--radiusPanel, 14px);
+  background: var(--surface, #fffdf7);
+  box-shadow: 0 12px 32px rgb(58 47 16 / 10%);
+  color: var(--textPrimary, #3a2f10);
+  text-align: center;
+}
+.entry-case-fallback[hidden] {
+  display: none;
+}
+.entry-case-fallback h2 {
+  margin: 0 0 10px;
+  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+}
+.entry-case-fallback p:not(.technology-kicker) {
+  max-width: 42rem;
+  margin: 0 auto;
+  color: var(--textSecondary, #6d6245);
+}
+.entry-case-fallback-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 22px;
+}
 @keyframes entry-case-loading-slide {
   from { transform: translateX(-110%); }
   to { transform: translateX(240%); }

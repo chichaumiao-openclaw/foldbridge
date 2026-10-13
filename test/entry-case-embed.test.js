@@ -7,6 +7,7 @@ import {
   applyEntryCaseHeightMessage,
   ENTRY_CASE_HEIGHT_MESSAGE,
   mountEntryCaseHeightListener,
+  mountEntryCaseFailureFallback,
   mountEntryCaseLoadingIndicator,
   parseEntryCaseMatrixFamily,
 } from '../src/entryCaseEmbed.js';
@@ -44,6 +45,55 @@ test('entry Case loading indicator stays visible until the iframe loads', () => 
   dispose();
   for (const handler of handlers) handler();
   assert.equal(indicator.hidden, false);
+});
+
+test('entry Case fallback appears on iframe failure or timeout and retries from the Pages shell', () => {
+  const handlers = new Map();
+  let scheduled;
+  let cleared = false;
+  const frame = {
+    src: 'https://foldbridge.sunhao.uk/entry-cases/cases/9ZC6/index.html',
+    addEventListener(type, handler) { handlers.set(type, handler); },
+    removeEventListener(type, handler) { if (handlers.get(type) === handler) handlers.delete(type); },
+  };
+  const indicator = { hidden: true };
+  const fallback = { hidden: true };
+  const retryButton = {
+    addEventListener(type, handler) { if (type === 'click') handlers.set(type, handler); },
+    removeEventListener(type, handler) { if (handlers.get(type) === handler) handlers.delete(type); },
+  };
+
+  const dispose = mountEntryCaseFailureFallback({
+    frame,
+    indicator,
+    fallback,
+    retryButton,
+    timeoutMs: 15_000,
+    setTimeoutFn(handler) { scheduled = handler; return 7; },
+    clearTimeoutFn() { cleared = true; },
+    now: () => 1700000000000,
+  });
+
+  assert.equal(indicator.hidden, false);
+  assert.equal(fallback.hidden, true);
+  handlers.get('error')();
+  assert.equal(indicator.hidden, true);
+  assert.equal(fallback.hidden, false);
+
+  handlers.get('click')({ preventDefault() {} });
+  assert.match(frame.src, /_foldbridge_retry=1700000000000/);
+  assert.equal(indicator.hidden, false);
+  assert.equal(fallback.hidden, true);
+
+  scheduled();
+  assert.equal(fallback.hidden, false);
+  handlers.get('load')();
+  assert.equal(indicator.hidden, true);
+  assert.equal(fallback.hidden, true);
+  assert.equal(cleared, true);
+
+  dispose();
+  assert.equal(handlers.size, 0);
 });
 
 test('entry Case iframe accepts a valid height only from its own trusted child', () => {
@@ -205,8 +255,11 @@ test('entry Case layout uses the shared centered width and content-driven height
   assert.match(main, /new URL\('\/public\/entry-cases', window\.location\.origin\)/);
   assert.match(main, /expectedOrigin: new URL\(entryCaseOriginForCurrentHost\(\)\)\.origin/);
   assert.match(main, /mountEntryCaseLoadingIndicator\(\{/);
+  assert.match(main, /mountEntryCaseFailureFallback\(\{/);
   assert.match(main, /class="entry-case-loading"/);
+  assert.match(main, /class="entry-case-fallback"/);
   assert.match(styles, /\.entry-case-loading-track/);
+  assert.match(styles, /\.entry-case-fallback/);
   assert.match(styles, /@keyframes entry-case-loading-slide/);
   assert.match(shell, /classList\.add\("is-embedded"\)/);
   assert.match(shellStyles, /html\.is-embedded \.shell\s*\{[^}]*width:\s*100%[^}]*max-width:\s*100%/s);

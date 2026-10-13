@@ -56,6 +56,7 @@ import { buildEntryExport } from './downloadExport.js';
 import { toggleTechniqueSelection } from './techniqueFilterModel.js';
 import {
   mountEntryCaseHeightListener,
+  mountEntryCaseFailureFallback,
   mountEntryCaseLoadingIndicator,
   parseEntryCaseMatrixFamily,
 } from './entryCaseEmbed.js';
@@ -110,6 +111,7 @@ let entryExportSignature = '';
 let homeProbingCarouselTimer = null; // 主页轮播自动轮换定时器句柄（幂等：每次 render 先清后起）
 let homeScrollStoryObserver = null; // 招牌区滚动联动 observer（幂等：每次 render 先 disconnect 再建）
 let disposeEntryCaseHeightListener = null;
+let disposeEntryCaseFailureFallback = null;
 let pdbCaseConfidenceFilter = 'all';
 let pdbCaseAlignmentPageByPdb = new Map(); // pdbId -> 当前 alignment 页码（1-based）
 let homeDashboardFilters = {
@@ -2859,9 +2861,10 @@ const ENTRY_CASE_ORIGIN = 'https://foldbridge.sunhao.uk/entry-cases';
 const ENTRY_CASE_FRAME_ORIGIN = new URL(ENTRY_CASE_ORIGIN).origin;
 
 function clearEntryCaseEmbed() {
-  if (!disposeEntryCaseHeightListener) return;
-  disposeEntryCaseHeightListener();
+  disposeEntryCaseHeightListener?.();
   disposeEntryCaseHeightListener = null;
+  disposeEntryCaseFailureFallback?.();
+  disposeEntryCaseFailureFallback = null;
 }
 
 function initEntryCaseEmbed() {
@@ -2878,10 +2881,19 @@ function initEntryCaseEmbed() {
     frame,
     indicator: document.querySelector('.entry-case-loading'),
   });
+  const disposeFailure = mountEntryCaseFailureFallback({
+    frame,
+    indicator: document.querySelector('.entry-case-loading'),
+    fallback: document.querySelector('.entry-case-fallback'),
+    retryButton: document.querySelector('.entry-case-retry'),
+    windowObject: window,
+    expectedOrigin: ENTRY_CASE_FRAME_ORIGIN,
+  });
   disposeEntryCaseHeightListener = () => {
     disposeHeight();
     disposeLoading();
   };
+  disposeEntryCaseFailureFallback = disposeFailure;
 }
 
 function entryCasePage() {
@@ -2917,6 +2929,15 @@ function entryCasePage() {
       <span class="entry-case-loading-label">Loading Case…</span>
       <span class="entry-case-loading-track" aria-hidden="true"><span></span></span>
     </div>
+    <section class="entry-case-fallback" hidden role="status" aria-live="polite">
+      <p class="technology-kicker">Case service</p>
+      <h2>Case data is temporarily unavailable</h2>
+      <p>We could not reach the case service. Please try again in a moment.</p>
+      <div class="entry-case-fallback-actions">
+        <button class="download-outline-btn entry-case-retry" type="button">Try again</button>
+        <a class="download-outline-btn" href="#entry">Back to Entry table</a>
+      </div>
+    </section>
     <iframe class="entry-case-embed-frame" src="${src}" title="${escapeHtml(safePdb)} case page"
       loading="lazy" referrerpolicy="no-referrer"></iframe>
   </main>`;

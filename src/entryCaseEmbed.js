@@ -111,3 +111,63 @@ export function mountEntryCaseLoadingIndicator({ frame, indicator }) {
     frame.removeEventListener('load', handleLoad);
   };
 }
+
+export function mountEntryCaseFailureFallback({
+  frame,
+  indicator,
+  fallback,
+  retryButton,
+  timeoutMs = 15_000,
+  setTimeoutFn = setTimeout,
+  clearTimeoutFn = clearTimeout,
+  now = Date.now,
+}) {
+  if (!frame || typeof frame.addEventListener !== 'function' || !indicator || !fallback) {
+    return () => {};
+  }
+
+  let timerId = null;
+  const clearTimer = () => {
+    if (timerId === null) return;
+    clearTimeoutFn(timerId);
+    timerId = null;
+  };
+  const showFailure = () => {
+    clearTimer();
+    indicator.hidden = true;
+    fallback.hidden = false;
+  };
+  const showLoading = () => {
+    clearTimer();
+    indicator.hidden = false;
+    fallback.hidden = true;
+    timerId = setTimeoutFn(showFailure, timeoutMs);
+  };
+  const handleLoad = () => {
+    clearTimer();
+    indicator.hidden = true;
+    fallback.hidden = true;
+  };
+  const handleRetry = (event) => {
+    event?.preventDefault?.();
+    const separator = String(frame.src || '').includes('?') ? '&' : '?';
+    frame.src = `${frame.src}${separator}_foldbridge_retry=${encodeURIComponent(now())}`;
+    showLoading();
+  };
+
+  fallback.hidden = true;
+  frame.addEventListener('load', handleLoad);
+  frame.addEventListener('error', showFailure);
+  retryButton?.addEventListener?.('click', handleRetry);
+  showLoading();
+
+  let mounted = true;
+  return () => {
+    if (!mounted) return;
+    mounted = false;
+    clearTimer();
+    frame.removeEventListener('load', handleLoad);
+    frame.removeEventListener('error', showFailure);
+    retryButton?.removeEventListener?.('click', handleRetry);
+  };
+}
