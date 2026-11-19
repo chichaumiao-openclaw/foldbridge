@@ -1,7 +1,7 @@
 // entry 浏览入口表的视图层：纯函数，输入归一化行 → 输出 HTML 字符串。
 // 无 DOM 副作用、无 fetch。跳转链接由 entryCaseHref 生成，指向静态 case 页树。
 
-import { ENTRY_TABLE_COLUMNS, entryCaseHref, entryEfLinks, rcsbStructureHref, buildEntryTableGroups } from './entryTable.js';
+import { ENTRY_TABLE_COLUMNS, entryCaseHref, entryEfLinks, rcsbStructureHref, buildEntryTableGroups } from './entryTable.js?v=20261118-entry-confidence';
 import { renderTechniqueFilterControls } from './annojoinAtlasView.js';
 import { renderDisclosureIcon } from './disclosureIcon.js';
 

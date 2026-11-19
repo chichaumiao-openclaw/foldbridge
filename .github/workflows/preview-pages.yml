@@ -24,6 +24,8 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Verify Entry confidence retirement
+        run: node --test test/entry-confidence-retirement.test.js
       - name: Build the search index
         run: |
           mkdir -p dist

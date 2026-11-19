@@ -50,9 +50,9 @@ import {
   sortAnnojointCases
 } from './annojoinAtlasTableModel.js';
 import { createAnnojointAtlasStore } from './annojoinAtlasStore.js';
-import { normalizeEntryRows, filterEntryRowsByTechniqueSelection } from './entryTable.js';
-import { renderEntryTablePage } from './entryTableView.js';
-import { buildEntryExport } from './downloadExport.js';
+import { normalizeEntryRows, filterEntryRowsByTechniqueSelection } from './entryTable.js?v=20261118-entry-confidence';
+import { renderEntryTablePage } from './entryTableView.js?v=20261118-entry-confidence';
+import { buildEntryExport } from './downloadExport.js?v=20261118-entry-confidence';
 import { toggleTechniqueSelection } from './techniqueFilterModel.js';
 import {
   mountEntryCaseHeightListener,

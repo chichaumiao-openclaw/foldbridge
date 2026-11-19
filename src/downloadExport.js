@@ -10,7 +10,7 @@ function stringList(value) {
 export function buildEntryExport(rows = [], { generatedAt = new Date().toISOString() } = {}) {
   if (!Array.isArray(rows)) throw new TypeError('Entry export rows must be an array');
   return {
-    schema_version: 'foldbridge-entry-export.v1',
+    schema_version: 'foldbridge-entry-export.v2',
     generated_at: generatedAt,
     row_count: rows.length,
     rows: rows.map((row) => ({
@@ -21,7 +21,6 @@ export function buildEntryExport(rows = [], { generatedAt = new Date().toISOStri
         rna_class: text(row.partition),
         technique: text(row.probingCategory),
         profiles: Number(row.nProfiles) || 0,
-        confidence: text(row.confidenceClass),
         source: text(row.sourceLanes),
       },
       profile_meta: {

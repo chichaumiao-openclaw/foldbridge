@@ -4,8 +4,7 @@
 
 import { classifyTechniqueFilter, matchesTechniqueFilter } from './techniqueFilterModel.js';
 
-// 展示列顺序：molecule / chain / PDB / profiles / technique /
-// confidence / class / source。锁死列序。
+// Entry 公开展示列；已退役的 confidence 不再进入视图行或导出。
 export const ENTRY_TABLE_COLUMNS = [
   { id: 'sciName', label: 'Molecule' },
   { id: 'auth', label: 'Chain' },
@@ -13,7 +12,6 @@ export const ENTRY_TABLE_COLUMNS = [
   { id: 'partition', label: 'RNA class' },
   { id: 'probingCategory', label: 'Technique' },
   { id: 'nProfiles', label: 'Profiles' },
-  { id: 'confidenceClass', label: 'Confidence' },
   { id: 'sourceLanes', label: 'Source' }
 ];
 
@@ -111,7 +109,6 @@ export function normalizeEntryRows(payload) {
       sciName: text(row.sci_name),
       partition: text(row.partition),
       nProfiles: Number(row.n_profiles) || 0,
-      confidenceClass: text(row.entry_confidence_class),
       probingCategory: text(row.probing_category),
       techFilter,
       techniqueNames,

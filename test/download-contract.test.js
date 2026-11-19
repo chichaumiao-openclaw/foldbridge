@@ -26,7 +26,7 @@ test('Entry export contains the filtered table rows and matching profile metadat
   ], { generatedAt: '2026-08-25T12:00:00.000Z' });
 
   assert.deepEqual(payload, {
-    schema_version: 'foldbridge-entry-export.v1',
+    schema_version: 'foldbridge-entry-export.v2',
     generated_at: '2026-08-25T12:00:00.000Z',
     row_count: 1,
     rows: [{
@@ -37,7 +37,6 @@ test('Entry export contains the filtered table rows and matching profile metadat
         rna_class: 'rRNA',
         technique: 'shape-based-probing',
         profiles: 2,
-        confidence: 'high',
         source: 'geo,rmdb',
       },
       profile_meta: {
